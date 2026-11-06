@@ -6,6 +6,14 @@ var CareerRuntime = (() => {
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __esm = (fn, res, err2) => function __init() {
+    if (err2) throw err2[0];
+    try {
+      return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+    } catch (e) {
+      throw err2 = [e], e;
+    }
+  };
   var __export = (target, all) => {
     for (var name2 in all)
       __defProp(target, name2, { get: all[name2], enumerable: true });
@@ -19,6 +27,2321 @@ var CareerRuntime = (() => {
     return to;
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+  // node_modules/fflate/esm/browser.js
+  var browser_exports = {};
+  __export(browser_exports, {
+    AsyncCompress: () => AsyncGzip,
+    AsyncDecompress: () => AsyncDecompress,
+    AsyncDeflate: () => AsyncDeflate,
+    AsyncGunzip: () => AsyncGunzip,
+    AsyncGzip: () => AsyncGzip,
+    AsyncInflate: () => AsyncInflate,
+    AsyncUnzipInflate: () => AsyncUnzipInflate,
+    AsyncUnzlib: () => AsyncUnzlib,
+    AsyncZipDeflate: () => AsyncZipDeflate,
+    AsyncZlib: () => AsyncZlib,
+    Compress: () => Gzip,
+    DecodeUTF8: () => DecodeUTF8,
+    Decompress: () => Decompress,
+    Deflate: () => Deflate,
+    EncodeUTF8: () => EncodeUTF8,
+    FlateErrorCode: () => FlateErrorCode,
+    Gunzip: () => Gunzip,
+    Gzip: () => Gzip,
+    Inflate: () => Inflate,
+    Unzip: () => Unzip,
+    UnzipInflate: () => UnzipInflate,
+    UnzipPassThrough: () => UnzipPassThrough,
+    Unzlib: () => Unzlib,
+    Zip: () => Zip,
+    ZipDeflate: () => ZipDeflate,
+    ZipPassThrough: () => ZipPassThrough,
+    Zlib: () => Zlib,
+    compress: () => gzip,
+    compressSync: () => gzipSync,
+    decompress: () => decompress,
+    decompressSync: () => decompressSync,
+    deflate: () => deflate,
+    deflateSync: () => deflateSync,
+    gunzip: () => gunzip,
+    gunzipSync: () => gunzipSync,
+    gzip: () => gzip,
+    gzipSync: () => gzipSync,
+    inflate: () => inflate,
+    inflateSync: () => inflateSync,
+    strFromU8: () => strFromU8,
+    strToU8: () => strToU8,
+    unzip: () => unzip,
+    unzipSync: () => unzipSync,
+    unzlib: () => unzlib,
+    unzlibSync: () => unzlibSync,
+    zip: () => zip,
+    zipSync: () => zipSync,
+    zlib: () => zlib,
+    zlibSync: () => zlibSync
+  });
+  function StrmOpt(opts, cb) {
+    if (typeof opts == "function")
+      cb = opts, opts = {};
+    this.ondata = cb;
+    return opts;
+  }
+  function deflate(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    return cbify(data2, opts, [
+      bDflt
+    ], function(ev) {
+      return pbf(deflateSync(ev.data[0], ev.data[1]));
+    }, 0, cb);
+  }
+  function deflateSync(data2, opts) {
+    return dopt(data2, opts || {}, 0, 0);
+  }
+  function inflate(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    return cbify(data2, opts, [
+      bInflt
+    ], function(ev) {
+      return pbf(inflateSync(ev.data[0], gopt(ev.data[1])));
+    }, 1, cb);
+  }
+  function inflateSync(data2, opts) {
+    return inflt(data2, { i: 2 }, opts && opts.out, opts && opts.dictionary);
+  }
+  function gzip(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    return cbify(data2, opts, [
+      bDflt,
+      gze,
+      function() {
+        return [gzipSync];
+      }
+    ], function(ev) {
+      return pbf(gzipSync(ev.data[0], ev.data[1]));
+    }, 2, cb);
+  }
+  function gzipSync(data2, opts) {
+    if (!opts)
+      opts = {};
+    var c = crc(), l = data2.length;
+    c.p(data2);
+    var d = dopt(data2, opts, gzhl(opts), 8), s = d.length;
+    return gzh(d, opts), wbytes(d, s - 8, c.d()), wbytes(d, s - 4, l), d;
+  }
+  function gunzip(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    return cbify(data2, opts, [
+      bInflt,
+      guze,
+      function() {
+        return [gunzipSync];
+      }
+    ], function(ev) {
+      return pbf(gunzipSync(ev.data[0], ev.data[1]));
+    }, 3, cb);
+  }
+  function gunzipSync(data2, opts) {
+    var st = gzs(data2);
+    if (st + 8 > data2.length)
+      err(6, "invalid gzip data");
+    return inflt(data2.subarray(st, -8), { i: 2 }, opts && opts.out || new u8(gzl(data2)), opts && opts.dictionary);
+  }
+  function zlib(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    return cbify(data2, opts, [
+      bDflt,
+      zle,
+      function() {
+        return [zlibSync];
+      }
+    ], function(ev) {
+      return pbf(zlibSync(ev.data[0], ev.data[1]));
+    }, 4, cb);
+  }
+  function zlibSync(data2, opts) {
+    if (!opts)
+      opts = {};
+    var a = adler();
+    a.p(data2);
+    var d = dopt(data2, opts, opts.dictionary ? 6 : 2, 4);
+    return zlh(d, opts), wbytes(d, d.length - 4, a.d()), d;
+  }
+  function unzlib(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    return cbify(data2, opts, [
+      bInflt,
+      zule,
+      function() {
+        return [unzlibSync];
+      }
+    ], function(ev) {
+      return pbf(unzlibSync(ev.data[0], gopt(ev.data[1])));
+    }, 5, cb);
+  }
+  function unzlibSync(data2, opts) {
+    return inflt(data2.subarray(zls(data2, opts && opts.dictionary), -4), { i: 2 }, opts && opts.out, opts && opts.dictionary);
+  }
+  function decompress(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    return data2[0] == 31 && data2[1] == 139 && data2[2] == 8 ? gunzip(data2, opts, cb) : (data2[0] & 15) != 8 || data2[0] >> 4 > 7 || (data2[0] << 8 | data2[1]) % 31 ? inflate(data2, opts, cb) : unzlib(data2, opts, cb);
+  }
+  function decompressSync(data2, opts) {
+    return data2[0] == 31 && data2[1] == 139 && data2[2] == 8 ? gunzipSync(data2, opts) : (data2[0] & 15) != 8 || data2[0] >> 4 > 7 || (data2[0] << 8 | data2[1]) % 31 ? inflateSync(data2, opts) : unzlibSync(data2, opts);
+  }
+  function strToU8(str, latin1) {
+    if (latin1) {
+      var ar_1 = new u8(str.length);
+      for (var i2 = 0; i2 < str.length; ++i2)
+        ar_1[i2] = str.charCodeAt(i2);
+      return ar_1;
+    }
+    if (te)
+      return te.encode(str);
+    var l = str.length;
+    var ar = new u8(str.length + (str.length >> 1));
+    var ai = 0;
+    var w = function(v) {
+      ar[ai++] = v;
+    };
+    for (var i2 = 0; i2 < l; ++i2) {
+      if (ai + 5 > ar.length) {
+        var n = new u8(ai + 8 + (l - i2 << 1));
+        n.set(ar);
+        ar = n;
+      }
+      var c = str.charCodeAt(i2);
+      if (c < 128 || latin1)
+        w(c);
+      else if (c < 2048)
+        w(192 | c >> 6), w(128 | c & 63);
+      else if (c > 55295 && c < 57344)
+        c = 65536 + (c & 1023 << 10) | str.charCodeAt(++i2) & 1023, w(240 | c >> 18), w(128 | c >> 12 & 63), w(128 | c >> 6 & 63), w(128 | c & 63);
+      else
+        w(224 | c >> 12), w(128 | c >> 6 & 63), w(128 | c & 63);
+    }
+    return slc(ar, 0, ai);
+  }
+  function strFromU8(dat, latin1) {
+    if (latin1) {
+      var r = "";
+      for (var i2 = 0; i2 < dat.length; i2 += 16384)
+        r += String.fromCharCode.apply(null, dat.subarray(i2, i2 + 16384));
+      return r;
+    } else if (td) {
+      return td.decode(dat);
+    } else {
+      var _a2 = dutf8(dat), s = _a2.s, r = _a2.r;
+      if (r.length)
+        err(8);
+      return s;
+    }
+  }
+  function zip(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    var r = {};
+    fltn(data2, "", r, opts);
+    var k = Object.keys(r);
+    var lft = k.length, o = 0, tot = 0;
+    var slft = lft, files = new Array(lft);
+    var term = [];
+    var tAll = function() {
+      for (var i3 = 0; i3 < term.length; ++i3)
+        term[i3]();
+    };
+    var cbd = function(a, b) {
+      mt(function() {
+        cb(a, b);
+      });
+    };
+    mt(function() {
+      cbd = cb;
+    });
+    var cbf = function() {
+      var out = new u8(tot + 22), oe = o, cdl = tot - o;
+      tot = 0;
+      for (var i3 = 0; i3 < slft; ++i3) {
+        var f = files[i3];
+        try {
+          var l = f.c.length;
+          wzh(out, tot, f, f.f, f.u, l);
+          var badd = 30 + f.f.length + exfl(f.extra);
+          var loc = tot + badd;
+          out.set(f.c, loc);
+          wzh(out, o, f, f.f, f.u, l, tot, f.m), o += 16 + badd + (f.m ? f.m.length : 0), tot = loc + l;
+        } catch (e) {
+          return cbd(e, null);
+        }
+      }
+      wzf(out, o, files.length, cdl, oe);
+      cbd(null, out);
+    };
+    if (!lft)
+      cbf();
+    var _loop_1 = function(i3) {
+      var fn = k[i3];
+      var _a2 = r[fn], file = _a2[0], p = _a2[1];
+      var c = crc(), size = file.length;
+      c.p(file);
+      var f = strToU8(fn), s = f.length;
+      var com = p.comment, m = com && strToU8(com), ms = m && m.length;
+      var exl = exfl(p.extra);
+      var compression = p.level == 0 ? 0 : 8;
+      var cbl = function(e, d) {
+        if (e) {
+          tAll();
+          cbd(e, null);
+        } else {
+          var l = d.length;
+          files[i3] = mrg(p, {
+            size,
+            crc: c.d(),
+            c: d,
+            f,
+            m,
+            u: s != fn.length || m && com.length != ms,
+            compression
+          });
+          o += 30 + s + exl + l;
+          tot += 76 + 2 * (s + exl) + (ms || 0) + l;
+          if (!--lft)
+            cbf();
+        }
+      };
+      if (s > 65535)
+        cbl(err(11, 0, 1), null);
+      if (!compression)
+        cbl(null, file);
+      else if (size < 16e4) {
+        try {
+          cbl(null, deflateSync(file, p));
+        } catch (e) {
+          cbl(e, null);
+        }
+      } else
+        term.push(deflate(file, p, cbl));
+    };
+    for (var i2 = 0; i2 < slft; ++i2) {
+      _loop_1(i2);
+    }
+    return tAll;
+  }
+  function zipSync(data2, opts) {
+    if (!opts)
+      opts = {};
+    var r = {};
+    var files = [];
+    fltn(data2, "", r, opts);
+    var o = 0;
+    var tot = 0;
+    for (var fn in r) {
+      var _a2 = r[fn], file = _a2[0], p = _a2[1];
+      var compression = p.level == 0 ? 0 : 8;
+      var f = strToU8(fn), s = f.length;
+      var com = p.comment, m = com && strToU8(com), ms = m && m.length;
+      var exl = exfl(p.extra);
+      if (s > 65535)
+        err(11);
+      var d = compression ? deflateSync(file, p) : file, l = d.length;
+      var c = crc();
+      c.p(file);
+      files.push(mrg(p, {
+        size: file.length,
+        crc: c.d(),
+        c: d,
+        f,
+        m,
+        u: s != fn.length || m && com.length != ms,
+        o,
+        compression
+      }));
+      o += 30 + s + exl + l;
+      tot += 76 + 2 * (s + exl) + (ms || 0) + l;
+    }
+    var out = new u8(tot + 22), oe = o, cdl = tot - o;
+    for (var i2 = 0; i2 < files.length; ++i2) {
+      var f = files[i2];
+      wzh(out, f.o, f, f.f, f.u, f.c.length);
+      var badd = 30 + f.f.length + exfl(f.extra);
+      out.set(f.c, f.o + badd);
+      wzh(out, o, f, f.f, f.u, f.c.length, f.o, f.m), o += 16 + badd + (f.m ? f.m.length : 0);
+    }
+    wzf(out, o, files.length, cdl, oe);
+    return out;
+  }
+  function unzip(data2, opts, cb) {
+    if (!cb)
+      cb = opts, opts = {};
+    if (typeof cb != "function")
+      err(7);
+    var term = [];
+    var tAll = function() {
+      for (var i3 = 0; i3 < term.length; ++i3)
+        term[i3]();
+    };
+    var files = {};
+    var cbd = function(a, b) {
+      mt(function() {
+        cb(a, b);
+      });
+    };
+    mt(function() {
+      cbd = cb;
+    });
+    var e = data2.length - 22;
+    for (; b4(data2, e) != 101010256; --e) {
+      if (!e || data2.length - e > 65558) {
+        cbd(err(13, 0, 1), null);
+        return tAll;
+      }
+    }
+    ;
+    var lft = b2(data2, e + 8);
+    if (lft) {
+      var c = lft;
+      var o = b4(data2, e + 16);
+      var z = o == 4294967295 || c == 65535;
+      if (z) {
+        var ze = b4(data2, e - 12);
+        z = b4(data2, ze) == 101075792;
+        if (z) {
+          c = lft = b4(data2, ze + 32);
+          o = b4(data2, ze + 48);
+        }
+      }
+      var fltr = opts && opts.filter;
+      var _loop_3 = function(i3) {
+        var _a2 = zh(data2, o, z), c_1 = _a2[0], sc = _a2[1], su = _a2[2], fn = _a2[3], no = _a2[4], off = _a2[5], b = slzh(data2, off);
+        o = no;
+        var cbl = function(e2, d) {
+          if (e2) {
+            tAll();
+            cbd(e2, null);
+          } else {
+            if (d)
+              files[fn] = d;
+            if (!--lft)
+              cbd(null, files);
+          }
+        };
+        if (!fltr || fltr({
+          name: fn,
+          size: sc,
+          originalSize: su,
+          compression: c_1
+        })) {
+          if (!c_1)
+            cbl(null, slc(data2, b, b + sc));
+          else if (c_1 == 8) {
+            var infl = data2.subarray(b, b + sc);
+            if (su < 524288 || sc > 0.8 * su) {
+              try {
+                cbl(null, inflateSync(infl, { out: new u8(su) }));
+              } catch (e2) {
+                cbl(e2, null);
+              }
+            } else
+              term.push(inflate(infl, { size: su }, cbl));
+          } else
+            cbl(err(14, "unknown compression type " + c_1, 1), null);
+        } else
+          cbl(null, null);
+      };
+      for (var i2 = 0; i2 < c; ++i2) {
+        _loop_3(i2);
+      }
+    } else
+      cbd(null, {});
+    return tAll;
+  }
+  function unzipSync(data2, opts) {
+    var files = {};
+    var e = data2.length - 22;
+    for (; b4(data2, e) != 101010256; --e) {
+      if (!e || data2.length - e > 65558)
+        err(13);
+    }
+    ;
+    var c = b2(data2, e + 8);
+    if (!c)
+      return {};
+    var o = b4(data2, e + 16);
+    var z = o == 4294967295 || c == 65535;
+    if (z) {
+      var ze = b4(data2, e - 12);
+      z = b4(data2, ze) == 101075792;
+      if (z) {
+        c = b4(data2, ze + 32);
+        o = b4(data2, ze + 48);
+      }
+    }
+    var fltr = opts && opts.filter;
+    for (var i2 = 0; i2 < c; ++i2) {
+      var _a2 = zh(data2, o, z), c_2 = _a2[0], sc = _a2[1], su = _a2[2], fn = _a2[3], no = _a2[4], off = _a2[5], b = slzh(data2, off);
+      o = no;
+      if (!fltr || fltr({
+        name: fn,
+        size: sc,
+        originalSize: su,
+        compression: c_2
+      })) {
+        if (!c_2)
+          files[fn] = slc(data2, b, b + sc);
+        else if (c_2 == 8)
+          files[fn] = inflateSync(data2.subarray(b, b + sc), { out: new u8(su) });
+        else
+          err(14, "unknown compression type " + c_2);
+      }
+    }
+    return files;
+  }
+  var ch2, wk, u8, u16, i32, fleb, fdeb, clim, freb, _a, fl, revfl, _b, fd, revfd, rev, x, i, hMap, flt, i, i, i, i, fdt, i, flm, flrm, fdm, fdrm, max, bits, bits16, shft, slc, FlateErrorCode, ec, err, inflt, wbits, wbits16, hTree, ln, lc, clen, wfblk, wblk, deo, et, dflt, crct, crc, adler, dopt, mrg, wcln, ch, cbfs, wrkr, bInflt, bDflt, gze, guze, zle, zule, pbf, gopt, cbify, astrm, astrmify, b2, b4, b8, wbytes, gzh, gzs, gzl, gzhl, zlh, zls, Deflate, AsyncDeflate, Inflate, AsyncInflate, Gzip, AsyncGzip, Gunzip, AsyncGunzip, Zlib, AsyncZlib, Unzlib, AsyncUnzlib, Decompress, AsyncDecompress, fltn, te, td, tds, dutf8, DecodeUTF8, EncodeUTF8, dbf, slzh, zh, z64e, exfl, wzh, wzf, ZipPassThrough, ZipDeflate, AsyncZipDeflate, Zip, UnzipPassThrough, UnzipInflate, AsyncUnzipInflate, Unzip, mt;
+  var init_browser = __esm({
+    "node_modules/fflate/esm/browser.js"() {
+      ch2 = {};
+      wk = (function(c, id, msg, transfer, cb) {
+        var w = new Worker(ch2[id] || (ch2[id] = URL.createObjectURL(new Blob([
+          c + ';addEventListener("error",function(e){e=e.error;postMessage({$e$:[e.message,e.code,e.stack]})})'
+        ], { type: "text/javascript" }))));
+        w.onmessage = function(e) {
+          var d = e.data, ed = d.$e$;
+          if (ed) {
+            var err2 = new Error(ed[0]);
+            err2["code"] = ed[1];
+            err2.stack = ed[2];
+            cb(err2, null);
+          } else
+            cb(null, d);
+        };
+        w.postMessage(msg, transfer);
+        return w;
+      });
+      u8 = Uint8Array;
+      u16 = Uint16Array;
+      i32 = Int32Array;
+      fleb = new u8([
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        5,
+        5,
+        5,
+        5,
+        0,
+        /* unused */
+        0,
+        0,
+        /* impossible */
+        0
+      ]);
+      fdeb = new u8([
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        2,
+        2,
+        3,
+        3,
+        4,
+        4,
+        5,
+        5,
+        6,
+        6,
+        7,
+        7,
+        8,
+        8,
+        9,
+        9,
+        10,
+        10,
+        11,
+        11,
+        12,
+        12,
+        13,
+        13,
+        /* unused */
+        0,
+        0
+      ]);
+      clim = new u8([16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]);
+      freb = function(eb, start) {
+        var b = new u16(31);
+        for (var i2 = 0; i2 < 31; ++i2) {
+          b[i2] = start += 1 << eb[i2 - 1];
+        }
+        var r = new i32(b[30]);
+        for (var i2 = 1; i2 < 30; ++i2) {
+          for (var j = b[i2]; j < b[i2 + 1]; ++j) {
+            r[j] = j - b[i2] << 5 | i2;
+          }
+        }
+        return { b, r };
+      };
+      _a = freb(fleb, 2);
+      fl = _a.b;
+      revfl = _a.r;
+      fl[28] = 258, revfl[258] = 28;
+      _b = freb(fdeb, 0);
+      fd = _b.b;
+      revfd = _b.r;
+      rev = new u16(32768);
+      for (i = 0; i < 32768; ++i) {
+        x = (i & 43690) >> 1 | (i & 21845) << 1;
+        x = (x & 52428) >> 2 | (x & 13107) << 2;
+        x = (x & 61680) >> 4 | (x & 3855) << 4;
+        rev[i] = ((x & 65280) >> 8 | (x & 255) << 8) >> 1;
+      }
+      hMap = (function(cd, mb, r) {
+        var s = cd.length;
+        var i2 = 0;
+        var l = new u16(mb);
+        for (; i2 < s; ++i2) {
+          if (cd[i2])
+            ++l[cd[i2] - 1];
+        }
+        var le = new u16(mb);
+        for (i2 = 1; i2 < mb; ++i2) {
+          le[i2] = le[i2 - 1] + l[i2 - 1] << 1;
+        }
+        var co;
+        if (r) {
+          co = new u16(1 << mb);
+          var rvb = 15 - mb;
+          for (i2 = 0; i2 < s; ++i2) {
+            if (cd[i2]) {
+              var sv = i2 << 4 | cd[i2];
+              var r_1 = mb - cd[i2];
+              var v = le[cd[i2] - 1]++ << r_1;
+              for (var m = v | (1 << r_1) - 1; v <= m; ++v) {
+                co[rev[v] >> rvb] = sv;
+              }
+            }
+          }
+        } else {
+          co = new u16(s);
+          for (i2 = 0; i2 < s; ++i2) {
+            if (cd[i2]) {
+              co[i2] = rev[le[cd[i2] - 1]++] >> 15 - cd[i2];
+            }
+          }
+        }
+        return co;
+      });
+      flt = new u8(288);
+      for (i = 0; i < 144; ++i)
+        flt[i] = 8;
+      for (i = 144; i < 256; ++i)
+        flt[i] = 9;
+      for (i = 256; i < 280; ++i)
+        flt[i] = 7;
+      for (i = 280; i < 288; ++i)
+        flt[i] = 8;
+      fdt = new u8(32);
+      for (i = 0; i < 32; ++i)
+        fdt[i] = 5;
+      flm = /* @__PURE__ */ hMap(flt, 9, 0);
+      flrm = /* @__PURE__ */ hMap(flt, 9, 1);
+      fdm = /* @__PURE__ */ hMap(fdt, 5, 0);
+      fdrm = /* @__PURE__ */ hMap(fdt, 5, 1);
+      max = function(a) {
+        var m = a[0];
+        for (var i2 = 1; i2 < a.length; ++i2) {
+          if (a[i2] > m)
+            m = a[i2];
+        }
+        return m;
+      };
+      bits = function(d, p, m) {
+        var o = p / 8 | 0;
+        return (d[o] | d[o + 1] << 8) >> (p & 7) & m;
+      };
+      bits16 = function(d, p) {
+        var o = p / 8 | 0;
+        return (d[o] | d[o + 1] << 8 | d[o + 2] << 16) >> (p & 7);
+      };
+      shft = function(p) {
+        return (p + 7) / 8 | 0;
+      };
+      slc = function(v, s, e) {
+        if (s == null || s < 0)
+          s = 0;
+        if (e == null || e > v.length)
+          e = v.length;
+        return new u8(v.subarray(s, e));
+      };
+      FlateErrorCode = {
+        UnexpectedEOF: 0,
+        InvalidBlockType: 1,
+        InvalidLengthLiteral: 2,
+        InvalidDistance: 3,
+        StreamFinished: 4,
+        NoStreamHandler: 5,
+        InvalidHeader: 6,
+        NoCallback: 7,
+        InvalidUTF8: 8,
+        ExtraFieldTooLong: 9,
+        InvalidDate: 10,
+        FilenameTooLong: 11,
+        StreamFinishing: 12,
+        InvalidZipData: 13,
+        UnknownCompressionMethod: 14
+      };
+      ec = [
+        "unexpected EOF",
+        "invalid block type",
+        "invalid length/literal",
+        "invalid distance",
+        "stream finished",
+        "no stream handler",
+        ,
+        "no callback",
+        "invalid UTF-8 data",
+        "extra field too long",
+        "date not in range 1980-2099",
+        "filename too long",
+        "stream finishing",
+        "invalid zip data"
+        // determined by unknown compression method
+      ];
+      err = function(ind, msg, nt) {
+        var e = new Error(msg || ec[ind]);
+        e.code = ind;
+        if (Error.captureStackTrace)
+          Error.captureStackTrace(e, err);
+        if (!nt)
+          throw e;
+        return e;
+      };
+      inflt = function(dat, st, buf, dict) {
+        var sl = dat.length, dl = dict ? dict.length : 0;
+        if (!sl || st.f && !st.l)
+          return buf || new u8(0);
+        var noBuf = !buf;
+        var resize = noBuf || st.i != 2;
+        var noSt = st.i;
+        if (noBuf)
+          buf = new u8(sl * 3);
+        var cbuf = function(l2) {
+          var bl = buf.length;
+          if (l2 > bl) {
+            var nbuf = new u8(Math.max(bl * 2, l2));
+            nbuf.set(buf);
+            buf = nbuf;
+          }
+        };
+        var final = st.f || 0, pos = st.p || 0, bt = st.b || 0, lm = st.l, dm = st.d, lbt = st.m, dbt = st.n;
+        var tbts = sl * 8;
+        do {
+          if (!lm) {
+            final = bits(dat, pos, 1);
+            var type = bits(dat, pos + 1, 3);
+            pos += 3;
+            if (!type) {
+              var s = shft(pos) + 4, l = dat[s - 4] | dat[s - 3] << 8, t = s + l;
+              if (t > sl) {
+                if (noSt)
+                  err(0);
+                break;
+              }
+              if (resize)
+                cbuf(bt + l);
+              buf.set(dat.subarray(s, t), bt);
+              st.b = bt += l, st.p = pos = t * 8, st.f = final;
+              continue;
+            } else if (type == 1)
+              lm = flrm, dm = fdrm, lbt = 9, dbt = 5;
+            else if (type == 2) {
+              var hLit = bits(dat, pos, 31) + 257, hcLen = bits(dat, pos + 10, 15) + 4;
+              var tl = hLit + bits(dat, pos + 5, 31) + 1;
+              pos += 14;
+              var ldt = new u8(tl);
+              var clt = new u8(19);
+              for (var i2 = 0; i2 < hcLen; ++i2) {
+                clt[clim[i2]] = bits(dat, pos + i2 * 3, 7);
+              }
+              pos += hcLen * 3;
+              var clb = max(clt), clbmsk = (1 << clb) - 1;
+              var clm = hMap(clt, clb, 1);
+              for (var i2 = 0; i2 < tl; ) {
+                var r = clm[bits(dat, pos, clbmsk)];
+                pos += r & 15;
+                var s = r >> 4;
+                if (s < 16) {
+                  ldt[i2++] = s;
+                } else {
+                  var c = 0, n = 0;
+                  if (s == 16)
+                    n = 3 + bits(dat, pos, 3), pos += 2, c = ldt[i2 - 1];
+                  else if (s == 17)
+                    n = 3 + bits(dat, pos, 7), pos += 3;
+                  else if (s == 18)
+                    n = 11 + bits(dat, pos, 127), pos += 7;
+                  while (n--)
+                    ldt[i2++] = c;
+                }
+              }
+              var lt = ldt.subarray(0, hLit), dt = ldt.subarray(hLit);
+              lbt = max(lt);
+              dbt = max(dt);
+              lm = hMap(lt, lbt, 1);
+              dm = hMap(dt, dbt, 1);
+            } else
+              err(1);
+            if (pos > tbts) {
+              if (noSt)
+                err(0);
+              break;
+            }
+          }
+          if (resize)
+            cbuf(bt + 131072);
+          var lms = (1 << lbt) - 1, dms = (1 << dbt) - 1;
+          var lpos = pos;
+          for (; ; lpos = pos) {
+            var c = lm[bits16(dat, pos) & lms], sym = c >> 4;
+            pos += c & 15;
+            if (pos > tbts) {
+              if (noSt)
+                err(0);
+              break;
+            }
+            if (!c)
+              err(2);
+            if (sym < 256)
+              buf[bt++] = sym;
+            else if (sym == 256) {
+              lpos = pos, lm = null;
+              break;
+            } else {
+              var add = sym - 254;
+              if (sym > 264) {
+                var i2 = sym - 257, b = fleb[i2];
+                add = bits(dat, pos, (1 << b) - 1) + fl[i2];
+                pos += b;
+              }
+              var d = dm[bits16(dat, pos) & dms], dsym = d >> 4;
+              if (!d)
+                err(3);
+              pos += d & 15;
+              var dt = fd[dsym];
+              if (dsym > 3) {
+                var b = fdeb[dsym];
+                dt += bits16(dat, pos) & (1 << b) - 1, pos += b;
+              }
+              if (pos > tbts) {
+                if (noSt)
+                  err(0);
+                break;
+              }
+              if (resize)
+                cbuf(bt + 131072);
+              var end = bt + add;
+              if (bt < dt) {
+                var shift = dl - dt, dend = Math.min(dt, end);
+                if (shift + bt < 0)
+                  err(3);
+                for (; bt < dend; ++bt)
+                  buf[bt] = dict[shift + bt];
+              }
+              for (; bt < end; ++bt)
+                buf[bt] = buf[bt - dt];
+            }
+          }
+          st.l = lm, st.p = lpos, st.b = bt, st.f = final;
+          if (lm)
+            final = 1, st.m = lbt, st.d = dm, st.n = dbt;
+        } while (!final);
+        return bt != buf.length && noBuf ? slc(buf, 0, bt) : buf.subarray(0, bt);
+      };
+      wbits = function(d, p, v) {
+        v <<= p & 7;
+        var o = p / 8 | 0;
+        d[o] |= v;
+        d[o + 1] |= v >> 8;
+      };
+      wbits16 = function(d, p, v) {
+        v <<= p & 7;
+        var o = p / 8 | 0;
+        d[o] |= v;
+        d[o + 1] |= v >> 8;
+        d[o + 2] |= v >> 16;
+      };
+      hTree = function(d, mb) {
+        var t = [];
+        for (var i2 = 0; i2 < d.length; ++i2) {
+          if (d[i2])
+            t.push({ s: i2, f: d[i2] });
+        }
+        var s = t.length;
+        var t2 = t.slice();
+        if (!s)
+          return { t: et, l: 0 };
+        if (s == 1) {
+          var v = new u8(t[0].s + 1);
+          v[t[0].s] = 1;
+          return { t: v, l: 1 };
+        }
+        t.sort(function(a, b) {
+          return a.f - b.f;
+        });
+        t.push({ s: -1, f: 25001 });
+        var l = t[0], r = t[1], i0 = 0, i1 = 1, i22 = 2;
+        t[0] = { s: -1, f: l.f + r.f, l, r };
+        while (i1 != s - 1) {
+          l = t[t[i0].f < t[i22].f ? i0++ : i22++];
+          r = t[i0 != i1 && t[i0].f < t[i22].f ? i0++ : i22++];
+          t[i1++] = { s: -1, f: l.f + r.f, l, r };
+        }
+        var maxSym = t2[0].s;
+        for (var i2 = 1; i2 < s; ++i2) {
+          if (t2[i2].s > maxSym)
+            maxSym = t2[i2].s;
+        }
+        var tr = new u16(maxSym + 1);
+        var mbt = ln(t[i1 - 1], tr, 0);
+        if (mbt > mb) {
+          var i2 = 0, dt = 0;
+          var lft = mbt - mb, cst = 1 << lft;
+          t2.sort(function(a, b) {
+            return tr[b.s] - tr[a.s] || a.f - b.f;
+          });
+          for (; i2 < s; ++i2) {
+            var i2_1 = t2[i2].s;
+            if (tr[i2_1] > mb) {
+              dt += cst - (1 << mbt - tr[i2_1]);
+              tr[i2_1] = mb;
+            } else
+              break;
+          }
+          dt >>= lft;
+          while (dt > 0) {
+            var i2_2 = t2[i2].s;
+            if (tr[i2_2] < mb)
+              dt -= 1 << mb - tr[i2_2]++ - 1;
+            else
+              ++i2;
+          }
+          for (; i2 >= 0 && dt; --i2) {
+            var i2_3 = t2[i2].s;
+            if (tr[i2_3] == mb) {
+              --tr[i2_3];
+              ++dt;
+            }
+          }
+          mbt = mb;
+        }
+        return { t: new u8(tr), l: mbt };
+      };
+      ln = function(n, l, d) {
+        return n.s == -1 ? Math.max(ln(n.l, l, d + 1), ln(n.r, l, d + 1)) : l[n.s] = d;
+      };
+      lc = function(c) {
+        var s = c.length;
+        while (s && !c[--s])
+          ;
+        var cl = new u16(++s);
+        var cli = 0, cln = c[0], cls = 1;
+        var w = function(v) {
+          cl[cli++] = v;
+        };
+        for (var i2 = 1; i2 <= s; ++i2) {
+          if (c[i2] == cln && i2 != s)
+            ++cls;
+          else {
+            if (!cln && cls > 2) {
+              for (; cls > 138; cls -= 138)
+                w(32754);
+              if (cls > 2) {
+                w(cls > 10 ? cls - 11 << 5 | 28690 : cls - 3 << 5 | 12305);
+                cls = 0;
+              }
+            } else if (cls > 3) {
+              w(cln), --cls;
+              for (; cls > 6; cls -= 6)
+                w(8304);
+              if (cls > 2)
+                w(cls - 3 << 5 | 8208), cls = 0;
+            }
+            while (cls--)
+              w(cln);
+            cls = 1;
+            cln = c[i2];
+          }
+        }
+        return { c: cl.subarray(0, cli), n: s };
+      };
+      clen = function(cf, cl) {
+        var l = 0;
+        for (var i2 = 0; i2 < cl.length; ++i2)
+          l += cf[i2] * cl[i2];
+        return l;
+      };
+      wfblk = function(out, pos, dat) {
+        var s = dat.length;
+        var o = shft(pos + 2);
+        out[o] = s & 255;
+        out[o + 1] = s >> 8;
+        out[o + 2] = out[o] ^ 255;
+        out[o + 3] = out[o + 1] ^ 255;
+        for (var i2 = 0; i2 < s; ++i2)
+          out[o + i2 + 4] = dat[i2];
+        return (o + 4 + s) * 8;
+      };
+      wblk = function(dat, out, final, syms, lf, df, eb, li, bs, bl, p) {
+        wbits(out, p++, final);
+        ++lf[256];
+        var _a2 = hTree(lf, 15), dlt = _a2.t, mlb = _a2.l;
+        var _b2 = hTree(df, 15), ddt = _b2.t, mdb = _b2.l;
+        var _c = lc(dlt), lclt = _c.c, nlc = _c.n;
+        var _d = lc(ddt), lcdt = _d.c, ndc = _d.n;
+        var lcfreq = new u16(19);
+        for (var i2 = 0; i2 < lclt.length; ++i2)
+          ++lcfreq[lclt[i2] & 31];
+        for (var i2 = 0; i2 < lcdt.length; ++i2)
+          ++lcfreq[lcdt[i2] & 31];
+        var _e = hTree(lcfreq, 7), lct = _e.t, mlcb = _e.l;
+        var nlcc = 19;
+        for (; nlcc > 4 && !lct[clim[nlcc - 1]]; --nlcc)
+          ;
+        var flen = bl + 5 << 3;
+        var ftlen = clen(lf, flt) + clen(df, fdt) + eb;
+        var dtlen = clen(lf, dlt) + clen(df, ddt) + eb + 14 + 3 * nlcc + clen(lcfreq, lct) + 2 * lcfreq[16] + 3 * lcfreq[17] + 7 * lcfreq[18];
+        if (bs >= 0 && flen <= ftlen && flen <= dtlen)
+          return wfblk(out, p, dat.subarray(bs, bs + bl));
+        var lm, ll, dm, dl;
+        wbits(out, p, 1 + (dtlen < ftlen)), p += 2;
+        if (dtlen < ftlen) {
+          lm = hMap(dlt, mlb, 0), ll = dlt, dm = hMap(ddt, mdb, 0), dl = ddt;
+          var llm = hMap(lct, mlcb, 0);
+          wbits(out, p, nlc - 257);
+          wbits(out, p + 5, ndc - 1);
+          wbits(out, p + 10, nlcc - 4);
+          p += 14;
+          for (var i2 = 0; i2 < nlcc; ++i2)
+            wbits(out, p + 3 * i2, lct[clim[i2]]);
+          p += 3 * nlcc;
+          var lcts = [lclt, lcdt];
+          for (var it = 0; it < 2; ++it) {
+            var clct = lcts[it];
+            for (var i2 = 0; i2 < clct.length; ++i2) {
+              var len = clct[i2] & 31;
+              wbits(out, p, llm[len]), p += lct[len];
+              if (len > 15)
+                wbits(out, p, clct[i2] >> 5 & 127), p += clct[i2] >> 12;
+            }
+          }
+        } else {
+          lm = flm, ll = flt, dm = fdm, dl = fdt;
+        }
+        for (var i2 = 0; i2 < li; ++i2) {
+          var sym = syms[i2];
+          if (sym > 255) {
+            var len = sym >> 18 & 31;
+            wbits16(out, p, lm[len + 257]), p += ll[len + 257];
+            if (len > 7)
+              wbits(out, p, sym >> 23 & 31), p += fleb[len];
+            var dst = sym & 31;
+            wbits16(out, p, dm[dst]), p += dl[dst];
+            if (dst > 3)
+              wbits16(out, p, sym >> 5 & 8191), p += fdeb[dst];
+          } else {
+            wbits16(out, p, lm[sym]), p += ll[sym];
+          }
+        }
+        wbits16(out, p, lm[256]);
+        return p + ll[256];
+      };
+      deo = /* @__PURE__ */ new i32([65540, 131080, 131088, 131104, 262176, 1048704, 1048832, 2114560, 2117632]);
+      et = /* @__PURE__ */ new u8(0);
+      dflt = function(dat, lvl, plvl, pre, post, st) {
+        var s = st.z || dat.length;
+        var o = new u8(pre + s + 5 * (1 + Math.ceil(s / 7e3)) + post);
+        var w = o.subarray(pre, o.length - post);
+        var lst = st.l;
+        var pos = (st.r || 0) & 7;
+        if (lvl) {
+          if (pos)
+            w[0] = st.r >> 3;
+          var opt = deo[lvl - 1];
+          var n = opt >> 13, c = opt & 8191;
+          var msk_1 = (1 << plvl) - 1;
+          var prev = st.p || new u16(32768), head = st.h || new u16(msk_1 + 1);
+          var bs1_1 = Math.ceil(plvl / 3), bs2_1 = 2 * bs1_1;
+          var hsh = function(i3) {
+            return (dat[i3] ^ dat[i3 + 1] << bs1_1 ^ dat[i3 + 2] << bs2_1) & msk_1;
+          };
+          var syms = new i32(25e3);
+          var lf = new u16(288), df = new u16(32);
+          var lc_1 = 0, eb = 0, i2 = st.i || 0, li = 0, wi = st.w || 0, bs = 0;
+          for (; i2 + 2 < s; ++i2) {
+            var hv = hsh(i2);
+            var imod = i2 & 32767, pimod = head[hv];
+            prev[imod] = pimod;
+            head[hv] = imod;
+            if (wi <= i2) {
+              var rem = s - i2;
+              if ((lc_1 > 7e3 || li > 24576) && (rem > 423 || !lst)) {
+                pos = wblk(dat, w, 0, syms, lf, df, eb, li, bs, i2 - bs, pos);
+                li = lc_1 = eb = 0, bs = i2;
+                for (var j = 0; j < 286; ++j)
+                  lf[j] = 0;
+                for (var j = 0; j < 30; ++j)
+                  df[j] = 0;
+              }
+              var l = 2, d = 0, ch_1 = c, dif = imod - pimod & 32767;
+              if (rem > 2 && hv == hsh(i2 - dif)) {
+                var maxn = Math.min(n, rem) - 1;
+                var maxd = Math.min(32767, i2);
+                var ml = Math.min(258, rem);
+                while (dif <= maxd && --ch_1 && imod != pimod) {
+                  if (dat[i2 + l] == dat[i2 + l - dif]) {
+                    var nl = 0;
+                    for (; nl < ml && dat[i2 + nl] == dat[i2 + nl - dif]; ++nl)
+                      ;
+                    if (nl > l) {
+                      l = nl, d = dif;
+                      if (nl > maxn)
+                        break;
+                      var mmd = Math.min(dif, nl - 2);
+                      var md = 0;
+                      for (var j = 0; j < mmd; ++j) {
+                        var ti = i2 - dif + j & 32767;
+                        var pti = prev[ti];
+                        var cd = ti - pti & 32767;
+                        if (cd > md)
+                          md = cd, pimod = ti;
+                      }
+                    }
+                  }
+                  imod = pimod, pimod = prev[imod];
+                  dif += imod - pimod & 32767;
+                }
+              }
+              if (d) {
+                syms[li++] = 268435456 | revfl[l] << 18 | revfd[d];
+                var lin = revfl[l] & 31, din = revfd[d] & 31;
+                eb += fleb[lin] + fdeb[din];
+                ++lf[257 + lin];
+                ++df[din];
+                wi = i2 + l;
+                ++lc_1;
+              } else {
+                syms[li++] = dat[i2];
+                ++lf[dat[i2]];
+              }
+            }
+          }
+          for (i2 = Math.max(i2, wi); i2 < s; ++i2) {
+            syms[li++] = dat[i2];
+            ++lf[dat[i2]];
+          }
+          pos = wblk(dat, w, lst, syms, lf, df, eb, li, bs, i2 - bs, pos);
+          if (!lst) {
+            st.r = pos & 7 | w[pos / 8 | 0] << 3;
+            pos -= 7;
+            st.h = head, st.p = prev, st.i = i2, st.w = wi;
+          }
+        } else {
+          for (var i2 = st.w || 0; i2 < s + lst; i2 += 65535) {
+            var e = i2 + 65535;
+            if (e >= s) {
+              w[pos / 8 | 0] = lst;
+              e = s;
+            }
+            pos = wfblk(w, pos + 1, dat.subarray(i2, e));
+          }
+          st.i = s;
+        }
+        return slc(o, 0, pre + shft(pos) + post);
+      };
+      crct = /* @__PURE__ */ (function() {
+        var t = new Int32Array(256);
+        for (var i2 = 0; i2 < 256; ++i2) {
+          var c = i2, k = 9;
+          while (--k)
+            c = (c & 1 && -306674912) ^ c >>> 1;
+          t[i2] = c;
+        }
+        return t;
+      })();
+      crc = function() {
+        var c = -1;
+        return {
+          p: function(d) {
+            var cr = c;
+            for (var i2 = 0; i2 < d.length; ++i2)
+              cr = crct[cr & 255 ^ d[i2]] ^ cr >>> 8;
+            c = cr;
+          },
+          d: function() {
+            return ~c;
+          }
+        };
+      };
+      adler = function() {
+        var a = 1, b = 0;
+        return {
+          p: function(d) {
+            var n = a, m = b;
+            var l = d.length | 0;
+            for (var i2 = 0; i2 != l; ) {
+              var e = Math.min(i2 + 2655, l);
+              for (; i2 < e; ++i2)
+                m += n += d[i2];
+              n = (n & 65535) + 15 * (n >> 16), m = (m & 65535) + 15 * (m >> 16);
+            }
+            a = n, b = m;
+          },
+          d: function() {
+            a %= 65521, b %= 65521;
+            return (a & 255) << 24 | (a & 65280) << 8 | (b & 255) << 8 | b >> 8;
+          }
+        };
+      };
+      dopt = function(dat, opt, pre, post, st) {
+        if (!st) {
+          st = { l: 1 };
+          if (opt.dictionary) {
+            var dict = opt.dictionary.subarray(-32768);
+            var newDat = new u8(dict.length + dat.length);
+            newDat.set(dict);
+            newDat.set(dat, dict.length);
+            dat = newDat;
+            st.w = dict.length;
+          }
+        }
+        return dflt(dat, opt.level == null ? 6 : opt.level, opt.mem == null ? st.l ? Math.ceil(Math.max(8, Math.min(13, Math.log(dat.length))) * 1.5) : 20 : 12 + opt.mem, pre, post, st);
+      };
+      mrg = function(a, b) {
+        var o = {};
+        for (var k in a)
+          o[k] = a[k];
+        for (var k in b)
+          o[k] = b[k];
+        return o;
+      };
+      wcln = function(fn, fnStr, td2) {
+        var dt = fn();
+        var st = fn.toString();
+        var ks = st.slice(st.indexOf("[") + 1, st.lastIndexOf("]")).replace(/\s+/g, "").split(",");
+        for (var i2 = 0; i2 < dt.length; ++i2) {
+          var v = dt[i2], k = ks[i2];
+          if (typeof v == "function") {
+            fnStr += ";" + k + "=";
+            var st_1 = v.toString();
+            if (v.prototype) {
+              if (st_1.indexOf("[native code]") != -1) {
+                var spInd = st_1.indexOf(" ", 8) + 1;
+                fnStr += st_1.slice(spInd, st_1.indexOf("(", spInd));
+              } else {
+                fnStr += st_1;
+                for (var t in v.prototype)
+                  fnStr += ";" + k + ".prototype." + t + "=" + v.prototype[t].toString();
+              }
+            } else
+              fnStr += st_1;
+          } else
+            td2[k] = v;
+        }
+        return fnStr;
+      };
+      ch = [];
+      cbfs = function(v) {
+        var tl = [];
+        for (var k in v) {
+          if (v[k].buffer) {
+            tl.push((v[k] = new v[k].constructor(v[k])).buffer);
+          }
+        }
+        return tl;
+      };
+      wrkr = function(fns, init2, id, cb) {
+        if (!ch[id]) {
+          var fnStr = "", td_1 = {}, m = fns.length - 1;
+          for (var i2 = 0; i2 < m; ++i2)
+            fnStr = wcln(fns[i2], fnStr, td_1);
+          ch[id] = { c: wcln(fns[m], fnStr, td_1), e: td_1 };
+        }
+        var td2 = mrg({}, ch[id].e);
+        return wk(ch[id].c + ";onmessage=function(e){for(var k in e.data)self[k]=e.data[k];onmessage=" + init2.toString() + "}", id, td2, cbfs(td2), cb);
+      };
+      bInflt = function() {
+        return [u8, u16, i32, fleb, fdeb, clim, fl, fd, flrm, fdrm, rev, ec, hMap, max, bits, bits16, shft, slc, err, inflt, inflateSync, pbf, gopt];
+      };
+      bDflt = function() {
+        return [u8, u16, i32, fleb, fdeb, clim, revfl, revfd, flm, flt, fdm, fdt, rev, deo, et, hMap, wbits, wbits16, hTree, ln, lc, clen, wfblk, wblk, shft, slc, dflt, dopt, deflateSync, pbf];
+      };
+      gze = function() {
+        return [gzh, gzhl, wbytes, crc, crct];
+      };
+      guze = function() {
+        return [gzs, gzl];
+      };
+      zle = function() {
+        return [zlh, wbytes, adler];
+      };
+      zule = function() {
+        return [zls];
+      };
+      pbf = function(msg) {
+        return postMessage(msg, [msg.buffer]);
+      };
+      gopt = function(o) {
+        return o && {
+          out: o.size && new u8(o.size),
+          dictionary: o.dictionary
+        };
+      };
+      cbify = function(dat, opts, fns, init2, id, cb) {
+        var w = wrkr(fns, init2, id, function(err2, dat2) {
+          w.terminate();
+          cb(err2, dat2);
+        });
+        w.postMessage([dat, opts], opts.consume ? [dat.buffer] : []);
+        return function() {
+          w.terminate();
+        };
+      };
+      astrm = function(strm) {
+        strm.ondata = function(dat, final) {
+          return postMessage([dat, final], [dat.buffer]);
+        };
+        return function(ev) {
+          if (ev.data.length) {
+            strm.push(ev.data[0], ev.data[1]);
+            postMessage([ev.data[0].length]);
+          } else
+            strm.flush();
+        };
+      };
+      astrmify = function(fns, strm, opts, init2, id, flush, ext) {
+        var t;
+        var w = wrkr(fns, init2, id, function(err2, dat) {
+          if (err2)
+            w.terminate(), strm.ondata.call(strm, err2);
+          else if (!Array.isArray(dat))
+            ext(dat);
+          else if (dat.length == 1) {
+            strm.queuedSize -= dat[0];
+            if (strm.ondrain)
+              strm.ondrain(dat[0]);
+          } else {
+            if (dat[1])
+              w.terminate();
+            strm.ondata.call(strm, err2, dat[0], dat[1]);
+          }
+        });
+        w.postMessage(opts);
+        strm.queuedSize = 0;
+        strm.push = function(d, f) {
+          if (!strm.ondata)
+            err(5);
+          if (t)
+            strm.ondata(err(4, 0, 1), null, !!f);
+          strm.queuedSize += d.length;
+          w.postMessage([d, t = f], [d.buffer]);
+        };
+        strm.terminate = function() {
+          w.terminate();
+        };
+        if (flush) {
+          strm.flush = function() {
+            w.postMessage([]);
+          };
+        }
+      };
+      b2 = function(d, b) {
+        return d[b] | d[b + 1] << 8;
+      };
+      b4 = function(d, b) {
+        return (d[b] | d[b + 1] << 8 | d[b + 2] << 16 | d[b + 3] << 24) >>> 0;
+      };
+      b8 = function(d, b) {
+        return b4(d, b) + b4(d, b + 4) * 4294967296;
+      };
+      wbytes = function(d, b, v) {
+        for (; v; ++b)
+          d[b] = v, v >>>= 8;
+      };
+      gzh = function(c, o) {
+        var fn = o.filename;
+        c[0] = 31, c[1] = 139, c[2] = 8, c[8] = o.level < 2 ? 4 : o.level == 9 ? 2 : 0, c[9] = 3;
+        if (o.mtime != 0)
+          wbytes(c, 4, Math.floor(new Date(o.mtime || Date.now()) / 1e3));
+        if (fn) {
+          c[3] = 8;
+          for (var i2 = 0; i2 <= fn.length; ++i2)
+            c[i2 + 10] = fn.charCodeAt(i2);
+        }
+      };
+      gzs = function(d) {
+        if (d[0] != 31 || d[1] != 139 || d[2] != 8)
+          err(6, "invalid gzip data");
+        var flg = d[3];
+        var st = 10;
+        if (flg & 4)
+          st += (d[10] | d[11] << 8) + 2;
+        for (var zs = (flg >> 3 & 1) + (flg >> 4 & 1); zs > 0; zs -= !d[st++])
+          ;
+        return st + (flg & 2);
+      };
+      gzl = function(d) {
+        var l = d.length;
+        return (d[l - 4] | d[l - 3] << 8 | d[l - 2] << 16 | d[l - 1] << 24) >>> 0;
+      };
+      gzhl = function(o) {
+        return 10 + (o.filename ? o.filename.length + 1 : 0);
+      };
+      zlh = function(c, o) {
+        var lv = o.level, fl2 = lv == 0 ? 0 : lv < 6 ? 1 : lv == 9 ? 3 : 2;
+        c[0] = 120, c[1] = fl2 << 6 | (o.dictionary && 32);
+        c[1] |= 31 - (c[0] << 8 | c[1]) % 31;
+        if (o.dictionary) {
+          var h = adler();
+          h.p(o.dictionary);
+          wbytes(c, 2, h.d());
+        }
+      };
+      zls = function(d, dict) {
+        if ((d[0] & 15) != 8 || d[0] >> 4 > 7 || (d[0] << 8 | d[1]) % 31)
+          err(6, "invalid zlib data");
+        if ((d[1] >> 5 & 1) == +!dict)
+          err(6, "invalid zlib data: " + (d[1] & 32 ? "need" : "unexpected") + " dictionary");
+        return (d[1] >> 3 & 4) + 2;
+      };
+      Deflate = /* @__PURE__ */ (function() {
+        function Deflate2(opts, cb) {
+          if (typeof opts == "function")
+            cb = opts, opts = {};
+          this.ondata = cb;
+          this.o = opts || {};
+          this.s = { l: 0, i: 32768, w: 32768, z: 32768 };
+          this.b = new u8(98304);
+          if (this.o.dictionary) {
+            var dict = this.o.dictionary.subarray(-32768);
+            this.b.set(dict, 32768 - dict.length);
+            this.s.i = 32768 - dict.length;
+          }
+        }
+        Deflate2.prototype.p = function(c, f) {
+          this.ondata(dopt(c, this.o, 0, 0, this.s), f);
+        };
+        Deflate2.prototype.push = function(chunk, final) {
+          if (!this.ondata)
+            err(5);
+          if (this.s.l)
+            err(4);
+          var endLen = chunk.length + this.s.z;
+          if (endLen > this.b.length) {
+            if (endLen > 2 * this.b.length - 32768) {
+              var newBuf = new u8(endLen & -32768);
+              newBuf.set(this.b.subarray(0, this.s.z));
+              this.b = newBuf;
+            }
+            var split = this.b.length - this.s.z;
+            this.b.set(chunk.subarray(0, split), this.s.z);
+            this.s.z = this.b.length;
+            this.p(this.b, false);
+            this.b.set(this.b.subarray(-32768));
+            this.b.set(chunk.subarray(split), 32768);
+            this.s.z = chunk.length - split + 32768;
+            this.s.i = 32766, this.s.w = 32768;
+          } else {
+            this.b.set(chunk, this.s.z);
+            this.s.z += chunk.length;
+          }
+          this.s.l = final & 1;
+          if (this.s.z > this.s.w + 8191 || final) {
+            this.p(this.b, final || false);
+            this.s.w = this.s.i, this.s.i -= 2;
+          }
+        };
+        Deflate2.prototype.flush = function() {
+          if (!this.ondata)
+            err(5);
+          if (this.s.l)
+            err(4);
+          this.p(this.b, false);
+          this.s.w = this.s.i, this.s.i -= 2;
+        };
+        return Deflate2;
+      })();
+      AsyncDeflate = /* @__PURE__ */ (function() {
+        function AsyncDeflate2(opts, cb) {
+          astrmify([
+            bDflt,
+            function() {
+              return [astrm, Deflate];
+            }
+          ], this, StrmOpt.call(this, opts, cb), function(ev) {
+            var strm = new Deflate(ev.data);
+            onmessage = astrm(strm);
+          }, 6, 1);
+        }
+        return AsyncDeflate2;
+      })();
+      Inflate = /* @__PURE__ */ (function() {
+        function Inflate2(opts, cb) {
+          if (typeof opts == "function")
+            cb = opts, opts = {};
+          this.ondata = cb;
+          var dict = opts && opts.dictionary && opts.dictionary.subarray(-32768);
+          this.s = { i: 0, b: dict ? dict.length : 0 };
+          this.o = new u8(32768);
+          this.p = new u8(0);
+          if (dict)
+            this.o.set(dict);
+        }
+        Inflate2.prototype.e = function(c) {
+          if (!this.ondata)
+            err(5);
+          if (this.d)
+            err(4);
+          if (!this.p.length)
+            this.p = c;
+          else if (c.length) {
+            var n = new u8(this.p.length + c.length);
+            n.set(this.p), n.set(c, this.p.length), this.p = n;
+          }
+        };
+        Inflate2.prototype.c = function(final) {
+          this.s.i = +(this.d = final || false);
+          var bts = this.s.b;
+          var dt = inflt(this.p, this.s, this.o);
+          this.ondata(slc(dt, bts, this.s.b), this.d);
+          this.o = slc(dt, this.s.b - 32768), this.s.b = this.o.length;
+          this.p = slc(this.p, this.s.p / 8 | 0), this.s.p &= 7;
+        };
+        Inflate2.prototype.push = function(chunk, final) {
+          this.e(chunk), this.c(final);
+        };
+        return Inflate2;
+      })();
+      AsyncInflate = /* @__PURE__ */ (function() {
+        function AsyncInflate2(opts, cb) {
+          astrmify([
+            bInflt,
+            function() {
+              return [astrm, Inflate];
+            }
+          ], this, StrmOpt.call(this, opts, cb), function(ev) {
+            var strm = new Inflate(ev.data);
+            onmessage = astrm(strm);
+          }, 7, 0);
+        }
+        return AsyncInflate2;
+      })();
+      Gzip = /* @__PURE__ */ (function() {
+        function Gzip2(opts, cb) {
+          this.c = crc();
+          this.l = 0;
+          this.v = 1;
+          Deflate.call(this, opts, cb);
+        }
+        Gzip2.prototype.push = function(chunk, final) {
+          this.c.p(chunk);
+          this.l += chunk.length;
+          Deflate.prototype.push.call(this, chunk, final);
+        };
+        Gzip2.prototype.p = function(c, f) {
+          var raw = dopt(c, this.o, this.v && gzhl(this.o), f && 8, this.s);
+          if (this.v)
+            gzh(raw, this.o), this.v = 0;
+          if (f)
+            wbytes(raw, raw.length - 8, this.c.d()), wbytes(raw, raw.length - 4, this.l);
+          this.ondata(raw, f);
+        };
+        Gzip2.prototype.flush = function() {
+          Deflate.prototype.flush.call(this);
+        };
+        return Gzip2;
+      })();
+      AsyncGzip = /* @__PURE__ */ (function() {
+        function AsyncGzip2(opts, cb) {
+          astrmify([
+            bDflt,
+            gze,
+            function() {
+              return [astrm, Deflate, Gzip];
+            }
+          ], this, StrmOpt.call(this, opts, cb), function(ev) {
+            var strm = new Gzip(ev.data);
+            onmessage = astrm(strm);
+          }, 8, 1);
+        }
+        return AsyncGzip2;
+      })();
+      Gunzip = /* @__PURE__ */ (function() {
+        function Gunzip2(opts, cb) {
+          this.v = 1;
+          this.r = 0;
+          Inflate.call(this, opts, cb);
+        }
+        Gunzip2.prototype.push = function(chunk, final) {
+          Inflate.prototype.e.call(this, chunk);
+          this.r += chunk.length;
+          if (this.v) {
+            var p = this.p.subarray(this.v - 1);
+            var s = p.length > 3 ? gzs(p) : 4;
+            if (s > p.length) {
+              if (!final)
+                return;
+            } else if (this.v > 1 && this.onmember) {
+              this.onmember(this.r - p.length);
+            }
+            this.p = p.subarray(s), this.v = 0;
+          }
+          Inflate.prototype.c.call(this, final);
+          if (this.s.f && !this.s.l && !final) {
+            this.v = shft(this.s.p) + 9;
+            this.s = { i: 0 };
+            this.o = new u8(0);
+            this.push(new u8(0), final);
+          }
+        };
+        return Gunzip2;
+      })();
+      AsyncGunzip = /* @__PURE__ */ (function() {
+        function AsyncGunzip2(opts, cb) {
+          var _this = this;
+          astrmify([
+            bInflt,
+            guze,
+            function() {
+              return [astrm, Inflate, Gunzip];
+            }
+          ], this, StrmOpt.call(this, opts, cb), function(ev) {
+            var strm = new Gunzip(ev.data);
+            strm.onmember = function(offset) {
+              return postMessage(offset);
+            };
+            onmessage = astrm(strm);
+          }, 9, 0, function(offset) {
+            return _this.onmember && _this.onmember(offset);
+          });
+        }
+        return AsyncGunzip2;
+      })();
+      Zlib = /* @__PURE__ */ (function() {
+        function Zlib2(opts, cb) {
+          this.c = adler();
+          this.v = 1;
+          Deflate.call(this, opts, cb);
+        }
+        Zlib2.prototype.push = function(chunk, final) {
+          this.c.p(chunk);
+          Deflate.prototype.push.call(this, chunk, final);
+        };
+        Zlib2.prototype.p = function(c, f) {
+          var raw = dopt(c, this.o, this.v && (this.o.dictionary ? 6 : 2), f && 4, this.s);
+          if (this.v)
+            zlh(raw, this.o), this.v = 0;
+          if (f)
+            wbytes(raw, raw.length - 4, this.c.d());
+          this.ondata(raw, f);
+        };
+        Zlib2.prototype.flush = function() {
+          Deflate.prototype.flush.call(this);
+        };
+        return Zlib2;
+      })();
+      AsyncZlib = /* @__PURE__ */ (function() {
+        function AsyncZlib2(opts, cb) {
+          astrmify([
+            bDflt,
+            zle,
+            function() {
+              return [astrm, Deflate, Zlib];
+            }
+          ], this, StrmOpt.call(this, opts, cb), function(ev) {
+            var strm = new Zlib(ev.data);
+            onmessage = astrm(strm);
+          }, 10, 1);
+        }
+        return AsyncZlib2;
+      })();
+      Unzlib = /* @__PURE__ */ (function() {
+        function Unzlib2(opts, cb) {
+          Inflate.call(this, opts, cb);
+          this.v = opts && opts.dictionary ? 2 : 1;
+        }
+        Unzlib2.prototype.push = function(chunk, final) {
+          Inflate.prototype.e.call(this, chunk);
+          if (this.v) {
+            if (this.p.length < 6 && !final)
+              return;
+            this.p = this.p.subarray(zls(this.p, this.v - 1)), this.v = 0;
+          }
+          if (final) {
+            if (this.p.length < 4)
+              err(6, "invalid zlib data");
+            this.p = this.p.subarray(0, -4);
+          }
+          Inflate.prototype.c.call(this, final);
+        };
+        return Unzlib2;
+      })();
+      AsyncUnzlib = /* @__PURE__ */ (function() {
+        function AsyncUnzlib2(opts, cb) {
+          astrmify([
+            bInflt,
+            zule,
+            function() {
+              return [astrm, Inflate, Unzlib];
+            }
+          ], this, StrmOpt.call(this, opts, cb), function(ev) {
+            var strm = new Unzlib(ev.data);
+            onmessage = astrm(strm);
+          }, 11, 0);
+        }
+        return AsyncUnzlib2;
+      })();
+      Decompress = /* @__PURE__ */ (function() {
+        function Decompress2(opts, cb) {
+          this.o = StrmOpt.call(this, opts, cb) || {};
+          this.G = Gunzip;
+          this.I = Inflate;
+          this.Z = Unzlib;
+        }
+        Decompress2.prototype.i = function() {
+          var _this = this;
+          this.s.ondata = function(dat, final) {
+            _this.ondata(dat, final);
+          };
+        };
+        Decompress2.prototype.push = function(chunk, final) {
+          if (!this.ondata)
+            err(5);
+          if (!this.s) {
+            if (this.p && this.p.length) {
+              var n = new u8(this.p.length + chunk.length);
+              n.set(this.p), n.set(chunk, this.p.length);
+            } else
+              this.p = chunk;
+            if (this.p.length > 2) {
+              this.s = this.p[0] == 31 && this.p[1] == 139 && this.p[2] == 8 ? new this.G(this.o) : (this.p[0] & 15) != 8 || this.p[0] >> 4 > 7 || (this.p[0] << 8 | this.p[1]) % 31 ? new this.I(this.o) : new this.Z(this.o);
+              this.i();
+              this.s.push(this.p, final);
+              this.p = null;
+            }
+          } else
+            this.s.push(chunk, final);
+        };
+        return Decompress2;
+      })();
+      AsyncDecompress = /* @__PURE__ */ (function() {
+        function AsyncDecompress2(opts, cb) {
+          Decompress.call(this, opts, cb);
+          this.queuedSize = 0;
+          this.G = AsyncGunzip;
+          this.I = AsyncInflate;
+          this.Z = AsyncUnzlib;
+        }
+        AsyncDecompress2.prototype.i = function() {
+          var _this = this;
+          this.s.ondata = function(err2, dat, final) {
+            _this.ondata(err2, dat, final);
+          };
+          this.s.ondrain = function(size) {
+            _this.queuedSize -= size;
+            if (_this.ondrain)
+              _this.ondrain(size);
+          };
+        };
+        AsyncDecompress2.prototype.push = function(chunk, final) {
+          this.queuedSize += chunk.length;
+          Decompress.prototype.push.call(this, chunk, final);
+        };
+        return AsyncDecompress2;
+      })();
+      fltn = function(d, p, t, o) {
+        for (var k in d) {
+          var val = d[k], n = p + k, op = o;
+          if (Array.isArray(val))
+            op = mrg(o, val[1]), val = val[0];
+          if (val instanceof u8)
+            t[n] = [val, op];
+          else {
+            t[n += "/"] = [new u8(0), op];
+            fltn(val, n, t, o);
+          }
+        }
+      };
+      te = typeof TextEncoder != "undefined" && /* @__PURE__ */ new TextEncoder();
+      td = typeof TextDecoder != "undefined" && /* @__PURE__ */ new TextDecoder();
+      tds = 0;
+      try {
+        td.decode(et, { stream: true });
+        tds = 1;
+      } catch (e) {
+      }
+      dutf8 = function(d) {
+        for (var r = "", i2 = 0; ; ) {
+          var c = d[i2++];
+          var eb = (c > 127) + (c > 223) + (c > 239);
+          if (i2 + eb > d.length)
+            return { s: r, r: slc(d, i2 - 1) };
+          if (!eb)
+            r += String.fromCharCode(c);
+          else if (eb == 3) {
+            c = ((c & 15) << 18 | (d[i2++] & 63) << 12 | (d[i2++] & 63) << 6 | d[i2++] & 63) - 65536, r += String.fromCharCode(55296 | c >> 10, 56320 | c & 1023);
+          } else if (eb & 1)
+            r += String.fromCharCode((c & 31) << 6 | d[i2++] & 63);
+          else
+            r += String.fromCharCode((c & 15) << 12 | (d[i2++] & 63) << 6 | d[i2++] & 63);
+        }
+      };
+      DecodeUTF8 = /* @__PURE__ */ (function() {
+        function DecodeUTF82(cb) {
+          this.ondata = cb;
+          if (tds)
+            this.t = new TextDecoder();
+          else
+            this.p = et;
+        }
+        DecodeUTF82.prototype.push = function(chunk, final) {
+          if (!this.ondata)
+            err(5);
+          final = !!final;
+          if (this.t) {
+            this.ondata(this.t.decode(chunk, { stream: true }), final);
+            if (final) {
+              if (this.t.decode().length)
+                err(8);
+              this.t = null;
+            }
+            return;
+          }
+          if (!this.p)
+            err(4);
+          var dat = new u8(this.p.length + chunk.length);
+          dat.set(this.p);
+          dat.set(chunk, this.p.length);
+          var _a2 = dutf8(dat), s = _a2.s, r = _a2.r;
+          if (final) {
+            if (r.length)
+              err(8);
+            this.p = null;
+          } else
+            this.p = r;
+          this.ondata(s, final);
+        };
+        return DecodeUTF82;
+      })();
+      EncodeUTF8 = /* @__PURE__ */ (function() {
+        function EncodeUTF82(cb) {
+          this.ondata = cb;
+        }
+        EncodeUTF82.prototype.push = function(chunk, final) {
+          if (!this.ondata)
+            err(5);
+          if (this.d)
+            err(4);
+          this.ondata(strToU8(chunk), this.d = final || false);
+        };
+        return EncodeUTF82;
+      })();
+      dbf = function(l) {
+        return l == 1 ? 3 : l < 6 ? 2 : l == 9 ? 1 : 0;
+      };
+      slzh = function(d, b) {
+        return b + 30 + b2(d, b + 26) + b2(d, b + 28);
+      };
+      zh = function(d, b, z) {
+        var fnl = b2(d, b + 28), fn = strFromU8(d.subarray(b + 46, b + 46 + fnl), !(b2(d, b + 8) & 2048)), es = b + 46 + fnl, bs = b4(d, b + 20);
+        var _a2 = z && bs == 4294967295 ? z64e(d, es) : [bs, b4(d, b + 24), b4(d, b + 42)], sc = _a2[0], su = _a2[1], off = _a2[2];
+        return [b2(d, b + 10), sc, su, fn, es + b2(d, b + 30) + b2(d, b + 32), off];
+      };
+      z64e = function(d, b) {
+        for (; b2(d, b) != 1; b += 4 + b2(d, b + 2))
+          ;
+        return [b8(d, b + 12), b8(d, b + 4), b8(d, b + 20)];
+      };
+      exfl = function(ex) {
+        var le = 0;
+        if (ex) {
+          for (var k in ex) {
+            var l = ex[k].length;
+            if (l > 65535)
+              err(9);
+            le += l + 4;
+          }
+        }
+        return le;
+      };
+      wzh = function(d, b, f, fn, u, c, ce, co) {
+        var fl2 = fn.length, ex = f.extra, col = co && co.length;
+        var exl = exfl(ex);
+        wbytes(d, b, ce != null ? 33639248 : 67324752), b += 4;
+        if (ce != null)
+          d[b++] = 20, d[b++] = f.os;
+        d[b] = 20, b += 2;
+        d[b++] = f.flag << 1 | (c < 0 && 8), d[b++] = u && 8;
+        d[b++] = f.compression & 255, d[b++] = f.compression >> 8;
+        var dt = new Date(f.mtime == null ? Date.now() : f.mtime), y = dt.getFullYear() - 1980;
+        if (y < 0 || y > 119)
+          err(10);
+        wbytes(d, b, y << 25 | dt.getMonth() + 1 << 21 | dt.getDate() << 16 | dt.getHours() << 11 | dt.getMinutes() << 5 | dt.getSeconds() >> 1), b += 4;
+        if (c != -1) {
+          wbytes(d, b, f.crc);
+          wbytes(d, b + 4, c < 0 ? -c - 2 : c);
+          wbytes(d, b + 8, f.size);
+        }
+        wbytes(d, b + 12, fl2);
+        wbytes(d, b + 14, exl), b += 16;
+        if (ce != null) {
+          wbytes(d, b, col);
+          wbytes(d, b + 6, f.attrs);
+          wbytes(d, b + 10, ce), b += 14;
+        }
+        d.set(fn, b);
+        b += fl2;
+        if (exl) {
+          for (var k in ex) {
+            var exf = ex[k], l = exf.length;
+            wbytes(d, b, +k);
+            wbytes(d, b + 2, l);
+            d.set(exf, b + 4), b += 4 + l;
+          }
+        }
+        if (col)
+          d.set(co, b), b += col;
+        return b;
+      };
+      wzf = function(o, b, c, d, e) {
+        wbytes(o, b, 101010256);
+        wbytes(o, b + 8, c);
+        wbytes(o, b + 10, c);
+        wbytes(o, b + 12, d);
+        wbytes(o, b + 16, e);
+      };
+      ZipPassThrough = /* @__PURE__ */ (function() {
+        function ZipPassThrough2(filename) {
+          this.filename = filename;
+          this.c = crc();
+          this.size = 0;
+          this.compression = 0;
+        }
+        ZipPassThrough2.prototype.process = function(chunk, final) {
+          this.ondata(null, chunk, final);
+        };
+        ZipPassThrough2.prototype.push = function(chunk, final) {
+          if (!this.ondata)
+            err(5);
+          this.c.p(chunk);
+          this.size += chunk.length;
+          if (final)
+            this.crc = this.c.d();
+          this.process(chunk, final || false);
+        };
+        return ZipPassThrough2;
+      })();
+      ZipDeflate = /* @__PURE__ */ (function() {
+        function ZipDeflate2(filename, opts) {
+          var _this = this;
+          if (!opts)
+            opts = {};
+          ZipPassThrough.call(this, filename);
+          this.d = new Deflate(opts, function(dat, final) {
+            _this.ondata(null, dat, final);
+          });
+          this.compression = 8;
+          this.flag = dbf(opts.level);
+        }
+        ZipDeflate2.prototype.process = function(chunk, final) {
+          try {
+            this.d.push(chunk, final);
+          } catch (e) {
+            this.ondata(e, null, final);
+          }
+        };
+        ZipDeflate2.prototype.push = function(chunk, final) {
+          ZipPassThrough.prototype.push.call(this, chunk, final);
+        };
+        return ZipDeflate2;
+      })();
+      AsyncZipDeflate = /* @__PURE__ */ (function() {
+        function AsyncZipDeflate2(filename, opts) {
+          var _this = this;
+          if (!opts)
+            opts = {};
+          ZipPassThrough.call(this, filename);
+          this.d = new AsyncDeflate(opts, function(err2, dat, final) {
+            _this.ondata(err2, dat, final);
+          });
+          this.compression = 8;
+          this.flag = dbf(opts.level);
+          this.terminate = this.d.terminate;
+        }
+        AsyncZipDeflate2.prototype.process = function(chunk, final) {
+          this.d.push(chunk, final);
+        };
+        AsyncZipDeflate2.prototype.push = function(chunk, final) {
+          ZipPassThrough.prototype.push.call(this, chunk, final);
+        };
+        return AsyncZipDeflate2;
+      })();
+      Zip = /* @__PURE__ */ (function() {
+        function Zip2(cb) {
+          this.ondata = cb;
+          this.u = [];
+          this.d = 1;
+        }
+        Zip2.prototype.add = function(file) {
+          var _this = this;
+          if (!this.ondata)
+            err(5);
+          if (this.d & 2)
+            this.ondata(err(4 + (this.d & 1) * 8, 0, 1), null, false);
+          else {
+            var f = strToU8(file.filename), fl_1 = f.length;
+            var com = file.comment, o = com && strToU8(com);
+            var u = fl_1 != file.filename.length || o && com.length != o.length;
+            var hl_1 = fl_1 + exfl(file.extra) + 30;
+            if (fl_1 > 65535)
+              this.ondata(err(11, 0, 1), null, false);
+            var header = new u8(hl_1);
+            wzh(header, 0, file, f, u, -1);
+            var chks_1 = [header];
+            var pAll_1 = function() {
+              for (var _i = 0, chks_2 = chks_1; _i < chks_2.length; _i++) {
+                var chk = chks_2[_i];
+                _this.ondata(null, chk, false);
+              }
+              chks_1 = [];
+            };
+            var tr_1 = this.d;
+            this.d = 0;
+            var ind_1 = this.u.length;
+            var uf_1 = mrg(file, {
+              f,
+              u,
+              o,
+              t: function() {
+                if (file.terminate)
+                  file.terminate();
+              },
+              r: function() {
+                pAll_1();
+                if (tr_1) {
+                  var nxt = _this.u[ind_1 + 1];
+                  if (nxt)
+                    nxt.r();
+                  else
+                    _this.d = 1;
+                }
+                tr_1 = 1;
+              }
+            });
+            var cl_1 = 0;
+            file.ondata = function(err2, dat, final) {
+              if (err2) {
+                _this.ondata(err2, dat, final);
+                _this.terminate();
+              } else {
+                cl_1 += dat.length;
+                chks_1.push(dat);
+                if (final) {
+                  var dd = new u8(16);
+                  wbytes(dd, 0, 134695760);
+                  wbytes(dd, 4, file.crc);
+                  wbytes(dd, 8, cl_1);
+                  wbytes(dd, 12, file.size);
+                  chks_1.push(dd);
+                  uf_1.c = cl_1, uf_1.b = hl_1 + cl_1 + 16, uf_1.crc = file.crc, uf_1.size = file.size;
+                  if (tr_1)
+                    uf_1.r();
+                  tr_1 = 1;
+                } else if (tr_1)
+                  pAll_1();
+              }
+            };
+            this.u.push(uf_1);
+          }
+        };
+        Zip2.prototype.end = function() {
+          var _this = this;
+          if (this.d & 2) {
+            this.ondata(err(4 + (this.d & 1) * 8, 0, 1), null, true);
+            return;
+          }
+          if (this.d)
+            this.e();
+          else
+            this.u.push({
+              r: function() {
+                if (!(_this.d & 1))
+                  return;
+                _this.u.splice(-1, 1);
+                _this.e();
+              },
+              t: function() {
+              }
+            });
+          this.d = 3;
+        };
+        Zip2.prototype.e = function() {
+          var bt = 0, l = 0, tl = 0;
+          for (var _i = 0, _a2 = this.u; _i < _a2.length; _i++) {
+            var f = _a2[_i];
+            tl += 46 + f.f.length + exfl(f.extra) + (f.o ? f.o.length : 0);
+          }
+          var out = new u8(tl + 22);
+          for (var _b2 = 0, _c = this.u; _b2 < _c.length; _b2++) {
+            var f = _c[_b2];
+            wzh(out, bt, f, f.f, f.u, -f.c - 2, l, f.o);
+            bt += 46 + f.f.length + exfl(f.extra) + (f.o ? f.o.length : 0), l += f.b;
+          }
+          wzf(out, bt, this.u.length, tl, l);
+          this.ondata(null, out, true);
+          this.d = 2;
+        };
+        Zip2.prototype.terminate = function() {
+          for (var _i = 0, _a2 = this.u; _i < _a2.length; _i++) {
+            var f = _a2[_i];
+            f.t();
+          }
+          this.d = 2;
+        };
+        return Zip2;
+      })();
+      UnzipPassThrough = /* @__PURE__ */ (function() {
+        function UnzipPassThrough2() {
+        }
+        UnzipPassThrough2.prototype.push = function(data2, final) {
+          this.ondata(null, data2, final);
+        };
+        UnzipPassThrough2.compression = 0;
+        return UnzipPassThrough2;
+      })();
+      UnzipInflate = /* @__PURE__ */ (function() {
+        function UnzipInflate2() {
+          var _this = this;
+          this.i = new Inflate(function(dat, final) {
+            _this.ondata(null, dat, final);
+          });
+        }
+        UnzipInflate2.prototype.push = function(data2, final) {
+          try {
+            this.i.push(data2, final);
+          } catch (e) {
+            this.ondata(e, null, final);
+          }
+        };
+        UnzipInflate2.compression = 8;
+        return UnzipInflate2;
+      })();
+      AsyncUnzipInflate = /* @__PURE__ */ (function() {
+        function AsyncUnzipInflate2(_, sz) {
+          var _this = this;
+          if (sz < 32e4) {
+            this.i = new Inflate(function(dat, final) {
+              _this.ondata(null, dat, final);
+            });
+          } else {
+            this.i = new AsyncInflate(function(err2, dat, final) {
+              _this.ondata(err2, dat, final);
+            });
+            this.terminate = this.i.terminate;
+          }
+        }
+        AsyncUnzipInflate2.prototype.push = function(data2, final) {
+          if (this.i.terminate)
+            data2 = slc(data2, 0);
+          this.i.push(data2, final);
+        };
+        AsyncUnzipInflate2.compression = 8;
+        return AsyncUnzipInflate2;
+      })();
+      Unzip = /* @__PURE__ */ (function() {
+        function Unzip2(cb) {
+          this.onfile = cb;
+          this.k = [];
+          this.o = {
+            0: UnzipPassThrough
+          };
+          this.p = et;
+        }
+        Unzip2.prototype.push = function(chunk, final) {
+          var _this = this;
+          if (!this.onfile)
+            err(5);
+          if (!this.p)
+            err(4);
+          if (this.c > 0) {
+            var len = Math.min(this.c, chunk.length);
+            var toAdd = chunk.subarray(0, len);
+            this.c -= len;
+            if (this.d)
+              this.d.push(toAdd, !this.c);
+            else
+              this.k[0].push(toAdd);
+            chunk = chunk.subarray(len);
+            if (chunk.length)
+              return this.push(chunk, final);
+          } else {
+            var f = 0, i2 = 0, is = void 0, buf = void 0;
+            if (!this.p.length)
+              buf = chunk;
+            else if (!chunk.length)
+              buf = this.p;
+            else {
+              buf = new u8(this.p.length + chunk.length);
+              buf.set(this.p), buf.set(chunk, this.p.length);
+            }
+            var l = buf.length, oc = this.c, add = oc && this.d;
+            var _loop_2 = function() {
+              var _a2;
+              var sig = b4(buf, i2);
+              if (sig == 67324752) {
+                f = 1, is = i2;
+                this_1.d = null;
+                this_1.c = 0;
+                var bf = b2(buf, i2 + 6), cmp_1 = b2(buf, i2 + 8), u = bf & 2048, dd = bf & 8, fnl = b2(buf, i2 + 26), es = b2(buf, i2 + 28);
+                if (l > i2 + 30 + fnl + es) {
+                  var chks_3 = [];
+                  this_1.k.unshift(chks_3);
+                  f = 2;
+                  var sc_1 = b4(buf, i2 + 18), su_1 = b4(buf, i2 + 22);
+                  var fn_1 = strFromU8(buf.subarray(i2 + 30, i2 += 30 + fnl), !u);
+                  if (sc_1 == 4294967295) {
+                    _a2 = dd ? [-2] : z64e(buf, i2), sc_1 = _a2[0], su_1 = _a2[1];
+                  } else if (dd)
+                    sc_1 = -1;
+                  i2 += es;
+                  this_1.c = sc_1;
+                  var d_1;
+                  var file_1 = {
+                    name: fn_1,
+                    compression: cmp_1,
+                    start: function() {
+                      if (!file_1.ondata)
+                        err(5);
+                      if (!sc_1)
+                        file_1.ondata(null, et, true);
+                      else {
+                        var ctr = _this.o[cmp_1];
+                        if (!ctr)
+                          file_1.ondata(err(14, "unknown compression type " + cmp_1, 1), null, false);
+                        d_1 = sc_1 < 0 ? new ctr(fn_1) : new ctr(fn_1, sc_1, su_1);
+                        d_1.ondata = function(err2, dat3, final2) {
+                          file_1.ondata(err2, dat3, final2);
+                        };
+                        for (var _i = 0, chks_4 = chks_3; _i < chks_4.length; _i++) {
+                          var dat2 = chks_4[_i];
+                          d_1.push(dat2, false);
+                        }
+                        if (_this.k[0] == chks_3 && _this.c)
+                          _this.d = d_1;
+                        else
+                          d_1.push(et, true);
+                      }
+                    },
+                    terminate: function() {
+                      if (d_1 && d_1.terminate)
+                        d_1.terminate();
+                    }
+                  };
+                  if (sc_1 >= 0)
+                    file_1.size = sc_1, file_1.originalSize = su_1;
+                  this_1.onfile(file_1);
+                }
+                return "break";
+              } else if (oc) {
+                if (sig == 134695760) {
+                  is = i2 += 12 + (oc == -2 && 8), f = 3, this_1.c = 0;
+                  return "break";
+                } else if (sig == 33639248) {
+                  is = i2 -= 4, f = 3, this_1.c = 0;
+                  return "break";
+                }
+              }
+            };
+            var this_1 = this;
+            for (; i2 < l - 4; ++i2) {
+              var state_1 = _loop_2();
+              if (state_1 === "break")
+                break;
+            }
+            this.p = et;
+            if (oc < 0) {
+              var dat = f ? buf.subarray(0, is - 12 - (oc == -2 && 8) - (b4(buf, is - 16) == 134695760 && 4)) : buf.subarray(0, i2);
+              if (add)
+                add.push(dat, !!f);
+              else
+                this.k[+(f == 2)].push(dat);
+            }
+            if (f & 2)
+              return this.push(buf.subarray(i2), final);
+            this.p = buf.subarray(i2);
+          }
+          if (final) {
+            if (this.c)
+              err(13);
+            this.p = null;
+          }
+        };
+        Unzip2.prototype.register = function(decoder) {
+          this.o[decoder.compression] = decoder;
+        };
+        return Unzip2;
+      })();
+      mt = typeof queueMicrotask == "function" ? queueMicrotask : typeof setTimeout == "function" ? setTimeout : function(fn) {
+        fn();
+      };
+    }
+  });
 
   // site/apps/career/assets/app.js
   var app_exports = {};
@@ -102,13 +2425,13 @@ var CareerRuntime = (() => {
     if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > SESSION_LIMIT) throw Error("file-size");
     const v = JSON.parse(text3);
     if (!allowed(v, ["schema", "schemaVersion", "releaseVersion", "modelVersion", "questionnaireVersion", "registryVersion", "savedAt", "inputs"]) || v.schema !== SESSION_SCHEMA || v.schemaVersion !== 1 || !compatibleInputModel(v.modelVersion) || v.questionnaireVersion !== QUESTIONNAIRE_VERSION || v.registryVersion !== REGISTRY_VERSION) throw Error("version");
-    const i = v.inputs, qids = questions.map((q) => q.id), sids = sectors.map((s) => s.id);
-    if (!allowed(i, ["answers", "prioritySectors", "lowPrioritySectors", "conditions", "focusAreas"]) || !allowed(i.answers, qids) || !Object.values(i.answers).every(score) || !allowed(i.conditions, conditions) || !Object.values(i.conditions).every(score)) throw Error("answers");
+    const i2 = v.inputs, qids = questions.map((q) => q.id), sids = sectors.map((s) => s.id);
+    if (!allowed(i2, ["answers", "prioritySectors", "lowPrioritySectors", "conditions", "focusAreas"]) || !allowed(i2.answers, qids) || !Object.values(i2.answers).every(score) || !allowed(i2.conditions, conditions) || !Object.values(i2.conditions).every(score)) throw Error("answers");
     for (const [key, limit] of [["prioritySectors", 4], ["lowPrioritySectors", 2]]) {
-      if (!Array.isArray(i[key]) || i[key].length > limit || new Set(i[key]).size !== i[key].length || i[key].some((id) => !sids.includes(id))) throw Error("sectors");
+      if (!Array.isArray(i2[key]) || i2[key].length > limit || new Set(i2[key]).size !== i2[key].length || i2[key].some((id) => !sids.includes(id))) throw Error("sectors");
     }
-    if (i.prioritySectors.some((id) => i.lowPrioritySectors.includes(id)) || !plain(i.focusAreas) || !validateFocusAreas(i.focusAreas, i.prioritySectors)) throw Error("focus");
-    return structuredClone(i);
+    if (i2.prioritySectors.some((id) => i2.lowPrioritySectors.includes(id)) || !plain(i2.focusAreas) || !validateFocusAreas(i2.focusAreas, i2.prioritySectors)) throw Error("focus");
+    return structuredClone(i2);
   }
 
   // site/apps/career/data/authority-symbols.json
@@ -1713,7 +4036,7 @@ var CareerRuntime = (() => {
   function configureTranslations(entries = {}, templates = [], locale = "en") {
     const dictionary = Object.fromEntries(Object.entries(entries).map(([key, value]) => [normalized(key), value]));
     const patterns = templates.map(([source, target]) => ({
-      re: new RegExp("^" + source.split(/(\{\d+\})/).map((x) => /^\{\d+\}$/.test(x) ? "(.+?)" : escapeRE(x)).join("") + "$"),
+      re: new RegExp("^" + source.split(/(\{\d+\})/).map((x2) => /^\{\d+\}$/.test(x2) ? "(.+?)" : escapeRE(x2)).join("") + "$"),
       target
     }));
     resources.set(normalizeLanguage(locale), { dictionary, patterns });
@@ -1742,7 +4065,7 @@ var CareerRuntime = (() => {
     if (output === void 0 && depth < 4) for (const pattern of patterns) {
       const match = key.match(pattern.re);
       if (match) {
-        output = pattern.target.replace(/\{(\d+)\}/g, (_, i) => textForLanguage(match[Number(i) + 1], locale, depth + 1));
+        output = pattern.target.replace(/\{(\d+)\}/g, (_, i2) => textForLanguage(match[Number(i2) + 1], locale, depth + 1));
         break;
       }
     }
@@ -1765,7 +4088,7 @@ var CareerRuntime = (() => {
     locale = normalizeLanguage(locale);
     if (locale === "ru" || resources.has(locale)) return true;
     if (pendingLanguages.has(locale)) return pendingLanguages.get(locale);
-    const request = loadJSON(`./locales/${locale}.json`, { validate: (x) => isRecord(x) && isRecord(x.entries) && Array.isArray(x.templates) }).then((content) => {
+    const request = loadJSON(`./locales/${locale}.json`, { validate: (x2) => isRecord(x2) && isRecord(x2.entries) && Array.isArray(x2.templates) }).then((content) => {
       configureTranslations(content.entries, content.templates, locale);
       unavailableLanguages.delete(locale);
       return true;
@@ -1817,8 +4140,8 @@ var CareerRuntime = (() => {
   }
   function translateText(node) {
     if (ignored(node.parentElement) || !node.nodeValue?.trim()) return;
-    const value = node.nodeValue, record = originals.get(node);
-    const source = record && value === record.rendered ? record.source : value;
+    const value = node.nodeValue, record2 = originals.get(node);
+    const source = record2 && value === record2.rendered ? record2.source : value;
     const rendered = translate(source);
     originals.set(node, { source, rendered });
     if (value !== rendered) node.nodeValue = rendered;
@@ -1858,9 +4181,9 @@ var CareerRuntime = (() => {
     observer = new MutationObserver((records) => {
       observer.disconnect();
       const roots = /* @__PURE__ */ new Set();
-      for (const record of records) {
-        if (record.type === "childList") record.addedNodes.forEach((n) => roots.add(n));
-        else roots.add(record.target);
+      for (const record2 of records) {
+        if (record2.type === "childList") record2.addedNodes.forEach((n) => roots.add(n));
+        else roots.add(record2.target);
       }
       for (const root of roots) {
         if (!root.isConnected) continue;
@@ -1912,7 +4235,7 @@ var CareerRuntime = (() => {
   var FRESH_MS = 24 * 60 * 60 * 1e3;
   var GUID = /^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/i;
   var ID = /^[\w.-]{1,120}$/;
-  var plain2 = (s, max = 500) => typeof s === "string" ? s.replace(/<[^>]*>/g, " ").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, max) : "";
+  var plain2 = (s, max2 = 500) => typeof s === "string" ? s.replace(/<[^>]*>/g, " ").replace(/[\u0000-\u001f\u007f]/g, " ").replace(/\s+/g, " ").trim().slice(0, max2) : "";
   function normalizeName(s) {
     return plain2(s, 1e3).normalize("NFKC").toLowerCase().replace(/ё/g, "\u0435").replace(/российской федерации/g, "\u0440\u043E\u0441\u0441\u0438\u0438").replace(/[«»"“”'()\[\],.;:–—-]/g, " ").replace(/\s+/g, " ").trim();
   }
@@ -1976,7 +4299,7 @@ var CareerRuntime = (() => {
   function selectVacancies(feed, { authorityIds = [], includeTerritorial = false, query = "", now = Date.now(), includeClosed = false } = {}) {
     if (validateFeed(feed).length) return [];
     const wanted = new Set(authorityIds), orgs = new Map(feed.organizations.map((o) => [o.id, o]));
-    const order = new Map(authorityIds.map((id, i) => [id, i]));
+    const order = new Map(authorityIds.map((id, i2) => [id, i2]));
     return feed.vacancies.flatMap((v) => {
       const org = orgs.get(v.organizationId);
       if (!org.authorityId || !wanted.has(org.authorityId) || org.relation !== "exact" && !(includeTerritorial && org.relation === "territorial")) return [];
@@ -2144,7 +4467,7 @@ var CareerRuntime = (() => {
       try {
         const response = await fetch("api/vacancies/refresh", { method: "POST", headers: { "Content-Type": "application/json", "X-RUDN-Vacancies": "1" }, body: "{}" });
         if (!response.ok) throw new Error("REFRESH_NOT_AVAILABLE");
-        for (let i = 0; i < 80; i++) {
+        for (let i2 = 0; i2 < 80; i2++) {
           await new Promise((r) => setTimeout(r, 3e3));
           const status = await localJSON("api/vacancies/status");
           if (!status.running) break;
@@ -2193,6 +4516,339 @@ var CareerRuntime = (() => {
     } };
   }
 
+  // site/apps/career/assets/employer-vacancies-bank.mjs
+  var BANK_COLUMNS = Object.freeze(["id", "title", "scope", "region", "locality", "salaryFrom", "salaryTo", "announcedAt", "expiresAt", "state", "archive", "sourceURL", "education", "professionalExperience", "governmentExperience"]);
+  var abortError = () => new DOMException("Vacancy request cancelled", "AbortError");
+  var record = (v) => v && typeof v === "object" && !Array.isArray(v);
+  var safePath = (p) => typeof p === "string" && /^[a-zA-Z0-9][a-zA-Z0-9_./-]*\.gz$/.test(p) && !p.split("/").some((s) => s === "." || s === ".." || !s);
+  function platformEmployerId(value) {
+    const id = String(value || "").replace(/^(?:ps:|territorial:)/, "");
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,246}$/.test(id)) throw new Error("Invalid employer identifier");
+    return id;
+  }
+  function validateDescriptor(value, id) {
+    if (!record(value) || value.schemaVersion !== 2 || value.authorityId !== id || !Number.isInteger(value.jobCount) || value.jobCount < 0 || !Array.isArray(value.pages)) throw new Error("Invalid employer descriptor");
+    if (value.pages.some((p) => !record(p) || !safePath(p.path) || !Number.isInteger(p.count) || p.count < 1 || p.count > 250 || !Number.isInteger(p.bytes) || p.bytes < 18 || p.bytes > 4 * 1024 * 1024 || !Number.isInteger(p.uncompressedBytes) || p.uncompressedBytes < 1 || p.uncompressedBytes > 8 * 1024 * 1024 || !/^[a-f0-9]{64}$/.test(p.sha256) || !/^[a-f0-9]{64}$/.test(p.uncompressedSHA256))) throw new Error("Invalid employer page");
+    if (value.pages.reduce((n, p) => n + p.count, 0) !== value.jobCount) throw new Error("Employer count differs from pages");
+    return value;
+  }
+  async function digest(bytes) {
+    if (!globalThis.crypto?.subtle) return null;
+    return [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
+  async function decodeGzip(bytes, { expectedBytes, maxBytes = 8 * 1024 * 1024 } = {}) {
+    const input = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+    if (input[0] !== 31 || input[1] !== 139 || input[2] !== 8) throw new Error("Invalid gzip page");
+    let output;
+    if (typeof globalThis.DecompressionStream === "function") {
+      const reader = new Blob([input]).stream().pipeThrough(new DecompressionStream("gzip")).getReader(), chunks = [];
+      let total = 0;
+      try {
+        for (; ; ) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          total += value.length;
+          if (total > maxBytes) throw new Error("Vacancy page exceeds size limit");
+          chunks.push(value);
+        }
+      } catch (error) {
+        await reader.cancel(error).catch(() => {
+        });
+        throw error;
+      }
+      output = new Uint8Array(total);
+      let offset = 0;
+      for (const chunk of chunks) {
+        output.set(chunk, offset);
+        offset += chunk.length;
+      }
+    } else {
+      const size = new DataView(input.buffer, input.byteOffset, input.byteLength).getUint32(input.length - 4, true);
+      if (size > maxBytes || expectedBytes !== void 0 && size !== expectedBytes) throw new Error("Invalid gzip output length");
+      const { gunzipSync: gunzipSync2 } = await Promise.resolve().then(() => (init_browser(), browser_exports));
+      output = gunzipSync2(input);
+    }
+    if (output.length > maxBytes || expectedBytes !== void 0 && output.length !== expectedBytes) throw new Error("Vacancy page length mismatch");
+    return output;
+  }
+  function unpackVacancyPage(value, descriptor, page) {
+    if (!record(value) || value.schemaVersion !== 2 || value.employerId !== descriptor.employerId || JSON.stringify(value.columns) !== JSON.stringify(BANK_COLUMNS) || !Array.isArray(value.rows) || value.rows.length !== page.count) throw new Error("Invalid vacancy page");
+    return value.rows.map((row) => {
+      if (!Array.isArray(row) || row.length !== BANK_COLUMNS.length || typeof row[0] !== "string" || row[1] !== null && typeof row[1] !== "string" || ![true, false, null].includes(row[10])) throw new Error("Invalid vacancy row");
+      const result = Object.fromEntries(BANK_COLUMNS.map((key, i2) => [key, row[i2]]));
+      if (result.sourceURL !== null) {
+        let url;
+        try {
+          url = new URL(result.sourceURL);
+        } catch {
+          throw new Error("Invalid vacancy source");
+        }
+        if (url.protocol !== "https:" || url.hostname !== "gossluzhba.gov.ru") throw new Error("Invalid vacancy source");
+      }
+      return result;
+    });
+  }
+  function vacancyBankStatus(row, now = /* @__PURE__ */ new Date()) {
+    const state2 = String(row.state || "").toLowerCase();
+    if (row.archive === true || /закрыт|архив|отмен[её]н|заверш[её]н/.test(state2)) return "archived";
+    const deadline = typeof row.expiresAt === "string" && /^\d{4}-\d{2}-\d{2}/.test(row.expiresAt) ? row.expiresAt.slice(0, 10) : null;
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+    if (deadline && deadline < today) return "expired";
+    return row.archive === false ? "source-active" : "unknown";
+  }
+  function createEmployerVacancyBank({ baseURL = "data/vacancies/bank/", fetchImpl = (...args) => fetch(...args), maxEmployers = 8, maxPages = 12, maxConcurrent = 2, timeout = 2e4, decompress: decompress2 = decodeGzip } = {}) {
+    const entries = /* @__PURE__ */ new Map(), pages = /* @__PURE__ */ new Map(), inflight = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set(), queue = [];
+    let active = 0, disposed = false;
+    const invalidState = (input) => ({ authorityId: String(input || ""), descriptor: null, rows: [], pageIndex: 0, targetPage: 0, loading: false, error: "invalid-employer", status: "error" });
+    const notify = (id) => {
+      if (!disposed) for (const listener of listeners) listener(id);
+    };
+    function limited(fn, signal) {
+      return new Promise((resolve, reject) => {
+        const task = { fn, resolve, reject, signal };
+        const cancelled = () => {
+          const i2 = queue.indexOf(task);
+          if (i2 >= 0) {
+            queue.splice(i2, 1);
+            reject(abortError());
+          }
+        };
+        task.cleanup = () => signal.removeEventListener("abort", cancelled);
+        signal.addEventListener("abort", cancelled, { once: true });
+        queue.push(task);
+        pump();
+      });
+    }
+    function pump() {
+      while (active < maxConcurrent && queue.length) {
+        const task = queue.shift();
+        task.cleanup();
+        if (task.signal.aborted) {
+          task.reject(abortError());
+          continue;
+        }
+        active++;
+        Promise.resolve().then(task.fn).then(task.resolve, task.reject).finally(() => {
+          active--;
+          pump();
+        });
+      }
+    }
+    async function request(url, signal, asJSON) {
+      return limited(async () => {
+        const control = new AbortController(), abort = () => control.abort(signal.reason || abortError());
+        signal.addEventListener("abort", abort, { once: true });
+        let timer;
+        const deadline = new Promise((_, reject) => {
+          timer = setTimeout(() => {
+            control.abort();
+            reject(new DOMException("Vacancy loading timed out", "TimeoutError"));
+          }, timeout);
+        });
+        try {
+          return await Promise.race([(async () => {
+            if (signal.aborted) throw abortError();
+            const response = await fetchImpl(url, { cache: "no-store", signal: control.signal });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const value = asJSON ? await response.json() : new Uint8Array(await response.arrayBuffer());
+            if (signal.aborted) throw abortError();
+            return value;
+          })(), deadline]);
+        } finally {
+          clearTimeout(timer);
+          signal.removeEventListener("abort", abort);
+        }
+      }, signal);
+    }
+    function touch(map, key, value) {
+      map.delete(key);
+      map.set(key, value);
+    }
+    function entryFor(input) {
+      const id = platformEmployerId(input);
+      let entry = entries.get(id);
+      if (!entry) {
+        entry = { id, descriptor: null, rows: [], loaded: false, pageIndex: 0, targetPage: 0, loading: false, error: null, generation: 0, controller: null, promise: null };
+        entries.set(id, entry);
+        while (entries.size > maxEmployers) {
+          const first = entries.keys().next().value;
+          entries.get(first).controller?.abort();
+          entries.delete(first);
+        }
+      } else touch(entries, id, entry);
+      return entry;
+    }
+    function snapshot(entry) {
+      return { authorityId: entry.id, descriptor: entry.descriptor, rows: entry.rows, pageIndex: entry.pageIndex, targetPage: entry.targetPage, loading: entry.loading, error: entry.error, status: entry.loading ? "loading" : entry.error ? "error" : entry.descriptor ? "ready" : "idle" };
+    }
+    function sharedPage(descriptor, page, signal) {
+      const key = descriptor.employerId + "|" + page.path;
+      if (pages.has(key)) {
+        const value = pages.get(key);
+        touch(pages, key, value);
+        return Promise.resolve(value);
+      }
+      let job = inflight.get(key);
+      if (job?.control.signal.aborted) {
+        inflight.delete(key);
+        job = null;
+      }
+      if (!job) {
+        const control = new AbortController();
+        job = { control, consumers: /* @__PURE__ */ new Set() };
+        job.promise = (async () => {
+          const compressed = await request(baseURL + page.path, control.signal, false);
+          if (compressed.length !== page.bytes) throw new Error("Vacancy page download length mismatch");
+          const actual = await digest(compressed);
+          if (actual && actual !== page.sha256) throw new Error("Vacancy page checksum mismatch");
+          const raw = await decompress2(compressed, { expectedBytes: page.uncompressedBytes });
+          if (control.signal.aborted) throw abortError();
+          const decoded = await digest(raw);
+          if (decoded && decoded !== page.uncompressedSHA256) throw new Error("Decoded vacancy page checksum mismatch");
+          const rows = unpackVacancyPage(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)), descriptor, page);
+          touch(pages, key, rows);
+          while (pages.size > maxPages) pages.delete(pages.keys().next().value);
+          return rows;
+        })();
+        inflight.set(key, job);
+        job.promise.finally(() => {
+          if (inflight.get(key) === job) inflight.delete(key);
+        }).catch(() => {
+        });
+      }
+      return new Promise((resolve, reject) => {
+        const consumer = {};
+        job.consumers.add(consumer);
+        let settled = false;
+        const cleanup = () => {
+          job.consumers.delete(consumer);
+          signal.removeEventListener("abort", cancel);
+        };
+        const cancel = () => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          if (!job.consumers.size) job.control.abort();
+          reject(abortError());
+        };
+        if (signal.aborted) {
+          cancel();
+          return;
+        }
+        signal.addEventListener("abort", cancel, { once: true });
+        job.promise.then((value) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            resolve(value);
+          }
+        }, (error) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            reject(error);
+          }
+        });
+      });
+    }
+    function loadPage(input, index = 0) {
+      if (disposed) return Promise.resolve(null);
+      let entry;
+      try {
+        entry = entryFor(input);
+      } catch {
+        return Promise.resolve(invalidState(input));
+      }
+      if (entry.loading && entry.targetPage === index) return entry.promise;
+      entry.controller?.abort();
+      const generation = ++entry.generation, controller = new AbortController();
+      entry.controller = controller;
+      entry.targetPage = index;
+      entry.loading = true;
+      entry.error = null;
+      notify(entry.id);
+      entry.promise = (async () => {
+        try {
+          let descriptor = entry.descriptor;
+          if (!descriptor) {
+            const compressed = await request(baseURL + "employers/" + entry.id + ".json.gz", controller.signal, false);
+            if (compressed.length > 256 * 1024) throw new Error("Employer descriptor exceeds size limit");
+            const raw = await decompress2(compressed, { maxBytes: 2 * 1024 * 1024 });
+            descriptor = validateDescriptor(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)), entry.id);
+          }
+          if (controller.signal.aborted || generation !== entry.generation) return snapshot(entry);
+          entry.descriptor = descriptor;
+          if (index < 0 || index >= Math.max(1, descriptor.pages.length)) throw new Error("Invalid vacancy page number");
+          const rows = descriptor.pages.length ? await sharedPage(descriptor, descriptor.pages[index], controller.signal) : [];
+          if (controller.signal.aborted || generation !== entry.generation) return snapshot(entry);
+          entry.rows = rows;
+          entry.loaded = true;
+          entry.pageIndex = index;
+          entry.error = null;
+        } catch (error) {
+          if (generation === entry.generation && error.name !== "AbortError") entry.error = error.name === "TimeoutError" ? "timeout" : "load-failed";
+        } finally {
+          if (generation === entry.generation) {
+            entry.loading = false;
+            entry.controller = null;
+            entry.promise = null;
+            notify(entry.id);
+          }
+        }
+        return snapshot(entry);
+      })();
+      return entry.promise;
+    }
+    return { get: (input) => {
+      try {
+        return snapshot(entryFor(input));
+      } catch {
+        return invalidState(input);
+      }
+    }, loadPage, ensure(input) {
+      let e;
+      try {
+        e = entryFor(input);
+      } catch {
+        return Promise.resolve(invalidState(input));
+      }
+      return e.descriptor && e.loaded && !e.error ? Promise.resolve(snapshot(e)) : loadPage(e.id, e.pageIndex);
+    }, retry: (input) => {
+      let e;
+      try {
+        e = entryFor(input);
+      } catch {
+        return Promise.resolve(invalidState(input));
+      }
+      return loadPage(e.id, e.targetPage);
+    }, cancel(input) {
+      let e;
+      try {
+        e = entries.get(platformEmployerId(input));
+      } catch {
+        return;
+      }
+      if (e) {
+        e.controller?.abort();
+        e.generation++;
+        e.loading = false;
+        e.controller = null;
+        e.promise = null;
+        notify(e.id);
+      }
+    }, subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    }, isBusy: () => [...entries.values()].some((e) => e.loading), cacheInfo: () => ({ employers: entries.size, pages: pages.size, pending: inflight.size, activeRequests: active }), dispose() {
+      disposed = true;
+      for (const e of entries.values()) e.controller?.abort();
+      for (const job of inflight.values()) job.control.abort();
+      listeners.clear();
+      entries.clear();
+      pages.clear();
+    } };
+  }
+
   // site/apps/career/assets/region-map-geometry.mjs
   var REGION_MAP_MAX_ZOOM = 40;
   var clampMapZoom = (value) => Math.max(1, Math.min(REGION_MAP_MAX_ZOOM, value));
@@ -2202,7 +4858,7 @@ var CareerRuntime = (() => {
   }
   function containMapView(view, { width, height, left = 0, top = 0, right = width, bottom = height }) {
     const zoom = clampMapZoom(view.zoom);
-    const axis = (offset, size, min, max) => size <= max - min ? (min + max - size) / 2 : Math.min(min, Math.max(max - size, offset));
+    const axis = (offset, size, min, max2) => size <= max2 - min ? (min + max2 - size) / 2 : Math.min(min, Math.max(max2 - size, offset));
     return { zoom, x: axis(view.x, width * zoom, left, right), y: axis(view.y, height * zoom, top, bottom) };
   }
 
@@ -2313,8 +4969,8 @@ var CareerRuntime = (() => {
       const normalized2 = normalize(query);
       let count = 0;
       for (const option of root.querySelectorAll(".career-region-option")) {
-        const record = byId.get(option.dataset.regionOption);
-        const searchable = [record.name, record.name_en, record.name_zh, record.code, record.id].map(normalize).join(" ");
+        const record2 = byId.get(option.dataset.regionOption);
+        const searchable = [record2.name, record2.name_en, record2.name_zh, record2.code, record2.id].map(normalize).join(" ");
         option.hidden = !!normalized2 && !searchable.includes(normalized2);
         if (!option.hidden) count++;
       }
@@ -2359,11 +5015,11 @@ var CareerRuntime = (() => {
         const threshold = feature.city ? 1.5 : item.area > 1e4 ? 1.2 : item.area > 2500 ? 2 : item.area > 600 ? 3.5 : 6;
         let visible = zoom >= threshold;
         const width = Math.max(...lines.map(textWidth)) + 10, height = lines.length * 16 + 4;
-        const x = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
+        const x2 = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
         const options = feature.city ? [[width / 2 + 14, 0], [0, -height / 2 - 14], [0, height / 2 + 14], [-width / 2 - 14, 0]] : [[0, 0]];
         let chosen = null;
         if (visible) for (const [dx, dy] of options) {
-          const box = { left: x + dx - width / 2, right: x + dx + width / 2, top: y + dy - height / 2, bottom: y + dy + height / 2 };
+          const box = { left: x2 + dx - width / 2, right: x2 + dx + width / 2, top: y + dy - height / 2, bottom: y + dy + height / 2 };
           if (box.left < 5 || box.right > m.width - 5 || box.top < 5 || box.bottom > m.height - 5) continue;
           if (placed.some((other) => box.left < other.right + 5 && box.right > other.left - 5 && box.top < other.bottom + 4 && box.bottom > other.top - 4)) continue;
           chosen = { dx, dy, box };
@@ -2422,8 +5078,8 @@ var CareerRuntime = (() => {
     function revealMapRegion(id) {
       const m = metrics(), feature = mappedFeatures.get(id);
       if (!m || !feature) return;
-      const x = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
-      if (x < 30 || x > m.width - 30 || y < 30 || y > m.height - 30) {
+      const x2 = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
+      if (x2 < 30 || x2 > m.width - 30 || y < 30 || y > m.height - 30) {
         mapX = data2.width / 2 - feature.anchor[0] * zoom;
         mapY = data2.height / 2 - feature.anchor[1] * zoom;
         applyView();
@@ -2993,8 +5649,8 @@ var CareerRuntime = (() => {
   var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
   var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
   var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
-  function clamp(value, min = 0, max = 1) {
-    return Math.max(min, Math.min(max, value));
+  function clamp(value, min = 0, max2 = 1) {
+    return Math.max(min, Math.min(max2, value));
   }
   function average(values) {
     if (!values.length) return 0;
@@ -3074,8 +5730,8 @@ var CareerRuntime = (() => {
     const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
     const mean = average(user), tmean = average(target);
     let dot = 0, norm = 0, tnorm = 0;
-    for (let i = 0; i < user.length; i++) {
-      const u = user[i] - mean, t = target[i] - tmean;
+    for (let i2 = 0; i2 < user.length; i2++) {
+      const u = user[i2] - mean, t = target[i2] - tmean;
       dot += u * t;
       norm += u * u;
       tnorm += t * t;
@@ -3585,7 +6241,7 @@ var CareerRuntime = (() => {
 
   // site/apps/career/assets/journey-visuals.mjs
   var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-  var L2 = (ru, en, zh) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh;
+  var L2 = (ru, en, zh2) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh2;
   var display = (value) => E3(translate(typeof value === "string" ? value : ""));
   var icon = (id) => `<svg aria-hidden="true"><use href="#i-${E3(id)}"></use></svg>`;
   var number = (value, digits = 0) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
@@ -3638,24 +6294,24 @@ var CareerRuntime = (() => {
       const angle = -Math.PI / 2 + index * Math.PI * 2 / count;
       return [center2 + Math.cos(angle) * radius2 * ratio, center2 + Math.sin(angle) * radius2 * ratio];
     };
-    const polygon = (ratio) => valid.map((_, i) => point2(i, ratio).join(",")).join(" ");
+    const polygon = (ratio) => valid.map((_, i2) => point2(i2, ratio).join(",")).join(" ");
     const values = valid.map((row) => Math.max(0, Math.min(1, row.met / row.total)));
-    const description = valid.map((row, i) => `${i + 1}. ${groupLabel(row.id)}: ${row.met}/${row.total}`).join("; ");
+    const description = valid.map((row, i2) => `${i2 + 1}. ${groupLabel(row.id)}: ${row.met}/${row.total}`).join("; ");
     return `<svg class="journey-target-radar" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="${E3(L2("\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u043F\u043E \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0435:", "Self-assessed requirements met:", "\u81EA\u8BC4\u5DF2\u7B26\u5408\u7684\u8981\u6C42\uFF1A") + " " + description)}">
     <title>${L2("\u041C\u043E\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "My self-assessment and the selected role requirements", "\u6211\u7684\u81EA\u8BC4\u4E0E\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</title>
-    <g fill="none" stroke="#d7e2ec" stroke-width="1">${[0.25, 0.5, 0.75, 1].map((value) => `<polygon points="${polygon(value)}"/>`).join("")}${valid.map((_, i) => {
-      const [x, y] = point2(i, 1);
-      return `<line x1="${center2}" y1="${center2}" x2="${x}" y2="${y}"/>`;
+    <g fill="none" stroke="#d7e2ec" stroke-width="1">${[0.25, 0.5, 0.75, 1].map((value) => `<polygon points="${polygon(value)}"/>`).join("")}${valid.map((_, i2) => {
+      const [x2, y] = point2(i2, 1);
+      return `<line x1="${center2}" y1="${center2}" x2="${x2}" y2="${y}"/>`;
     }).join("")}</g>
     <polygon points="${polygon(1)}" fill="#b76a15" fill-opacity=".04" stroke="#9b5914" stroke-width="2.5" stroke-dasharray="7 5"/>
-    <polygon points="${values.map((v, i) => point2(i, v).join(",")).join(" ")}" fill="#087bb5" fill-opacity=".18" stroke="#0874aa" stroke-width="2.5"/>
-    ${values.map((v, i) => {
-      const [x, y] = point2(i, v);
-      return `<circle cx="${x}" cy="${y}" r="4" fill="#0874aa" stroke="#fff" stroke-width="1.5"/>`;
+    <polygon points="${values.map((v, i2) => point2(i2, v).join(",")).join(" ")}" fill="#087bb5" fill-opacity=".18" stroke="#0874aa" stroke-width="2.5"/>
+    ${values.map((v, i2) => {
+      const [x2, y] = point2(i2, v);
+      return `<circle cx="${x2}" cy="${y}" r="4" fill="#0874aa" stroke="#fff" stroke-width="1.5"/>`;
     }).join("")}
-    <g fill="#294663" font-size="14" font-weight="650" text-anchor="middle" dominant-baseline="middle">${valid.map((_, i) => {
-      const [x, y] = point2(i, 1.23);
-      return `<text x="${x}" y="${y}">${i + 1}</text>`;
+    <g fill="#294663" font-size="14" font-weight="650" text-anchor="middle" dominant-baseline="middle">${valid.map((_, i2) => {
+      const [x2, y] = point2(i2, 1.23);
+      return `<text x="${x2}" y="${y}">${i2 + 1}</text>`;
     }).join("")}</g>
     <g fill="#5d7184" font-size="10" text-anchor="end">${[25, 50, 75, 100].map((v) => `<text x="${center2 - 7}" y="${center2 - radius2 * v / 100 + 3}">${v}%</text>`).join("")}</g>
   </svg>`;
@@ -3674,7 +6330,7 @@ var CareerRuntime = (() => {
   var preferenceRoutes = /* @__PURE__ */ new Set(["test", "sectors", "conditions", "results"]);
   var statuses = /* @__PURE__ */ new Set(["met", "gap"]);
   var isRecord2 = (value) => !!value && typeof value === "object" && !Array.isArray(value);
-  var safeText = (value, max = 2e4) => typeof value === "string" ? value.trim().slice(0, max) : "";
+  var safeText = (value, max2 = 2e4) => typeof value === "string" ? value.trim().slice(0, max2) : "";
   function createSeminarFlow({ data: data2, getResult, getProfileContext, getInputs, navigate, resolveResumeRoute: resolveResumeRoute2, radarSvg: radarSvg2, toast: toast2 }) {
     const key = storageKey("career-journey-v1");
     let saved;
@@ -3692,6 +6348,13 @@ var CareerRuntime = (() => {
     let lastRoute = "personality", pendingRoute = null, manualSaveTimer = null, picker = null, wishSorter = null, opening = false, dirty = false, rankingCache = null, catalogGeneration = 0;
     let authorityQuery = "", authorityScope = "", authorityLimit = 24, vacancyQuery = "", vacancyEmployer = "", vacancyLimit = 12;
     const rolePanelStates = /* @__PURE__ */ new Map();
+    const vacancyBank = createEmployerVacancyBank();
+    vacancyBank.subscribe((id) => {
+      if (!__careerHost.destroyed && lastRoute === "results") document.querySelectorAll("[data-authority-roles]").forEach((panel) => {
+        const state2 = rolePanelState(panel.dataset.rolePanel);
+        if (bankId(state2.bankAuthorityId || panel.dataset.authorityRoles) === id) renderEmployerVacancies(panel);
+      });
+    });
     const root = () => document.querySelector("#results-root");
     const preferencesRoot = () => document.querySelector("#journey-preferences-root");
     const byId = () => new Map(institutions.map((a) => [a.id, a]));
@@ -3758,7 +6421,7 @@ var CareerRuntime = (() => {
       const ticket = ++catalogGeneration;
       try {
         const values = await Promise.all([
-          loadJSON("data/territories.json", { validate: (v) => Array.isArray(v) && v.length === 89 && new Set(v.map((x) => x.id)).size === 89 }),
+          loadJSON("data/territories.json", { validate: (v) => Array.isArray(v) && v.length === 89 && new Set(v.map((x2) => x2.id)).size === 89 }),
           loadJSON("data/territorial-authorities.json", { validate: (v) => Array.isArray(v) || Array.isArray(v?.authorities) }),
           loadJSON("data/career-framework.json", { validate: (v) => Array.isArray(v?.trackProfiles) }),
           loadJSON("data/competencies.json", { validate: Array.isArray })
@@ -4053,7 +6716,7 @@ var CareerRuntime = (() => {
       bindAuthorityDetails(target);
       bindAuthorityRolePanels(target);
       renderVacancies();
-      void loadVacancies();
+      renderEmployerVacancyPanels();
     }
     let positionSelection = "", positionLoadGeneration = 0;
     const positionShards = /* @__PURE__ */ new Map();
@@ -4147,8 +6810,8 @@ var CareerRuntime = (() => {
     }
     function findSelectedVacancy() {
       if (!journey.selectedVacancyId) return null;
-      const record = roleRecords().find((v) => v.id === journey.selectedVacancyId);
-      if (record) return record;
+      const record2 = roleRecords().find((v) => v.id === journey.selectedVacancyId);
+      if (record2) return record2;
       const snapshot = journey.selectedSnapshot;
       return snapshot?.id === journey.selectedVacancyId && !(snapshot.organization?.relation === "territorial" && !journey.regionIds.includes(snapshot.regionId)) && visibleInstitutions().some((a) => a.id === snapshot.institutionId) && (!snapshot.regionId || journey.regionIds.includes(snapshot.regionId)) ? snapshot : null;
     }
@@ -4184,7 +6847,102 @@ var CareerRuntime = (() => {
       const state2 = rolePanelState(panelKey), draft = draftForAuthority(authority.id);
       const draftHere = draft.open && (draft.panelKey || defaultRolePanel(authority.id)) === panelKey;
       const employerUrl = safeURL(authority.governmentUrl || authority.descriptionSources?.[0]?.url);
-      return `<details class="journey-authority-roles" data-authority-roles="${E3(authority.id)}" data-role-panel="${E3(panelKey)}" ${state2.open || draftHere ? "open" : ""}><summary><span>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Roles", "\u804C\u4F4D")}</span><span class="journey-role-total" data-role-total>\u2026</span></summary><div class="journey-authority-roles-content"><p class="seminar-source-note" data-role-source-note role="status"></p><div data-role-load-status></div><label class="journey-field journey-role-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043E\u0440\u0433\u0430\u043D\u0435", "Find a role with this employer", "\u67E5\u627E\u8BE5\u673A\u6784\u7684\u804C\u4F4D")}<input type="search" data-role-search autocomplete="off" value="${E3(state2.query)}"></label><p class="journey-result-count" data-role-result-count></p><div class="journey-local-role-list" data-authority-role-list></div><button type="button" class="button button-secondary journey-more" data-role-more hidden>${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button><div class="journey-source-links">${employerUrl ? `<a href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L2("\u0421\u0430\u0439\u0442 \u043E\u0440\u0433\u0430\u043D\u0430", "Employer website", "\u673A\u6784\u7F51\u7AD9")}${icon("external")}</a>` : ""}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L2("\u041F\u043E\u0440\u0442\u0430\u043B \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430", "Civil service portal", "\u516C\u52A1\u5458\u95E8\u6237")}${icon("external")}</a></div>${manualVacancyForm(authority, panelKey)}</div></details>`;
+      return `<details class="journey-authority-roles" data-authority-roles="${E3(authority.id)}" data-role-panel="${E3(panelKey)}" ${state2.open || draftHere ? "open" : ""}><summary><span>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Roles and vacancies", "\u804C\u4F4D\u4E0E\u62DB\u8058\u516C\u544A")}</span></summary><div class="journey-authority-roles-content"><section class="journey-bank" data-employer-bank></section><h4 class="journey-study-heading">${L2("\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0434\u043B\u044F \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Materials for role assessment", "\u804C\u4F4D\u5206\u6790\u5B66\u4E60\u6750\u6599")} <span class="journey-role-total" data-role-total>\u2026</span></h4><p class="seminar-source-note" data-role-source-note role="status"></p><div data-role-load-status></div><label class="journey-field journey-role-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043E\u0440\u0433\u0430\u043D\u0435", "Find a role with this employer", "\u67E5\u627E\u8BE5\u673A\u6784\u7684\u804C\u4F4D")}<input type="search" data-role-search autocomplete="off" value="${E3(state2.query)}"></label><p class="journey-result-count" data-role-result-count></p><div class="journey-local-role-list" data-authority-role-list></div><button type="button" class="button button-secondary journey-more" data-role-more hidden>${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button><div class="journey-source-links">${employerUrl ? `<a href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L2("\u0421\u0430\u0439\u0442 \u043E\u0440\u0433\u0430\u043D\u0430", "Employer website", "\u673A\u6784\u7F51\u7AD9")}${icon("external")}</a>` : ""}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L2("\u041F\u043E\u0440\u0442\u0430\u043B \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430", "Civil service portal", "\u516C\u52A1\u5458\u95E8\u6237")}${icon("external")}</a></div>${manualVacancyForm(authority, panelKey)}</div></details>`;
+    }
+    function bankId(value) {
+      try {
+        return platformEmployerId(value);
+      } catch {
+        return String(value || "");
+      }
+    }
+    function bankAuthority(panel) {
+      return bankId(rolePanelState(panel.dataset.rolePanel).bankAuthorityId || panel.dataset.authorityRoles);
+    }
+    function bankStatus(row) {
+      const status = vacancyBankStatus(row);
+      const label2 = {
+        "source-active": L2("\u041F\u0440\u0438\u0451\u043C \u043F\u043E \u0434\u0430\u043D\u043D\u044B\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0430", "Accepting as listed by the portal", "\u95E8\u6237\u663E\u793A\u6B63\u5728\u62DB\u52DF"),
+        archived: L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u516C\u544A"),
+        expired: L2("\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u0441\u0440\u043E\u043A \u0438\u0441\u0442\u0451\u043A", "Listed deadline has passed", "\u6240\u5217\u622A\u6B62\u65E5\u671F\u5DF2\u8FC7"),
+        unknown: L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Recruitment status not stated", "\u672A\u6CE8\u660E\u62DB\u8058\u72B6\u6001")
+      }[status];
+      return `<span class="journey-bank-badge ${status}">${label2}</span>`;
+    }
+    function bankJob(row) {
+      const salary = [row.salaryFrom, row.salaryTo].filter((value) => typeof value === "number" && Number.isFinite(value));
+      const pay = salary.length ? salary.map((value) => number(value)).join(" \u2013 ") + " \u20BD" : "";
+      const location2 = [row.region, row.locality].filter((value) => typeof value === "string" && value.trim()).join(", ");
+      const fields = [
+        [L2("\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Published", "\u53D1\u5E03\u65E5\u671F"), row.announcedAt ? date2(row.announcedAt) : L2("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Not stated", "\u672A\u6CE8\u660E")],
+        [L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62"), row.expiresAt ? date2(row.expiresAt) : L2("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Not stated", "\u672A\u6CE8\u660E")],
+        [L2("\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Pay as published", "\u6765\u6E90\u6240\u5217\u62A5\u916C"), pay]
+      ].filter(([, value]) => value);
+      const requirements = [[L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"), row.education], [L2("\u041E\u043F\u044B\u0442 \u043F\u043E \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Professional experience", "\u4E13\u4E1A\u7ECF\u5386"), row.professionalExperience], [L2("\u0421\u0442\u0430\u0436 \u0433\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u044B", "Public-service experience", "\u516C\u52A1\u7ECF\u5386"), row.governmentExperience]].filter(([, value]) => typeof value === "string" && value.trim());
+      const url = safeURL(row.sourceURL);
+      return `<article class="journey-bank-job" data-bank-job="${E3(row.id)}"><div class="journey-bank-badges">${bankStatus(row)}${row.scope === "group-or-reserve-context" ? `<span class="journey-bank-badge scope">${L2("\u0413\u0440\u0443\u043F\u043F\u0430 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 / \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0440\u0432", "Position group / talent reserve", "\u804C\u4F4D\u7EC4\uFF0F\u4EBA\u624D\u50A8\u5907")}</span>` : ""}</div><h5 lang="ru">${E3(row.title || L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Role title not stated", "\u672A\u6CE8\u660E\u804C\u4F4D\u540D\u79F0"))}</h5>${location2 ? `<p class="journey-bank-location" lang="ru">${E3(location2)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl>${requirements.length ? `<details class="journey-bank-requirements"><summary>${L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436", "Education and experience", "\u5B66\u5386\u4E0E\u7ECF\u5386")}</summary><dl>${requirements.map(([label2, value]) => `<div><dt>${label2}</dt><dd lang="ru">${E3(value)}</dd></div>`).join("")}</dl></details>` : ""}${url ? `<a class="seminar-vacancy-link" href="${E3(url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Open announcement", "\u6253\u5F00\u516C\u544A")}${icon("external")}</a>` : ""}</article>`;
+    }
+    function renderEmployerVacancies(panel) {
+      const target = panel.querySelector("[data-employer-bank]");
+      if (!target || !panel.isConnected) return;
+      const state2 = rolePanelState(panel.dataset.rolePanel), id = bankAuthority(panel), view = vacancyBank.get(id), descriptor = view.descriptor;
+      state2.bankLimit = state2.bankLimit || 10;
+      if (id === bankId(panel.dataset.authorityRoles) && descriptor?.familyConnections) {
+        state2.bankFamilyConnections = descriptor.familyConnections;
+        state2.bankPrimaryEmpty = descriptor.jobCount === 0;
+        const related = descriptor.familyConnections.find((item) => item.jobCount > 0);
+        if (state2.bankPrimaryEmpty && related && !state2.bankAutoSelected) {
+          state2.bankAutoSelected = true;
+          state2.bankAuthorityId = related.authorityId;
+          state2.bankLimit = 10;
+          renderEmployerVacancies(panel);
+          void vacancyBank.ensure(related.authorityId);
+          return;
+        }
+      }
+      const family = state2.bankFamilyConnections || [], parentName = authorityName(byId().get(panel.dataset.authorityRoles) || { name: panel.dataset.authorityRoles });
+      const selector = family.length ? `<label class="journey-field journey-bank-family">${L2("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C", "Employer", "\u96C7\u4E3B")}<select data-bank-family><option value="${E3(panel.dataset.authorityRoles)}" ${id === bankId(panel.dataset.authorityRoles) ? "selected" : ""}>${E3(parentName)}</option>${family.map((item) => `<option value="${E3(item.authorityId)}" ${id === item.authorityId ? "selected" : ""}>${E3(item.name)} (${number(item.jobCount)})</option>`).join("")}</select><small>${L2("\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E: \u0438\u0445 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u044F\u044E\u0442\u0441\u044F \u0441 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u043C\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Related employers are separate; their announcements are not merged with this employer\u2019s listings.", "\u76F8\u5173\u673A\u6784\u5206\u522B\u5C55\u793A\uFF0C\u5176\u516C\u544A\u4E0D\u4F1A\u4E0E\u5F53\u524D\u96C7\u4E3B\u5408\u5E76\u3002")}</small></label>` : "";
+      const selectedName = descriptor?.name || (state2.bankFamilyConnections || []).find((item) => item.authorityId === id)?.name || parentName;
+      const heading = `<div class="journey-bank-heading"><h4>${L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Civil-service portal announcements", "\u516C\u52A1\u5458\u95E8\u6237\u516C\u544A")}</h4>${descriptor ? `<span>${number(descriptor.jobCount)}</span>` : ""}</div>`;
+      if (view.status === "idle") {
+        target.innerHTML = heading + `<p class="journey-muted">${L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0437\u0430\u0433\u0440\u0443\u0437\u044F\u0442\u0441\u044F \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438.", "Announcements load when you open this panel.", "\u6253\u5F00\u6B64\u9762\u677F\u65F6\u52A0\u8F7D\u516C\u544A\u3002")}</p>`;
+        return;
+      }
+      const copyDate = descriptor?.snapshotAt ? date2(descriptor.snapshotAt) : "";
+      const total = descriptor?.jobCount || 0, pageCount = descriptor?.pages.length || 0, shown = view.rows.slice(0, state2.bankLimit);
+      const empty = descriptor && !total ? !descriptor.employerId ? L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u043A\u0430 \u043D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D\u044B \u0441 \u044D\u0442\u0438\u043C \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u043C. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043F\u043E\u0440\u0442\u0430\u043B.", "Announcements have not yet been linked to this employer. Check the official portal.", "\u5C1A\u672A\u5C06\u516C\u544A\u5173\u8054\u5230\u6B64\u96C7\u4E3B\uFF0C\u8BF7\u67E5\u770B\u5B98\u65B9\u95E8\u6237\u3002") : L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u043E\u043F\u0438\u0438 \u043D\u0435\u0442 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u044D\u0442\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F. \u042D\u0442\u043E \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442, \u0447\u0442\u043E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435\u0442.", "This snapshot has no announcements for this employer. This does not mean there are no vacancies.", "\u6B64\u526F\u672C\u6CA1\u6709\u8BE5\u96C7\u4E3B\u7684\u516C\u544A\uFF0C\u4F46\u8FD9\u5E76\u4E0D\u8868\u793A\u6CA1\u6709\u7A7A\u7F3A\u3002") : "";
+      target.innerHTML = heading + selector + `<p class="journey-bank-current-employer" lang="ru">${E3(selectedName)}</p>${state2.bankPrimaryEmpty && id !== bankId(panel.dataset.authorityRoles) ? `<p class="journey-bank-note">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u043E\u043F\u0438\u0438 \u043D\u0435\u0442 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430. \u041F\u043E\u043A\u0430\u0437\u0430\u043D \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C.", "This snapshot has no listings for the selected authority. A separate related employer is shown.", "\u6B64\u526F\u672C\u6CA1\u6709\u6240\u9009\u673A\u5173\u7684\u516C\u544A\uFF0C\u73B0\u663E\u793A\u4E00\u4E2A\u72EC\u7ACB\u7684\u76F8\u5173\u96C7\u4E3B\u3002")}</p>` : ""}` + (descriptor ? `<p class="journey-bank-count">${L2("\u0412\u0441\u0435\u0433\u043E", "Total", "\u603B\u8BA1")}: ${number(total)} \xB7 ${L2("\u0410\u0440\u0445\u0438\u0432\u043D\u044B\u0445 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Archived as published", "\u6765\u6E90\u6807\u4E3A\u5386\u53F2")}: ${number(descriptor.archiveCount || 0)}</p>` : "") + `<p class="journey-bank-status" role="status" aria-live="polite">${view.loading ? L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u2026", "Loading announcements\u2026", "\u6B63\u5728\u52A0\u8F7D\u516C\u544A\u2026\u2026") : view.error ? L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F. \u0423\u0436\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B.", "Announcements could not be loaded. Previously loaded cards remain available.", "\u516C\u544A\u52A0\u8F7D\u5931\u8D25\uFF0C\u5DF2\u52A0\u8F7D\u7684\u5361\u7247\u4ECD\u53EF\u67E5\u770B\u3002") : empty || ""}</p>${view.error ? `<button type="button" class="button button-secondary" data-bank-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button>` : ""}<div class="journey-bank-list" aria-busy="${view.loading}">${shown.map(bankJob).join("")}</div>${view.rows.length ? `<p class="journey-bank-page-note">${L2(`\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ${view.pageIndex + 1} \u0438\u0437 ${pageCount}. \u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E ${shown.length} \u0438\u0437 ${view.rows.length} \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B.`, `Page ${view.pageIndex + 1} of ${pageCount}. Showing ${shown.length} of ${view.rows.length} announcements on this page.`, `\u7B2C ${view.pageIndex + 1}\uFF0F${pageCount} \u9875\uFF0C\u663E\u793A\u672C\u9875 ${view.rows.length} \u6761\u516C\u544A\u4E2D\u7684 ${shown.length} \u6761\u3002`)}</p>` : ""}${view.rows.length > state2.bankLimit ? `<button type="button" class="button button-secondary journey-bank-more" data-bank-more>${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451 \u043D\u0430 \u044D\u0442\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435", "Show more on this page", "\u663E\u793A\u672C\u9875\u66F4\u591A\u516C\u544A")}</button>` : ""}${pageCount > 1 ? `<nav class="journey-bank-pages" aria-label="${L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F", "Employer announcement pages", "\u96C7\u4E3B\u516C\u544A\u5206\u9875")}"><button type="button" class="button button-secondary" data-bank-prev ${view.loading || view.pageIndex === 0 ? "disabled" : ""}>${L2("\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", "Previous page", "\u4E0A\u4E00\u9875")}</button><span>${view.pageIndex + 1} / ${pageCount}</span><button type="button" class="button button-secondary" data-bank-next ${view.loading || view.pageIndex >= pageCount - 1 ? "disabled" : ""}>${L2("\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", "Next page", "\u4E0B\u4E00\u9875")}</button></nav>` : ""}<p class="journey-bank-note">${copyDate ? L2("\u0414\u0430\u0442\u0430 \u043A\u043E\u043F\u0438\u0438: ", "Snapshot prepared: ", "\u526F\u672C\u65E5\u671F\uFF1A") + E3(copyDate) + (copyDate.trim().endsWith(".") ? " " : L2(". ", ". ", "\u3002")) : ""}${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u0432\u0441\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F, \u0432\u043A\u043B\u044E\u0447\u0430\u044F \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435. \u0421\u0440\u043E\u043A\u0438 \u0438 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u043E\u0442\u043A\u043B\u0438\u043A\u0430 \u0443\u0442\u043E\u0447\u043D\u044F\u0439\u0442\u0435 \u0432 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438.", "All this employer\u2019s announcements are included, including archived listings. Check dates and application availability in the official announcement.", "\u5305\u542B\u8BE5\u96C7\u4E3B\u7684\u5168\u90E8\u516C\u544A\u53CA\u5386\u53F2\u8BB0\u5F55\uFF0C\u8BF7\u5728\u5B98\u65B9\u516C\u544A\u4E2D\u6838\u5BF9\u671F\u9650\u53CA\u7533\u8BF7\u72B6\u6001\u3002")}</p>`;
+      target.querySelector("[data-bank-more]")?.addEventListener("click", () => {
+        state2.bankLimit += 10;
+        renderEmployerVacancies(panel);
+      });
+      target.querySelector("[data-bank-retry]")?.addEventListener("click", () => void vacancyBank.retry(id));
+      const turn = (delta) => {
+        state2.bankLimit = 10;
+        void vacancyBank.loadPage(id, view.pageIndex + delta);
+      };
+      target.querySelector("[data-bank-prev]")?.addEventListener("click", () => turn(-1));
+      target.querySelector("[data-bank-next]")?.addEventListener("click", () => turn(1));
+      target.querySelector("[data-bank-family]")?.addEventListener("change", (event) => {
+        const previous = id;
+        state2.bankAuthorityId = event.target.value;
+        state2.bankLimit = 10;
+        cancelUnusedBank(previous, panel);
+        renderEmployerVacancies(panel);
+        void vacancyBank.ensure(state2.bankAuthorityId);
+      });
+    }
+    function cancelUnusedBank(id, except) {
+      if (![...document.querySelectorAll("[data-authority-roles][open]")].some((panel) => panel !== except && bankAuthority(panel) === id)) vacancyBank.cancel(id);
+    }
+    function renderEmployerVacancyPanels() {
+      document.querySelectorAll("[data-authority-roles]").forEach((panel) => {
+        renderEmployerVacancies(panel);
+        if (panel.open) void vacancyBank.ensure(bankAuthority(panel));
+      });
+    }
+    function cancelEmployerVacancyRequests() {
+      document.querySelectorAll("[data-authority-roles]").forEach((panel) => vacancyBank.cancel(bankAuthority(panel)));
     }
     function vacancyCard(v, sourceOpen) {
       const selected = journey.selectedVacancyId === v.id, sourceDate = date2(v.source?.retrievedAt || v.lastSeenAt || v.sourceSnapshotAt);
@@ -4201,9 +6959,9 @@ var CareerRuntime = (() => {
       const panels = onlyPanel ? [onlyPanel] : [...document.querySelectorAll("[data-authority-roles]")];
       if (!panels.length) return;
       const all = roleRecords(), grouped = /* @__PURE__ */ new Map();
-      for (const record of all) {
-        if (!grouped.has(record.institutionId)) grouped.set(record.institutionId, []);
-        grouped.get(record.institutionId).push(record);
+      for (const record2 of all) {
+        if (!grouped.has(record2.institutionId)) grouped.set(record2.institutionId, []);
+        grouped.get(record2.institutionId).push(record2);
       }
       for (const panel of panels) {
         if (!panel.isConnected) continue;
@@ -4218,7 +6976,7 @@ var CareerRuntime = (() => {
         panel.querySelector("[data-role-source-note]").textContent = sourceNote();
         loadStatus.innerHTML = positionsError ? `<p class="journey-source-status">${L2("\u0427\u0430\u0441\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C. \u0414\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B.", "Some sources could not be loaded. Available materials are still shown.", "\u90E8\u5206\u6765\u6E90\u672A\u80FD\u52A0\u8F7D\uFF0C\u5DF2\u52A0\u8F7D\u7684\u6750\u6599\u4ECD\u53EF\u67E5\u770B\u3002")} <button type="button" class="journey-text-button" data-role-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button></p>` : "";
         panel.querySelector("[data-role-result-count]").textContent = L2(`\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u043E\u0432 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430: ${list2.length}`, `Materials from this employer: ${list2.length}`, `\u8BE5\u673A\u6784\u7684\u8D44\u6599\u6570\uFF1A${list2.length}`);
-        target.innerHTML = list2.slice(0, state2.limit).map((record) => vacancyCard(record, state2.sourceOpen.has(record.id))).join("") || `<p class="journey-local-role-empty">${positionsLoading ? L2("\u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B\u2026", "Finding materials\u2026", "\u6B63\u5728\u67E5\u627E\u6750\u6599\u2026\u2026") : query ? L2("\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u0437\u0430\u043F\u0440\u043E\u0441.", "No matches. Try a different search.", "\u6CA1\u6709\u5339\u914D\u7ED3\u679C\uFF0C\u8BF7\u66F4\u6539\u641C\u7D22\u8BCD\u3002") : L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u0445 \u043D\u0435\u0442 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430 \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u0430\u0439\u0442 \u0438\u043B\u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043D\u0438\u0436\u0435.", "The saved sources contain no roles for this employer in your chosen territories. Check its official website or add an announcement below.", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u6CA1\u6709\u8BE5\u673A\u6784\u5728\u6240\u9009\u5730\u533A\u7684\u804C\u4F4D\u3002\u8BF7\u67E5\u770B\u5B98\u65B9\u7F51\u7AD9\uFF0C\u6216\u5728\u4E0B\u65B9\u6DFB\u52A0\u516C\u544A\u3002")}</p>`;
+        target.innerHTML = list2.slice(0, state2.limit).map((record2) => vacancyCard(record2, state2.sourceOpen.has(record2.id))).join("") || `<p class="journey-local-role-empty">${positionsLoading ? L2("\u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B\u2026", "Finding materials\u2026", "\u6B63\u5728\u67E5\u627E\u6750\u6599\u2026\u2026") : query ? L2("\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u0437\u0430\u043F\u0440\u043E\u0441.", "No matches. Try a different search.", "\u6CA1\u6709\u5339\u914D\u7ED3\u679C\uFF0C\u8BF7\u66F4\u6539\u641C\u7D22\u8BCD\u3002") : L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u0445 \u043D\u0435\u0442 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430 \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u0430\u0439\u0442 \u0438\u043B\u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043D\u0438\u0436\u0435.", "The saved sources contain no roles for this employer in your chosen territories. Check its official website or add an announcement below.", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u6CA1\u6709\u8BE5\u673A\u6784\u5728\u6240\u9009\u5730\u533A\u7684\u804C\u4F4D\u3002\u8BF7\u67E5\u770B\u5B98\u65B9\u7F51\u7AD9\uFF0C\u6216\u5728\u4E0B\u65B9\u6DFB\u52A0\u516C\u544A\u3002")}</p>`;
         target.dataset.rendered = "true";
         panel.querySelector("[data-role-more]").hidden = list2.length <= state2.limit;
         if (focused) {
@@ -4232,8 +6990,14 @@ var CareerRuntime = (() => {
       target.querySelectorAll("[data-authority-roles]").forEach((panel) => {
         const state2 = rolePanelState(panel.dataset.rolePanel);
         panel.addEventListener("toggle", (event) => {
-          if (event.target === panel) state2.open = panel.open;
-          else if (event.target.dataset.roleSource) {
+          if (event.target === panel) {
+            state2.open = panel.open;
+            if (panel.open) {
+              renderEmployerVacancies(panel);
+              void vacancyBank.ensure(bankAuthority(panel));
+              void loadVacancies();
+            } else cancelUnusedBank(bankAuthority(panel), panel);
+          } else if (event.target.dataset.roleSource) {
             if (event.target.open) state2.sourceOpen.add(event.target.dataset.roleSource);
             else state2.sourceOpen.delete(event.target.dataset.roleSource);
           }
@@ -4465,6 +7229,7 @@ var CareerRuntime = (() => {
         return;
       }
       const view = stage();
+      if (view !== "recommendations") cancelEmployerVacancyRequests();
       if (view === "profile") renderProfile(result, target);
       else if (view === "recommendations") renderRecommendations(result, target);
       else if (view === "requirements") renderRequirements(result, target);
@@ -4488,6 +7253,7 @@ var CareerRuntime = (() => {
           wishSorter?.destroy();
           wishSorter = null;
         }
+        if (route !== "results") cancelEmployerVacancyRequests();
         lastRoute = route;
         updateLabels();
         if (route === "preferences") renderPreferences();
@@ -4496,7 +7262,7 @@ var CareerRuntime = (() => {
         wishSorter?.cancel({ focus: false, announceResult: false });
         return !dirty || save();
       },
-      updateBusy: () => catalogLoading || positionsLoading || opening || Boolean(wishSorter?.isBusy()),
+      updateBusy: () => catalogLoading || positionsLoading || vacancyBank.isBusy() || opening || Boolean(wishSorter?.isBusy()),
       captureForUpdate: () => ({ view: journey.view, authorityQuery, authorityScope, vacancyQuery, vacancyEmployer }),
       restoreForUpdate(value) {
         if (!isRecord2(value)) return;
@@ -6093,7 +8859,7 @@ var CareerRuntime = (() => {
     const angle = -Math.PI / 2 + index * Math.PI * 2 / 5;
     return { x: center.x + Math.cos(angle) * distance, y: center.y + Math.sin(angle) * distance };
   };
-  var pair = ({ x, y }) => `${x.toFixed(3)},${y.toFixed(3)}`;
+  var pair = ({ x: x2, y }) => `${x2.toFixed(3)},${y.toFixed(3)}`;
   function personalityRadarGeometry(domains) {
     return PERSONALITY_RADAR_ORDER.map((id, index) => {
       const value = domains?.[id]?.mean;
@@ -6117,7 +8883,7 @@ var CareerRuntime = (() => {
       <div class="personality-radar-plot">
         <svg class="personality-radar" viewBox="0 0 320 290" role="img" aria-labelledby="personality-radar-title personality-radar-desc" focusable="false">
           <title id="personality-radar-title">${E4(title)}</title><desc id="personality-radar-desc">${E4(scale + " " + values)}</desc>
-          <g aria-hidden="true">${rings}${axes}<polygon class="personality-radar-shape" points="${vertices.map(pair).join(" ")}"/>${vertices.map(({ id, value, x, y }) => `<circle class="personality-radar-point" data-personality-radar-domain="${id}" data-radar-value="${value}" cx="${x.toFixed(3)}" cy="${y.toFixed(3)}" r="4"/>`).join("")}${ticks}</g>
+          <g aria-hidden="true">${rings}${axes}<polygon class="personality-radar-shape" points="${vertices.map(pair).join(" ")}"/>${vertices.map(({ id, value, x: x2, y }) => `<circle class="personality-radar-point" data-personality-radar-domain="${id}" data-radar-value="${value}" cx="${x2.toFixed(3)}" cy="${y.toFixed(3)}" r="4"/>`).join("")}${ticks}</g>
         </svg>
         ${vertices.map(({ id }, index) => `<span class="personality-radar-key" aria-hidden="true" style="left:${keyPositions[index].x}%;top:${keyPositions[index].y}%">${id}</span>`).join("")}
       </div>
@@ -6131,7 +8897,7 @@ var CareerRuntime = (() => {
   var PAGE_SIZE = 10;
   var PAGE_COUNT = PERSONALITY_ITEMS.length / PAGE_SIZE;
   var E5 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
-  var L3 = (ru, en, zh) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh;
+  var L3 = (ru, en, zh2) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh2;
   var text = (values) => L3(...values);
   var englishFacetLabels = { N3: "Low mood", O5: "Intellectual curiosity", A2: "Straightforwardness" };
   var label = (value) => L3(value.name, englishFacetLabels[value.id] || value.en, value.zh);
@@ -6386,8 +9152,8 @@ var CareerRuntime = (() => {
       const errors = validateScenario(item, questions, sectors);
       if (errors.length) throw new Error(errors.join(", "));
     }
-    if (new Set(bundle.scenarios.map((x) => x.id)).size !== bundle.scenarios.length) throw new Error("duplicate-file-id");
-    const result = structuredClone(existing), ids2 = new Map(result.map((x) => [x.id, x]));
+    if (new Set(bundle.scenarios.map((x2) => x2.id)).size !== bundle.scenarios.length) throw new Error("duplicate-file-id");
+    const result = structuredClone(existing), ids2 = new Map(result.map((x2) => [x2.id, x2]));
     let added = 0, duplicates = 0;
     for (const item of bundle.scenarios) {
       if (ids2.has(item.id)) {
@@ -6403,14 +9169,14 @@ var CareerRuntime = (() => {
     return { items: result, added, duplicates };
   }
   function compareScenarioResults(a, b, resultA, resultB) {
-    const government = (r) => r.ranked.filter((x) => !["corporation", "fund"].includes(x.entityType));
-    const left = government(resultA), right = government(resultB), rightMap = new Map(right.map((x, i) => [x.id, { ...x, position: i + 1 }]));
+    const government = (r) => r.ranked.filter((x2) => !["corporation", "fund"].includes(x2.entityType));
+    const left = government(resultA), right = government(resultB), rightMap = new Map(right.map((x2, i2) => [x2.id, { ...x2, position: i2 + 1 }]));
     return {
       changedAnswers: Object.keys(a.inputs.answers).filter((id) => a.inputs.answers[id] !== b.inputs.answers[id]),
       changedConditions: CONDITION_IDS2.filter((id) => a.inputs.conditions[id] !== b.inputs.conditions[id]),
       samePriorityOrder: JSON.stringify(a.inputs.prioritySectors) === JSON.stringify(b.inputs.prioritySectors),
-      topOverlap: left.slice(0, 5).filter((x) => right.slice(0, 5).some((y) => y.id === x.id)).length,
-      rows: left.map((x, i) => ({ id: x.id, scoreA: x.score, scoreB: rightMap.get(x.id)?.score ?? null, rankA: i + 1, rankB: rightMap.get(x.id)?.position ?? null, delta: Math.round(((rightMap.get(x.id)?.score ?? x.score) - x.score) * 10) / 10 }))
+      topOverlap: left.slice(0, 5).filter((x2) => right.slice(0, 5).some((y) => y.id === x2.id)).length,
+      rows: left.map((x2, i2) => ({ id: x2.id, scoreA: x2.score, scoreB: rightMap.get(x2.id)?.score ?? null, rankA: i2 + 1, rankB: rightMap.get(x2.id)?.position ?? null, delta: Math.round(((rightMap.get(x2.id)?.score ?? x2.score) - x2.score) * 10) / 10 }))
     };
   }
 
@@ -6493,13 +9259,13 @@ var CareerRuntime = (() => {
     const sectorPreferences = buildSectorPreference(inputs.prioritySectors, inputs.lowPrioritySectors, data2.sectors);
     const context = { roleProfile, sectorPreferences, conditions: inputs.conditions, focusAreas: inputs.focusAreas || {} };
     const map = new Map(data2.tracks.map((t) => [t.id, t]));
-    const ranked = registry.records.map((record) => {
-      const options = record.tracks.map((link) => {
-        const scored = scoreAuthority({ id: record.id, shortName: record.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
+    const ranked = registry.records.map((record2) => {
+      const options = record2.tracks.map((link) => {
+        const scored = scoreAuthority({ id: record2.id, shortName: record2.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
         return { ...scored, link };
       }).sort((a, b) => b.rawScore - a.rawScore || b.sectorFit - a.sectorFit || a.link.id.localeCompare(b.link.id));
-      const overall = scoreAuthority({ id: record.id, shortName: record.name.ru, tracks: record.tracks }, context, map);
-      return { ...record, match: { ...overall, link: overall.path }, options };
+      const overall = scoreAuthority({ id: record2.id, shortName: record2.name.ru, tracks: record2.tracks }, context, map);
+      return { ...record2, match: { ...overall, link: overall.path }, options };
     }).sort((a, b) => b.match.rawScore - a.match.rawScore || b.match.sectorFit - a.match.sectorFit || a.name.ru.localeCompare(b.name.ru, "ru"));
     return { ranked, roleProfile, sectorPreferences };
   }
@@ -6508,7 +9274,7 @@ var CareerRuntime = (() => {
     return records.filter((a) => (cohort === "all" || a.cohort === cohort) && (!q || [...Object.values(a.name), ...Object.values(a.location), ...Object.values(a.mission), ...a.verifiedUnits, ...a.tracks.flatMap((t) => Object.values(t.title))].join(" ").normalize("NFKC").toLocaleLowerCase().includes(q)));
   }
   function publicServiceReport(registry, ranked) {
-    return { kind: "russian-public-service-exploration", schemaVersion: 1, registryVersion: registry.registryVersion, modelVersion: MODEL_VERSION, scoringRevision: SCORING_REVISION, generatedAt: (/* @__PURE__ */ new Date()).toISOString(), notice: "Not an anonymous class result or evidence of eligibility. Russian institutions only.", items: ranked.map((a, i) => ({ id: a.id, officialName: a.name.ru, country: "RU", cohort: a.cohort, rankWithinSelection: i + 1, index: a.match?.score ?? null, track: a.match?.link.id ?? null, source: a.sources[0].url })) };
+    return { kind: "russian-public-service-exploration", schemaVersion: 1, registryVersion: registry.registryVersion, modelVersion: MODEL_VERSION, scoringRevision: SCORING_REVISION, generatedAt: (/* @__PURE__ */ new Date()).toISOString(), notice: "Not an anonymous class result or evidence of eligibility. Russian institutions only.", items: ranked.map((a, i2) => ({ id: a.id, officialName: a.name.ru, country: "RU", cohort: a.cohort, rankWithinSelection: i2 + 1, index: a.match?.score ?? null, track: a.match?.link.id ?? null, source: a.sources[0].url })) };
   }
 
   // site/apps/career/assets/public-service.mjs
@@ -6541,18 +9307,18 @@ var CareerRuntime = (() => {
     }
     function modelDetails(a) {
       return `<section class="ps-section"><h2>${L4("\u0427\u0442\u043E \u043C\u043E\u0436\u043D\u043E \u0434\u0435\u043B\u0430\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438", "Work to explore", "\u53EF\u63A2\u7D22\u7684\u5DE5\u4F5C")}</h2><p class="small-note">${L4("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0438\u0436\u0435 \u043E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u0427\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u043E\u0440\u0433\u0430\u043D\u0430.", "The following labels are modelled work directions, not confirmed vacancies. Weights are not official institutional ratings.", "\u4E0B\u5217\u540D\u79F0\u662F\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411\uFF0C\u4E0D\u662F\u5DF2\u786E\u8BA4\u7684\u5728\u62DB\u804C\u4F4D\u3002\u6570\u503C\u6743\u91CD\u4E0D\u662F\u5B98\u65B9\u673A\u6784\u8BC4\u5206\u3002")}</p>${a.tracks.map((t) => {
-        const opt = a.options?.find((x) => x.link.id === t.id);
-        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I2("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E6(translate(data2.sectors.find((x) => x.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E6(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
+        const opt = a.options?.find((x2) => x2.link.id === t.id);
+        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I2("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E6(translate(data2.sectors.find((x2) => x2.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E6(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
       }).join("")}</section>`;
     }
     function detail(a) {
-      const match = result?.ranked.find((x) => x.id === a.id);
+      const match = result?.ranked.find((x2) => x2.id === a.id);
       a = match || a;
       return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E6(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E6(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
     }
     function comparisonView(items) {
       if (comparison.length !== 2) return "";
-      const selectedItems = comparison.map((id) => items.find((x) => x.id === id) || byId(id));
+      const selectedItems = comparison.map((id) => items.find((x2) => x2.id === id) || byId(id));
       return `<section class="ps-section ps-comparison" id="ps-comparison"><h2>${L4("\u0414\u0432\u0430 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u044F\u0434\u043E\u043C", "Two directions side by side", "\u4E24\u4E2A\u65B9\u5411\u5E76\u5217")}</h2><div class="ps-compare-grid">${selectedItems.map((a) => `<article><h3>${B(a.name)}</h3><p>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</p><strong>${a.match ? F(a.match.score) + " / 100" : L4("\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Complete the test for an index", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u663E\u793A\u6307\u6570")}</strong><p>${a.match ? B(a.match.link.title) : B(a.tracks[0].title)}</p><p>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C.", "Check education requirements and the actual service regime in official materials.", "\u6309\u5B98\u65B9\u8D44\u6599\u6838\u5BF9\u5B66\u5386\u8981\u6C42\u548C\u5B9E\u9645\u670D\u52A1\u5236\u5EA6\u3002")}</p>${sourceLink(a.sources.find((s) => s.id === "hr") || a.sources[0])}</article>`).join("")}</div><button class="text-link" id="ps-clear-compare">${L4("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435", "Clear comparison", "\u6E05\u7A7A\u6BD4\u8F83")}</button></section>`;
     }
     function list2() {
@@ -6600,7 +9366,7 @@ var CareerRuntime = (() => {
       search?.addEventListener("input", updateSearch);
       root.querySelectorAll("[data-ps-compare]").forEach((b) => b.onclick = () => {
         const id = b.dataset.psCompare;
-        comparison = comparison.includes(id) ? comparison.filter((x) => x !== id) : comparison.length < 2 ? [...comparison, id] : [comparison[1], id];
+        comparison = comparison.includes(id) ? comparison.filter((x2) => x2 !== id) : comparison.length < 2 ? [...comparison, id] : [comparison[1], id];
         render("public-service");
         root.querySelector(`[data-ps-compare="${id}"]`)?.focus();
         if (comparison.length === 2) root.querySelector("#ps-comparison")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -6641,7 +9407,7 @@ var CareerRuntime = (() => {
   var CLOSE_SCORE_DISTANCE = 2.5;
   var core = (item) => !["corporation", "fund"].includes(item.entityType);
   var factorFor = (importance) => importance >= 3 ? 1 : importance === 2 ? 0.96 : 0.91;
-  var governmentRanking = (result) => result.ranked.filter(core).map((x, i) => ({ ...x, rank: i + 1 }));
+  var governmentRanking = (result) => result.ranked.filter(core).map((x2, i2) => ({ ...x2, rank: i2 + 1 }));
   function checkedInputs(state2, data2) {
     const input = inputsFromState(state2);
     const errors = validateInputs(input, data2.questions, data2.sectors);
@@ -6658,9 +9424,9 @@ var CareerRuntime = (() => {
   function displayContributions(values, displayedTotal) {
     const tenths = values.map((v) => Math.floor(v * 10 + 1e-10));
     let remainder = Math.round(displayedTotal * 10) - tenths.reduce((a, b) => a + b, 0);
-    const order = values.map((v, i) => ({ i, remainder: v * 10 - tenths[i] })).sort((a, b) => b.remainder - a.remainder || a.i - b.i);
+    const order = values.map((v, i2) => ({ i: i2, remainder: v * 10 - tenths[i2] })).sort((a, b) => b.remainder - a.remainder || a.i - b.i);
     if (remainder < 0 || remainder > values.length) throw new Error("contribution-rounding");
-    for (let i = 0; i < remainder; i++) tenths[order[i].i]++;
+    for (let i2 = 0; i2 < remainder; i2++) tenths[order[i2].i]++;
     return tenths.map((v) => v / 10);
   }
   function explainAuthority(authorityId, state2, data2, existingResult = null) {
@@ -6820,12 +9586,12 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/decision-lab.mjs
-  var E7 = (x) => String(x ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E7 = (x2) => String(x2 ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L5 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
-  var T = (x) => E7(translate(x));
+  var T = (x2) => E7(translate(x2));
   var I3 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
-  var F2 = (x) => new Intl.NumberFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage() === "en" ? "en-GB" : "ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(x);
-  var D = (x) => `${x > 0 ? "+" : ""}${F2(x)}`;
+  var F2 = (x2) => new Intl.NumberFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage() === "en" ? "en-GB" : "ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(x2);
+  var D = (x2) => `${x2 > 0 ? "+" : ""}${F2(x2)}`;
   function createDecisionLab({ data: data2, state: state2, routeTo: routeTo2, openAuthority: openAuthority2, saveScenario, toast: toast2 }) {
     const root = document.querySelector("#decision-root");
     let mode = "explain", selected = "", baseline = null, draft = null, fingerprint2 = "", sensitivity = null, busy = false, title = "";
@@ -6860,31 +9626,31 @@ var CareerRuntime = (() => {
     }
     const trackName = (id) => data2.tracks.find((t) => t.id === id)?.title || id;
     function explain() {
-      const x = explainAuthority(selected, baseline, data2, result);
+      const x2 = explainAuthority(selected, baseline, data2, result);
       const labels = [L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B", "Work interests"), L5("\u0421\u0444\u0435\u0440\u044B \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438", "Policy areas"), L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430", "Working conditions")];
-      const max = [40, 45, 15];
-      const near = x.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E7(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
-      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x.authority, "compact")}<h2>${E7(authorityName(x.authority))}</h2></div><span>${x.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x.rank} / ${x.categorySize}</span></div><div class="dl-index"><strong>${F2(x.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
-    <p class="dl-track">${L5("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x.item.track?.title)}</strong></p>
-    ${x.roleProfile.flat ? `<div class="dl-notice">${L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
-    ${x.lowInterest ? `<div class="dl-notice">${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
+      const max2 = [40, 45, 15];
+      const near = x2.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E7(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
+      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x2.authority, "compact")}<h2>${E7(authorityName(x2.authority))}</h2></div><span>${x2.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x2.rank} / ${x2.categorySize}</span></div><div class="dl-index"><strong>${F2(x2.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
+    <p class="dl-track">${L5("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x2.item.track?.title)}</strong></p>
+    ${x2.roleProfile.flat ? `<div class="dl-notice">${L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
+    ${x2.lowInterest ? `<div class="dl-notice">${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
     <h3>${L5("\u0418\u0437 \u0447\u0435\u0433\u043E \u0441\u043B\u043E\u0436\u0438\u043B\u0441\u044F \u0438\u043D\u0434\u0435\u043A\u0441", "How the index adds up")}</h3><p>${L5("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043E\u0446\u0435\u043D\u043A\u0438 \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F + 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u041F\u043E\u044D\u0442\u043E\u043C\u0443 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442\u0441\u044F \u043D\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0434\u0438\u043D \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0439 \u0442\u0440\u0435\u043A, \u043D\u043E \u0438 \u043E\u0431\u0449\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F.", "Institution index: 70% of the best work direction + 30% of the average across all distinct work directions. This reflects both a suitable career path and the institution\u2019s wider work profile.")}</p>
-    <div class="dl-stacked" aria-hidden="true">${x.contributions.map((p, i) => `<i class="dl-piece-${i}" style="width:${p}%"></i>`).join("")}</div>
-    <div class="dl-contributions">${x.contributions.map((p, i) => `<div><span><i class="dl-key dl-piece-${i}"></i>${labels[i]}</span><strong>${F2(p)}</strong><small>${L5("\u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441", "base weight")}: ${max[i]} / 100</small></div>`).join("")}</div>
-    <p class="dl-formula">${x.contributions.map(F2).join(" + ")} = ${F2(x.item.score)} ${L5("\u0431\u0430\u043B\u043B\u0430 \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "index points")}</p>
+    <div class="dl-stacked" aria-hidden="true">${x2.contributions.map((p, i2) => `<i class="dl-piece-${i2}" style="width:${p}%"></i>`).join("")}</div>
+    <div class="dl-contributions">${x2.contributions.map((p, i2) => `<div><span><i class="dl-key dl-piece-${i2}"></i>${labels[i2]}</span><strong>${F2(p)}</strong><small>${L5("\u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441", "base weight")}: ${max2[i2]} / 100</small></div>`).join("")}</div>
+    <p class="dl-formula">${x2.contributions.map(F2).join(" + ")} = ${F2(x2.item.score)} ${L5("\u0431\u0430\u043B\u043B\u0430 \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "index points")}</p>
     <p class="dl-help">${L5("\u0412\u0441\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0443\u0436\u0435 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442 \u043A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0442\u0440\u0435\u043A\u0430. \u0414\u0435\u0441\u044F\u0442\u044B\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D\u044B \u0442\u0430\u043A, \u0447\u0442\u043E\u0431\u044B \u0441\u0443\u043C\u043C\u0430 \u0441\u043E\u0432\u043F\u0430\u0434\u0430\u043B\u0430 \u0441 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u043C\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435 \u043E\u0442 \u044D\u0442\u043E\u0433\u043E \u043D\u0435 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F.", "All three contributions already include the track-representation factor. Displayed tenths are reconciled to add up to the index; rankings are not changed.")}</p>
-    <details class="dl-details"><summary>${L5("\u0421\u0444\u0435\u0440\u044B \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Areas of the best work direction")}</summary><div class="dl-table-wrap" tabindex="0"><table><caption>${L5("\u0414\u0435\u0442\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F. \u0412\u0435\u0441\u0430 \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435, \u043D\u0435 \u0434\u043E\u043B\u0438 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432", "Details of the best work direction. Weights are authored, not workforce shares")}</caption><thead><tr><th>${L5("\u0421\u0444\u0435\u0440\u0430", "Area")}</th><th>${L5("\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442", "Your priority")}</th><th>${L5("\u0412\u0435\u0441 \u043E\u0440\u0433\u0430\u043D\u0430", "Agency weight")}</th><th>${L5("\u0412\u043A\u043B\u0430\u0434", "Contribution")}</th></tr></thead><tbody>${x.sectorRows.map((s) => `<tr><th>${T(sname(s.id))}</th><td>${s.priority ? `\u2116 ${s.priority}` : s.lowPriority ? L5("\u041D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Least interesting") : L5("\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430", "Not selected")}<small>${F2(s.preference)}</small></td><td>${F2(s.weight)}</td><td>${F2(s.points)}</td></tr>`).join("")}</tbody></table></div><p>${L5("\u041F\u0440\u0438 \u0437\u0430\u043C\u0435\u043D\u0435 \u0441\u0444\u0435\u0440\u044B \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u043E\u0439 \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442. \u041D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441 0,25, \u0430 \u043D\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u043E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u043E\u0439.", "Changing an area affects only the area component. An unselected area receives a baseline weight of 0.25 and is not treated as rejected.")}</p></details>
-    <details class="dl-details"><summary>${L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Conditions of the best work direction")}</summary><p>${L5("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u043E\u0442\u043D\u043E\u0441\u044F\u0442\u0441\u044F \u043A \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C\u0443 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0440\u0430\u0431\u043E\u0442\u044B. \u042D\u0442\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u043D\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u043A\u043B\u0430\u0434. \u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043D\u0435 \u0448\u0442\u0440\u0430\u0444\u0443\u0435\u0442\u0441\u044F.", "Ranges apply to the selected work path. They are scenario assumptions, not vacancy requirements. An unknown condition has a neutral contribution. Greater willingness is not penalised.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L5("\u0423\u0441\u043B\u043E\u0432\u0438\u0435", "Condition")}</th><th>${L5("\u0412\u0430\u0448 \u043E\u0442\u0432\u0435\u0442", "Your answer")}</th><th>${L5("\u041C\u043E\u0434\u0435\u043B\u044C \u043E\u0440\u0433\u0430\u043D\u0430", "Agency model")}</th><th>${L5("\u0412\u043A\u043B\u0430\u0434, \u0431\u0430\u043B\u043B\u044B", "Contribution, points")}</th></tr></thead><tbody>${x.conditionRows.map((c) => `<tr><th>${T(data2.conditions.find((y) => y.id === c.id).title)}</th><td>${c.willingness} / 5</td><td>${T(c.requirementLabel)}${c.known ? " / 5" : ""}</td><td>${F2(15 * x.factor * c.fit / 4)}</td></tr>`).join("")}</tbody></table></div></details>
-    <details class="dl-details"><summary>${L5("\u0412\u0441\u0435 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "All career tracks in this agency")}</summary><p>${L5("\u041B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u0451\u0442 70% \u0438\u043D\u0434\u0435\u043A\u0441\u0430, \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u2014 30%. \u041A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438: 3 \u2192 1,00; 2 \u2192 0,96; 1 \u2192 0,91. \u042D\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438.", "The best work direction contributes 70% of the index; the average across all distinct work directions contributes 30%. Representation factors are 3 \u2192 1.00, 2 \u2192 0.96 and 1 \u2192 0.91. These are authored settings.")}</p><div class="dl-tracks">${x.tracks.map((t) => `<div class="${t.selected ? "selected" : ""}"><span>${T(trackName(t.id))}${t.selected ? `<small>${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435", "Shown in your result")}</small>` : ""}</span><span>${t.importance} / 3</span><strong>${F2(t.score)}</strong></div>`).join("")}</div></details>
-    <details class="dl-details"><summary>${L5("\u0420\u043E\u043B\u044C \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Role of the best work direction")}</summary><p>${L5("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 1\u20135 \u0438 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438 \u0432 \u0440\u043E\u043B\u0438 0\u20131 \u2013 \u0440\u0430\u0437\u043D\u044B\u0435 \u0448\u043A\u0430\u043B\u044B. \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0444\u043E\u0440\u043C\u0430 \u0434\u0435\u0432\u044F\u0442\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u0439, \u0430 \u043D\u0435 \u0438\u0445 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0435 \u0443\u0440\u043E\u0432\u043D\u0438. \u042D\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0439.", "Your 1\u20135 ratings and authored 0\u20131 task relevance are different scales. The shapes of the nine-value profiles are compared, not their absolute levels. This does not measure skills.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L5("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "Work area")}</th><th>${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 1\u20135", "Interest 1\u20135")}</th><th>${L5("\u0412\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u043E\u043B\u0438 0\u20131", "Role relevance 0\u20131")}</th></tr></thead><tbody>${x.roleRows.map((r) => `<tr><th>${T(data2.scales.find((s) => s.id === r.id).short)}</th><td>${F2(r.interest)}</td><td>${F2(r.relevance)}</td></tr>`).join("")}</tbody></table></div></details>
+    <details class="dl-details"><summary>${L5("\u0421\u0444\u0435\u0440\u044B \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Areas of the best work direction")}</summary><div class="dl-table-wrap" tabindex="0"><table><caption>${L5("\u0414\u0435\u0442\u0430\u043B\u0438\u0437\u0430\u0446\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F. \u0412\u0435\u0441\u0430 \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435, \u043D\u0435 \u0434\u043E\u043B\u0438 \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u043E\u0432", "Details of the best work direction. Weights are authored, not workforce shares")}</caption><thead><tr><th>${L5("\u0421\u0444\u0435\u0440\u0430", "Area")}</th><th>${L5("\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442", "Your priority")}</th><th>${L5("\u0412\u0435\u0441 \u043E\u0440\u0433\u0430\u043D\u0430", "Agency weight")}</th><th>${L5("\u0412\u043A\u043B\u0430\u0434", "Contribution")}</th></tr></thead><tbody>${x2.sectorRows.map((s) => `<tr><th>${T(sname(s.id))}</th><td>${s.priority ? `\u2116 ${s.priority}` : s.lowPriority ? L5("\u041D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Least interesting") : L5("\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u0430", "Not selected")}<small>${F2(s.preference)}</small></td><td>${F2(s.weight)}</td><td>${F2(s.points)}</td></tr>`).join("")}</tbody></table></div><p>${L5("\u041F\u0440\u0438 \u0437\u0430\u043C\u0435\u043D\u0435 \u0441\u0444\u0435\u0440\u044B \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u043E\u0439 \u043A\u043E\u043C\u043F\u043E\u043D\u0435\u043D\u0442. \u041D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u0431\u0430\u0437\u043E\u0432\u044B\u0439 \u0432\u0435\u0441 0,25, \u0430 \u043D\u0435 \u0441\u0447\u0438\u0442\u0430\u0435\u0442\u0441\u044F \u043E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u043E\u0439.", "Changing an area affects only the area component. An unselected area receives a baseline weight of 0.25 and is not treated as rejected.")}</p></details>
+    <details class="dl-details"><summary>${L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Conditions of the best work direction")}</summary><p>${L5("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u043E\u0442\u043D\u043E\u0441\u044F\u0442\u0441\u044F \u043A \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u043C\u0443 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044E \u0440\u0430\u0431\u043E\u0442\u044B. \u042D\u0442\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u043D\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0438\u043C\u0435\u0435\u0442 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u043A\u043B\u0430\u0434. \u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043D\u0435 \u0448\u0442\u0440\u0430\u0444\u0443\u0435\u0442\u0441\u044F.", "Ranges apply to the selected work path. They are scenario assumptions, not vacancy requirements. An unknown condition has a neutral contribution. Greater willingness is not penalised.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L5("\u0423\u0441\u043B\u043E\u0432\u0438\u0435", "Condition")}</th><th>${L5("\u0412\u0430\u0448 \u043E\u0442\u0432\u0435\u0442", "Your answer")}</th><th>${L5("\u041C\u043E\u0434\u0435\u043B\u044C \u043E\u0440\u0433\u0430\u043D\u0430", "Agency model")}</th><th>${L5("\u0412\u043A\u043B\u0430\u0434, \u0431\u0430\u043B\u043B\u044B", "Contribution, points")}</th></tr></thead><tbody>${x2.conditionRows.map((c) => `<tr><th>${T(data2.conditions.find((y) => y.id === c.id).title)}</th><td>${c.willingness} / 5</td><td>${T(c.requirementLabel)}${c.known ? " / 5" : ""}</td><td>${F2(15 * x2.factor * c.fit / 4)}</td></tr>`).join("")}</tbody></table></div></details>
+    <details class="dl-details"><summary>${L5("\u0412\u0441\u0435 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "All career tracks in this agency")}</summary><p>${L5("\u041B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u0451\u0442 70% \u0438\u043D\u0434\u0435\u043A\u0441\u0430, \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u2014 30%. \u041A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438: 3 \u2192 1,00; 2 \u2192 0,96; 1 \u2192 0,91. \u042D\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438.", "The best work direction contributes 70% of the index; the average across all distinct work directions contributes 30%. Representation factors are 3 \u2192 1.00, 2 \u2192 0.96 and 1 \u2192 0.91. These are authored settings.")}</p><div class="dl-tracks">${x2.tracks.map((t) => `<div class="${t.selected ? "selected" : ""}"><span>${T(trackName(t.id))}${t.selected ? `<small>${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435", "Shown in your result")}</small>` : ""}</span><span>${t.importance} / 3</span><strong>${F2(t.score)}</strong></div>`).join("")}</div></details>
+    <details class="dl-details"><summary>${L5("\u0420\u043E\u043B\u044C \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Role of the best work direction")}</summary><p>${L5("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 1\u20135 \u0438 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438 \u0432 \u0440\u043E\u043B\u0438 0\u20131 \u2013 \u0440\u0430\u0437\u043D\u044B\u0435 \u0448\u043A\u0430\u043B\u044B. \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0444\u043E\u0440\u043C\u0430 \u0434\u0435\u0432\u044F\u0442\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u0439, \u0430 \u043D\u0435 \u0438\u0445 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0435 \u0443\u0440\u043E\u0432\u043D\u0438. \u042D\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0439.", "Your 1\u20135 ratings and authored 0\u20131 task relevance are different scales. The shapes of the nine-value profiles are compared, not their absolute levels. This does not measure skills.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L5("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "Work area")}</th><th>${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 1\u20135", "Interest 1\u20135")}</th><th>${L5("\u0412\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u043E\u043B\u0438 0\u20131", "Role relevance 0\u20131")}</th></tr></thead><tbody>${x2.roleRows.map((r) => `<tr><th>${T(data2.scales.find((s) => s.id === r.id).short)}</th><td>${F2(r.interest)}</td><td>${F2(r.relevance)}</td></tr>`).join("")}</tbody></table></div></details>
     </article><aside class="dl-aside"><section class="dl-side-card"><h3>${L5("\u041F\u043E\u0447\u0435\u043C\u0443 \u043D\u0435 \u0441\u0442\u043E\u0438\u0442 \u0441\u043F\u043E\u0440\u0438\u0442\u044C \u043E \u0434\u0435\u0441\u044F\u0442\u044B\u0445", "Why tenths should not decide a career")}</h3><p>${L5("\u042D\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u043D\u0430\u0445\u043E\u0434\u044F\u0442\u0441\u044F \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 2,5 \u0431\u0430\u043B\u043B\u0430 \u043E\u0442 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E. \u041F\u043E\u0440\u043E\u0433 \u2013 \u043F\u0440\u0430\u0432\u0438\u043B\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430, \u043D\u0435 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B.", "These agencies are within 2.5 points of the selected one. The threshold is an interface rule, not a statistical confidence interval.")}</p><div class="dl-neighbours">${near || `<p>${L5("\u0412 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435 \u0441\u043E\u0441\u0435\u0434\u0435\u0439 \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043F\u043E\u0440\u043E\u0433\u0430 \u043D\u0435\u0442.", "No other agency in this category is within the threshold.")}</p>`}</div><p class="dl-help">${L5("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u043E\u043A\u0440\u0443\u0433\u043B\u0451\u043D\u043D\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0442\u043E\u0447\u043D\u044B\u0435 \u0440\u0430\u0432\u0435\u043D\u0441\u0442\u0432\u0430 \u0440\u0430\u0437\u0440\u0435\u0448\u0430\u044E\u0442\u0441\u044F \u043F\u043E \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0443. \u042D\u0442\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043F\u043E\u0440\u044F\u0434\u043E\u043A, \u043D\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430.", "Ordering uses the unrounded index; exact ties are resolved by identifier. This technical order is not evidence of superiority.")}</p></section>
     <section class="dl-side-card"><h3>${L5("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Evidence behind the recommendation")}</h3><p>${L5("\u0424\u0443\u043D\u043A\u0446\u0438\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u043D\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u043E\u0434\u043D\u043E \u0438 \u0442\u043E \u0436\u0435. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u0438; \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0438 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0443\u0447\u0435\u0431\u043D\u044B\u043C \u043C\u043E\u0434\u0435\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435\u043C.", "Official functions and authored weights are not the same. Sources describe functions; numerical profiles are educational modelling.")}</p><button type="button" class="button button-secondary" id="dl-sources">${L5("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438", "Review sources")}${I3("source")}</button></section>
-    ${sensitivityCard(x)}
+    ${sensitivityCard(x2)}
     </aside></div>`;
     }
-    function sensitivityCard(x) {
+    function sensitivityCard(x2) {
       if (!sensitivity) return `<section class="dl-side-card"><h3>${L5("\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u0435\u043D", "How sensitive is this result?")}</h3><p>${L5("\u0418\u0437\u043C\u0435\u043D\u0438\u043C \u043F\u043E \u043E\u0434\u043D\u043E\u043C\u0443 \u043E\u0442\u0432\u0435\u0442\u0443 \u043D\u0430 \u043E\u0434\u0438\u043D \u0431\u0430\u043B\u043B \u0432 \u043E\u0431\u0435 \u0441\u0442\u043E\u0440\u043E\u043D\u044B. \u0421\u0444\u0435\u0440\u044B \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u043E\u0441\u0442\u0430\u043D\u0443\u0442\u0441\u044F \u043F\u0440\u0435\u0436\u043D\u0438\u043C\u0438; \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0437\u0430\u043D\u043E\u0432\u043E.", "Change one answer at a time by one point in either direction. Areas and conditions stay fixed; your original answers remain untouched.")}</p><button type="button" id="dl-sensitivity" class="button button-primary" ${busy ? "disabled" : ""}>${busy ? L5("\u0420\u0430\u0441\u0441\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u043C\u2026", "Calculating\u2026") : L5("\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F", "Check small changes")}</button><p class="dl-help">${L5("\u042D\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0430\u043B\u0433\u043E\u0440\u0438\u0442\u043C\u0430 \u0440\u044F\u0434\u043E\u043C \u0441 \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u043E\u043C, \u043D\u0435 \u043F\u0440\u043E\u0433\u043D\u043E\u0437 \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043D\u0430\u0434\u0451\u0436\u043D\u043E\u0441\u0442\u0438 \u0442\u0435\u0441\u0442\u0430.", "This is a local algorithm check, not a prediction or an estimate of test reliability.")}</p></section>`;
-      const row = sensitivity.rows.find((r) => r.id === x.item.id);
+      const row = sensitivity.rows.find((r) => r.id === x2.item.id);
       return `<section class="dl-side-card"><h3>${L5("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u043C\u0430\u043B\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439", "Small-change check")}</h3><dl class="dl-stability"><div><dt>${L5("\u0412\u0430\u0440\u0438\u0430\u043D\u0442\u043E\u0432 \u043E\u0442\u0432\u0435\u0442\u043E\u0432", "Answer variants")}</dt><dd>${sensitivity.count}</dd></div>${row ? `<div><dt>${L5("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D \u043C\u0435\u0441\u0442\u0430", "Rank range")}</dt><dd>${row.minRank}\u2013${row.maxRank}</dd></div><div><dt>${L5("\u041E\u0441\u0442\u0430\u043B\u0441\u044F \u0432 \u0422\u041E\u041F-5", "Appeared in the top 5")}</dt><dd>${row.topFive} / ${sensitivity.count}</dd></div><div><dt>${L5("\u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Index range")}</dt><dd>${F2(row.minScore)}\u2013${F2(row.maxScore)}</dd></div>` : `<div><dt>${L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0435 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0438 \u0432 \u044D\u0442\u043E\u0439 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0435 \u043D\u0435 \u0440\u0430\u043D\u0436\u0438\u0440\u0443\u044E\u0442\u0441\u044F", "Other public-sector employers are not included in this check")}</dt></div>`}</dl><p class="dl-help">${L5("\u041F\u0435\u0440\u0435\u0431\u0440\u0430\u043D\u044B \u0432\u0441\u0435 \u0434\u043E\u043F\u0443\u0441\u0442\u0438\u043C\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0440\u043E\u0432\u043D\u043E \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 27 \u043E\u0442\u0432\u0435\u0442\u043E\u0432 \u043D\u0430 \xB11. \u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u0432\u043A\u043B\u044E\u0447\u0430\u044E\u0442 \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442; \u0441\u0447\u0451\u0442\u0447\u0438\u043A\u0438 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u044E\u0442 \u0442\u043E\u043B\u044C\u043A\u043E \u0438\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B. \u042D\u0442\u043E \u043D\u0435 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B \u0438 \u043D\u0435 \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C.", "Every allowed \xB11 change to one of 27 answers was tested. Ranges include the original result; counts include changed variants only. This is not a confidence interval or a probability.")}</p></section>`;
     }
     function topList(items, comparison = false) {
@@ -6902,7 +9668,7 @@ var CareerRuntime = (() => {
     <p class="dl-help">${L5("1 \u2013 \u043D\u0438\u0437\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C; 5 \u2013 \u0432\u044B\u0441\u043E\u043A\u0430\u044F. \u041E\u0446\u0435\u043D\u043A\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0437\u0434\u0435\u0441\u044C \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.", "1 means low willingness; 5 means high willingness. Work-interest answers are not changed here.")}</p><button type="button" id="dl-reset" class="button button-secondary" ${changed ? "" : "disabled"}>${I3("reset")}${L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Reset to original")}</button>
     <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E7(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I3("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
     <div class="dl-preview"><div class="dl-preview-summary" role="status"><h2>${L5("\u0414\u0432\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0440\u044F\u0434\u043E\u043C", "Two versions side by side")}</h2><p>${L5("\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043A\u0430\u0445", "Agencies shared by the top fives")}: <b>${preview.overlap} / 5</b> \xB7 ${L5("\u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0439", "conditions changed")}: <b>${preview.changes.conditions.length}</b></p></div>
-    <div class="dl-pair"><article><h3>${L5("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Original result")}</h3><div class="dl-priorities">${baseline.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.left)}</article><article class="dl-modified"><h3>${L5("\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Experimental variant")}</h3><div class="dl-priorities">${draft.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.right, true)}</article></div>
+    <div class="dl-pair"><article><h3>${L5("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Original result")}</h3><div class="dl-priorities">${baseline.prioritySectors.map((id, i2) => `<span>${i2 + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.left)}</article><article class="dl-modified"><h3>${L5("\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Experimental variant")}</h3><div class="dl-priorities">${draft.prioritySectors.map((id, i2) => `<span>${i2 + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.right, true)}</article></div>
     <p class="dl-help">${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E \u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u0432\u0432\u0435\u0434\u0451\u043D\u043D\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u042D\u0442\u043E \u043D\u0435 \u0441\u043E\u0432\u0435\u0442 \u043F\u043E\u0434\u0431\u0438\u0440\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E. \u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443, \u0432\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u0430\u043D\u043A\u0435\u0442\u0435 \u0438\u043B\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "These are the model\u2019s consequences of your changes, not an invitation to tailor answers to a target agency. To reconsider your actual interests, return to the questionnaire or save a separate scenario.")}</p></div></div>`;
     }
     function render(route) {
@@ -7085,7 +9851,7 @@ var CareerRuntime = (() => {
   var NOTEBOOK_FILE_LIMIT = 15e5;
   var TEXT_LIMIT = 1200;
   var textFields = ["why", "question", "next"];
-  var plain4 = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
+  var plain4 = (x2) => x2 !== null && typeof x2 === "object" && !Array.isArray(x2);
   var keys = (o, list2) => plain4(o) && Object.keys(o).length === list2.length && list2.every((k) => Object.hasOwn(o, k));
   function blankWorkbook() {
     return { schema: NOTEBOOK_SCHEMA, schemaVersion: 1, selected: null, notes: {}, responses: {}, duration: 90 };
@@ -7115,9 +9881,9 @@ var CareerRuntime = (() => {
     const minutes = duration === 45 ? [3, 12, 8, 10, 9, 3] : [5, 18, 15, 20, 25, 7];
     const steps = [["intro", "\u0412\u0432\u043E\u0434\u043D\u0430\u044F: \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043D\u0435 \u0440\u0430\u0432\u043D\u044B \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u043C", "Introduction: interests are not abilities"], ["test", "\u0422\u0435\u0441\u0442 \u0438 \u043F\u0435\u0440\u0432\u044B\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "The test and initial recommendations"], ["explore", "\u0420\u0430\u0437\u0431\u043E\u0440 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u043E\u0432", "Explain the recommendation and compare variants"], ["case", "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430 \u0438 \u0440\u0430\u0437\u0431\u043E\u0440 \u0440\u0435\u0448\u0435\u043D\u0438\u044F", "Try a professional task and discuss the response"], ["discussion", "\u041E\u0431\u0441\u0443\u0436\u0434\u0435\u043D\u0438\u0435 \u0432 \u043F\u0430\u0440\u0430\u0445 \u0438 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Pair discussion and career-choice worksheet"], ["finish", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0438\u0435", "Next step and closing"]];
     let offset = 0;
-    return steps.map(([id, ru, en], i) => {
-      const row = { id, title: { ru, en }, minutes: minutes[i], start: offset, end: offset + minutes[i] };
-      offset += minutes[i];
+    return steps.map(([id, ru, en], i2) => {
+      const row = { id, title: { ru, en }, minutes: minutes[i2], start: offset, end: offset + minutes[i2] };
+      offset += minutes[i2];
       return row;
     });
   }
@@ -7172,12 +9938,12 @@ var CareerRuntime = (() => {
       return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E8(name(a))}</small><h2>${E8(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
     }
     function materials(c) {
-      return c.materials ? `<section class="ws-materials"><h3>${E8(B2(c.materials.title))}</h3><p>${E8(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E8(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i) => i ? `<td>${E8(B2(v))}</td>` : `<th>${E8(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
+      return c.materials ? `<section class="ws-materials"><h3>${E8(B2(c.materials.title))}</h3><p>${E8(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E8(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i2) => i2 ? `<td>${E8(B2(v))}</td>` : `<th>${E8(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
     }
     function renderCases() {
       if (!activeCase) return `<p class="ws-intro">${E8(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
-      const c = cases.find((c2) => c2.id === activeCase), selected = book.responses[c.id], choice = c.choices.find((x) => x.id === selected), a = agency(c.authorityId);
-      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E8(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E8(B2(c.title))}</h2><p class="ws-situation">${E8(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x, i) => `<button class="ws-option${selected === x.id ? " chosen" : ""}" type="button" data-choice="${x.id}" aria-pressed="${selected === x.id}"><span>${i + 1}</span><p>${E8(B2(x.text))}</p>${selected === x.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E8(B2(choice.feedback))}</p><p>${E8(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E8(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
+      const c = cases.find((c2) => c2.id === activeCase), selected = book.responses[c.id], choice = c.choices.find((x2) => x2.id === selected), a = agency(c.authorityId);
+      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E8(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E8(B2(c.title))}</h2><p class="ws-situation">${E8(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x2, i2) => `<button class="ws-option${selected === x2.id ? " chosen" : ""}" type="button" data-choice="${x2.id}" aria-pressed="${selected === x2.id}"><span>${i2 + 1}</span><p>${E8(B2(x2.text))}</p>${selected === x2.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E8(B2(choice.feedback))}</p><p>${E8(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E8(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
     }
     function renderNotes() {
       if (!book.selected) {
@@ -7186,7 +9952,7 @@ var CareerRuntime = (() => {
       }
       const a = agency(book.selected), n = a ? book.notes[a.id] || blankNote() : blankNote();
       const fields = [["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u043C\u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E \u044D\u0442\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435?", "Why does this direction interest me?", "\u0421\u0432\u044F\u0436\u0438\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u0441 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0437\u0430\u0434\u0430\u0447\u0435\u0439, \u0430 \u043D\u0435 \u0441 \u043F\u0440\u0435\u0441\u0442\u0438\u0436\u0435\u043C \u043E\u0440\u0433\u0430\u043D\u0430.", "Connect your interest to a specific task rather than the agency\u2019s prestige."], ["question", "\u0427\u0442\u043E \u043C\u043D\u0435 \u0435\u0449\u0451 \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C?", "What do I still need to find out?", "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0435, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u0440\u0430\u0431\u043E\u0442\u044B \u0438\u043B\u0438 \u0433\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u0439.", "For example, education requirements, work activities or limits of responsibility."], ["next", "\u041A\u0430\u043A\u043E\u0439 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u044F \u0441\u0434\u0435\u043B\u0430\u044E?", "What will I do next?", "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442: \u043D\u0430\u0439\u0442\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443, \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0434\u0432\u0430 \u043E\u0440\u0433\u0430\u043D\u0430, \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443.", "State an action and its output: find an official careers page, compare two agencies, prepare a student project."]];
-      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x) => `<option value="${x.id}"${a?.id === x.id ? " selected" : ""}>${E8(name(x))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E8(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E8(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
+      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x2) => `<option value="${x2.id}"${a?.id === x2.id ? " selected" : ""}>${E8(name(x2))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E8(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E8(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
     }
     function renderPlan() {
       return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E8(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
@@ -7215,10 +9981,10 @@ var CareerRuntime = (() => {
       });
       root.querySelector(".ws-modebar")?.addEventListener("keydown", (e) => {
         if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
-        const tabs = [...root.querySelectorAll("[data-mode]")], i = tabs.indexOf(document.activeElement);
-        if (i < 0) return;
+        const tabs = [...root.querySelectorAll("[data-mode]")], i2 = tabs.indexOf(document.activeElement);
+        if (i2 < 0) return;
         e.preventDefault();
-        const j = e.key === "Home" ? 0 : e.key === "End" ? 2 : (i + (e.key === "ArrowRight" ? 1 : 2)) % 3;
+        const j = e.key === "Home" ? 0 : e.key === "End" ? 2 : (i2 + (e.key === "ArrowRight" ? 1 : 2)) % 3;
         tabs[j].click();
       });
       root.querySelectorAll("[data-case]").forEach((b) => b.onclick = () => {
@@ -7369,51 +10135,51 @@ var CareerRuntime = (() => {
   var plainObject = (value) => !!value && typeof value === "object" && !Array.isArray(value);
   var exactKeys = (value, keys3) => plainObject(value) && Object.keys(value).length === keys3.length && keys3.every((key) => Object.hasOwn(value, key));
   var TRACK_IDS = ["POLICY", "LEGAL", "INSPECT", "PROGRAM", "FINANCE", "DIGITAL", "SERVICE", "TERRITORIAL", "INTERNATIONAL"];
-  function validateAnonymousRecord(record, registry = validationRegistry) {
+  function validateAnonymousRecord(record2, registry = validationRegistry) {
     const errors = [];
-    if (!record || typeof record !== "object" || Array.isArray(record)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
-    if (record.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
-    const schemaOK = exactKeys(record, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record.roleProfile.raw, SCALE_IDS2) && exactKeys(record.conditions, CONDITION_IDS3) && Array.isArray(record.ranking) && record.ranking.length >= 5 && record.ranking.length <= 10 && record.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
+    if (!record2 || typeof record2 !== "object" || Array.isArray(record2)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
+    if (record2.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
+    const schemaOK = exactKeys(record2, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record2.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record2.roleProfile.raw, SCALE_IDS2) && exactKeys(record2.conditions, CONDITION_IDS3) && Array.isArray(record2.ranking) && record2.ranking.length >= 5 && record2.ranking.length <= 10 && record2.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
     if (!schemaOK) return { valid: false, errors: ["\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0444\u0430\u0439\u043B\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0437\u0430\u043A\u0440\u044B\u0442\u043E\u0439 \u0441\u0445\u0435\u043C\u0435. \u041F\u043E\u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u0435, \u0432 \u0442\u043E\u043C \u0447\u0438\u0441\u043B\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u043E\u043B\u044F, \u043D\u0435 \u0434\u043E\u043F\u0443\u0441\u043A\u0430\u044E\u0442\u0441\u044F."] };
-    if (!Array.isArray(record.leadingTieIds) || !record.leadingTieIds.length || record.leadingTieIds.length > 69 || new Set(record.leadingTieIds).size !== record.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
-    if (record.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
-    if (record.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
-    if (record.questionnaireVersion !== QUESTIONNAIRE_VERSION || record.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
-    if (!validateFocusAreas(record.focusAreas, record.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
-    if (record.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
-    if (typeof record.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
-    if (typeof record.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record.createdAt) || Number.isNaN(Date.parse(record.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
-    if (!record.roleProfile || typeof record.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
+    if (!Array.isArray(record2.leadingTieIds) || !record2.leadingTieIds.length || record2.leadingTieIds.length > 69 || new Set(record2.leadingTieIds).size !== record2.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
+    if (record2.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
+    if (record2.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
+    if (record2.questionnaireVersion !== QUESTIONNAIRE_VERSION || record2.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
+    if (!validateFocusAreas(record2.focusAreas, record2.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
+    if (record2.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
+    if (typeof record2.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record2.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
+    if (typeof record2.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record2.createdAt) || Number.isNaN(Date.parse(record2.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
+    if (!record2.roleProfile || typeof record2.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
     for (const id of SCALE_IDS2) {
-      const value = record.roleProfile?.raw?.[id];
+      const value = record2.roleProfile?.raw?.[id];
       if (!Number.isFinite(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0448\u043A\u0430\u043B\u044B ${id}.`);
     }
-    const dispersion = record.roleProfile?.dispersion;
+    const dispersion = record2.roleProfile?.dispersion;
     if (!Number.isFinite(dispersion) || dispersion < 0 || dispersion > 2) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0438\u0441\u043F\u0435\u0440\u0441\u0438\u044F \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    if (typeof record.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    const values = SCALE_IDS2.map((id) => record.roleProfile.raw[id]);
+    if (typeof record2.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
+    const values = SCALE_IDS2.map((id) => record2.roleProfile.raw[id]);
     if (values.every((v) => typeof v === "number" && Number.isFinite(v))) {
       const mean = values.reduce((a, b) => a + b, 0) / values.length;
       const sd = Math.sqrt(values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length);
-      if (Math.abs(sd - dispersion) > 1e-6 || record.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
+      if (Math.abs(sd - dispersion) > 1e-6 || record2.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
     }
-    if (!Array.isArray(record.prioritySectors) || record.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    if (!Array.isArray(record.lowPrioritySectors) || record.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    const priority = Array.isArray(record.prioritySectors) ? record.prioritySectors : [];
-    const low = Array.isArray(record.lowPrioritySectors) ? record.lowPrioritySectors : [];
+    if (!Array.isArray(record2.prioritySectors) || record2.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    if (!Array.isArray(record2.lowPrioritySectors) || record2.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    const priority = Array.isArray(record2.prioritySectors) ? record2.prioritySectors : [];
+    const low = Array.isArray(record2.lowPrioritySectors) ? record2.lowPrioritySectors : [];
     if (new Set(priority).size !== priority.length || new Set(low).size !== low.length) errors.push("\u0421\u0444\u0435\u0440\u044B \u0432\u043D\u0443\u0442\u0440\u0438 \u0441\u043F\u0438\u0441\u043A\u0430 \u043D\u0435 \u0434\u043E\u043B\u0436\u043D\u044B \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0442\u044C\u0441\u044F.");
     if (priority.some((id) => !SECTOR_IDS.includes(id)) || low.some((id) => !SECTOR_IDS.includes(id))) errors.push("\u0424\u0430\u0439\u043B \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0443\u044E \u0441\u0444\u0435\u0440\u0443 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438.");
     if (priority.some((id) => low.includes(id))) errors.push("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0438 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u043F\u0435\u0440\u0435\u0441\u0435\u043A\u0430\u044E\u0442\u0441\u044F.");
-    if (!record.conditions || typeof record.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
+    if (!record2.conditions || typeof record2.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
     for (const id of CONDITION_IDS3) {
-      const value = record.conditions?.[id];
+      const value = record2.conditions?.[id];
       if (!Number.isInteger(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F ${id}.`);
     }
-    if (!Array.isArray(record.ranking) || record.ranking.length < 5 || record.ranking.length > 10) {
+    if (!Array.isArray(record2.ranking) || record2.ranking.length < 5 || record2.ranking.length > 10) {
       errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0434\u043E\u043B\u0436\u0435\u043D \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043E\u0442 \u043F\u044F\u0442\u0438 \u0434\u043E \u0434\u0435\u0441\u044F\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.");
     } else {
       const authorityIds = /* @__PURE__ */ new Set();
-      record.ranking.forEach((item, index) => {
+      record2.ranking.forEach((item, index) => {
         if (!item || typeof item !== "object") {
           errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0441\u0442\u0440\u043E\u043A\u0430 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 ${index + 1}.`);
           return;
@@ -7423,7 +10189,7 @@ var CareerRuntime = (() => {
         if (authorityIds.has(item.authorityId)) errors.push("\u041E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0435\u0442\u0441\u044F \u0432 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435.");
         authorityIds.add(item.authorityId);
         if (typeof item.score !== "number" || !Number.isFinite(item.score) || item.score < 0 || item.score > 100) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441 \u0432 \u0441\u0442\u0440\u043E\u043A\u0435 ${index + 1}.`);
-        if (index && item.score > record.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
+        if (index && item.score > record2.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
         if (Array.isArray(registry?.authorities)) {
           const authority = registry.authorities.find((a) => a.id === item.authorityId);
           if (!authority || ["corporation", "fund"].includes(authority.entityType)) errors.push("\u0412 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0432\u043D\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0433\u043E \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430.");
@@ -7439,35 +10205,35 @@ var CareerRuntime = (() => {
         authorities: registry.authorities,
         tracks: registry.tracks,
         sectors: registry.sectors,
-        roleProfile: profileFromMeans(record.roleProfile.raw),
+        roleProfile: profileFromMeans(record2.roleProfile.raw),
         prioritySectors: priority,
         lowPrioritySectors: low,
-        conditions: record.conditions,
-        focusAreas: record.focusAreas
+        conditions: record2.conditions,
+        focusAreas: record2.focusAreas
       }).ranked.filter((item) => !["corporation", "fund"].includes(item.entityType));
-      const expectedTies = expected.filter((x) => Math.abs(x.rawScore - expected[0].rawScore) < 1e-8).map((x) => x.id);
-      if (JSON.stringify(expectedTies) !== JSON.stringify(record.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
-      expected.splice(record.ranking.length);
-      if (expected.length !== record.ranking.length || expected.some((item, i) => item.id !== record.ranking[i].authorityId || Math.abs(item.score - record.ranking[i].score) > 1e-8 || (item.track?.id || null) !== record.ranking[i].trackId)) {
+      const expectedTies = expected.filter((x2) => Math.abs(x2.rawScore - expected[0].rawScore) < 1e-8).map((x2) => x2.id);
+      if (JSON.stringify(expectedTies) !== JSON.stringify(record2.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
+      expected.splice(record2.ranking.length);
+      if (expected.length !== record2.ranking.length || expected.some((item, i2) => item.id !== record2.ranking[i2].authorityId || Math.abs(item.score - record2.ranking[i2].score) > 1e-8 || (item.track?.id || null) !== record2.ranking[i2].trackId)) {
         errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u0438 \u0432\u0435\u0440\u0441\u0438\u0438 \u043C\u043E\u0434\u0435\u043B\u0438. \u041F\u0435\u0440\u0435\u0441\u0447\u0451\u0442 \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0438\u043B \u0440\u0430\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.");
       }
     }
     return { valid: errors.length === 0, errors: [...new Set(errors)] };
   }
   function aggregateAnonymousRecords(records = [], registry = validationRegistry) {
-    const validRecords = records.filter((record) => validateAnonymousRecord(record, registry).valid);
+    const validRecords = records.filter((record2) => validateAnonymousRecord(record2, registry).valid);
     const authorityTopOne = /* @__PURE__ */ new Map();
     const authorityTopFive = /* @__PURE__ */ new Map();
     const tracks = /* @__PURE__ */ new Map();
     const sectors = /* @__PURE__ */ new Map();
     const scaleSums = Object.fromEntries(SCALE_IDS2.map((id) => [id, 0]));
     let flatCount = 0;
-    for (const record of validRecords) {
-      if (record.roleProfile.flat) flatCount += 1;
-      for (const id of SCALE_IDS2) scaleSums[id] += Number(record.roleProfile.raw[id] || 0);
-      for (const id of record.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
-      for (const id of record.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record.leadingTieIds.length);
-      for (const item of (record.ranking || []).slice(0, 5)) {
+    for (const record2 of validRecords) {
+      if (record2.roleProfile.flat) flatCount += 1;
+      for (const id of SCALE_IDS2) scaleSums[id] += Number(record2.roleProfile.raw[id] || 0);
+      for (const id of record2.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
+      for (const id of record2.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record2.leadingTieIds.length);
+      for (const item of (record2.ranking || []).slice(0, 5)) {
         authorityTopFive.set(item.authorityId, (authorityTopFive.get(item.authorityId) || 0) + 1);
         if (item.trackId) tracks.set(item.trackId, (tracks.get(item.trackId) || 0) + 1);
       }
@@ -7493,21 +10259,21 @@ var CareerRuntime = (() => {
   function recordsToCsv(records = [], registry = validationRegistry) {
     const header = ["record_id", "created_at", ...SCALE_IDS2.map((id) => `scale_${id}`), "dispersion", "flat", "priority_sectors", "low_priority_sectors", ...CONDITION_IDS3.map((id) => `condition_${id}`), "first_displayed_authority", "top1_score", "top1_track", "equal_leading_authorities"];
     const lines = [header.join(";")];
-    for (const record of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
-      const top = record.ranking[0] || {};
+    for (const record2 of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
+      const top = record2.ranking[0] || {};
       const row = [
-        record.recordId,
-        record.createdAt,
-        ...SCALE_IDS2.map((id) => Number(record.roleProfile.raw[id]).toFixed(2)),
-        Number(record.roleProfile.dispersion || 0).toFixed(3),
-        record.roleProfile.flat ? 1 : 0,
-        record.prioritySectors.join("|"),
-        record.lowPrioritySectors.join("|"),
-        ...CONDITION_IDS3.map((id) => record.conditions[id]),
+        record2.recordId,
+        record2.createdAt,
+        ...SCALE_IDS2.map((id) => Number(record2.roleProfile.raw[id]).toFixed(2)),
+        Number(record2.roleProfile.dispersion || 0).toFixed(3),
+        record2.roleProfile.flat ? 1 : 0,
+        record2.prioritySectors.join("|"),
+        record2.lowPrioritySectors.join("|"),
+        ...CONDITION_IDS3.map((id) => record2.conditions[id]),
         top.authorityId || "",
         top.score ?? "",
         top.trackId || "",
-        record.leadingTieIds.join("|")
+        record2.leadingTieIds.join("|")
       ];
       lines.push(row.map(csvCell).join(";"));
     }
@@ -7532,10 +10298,10 @@ var CareerRuntime = (() => {
   var GROUP_SCHEMA = "rudn-career-class";
   var GROUP_LIMIT = 250;
   var GROUP_FILE_LIMIT = 2e6;
-  var plain5 = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
-  var keys2 = (x, allowed2) => plain5(x) && Object.keys(x).length === allowed2.length && allowed2.every((k) => Object.hasOwn(x, k));
-  function stable(x) {
-    return Array.isArray(x) ? x.map(stable) : plain5(x) ? Object.fromEntries(Object.keys(x).sort().map((k) => [k, stable(x[k])])) : x;
+  var plain5 = (x2) => x2 !== null && typeof x2 === "object" && !Array.isArray(x2);
+  var keys2 = (x2, allowed2) => plain5(x2) && Object.keys(x2).length === allowed2.length && allowed2.every((k) => Object.hasOwn(x2, k));
+  function stable(x2) {
+    return Array.isArray(x2) ? x2.map(stable) : plain5(x2) ? Object.fromEntries(Object.keys(x2).sort().map((k) => [k, stable(x2[k])])) : x2;
   }
   function sameRecord(a, b) {
     return JSON.stringify(stable(a)) === JSON.stringify(stable(b));
@@ -7557,30 +10323,30 @@ var CareerRuntime = (() => {
     if (!records.length || records.length > GROUP_LIMIT) throw Error("record-limit");
     if (bundle && value.origin === "demo" || records.some((r) => typeof r?.recordId === "string" && r.recordId.startsWith("demo-"))) throw Error("demo-data");
     const seen = /* @__PURE__ */ new Set();
-    for (const record of records) {
-      const validation = validateAnonymousRecord(record, registry);
+    for (const record2 of records) {
+      const validation = validateAnonymousRecord(record2, registry);
       if (!validation.valid) {
         const error = new Error("record-schema");
         error.validationErrors = validation.errors;
         throw error;
       }
-      if (seen.has(record.recordId)) throw Error("duplicate-in-bundle");
-      seen.add(record.recordId);
+      if (seen.has(record2.recordId)) throw Error("duplicate-in-bundle");
+      seen.add(record2.recordId);
     }
     return records;
   }
   function mergeGroupRecords(existing, incoming) {
-    const records = [...existing], byId = new Map(existing.map((x) => [x.recordId, x]));
+    const records = [...existing], byId = new Map(existing.map((x2) => [x2.recordId, x2]));
     let added = 0, duplicates = 0;
-    for (const record of incoming) {
-      const prior = byId.get(record.recordId);
+    for (const record2 of incoming) {
+      const prior = byId.get(record2.recordId);
       if (prior) {
-        if (!sameRecord(prior, record)) throw Error("id-conflict");
+        if (!sameRecord(prior, record2)) throw Error("id-conflict");
         duplicates++;
         continue;
       }
-      records.push(record);
-      byId.set(record.recordId, record);
+      records.push(record2);
+      byId.set(record2.recordId, record2);
       added++;
     }
     if (records.length > GROUP_LIMIT) throw Error("record-limit");
@@ -7589,7 +10355,7 @@ var CareerRuntime = (() => {
 
   // site/apps/career/assets/hierarchy.mjs
   function ancestorsOf(id, hierarchy) {
-    const parents = new Map(hierarchy.links.map((x) => [x.child, x.parent])), seen = /* @__PURE__ */ new Set(), result = [];
+    const parents = new Map(hierarchy.links.map((x2) => [x2.child, x2.parent])), seen = /* @__PURE__ */ new Set(), result = [];
     let next = parents.get(id);
     while (next && !seen.has(next)) {
       seen.add(next);
@@ -7599,9 +10365,9 @@ var CareerRuntime = (() => {
     return result;
   }
   function childrenOf(id, hierarchy) {
-    return hierarchy.links.filter((x) => x.parent === id).map((x) => x.child);
+    return hierarchy.links.filter((x2) => x2.parent === id).map((x2) => x2.child);
   }
-  function hierarchySearch(query, authorities, localize = (x) => x) {
+  function hierarchySearch(query, authorities, localize = (x2) => x2) {
     const q = query.trim().toLocaleLowerCase().replaceAll("\u0451", "\u0435");
     if (!q) return [];
     return authorities.filter((a) => !["fund", "corporation"].includes(a.entityType) && [a.id, a.name, a.shortName, localize(a.name), localize(a.shortName)].join(" ").toLocaleLowerCase().replaceAll("\u0451", "\u0435").includes(q));
@@ -7622,7 +10388,7 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/workspace.mjs
-  var esc = (x) => String(x ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var esc = (x2) => String(x2 ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var $ = (s, r = document) => r.querySelector(s);
   var $$ = (s, r = document) => [...r.querySelectorAll(s)];
   var glyph = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
@@ -7719,7 +10485,7 @@ var CareerRuntime = (() => {
         const result = resultFor(item), top = result?.ranked.filter(authorityCore).slice(0, 3) || [], checked = selection.includes(item.id);
         return `<article class="saved-scenario ${checked ? "selected" : ""}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date3(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked ? "checked" : ""} ${result ? "" : "disabled"}><span>\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</span></label></div>
       <div class="tag-row">${item.inputs.prioritySectors.map((id) => `<span class="tag">${esc(data2.sectors.find((s) => s.id === id)?.title || id)}</span>`).join("")}</div>
-      <div class="scenario-top">${top.map((a, i) => `<span><b>${i + 1}</b>${esc(authorityName(a))}<strong>${a.score.toFixed(1)}</strong></span>`).join("")}</div>
+      <div class="scenario-top">${top.map((a, i2) => `<span><b>${i2 + 1}</b>${esc(authorityName(a))}<strong>${a.score.toFixed(1)}</strong></span>`).join("")}</div>
       ${!result ? '<p class="scenario-warning">\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0438.</p>' : ""}
       <div class="scenario-actions"><button class="button button-primary" data-restore="${item.id}" ${!result ? 'data-legacy="true"' : ""}>${result ? "\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C" : "\u041F\u0435\u0440\u0435\u043D\u0435\u0441\u0442\u0438 \u0438 \u043F\u0435\u0440\u0435\u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C"}</button><button class="button button-secondary" data-rename="${item.id}">\u041F\u0435\u0440\u0435\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u0442\u044C</button><button class="icon-button" data-delete="${item.id}" aria-label="\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439">${glyph("trash")}</button></div>
       </article>`;
@@ -7731,11 +10497,11 @@ var CareerRuntime = (() => {
           input.checked = false;
           return toast2(translate("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043D\u0435 \u0431\u043E\u043B\u0435\u0435 \u0434\u0432\u0443\u0445 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u0432."));
         }
-        selection = input.checked ? [...selection, id] : selection.filter((x) => x !== id);
+        selection = input.checked ? [...selection, id] : selection.filter((x2) => x2 !== id);
         renderScenarios();
       }));
       $$("[data-restore]", root).forEach((b) => b.addEventListener("click", () => {
-        const item = scenarios.find((x) => x.id === b.dataset.restore);
+        const item = scenarios.find((x2) => x2.id === b.dataset.restore);
         if (!item) return;
         if (!confirm(translate("\u0417\u0430\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u043C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u043C? \u041D\u0435\u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u0442\u0435\u0440\u044F\u043D\u044B."))) return;
         const input = structuredClone(item.inputs);
@@ -7752,7 +10518,7 @@ var CareerRuntime = (() => {
         }
       }));
       $$("[data-rename]", root).forEach((b) => b.addEventListener("click", () => {
-        const item = scenarios.find((x) => x.id === b.dataset.rename), newTitle = prompt(translate("\u041D\u043E\u0432\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F (\u0434\u043E 60 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"), item.title);
+        const item = scenarios.find((x2) => x2.id === b.dataset.rename), newTitle = prompt(translate("\u041D\u043E\u0432\u043E\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F (\u0434\u043E 60 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432)"), item.title);
         if (newTitle === null) return;
         const title = newTitle.trim();
         if (!title || title.length > 60 || /[\x00-\x1f]/.test(title)) return toast2(translate("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043E\u0442 1 \u0434\u043E 60 \u0441\u0438\u043C\u0432\u043E\u043B\u043E\u0432."));
@@ -7762,8 +10528,8 @@ var CareerRuntime = (() => {
       }));
       $$("[data-delete]", root).forEach((b) => b.addEventListener("click", () => {
         if (!confirm(translate("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u044D\u0442\u043E\u0442 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u0441 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430?"))) return;
-        scenarios = scenarios.filter((x) => x.id !== b.dataset.delete);
-        selection = selection.filter((x) => x !== b.dataset.delete);
+        scenarios = scenarios.filter((x2) => x2.id !== b.dataset.delete);
+        selection = selection.filter((x2) => x2 !== b.dataset.delete);
         scenarioResults.delete(b.dataset.delete);
         persist();
         renderScenarios();
@@ -7781,19 +10547,19 @@ var CareerRuntime = (() => {
         root.innerHTML = '<p class="comparison-hint">\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u0434\u0432\u0430 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0445 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C, \u0447\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u043E\u0441\u044C \u0432 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u0445.</p>';
         return;
       }
-      const [a, b] = selection.map((id) => scenarios.find((x) => x.id === id));
+      const [a, b] = selection.map((id) => scenarios.find((x2) => x2.id === id));
       const ra = resultFor(a), rb = resultFor(b);
       if (!ra || !rb) {
         root.innerHTML = "";
         return;
       }
       const comparison = compareScenarioResults(a, b, ra, rb);
-      const list2 = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x) => x.id))];
-      const rows = comparison.rows.filter((x) => list2.includes(x.id));
+      const list2 = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x2) => x2.id))];
+      const rows = comparison.rows.filter((x2) => list2.includes(x2.id));
       root.innerHTML = `<div class="comparison-heading"><h2>\u0414\u0432\u0430 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F \u0440\u044F\u0434\u043E\u043C</h2><p>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432: \u0432\u0442\u043E\u0440\u043E\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u043C\u0438\u043D\u0443\u0441 \u043F\u0435\u0440\u0432\u044B\u0439. \u042D\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F, \u043D\u0435 \u043F\u0440\u043E\u0433\u043D\u043E\u0437 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0443\u0441\u043F\u0435\u0445\u0430.</p></div>
     <div class="scenario-summary"><span><b>${comparison.topOverlap} / 5</b>\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u0422\u041E\u041F-5</span><span><b>${comparison.changedAnswers.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</span><span><b>${comparison.changedConditions.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439</span></div>
     <div class="scenario-table-scroll" tabindex="0" aria-label="\u0422\u0430\u0431\u043B\u0438\u0446\u0430 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u0432"><table class="scenario-table"><caption>\u041E\u0440\u0433\u0430\u043D\u044B \u0438\u0437 \u0434\u0432\u0443\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043E\u043A</caption><thead><tr><th>\u041E\u0440\u0433\u0430\u043D</th><th data-no-i18n>${esc(a.title)}</th><th data-no-i18n>${esc(b.title)}</th><th>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C</th></tr></thead><tbody>${rows.map((row) => `<tr><th><button class="text-link" data-dossier="${row.id}">${esc(name2(row.id))}</button></th><td>${row.scoreA.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankA}</small></td><td>${row.scoreB.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankB}</small></td><td class="${row.delta > 0 ? "delta-up" : ""}">${row.delta > 0 ? "+" : ""}${row.delta.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`;
-      $$("[data-dossier]", root).forEach((b2) => b2.addEventListener("click", () => openAuthority2(b2.dataset.dossier)));
+      $$("[data-dossier]", root).forEach((b3) => b3.addEventListener("click", () => openAuthority2(b3.dataset.dossier)));
     }
     function opportunities() {
       const query = $("#opportunity-authority");
@@ -7924,15 +10690,15 @@ var CareerRuntime = (() => {
     const ids2 = new Set(authority?.entryRouteIds || []);
     return entryRoutes.filter((route) => ids2.has(route.id));
   }
-  function addCompareId(compareIds = [], authorityId, max = MAX_COMPARE) {
+  function addCompareId(compareIds = [], authorityId, max2 = MAX_COMPARE) {
     const clean = [...new Set(compareIds.filter(Boolean))];
     if (clean.includes(authorityId)) return { ids: clean.filter((id) => id !== authorityId), removed: true, full: false };
-    if (clean.length >= max) return { ids: clean, removed: false, full: true };
+    if (clean.length >= max2) return { ids: clean, removed: false, full: true };
     return { ids: [...clean, authorityId], removed: false, full: false };
   }
-  function sanitizeCompareIds(compareIds = [], authorities = [], max = MAX_COMPARE) {
+  function sanitizeCompareIds(compareIds = [], authorities = [], max2 = MAX_COMPARE) {
     const valid = new Set(authorities.map((item) => item.id));
-    return [...new Set(compareIds)].filter((id) => valid.has(id)).slice(0, max);
+    return [...new Set(compareIds)].filter((id) => valid.has(id)).slice(0, max2);
   }
   function compareAuthoritySet(compareIds = [], authorities = []) {
     const byId = new Map(authorities.map((item) => [item.id, item]));
@@ -8213,24 +10979,24 @@ var CareerRuntime = (() => {
       { cases: [], disclaimer: { ru: "\u0420\u0430\u0437\u0434\u0435\u043B \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D", en: "Section temporarily unavailable", "zh-Hans": "\u8BE5\u90E8\u5206\u6682\u4E0D\u53EF\u7528" } },
       { records: [], eligibilitySources: [], country: "RU", registryVersion: "unavailable" }
     ];
-    const optional = SEMINAR_FLOW ? Promise.resolve(defaults.map((value) => ({ value }))) : Promise.all(optionalFiles.map(async (url, i) => {
+    const optional = SEMINAR_FLOW ? Promise.resolve(defaults.map((value) => ({ value }))) : Promise.all(optionalFiles.map(async (url, i2) => {
       try {
         return { value: await loadJSON(url, { validate: (v) => {
-          if (Array.isArray(defaults[i])) return Array.isArray(v);
+          if (Array.isArray(defaults[i2])) return Array.isArray(v);
           if (!isRecord(v)) return false;
-          if (i === 1) return Array.isArray(v.trackProfiles) && Array.isArray(v.sources);
-          if (i === 3) return ["roots", "links", "sources", "territorialExamples"].every((k) => Array.isArray(v[k]));
-          if (i === 5) return Array.isArray(v.cases);
-          if (i === 6) return Array.isArray(v.records) && Array.isArray(v.eligibilitySources) && v.country === "RU";
+          if (i2 === 1) return Array.isArray(v.trackProfiles) && Array.isArray(v.sources);
+          if (i2 === 3) return ["roots", "links", "sources", "territorialExamples"].every((k) => Array.isArray(v[k]));
+          if (i2 === 5) return Array.isArray(v.cases);
+          if (i2 === 6) return Array.isArray(v.records) && Array.isArray(v.eligibilitySources) && v.country === "RU";
           return true;
         } }) };
       } catch {
-        return { value: defaults[i], failed: url };
+        return { value: defaults[i2], failed: url };
       }
     }));
     const [core2, extensions] = await Promise.all([corePromise, optional, manifestPromise]);
     const [scales, questions, sectors, conditions2, tracks, authorities] = core2;
-    let [competencies, careerFramework, entryRoutes, hierarchy, resources2, agencyStudies, publicService2] = extensions.map((x) => x.value);
+    let [competencies, careerFramework, entryRoutes, hierarchy, resources2, agencyStudies, publicService2] = extensions.map((x2) => x2.value);
     if (!SEMINAR_FLOW && !extensions[6].failed) {
       try {
         if (validatePublicRegistry(publicService2, { tracks, sectors }).length) throw new Error("invalid-extension");
@@ -8253,7 +11019,7 @@ var CareerRuntime = (() => {
       resources: resources2,
       agencyStudies,
       publicService: publicService2,
-      unavailable: extensions.filter((x) => x.failed).map((x) => x.failed)
+      unavailable: extensions.filter((x2) => x2.failed).map((x2) => x2.failed)
     };
   }
   function updateResumeButton() {
@@ -8399,7 +11165,7 @@ var CareerRuntime = (() => {
   }
   function renderQuestionMap() {
     const root = $2("#question-map-grid");
-    root.innerHTML = data.questions.map((q, i) => `<button type="button" data-question-index="${i}" class="${state.answers[q.id] ? "answered" : ""}" ${state.questionIndex === i ? 'aria-current="step"' : ""} aria-label="${escapeHtml(translate(`\u0412\u043E\u043F\u0440\u043E\u0441 ${i + 1} \u0438\u0437 ${data.questions.length}`))}: ${escapeHtml(translate(state.answers[q.id] ? "\u041E\u0442\u0432\u0435\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D" : "\u0411\u0435\u0437 \u043E\u0442\u0432\u0435\u0442\u0430"))}">${i + 1}</button>`).join("");
+    root.innerHTML = data.questions.map((q, i2) => `<button type="button" data-question-index="${i2}" class="${state.answers[q.id] ? "answered" : ""}" ${state.questionIndex === i2 ? 'aria-current="step"' : ""} aria-label="${escapeHtml(translate(`\u0412\u043E\u043F\u0440\u043E\u0441 ${i2 + 1} \u0438\u0437 ${data.questions.length}`))}: ${escapeHtml(translate(state.answers[q.id] ? "\u041E\u0442\u0432\u0435\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D" : "\u0411\u0435\u0437 \u043E\u0442\u0432\u0435\u0442\u0430"))}">${i2 + 1}</button>`).join("");
     root.querySelectorAll("[data-question-index]").forEach((b) => b.addEventListener("click", () => {
       state.questionIndex = Number(b.dataset.questionIndex);
       saveState();
@@ -8482,10 +11248,10 @@ var CareerRuntime = (() => {
       $2("#sector-grid").before(root);
     }
     const labels = { prioritySectors: "\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u044B: \u043E\u0442 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u043A \u0447\u0435\u0442\u0432\u0451\u0440\u0442\u043E\u043C\u0443", lowPrioritySectors: "\u041C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0435: \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u044F\u044F \u0441\u0442\u0440\u043E\u043A\u0430 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0442\u0435\u043B\u044C\u043D\u0430" };
-    root.innerHTML = Object.entries(labels).map(([key, label2]) => `<section class="sector-order-group ${key === "prioritySectors" ? "priority" : "low"}" aria-labelledby="${key}-heading"><h3 id="${key}-heading">${label2}</h3>${state[key].length ? `<ol class="sector-order-list" data-order-list="${key}">${state[key].map((id, i) => {
+    root.innerHTML = Object.entries(labels).map(([key, label2]) => `<section class="sector-order-group ${key === "prioritySectors" ? "priority" : "low"}" aria-labelledby="${key}-heading"><h3 id="${key}-heading">${label2}</h3>${state[key].length ? `<ol class="sector-order-list" data-order-list="${key}">${state[key].map((id, i2) => {
       const title = escapeHtml(data.sectors.find((s) => s.id === id)?.title || id);
       return `<li class="sector-order-row ${key === "prioritySectors" ? "priority" : "low"}" data-order-key="${key}" data-sector-id="${id}" tabindex="0" aria-label="${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}" aria-roledescription="${escapeHtml(translate("\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0435\u043C\u044B\u0439 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}" aria-describedby="sector-drag-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape">
-      <span class="sector-order-title"><b class="order-index">${i + 1}.</b><span>${title}</span></span>
+      <span class="sector-order-title"><b class="order-index">${i2 + 1}.</b><span>${title}</span></span>
       <button type="button" class="sector-remove" aria-label="${escapeHtml(translate("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}: ${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}">${icon2("close")}</button>
       ${key === "prioritySectors" ? `<div class="sector-card-topics" data-topic-card="${id}" hidden></div>` : ""}
     </li>`;
@@ -8629,9 +11395,9 @@ var CareerRuntime = (() => {
     drag.rows.forEach((row) => row.style.removeProperty("transform"));
     const boxes = drag.rows.map((row) => row.getBoundingClientRect());
     if (drag.mode !== "keyboard") {
-      drag.target = boxes.reduce((index, box, i) => i !== drag.index && drag.clientY > box.top + box.height / 2 ? index + 1 : index, 0);
+      drag.target = boxes.reduce((index, box, i2) => i2 !== drag.index && drag.clientY > box.top + box.height / 2 ? index + 1 : index, 0);
     }
-    const order = drag.rows.map((_, i) => i);
+    const order = drag.rows.map((_, i2) => i2);
     order.splice(drag.index, 1);
     order.splice(drag.target, 0, drag.index);
     const gap = boxes.length > 1 ? boxes[1].top - boxes[0].bottom : 0;
@@ -8744,7 +11510,7 @@ var CareerRuntime = (() => {
   function renderReview() {
     const root = $2("#answer-review");
     const names = (ids2) => ids2.map((id) => `<li>${escapeHtml(data.sectors.find((s) => s.id === id)?.title || id)}</li>`).join("");
-    root.innerHTML = `<h2>\u041F\u0435\u0440\u0435\u0434 \u0440\u0430\u0441\u0447\u0451\u0442\u043E\u043C</h2><p>\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u0440\u044F\u0434\u043E\u043A \u0441\u0444\u0435\u0440 \u0438 \u043F\u0440\u0438 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E\u0441\u0442\u0438 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B. \u0418\u043D\u0434\u0435\u043A\u0441 \u043F\u043E\u043A\u0430\u0436\u0435\u0442 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043A \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u0442\u0440\u0443\u0434\u043E\u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430.</p><div class="review-summary"><div><h3>\u0427\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.prioritySectors)}</ol></div><div><h3>\u0414\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.lowPrioritySectors)}</ol></div></div><button class="text-link" type="button" id="review-sectors">\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440 \u0441\u0444\u0435\u0440</button><details class="review-answers"><summary>\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C 27 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</summary>${data.questions.map((q, i) => `<button type="button" class="review-answer" data-review-question="${i}"><span>${i + 1}</span><span>${escapeHtml(q.text)}</span><strong>${state.answers[q.id] || "\u2014"} / 5</strong></button>`).join("")}</details>`;
+    root.innerHTML = `<h2>\u041F\u0435\u0440\u0435\u0434 \u0440\u0430\u0441\u0447\u0451\u0442\u043E\u043C</h2><p>\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u0440\u044F\u0434\u043E\u043A \u0441\u0444\u0435\u0440 \u0438 \u043F\u0440\u0438 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E\u0441\u0442\u0438 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B. \u0418\u043D\u0434\u0435\u043A\u0441 \u043F\u043E\u043A\u0430\u0436\u0435\u0442 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043A \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u0442\u0440\u0443\u0434\u043E\u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430.</p><div class="review-summary"><div><h3>\u0427\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.prioritySectors)}</ol></div><div><h3>\u0414\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.lowPrioritySectors)}</ol></div></div><button class="text-link" type="button" id="review-sectors">\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440 \u0441\u0444\u0435\u0440</button><details class="review-answers"><summary>\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C 27 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</summary>${data.questions.map((q, i2) => `<button type="button" class="review-answer" data-review-question="${i2}"><span>${i2 + 1}</span><span>${escapeHtml(q.text)}</span><strong>${state.answers[q.id] || "\u2014"} / 5</strong></button>`).join("")}</details>`;
     $2("#review-sectors").onclick = () => routeTo("sectors");
     $$2("[data-review-question]", root).forEach((b) => b.onclick = () => {
       state.questionIndex = Number(b.dataset.reviewQuestion);
@@ -8805,17 +11571,17 @@ var CareerRuntime = (() => {
       const values2 = SCALE_IDS.map((id) => Math.max(1, Math.min(5, Number(profile.raw[id]) || 1)) / 5);
       return `<svg viewBox="0 0 310 310" width="310" height="310" role="img" aria-label="${escapeHtml(label2)}">
       <g fill="none" stroke="#d3e1eb" stroke-width="1">${[1, 2, 3, 4, 5].map((value) => `<polygon points="${polygon2(value / 5)}"/>`).join("")}${SCALE_IDS.map((_, index) => {
-        const [x, y] = point3(index, 1);
-        return `<line x1="${center3}" y1="${center3}" x2="${x}" y2="${y}"/>`;
+        const [x2, y] = point3(index, 1);
+        return `<line x1="${center3}" y1="${center3}" x2="${x2}" y2="${y}"/>`;
       }).join("")}</g>
       <polygon points="${values2.map((value, index) => point3(index, value).join(",")).join(" ")}" fill="#087bc1" fill-opacity=".16" stroke="#087bc1" stroke-width="2.5"/>
       ${values2.map((value, index) => {
-        const [x, y] = point3(index, value);
-        return `<circle cx="${x}" cy="${y}" r="3.5" fill="#087bc1" stroke="#fff" stroke-width="1.5"/>`;
+        const [x2, y] = point3(index, value);
+        return `<circle cx="${x2}" cy="${y}" r="3.5" fill="#087bc1" stroke="#fff" stroke-width="1.5"/>`;
       }).join("")}
       <g fill="#1c355f" stroke="none" font-size="15" font-weight="600" text-anchor="middle" dominant-baseline="middle">${SCALE_IDS.map((_, index) => {
-        const [x, y] = point3(index, 1.23);
-        return `<text x="${x}" y="${y}">${index + 1}</text>`;
+        const [x2, y] = point3(index, 1.23);
+        return `<text x="${x2}" y="${y}">${index + 1}</text>`;
       }).join("")}</g>
       <g fill="#627490" stroke="none" font-size="10" text-anchor="end">${[1, 2, 3, 4, 5].map((value) => `<text x="${center3 - 6}" y="${center3 - radius3 * value / 5 + 3}">${value}</text>`).join("")}</g>
     </svg>`;
@@ -8829,17 +11595,17 @@ var CareerRuntime = (() => {
       return [center2 + Math.cos(angle) * radius2 * ratio, center2 + Math.sin(angle) * radius2 * ratio];
     };
     const polygon = values.map((value, index) => point2(index, 0.25 + 0.75 * value).join(",")).join(" ");
-    const grids = [0.25, 0.5, 0.75, 1].map((ratio) => `<polygon points="${SCALE_IDS.map((_, i) => point2(i, ratio).join(",")).join(" ")}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>`).join("");
-    const axes = SCALE_IDS.map((_, i) => {
-      const [x, y] = point2(i, 1);
-      return `<line x1="${center2}" y1="${center2}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,.17)" stroke-width="1"/>`;
+    const grids = [0.25, 0.5, 0.75, 1].map((ratio) => `<polygon points="${SCALE_IDS.map((_, i2) => point2(i2, ratio).join(",")).join(" ")}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>`).join("");
+    const axes = SCALE_IDS.map((_, i2) => {
+      const [x2, y] = point2(i2, 1);
+      return `<line x1="${center2}" y1="${center2}" x2="${x2}" y2="${y}" stroke="rgba(255,255,255,.17)" stroke-width="1"/>`;
     }).join("");
     return `<svg viewBox="0 0 210 210" role="img" aria-label="\u0414\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F">
     ${grids}${axes}
     <polygon points="${polygon}" fill="rgba(255,255,255,.23)" stroke="#fff" stroke-width="2.2"/>
-    ${values.map((value, i) => {
-      const [x, y] = point2(i, 0.25 + 0.75 * value);
-      return `<circle cx="${x}" cy="${y}" r="3.3" fill="#fff" stroke="#087bc1" stroke-width="1.5"/>`;
+    ${values.map((value, i2) => {
+      const [x2, y] = point2(i2, 0.25 + 0.75 * value);
+      return `<circle cx="${x2}" cy="${y}" r="3.3" fill="#fff" stroke="#087bc1" stroke-width="1.5"/>`;
     }).join("")}
     <circle cx="${center2}" cy="${center2}" r="4" fill="#fff"/>
   </svg>`;
@@ -9016,7 +11782,7 @@ var CareerRuntime = (() => {
   function exportAnonymousResult() {
     const result = getResults();
     if (!result) return;
-    const record = createAnonymousRecord({
+    const record2 = createAnonymousRecord({
       recordId: state.resultRecordId || anonymousId(),
       createdAt: state.completedAt || (/* @__PURE__ */ new Date()).toISOString(),
       roleProfile: result.roleProfile,
@@ -9027,7 +11793,7 @@ var CareerRuntime = (() => {
       ranked: result.ranked
     });
     const stamp = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
-    downloadText(`rudn-career-result-${stamp}-${record.recordId.slice(0, 8)}.json`, JSON.stringify(record, null, 2), "application/json;charset=utf-8");
+    downloadText(`rudn-career-result-${stamp}-${record2.recordId.slice(0, 8)}.json`, JSON.stringify(record2, null, 2), "application/json;charset=utf-8");
     toast("\u041E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u0444\u0430\u0439\u043B \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043B\u0435\u043D.");
   }
   function directoryMatches(authority, query, type, sector, track) {
@@ -9416,10 +12182,10 @@ var CareerRuntime = (() => {
     renderGroupDashboard();
     let accepted = 0, duplicates = 0, rejected = 0;
     const log = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    for (let i2 = 0; i2 < files.length; i2++) {
+      const file = files[i2];
       try {
-        if (i >= 250) throw Error("record-limit");
+        if (i2 >= 250) throw Error("record-limit");
         if (file.size > GROUP_FILE_LIMIT) throw Error("file-size");
         const incoming = readGroupInput(await file.text(), data);
         const outcome = mergeGroupRecords(groupRecords, incoming);
@@ -9444,8 +12210,8 @@ var CareerRuntime = (() => {
   }
   function barsMarkup(rows, total, suffix = "", denominatorLabel = "\u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u0432") {
     if (!rows.length) return `<p class="group-empty-note">\u041D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u0447\u043D\u043E \u0434\u0430\u043D\u043D\u044B\u0445.</p>`;
-    const max = Math.max(...rows.map((row) => row.count), 1);
-    return rows.map((row) => `<div class="group-bar-row"><div><strong>${escapeHtml(row.label)}</strong><span>${Number.isInteger(row.count) ? row.count : row.count.toFixed(2)}${suffix}</span></div><i><em style="width:${row.count / max * 100}%"></em></i><small>${total ? `${Math.round(row.count / total * 100)}% ${denominatorLabel}` : ""}</small></div>`).join("");
+    const max2 = Math.max(...rows.map((row) => row.count), 1);
+    return rows.map((row) => `<div class="group-bar-row"><div><strong>${escapeHtml(row.label)}</strong><span>${Number.isInteger(row.count) ? row.count : row.count.toFixed(2)}${suffix}</span></div><i><em style="width:${row.count / max2 * 100}%"></em></i><small>${total ? `${Math.round(row.count / total * 100)}% ${denominatorLabel}` : ""}</small></div>`).join("");
   }
   function renderGroupDashboard() {
     const dashboard = $2("#group-dashboard");
@@ -9606,11 +12372,11 @@ var CareerRuntime = (() => {
       const radios = $$2('[role="radio"]', group);
       if (!radios.length) return;
       event.preventDefault();
-      let i = radios.indexOf(current);
-      if (event.key === "Home") i = 0;
-      else if (event.key === "End") i = radios.length - 1;
-      else i = (i + (["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1) + radios.length) % radios.length;
-      radios[i].click();
+      let i2 = radios.indexOf(current);
+      if (event.key === "Home") i2 = 0;
+      else if (event.key === "End") i2 = radios.length - 1;
+      else i2 = (i2 + (["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1) + radios.length) % radios.length;
+      radios[i2].click();
     });
     window.addEventListener("keydown", (event) => {
       if (event.ctrlKey || event.altKey || event.metaKey || event.target.closest?.('input,textarea,select,[contenteditable="true"]')) return;

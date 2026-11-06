@@ -10,8 +10,23 @@ import {execFileSync} from 'node:child_process';
 
 const baseCommit='bbc731814813486541108a3abacfafd1f0cfa4a8';
 const allowedFiles=new Set([
+  '.gitignore',
+  '.gitattributes',
+  'package.json',
+  'package-lock.json',
   '.github/workflows/publish-career-seminar.yml',
   'scripts/build-career.mjs',
+  'scripts/build-platform-release.mjs',
+  'scripts/unpack-career-vacancies.py',
+  'scripts/repack-career-vacancies.py',
+  'scripts/overlay-career-vacancy-parents.py',
+  'scripts/test_repack_career_vacancies.py',
+  'scripts/compress-career-vacancy-descriptors.py',
+  'scripts/test_career_vacancy_bank_ui.mjs',
+  'tests/employer-vacancies-bank.test.mjs',
+  'tests/career-vacancy-lazy-release.test.mjs',
+  'scripts/test_compress_career_vacancy_descriptors.py',
+  'site/service-worker.js',
   'scripts/build-career-territorial-catalog.py',
   'scripts/test_career_journey_ui.mjs',
   'scripts/test_career_preferences_ui.mjs',
@@ -26,7 +41,7 @@ const allowedFiles=new Set([
   'tests/career-region-map.test.mjs',
   'tests/career-wish-sortable.test.mjs'
 ]);
-const allowedPrefixes=['site/apps/career/'];
+const allowedPrefixes=['site/apps/career/','source-audit/career-vacancies/'];
 const isAllowed=name=>allowedFiles.has(name)||allowedPrefixes.some(prefix=>name.startsWith(prefix));
 const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -100,7 +115,13 @@ if(args.includes('--scope')){
   assert.deepEqual(next.pointer.previous,old.entry,'The live release remains the rollback target');
   assert.deepEqual(next.manifest.contracts,old.manifest.contracts,'Module contracts unchanged');
   assert.deepEqual(next.manifest.publicEntries,old.manifest.publicEntries,'Public entry routes unchanged');
-  assert.equal(next.manifest.workerTemplateSha256,old.manifest.workerTemplateSha256,'Worker unchanged');
+  const workerTemplate=fs.readFileSync('site/service-worker.js','utf8');
+  const lazyBlocks=/\/\* CAREER_VACANCY_LAZY_BEGIN \*\/[\s\S]*?\/\* CAREER_VACANCY_LAZY_END \*\/\n?/g;
+  assert.equal(sha(workerTemplate),next.manifest.workerTemplateSha256,'Published worker matches the reviewed source');
+  if(next.manifest.workerTemplateSha256!==old.manifest.workerTemplateSha256){
+    assert.equal([...workerTemplate.matchAll(lazyBlocks)].length,2,'Only the two reviewed career collection additions are permitted');
+    assert.equal(sha(workerTemplate.replace(lazyBlocks,'')),old.manifest.workerTemplateSha256,'Worker bytes outside career collection routing unchanged');
+  }
   const resources=new Set([...Object.keys(old.manifest.resources),...Object.keys(next.manifest.resources)]),changed=[];
   const canonical=(root,item,buildId)=>fs.readFileSync(path.join(root,local(item.url)),'utf8').replaceAll(buildId,'__RUDN_RELEASE_ID__');
   for(const name of resources){

@@ -6,6 +6,22 @@ import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../ass
 import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);
+const BANK_PREFIX = 'data/vacancies/bank/';
+function careerFetchURL(input) {
+  const value=String(input),context=getReleaseContext();
+  if(value.startsWith(BANK_PREFIX)) {
+    const suffix=value.slice(BANK_PREFIX.length);
+    if(!/^[A-Za-z0-9][A-Za-z0-9_./-]*$/.test(suffix)||suffix.split('/').some(part=>!part||part==='.'||part==='..'))throw new TypeError('Invalid vacancy-bank resource path');
+    const collection=context?.resources?.['apps/career/data/vacancies/bank/summary.json']?.collectionRoot;
+    if(collection) {
+      const siteRoot=new URL(context.siteRoot),base=new URL(collection,siteRoot),url=new URL(suffix,base);
+      if(base.origin!==siteRoot.origin||!base.pathname.startsWith(siteRoot.pathname)||!base.pathname.endsWith('/')||base.search||base.hash||url.origin!==base.origin||!url.pathname.startsWith(base.pathname)||url.search||url.hash)throw new TypeError('Invalid vacancy-bank collection boundary');
+      return url;
+    }
+  }
+  return value.startsWith('api/')?new URL('apps/career/'+value,context?.siteRoot||new URL('../../',MODULE_BASE)):resourceURL(input,MODULE_BASE);
+}
+
 const VALID_ROUTES = new Set(['home','personality','personality-results','preferences','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
 const locale = value => String(value || 'ru').startsWith('zh') ? 'zh-Hans' : String(value || 'ru').startsWith('en') ? 'en' : 'ru';
 const activeMounts = new WeakMap();
@@ -177,7 +193,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         const abort = () => combined.abort();
         if(life.signal.aborted || options.signal?.aborted)combined.abort();
         life.signal.addEventListener('abort',abort,{once:true}); options.signal?.addEventListener('abort',abort,{once:true});
-        try{return await hostWindow.fetch(String(input).startsWith('api/')?new URL('apps/career/'+input,getReleaseContext()?.siteRoot||new URL('../../',MODULE_BASE)):resourceURL(input,MODULE_BASE),{...options,signal:combined.signal});}
+        try{return await hostWindow.fetch(careerFetchURL(input),{...options,signal:combined.signal});}
         finally{life.signal.removeEventListener('abort',abort);options.signal?.removeEventListener('abort',abort);}
       },
       MutationObserver:ScopedObserver,URL:ScopedURL,setTimeout:timeout,clearTimeout:clearTimer,requestAnimationFrame:raf,

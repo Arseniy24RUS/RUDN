@@ -721,6 +721,24 @@ async function platformActivate(){
   await metadata.put(ACTIVE_RELEASE,new Response(platformCache(PLATFORM_RELEASE.current.buildId)));await self.clients.claim();
   for(const client of clients)client.postMessage({type:'RELEASE_AVAILABLE',buildId:PLATFORM_RELEASE.current.buildId});
 }
+/* CAREER_VACANCY_LAZY_BEGIN */
+function platformLazyCollection(url,manifest){
+  // Server-side release verification pins the complete collection tree. The
+  // client keeps only this root, never a global member list or preload queue.
+  if(url.origin!==SCOPE.origin||url.search||url.hash||!Array.isArray(manifest.lazyCollections)||manifest.lazyCollections.length>1)return null;
+  for(const collection of manifest.lazyCollections){
+    if(collection?.id!=='career-vacancies'||collection.logicalPrefix!=='apps/career/data/vacancies/bank/'||!/^[a-f0-9]{64}$/.test(collection.treeSHA||'')||!Number.isSafeInteger(collection.fileCount)||collection.fileCount<1||!Number.isSafeInteger(collection.bytes)||collection.bytes<1)continue;
+    const summary=manifest.resources?.['apps/career/data/vacancies/bank/summary.json'];
+    if(summary?.collectionRoot!==collection.collectionRoot||summary.collection?.treeSHA!==collection.treeSHA||summary.collection?.fileCount!==collection.fileCount||summary.collection?.bytes!==collection.bytes)continue;
+    const expected=new URL(`_collections/career-vacancies/${collection.treeSHA}/`,SCOPE);
+    let root;try{root=platformURL(collection.collectionRoot);}catch{continue;}
+    if(root.href!==expected.href||!url.pathname.startsWith(root.pathname))continue;
+    const suffix=url.pathname.slice(root.pathname.length);
+    if(/^(?:summary\.json|employers\/[a-zA-Z0-9][a-zA-Z0-9_-]{0,246}\.json\.gz|pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p\d{4,}-[a-f0-9]{16}\.json\.gz)$/.test(suffix))return collection;
+  }
+  return null;
+}
+/* CAREER_VACANCY_LAZY_END */
 async function platformServe(event){
   const url=platformURL(event.request.url),logical=url.pathname.slice(SCOPE.pathname.length),navigation=event.request.mode==='navigate';
   try{
@@ -738,7 +756,12 @@ async function platformServe(event){
     }
     const bound=await clientRelease(event.clientId),build=/release-([a-f0-9]{32})$/.exec(bound||'')?.[1];
     if(navigation){const manifest=await platformManifest(PLATFORM_RELEASE.current),name=logical.endsWith('/')?logical+'index.html':logical||'index.html',item=manifest.resources[name];if(item?.kind==='runtime'){await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(item.url,item.sha256,platformCache(manifest.buildId));}}
-    if(build){const manifest=await platformFind(build),item=manifest.resources[logical]||manifest.byURL.get(url.href);if(item)return platformChecked(item.url,item.sha256,platformCache(build));if(!logical.startsWith('_objects/'))throw new Error('release/unknown-resource');}
+    if(build){const manifest=await platformFind(build),item=manifest.resources[logical]||manifest.byURL.get(url.href);if(item)return platformChecked(item.url,item.sha256,platformCache(build));/* CAREER_VACANCY_LAZY_BEGIN */
+      // No per-file digest is advertised for collection headers: keep this lazy
+      // route network-only, outside the integrity-checked release cache. The
+      // bank loader bounds its own cache and verifies each requested job page.
+      if(platformLazyCollection(url,manifest))return fetchWithDeadline(event.request);
+/* CAREER_VACANCY_LAZY_END */if(!logical.startsWith('_objects/'))throw new Error('release/unknown-resource');}
     // Shared objects can be loaded by a worker with no window client ID. Their
     // pathname itself carries the complete SHA-256 of the canonical bytes.
     const object=/^_objects\/([a-f0-9]{64})(?:\.[a-z0-9.-]+)?$/i.exec(logical);

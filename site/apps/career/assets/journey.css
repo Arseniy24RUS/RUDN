@@ -208,3 +208,36 @@
 
 .journey-source-heading { color: #3d5670; font-size: 13px; line-height: 1.6; margin: 2px 0 10px; }
 .journey-source-note { color: #48617b; font-size: 13px; line-height: 1.65; margin: 8px 0; }
+
+/* Employer-scoped vacancy pages: independent from the graded role assessment. */
+.journey-bank { margin: 0 0 24px; padding-bottom: 22px; border-bottom: 1px solid #dbe5eb; }
+.journey-bank-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.journey-bank-heading h4,.journey-study-heading { margin: 0 0 12px; font-size: 17px; }
+.journey-bank-heading > span { font-weight: 750; color: #245875; font-variant-numeric: tabular-nums; }
+.journey-bank-count,.journey-bank-status,.journey-bank-page-note { margin: 8px 0; font-size: 13px; line-height: 1.55; color: #4b6478; }
+.journey-bank-status:empty { display: none; }
+.journey-bank-family { margin: 12px 0; }
+.journey-bank-family small,.journey-bank-note { color: #526a7c; font-size: 12px; line-height: 1.6; }
+.journey-bank-list { display: grid; gap: 12px; margin: 14px 0; }
+.journey-bank-job { min-width: 0; padding: 16px; border: 1px solid #dae4eb; border-radius: 12px; background: #fff; overflow-wrap: anywhere; }
+.journey-bank-job h5 { margin: 10px 0 8px; font-size: 16px; line-height: 1.45; }
+.journey-bank-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.journey-bank-badge { display: inline-block; padding: 4px 8px; border-radius: 6px; background: #eef2f5; color: #496174; font-size: 11px; line-height: 1.5; }
+.journey-bank-badge.source-active { color: #185b45; background: #e5f3ec; }
+.journey-bank-badge.archived,.journey-bank-badge.expired { color: #675645; background: #f5f0e8; }
+.journey-bank-badge.scope { color: #4d5b79; background: #eef0f7; }
+.journey-bank-location { margin: 8px 0; color: #526a7c; font-size: 13px; line-height: 1.5; }
+.journey-bank-job dl { margin: 10px 0; font-size: 12px; }
+.journey-bank-job dl > div { display: grid; grid-template-columns: minmax(80px,0.7fr) minmax(0,1fr); gap: 10px; padding: 5px 0; }
+.journey-bank-job dt { color: #5c7283; }.journey-bank-job dd { margin: 0; line-height: 1.55; }
+.journey-bank-requirements { margin: 10px 0; font-size: 13px; }.journey-bank-requirements summary { cursor: pointer; min-height: 32px; padding: 6px 0; }
+.journey-bank-pages { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.journey-bank-pages button,.journey-bank-more { min-height: 44px; white-space: normal; }
+.journey-bank-pages > span { font-size: 12px; font-variant-numeric: tabular-nums; }
+.journey-bank-note { margin: 14px 0 0; }
+@media (max-width: 480px) {
+ .journey-bank-job { padding: 12px; }
+ .journey-bank-job dl > div { grid-template-columns: minmax(0,1fr); gap: 2px; }
+ .journey-bank-pages button { flex: 1 1 110px; padding-inline: 10px; font-size: 12px; }
+}
+.journey-bank-current-employer { margin: 10px 0; font-size: 14px; line-height: 1.55; font-weight: 650; overflow-wrap: anywhere; }

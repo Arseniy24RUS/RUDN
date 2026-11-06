@@ -32,6 +32,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Reconstruct the lazy public vacancy bank
+        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') }}
+        run: python scripts/unpack-career-vacancies.py
       - name: Build the career module
         timeout-minutes: 5
         run: |
@@ -50,19 +53,28 @@ jobs:
       - name: Install browser
         timeout-minutes: 5
         run: python -m playwright install "${{ matrix.browser }}"
+      - name: Verify recommended-employer vacancies and bounded lazy loading
+        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') }}
+        run: |
+          export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          node scripts/test_career_vacancy_bank_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/vacancies"
       - name: Verify the personality stage in Russian, English and Chinese
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_personality_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/personality"
       - name: Verify touch map gestures and preferred employer reordering
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_career_preferences_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/preferences"
       - name: Restore existing Seminar 5 work through personality and preferences
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_career_update_migration.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/migration"
       - name: Keep course and free career sessions independent
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         env:
           FREE_MODULES: career
           DURABLE_TEST_BROWSERS: ${{ matrix.browser }}
@@ -98,25 +110,40 @@ jobs:
         run: |
           git fetch --no-tags --depth=1 origin bbc731814813486541108a3abacfafd1f0cfa4a8
           node scripts/verify-career-express-release.mjs --scope
+      - name: Reconstruct the lazy public vacancy bank
+        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') }}
+        run: python3 scripts/unpack-career-vacancies.py
       - name: Build the career component and existing deterministic assets
         run: |
           npm ci --ignore-scripts
           npm run build:career
           git diff --exit-code -- site/apps/career/runtime.bundle.mjs site/apps/career/module.css
           npm run build:firebase
+      - name: Rebuild existing reception localization for earlier career releases
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        run: |
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs
+      - name: Verify vacancy codec, source links, paging and lazy release metadata
+        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') }}
+        run: |
+          node --test tests/employer-vacancies-bank.test.mjs tests/career-vacancy-lazy-release.test.mjs
+          python3 scripts/test_repack_career_vacancies.py
       - name: Verify scoring, territory ranking and sourced requirement assessment
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         run: |
           node scripts/test_personality_model.mjs
           node scripts/test_personality_insights.mjs
           node scripts/test_career_localization.mjs
           node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs tests/career-journey-model.test.mjs tests/career-territorial-catalog.test.mjs tests/personality-visuals.test.mjs tests/career-region-map.test.mjs tests/career-wish-sortable.test.mjs
       - name: Verify the reusable territory map is deterministic
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         run: node site/apps/career/data/regions/build-map.mjs --check
       - name: Install the isolated DOM test dependency
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         run: npm install --ignore-scripts --no-audit --no-fund --prefix "${{ runner.temp }}/career-dom-qa" happy-dom@21.0.4
       - name: Verify the complete career journey with DOM interactions
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
         env:
           HAPPY_DOM_MODULE_PATH: ${{ runner.temp }}/career-dom-qa/node_modules/happy-dom/lib/index.js
         run: node scripts/test_career_journey_ui.mjs --output "${{ runner.temp }}/career-dom-qa/report.json"
@@ -190,6 +217,6 @@ jobs:
             gh release download "$tag" --pattern receipt.json --dir existing
             node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
           else
-            notes="Seminar 5 career journey: personality, 89 work territories, three ranked preferred employers, national and territorial recommendations, source-backed role requirements and a development plan. Focused checks on this source cover unchanged career scoring, source requirement preservation, deterministic map data and full-journey DOM interactions. Browser checks in Chromium, Firefox and WebKit cover translated personality UI, the new preference transition, restored old sessions and independent course/free progress. DOM checks do not claim browser layout or screen-reader validation. Immutable resources outside Seminar 5 and the rollback archive are verified."
+            notes="Seminar 5: source-backed employer vacancies with active and archived labels, lazy compressed paging and bounded client loading. Focused checks cover this vacancy flow in Chromium, Firefox and WebKit, the dataset codec and immutable collection routing. The source seed and rollback release are retained. No full-platform UI testing is claimed."
             gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "$notes"
           fi

@@ -3,6 +3,7 @@ import {authorityEmblem} from './authority-symbols.mjs';
 import {authorityName} from './authority-names.mjs';
 import {storageKey,readLocal,writeLocal} from './storage.mjs';
 import {loadJSON} from './loader.mjs';
+import {createEmployerVacancyBank,vacancyBankStatus,platformEmployerId} from './employer-vacancies-bank.mjs';
 import {PORTAL,FRESH_MS,validateFeed,currentStatus,normalizeName} from './vacancies-model.mjs';
 import {createRegionPicker} from './region-picker.mjs';
 import {createWishSortable} from './wish-sortable.mjs';
@@ -32,6 +33,8 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
   let lastRoute='personality',pendingRoute=null,manualSaveTimer=null,picker=null,wishSorter=null,opening=false,dirty=false,rankingCache=null,catalogGeneration=0;
   let authorityQuery='',authorityScope='',authorityLimit=24,vacancyQuery='',vacancyEmployer='',vacancyLimit=12;
   const rolePanelStates=new Map();
+  const vacancyBank=createEmployerVacancyBank();
+  vacancyBank.subscribe(id=>{if(!__careerHost.destroyed&&lastRoute==='results')document.querySelectorAll('[data-authority-roles]').forEach(panel=>{const state=rolePanelState(panel.dataset.rolePanel);if(bankId(state.bankAuthorityId||panel.dataset.authorityRoles)===id)renderEmployerVacancies(panel);});});
   const root=()=>document.querySelector('#results-root');
   const preferencesRoot=()=>document.querySelector('#journey-preferences-root');
   const byId=()=>new Map(institutions.map(a=>[a.id,a]));
@@ -271,7 +274,7 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     target.querySelector('#seminar-back-profile').onclick=()=>switchStage('profile');
     target.querySelector('#journey-edit-preferences').onclick=changePreferences;
     target.querySelector('#journey-show-plan').onclick=()=>switchStage('summary');
-    bindDevelopment(target,ranked);bindAuthorityDetails(target);bindAuthorityRolePanels(target);renderVacancies();void loadVacancies();
+    bindDevelopment(target,ranked);bindAuthorityDetails(target);bindAuthorityRolePanels(target);renderVacancies();renderEmployerVacancyPanels();
   }
 
   let positionSelection='',positionLoadGeneration=0;
@@ -389,8 +392,57 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     const state=rolePanelState(panelKey),draft=draftForAuthority(authority.id);
     const draftHere=draft.open&&(draft.panelKey||defaultRolePanel(authority.id))===panelKey;
     const employerUrl=safeURL(authority.governmentUrl||authority.descriptionSources?.[0]?.url);
-    return `<details class="journey-authority-roles" data-authority-roles="${E(authority.id)}" data-role-panel="${E(panelKey)}" ${state.open||draftHere?'open':''}><summary><span>${L('Должности','Roles','职位')}</span><span class="journey-role-total" data-role-total>…</span></summary><div class="journey-authority-roles-content"><p class="seminar-source-note" data-role-source-note role="status"></p><div data-role-load-status></div><label class="journey-field journey-role-search">${L('Найти должность в этом органе','Find a role with this employer','查找该机构的职位')}<input type="search" data-role-search autocomplete="off" value="${E(state.query)}"></label><p class="journey-result-count" data-role-result-count></p><div class="journey-local-role-list" data-authority-role-list></div><button type="button" class="button button-secondary journey-more" data-role-more hidden>${L('Показать ещё','Show more','显示更多')}</button><div class="journey-source-links">${employerUrl?`<a href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L('Сайт органа','Employer website','机构网站')}${I('external')}</a>`:''}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L('Портал Госслужба','Civil service portal','公务员门户')}${I('external')}</a></div>${manualVacancyForm(authority,panelKey)}</div></details>`;
+    return `<details class="journey-authority-roles" data-authority-roles="${E(authority.id)}" data-role-panel="${E(panelKey)}" ${state.open||draftHere?'open':''}><summary><span>${L('Должности и вакансии','Roles and vacancies','职位与招聘公告')}</span></summary><div class="journey-authority-roles-content"><section class="journey-bank" data-employer-bank></section><h4 class="journey-study-heading">${L('Материалы для учебного разбора','Materials for role assessment','职位分析学习材料')} <span class="journey-role-total" data-role-total>…</span></h4><p class="seminar-source-note" data-role-source-note role="status"></p><div data-role-load-status></div><label class="journey-field journey-role-search">${L('Найти должность в этом органе','Find a role with this employer','查找该机构的职位')}<input type="search" data-role-search autocomplete="off" value="${E(state.query)}"></label><p class="journey-result-count" data-role-result-count></p><div class="journey-local-role-list" data-authority-role-list></div><button type="button" class="button button-secondary journey-more" data-role-more hidden>${L('Показать ещё','Show more','显示更多')}</button><div class="journey-source-links">${employerUrl?`<a href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L('Сайт органа','Employer website','机构网站')}${I('external')}</a>`:''}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L('Портал Госслужба','Civil service portal','公务员门户')}${I('external')}</a></div>${manualVacancyForm(authority,panelKey)}</div></details>`;
   }
+  function bankId(value){try{return platformEmployerId(value);}catch{return String(value||'');}}
+  function bankAuthority(panel){return bankId(rolePanelState(panel.dataset.rolePanel).bankAuthorityId||panel.dataset.authorityRoles);}
+  function bankStatus(row){
+    const status=vacancyBankStatus(row);
+    const label={
+      'source-active':L('Приём по данным портала','Accepting as listed by the portal','门户显示正在招募'),
+      archived:L('Архивное объявление','Archived announcement','历史公告'),
+      expired:L('Указанный срок истёк','Listed deadline has passed','所列截止日期已过'),
+      unknown:L('Статус приёма не указан','Recruitment status not stated','未注明招聘状态')
+    }[status];
+    return `<span class="journey-bank-badge ${status}">${label}</span>`;
+  }
+  function bankJob(row){
+    const salary=[row.salaryFrom,row.salaryTo].filter(value=>typeof value==='number'&&Number.isFinite(value));
+    const pay=salary.length?salary.map(value=>number(value)).join(' – ')+' ₽':'';
+    const location=[row.region,row.locality].filter(value=>typeof value==='string'&&value.trim()).join(', ');
+    const fields=[[L('Опубликовано','Published','发布日期'),row.announcedAt?date(row.announcedAt):L('Не указано','Not stated','未注明')],
+      [L('Приём до','Apply by','申请截止'),row.expiresAt?date(row.expiresAt):L('Не указан','Not stated','未注明')],
+      [L('Оплата по источнику','Pay as published','来源所列报酬'),pay]].filter(([,value])=>value);
+    const requirements=[[L('Образование','Education','学历'),row.education],[L('Опыт по специальности','Professional experience','专业经历'),row.professionalExperience],[L('Стаж госслужбы','Public-service experience','公务经历'),row.governmentExperience]].filter(([,value])=>typeof value==='string'&&value.trim());
+    const url=safeURL(row.sourceURL);
+    return `<article class="journey-bank-job" data-bank-job="${E(row.id)}"><div class="journey-bank-badges">${bankStatus(row)}${row.scope==='group-or-reserve-context'?`<span class="journey-bank-badge scope">${L('Группа должностей / кадровый резерв','Position group / talent reserve','职位组／人才储备')}</span>`:''}</div><h5 lang="ru">${E(row.title||L('Название должности не указано','Role title not stated','未注明职位名称'))}</h5>${location?`<p class="journey-bank-location" lang="ru">${E(location)}</p>`:''}<dl>${fields.map(([label,value])=>`<div><dt>${label}</dt><dd>${E(value)}</dd></div>`).join('')}</dl>${requirements.length?`<details class="journey-bank-requirements"><summary>${L('Образование и стаж','Education and experience','学历与经历')}</summary><dl>${requirements.map(([label,value])=>`<div><dt>${label}</dt><dd lang="ru">${E(value)}</dd></div>`).join('')}</dl></details>`:''}${url?`<a class="seminar-vacancy-link" href="${E(url)}" target="_blank" rel="noopener noreferrer">${L('Открыть объявление','Open announcement','打开公告')}${I('external')}</a>`:''}</article>`;
+  }
+  function renderEmployerVacancies(panel){
+    const target=panel.querySelector('[data-employer-bank]');if(!target||!panel.isConnected)return;
+    const state=rolePanelState(panel.dataset.rolePanel),id=bankAuthority(panel),view=vacancyBank.get(id),descriptor=view.descriptor;
+    state.bankLimit=state.bankLimit||10;
+    if(id===bankId(panel.dataset.authorityRoles)&&descriptor?.familyConnections){state.bankFamilyConnections=descriptor.familyConnections;state.bankPrimaryEmpty=descriptor.jobCount===0;
+      const related=descriptor.familyConnections.find(item=>item.jobCount>0);
+      if(state.bankPrimaryEmpty&&related&&!state.bankAutoSelected){state.bankAutoSelected=true;state.bankAuthorityId=related.authorityId;state.bankLimit=10;renderEmployerVacancies(panel);void vacancyBank.ensure(related.authorityId);return;}
+    }
+    const family=state.bankFamilyConnections||[],parentName=authorityName(byId().get(panel.dataset.authorityRoles)||{name:panel.dataset.authorityRoles});
+    const selector=family.length?`<label class="journey-field journey-bank-family">${L('Работодатель','Employer','雇主')}<select data-bank-family><option value="${E(panel.dataset.authorityRoles)}" ${id===bankId(panel.dataset.authorityRoles)?'selected':''}>${E(parentName)}</option>${family.map(item=>`<option value="${E(item.authorityId)}" ${id===item.authorityId?'selected':''}>${E(item.name)} (${number(item.jobCount)})</option>`).join('')}</select><small>${L('Связанные органы показаны отдельно: их объявления не объединяются с объявлениями выбранного работодателя.','Related employers are separate; their announcements are not merged with this employer’s listings.','相关机构分别展示，其公告不会与当前雇主合并。')}</small></label>`:'';
+    const selectedName=descriptor?.name||(state.bankFamilyConnections||[]).find(item=>item.authorityId===id)?.name||parentName;
+    const heading=`<div class="journey-bank-heading"><h4>${L('Объявления на Госслужбе','Civil-service portal announcements','公务员门户公告')}</h4>${descriptor?`<span>${number(descriptor.jobCount)}</span>`:''}</div>`;
+    if(view.status==='idle'){target.innerHTML=heading+`<p class="journey-muted">${L('Объявления загрузятся при открытии карточки.','Announcements load when you open this panel.','打开此面板时加载公告。')}</p>`;return;}
+    const copyDate=descriptor?.snapshotAt?date(descriptor.snapshotAt):'';
+    const total=descriptor?.jobCount||0,pageCount=descriptor?.pages.length||0,shown=view.rows.slice(0,state.bankLimit);
+    const empty=descriptor&&!total?(!descriptor.employerId?L('Объявления пока не связаны с этим работодателем. Проверьте официальный портал.','Announcements have not yet been linked to this employer. Check the official portal.','尚未将公告关联到此雇主，请查看官方门户。'):L('В этой копии нет объявлений этого работодателя. Это не означает, что вакансий нет.','This snapshot has no announcements for this employer. This does not mean there are no vacancies.','此副本没有该雇主的公告，但这并不表示没有空缺。')):'';
+    target.innerHTML=heading+selector+`<p class="journey-bank-current-employer" lang="ru">${E(selectedName)}</p>${state.bankPrimaryEmpty&&id!==bankId(panel.dataset.authorityRoles)?`<p class="journey-bank-note">${L('В этой копии нет объявлений выбранного органа. Показан отдельный связанный работодатель.','This snapshot has no listings for the selected authority. A separate related employer is shown.','此副本没有所选机关的公告，现显示一个独立的相关雇主。')}</p>`:''}`+(descriptor?`<p class="journey-bank-count">${L('Всего','Total','总计')}: ${number(total)} · ${L('Архивных по источнику','Archived as published','来源标为历史')}: ${number(descriptor.archiveCount||0)}</p>`:'')+`<p class="journey-bank-status" role="status" aria-live="polite">${view.loading?L('Загружаем объявления…','Loading announcements…','正在加载公告……'):view.error?L('Не удалось загрузить объявления. Уже загруженные карточки остаются доступны.','Announcements could not be loaded. Previously loaded cards remain available.','公告加载失败，已加载的卡片仍可查看。'):empty||''}</p>${view.error?`<button type="button" class="button button-secondary" data-bank-retry>${L('Повторить загрузку','Retry loading','重新加载')}</button>`:''}<div class="journey-bank-list" aria-busy="${view.loading}">${shown.map(bankJob).join('')}</div>${view.rows.length?`<p class="journey-bank-page-note">${L(`Страница ${view.pageIndex+1} из ${pageCount}. Показано ${shown.length} из ${view.rows.length} объявлений страницы.`,`Page ${view.pageIndex+1} of ${pageCount}. Showing ${shown.length} of ${view.rows.length} announcements on this page.`,`第 ${view.pageIndex+1}／${pageCount} 页，显示本页 ${view.rows.length} 条公告中的 ${shown.length} 条。`)}</p>`:''}${view.rows.length>state.bankLimit?`<button type="button" class="button button-secondary journey-bank-more" data-bank-more>${L('Показать ещё на этой странице','Show more on this page','显示本页更多公告')}</button>`:''}${pageCount>1?`<nav class="journey-bank-pages" aria-label="${L('Страницы объявлений работодателя','Employer announcement pages','雇主公告分页')}"><button type="button" class="button button-secondary" data-bank-prev ${view.loading||view.pageIndex===0?'disabled':''}>${L('Предыдущая страница','Previous page','上一页')}</button><span>${view.pageIndex+1} / ${pageCount}</span><button type="button" class="button button-secondary" data-bank-next ${view.loading||view.pageIndex>=pageCount-1?'disabled':''}>${L('Следующая страница','Next page','下一页')}</button></nav>`:''}<p class="journey-bank-note">${copyDate?L('Дата копии: ','Snapshot prepared: ','副本日期：')+E(copyDate)+(copyDate.trim().endsWith('.')?' ':L('. ','. ','。')):''}${L('Показаны все объявления работодателя, включая архивные. Сроки и возможность отклика уточняйте в официальном объявлении.','All this employer’s announcements are included, including archived listings. Check dates and application availability in the official announcement.','包含该雇主的全部公告及历史记录，请在官方公告中核对期限及申请状态。')}</p>`;
+    target.querySelector('[data-bank-more]')?.addEventListener('click',()=>{state.bankLimit+=10;renderEmployerVacancies(panel);});
+    target.querySelector('[data-bank-retry]')?.addEventListener('click',()=>void vacancyBank.retry(id));
+    const turn=delta=>{state.bankLimit=10;void vacancyBank.loadPage(id,view.pageIndex+delta);};
+    target.querySelector('[data-bank-prev]')?.addEventListener('click',()=>turn(-1));target.querySelector('[data-bank-next]')?.addEventListener('click',()=>turn(1));
+    target.querySelector('[data-bank-family]')?.addEventListener('change',event=>{const previous=id;state.bankAuthorityId=event.target.value;state.bankLimit=10;cancelUnusedBank(previous,panel);renderEmployerVacancies(panel);void vacancyBank.ensure(state.bankAuthorityId);});
+  }
+  function cancelUnusedBank(id,except){if(![...document.querySelectorAll('[data-authority-roles][open]')].some(panel=>panel!==except&&bankAuthority(panel)===id))vacancyBank.cancel(id);}
+  function renderEmployerVacancyPanels(){document.querySelectorAll('[data-authority-roles]').forEach(panel=>{renderEmployerVacancies(panel);if(panel.open)void vacancyBank.ensure(bankAuthority(panel));});}
+  function cancelEmployerVacancyRequests(){document.querySelectorAll('[data-authority-roles]').forEach(panel=>vacancyBank.cancel(bankAuthority(panel)));}
   function vacancyCard(v,sourceOpen){
     const selected=journey.selectedVacancyId===v.id,sourceDate=date(v.source?.retrievedAt||v.lastSeenAt||v.sourceSnapshotAt);
     const requirementsCount=buildVacancyRequirements(v).rows.filter(row=>row.assessable).length;
@@ -429,7 +481,7 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     target.querySelectorAll('[data-authority-roles]').forEach(panel=>{
       const state=rolePanelState(panel.dataset.rolePanel);
       panel.addEventListener('toggle',event=>{
-        if(event.target===panel)state.open=panel.open;
+        if(event.target===panel){state.open=panel.open;if(panel.open){renderEmployerVacancies(panel);void vacancyBank.ensure(bankAuthority(panel));void loadVacancies();}else cancelUnusedBank(bankAuthority(panel),panel);}
         else if(event.target.dataset.roleSource){if(event.target.open)state.sourceOpen.add(event.target.dataset.roleSource);else state.sourceOpen.delete(event.target.dataset.roleSource);}
       },true);
       panel.querySelector('[data-role-search]').addEventListener('input',event=>{state.query=event.target.value;state.limit=5;renderVacancies(panel);});
@@ -597,6 +649,7 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     target.setAttribute('data-no-i18n','');
     if(!catalogLoaded){navigate('preferences');return;}
     const view=stage();
+    if(view!=='recommendations')cancelEmployerVacancyRequests();
     if(view==='profile')renderProfile(result,target);
     else if(view==='recommendations')renderRecommendations(result,target);
     else if(view==='requirements')renderRequirements(result,target);
@@ -608,10 +661,10 @@ export function createSeminarFlow({data,getResult,getProfileContext,getInputs,na
     isReady,guardRoute,renderResults,
     render(route){
       if(lastRoute==='preferences'&&route!=='preferences'){picker?.destroy();picker=null;wishSorter?.destroy();wishSorter=null;}
-      lastRoute=route;updateLabels();if(route==='preferences')renderPreferences();
+      if(route!=='results')cancelEmployerVacancyRequests();lastRoute=route;updateLabels();if(route==='preferences')renderPreferences();
     },
     flush:()=>{wishSorter?.cancel({focus:false,announceResult:false});return !dirty||save();},
-    updateBusy:()=>catalogLoading||positionsLoading||opening||Boolean(wishSorter?.isBusy()),
+    updateBusy:()=>catalogLoading||positionsLoading||vacancyBank.isBusy()||opening||Boolean(wishSorter?.isBusy()),
     captureForUpdate:()=>({view:journey.view,authorityQuery,authorityScope,vacancyQuery,vacancyEmployer}),
     restoreForUpdate(value){if(!isRecord(value))return;authorityQuery=safeText(value.authorityQuery,500);authorityScope=safeText(value.authorityScope,80);vacancyQuery=safeText(value.vacancyQuery,500);vacancyEmployer=safeText(value.vacancyEmployer,200);}
   };

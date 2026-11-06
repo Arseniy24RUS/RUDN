@@ -11,7 +11,8 @@
     "build:career": "node scripts/build-career.mjs"
   },
   "dependencies": {
-    "firebase": "12.18.0"
+    "firebase": "12.18.0",
+    "fflate": "0.8.2"
   },
   "devDependencies": {
     "acorn": "8.15.0",

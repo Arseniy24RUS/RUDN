@@ -14,3 +14,6 @@ tests/fixtures/legal-lab-retired-corpus/** -text whitespace=cr-at-eol
 
 # Ministry question-bank reviews bind the exact imported source bytes.
 site/data/civil-service/** -text whitespace=cr-at-eol
+
+# Compressed public vacancy seed parts are byte-exact on every platform.
+source-audit/career-vacancies/*.bin -text

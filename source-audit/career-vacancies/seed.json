@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "datasetSchemaVersion": 2,
+  "source": "https://gossluzhba.gov.ru/vacancy/",
+  "sourceSnapshotDate": "2026-11-06",
+  "vacancies": 457627,
+  "fileCount": 21142,
+  "publicBytes": 29005652,
+  "treeSha256": "4e0a0659c22cf71830f25ac6772264297a50ad7baf82f9e3f1bd265e6fa19f92",
+  "archiveBytes": 29671794,
+  "archiveSha256": "5d2fa8249938e847d75df59fcce35b6955b6353c3abbd32e7f98c7d8a606153a",
+  "parts": [
+    {
+      "path": "bank-000.bin",
+      "bytes": 1048576,
+      "sha256": "0fe5b0e568bb9a0b4d2199e0ed381a8acff6288560223788df1dbae1a84a957c"
+    },
+    {
+      "path": "bank-001.bin",
+      "bytes": 1048576,
+      "sha256": "9a6a1110d6a5142cd298211c70bfbc49b9d8fca02a1c508d428f9764e2dee72c"
+    },
+    {
+      "path": "bank-002.bin",
+      "bytes": 1048576,
+      "sha256": "5fc164020c09558614fff421414516ca741581f7c665ee952a41a02237d33269"
+    },
+    {
+      "path": "bank-003.bin",
+      "bytes": 1048576,
+      "sha256": "1bb192b70f3cbe3338d3bc3bf53a7f3bbf00327acc4dd2fb1d79e4742976589d"
+    },
+    {
+      "path": "bank-004.bin",
+      "bytes": 1048576,
+      "sha256": "b1ea112587685577f62b4f5ea3f5f65c87e32eeb5ae154ab305c382b51bd586f"
+    },
+    {
+      "path": "bank-005.bin",
+      "bytes": 1048576,
+      "sha256": "21bd8de5da9c72c1bbf24b6d74045160c1bbc3cf75526577b509a59b2a28058a"
+    },
+    {
+      "path": "bank-006.bin",
+      "bytes": 1048576,
+      "sha256": "3e1611ee294af7a80c98f81606bbd2eda7ea29151d93af4d25abc25a9b041a51"
+    },
+    {
+      "path": "bank-007.bin",
+      "bytes": 1048576,
+      "sha256": "50e5ffa5bccc09736ddc533f06e54d5442ec05508baaf568d268a4f0b47bfe5b"
+    },
+    {
+      "path": "bank-008.bin",
+      "bytes": 1048576,
+      "sha256": "b769deb4bc4925279b0ca20f6936e61cff19f2d26716f7e046951a2d860190c5"
+    },
+    {
+      "path": "bank-009.bin",
+      "bytes": 1048576,
+      "sha256": "e306767b2e70c9eaeb662a263003b5b20f27dff9a25926c67b3dc7b28e636006"
+    },
+    {
+      "path": "bank-010.bin",
+      "bytes": 1048576,
+      "sha256": "eb0c67060f4dc2b8bf0bf9b061342d4318a5bb19892f7848ef4c1051dcd11b45"
+    },
+    {
+      "path": "bank-011.bin",
+      "bytes": 1048576,
+      "sha256": "168f8efc1f109f2481d2a697029f47274a68194c64cba9fefc98fe36a548e3f8"
+    },
+    {
+      "path": "bank-012.bin",
+      "bytes": 1048576,
+      "sha256": "d17ff46727c9b100c99df09848e169851472d6d1cc4c22d52408ab8c2903ed1c"
+    },
+    {
+      "path": "bank-013.bin",
+      "bytes": 1048576,
+      "sha256": "93831307c4823b80218016fcae4617e0f2bdde90ac07431e60f59de6916459f8"
+    },
+    {
+      "path": "bank-014.bin",
+      "bytes": 1048576,
+      "sha256": "14a4ff2e30b6034661991c417685a112990d34542e24843f22bbb8e478272e36"
+    },
+    {
+      "path": "bank-015.bin",
+      "bytes": 1048576,
+      "sha256": "ece7221b9394a72ba9d6d114a3fee5dd0a81481b11585277264980c54b6dbfd4"
+    },
+    {
+      "path": "bank-016.bin",
+      "bytes": 1048576,
+      "sha256": "a3872463f51d26c920ccad4447081c086fe468ee9f285f8cb1819ef0093a4b0b"
+    },
+    {
+      "path": "bank-017.bin",
+      "bytes": 1048576,
+      "sha256": "a5adf08e6d6839694f52df691c27173e2af3ee06e9100d4453c9eb07d61f87b0"
+    },
+    {
+      "path": "bank-018.bin",
+      "bytes": 1048576,
+      "sha256": "8590d727b80817f1c7ed93d6cb793fd84affdf98328bb5e654e04b069f3b6887"
+    },
+    {
+      "path": "bank-019.bin",
+      "bytes": 1048576,
+      "sha256": "8ac6a517c5986b8747910a92488259e528796bb20a5f45066b8a199dcb813811"
+    },
+    {
+      "path": "bank-020.bin",
+      "bytes": 1048576,
+      "sha256": "43782a5e48749ab2ce7f900dc4705cbab541fb343e9a38e6de3d22bf84f1f0fd"
+    },
+    {
+      "path": "bank-021.bin",
+      "bytes": 1048576,
+      "sha256": "4936314f1d51cbd496314b11345e45cdb79b6f720932cf5e6e9b4b622e4c8da0"
+    },
+    {
+      "path": "bank-022.bin",
+      "bytes": 1048576,
+      "sha256": "879c8d00329c2217d8a6364f9bd0fdc7a5fd998ebfea5eb9511133d212df29a8"
+    },
+    {
+      "path": "bank-023.bin",
+      "bytes": 1048576,
+      "sha256": "c2260c76ef9eb8b3337340bcf0237293bd63fe4de5fe3211c9c157bad6aefcb5"
+    },
+    {
+      "path": "bank-024.bin",
+      "bytes": 1048576,
+      "sha256": "3734ec954af25f5e3fcf110fcc67901df1b87c47537cc33899bc87b2f9bd08d3"
+    },
+    {
+      "path": "bank-025.bin",
+      "bytes": 1048576,
+      "sha256": "b1fa95c2470fec3dfb17663de7ff3666d2c1cbd96a7dda68f6584bd4cf0b0174"
+    },
+    {
+      "path": "bank-026.bin",
+      "bytes": 1048576,
+      "sha256": "61aa89a9c1bc92432b54c36ce3faee90ab9c9a3b28bb62b497a100d4821c84b8"
+    },
+    {
+      "path": "bank-027.bin",
+      "bytes": 1048576,
+      "sha256": "c362e4e23138ff33e02e78117f2c55401f740e2f4dbfa87cc630735f60e9f9c7"
+    },
+    {
+      "path": "bank-028.bin",
+      "bytes": 311666,
+      "sha256": "5a062b756b6cbf1d912c40884c6dec0a659b9aeca94827457f0ef1e93d7e0583"
+    }
+  ],
+  "clientLoading": "Per-employer gzip descriptor and paged gzip rows only; seed is build-time source, never shipped to student"
+}

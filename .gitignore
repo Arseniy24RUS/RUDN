@@ -11,5 +11,8 @@ Thumbs.db
 *.log
 __pycache__/
 
+# Reconstructed from the checked, compressed public vacancy seed during build.
+site/apps/career/data/vacancies/bank/
+
 # Local backups, never publish
 .reception-backup-*/
