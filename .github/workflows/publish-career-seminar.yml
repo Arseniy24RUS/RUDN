@@ -119,8 +119,7 @@ jobs:
           npm run build:career
           git diff --exit-code -- site/apps/career/runtime.bundle.mjs site/apps/career/module.css
           npm run build:firebase
-      - name: Rebuild existing reception localization for earlier career releases
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+      - name: Restore deterministic localization artifacts for immutable packaging
         run: |
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs

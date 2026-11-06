@@ -3,11 +3,14 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'acorn';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
 
 const TOKEN='__RUDN_RELEASE_ID__', SCHEMA=1;
 const CAREER_BANK_PREFIX='apps/career/data/vacancies/bank/', CAREER_BANK_SUMMARY=CAREER_BANK_PREFIX+'summary.json';
 const controls=new Set(['index.html','404.html','service-worker.js','release.json','platform-baseline.json','platform-build-report.json']);
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const execute=promisify(execFile);
 const json=value=>JSON.stringify(value)+'\n';
 const fail=code=>{throw new Error(code);};
 export function validateContracts(value){
@@ -197,6 +200,15 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   if(!/^\/(?:[A-Za-z0-9_-]+\/)*$/.test(base))fail('release/invalid-site-path');
   for(const source of [site,baselineDir])if(out===source||out.startsWith(source+path.sep)||source.startsWith(out+path.sep))fail('release/output-overlaps-source');
   try{await fs.access(out);fail('release/output-exists');}catch(error){if(error.code!=='ENOENT')throw error;}
+  let hosting=null;try{hosting=JSON.parse(await fs.readFile(path.resolve(site,'../source-audit/career-vacancies/hosting.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+  if(hosting){
+    try{await fs.access(path.join(site,CAREER_BANK_SUMMARY));}catch(error){
+      if(error.code!=='ENOENT')throw error;
+      try{if((await fs.readdir(path.join(site,CAREER_BANK_PREFIX))).length)fail('release/hosted-collection-existing-bank-summary-missing');}catch(existing){if(existing.code!=='ENOENT')throw existing;}
+      onProgress('reconstruct-hosted-career-bank');
+      await execute('python3',[path.resolve(site,'../scripts/unpack-career-vacancies.py'),'--seed',path.resolve(site,'../source-audit/career-vacancies'),'--out',path.join(site,CAREER_BANK_PREFIX)],{timeout:120000,maxBuffer:1024*1024});
+    }
+  }
   onProgress('inventory-source');const source=await inventory(site);onProgress('inventory-baseline');const baselineSource=await inventory(baselineDir);
   for(const required of ['index.html','service-worker.js','assets/js/main.js','assets/js/release-bootstrap.js','assets/js/release-resources.js','assets/js/release-recovery.js','assets/js/diagnostics-bootstrap.js','data/platform-contracts.json'])if(!source[required])fail('release/missing-source:'+required);
   const contracts=validateContracts(JSON.parse(await fs.readFile(path.join(site,'data/platform-contracts.json'),'utf8')));
@@ -208,7 +220,6 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   const frozen=oldRegistry?.files||Object.fromEntries(Object.entries(baselineSource).filter(([name])=>!controls.has(name)&&!legacyEntryHTML[name]));
   if(Object.keys(frozen).some(name=>!safeName(name)))fail('release/unsafe-baseline-path');
   const baselineId=oldRegistry?.baselineId||digest(json({files:frozen,legacyEntryHTML}));
-  let hosting=null;try{hosting=JSON.parse(await fs.readFile(path.resolve(site,'../source-audit/career-vacancies/hosting.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
   const currentCollection=careerCollection(source,base,hosting),collections=currentCollection?[currentCollection.descriptor]:[];
   const resources={};for(const [name,item] of Object.entries(source)){
     if(controls.has(name)&&name!=='index.html')continue;
