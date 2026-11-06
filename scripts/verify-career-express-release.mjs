@@ -1,26 +1,30 @@
-/** Scope and artifact checks for the owner's explicitly requested Seminar 5 publication.
- * This does not represent a full-platform CI run. */
+/** Scope and artifact checks for a future, separately reviewed Seminar 5 release.
+ * --scope checks committed base-to-HEAD changes on the review branch. It does
+ * not stage or include local/untracked files and is not a full-platform CI run.
+ * Preparing this verifier or a ZIP does not publish anything. */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 
-const baseCommit='7417f30b3f9cb9f40aac92d55334c4f1fb0cad93';
-const allowed=new Set([
+const baseCommit='790f9cb778df4bf7174fbf3d90d0edf7b157efc0';
+const allowedFiles=new Set([
   '.github/workflows/publish-career-seminar.yml',
+  'scripts/build-career.mjs',
+  'scripts/build-career-territorial-catalog.py',
+  'scripts/test_career_journey_ui.mjs',
   'scripts/test_career_update_migration.mjs',
   'scripts/test_personality_ui.mjs',
+  'scripts/test_free_module_contexts.mjs',
   'scripts/verify-career-express-release.mjs',
-  'site/apps/career/assets/app.js',
-  'site/apps/career/assets/personality-insights.mjs',
-  'site/apps/career/assets/personality-items.mjs',
-  'site/apps/career/assets/personality-model.mjs',
-  'site/apps/career/assets/personality.mjs',
-  'site/apps/career/assets/seminar-flow.mjs',
-  'site/apps/career/docs/IPIP-NEO-120.md',
-  'site/apps/career/runtime.bundle.mjs'
+  'site/assets/js/career-course.js',
+  'tests/career-journey-model.test.mjs',
+  'tests/career-territorial-catalog.test.mjs',
+  'tests/personality-visuals.test.mjs'
 ]);
+const allowedPrefixes=['site/apps/career/'];
+const isAllowed=name=>allowedFiles.has(name)||allowedPrefixes.some(prefix=>name.startsWith(prefix));
 const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=(root,file)=>JSON.parse(fs.readFileSync(path.join(root,file),'utf8'));
@@ -41,11 +45,21 @@ function current(root){
 }
 const args=process.argv.slice(2),option=name=>args[args.indexOf(name)+1];
 if(args.includes('--scope')){
-  const changed=git('diff','--name-only',baseCommit,'HEAD').split('\n').filter(Boolean);
+  // Disable rename detection: moving a file is a deletion plus an addition,
+  // and deletions (including those hidden by rename detection) are forbidden.
+  const entries=git('diff','--name-status','--no-renames','-z',baseCommit,'HEAD').split('\0');
+  if(entries.at(-1)==='')entries.pop();
+  assert.equal(entries.length%2,0,'Expected NUL-delimited status/path pairs');
+  const changed=[];
+  for(let index=0;index<entries.length;index+=2){
+    const status=entries[index],name=entries[index+1];
+    assert.ok(status==='A'||status==='M',`Deleting, renaming or changing a file type is outside this publication: ${status} ${name}`);
+    assert.ok(isAllowed(name),`Outside the reviewed Seminar 5 scope: ${name}`);
+    assert.ok(fs.lstatSync(name).isFile(),`Only regular files may be published: ${name}`);
+    changed.push(name);
+  }
   assert.ok(changed.length,'The focused publication must contain a change');
   for(const name of changed){
-    assert.ok(allowed.has(name),`Outside the reviewed Seminar 5 scope: ${name}`);
-    assert.ok(fs.statSync(name).isFile(),`Deleting a file is outside this publication: ${name}`);
     if(/\.m?js$/.test(name))execFileSync(process.execPath,['--check',name],{stdio:'inherit'});
     if(name.endsWith('.json'))JSON.parse(fs.readFileSync(name,'utf8'));
   }
@@ -95,7 +109,7 @@ if(args.includes('--scope')){
         : after.sha256!==before.sha256;
       if(!differs)continue;
     }
-    assert.ok(allowed.has('site/'+name),`Published bytes changed outside Seminar 5: ${name}`);
+    assert.ok(isAllowed('site/'+name),`Published bytes changed outside Seminar 5: ${name}`);
     assert.ok(after,`Deleting a published resource is outside this change: ${name}`);
     changed.push(name);
   }

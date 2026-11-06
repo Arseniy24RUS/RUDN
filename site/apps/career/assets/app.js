@@ -327,16 +327,17 @@ function activeRoute() {
 
 function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
   finishSectorDrag(false, {focus:false, announce:false});
-  const valid = ["home", "personality", "personality-results", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
+  const valid = ["home", "personality", "personality-results", "preferences", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
   if(route==='main-content'){document.getElementById('main-content')?.focus();return;}
   if (!valid.includes(route)) route = "home";
   if(SEMINAR_FLOW){
     if(!personality?.isComplete())route='personality';
     else if(route==='home')route='personality-results';
-    else if(!['personality','personality-results','test','sectors','conditions','results'].includes(route))route=resolveResumeRoute();
+    else if(!['personality','personality-results','preferences','test','sectors','conditions','results'].includes(route))route=resolveResumeRoute();
     if(route==='sectors'&&Object.keys(state.answers).length<data.questions.length)route='test';
     if(route==='conditions'&&(state.prioritySectors.length!==4||state.lowPrioritySectors.length!==2))route=resolveResumeRoute();
-  }else if(['personality','personality-results'].includes(route))route='home';
+    route=seminarFlow?.guardRoute(route)||route;
+  }else if(['personality','personality-results','preferences'].includes(route))route='home';
   if(route==='results'&&!completionStatus({...state,questions:data.questions}).complete)route=resolveResumeRoute();
   const unavailableRoutes={workshop:'data/agency-studies.json','public-service':'data/public-service.json',structure:'data/hierarchy.json',opportunities:'data/career-resources.json'};
   if(data.unavailable.includes(unavailableRoutes[route])){
@@ -455,7 +456,7 @@ function selectAnswer(value) {
 
 function moveQuestion(direction) {
   if (direction < 0) {
-    if (state.questionIndex === 0) return routeTo("home");
+    if (state.questionIndex === 0) return routeTo(SEMINAR_FLOW?"preferences":"home");
     state.questionIndex -= 1;
     saveState();
     renderQuestion();
@@ -1580,7 +1581,7 @@ async function init() {
     data.allInstitutions=[...data.authorities,...data.publicService.records.map(a=>({id:a.id,name:a.name.ru,shortName:a.name.ru,mission:a.mission.ru,entityType:'additional',entityTypeLabel:'Другие ветви и уровни публичной власти',tracks:a.tracks,governmentUrl:a.sources?.[0]?.url||'',localizedName:a.name,source:a}))];
     if(SEMINAR_FLOW){
       personality=createPersonality({navigate:routeTo,continueCareer:()=>routeTo(resolveResumeRoute())});
-      seminarFlow=createSeminarFlow({getResult:getResults,getProfileContext:()=>({recordId:state.resultRecordId,scales:data.scales,sectors:data.sectors,conditions:data.conditions,prioritySectors:state.prioritySectors,conditionValues:state.conditions}),radarSvg,toast});
+      seminarFlow=createSeminarFlow({data,navigate:routeTo,resolveResumeRoute,getInputs:()=>({...state}),getResult:getResults,getProfileContext:()=>({recordId:state.resultRecordId,scales:data.scales,sectors:data.sectors,conditions:data.conditions,prioritySectors:state.prioritySectors,conditionValues:state.conditions}),radarSvg,toast});
     }else{
       classroom=createClassroom({data:{...data,authorities:data.allInstitutions},routeTo,openAuthority,toast,downloadText,getResult:()=>latestResult});
       workspace = createWorkspace({data,state,modelVersion:MODEL_VERSION,
@@ -1618,16 +1619,16 @@ export const ready = init();
 export {routeTo as navigate, setLanguage as setLocale};
 export const updateBusy=()=>Boolean(sectorDrag||sectorPress)||groupBusy||decisionLab?.updateBusy?.()||vacancies?.updateBusy?.()||seminarFlow?.updateBusy?.()||personality?.updateBusy?.()||workspace?.updateBusy?.()||classroom?.updateBusy?.()||pendingLegacyChoice||protectedStorage;
 export const pauseForUpdate=()=>{finishSectorDrag(false,{focus:false,announce:false});};
-export function flushForUpdate(){finishSectorDrag(false,{focus:false,announce:false});const personalitySaved=personality?.flush()!==false;const careerSaved=saveState();return personalitySaved&&careerSaved;}
+export function flushForUpdate(){finishSectorDrag(false,{focus:false,announce:false});const personalitySaved=personality?.flush()!==false;const careerSaved=saveState();return personalitySaved&&careerSaved&&(seminarFlow?.flush()!==false);}
 export function captureForUpdate(){
   const filters=Object.fromEntries(['directory-search','directory-type-filter','directory-sector-filter','directory-track-filter'].map(id=>[id,$('#'+id)?.value||'']));
-  return {schema:1,model:MODEL_VERSION,fields:[...document.querySelectorAll('input[id],textarea[id],select[id]')].filter(el=>el.type!=='file'&&el.type!=='password'&&!el.closest('#view-personality,#view-personality-results')).slice(0,100).map(el=>({id:el.id,value:el.value,checked:el.checked})),route:state.lastRoute,questionIndex:state.questionIndex,filters,authority:currentAuthority?.id||null,authorityTab:document.querySelector('#authority-dialog [role=tab][aria-selected=true]')?.dataset.tab||'overview',seminarAuthority:seminarAuthority?.id||null,groupMode,groupRecords,groupRejected,workspace:workspace?.captureForUpdate?.(),classroom:classroom?.captureForUpdate?.(),decisionLab:decisionLab?.captureForUpdate?.(),publicService:publicService?.captureForUpdate?.(),vacancies:vacancies?.captureForUpdate?.()};
+  return {schema:1,model:MODEL_VERSION,fields:[...document.querySelectorAll('input[id],textarea[id],select[id]')].filter(el=>el.type!=='file'&&el.type!=='password'&&!el.closest('#view-personality,#view-personality-results')).slice(0,100).map(el=>({id:el.id,value:el.value,checked:el.checked})),route:state.lastRoute,questionIndex:state.questionIndex,filters,authority:currentAuthority?.id||null,authorityTab:document.querySelector('#authority-dialog [role=tab][aria-selected=true]')?.dataset.tab||'overview',seminarAuthority:seminarAuthority?.id||null,groupMode,groupRecords,groupRejected,workspace:workspace?.captureForUpdate?.(),classroom:classroom?.captureForUpdate?.(),decisionLab:decisionLab?.captureForUpdate?.(),publicService:publicService?.captureForUpdate?.(),vacancies:vacancies?.captureForUpdate?.(),seminarFlow:seminarFlow?.captureForUpdate?.()};
 }
 export async function restoreForUpdate(value){
   if(value?.schema!==1||value.model!==MODEL_VERSION)throw Error('update/incompatible');
   if(Number.isInteger(value.questionIndex))state.questionIndex=Math.max(0,Math.min(data.questions.length-1,value.questionIndex));
   for(const [id,text]of Object.entries(value.filters||{})){if(['directory-search','directory-type-filter','directory-sector-filter','directory-track-filter'].includes(id)&&$('#'+id))$('#'+id).value=String(text).slice(0,500);}
-  workspace?.restoreForUpdate?.(value.workspace);classroom?.restoreForUpdate?.(value.classroom);decisionLab?.restoreForUpdate?.(value.decisionLab);publicService?.restoreForUpdate?.(value.publicService);vacancies?.restoreForUpdate?.(value.vacancies);
+  workspace?.restoreForUpdate?.(value.workspace);classroom?.restoreForUpdate?.(value.classroom);decisionLab?.restoreForUpdate?.(value.decisionLab);publicService?.restoreForUpdate?.(value.publicService);vacancies?.restoreForUpdate?.(value.vacancies);seminarFlow?.restoreForUpdate?.(value.seminarFlow);
   groupMode=value.groupMode==='demo'?'demo':'uploaded';groupRecords=Array.isArray(value.groupRecords)?value.groupRecords:[];groupRejected=Math.max(0,Number(value.groupRejected)||0);
   seminarAuthority=data.authorities.find(a=>a.id===value.seminarAuthority)||null;
   routeTo(value.route,{updateHash:false,focus:false});

@@ -26,7 +26,7 @@ const LANGUAGES=['ru','en','zh-Hans'];
 const LOCALE_COPY={
   ru:{title:'Личностный профиль',stage:'Личностный профиль',results:'Ваш стиль работы в команде',back:'Назад',next:'Далее',finish:'Мои результаты',edit:'К ответам',continue:'Перейти к профориентации',method:'Методика:',
     anchors:['Совершенно неверно','Скорее неверно','Ни верно, ни неверно','Скорее верно','Совершенно верно'],counter:(answered)=>`Ответов: ${answered} из 120`,page:(number)=>`Страница ${number} из 12`,decimal:'4,0 / 5'},
-  en:{title:'Personality profile',stage:'Personality profile',results:'Your style of working in a team',back:'Back',next:'Next',finish:'My results',edit:'Back to answers',continue:'Continue to career interests',method:'Method:',
+  en:{title:'Personality profile',stage:'Personality',results:'Your style of working in a team',back:'Back',next:'Next',finish:'My results',edit:'Back to answers',continue:'Continue to career interests',method:'Method:',
     anchors:['Very inaccurate','Moderately inaccurate','Neither accurate nor inaccurate','Moderately accurate','Very accurate'],counter:(answered)=>`Answered: ${answered} of 120`,page:(number)=>`Page ${number} of 12`,decimal:'4.0 / 5'},
   'zh-Hans':{title:'人格特征',stage:'人格特征',results:'你的团队工作风格',back:'上一步',next:'下一步',finish:'我的结果',edit:'返回答案',continue:'继续职业兴趣测试',method:'方法：',
     anchors:['完全不符合','比较不符合','介于符合与不符合之间','比较符合','完全符合'],counter:(answered)=>`已回答：${answered} / 120`,page:(number)=>`第${number}页，共12页`,decimal:'4.0 / 5'}
@@ -142,6 +142,24 @@ async function finishQuestionnaire(page,{fill=true}={}){
     await item(page,next,3).waitFor();
   }
   assert.fail('The complete 120-item inventory must show results');
+}
+async function chooseCareerPreferences(page){
+  await page.locator('#view-preferences:not([hidden])').waitFor();
+  const next=page.locator('#journey-preferences-next');
+  await next.waitFor();
+  assert.equal(await page.locator('#view-test').isVisible(),false,'The career questions wait for explicit employer choices');
+  assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),0,'A new owner has no inherited employer choices');
+  assert.equal(await next.isDisabled(),true,'Three preferred employers are required');
+  for(let priority=0;priority<3;priority++){
+    await page.locator('[data-add-wish][aria-pressed="false"]:not([disabled])').first().click();
+    assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),priority+1);
+    assert.equal(await next.isDisabled(),priority<2,'Partial choices cannot skip the preference stage');
+  }
+  const desiredIds=await page.locator('#journey-desired-choices [data-remove-wish]').evaluateAll(nodes=>nodes.map(node=>node.dataset.removeWish));
+  assert.equal(new Set(desiredIds).size,3,'All three ordered choices are distinct');
+  await next.click();
+  await page.locator('#view-test:not([hidden])').waitFor();
+  return desiredIds;
 }
 function hasAnswerKeys(value){
   if(value===null||typeof value!=='object')return false;
@@ -265,7 +283,7 @@ async function assertCareerQuestionLocale(page,language,index){
   assert.equal(normalize(await page.locator('#question-text').innerText()),normalize(expected));
   const labels=['Совершенно неинтересно','Скорее неинтересно','Трудно сказать','Скорее интересно','Очень интересно'];
   assert.deepEqual(await page.locator('#answer-options .answer-option > span').allTextContents(),labels.map(label=>language==='ru'?label:careerLocales[language].entries[label]));
-  assert.equal(await page.locator('.seminar-step[aria-current="step"] strong').innerText(),translated(['Профориентация','Career interests','职业倾向'],language));
+  assert.equal(await page.locator('.seminar-step[aria-current="step"] strong').innerText(),translated(['Профориентация','Career interests','职业兴趣'],language));
 }
 async function verifyAllLocales(page){
   await page.evaluate(owner=>mount({owner,lang:'en',route:'home'}),OWNER_LOCALES);await item(page,1,3).waitFor();
@@ -315,7 +333,9 @@ async function verifyAllLocales(page){
     await page.locator('#personality-next').click();await assertQuestionLocale(page,language,1,answers);
     await page.locator('#personality-back').click();await assertQuestionLocale(page,language,0,answers);
     await page.evaluate(()=>handle.navigate('personality-results'));assert.deepEqual(await assertResultsLocale(page,language),original);
-    await page.locator('#personality-continue').click();await page.locator('#view-test:not([hidden])').waitFor();
+    await page.locator('#personality-continue').click();
+    if(careerIndex===0)await chooseCareerPreferences(page);
+    else await page.locator('#view-test:not([hidden])').waitFor();
     await assertCareerQuestionLocale(page,language,careerIndex);
     await page.locator('#answer-options [data-answer="'+(careerIndex+2)+'"]').click();await page.locator('#question-next').click();careerIndex++;
     await assertCareerQuestionLocale(page,language,careerIndex);
@@ -347,7 +367,7 @@ try{
   assert.equal(await page.locator('#personality-root input[type="radio"]').count(),50);
   assert.equal(await page.locator('#personality-root input:checked').count(),0);
   assert.equal(await page.locator('#personality-next').isDisabled(),true);
-  assert.equal(await page.locator('.seminar-step').count(),5);
+  assert.equal(await page.locator('.seminar-step').count(),6);
   assert.match(await page.locator('.seminar-step[aria-current="step"]').innerText(),/Личностный профиль/);
   check('New course session begins with the independent personality inventory');
 
@@ -400,7 +420,7 @@ try{
   assert.equal(Number(await page.locator('[data-personality-detail-facet="N1"]').getAttribute('data-personality-score')),3.5);
   check('Editing re-scores the inventory; incomplete recalculation is guarded; completed results survive reload');
 
-  await page.locator('#personality-continue').click();await page.locator('#view-test:not([hidden])').waitFor();
+  await page.locator('#personality-continue').click();await chooseCareerPreferences(page);
   assert.equal(await page.locator('#question-text').innerText(),questions[0].text);
   await page.locator('#answer-options [data-answer="3"]').click();await page.locator('#question-next').click();
   await page.locator('#answer-options [data-answer="4"]').click();await page.locator('#question-next').click();
@@ -408,7 +428,7 @@ try{
   await page.evaluate(()=>handle.navigate('personality-results'));await page.locator('#personality-continue').click();
   assert.equal(await page.locator('#question-text').innerText(),questions[2].text,'Returning from personality results resumes previous career answers');
   await assertPrivatePayloads(page);
-  check('Continue opens the existing career questionnaire and preserves its own progress');
+  check('Continue requires three employer choices before the existing career questionnaire and preserves both stages');
 
   await page.evaluate(owner=>mount({owner,route:'personality-results'}),OWNER_B);
   await item(page,1,2).waitFor();

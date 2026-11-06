@@ -1,4 +1,6 @@
-name: Publish Seminar 5 with focused checks
+# Prepared locally for a future reviewed release; creating the update ZIP does
+# not run this workflow. Its committed scope is checked against 790f9cb below.
+name: Publish Seminar 5 career journey with focused checks
 
 on:
   push:
@@ -53,7 +55,7 @@ jobs:
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_personality_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/personality"
-      - name: Restore existing Seminar 5 work into the new first stage
+      - name: Restore existing Seminar 5 work through personality and preferences
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_career_update_migration.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/migration"
@@ -91,7 +93,7 @@ jobs:
           node-version: '24'
       - name: Verify the authorized Seminar 5 change scope and syntax
         run: |
-          git fetch --no-tags --depth=1 origin 7417f30b3f9cb9f40aac92d55334c4f1fb0cad93
+          git fetch --no-tags --depth=1 origin 790f9cb778df4bf7174fbf3d90d0edf7b157efc0
           node scripts/verify-career-express-release.mjs --scope
       - name: Build the career component and existing deterministic assets
         run: |
@@ -101,12 +103,28 @@ jobs:
           npm run build:firebase
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs
-      - name: Verify personality scoring, role interpretation and existing career results
+      - name: Verify scoring, territory ranking and sourced requirement assessment
         run: |
           node scripts/test_personality_model.mjs
           node scripts/test_personality_insights.mjs
           node scripts/test_career_localization.mjs
-          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs
+          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs tests/career-journey-model.test.mjs tests/career-territorial-catalog.test.mjs tests/personality-visuals.test.mjs
+      - name: Verify the reusable territory map is deterministic
+        run: node site/apps/career/data/regions/build-map.mjs --check
+      - name: Install the isolated DOM test dependency
+        run: npm install --ignore-scripts --no-audit --no-fund --prefix "${{ runner.temp }}/career-dom-qa" happy-dom@21.0.4
+      - name: Verify the complete career journey with DOM interactions
+        env:
+          HAPPY_DOM_MODULE_PATH: ${{ runner.temp }}/career-dom-qa/node_modules/happy-dom/lib/index.js
+        run: node scripts/test_career_journey_ui.mjs --output "${{ runner.temp }}/career-dom-qa/report.json"
+      - name: Retain focused DOM evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: career-journey-dom
+          path: ${{ runner.temp }}/career-dom-qa/report.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Retrieve the published baseline and preserve its calendar
         env:
           GH_TOKEN: ${{ github.token }}
@@ -169,6 +187,6 @@ jobs:
             gh release download "$tag" --pattern receipt.json --dir existing
             node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
           else
-            notes="Seminar 5 IPIP-NEO-120: Russian, English and Chinese questions, results and language switching. Focused career checks passed on this source: scoring, existing career results, restored old sessions, independent course/free progress and UI in Chromium, Firefox and WebKit. Immutable resources and rollback archive verified."
+            notes="Seminar 5 career journey: personality, 89 work territories, three ranked preferred employers, national and territorial recommendations, source-backed role requirements and a development plan. Focused checks on this source cover unchanged career scoring, source requirement preservation, deterministic map data and full-journey DOM interactions. Browser checks in Chromium, Firefox and WebKit cover translated personality UI, the new preference transition, restored old sessions and independent course/free progress. DOM checks do not claim browser layout or screen-reader validation. Immutable resources outside Seminar 5 and the rollback archive are verified."
             gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "$notes"
           fi

@@ -1,6 +1,7 @@
 import {getLanguage} from './i18n.mjs';
 import {PERSONALITY_ITEMS,PERSONALITY_DOMAINS,PERSONALITY_FACETS,PERSONALITY_METHOD,scorePersonality} from './personality-model.mjs';
 import {WORK_TRAITS,expressionBand,suggestTeamRoles} from './personality-insights.mjs';
+import {personalityIcon,renderPersonalityRadar} from './personality-visuals.mjs';
 
 const PAGE_SIZE=10;
 const PAGE_COUNT=PERSONALITY_ITEMS.length/PAGE_SIZE;
@@ -109,20 +110,29 @@ export function createPersonality({navigate,continueCareer}){
     if(!isComplete()){navigate('personality');return;}
     const root=document.querySelector('#personality-results-root'),suggestions=suggestTeamRoles(profile);
     root.lang=getLanguage();
+    const radar=renderPersonalityRadar(profile.domains,{
+      labels:Object.fromEntries(Object.entries(domainCopy).map(([id,copy])=>[id,text(copy.title)])),
+      title:L('Сочетание Ваших черт','Your traits at a glance','你的特征组合'),
+      description:L('Пять основных шкал личностного профиля на одной диаграмме.','The five main personality scales in one chart.','在一张图中查看五项主要人格特征。'),
+      scale:L('Единая шкала: 1 — в центре, 5 — на внешнем контуре.','Shared scale: 1 at the centre, 5 on the outer ring.','统一量表：中心为1分，外圈为5分。'),
+      caption:L('Более высокий балл означает большую выраженность черты в Ваших ответах. Большая площадь диаграммы не означает лучший результат.','A higher score means that a trait is more strongly expressed in your answers. A larger chart area does not mean a better result.','分数越高，表示该特征在你的回答中越明显。图形面积较大并不表示结果更好。'),
+      formatValue:number
+    });
     const roleIntro=suggestions.kind==='balanced'
       ?L('Несколько способов участия в команде выражены сходным образом. Попробуйте разные роли и сравните, какие задачи дают Вам больше удовлетворения.','Several ways of contributing to a team are similarly expressed. Try different roles and compare which tasks you find more satisfying.','你在多种团队参与方式上表现相近。可以尝试不同角色，比较哪些任务更让你感到满意。')
       :suggestions.kind==='exploratory'
         ?L('По Вашим ответам пока не выделяется определённая командная роль. В ближайшем групповом задании попробуйте небольшую задачу по планированию, анализу или поддержке участников и оцените свои впечатления.','Your answers do not point clearly to a particular team role. In your next group task, try a small planning, analysis or support responsibility and reflect on the experience.','你的回答尚未显示出明确的团队角色倾向。下次小组任务中，可以尝试一项计划、分析或支持成员的具体工作，再体会自己的感受。')
         :L('Сочетания Ваших черт дают основания попробовать следующие способы участия в общей работе.','Your combination of traits suggests the following contributions to try in shared work.','根据你的特征组合，可以在共同工作中尝试以下参与方式。');
     root.innerHTML=`<header class="personality-heading personality-result-heading"><button type="button" id="personality-edit" class="personality-text-button">${L('К ответам','Back to answers','返回答案')}</button><h1>${L('Ваш стиль работы в команде','Your style of working in a team','你的团队工作风格')}</h1><p>${L('Баллы от 1 до 5 показывают выраженность черт в Ваших ответах. У каждого сочетания есть полезные стороны и задачи для развития.','Scores from 1 to 5 describe the traits expressed in your answers. Each combination has useful aspects and opportunities for development.','1至5分反映你的回答中各项特征的表现程度。每种组合都有有利之处和可以发展的方面。')}</p></header>
+      ${radar}
       <section class="personality-section" aria-labelledby="personality-work-title"><h2 id="personality-work-title">${L('Ответственность, инициатива и совместная работа','Responsibility, initiative and collaboration','责任、主动性与合作')}</h2><div class="personality-traits">${WORK_TRAITS.map(trait=>{
         const value=profile.facets[trait.facet].mean,title=text(trait.label);
-        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${E(title)}</h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value,title)}<p>${E(text(trait[expressionBand(value)]))}</p></article>`;
+        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E(title)}</span></h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value,title)}<p>${E(text(trait[expressionBand(value)]))}</p></article>`;
       }).join('')}</div></section>
-      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L('Роли, которые стоит попробовать','Roles worth trying','值得尝试的团队角色')}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length?`<div class="personality-roles">${suggestions.roles.map(role=>`<article class="personality-role" data-personality-role="${role.id}"><h3>${E(text(role.label))}</h3><p>${E(text(role.description))}</p><dl>${role.facets.map(id=>`<div><dt>${E(label(facetById.get(id)))}</dt><dd>${number(profile.facets[id].mean)} / 5</dd></div>`).join('')}</dl><p class="personality-role-action"><strong>${L('Попробуйте:','Try:','可以尝试：')}</strong> ${E(text(role.action))}</p></article>`).join('')}</div>`:''}</section>
+      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L('Роли, которые стоит попробовать','Roles worth trying','值得尝试的团队角色')}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length?`<div class="personality-roles">${suggestions.roles.map(role=>`<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E(text(role.label))}</span></h3><p>${E(text(role.description))}</p><dl>${role.facets.map(id=>`<div><dt>${E(label(facetById.get(id)))}</dt><dd>${number(profile.facets[id].mean)} / 5</dd></div>`).join('')}</dl><p class="personality-role-action"><strong>${L('Попробуйте:','Try:','可以尝试：')}</strong> ${E(text(role.action))}</p></article>`).join('')}</div>`:''}</section>
       <section class="personality-section" aria-labelledby="personality-full-title"><h2 id="personality-full-title">${L('Полный личностный профиль','Your full personality profile','完整的人格特征')}</h2><div class="personality-domains">${['C','E','A','O','N'].map(id=>{
         const domain=PERSONALITY_DOMAINS.find(item=>item.id===id),copy=domainCopy[id],value=profile.domains[id].mean,title=text(copy.title);
-        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${E(title)}</h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value,title)}<p>${E(text(copy.description))}</p><dl>${domain.facets.map(facet=>{
+        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E(title)}</span></h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value,title)}<p>${E(text(copy.description))}</p><dl>${domain.facets.map(facet=>{
           const facetLabel=label(facetById.get(facet));
           return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E(facetLabel)}</dt><dd>${number(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
         }).join('')}</dl></article>`;

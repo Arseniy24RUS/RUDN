@@ -1,5 +1,6 @@
-/** A pre-personality course update must restore its existing checkpoint while
- * displaying the new first stage. Real career runtime, coordinator and local
+/** An older course update must restore its existing checkpoint while displaying
+ * the personality and employer-preference stages before resuming career answers.
+ * Real career runtime, coordinator and local
  * stores; only the backend and release transport use isolated synthetic data. */
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
@@ -27,7 +28,7 @@ export const groupOptions=()=>[];
 export const backend={generation:1,authReady:true,user:null,mode:'local',connected:false,serverTimeOffset:0,
 getProfile:()=>({studentKey:'career-migration-qa'}),isAdmin:()=>false,init:async()=>{},onStatus:()=>()=>{},status:()=>({}),
 globalNow:()=>Date.now(),getAccessOverrides:()=>({}),localGrades:()=>({}),localAttempts:()=>[],getAttempts:async()=>[],
-loadDraft:scope=>durableStore.loadDraft(scope),checkpoint:(input,options)=>durableStore.checkpoint(input,{...options,queue:false}),
+loadDraft:scope=>durableStore.loadDraft(scope),checkpoint:(input,options)=>{window.qa.checkpoints.push(structuredClone(input));return durableStore.checkpoint(input,{...options,queue:false});},
 saveAttempt:async()=>{window.qa.submissions++;throw Error('Migration QA forbids submissions');}};`;
 
 const harness=`<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Career update migration · isolated QA</title>
@@ -42,7 +43,7 @@ const owner=${JSON.stringify(owner)},prior=${JSON.stringify(prior)},scope={owner
 const oldRoute=new URLSearchParams(location.search).get('route')||'test';
 const outerRoute='#activity/seminar-6/'+oldRoute,sourceBuild='11111111111111111111111111111111',targetBuild='22222222222222222222222222222222';
 const store=updateSnapshotStore(),token=crypto.randomUUID(),adapterToken=crypto.randomUUID();
-window.qa={submissions:0,routeChanges:[],rollbackCalls:0,restoredSignals:0,bootConfirmed:0,outerRoute,oldRoute,token,adapterToken};
+window.qa={submissions:0,checkpoints:[],routeChanges:[],rollbackCalls:0,restoredSignals:0,bootConfirmed:0,outerRoute,oldRoute,token,adapterToken};
 window.addEventListener('rudn:update-restored',()=>qa.restoredSignals++);
 try{
   const contracts=await fetch('/data/platform-contracts.json').then(response=>response.json());
@@ -116,8 +117,44 @@ try{
     assert.equal(result.submissions,0);
     await page.locator('input[data-personality-item="ipip-001"][value="4"]').check();
     assert.equal(await page.locator('input[data-personality-item="ipip-001"][value="4"]').isChecked(),true,'The restored first stage accepts normal student input');
-    report.checks.push({route,status:'pass',check:'Old career checkpoint restores, new first stage stays mandatory, pending update clears without rollback'});
-    console.log('PASS '+engine+' legacy course '+route+': restored, answers retained, no rollback');
+    for(let offset=0;offset<120;offset+=10){
+      await page.locator(`input[data-personality-item="ipip-${String(offset+1).padStart(3,'0')}"]`).first().waitFor();
+      const ids=await page.locator('#personality-root input[data-personality-item]').evaluateAll(nodes=>[...new Set(nodes.map(node=>node.dataset.personalityItem))]);
+      assert.equal(ids.length,10,'Each restored personality page still contains ten items');
+      for(const id of ids)if(!await page.locator(`input[data-personality-item="${id}"]:checked`).count())await page.locator(`input[data-personality-item="${id}"][value="3"]`).check();
+      await page.locator('#personality-next').click();
+    }
+    await page.locator('#view-personality-results:not([hidden])').waitFor();
+    await page.locator('#personality-continue').click();
+    await page.locator('#view-preferences:not([hidden])').waitFor();
+    const next=page.locator('#journey-preferences-next');await next.waitFor();
+    assert.equal(await page.locator('#view-test').isVisible(),false,'An old draft cannot bypass the new preference stage');
+    assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),0,'Migration does not invent preferred employers');
+    assert.equal(await next.isDisabled(),true);
+    for(let priority=0;priority<3;priority++){
+      await page.locator('[data-add-wish][aria-pressed="false"]:not([disabled])').first().click();
+      assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),priority+1);
+      assert.equal(await next.isDisabled(),priority<2);
+    }
+    const desiredIds=await page.locator('#journey-desired-choices [data-remove-wish]').evaluateAll(nodes=>nodes.map(node=>node.dataset.removeWish));
+    assert.equal(new Set(desiredIds).size,3);
+    await next.click();await page.locator('#view-test:not([hidden])').waitFor();
+    assert.equal(await page.locator('#question-text').innerText(),questions[2].text,'The original question index resumes after both new stages');
+    const continued=await page.evaluate(async owner=>{
+      await handle.flush();
+      const saved=await (await import('/assets/js/durable-store.js')).durableStore.loadDraft({owner,activitySlug:'career-workspace',mode:'diagnostic',attemptId:'workspace-v1'});
+      return {saved,checkpoints:qa.checkpoints,submissions:qa.submissions};
+    },owner);
+    const resumed=JSON.parse(continued.saved.state.values['answers-v8.1']);
+    for(const key of ['modelVersion','questionnaireVersion','registryVersion','answers','questionIndex','prioritySectors','lowPrioritySectors','conditions','focusAreas','completedAt','resultRecordId'])assert.deepEqual(resumed[key],prior[key],'New stages preserve the existing career '+key);
+    const journey=JSON.parse(continued.saved.state.values['career-journey-v1']);
+    assert.deepEqual(journey.desiredIds,desiredIds,'The explicit ordered choices are saved in the same owner workspace');
+    assert.equal(journey.confirmed,true);
+    assert.equal(/ipip-\d{3}/.test(JSON.stringify(continued.checkpoints)),false,'Private personality responses never enter migrated career checkpoints');
+    for(const checkpoint of continued.checkpoints)assert.equal(Object.keys(checkpoint.state?.values||{}).some(key=>/personality|ipip/i.test(key)),false,'The separate personality inventory is absent from synced values');
+    assert.equal(continued.submissions,0);
+    report.checks.push({route,status:'pass',check:'Old career checkpoint restores, both new stages remain mandatory, ordered choices save, career answers resume, no rollback or private-response sync'});
+    console.log('PASS '+engine+' legacy course '+route+': restored, personality and preferences completed through UI, answers retained, no rollback or private-response sync');
     await context.close();
   }
   assert.deepEqual(report.errors,[]);assert.deepEqual(report.externalRequests,[]);report.status='pass';

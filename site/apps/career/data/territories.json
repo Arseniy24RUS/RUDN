@@ -1,0 +1,1337 @@
+[
+  {
+    "id": "ru-77",
+    "code": "77",
+    "name": "Москва",
+    "name_en": "Moscow",
+    "name_zh": "莫斯科市",
+    "mapId": "102269",
+    "type": "federal-city",
+    "defaultSelected": true,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-22",
+    "code": "22",
+    "name": "Алтайский край",
+    "name_en": "Altai Krai",
+    "name_zh": "阿尔泰边疆区",
+    "mapId": "144764",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-28",
+    "code": "28",
+    "name": "Амурская область",
+    "name_en": "Amur Oblast",
+    "name_zh": "阿穆尔州",
+    "mapId": "147166",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-29",
+    "code": "29",
+    "name": "Архангельская область",
+    "name_en": "Arkhangelsk Oblast",
+    "name_zh": "阿尔汉格尔斯克州",
+    "mapId": "140337",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-30",
+    "code": "30",
+    "name": "Астраханская область",
+    "name_en": "Astrakhan Oblast",
+    "name_zh": "阿斯特拉罕州",
+    "mapId": "112819",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-31",
+    "code": "31",
+    "name": "Белгородская область",
+    "name_en": "Belgorod Oblast",
+    "name_zh": "别尔哥罗德州",
+    "mapId": "83184",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-32",
+    "code": "32",
+    "name": "Брянская область",
+    "name_en": "Bryansk Oblast",
+    "name_zh": "布良斯克州",
+    "mapId": "81997",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-33",
+    "code": "33",
+    "name": "Владимирская область",
+    "name_en": "Vladimir Oblast",
+    "name_zh": "弗拉基米尔州",
+    "mapId": "72197",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-34",
+    "code": "34",
+    "name": "Волгоградская область",
+    "name_en": "Volgograd Oblast",
+    "name_zh": "伏尔加格勒州",
+    "mapId": "77665",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-35",
+    "code": "35",
+    "name": "Вологодская область",
+    "name_en": "Vologda Oblast",
+    "name_zh": "沃洛格达州",
+    "mapId": "115106",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-36",
+    "code": "36",
+    "name": "Воронежская область",
+    "name_en": "Voronezh Oblast",
+    "name_zh": "沃罗涅日州",
+    "mapId": "72181",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-93",
+    "code": "93",
+    "name": "Донецкая Народная Республика",
+    "name_en": "Donetsk People's Republic",
+    "name_zh": "顿涅茨克人民共和国",
+    "mapId": "2",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/rn77/about_fts/docs/12990252/"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-79",
+    "code": "79",
+    "name": "Еврейская автономная область",
+    "name_en": "Jewish Autonomous Oblast",
+    "name_zh": "犹太自治州",
+    "mapId": "147167",
+    "type": "autonomous-oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-75",
+    "code": "75",
+    "name": "Забайкальский край",
+    "name_en": "Zabaykalsky Krai",
+    "name_zh": "外贝加尔边疆区",
+    "mapId": "145730",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-90",
+    "code": "90",
+    "name": "Запорожская область",
+    "name_en": "Zaporozhye Oblast",
+    "name_zh": "扎波罗热州",
+    "mapId": "3",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/rn77/about_fts/docs/12990252/"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-37",
+    "code": "37",
+    "name": "Ивановская область",
+    "name_en": "Ivanovo Oblast",
+    "name_zh": "伊万诺沃州",
+    "mapId": "85617",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-38",
+    "code": "38",
+    "name": "Иркутская область",
+    "name_en": "Irkutsk Oblast",
+    "name_zh": "伊尔库茨克州",
+    "mapId": "145454",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-07",
+    "code": "07",
+    "name": "Кабардино-Балкарская Республика",
+    "name_en": "Kabardino-Balkaria",
+    "name_zh": "卡巴尔达-巴尔卡尔共和国",
+    "mapId": "109879",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-39",
+    "code": "39",
+    "name": "Калининградская область",
+    "name_en": "Kaliningrad",
+    "name_zh": "加里宁格勒州",
+    "mapId": "103906",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-40",
+    "code": "40",
+    "name": "Калужская область",
+    "name_en": "Kaluga Oblast",
+    "name_zh": "卡卢加州",
+    "mapId": "81995",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-41",
+    "code": "41",
+    "name": "Камчатский край",
+    "name_en": "Kamchatka Krai",
+    "name_zh": "堪察加边疆区",
+    "mapId": "151233",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-09",
+    "code": "09",
+    "name": "Карачаево-Черкесская Республика",
+    "name_en": "Karachay-Cherkessia",
+    "name_zh": "卡拉恰伊-切尔克斯共和国",
+    "mapId": "109878",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-42",
+    "code": "42",
+    "name": "Кемеровская область – Кузбасс",
+    "name_en": "Kemerovo Oblast",
+    "name_zh": "克麦罗沃州",
+    "mapId": "144763",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-43",
+    "code": "43",
+    "name": "Кировская область",
+    "name_en": "Kirov Oblast",
+    "name_zh": "基洛夫州",
+    "mapId": "115100",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-44",
+    "code": "44",
+    "name": "Костромская область",
+    "name_en": "Kostroma Oblast",
+    "name_zh": "科斯特罗马州",
+    "mapId": "85963",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-23",
+    "code": "23",
+    "name": "Краснодарский край",
+    "name_en": "Krasnodar Krai",
+    "name_zh": "克拉斯诺达尔边疆区",
+    "mapId": "108082",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-24",
+    "code": "24",
+    "name": "Красноярский край",
+    "name_en": "Krasnoyarsk Krai",
+    "name_zh": "克拉斯诺亚尔斯克边疆区",
+    "mapId": "190090",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-45",
+    "code": "45",
+    "name": "Курганская область",
+    "name_en": "Kurgan Oblast",
+    "name_zh": "库尔干州",
+    "mapId": "140290",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-46",
+    "code": "46",
+    "name": "Курская область",
+    "name_en": "Kursk Oblast",
+    "name_zh": "库尔斯克州",
+    "mapId": "72223",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-47",
+    "code": "47",
+    "name": "Ленинградская область",
+    "name_en": "Leningrad oblast",
+    "name_zh": "列宁格勒州",
+    "mapId": "176095",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-48",
+    "code": "48",
+    "name": "Липецкая область",
+    "name_en": "Lipetsk Oblast",
+    "name_zh": "利佩茨克州",
+    "mapId": "72169",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-94",
+    "code": "94",
+    "name": "Луганская Народная Республика",
+    "name_en": "Lugansk People's Republic",
+    "name_zh": "卢甘斯克人民共和国",
+    "mapId": "1",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/rn77/about_fts/docs/12990252/"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-49",
+    "code": "49",
+    "name": "Магаданская область",
+    "name_en": "Magadan Oblast",
+    "name_zh": "马加丹州",
+    "mapId": "151228",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-50",
+    "code": "50",
+    "name": "Московская область",
+    "name_en": "Moscow Oblast",
+    "name_zh": "莫斯科州",
+    "mapId": "51490",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-51",
+    "code": "51",
+    "name": "Мурманская область",
+    "name_en": "Murmansk Oblast",
+    "name_zh": "摩尔曼斯克州",
+    "mapId": "2099216",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-83",
+    "code": "83",
+    "name": "Ненецкий автономный округ",
+    "name_en": "Nenets Autonomous Okrug",
+    "name_zh": "涅涅茨自治区",
+    "mapId": "274048",
+    "type": "autonomous-okrug",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-52",
+    "code": "52",
+    "name": "Нижегородская область",
+    "name_en": "Nizhny Novgorod Oblast",
+    "name_zh": "下诺夫哥罗德州",
+    "mapId": "72195",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-53",
+    "code": "53",
+    "name": "Новгородская область",
+    "name_en": "Novgorod Oblast",
+    "name_zh": "诺夫哥罗德州",
+    "mapId": "89331",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-54",
+    "code": "54",
+    "name": "Новосибирская область",
+    "name_en": "Novosibirsk Oblast",
+    "name_zh": "新西伯利亚州",
+    "mapId": "140294",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-55",
+    "code": "55",
+    "name": "Омская область",
+    "name_en": "Omsk Oblast",
+    "name_zh": "鄂木斯克州",
+    "mapId": "140292",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-56",
+    "code": "56",
+    "name": "Оренбургская область",
+    "name_en": "Orenburg Oblast",
+    "name_zh": "奥伦堡州",
+    "mapId": "77669",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-57",
+    "code": "57",
+    "name": "Орловская область",
+    "name_en": "Oryol Oblast",
+    "name_zh": "奥廖尔州",
+    "mapId": "72224",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-58",
+    "code": "58",
+    "name": "Пензенская область",
+    "name_en": "Penza Oblast",
+    "name_zh": "奔萨州",
+    "mapId": "72182",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-59",
+    "code": "59",
+    "name": "Пермский край",
+    "name_en": "Perm Krai",
+    "name_zh": "彼尔姆边疆区",
+    "mapId": "115135",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-25",
+    "code": "25",
+    "name": "Приморский край",
+    "name_en": "Primorsky Krai",
+    "name_zh": "滨海边疆区",
+    "mapId": "151225",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-60",
+    "code": "60",
+    "name": "Псковская область",
+    "name_en": "Pskov Oblast",
+    "name_zh": "普斯科夫州",
+    "mapId": "155262",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-01",
+    "code": "01",
+    "name": "Республика Адыгея (Адыгея)",
+    "name_en": "Adygea",
+    "name_zh": "阿迪格共和国",
+    "mapId": "253256",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-04",
+    "code": "04",
+    "name": "Республика Алтай",
+    "name_en": "Altai Republic",
+    "name_zh": "阿尔泰共和国",
+    "mapId": "145194",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-02",
+    "code": "02",
+    "name": "Республика Башкортостан",
+    "name_en": "Bashkortostan",
+    "name_zh": "巴什科尔托斯坦共和国",
+    "mapId": "77677",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-03",
+    "code": "03",
+    "name": "Республика Бурятия",
+    "name_en": "Buryatia",
+    "name_zh": "布里亚特共和国",
+    "mapId": "145729",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-05",
+    "code": "05",
+    "name": "Республика Дагестан",
+    "name_en": "Dagestan",
+    "name_zh": "达吉斯坦共和国",
+    "mapId": "109876",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-06",
+    "code": "06",
+    "name": "Республика Ингушетия",
+    "name_en": "Ingushetia",
+    "name_zh": "印古什共和国",
+    "mapId": "253252",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-08",
+    "code": "08",
+    "name": "Республика Калмыкия",
+    "name_en": "Kalmykia",
+    "name_zh": "卡尔梅克共和国",
+    "mapId": "108083",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-10",
+    "code": "10",
+    "name": "Республика Карелия",
+    "name_en": "Republic of Karelia",
+    "name_zh": "卡累利阿共和国",
+    "mapId": "393980",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-11",
+    "code": "11",
+    "name": "Республика Коми",
+    "name_en": "Komi Republic",
+    "name_zh": "科米共和国",
+    "mapId": "115136",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-91",
+    "code": "91",
+    "name": "Республика Крым",
+    "name_en": "Republic of Crimea",
+    "name_zh": "克里米亚共和国",
+    "mapId": "3795586",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-12",
+    "code": "12",
+    "name": "Республика Марий Эл",
+    "name_en": "Mari El",
+    "name_zh": "马里埃尔共和国",
+    "mapId": "115114",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-13",
+    "code": "13",
+    "name": "Республика Мордовия",
+    "name_en": "Republic of Mordovia",
+    "name_zh": "莫尔多瓦共和国",
+    "mapId": "72196",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-14",
+    "code": "14",
+    "name": "Республика Саха (Якутия)",
+    "name_en": "Sakha Republic",
+    "name_zh": "萨哈（雅库特）共和国",
+    "mapId": "151234",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-15",
+    "code": "15",
+    "name": "Республика Северная Осетия – Алания",
+    "name_en": "North Ossetia–Alania",
+    "name_zh": "北奥塞梯—阿兰共和国",
+    "mapId": "110032",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-16",
+    "code": "16",
+    "name": "Республика Татарстан (Татарстан)",
+    "name_en": "Tatarstan",
+    "name_zh": "鞑靼斯坦共和国",
+    "mapId": "79374",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-17",
+    "code": "17",
+    "name": "Республика Тыва",
+    "name_en": "Tuva",
+    "name_zh": "图瓦共和国",
+    "mapId": "145195",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-19",
+    "code": "19",
+    "name": "Республика Хакасия",
+    "name_en": "Khakassia",
+    "name_zh": "哈卡斯共和国",
+    "mapId": "190911",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-61",
+    "code": "61",
+    "name": "Ростовская область",
+    "name_en": "Rostov Oblast",
+    "name_zh": "罗斯托夫州",
+    "mapId": "85606",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-62",
+    "code": "62",
+    "name": "Рязанская область",
+    "name_en": "Ryazan Oblast",
+    "name_zh": "梁赞州",
+    "mapId": "71950",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-63",
+    "code": "63",
+    "name": "Самарская область",
+    "name_en": "Samara Oblast",
+    "name_zh": "萨马拉州",
+    "mapId": "72194",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-78",
+    "code": "78",
+    "name": "Санкт-Петербург",
+    "name_en": "Saint Petersburg",
+    "name_zh": "圣彼得堡市",
+    "mapId": "337422",
+    "type": "federal-city",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-64",
+    "code": "64",
+    "name": "Саратовская область",
+    "name_en": "Saratov Oblast",
+    "name_zh": "萨拉托夫州",
+    "mapId": "72193",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-65",
+    "code": "65",
+    "name": "Сахалинская область",
+    "name_en": "Sakhalin Oblast",
+    "name_zh": "萨哈林州",
+    "mapId": "394235",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-66",
+    "code": "66",
+    "name": "Свердловская область",
+    "name_en": "Sverdlovsk Oblast",
+    "name_zh": "斯维尔德洛夫斯克州",
+    "mapId": "79379",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-92",
+    "code": "92",
+    "name": "Севастополь",
+    "name_en": "Sevastopol",
+    "name_zh": "塞瓦斯托波尔市",
+    "mapId": "3788485",
+    "type": "federal-city",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-67",
+    "code": "67",
+    "name": "Смоленская область",
+    "name_en": "Smolensk Oblast",
+    "name_zh": "斯摩棱斯克州",
+    "mapId": "81996",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-26",
+    "code": "26",
+    "name": "Ставропольский край",
+    "name_en": "Stavropol Krai",
+    "name_zh": "斯塔夫罗波尔边疆区",
+    "mapId": "108081",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-68",
+    "code": "68",
+    "name": "Тамбовская область",
+    "name_en": "Tambov Oblast",
+    "name_zh": "坦波夫州",
+    "mapId": "72180",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-69",
+    "code": "69",
+    "name": "Тверская область",
+    "name_en": "Tver Oblast",
+    "name_zh": "特维尔州",
+    "mapId": "2095259",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-70",
+    "code": "70",
+    "name": "Томская область",
+    "name_en": "Tomsk Oblast",
+    "name_zh": "托木斯克州",
+    "mapId": "140295",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-71",
+    "code": "71",
+    "name": "Тульская область",
+    "name_en": "Tula Oblast",
+    "name_zh": "图拉州",
+    "mapId": "81993",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-72",
+    "code": "72",
+    "name": "Тюменская область",
+    "name_en": "Tyumen Oblast",
+    "name_zh": "秋明州",
+    "mapId": "140291",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-18",
+    "code": "18",
+    "name": "Удмуртская Республика",
+    "name_en": "Udmurtia",
+    "name_zh": "乌德穆尔特共和国",
+    "mapId": "115134",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-73",
+    "code": "73",
+    "name": "Ульяновская область",
+    "name_en": "Ulyanovsk Oblast",
+    "name_zh": "乌里扬诺夫斯克州",
+    "mapId": "72192",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-27",
+    "code": "27",
+    "name": "Хабаровский край",
+    "name_en": "Khabarovsk Krai",
+    "name_zh": "哈巴罗夫斯克边疆区",
+    "mapId": "151223",
+    "type": "krai",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-86",
+    "code": "86",
+    "name": "Ханты-Мансийский автономный округ – Югра",
+    "name_en": "Khanty-Mansiysk Autonomous Okrug – Ugra",
+    "name_zh": "汉特-曼西自治区—尤格拉",
+    "mapId": "140296",
+    "type": "autonomous-okrug",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-95",
+    "code": "95",
+    "name": "Херсонская область",
+    "name_en": "Kherson Oblast",
+    "name_zh": "赫尔松州",
+    "mapId": "0",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/rn77/about_fts/docs/12990252/"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-74",
+    "code": "74",
+    "name": "Челябинская область",
+    "name_en": "Chelyabinsk Oblast",
+    "name_zh": "车里雅宾斯克州",
+    "mapId": "77687",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-20",
+    "code": "20",
+    "name": "Чеченская Республика",
+    "name_en": "Chechnya",
+    "name_zh": "车臣共和国",
+    "mapId": "109877",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-21",
+    "code": "21",
+    "name": "Чувашская Республика – Чувашия",
+    "name_en": "Chuvashia",
+    "name_zh": "楚瓦什共和国",
+    "mapId": "80513",
+    "type": "republic",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-87",
+    "code": "87",
+    "name": "Чукотский автономный округ",
+    "name_en": "Chukotka Autonomous Okrug",
+    "name_zh": "楚科奇自治区",
+    "mapId": "151231",
+    "type": "autonomous-okrug",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-89",
+    "code": "89",
+    "name": "Ямало-Ненецкий автономный округ",
+    "name_en": "Yamalo-Nenets Autonomous Okrug",
+    "name_zh": "亚马尔-涅涅茨自治区",
+    "mapId": "191706",
+    "type": "autonomous-okrug",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  },
+  {
+    "id": "ru-76",
+    "code": "76",
+    "name": "Ярославская область",
+    "name_en": "Yaroslavl Oblast",
+    "name_zh": "雅罗斯拉夫尔州",
+    "mapId": "81994",
+    "type": "oblast",
+    "defaultSelected": false,
+    "sourceUrls": [
+      "https://www.minjust.gov.ru/ru/documents/8011/",
+      "https://www.nalog.gov.ru/html/sites/www.new.nalog.ru/doc/2pril887_081220.pdf"
+    ],
+    "sourceSnapshotDate": "2026-11-01"
+  }
+]

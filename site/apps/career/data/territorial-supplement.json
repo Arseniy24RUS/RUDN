@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-11-06",
+  "purpose": "Source-backed municipal examples for the default Moscow selection. Staff directories do not establish any open vacancy.",
+  "institutions": [
+    {
+      "id": "ru-77-arbat-municipal-administration",
+      "name": "Администрация внутригородского муниципального образования — муниципального округа Арбат в городе Москве",
+      "shortName": "",
+      "level": "municipal",
+      "regionId": "ru-77",
+      "employerType": "municipal-service-authority",
+      "officialUrl": "https://mo-arbat.ru/",
+      "functionalFamilyIds": ["public-administration", "justice", "finance"],
+      "description": [
+        "Администрация обеспечивает исполнение решений Совета депутатов и работу с обращениями жителей муниципального округа Арбат. Сотрудники ведут переписку, разъясняют муниципальные правовые акты и готовят документы по вопросам местного значения.",
+        "На официальном сайте представлены организационное и кадровое направление, правовое сопровождение, бухгалтерский учёт и финансовое обеспечение. Муниципальная работа объединяет подготовку документов, взаимодействие с жителями и обеспечение деятельности органов местного самоуправления."
+      ],
+      "sources": [
+        {
+          "id": "moscow-arbat-official-regulations-20261106",
+          "url": "https://mo-arbat.ru/reglament",
+          "title": "Официальный сайт муниципального округа Арбат: регламент администрации",
+          "checkedAt": "2026-11-06",
+          "supports": ["identity", "description", "functions"],
+          "sourceLocator": "Раздел «Регламент Администрации»: исполнение решений, взаимодействие с жителями, корреспонденция"
+        },
+        {
+          "id": "moscow-arbat-official-staff-20261106",
+          "url": "https://mo-arbat.ru/admini",
+          "title": "Официальный сайт муниципального округа Арбат: сотрудники администрации",
+          "checkedAt": "2026-11-06",
+          "supports": ["identity", "structure"],
+          "sourceLocator": "Перечень организационного, юридического и финансового подразделений"
+        }
+      ],
+      "contentStatus": "prepared-primary-published-description",
+      "current": true,
+      "temporalStatus": "official-website-observed-2026-11-06",
+      "sourceSnapshotAt": "2026-11-06",
+      "verificationNotes": [
+        "Кадровый состав используется для описания направлений работы. Наличие должности в перечне сотрудников не считается объявлением о вакансии."
+      ]
+    },
+    {
+      "id": "ru-77-tverskoy-municipal-administration",
+      "name": "Администрация муниципального округа Тверской в городе Москве",
+      "shortName": "",
+      "level": "municipal",
+      "regionId": "ru-77",
+      "employerType": "municipal-service-authority",
+      "officialUrl": "https://mo-tverskoy.ru/",
+      "functionalFamilyIds": ["public-administration", "finance", "justice"],
+      "description": [
+        "Администрация муниципального округа Тверской организует исполнение решений Совета депутатов и взаимодействует с жителями по местным вопросам. Работа включает подготовку и регистрацию документов, переписку и разъяснение муниципальных правовых актов.",
+        "Опубликованный состав администрации выделяет обеспечение работы Совета депутатов, кадровые и юридические вопросы, информационную работу, бухгалтерский учёт и бюджетное планирование. Подразделения позволяют познакомиться с административными, правовыми и финансовыми задачами муниципальной службы."
+      ],
+      "sources": [
+        {
+          "id": "moscow-tverskoy-official-regulations-20261106",
+          "url": "https://mo-tverskoy.ru/reglament",
+          "title": "Официальный сайт муниципального округа Тверской: регламент администрации",
+          "checkedAt": "2026-11-06",
+          "supports": ["identity", "description", "functions"],
+          "sourceLocator": "Раздел «Регламент Администрации»: исполнение решений, взаимодействие с жителями и документами"
+        },
+        {
+          "id": "moscow-tverskoy-official-staff-20261106",
+          "url": "https://mo-tverskoy.ru/admini",
+          "title": "Официальный сайт муниципального округа Тверской: состав администрации",
+          "checkedAt": "2026-11-06",
+          "supports": ["identity", "structure"],
+          "sourceLocator": "Раздел «Администрация»: опубликованные подразделения и направления работы"
+        }
+      ],
+      "contentStatus": "prepared-primary-published-description",
+      "current": true,
+      "temporalStatus": "official-website-observed-2026-11-06",
+      "sourceSnapshotAt": "2026-11-06",
+      "verificationNotes": [
+        "Должности на странице состава администрации не интерпретируются как открытые вакансии; требования к кандидатам из неё не выводятся."
+      ]
+    }
+  ]
+}

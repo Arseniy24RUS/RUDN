@@ -6,7 +6,7 @@ import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../ass
 import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);
-const VALID_ROUTES = new Set(['home','personality','personality-results','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
+const VALID_ROUTES = new Set(['home','personality','personality-results','preferences','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
 const locale = value => String(value || 'ru').startsWith('zh') ? 'zh-Hans' : String(value || 'ru').startsWith('en') ? 'en' : 'ru';
 const activeMounts = new WeakMap();
 

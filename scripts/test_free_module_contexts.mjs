@@ -73,7 +73,7 @@ try{
     page.on('pageerror',e=>errors.push(e.message));await context.route('**/*',route=>new URL(route.request().url()).origin===base?route.continue():route.abort());
     await page.goto(base+'/qa.html');await mount(page,module,'course');
     if(module==='career'){
-     // Course starts with the independent personality inventory. Complete it
+     // Complete the independent personality inventory and the new preferences
      // through the real UI before checking the original course/free workspace.
      await page.locator('#view-personality:not([hidden])').waitFor();
      for(let offset=0;offset<120;offset+=10){
@@ -85,6 +85,16 @@ try{
      }
      await page.locator('#view-personality-results:not([hidden])').waitFor();
      await page.locator('#personality-continue').click();
+     await page.locator('#view-preferences:not([hidden])').waitFor();
+     const next=page.locator('#journey-preferences-next');await next.waitFor();
+     assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),0,'New course owner has no inherited employer choices');
+     assert.equal(await next.isDisabled(),true,'Course requires three employer choices');
+     for(let priority=0;priority<3;priority++){
+      await page.locator('[data-add-wish][aria-pressed="false"]:not([disabled])').first().click();
+      assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),priority+1);
+      assert.equal(await next.isDisabled(),priority<2);
+     }
+     await next.click();
      await page.locator('#view-test:not([hidden])').waitFor();
     }
     const courseScope={owner:'student:'+profile.studentKey,activitySlug:module==='reception'?'seminar-5':'career-workspace',mode:module==='reception'?'2026-2027:practice':'diagnostic'};
@@ -93,6 +103,12 @@ try{
     await answer(2);const original=await load(page,courseScope);assert(original?.state);
     await mount(page,module,'free');if(module==='reception')assert.equal(await page.locator('[data-mode]').count(),0,'Free Reception has no assessment selector');
     await answer(4);const free=await load(page,freeScope);assert(free?.state);assert.notEqual(free.id,original.id);
+    if(module==='career'){
+     const journey=JSON.parse(original.state.values['career-journey-v1']);
+     assert.equal(journey.confirmed,true);assert.equal(new Set(journey.desiredIds).size,3);
+     assert.equal(free.state.values['career-journey-v1'],undefined,'Free career never inherits the course employer choices');
+     assert.equal(/ipip-\d{3}/.test(JSON.stringify([original.state,free.state])),false,'Private personality answers remain outside both synced workspaces');
+    }
     assert.deepEqual((await load(page,courseScope)).state,original.state,'Free actions leave course state intact');
     await mount(page,module,'course');assert.deepEqual((await load(page,courseScope)).state,original.state);
     await page.reload();await mount(page,module,'free');assert.deepEqual((await load(page,freeScope)).state,free.state,'Free reload restores exact saved state');

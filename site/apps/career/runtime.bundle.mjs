@@ -1964,10 +1964,10 @@ var CareerRuntime = (() => {
       else orgs.set(o.id, o);
       if (o?.authorityId && !["exact", "territorial", "subordinate"].includes(o.relation)) errors.push("invalid-relationship");
     }
-    const ids = /* @__PURE__ */ new Set();
+    const ids2 = /* @__PURE__ */ new Set();
     for (const v of feed.vacancies) {
-      if (!v || !vacancyUrl(v.id) || !plain2(v.title) || !orgs.has(v.organizationId) || ids.has(v.id)) errors.push("invalid-or-duplicate-vacancy");
-      ids.add(v?.id);
+      if (!v || !vacancyUrl(v.id) || !plain2(v.title) || !orgs.has(v.organizationId) || ids2.has(v.id)) errors.push("invalid-or-duplicate-vacancy");
+      ids2.add(v?.id);
       if (v?.url !== vacancyUrl(v?.id) || !isoDate(v?.lastSeenAt)) errors.push("invalid-vacancy-provenance");
       for (const key of ["deadline", "acceptFrom", "publishedAt"]) if (v?.[key] && !isoDate(v[key])) errors.push(`invalid-${key}`);
     }
@@ -2005,7 +2005,7 @@ var CareerRuntime = (() => {
     root.setAttribute("data-no-i18n", "");
     let feed = null, sync = null, loading = false, loaded = false, loadError = "", selected = "", territorial = false, query = "", limit = 12, connection = null, busy = false;
     const institutions = data2.allInstitutions || data2.authorities;
-    const ids = () => selected ? [selected] : (getResult()?.ranked || []).filter((a) => !["fund", "corporation"].includes(a.entityType)).slice(0, 5).map((a) => a.id);
+    const ids2 = () => selected ? [selected] : (getResult()?.ranked || []).filter((a) => !["fund", "corporation"].includes(a.entityType)).slice(0, 5).map((a) => a.id);
     const displayName = (id) => authorityName(institutions.find((a) => a.id === id)) || id;
     const isVisible = () => !document.querySelector("#view-vacancies")?.hidden;
     async function localJSON(file) {
@@ -2072,7 +2072,7 @@ var CareerRuntime = (() => {
       return items.map((v) => `<article class="vac-card"><div class="vac-card-meta"><span>${E(strings()[v.status])}</span><span>${E(v.location || L("\u041C\u0435\u0441\u0442\u043E \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Location not supplied", "\u672A\u6CE8\u660E\u5730\u70B9"))}</span></div><div class="result-symbol-heading">${authorityEmblem(institutions.find((a) => a.id === v.organization.authorityId) || { id: "" }, "compact")}<h3 lang="ru">${E(v.title)}</h3></div><p class="vac-employer" lang="ru">${E(v.organization.name)}</p>${v.organization.relation === "territorial" ? `<p class="vac-relation">${L("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D, \u043D\u0435 \u0446\u0435\u043D\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0430\u043F\u043F\u0430\u0440\u0430\u0442", "Territorial authority, not the central office", "\u5730\u65B9\u6D3E\u51FA\u673A\u5173\uFF0C\u975E\u4E2D\u592E\u673A\u5173")}</p>` : ""}${v.department ? `<p lang="ru">${E(v.department)}</p>` : ""}<dl>${v.deadline ? `<div><dt>${L("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62")}</dt><dd>${E(date(v.deadline))}</dd></div>` : ""}${v.salary ? `<div><dt>${L("\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Pay as stated", "\u6765\u6E90\u6240\u5217\u62A5\u916C")}</dt><dd lang="ru">${E(v.salary)}</dd></div>` : ""}${v.education ? `<div><dt>${L("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386")}</dt><dd lang="ru">${E(v.education)}</dd></div>` : ""}${v.experience ? `<div><dt>${L("\u041E\u043F\u044B\u0442", "Experience", "\u7ECF\u5386")}</dt><dd lang="ru">${E(v.experience)}</dd></div>` : ""}${v.kind ? `<div><dt>${L("\u0412\u0438\u0434 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Announcement type", "\u516C\u544A\u7C7B\u578B")}</dt><dd lang="ru">${E(v.kind)}</dd></div>` : ""}</dl><p class="vac-card-note">${L("\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u044B", "Retrieved", "\u83B7\u53D6\u4E8E")}: ${E(date(v.lastSeenAt))}. ${L("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C.", "Titles and requirements retain their original Russian wording.", "\u6807\u9898\u53CA\u8981\u6C42\u4FDD\u7559\u4FC4\u6587\u539F\u6587\u3002")}</p><a class="button button-primary" href="${E(v.url)}" target="_blank" rel="noopener noreferrer">${L("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Open official vacancy", "\u6253\u5F00\u5B98\u65B9\u804C\u4F4D")}${I("external")}</a></article>`).join("");
     }
     function nothing() {
-      const targets = ids();
+      const targets = ids2();
       if (!targets.length) return `<div class="vac-empty">${I("briefcase")}<h3>${L("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0442\u0435\u0441\u0442", "Choose an authority or complete the test", "\u8BF7\u9009\u62E9\u673A\u5173\u6216\u5B8C\u6210\u6D4B\u8BD5")}</h3><p>${L("\u041F\u043E\u0441\u043B\u0435 \u0442\u0435\u0441\u0442\u0430 \u0437\u0434\u0435\u0441\u044C \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442\u0441\u044F \u043F\u044F\u0442\u044C \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "The five recommended federal authorities are selected automatically after the test.", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u5C06\u81EA\u52A8\u4F7F\u7528\u63A8\u8350\u7684\u4E94\u4E2A\u8054\u90A6\u673A\u5173\u3002")}</p></div>`;
       const matched = (feed?.organizations || []).filter((o) => targets.includes(o.authorityId));
       return `<div class="vac-empty">${I("briefcase")}<h3>${!matched.length ? L("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0438 \u0435\u0449\u0451 \u043D\u0435 \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B", "Employers not yet matched", "\u96C7\u4E3B\u5C1A\u672A\u5339\u914D") : L("\u0412 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u043E\u0439 \u0447\u0430\u0441\u0442\u0438 \u0432\u044B\u0434\u0430\u0447\u0438 \u043D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439", "No matching announcements in the retrieved results", "\u5DF2\u83B7\u53D6\u7ED3\u679C\u4E2D\u6CA1\u6709\u5339\u914D\u516C\u544A")}</h3><p>${L("\u042D\u0442\u043E \u043D\u0435 \u0432\u044B\u0432\u043E\u0434 \u043E\u0431 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435. \u0414\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u043A \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0438\u0441\u043A\u0443.", "This is not evidence that the authority has no vacancies. You can open the official search.", "\u8FD9\u4E0D\u8BC1\u660E\u673A\u5173\u6CA1\u6709\u7A7A\u7F3A\uFF1B\u53EF\u4EE5\u6253\u5F00\u5B98\u65B9\u641C\u7D22\u3002")}</p><a class="button button-secondary" href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L("\u041F\u043E\u0438\u0441\u043A \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Search the official portal", "\u5728\u5B98\u65B9\u95E8\u6237\u641C\u7D22")}${I("external")}</a></div>`;
@@ -2083,7 +2083,7 @@ var CareerRuntime = (() => {
     }
     function draw() {
       if (!isVisible()) return;
-      const items = feed ? selectVacancies(feed, { authorityIds: ids(), includeTerritorial: territorial, query }) : [];
+      const items = feed ? selectVacancies(feed, { authorityIds: ids2(), includeTerritorial: territorial, query }) : [];
       root.innerHTML = `<header class="vac-heading"><div><h1>${L("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432", "Vacancies in recommended authorities", "\u63A8\u8350\u673A\u5173\u7684\u804C\u4F4D")}</h1><p>${L("\u041A\u0440\u0430\u0442\u043A\u0438\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u2013 \u0437\u0434\u0435\u0441\u044C. \u041F\u043E\u043B\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0438 \u043F\u043E\u0434\u0430\u0447\u0430 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u2013 \u043D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430.", "Brief cards here. Full terms and applications stay on the official portal.", "\u6B64\u5904\u5C55\u793A\u7B80\u8981\u5361\u7247\uFF1B\u5B8C\u6574\u6761\u4EF6\u53CA\u7533\u8BF7\u7559\u5728\u5B98\u65B9\u95E8\u6237\u3002")}</p></div><a class="button button-secondary" href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">gossluzhba.gov.ru${I("external")}</a></header>${statusPanel()}<div class="vac-controls"><label>${L("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Authority", "\u673A\u5173")}<select id="vac-authority"><option value="">${L("\u041F\u043E \u043C\u043E\u0435\u043C\u0443 \u0422\u041E\u041F-5", "My top five", "\u6211\u7684\u524D\u4E94\u63A8\u8350")}</option>${institutions.map((a) => `<option value="${E(a.id)}" ${selected === a.id ? "selected" : ""}>${E(displayName(a.id))}</option>`).join("")}</select></label><label>${L("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0438\u043B\u0438 \u043C\u0435\u0441\u0442\u043E", "Position or location", "\u804C\u4F4D\u6216\u5730\u70B9")}<input id="vac-query" type="search" maxlength="150" value="${E(query)}" placeholder="${L("\u041F\u043E\u0438\u0441\u043A \u0432 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445", "Search retrieved data", "\u641C\u7D22\u5DF2\u83B7\u53D6\u6570\u636E")}"></label><label class="vac-checkbox"><input id="vac-territory" type="checkbox" ${territorial ? "checked" : ""}>${L("\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B", "Include confirmed territorial employers", "\u5305\u542B\u5DF2\u786E\u8BA4\u7684\u6D3E\u51FA\u673A\u5173")}</label></div><div class="vac-toolbar"><span>${L("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0432 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Announcements in this selection", "\u9009\u96C6\u4E2D\u516C\u544A")}: <b>${items.length}</b></span><button type="button" class="button button-secondary" id="vac-reload" ${loading ? "disabled" : ""}>${L("\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043E\u043F\u0438\u0438", "Check snapshot update", "\u68C0\u67E5\u526F\u672C\u66F4\u65B0")}${I("reset")}</button>${connection?.refreshEnabled ? `<button type="button" class="button button-secondary" id="vac-sync" ${busy ? "disabled" : ""}>${L("\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0434\u0430\u043D\u043D\u044B\u0435 \u0441 \u043F\u043E\u0440\u0442\u0430\u043B\u0430", "Fetch from the portal", "\u4ECE\u95E8\u6237\u83B7\u53D6\u6570\u636E")}</button>` : ""}</div>${busy ? `<p role="status">${L("\u041F\u043E\u043B\u0443\u0447\u0430\u0435\u043C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435. \u041C\u043E\u0436\u043D\u043E \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0443 \u0441 \u0442\u0435\u0441\u0442\u043E\u043C.", "Retrieving public data. You can continue using the test.", "\u6B63\u5728\u83B7\u53D6\u516C\u5171\u6570\u636E\uFF1B\u4F60\u53EF\u4EE5\u7EE7\u7EED\u4F7F\u7528\u6D4B\u8BD5\u3002")}</p>` : ""}<div class="vac-cards">${items.length ? cards(items.slice(0, limit)) : nothing()}</div>${items.length > limit ? `<button type="button" id="vac-more" class="button button-secondary">${L("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button>` : ""}<p class="vac-boundary">${I("shield")}${L("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442 \u0431\u0430\u043B\u043B\u044B \u043F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u0438. \u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u0443, \u044F\u0437\u044B\u043A\u0443, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E \u0438 \u0441\u0442\u0430\u0436\u0443 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u0432 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438. \u042F\u0437\u044B\u043A \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430 \u043D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E.", "Vacancies do not change career scores. Check citizenship, language, education and experience in the specific announcement. Interface language does not determine citizenship.", "\u804C\u4F4D\u4E0D\u6539\u53D8\u804C\u4E1A\u6D4B\u8BD5\u5206\u6570\u3002\u56FD\u7C4D\u3001\u8BED\u8A00\u3001\u5B66\u5386\u548C\u7ECF\u5386\u8981\u6C42\u5E94\u6309\u5177\u4F53\u516C\u544A\u6838\u5BF9\uFF1B\u754C\u9762\u8BED\u8A00\u4E0D\u51B3\u5B9A\u56FD\u7C4D\u3002")}</p>${setup()}`;
       root.querySelector("#vac-authority").onchange = (e) => {
         selected = e.target.value;
@@ -2193,41 +2193,1180 @@ var CareerRuntime = (() => {
     } };
   }
 
-  // site/apps/career/assets/seminar-flow.mjs
-  var E2 = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
-  var L2 = (ru, en, zh) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh;
-  var I2 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
-  var date2 = (value) => {
-    if (!value) return "";
+  // site/apps/career/assets/region-picker.mjs
+  var E2 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var normalize = (value) => String(value ?? "").normalize("NFKC").toLowerCase().replace(/ё/g, "\u0435").replace(/[—–−]/g, "-").replace(/\s+/g, " ").trim();
+  var languageCode = (value) => String(value || "ru").startsWith("zh") ? "zh-Hans" : String(value).startsWith("en") ? "en" : "ru";
+  var isMoscow = (region) => String(region.mapId) === "102269" || region.id === "ru-77" || normalize(region.name) === "\u043C\u043E\u0441\u043A\u0432\u0430";
+  var copy = {
+    ru: { search: "\u041D\u0430\u0439\u0442\u0438 \u0441\u0443\u0431\u044A\u0435\u043A\u0442", searchHint: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430", list: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B", map: "\u0412\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u043D\u0430 \u043A\u0430\u0440\u0442\u0435", mapHelp: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u0441\u0443\u0431\u044A\u0435\u043A\u0442, \u0447\u0442\u043E\u0431\u044B \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u0435\u0433\u043E. \u0414\u043B\u044F \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439 \u0443\u0432\u0435\u043B\u0438\u0447\u044C\u0442\u0435 \u043A\u0430\u0440\u0442\u0443. \u0421 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: \u0441\u0442\u0440\u0435\u043B\u043A\u0438 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u044E\u0442 \u0444\u043E\u043A\u0443\u0441, \u043F\u0440\u043E\u0431\u0435\u043B \u0438\u043B\u0438 Enter \u043C\u0435\u043D\u044F\u044E\u0442 \u0432\u044B\u0431\u043E\u0440.", selected: "\u0412\u044B\u0431\u0440\u0430\u043D\u043E", notSelected: "\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043E", of: "\u0438\u0437", add: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C", remove: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0432\u044B\u0431\u043E\u0440\u0430", none: "\u0412\u044B\u0431\u0440\u0430\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438.", noMatches: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u0441 \u0442\u0430\u043A\u0438\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", loading: "\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043A\u0430\u0440\u0442\u0443\u2026", unavailable: "\u041A\u0430\u0440\u0442\u0430 \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", zoomIn: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", zoomOut: "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", reset: "\u0412\u0441\u044F \u043A\u0430\u0440\u0442\u0430", zoom: "\u041C\u0430\u0441\u0448\u0442\u0430\u0431 \u043A\u0430\u0440\u0442\u044B", hint: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044E \u043D\u0430 \u043A\u0430\u0440\u0442\u0435 \u0438\u043B\u0438 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", searchResults: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432", chosenLegend: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B" },
+    en: { search: "Find a region", searchHint: "Region name", list: "Regions to work in", map: "Select regions on the map", mapHelp: "Select a region by clicking it. Zoom in for smaller regions. With a keyboard, use the arrow keys to move focus and Space or Enter to change selection.", selected: "Selected", notSelected: "Not selected", of: "of", add: "Select", remove: "Deselect", none: "Only federal authorities and organisations are selected.", noMatches: "No regions match this name.", loading: "Loading the map\u2026", unavailable: "The map is temporarily unavailable. Select regions in the list.", zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Whole map", zoom: "Map zoom", hint: "Select a region on the map or in the list.", searchResults: "Regions found", chosenLegend: "Selected regions" },
+    "zh-Hans": { search: "\u641C\u7D22\u5730\u533A", searchHint: "\u5730\u533A\u540D\u79F0", list: "\u5E0C\u671B\u5DE5\u4F5C\u7684\u5730\u533A", map: "\u5728\u5730\u56FE\u4E0A\u9009\u62E9\u5730\u533A", mapHelp: "\u70B9\u51FB\u5730\u533A\u5373\u53EF\u9009\u62E9\u3002\u8F83\u5C0F\u7684\u5730\u533A\u53EF\u653E\u5927\u5730\u56FE\u540E\u9009\u62E9\u3002\u952E\u76D8\u64CD\u4F5C\uFF1A\u65B9\u5411\u952E\u79FB\u52A8\u7126\u70B9\uFF0C\u7A7A\u683C\u6216\u56DE\u8F66\u952E\u5207\u6362\u9009\u62E9\u3002", selected: "\u5DF2\u9009\u62E9", notSelected: "\u672A\u9009\u62E9", of: "/", add: "\u9009\u62E9", remove: "\u53D6\u6D88\u9009\u62E9", none: "\u76EE\u524D\u4EC5\u9009\u62E9\u8054\u90A6\u673A\u5173\u548C\u7EC4\u7EC7\u3002", noMatches: "\u672A\u627E\u5230\u7B26\u5408\u8BE5\u540D\u79F0\u7684\u5730\u533A\u3002", loading: "\u6B63\u5728\u52A0\u8F7D\u5730\u56FE\u2026\u2026", unavailable: "\u5730\u56FE\u6682\u4E0D\u53EF\u7528\u3002\u8BF7\u5728\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", zoomIn: "\u653E\u5927\u5730\u56FE", zoomOut: "\u7F29\u5C0F\u5730\u56FE", reset: "\u5B8C\u6574\u5730\u56FE", zoom: "\u5730\u56FE\u7F29\u653E", hint: "\u5728\u5730\u56FE\u6216\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", searchResults: "\u627E\u5230\u7684\u5730\u533A", chosenLegend: "\u5DF2\u9009\u62E9\u5730\u533A" }
+  };
+  var instanceCounter = 0;
+  var mapRequests = /* @__PURE__ */ new Map();
+  function regionLabel(region, language2 = "ru") {
+    const locale = languageCode(language2);
+    return String(locale === "en" ? region.name_en || region.name : locale === "zh-Hans" ? region.name_zh || region.name : region.name || region.name_ru || region.id);
+  }
+  function orderRegions(regions, language2 = "ru") {
+    const locale = languageCode(language2);
+    const collator = new Intl.Collator(locale === "zh-Hans" ? "zh-CN" : locale, { sensitivity: "base", numeric: true });
+    return [...regions].sort((a, b) => Number(isMoscow(b)) - Number(isMoscow(a)) || collator.compare(regionLabel(a, locale), regionLabel(b, locale)) || String(a.id).localeCompare(String(b.id)));
+  }
+  function sanitizeRegionSelection(ids2, regions) {
+    const valid = new Set(regions.map((region) => String(region.id)));
+    return [...new Set((Array.isArray(ids2) ? ids2 : []).map(String))].filter((id) => valid.has(id));
+  }
+  function loadMap(url) {
+    if (!mapRequests.has(url)) {
+      const promise = loadJSON(url, { timeout: 1e4, validate: (value) => value?.schema === "rudn-career-region-map" && value.schemaVersion === 1 && value.width > 0 && value.height > 0 && Array.isArray(value.features) && value.features.length === 89 && value.features.every((feature) => typeof feature.mapId === "string" && typeof feature.d === "string" && Array.isArray(feature.anchor) && feature.anchor.every(Number.isFinite)) }).catch((error) => {
+        mapRequests.delete(url);
+        throw error;
+      });
+      mapRequests.set(url, promise);
+    }
+    return mapRequests.get(url);
+  }
+  function createRegionPicker({ root, regions = [], selectedIds, onChange = () => {
+  }, getLanguage: getLanguage2 = getLanguage, mapURL = "data/region-map.json" } = {}) {
+    if (!root?.replaceChildren) throw new TypeError("A region picker root element is required.");
+    const catalog = regions.filter((region) => region && region.id != null && region.name).map((region) => ({ ...region, id: String(region.id) }));
+    if (new Set(catalog.map((region) => region.id)).size !== catalog.length) throw new TypeError("Region identifiers must be unique.");
+    const byId = new Map(catalog.map((region) => [region.id, region]));
+    const defaultRegion = catalog.find(isMoscow) || catalog.find((region) => region.defaultSelected);
+    let selection = new Set(sanitizeRegionSelection(selectedIds === void 0 ? defaultRegion ? [defaultRegion.id] : [] : selectedIds, catalog));
+    let language2 = languageCode(getLanguage2()), ordered = orderRegions(catalog, language2), data2 = null, destroyed = false, zoom = 1;
+    let query = "", activeId = defaultRegion?.id || ordered[0]?.id, hoveredId = null, pan = null, ignoreMapClick = false, ignoreTimer;
+    const key = `career-regions-${++instanceCounter}`;
+    const ui = () => copy[language2];
+    const selected = () => orderRegions(catalog, "ru").filter((region) => selection.has(region.id)).map((region) => region.id);
+    const canonicalByMap = new Map(catalog.filter((region) => region.mapId != null).map((region) => [String(region.mapId), region.id]));
+    const canonicalByName = new Map(catalog.map((region) => [normalize(region.name), region.id]));
+    const mappedFeatures = /* @__PURE__ */ new Map();
+    const bindings = [];
+    const listen = (target, type, listener, options) => {
+      target.addEventListener(type, listener, options);
+      bindings.push(() => target.removeEventListener(type, listener, options));
+    };
+    const label2 = (id) => regionLabel(byId.get(id) || {}, language2);
+    const emit = (source, regionId = null) => onChange(selected(), { source, regionId });
+    const badge = (id) => selection.has(id) ? ui().selected : ui().notSelected;
+    const setText = (element, value) => {
+      if (element.textContent !== value) element.textContent = value;
+    };
+    function updateStatus() {
+      const status = root.querySelector("[data-region-selection-status]");
+      setText(status, `${ui().selected}: ${selection.size} ${ui().of} ${catalog.length}`);
+      root.querySelector("[data-region-empty-selection]").hidden = selection.size > 0;
+      root.dataset.selectedRegionCount = String(selection.size);
+      const describedId = hoveredId || activeId;
+      const hint = root.querySelector("[data-region-map-current]");
+      setText(hint, describedId && byId.has(describedId) ? `${label2(describedId)} \xB7 ${badge(describedId)}` : ui().hint);
+    }
+    function updateSelection() {
+      if (destroyed) return;
+      for (const checkbox of root.querySelectorAll("[data-region-checkbox]")) {
+        const checked = selection.has(checkbox.dataset.regionCheckbox);
+        checkbox.checked = checked;
+        checkbox.closest(".career-region-option").classList.toggle("is-selected", checked);
+      }
+      for (const shape of root.querySelectorAll("[data-region-map-id]")) {
+        const id = shape.dataset.regionMapId, checked = selection.has(id);
+        shape.setAttribute("aria-checked", String(checked));
+        shape.setAttribute("aria-label", label2(id));
+        shape.classList.toggle("is-selected", checked);
+        shape.classList.toggle("is-active", id === activeId);
+        shape.setAttribute("tabindex", id === activeId ? "0" : "-1");
+        const title = shape.querySelector("title");
+        if (title) title.textContent = `${label2(id)} \xB7 ${badge(id)}`;
+      }
+      for (const boundary of root.querySelectorAll("[data-region-boundary]")) boundary.classList.toggle("is-selected", selection.has(boundary.dataset.regionBoundary));
+      updateStatus();
+    }
+    function toggle(id, source) {
+      if (!byId.has(id) || destroyed) return;
+      if (selection.has(id)) selection.delete(id);
+      else selection.add(id);
+      if (source === "map") activeId = id;
+      updateSelection();
+      emit(source, id);
+    }
+    function filterList() {
+      const normalized2 = normalize(query);
+      let count = 0;
+      for (const option of root.querySelectorAll(".career-region-option")) {
+        const record = byId.get(option.dataset.regionOption);
+        const searchable = [record.name, record.name_en, record.name_zh, record.code, record.id].map(normalize).join(" ");
+        option.hidden = !!normalized2 && !searchable.includes(normalized2);
+        if (!option.hidden) count++;
+      }
+      root.querySelector("[data-region-no-matches]").hidden = count > 0;
+      const status = root.querySelector("[data-region-search-status]");
+      status.textContent = normalized2 ? `${ui().searchResults}: ${count}` : "";
+    }
+    function setZoom(value, { focusId } = {}) {
+      const next = Math.min(4, Math.max(1, value));
+      const viewport = root.querySelector(".career-region-map-viewport"), svg = root.querySelector(".career-region-map");
+      if (!viewport || !svg || !data2) return;
+      const ratio = next / zoom;
+      let centreX = viewport.scrollLeft + viewport.clientWidth / 2, centreY = viewport.scrollTop + viewport.clientHeight / 2;
+      if (focusId && mappedFeatures.has(focusId)) {
+        const feature = mappedFeatures.get(focusId), oldWidth = svg.getBoundingClientRect().width;
+        centreX = feature.anchor[0] * oldWidth / data2.width;
+        centreY = feature.anchor[1] * oldWidth / data2.width;
+      }
+      zoom = next;
+      svg.style.width = `${zoom * 100}%`;
+      viewport.classList.toggle("is-zoomed", zoom > 1);
+      viewport.scrollLeft = zoom === 1 ? 0 : centreX * ratio - viewport.clientWidth / 2;
+      viewport.scrollTop = zoom === 1 ? 0 : centreY * ratio - viewport.clientHeight / 2;
+      root.querySelector('[data-region-zoom="in"]').disabled = zoom >= 4;
+      root.querySelector('[data-region-zoom="out"]').disabled = zoom <= 1;
+      root.querySelector('[data-region-zoom="reset"]').disabled = zoom <= 1;
+      root.querySelector("[data-region-zoom-value]").textContent = `${Math.round(zoom * 100)}%`;
+    }
+    function revealMapRegion(id) {
+      const viewport = root.querySelector(".career-region-map-viewport"), shape = [...root.querySelectorAll("[data-region-map-id]")].find((element) => element.dataset.regionMapId === id);
+      if (!viewport || !shape) return;
+      const box = shape.getBoundingClientRect(), visible = viewport.getBoundingClientRect(), pad = 24;
+      if (box.left < visible.left + pad) viewport.scrollLeft -= visible.left + pad - box.left;
+      else if (box.right > visible.right - pad) viewport.scrollLeft += box.right - visible.right + pad;
+      if (box.top < visible.top + pad) viewport.scrollTop -= visible.top + pad - box.top;
+      else if (box.bottom > visible.bottom - pad) viewport.scrollTop += box.bottom - visible.bottom + pad;
+    }
+    function moveMapFocus(keyName) {
+      const available = ordered.filter((region) => mappedFeatures.has(region.id));
+      if (!available.length) return;
+      let id = activeId;
+      if (keyName === "Home") id = available[0].id;
+      else if (keyName === "End") id = available.at(-1).id;
+      else {
+        const origin = mappedFeatures.get(activeId)?.anchor || mappedFeatures.get(available[0].id).anchor;
+        const direction = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowDown: [0, 1], ArrowUp: [0, -1] }[keyName];
+        let score2 = Infinity;
+        for (const region of available) {
+          if (region.id === activeId) continue;
+          const point2 = mappedFeatures.get(region.id).anchor, dx = point2[0] - origin[0], dy = point2[1] - origin[1];
+          const forward = dx * direction[0] + dy * direction[1], side = Math.abs(dx * direction[1] - dy * direction[0]);
+          if (forward <= 0.01) continue;
+          const distance = Math.hypot(dx, dy) + side * 1.4;
+          if (distance < score2) {
+            score2 = distance;
+            id = region.id;
+          }
+        }
+      }
+      activeId = id;
+      hoveredId = null;
+      updateSelection();
+      const shape = [...root.querySelectorAll("[data-region-map-id]")].find((element) => element.dataset.regionMapId === id);
+      shape?.focus({ preventScroll: true });
+      revealMapRegion(id);
+    }
+    function renderMap() {
+      const frame = root.querySelector("[data-region-map-frame]");
+      if (!data2 || !frame || destroyed) return;
+      mappedFeatures.clear();
+      for (const feature of data2.features) {
+        const id = canonicalByMap.get(String(feature.mapId)) || canonicalByName.get(normalize(feature.name));
+        if (id) mappedFeatures.set(id, feature);
+      }
+      if (!mappedFeatures.has(activeId)) activeId = ordered.find((region) => mappedFeatures.has(region.id))?.id;
+      const featureMarkup = (region, marker = false) => {
+        const feature = mappedFeatures.get(region.id);
+        if (!feature) return "";
+        const title = `<title>${E2(label2(region.id))} \xB7 ${badge(region.id)}</title>`;
+        if (marker) return `<g class="career-region-shape career-region-city" data-region-map-id="${E2(region.id)}" data-region-marker role="checkbox" aria-checked="false" aria-label="${E2(label2(region.id))}" tabindex="-1" transform="translate(${feature.anchor.join(" ")})">${title}<circle class="career-region-city-hit" r=".01"/><circle class="career-region-city-halo" r=".01"/><circle class="career-region-city-dot" r=".01"/></g>`;
+        if (feature.city) return `<path class="career-region-shape career-region-city-boundary" aria-hidden="true" data-region-boundary="${E2(region.id)}" d="${E2(feature.d)}"/>`;
+        return `<path class="career-region-shape" data-region-map-id="${E2(region.id)}" role="checkbox" aria-checked="false" aria-label="${E2(label2(region.id))}" tabindex="-1" d="${E2(feature.d)}">${title}</path>`;
+      };
+      frame.innerHTML = `<div class="career-region-map-viewport" aria-describedby="${key}-map-help"><svg class="career-region-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${data2.width} ${data2.height}" width="${data2.width}" height="${data2.height}" role="group" aria-label="${ui().map}" aria-describedby="${key}-map-help"><g class="career-region-boundaries" fill-rule="evenodd">${ordered.map((region) => featureMarkup(region)).join("")}</g><g class="career-region-city-markers">${ordered.filter((region) => mappedFeatures.get(region.id)?.city).map((region) => featureMarkup(region, true)).join("")}</g></svg></div>`;
+      root.dataset.regionMapState = "ready";
+      root.querySelector("[data-region-map-controls]").hidden = false;
+      const viewport = frame.querySelector(".career-region-map-viewport");
+      listen(viewport, "pointerdown", (event) => {
+        if (event.pointerType !== "mouse" || event.button !== 0 || zoom <= 1) return;
+        pan = { id: event.pointerId, x: event.clientX, y: event.clientY, left: viewport.scrollLeft, top: viewport.scrollTop, moved: false };
+      });
+      listen(viewport, "pointermove", (event) => {
+        if (!pan || event.pointerId !== pan.id || event.buttons !== 1) return;
+        const dx = event.clientX - pan.x, dy = event.clientY - pan.y;
+        if (!pan.moved && Math.hypot(dx, dy) < 5) return;
+        pan.moved = true;
+        ignoreMapClick = true;
+        viewport.setPointerCapture?.(event.pointerId);
+        viewport.classList.add("is-panning");
+        viewport.scrollLeft = pan.left - dx;
+        viewport.scrollTop = pan.top - dy;
+        event.preventDefault();
+      });
+      const endPan = () => {
+        if (!pan) return;
+        pan = null;
+        viewport.classList.remove("is-panning");
+        clearTimeout(ignoreTimer);
+        ignoreTimer = setTimeout(() => {
+          ignoreMapClick = false;
+        }, 120);
+      };
+      listen(viewport, "pointerup", endPan);
+      listen(viewport, "pointercancel", endPan);
+      listen(viewport, "lostpointercapture", endPan);
+      setZoom(zoom);
+      updateSelection();
+      for (const shape of frame.querySelectorAll("[data-region-boundary]")) shape.classList.toggle("is-selected", selection.has(shape.dataset.regionBoundary));
+    }
+    function render() {
+      if (destroyed) return;
+      const focused = root.querySelector(":focus"), focusRegion = focused?.dataset?.regionCheckbox, searchFocused = focused?.hasAttribute("data-region-search");
+      const scroll = root.querySelector(".career-region-options")?.scrollTop || 0;
+      for (const off of bindings.splice(0)) off();
+      root.classList.add("career-region-picker");
+      root.setAttribute("data-no-i18n", "");
+      root.innerHTML = `<div class="career-region-picker-heading"><strong data-region-selection-status role="status" aria-live="polite"></strong><span class="career-region-legend"><i aria-hidden="true"></i>${ui().chosenLegend}</span></div><p class="career-region-federal-only" data-region-empty-selection hidden>${ui().none}</p><div class="career-region-grid"><div class="career-region-map-panel"><div class="career-region-map-controls" data-region-map-controls hidden><div class="career-region-zoom" role="group" aria-label="${ui().zoom}"><button type="button" data-region-zoom="out" aria-label="${ui().zoomOut}" title="${ui().zoomOut}">\u2212</button><span data-region-zoom-value>100%</span><button type="button" data-region-zoom="in" aria-label="${ui().zoomIn}" title="${ui().zoomIn}">+</button></div><button type="button" class="career-region-map-reset" data-region-zoom="reset">${ui().reset}</button></div><div data-region-map-frame class="career-region-map-frame"><p class="career-region-map-loading" role="status">${ui().loading}</p></div><p id="${key}-map-help" class="career-region-sr-only">${ui().mapHelp}</p><p class="career-region-map-current" data-region-map-current aria-live="polite"></p></div><div class="career-region-list-panel"><label class="career-region-search-label" for="${key}-search">${ui().search}</label><input id="${key}-search" class="career-region-search" type="search" autocomplete="off" placeholder="${ui().searchHint}" data-region-search value="${E2(query)}"><span class="career-region-sr-only" role="status" data-region-search-status></span><fieldset class="career-region-options"><legend class="career-region-sr-only">${ui().list}</legend>${ordered.map((region) => `<label class="career-region-option" data-region-option="${E2(region.id)}"><input type="checkbox" value="${E2(region.id)}" data-region-checkbox="${E2(region.id)}"><span>${E2(regionLabel(region, language2))}</span></label>`).join("")}<p class="career-region-no-matches" data-region-no-matches hidden>${ui().noMatches}</p></fieldset></div></div>`;
+      listen(root, "change", (event) => {
+        const checkbox = event.target.closest?.("[data-region-checkbox]");
+        if (checkbox) toggle(checkbox.dataset.regionCheckbox, "list");
+      });
+      listen(root, "input", (event) => {
+        if (event.target.matches?.("[data-region-search]")) {
+          query = event.target.value;
+          filterList();
+        }
+      });
+      listen(root, "click", (event) => {
+        const zoomButton = event.target.closest?.("[data-region-zoom]");
+        if (zoomButton) {
+          const action = zoomButton.dataset.regionZoom;
+          setZoom(action === "reset" ? 1 : zoom * (action === "in" ? 2 : 0.5));
+          return;
+        }
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape && !ignoreMapClick) {
+          const id = shape.dataset.regionMapId;
+          hoveredId = id;
+          toggle(id, "map");
+          shape.focus({ preventScroll: true });
+        }
+      });
+      listen(root, "keydown", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (!shape) return;
+        activeId = shape.dataset.regionMapId;
+        if (event.key === " " || event.key === "Enter") {
+          event.preventDefault();
+          toggle(activeId, "map");
+        } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          moveMapFocus(event.key);
+        } else if (event.key === "+" || event.key === "=") {
+          event.preventDefault();
+          setZoom(zoom * 2, { focusId: activeId });
+        } else if (event.key === "-") {
+          event.preventDefault();
+          setZoom(zoom * 0.5, { focusId: activeId });
+        }
+      });
+      listen(root, "pointerover", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape) {
+          hoveredId = shape.dataset.regionMapId;
+          updateStatus();
+        }
+      });
+      listen(root, "pointerout", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape && !shape.contains(event.relatedTarget)) {
+          hoveredId = null;
+          updateStatus();
+        }
+      });
+      listen(root, "focusin", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape) {
+          activeId = shape.dataset.regionMapId;
+          hoveredId = null;
+          updateSelection();
+        }
+      });
+      filterList();
+      updateSelection();
+      if (data2) renderMap();
+      else if (root.dataset.regionMapState === "unavailable") showMapUnavailable();
+      root.querySelector(".career-region-options").scrollTop = scroll;
+      if (searchFocused) root.querySelector("[data-region-search]").focus({ preventScroll: true });
+      else if (focusRegion) [...root.querySelectorAll("[data-region-checkbox]")].find((checkbox) => checkbox.dataset.regionCheckbox === focusRegion)?.focus({ preventScroll: true });
+    }
+    function showMapUnavailable() {
+      if (destroyed) return;
+      root.dataset.regionMapState = "unavailable";
+      const frame = root.querySelector("[data-region-map-frame]");
+      frame.innerHTML = `<p class="career-region-map-loading" role="status">${ui().unavailable}</p>`;
+    }
+    function refresh() {
+      if (destroyed) return;
+      language2 = languageCode(getLanguage2());
+      ordered = orderRegions(catalog, language2);
+      render();
+    }
+    root.dataset.regionMapState = "loading";
+    render();
+    const languageListener = () => refresh();
+    document.addEventListener("app:language", languageListener);
+    const ready2 = loadMap(mapURL).then((value) => {
+      if (destroyed) return false;
+      data2 = value;
+      renderMap();
+      return true;
+    }).catch(() => {
+      showMapUnavailable();
+      return false;
+    });
+    return {
+      ready: ready2,
+      getSelection: () => selected(),
+      setSelection(ids2, { emit: shouldEmit = false } = {}) {
+        if (destroyed) return;
+        selection = new Set(sanitizeRegionSelection(ids2, catalog));
+        updateSelection();
+        if (shouldEmit) emit("external");
+      },
+      refresh,
+      destroy() {
+        if (destroyed) return;
+        destroyed = true;
+        for (const off of bindings.splice(0)) off();
+        clearTimeout(ignoreTimer);
+        document.removeEventListener("app:language", languageListener);
+        root.replaceChildren();
+        root.classList.remove("career-region-picker");
+        delete root.dataset.regionMapState;
+        delete root.dataset.selectedRegionCount;
+      }
+    };
+  }
+
+  // site/apps/career/assets/territorial-catalog.mjs
+  function expandTerritorialCatalog(payload) {
+    if (Array.isArray(payload)) return payload;
+    if (payload?.schemaVersion !== 1 || !Array.isArray(payload.authorities) || !payload.templates || typeof payload.templates !== "object") {
+      throw new Error("career/invalid-territorial-catalog");
+    }
+    const seen = /* @__PURE__ */ new Set();
+    return payload.authorities.map((item) => {
+      const template = payload.templates[item.scoringKey];
+      if (!item.id || seen.has(item.id) || !template?.tracks?.length || !template?.sectors?.length) {
+        throw new Error("career/invalid-territorial-authority");
+      }
+      seen.add(item.id);
+      const corporation = item.level === "national-corporation";
+      return {
+        ...item,
+        shortName: item.shortName || "",
+        entityType: corporation ? "corporation" : item.level,
+        entityTypeLabel: corporation ? "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u043A\u043E\u0440\u043F\u043E\u0440\u0430\u0446\u0438\u044F" : item.level === "municipal" ? "\u041E\u0440\u0433\u0430\u043D \u043C\u0435\u0441\u0442\u043D\u043E\u0433\u043E \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F" : "\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
+        employerType: corporation ? "state-corporation" : item.level === "municipal" ? "municipal-service-authority" : "regional-state-body",
+        descriptionParagraphs: [item.mission],
+        descriptionSources: [{ url: item.sourceUrl, checkedAt: item.verifiedAt }],
+        tracks: template.tracks,
+        sectors: template.sectors,
+        sourceSnapshotAt: item.sourceSnapshotAt || payload.sourceSnapshotAt,
+        familiarity: 1,
+        confidence: "limited",
+        entryRouteIds: [],
+        scoringProvenance: {
+          kind: item.coding === 0 ? "retained-editorial-functional-families" : "editorial-description-and-function-coding",
+          donorIds: template.donorIds,
+          workingConditionsInherited: false,
+          jobRequirementsInherited: false,
+          psychometricallyValidated: false
+        }
+      };
+    });
+  }
+  function mergeTerritorialAuthorityDetails(authority, payload) {
+    if (payload?.schemaVersion !== 1 || !Array.isArray(payload.authorities)) {
+      throw new Error("career/invalid-authority-details");
+    }
+    const detail = payload.authorities.find((item) => item.id === authority.id);
+    if (!detail || detail.regionId !== authority.regionId || detail.level !== authority.level) {
+      throw new Error("career/authority-details-mismatch");
+    }
+    return { ...authority, ...detail };
+  }
+
+  // site/apps/career/assets/scoring.mjs
+  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
+  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
+  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
+  function clamp(value, min = 0, max = 1) {
+    return Math.max(min, Math.min(max, value));
+  }
+  function average(values) {
+    if (!values.length) return 0;
+    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
+  }
+  function standardDeviation(values) {
+    if (!values.length) return 0;
+    const mean = average(values);
+    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
+  }
+  function computeRoleProfile(answerMap, questions) {
+    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
+    for (const question of questions) {
+      const raw2 = Number(answerMap[question.id]);
+      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
+        grouped[question.scale].push(raw2);
+      }
+    }
+    const raw = {};
+    const normalized2 = {};
+    for (const id of SCALE_IDS) {
+      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
+      normalized2[id] = (raw[id] - 1) / 4;
+    }
+    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
+  }
+  function profileFromMeans(raw, answered = 27) {
+    const normalized2 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
+    const values = SCALE_IDS.map((id) => Number(raw[id]));
+    const dispersion = standardDeviation(values);
+    const mean = average(values);
+    return {
+      raw,
+      normalized: normalized2,
+      dispersion,
+      flat: dispersion < 0.26,
+      answered,
+      mean,
+      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
+      positiveScales: values.filter((v) => v >= 3.5).length,
+      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
+    };
+  }
+  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
+    const priorityWeights = [1, 0.82, 0.66, 0.5];
+    const lowWeights = [0.08, 0];
+    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
+    priorityIds.slice(0, 4).forEach((id, index) => {
+      if (id in values) values[id] = priorityWeights[index];
+    });
+    lowPriorityIds.slice(0, 2).forEach((id, index) => {
+      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
+    });
+    return values;
+  }
+  function sectorFit(preferences, authority, focusAreas = {}) {
+    const entries = authority.sectors || [];
+    if (!entries.length) return 0.25;
+    return clamp(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
+  }
+  function conditionDetails(userConditions = {}, requirements = {}) {
+    return CONDITION_IDS.map((id) => {
+      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
+      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
+      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
+      const [lo, hi] = interval;
+      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
+      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
+      return { id, willingness, requirement, interval, known: true, fit: clamp(1 - expectedGap / 4), gap: expectedGap };
+    });
+  }
+  function conditionFit(userConditions = {}, requirements = {}) {
+    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
+  }
+  function roleFit(roleProfile, template) {
+    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
+    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
+    const mean = average(user), tmean = average(target);
+    let dot = 0, norm = 0, tnorm = 0;
+    for (let i = 0; i < user.length; i++) {
+      const u = user[i] - mean, t = target[i] - tmean;
+      dot += u * t;
+      norm += u * u;
+      tnorm += t * t;
+    }
+    if (tnorm < 1e-12) return 0.5;
+    return clamp(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
+  }
+  function matchBand(score2) {
+    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
+  }
+  function importanceFactor(importance) {
+    if (Number(importance) >= 3) return 1;
+    if (Number(importance) === 2) return 0.96;
+    return 0.91;
+  }
+  function canonicalValue(value) {
+    if (Array.isArray(value)) return value.map(canonicalValue);
+    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
+    return value;
+  }
+  function pathSignature(path, template, factor) {
+    return JSON.stringify(canonicalValue({
+      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
+      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
+      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids2]) => ids2?.length).map(([id, ids2]) => [id, [...new Set(ids2)].sort()])),
+      conditions: CONDITION_IDS.map((id) => {
+        const value = path.conditions?.[id];
+        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
+      }),
+      factor
+    }));
+  }
+  function aggregatePaths(paths) {
+    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
+    const best = ordered[0];
+    const pathMeanScore = average(ordered.map((path) => path.score));
+    const contributions = {};
+    const pathMeanContributions = {};
+    for (const key of ["role", "sector", "conditions"]) {
+      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
+      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
+    }
+    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
+    const { signature, ...bestPath } = best;
+    return {
+      ...bestPath,
+      rawScore,
+      score: Math.round(rawScore * 10) / 10,
+      band: matchBand(rawScore),
+      bestPathScore: best.score,
+      pathMeanScore,
+      portfolioScore: pathMeanScore,
+      pathCount: ordered.length,
+      aggregation: AGENCY_AGGREGATION,
+      bestPathContributions: best.contributions,
+      pathMeanContributions,
+      contributions
+    };
+  }
+  function scoreAuthority(authority, context, trackMap) {
+    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
+    const cFit = conditionFit(context.conditions, authority.conditions);
+    const paths = /* @__PURE__ */ new Map();
+    for (const link of authority.tracks || []) {
+      const template = trackMap.get(link.id);
+      if (!template) continue;
+      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
+      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
+      const cFit2 = conditionFit(context.conditions, link.conditions || {});
+      const rFit = roleFit(context.roleProfile, template);
+      const factor = importanceFactor(link.importance);
+      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
+      const score2 = 100 * base * factor;
+      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
+      const candidate = {
+        score: score2,
+        signature,
+        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
+        roleFit: rFit,
+        sectorFit: sFit2,
+        conditionFit: cFit2,
+        track: template,
+        importance: link.importance,
+        path: link,
+        pathSectors: path.sectors,
+        pathTopics: path.topics || {},
+        pathConditions: link.conditions || {}
+      };
+      const existing = paths.get(signature);
+      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
+    }
+    if (!paths.size) {
+      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
+      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
+      return {
+        ...authority,
+        score: Math.round(score2 * 10) / 10,
+        rawScore: score2,
+        band: matchBand(score2),
+        roleFit: 0.5,
+        sectorFit: sFit,
+        conditionFit: cFit,
+        track: null,
+        importance: 0,
+        bestPathScore: null,
+        pathMeanScore: null,
+        portfolioScore: null,
+        pathCount: 0,
+        aggregation: AGENCY_AGGREGATION,
+        contributions,
+        bestPathContributions: null,
+        pathMeanContributions: null
+      };
+    }
+    return { ...authority, ...aggregatePaths([...paths.values()]) };
+  }
+  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const roleProfile = computeRoleProfile(answers, questions);
+    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
+  }
+  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
+    const trackMap = new Map(tracks.map((track) => [track.id, track]));
+    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
+    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
+    return { ranked, roleProfile, sectorPreferences, context };
+  }
+  function selectDiscoveryCandidate(ranked, topCount = 5) {
+    if (ranked.length <= topCount) return null;
+    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
+    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
+      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
+      return right.score - left.score;
+    });
+    return candidates[0] || null;
+  }
+  function buildExplanation(item, roleProfile, scales, sectors) {
+    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
+    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
+    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
+    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
+    return {
+      strengths: strongest,
+      sectors: authoritySectors,
+      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
+      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
+    };
+  }
+  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
+    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
+    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
+    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
+    return {
+      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
+      missingQuestions,
+      priorityCount: prioritySectors.length,
+      lowPriorityCount: lowPrioritySectors.length,
+      missingConditions
+    };
+  }
+
+  // site/apps/career/assets/career-journey-model.mjs
+  var JOURNEY_SCHEMA = 1;
+  var DESIRED_AUTHORITY_COUNT = 3;
+  var REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills", "eligibility", "other"]);
+  var CORE_REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills"]);
+  var COMPETENCY_DOMAIN_IDS = Object.freeze([
+    "law-regulation",
+    "documents-records",
+    "data-digital",
+    "finance-economy",
+    "communication",
+    "organization-projects",
+    "sector-knowledge",
+    "analytical-work"
+  ]);
+  var PERSONAL_CATEGORIES = /* @__PURE__ */ new Set(["knowledge", "skills"]);
+  var FORMAL_CATEGORIES = /* @__PURE__ */ new Set(["education", "experience", "eligibility"]);
+  var object = (value) => value && typeof value === "object" && !Array.isArray(value);
+  var list = (value) => Array.isArray(value) ? value : [];
+  var ids = (value) => [...new Set(list(value).filter((id) => typeof id === "string" && id.trim()))];
+  var sourceText = (value) => typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
+  function isNationalAuthority(authority) {
+    if (!authority) return false;
+    if (["federal", "national", "national-corporation"].includes(authority.level)) return true;
+    if (authority.level === "regional" || authority.level === "municipal" || authority.regionId) return false;
+    if (String(authority.cohort || "").startsWith("federal-")) return true;
+    return !authority.level || ["corporation", "fund"].includes(authority.entityType);
+  }
+  function authorityInSelectedTerritories(authority, regionIds = []) {
+    return isNationalAuthority(authority) || ids(regionIds).includes(authority?.regionId);
+  }
+  function sanitizeJourneyPreferences(value, { regions = [], authorities = [], defaultRegionId = "ru-77" } = {}) {
+    const stored = object(value) ? value : {};
+    const knownRegions = new Set(list(regions).map((region) => typeof region === "string" ? region : region?.id));
+    const candidateRegions = Array.isArray(stored.regionIds) ? stored.regionIds : [defaultRegionId];
+    const regionIds = ids(candidateRegions).filter((id) => knownRegions.has(id));
+    const knownAuthorities = new Map(list(authorities).filter((authority) => authority?.id).map((authority) => [authority.id, authority]));
+    const desiredIds = ids(stored.desiredIds).filter((id) => {
+      const authority = knownAuthorities.get(id);
+      return authority && authorityInSelectedTerritories(authority, regionIds);
+    }).slice(0, DESIRED_AUTHORITY_COUNT);
+    return {
+      schemaVersion: JOURNEY_SCHEMA,
+      regionIds,
+      desiredIds,
+      confirmed: stored.confirmed === true && desiredIds.length === DESIRED_AUTHORITY_COUNT
+    };
+  }
+  function validProfile(profile) {
+    return profile && SCALE_IDS.every((id) => Number.isFinite(profile.raw?.[id]) && profile.raw[id] >= 1 && profile.raw[id] <= 5);
+  }
+  function rankJourneyAuthorities(options = {}) {
+    const { authorities = [], tracks = [], questions = [], sectors = [] } = options;
+    const input = { ...options, ...object(options.inputs) ? options.inputs : {} };
+    let roleProfile = options.context?.roleProfile || options.roleProfile;
+    if (!roleProfile) {
+      if (!questions.length || questions.some((question) => !Number.isInteger(input.answers?.[question.id]) || input.answers[question.id] < 1 || input.answers[question.id] > 5)) {
+        throw new Error("journey/incomplete-interest-profile");
+      }
+      roleProfile = computeRoleProfile(input.answers, questions);
+    }
+    if (!validProfile(roleProfile)) throw new Error("journey/invalid-interest-profile");
+    const context = {
+      roleProfile,
+      sectorPreferences: options.context?.sectorPreferences || buildSectorPreference(input.prioritySectors, input.lowPrioritySectors, sectors),
+      conditions: options.context?.conditions || input.conditions || {},
+      focusAreas: options.context?.focusAreas || input.focusAreas || {}
+    };
+    const regionIds = ids(options.regionIds);
+    const regionsWanted = new Set(regionIds);
+    const count = Number.isSafeInteger(options.limit) && options.limit >= 0 ? options.limit : 3;
+    const trackMap = new Map(list(tracks).map((track) => [track.id, track]));
+    const distinct = /* @__PURE__ */ new Map();
+    for (const authority of list(authorities)) {
+      if (!authority || typeof authority.id !== "string" || !authority.id || distinct.has(authority.id)) continue;
+      if (isNationalAuthority(authority) || regionsWanted.has(authority.regionId)) distinct.set(authority.id, authority);
+    }
+    const ranked = [...distinct.values()].map((authority) => scoreAuthority(authority, context, trackMap)).sort((left, right) => right.rawScore - left.rawScore || left.id.localeCompare(right.id)).map((authority, index) => ({ ...authority, rank: index + 1 }));
+    if (ranked.some((authority) => !Number.isFinite(authority.rawScore))) throw new Error("journey/invalid-model-score");
+    const federalPool = ranked.filter(isNationalAuthority);
+    const federal = federalPool.slice(0, count);
+    const regions = regionIds.map((regionId) => {
+      const pool = ranked.filter((authority) => !isNationalAuthority(authority) && authority.regionId === regionId);
+      return {
+        regionId,
+        authorities: pool.slice(0, count),
+        total: pool.length,
+        municipalCount: pool.filter((authority) => authority.level === "municipal").length
+      };
+    });
+    return {
+      ranked,
+      federal,
+      federalTotal: federalPool.length,
+      regions,
+      recommendations: [...federal, ...regions.flatMap((region) => region.authorities)],
+      roleProfile,
+      context
+    };
+  }
+  function compareDesiredAuthorities(desiredIds, ranked = [], groups = {}) {
+    const byId = new Map(list(ranked).map((authority) => [authority.id, authority]));
+    const placements = /* @__PURE__ */ new Map();
+    const add = (authorities, groupId, regionId = null) => list(authorities).forEach((authority, index) => {
+      if (!placements.has(authority.id)) placements.set(authority.id, []);
+      placements.get(authority.id).push({ groupId, regionId, rank: index + 1 });
+    });
+    add(groups.federal, "federal");
+    for (const group of list(groups.regions)) add(group.authorities, group.regionId, group.regionId);
+    return ids(desiredIds).slice(0, DESIRED_AUTHORITY_COUNT).map((authorityId, index) => ({
+      authorityId,
+      priority: index + 1,
+      authority: byId.get(authorityId) || null,
+      matched: placements.has(authorityId),
+      recommendations: placements.get(authorityId) || []
+    }));
+  }
+  function buildAuthorityDevelopment(authority, roleProfile, { tracks = [], careerFramework = {}, competencies = [] } = {}) {
+    const templates = new Map(list(tracks).map((track2) => [track2.id, track2]));
+    const scoredTrack = authority?.track || authority?.match?.track;
+    const link = list(authority?.tracks).slice().sort((left, right) => Number(right.importance || 0) - Number(left.importance || 0) || String(left.id).localeCompare(String(right.id))).find((candidate) => templates.has(candidate.id));
+    const track = scoredTrack?.vector ? scoredTrack : templates.get(scoredTrack?.id || link?.id);
+    const base = {
+      authorityId: authority?.id || null,
+      modelReference: true,
+      comparableToQuestionnaireUnits: false,
+      overlayOnPersonalInterestRadarAllowed: false,
+      skillDeficits: null,
+      eligibilityVerdict: null
+    };
+    if (!track || !validProfile(roleProfile)) return {
+      ...base,
+      available: false,
+      trackId: null,
+      rows: [],
+      lowerInterestDimensions: [],
+      competencies: [],
+      portfolio: [],
+      tasks: []
+    };
+    const rows = SCALE_IDS.map((id) => ({
+      id,
+      interest: roleProfile.raw[id],
+      emphasis: Number.isFinite(track.vector?.[id]) && track.vector[id] >= 0 && track.vector[id] <= 1 ? track.vector[id] : null
+    }));
+    const profile = list(careerFramework.trackProfiles).find((candidate) => candidate.id === track.id);
+    const competencyMap2 = new Map(list(competencies).map((competency) => [competency.id, competency]));
+    return {
+      ...base,
+      available: rows.some((row) => row.emphasis !== null),
+      trackId: track.id,
+      track,
+      rows,
+      lowerInterestDimensions: rows.filter((row) => row.emphasis >= 0.5 && row.interest < 3.5).sort((left, right) => right.emphasis - left.emphasis || left.interest - right.interest || SCALE_IDS.indexOf(left.id) - SCALE_IDS.indexOf(right.id)),
+      // This selection is a teaching prompt; it is not a psychometric cut-off.
+      reflectionRule: { minimumModelEmphasis: 0.5, belowInterest: 3.5, meaning: "topics-to-explore" },
+      competencies: ids(profile?.competencyIds).map((id) => competencyMap2.get(id)).filter(Boolean),
+      portfolio: list(profile?.portfolio).slice(),
+      tasks: list(profile?.tasks).slice(),
+      competencyMeaning: "authored-learning-suggestions-not-measured-deficits"
+    };
+  }
+  function canonicalRequirementCategory(category) {
+    if (category === "skill") return "skills";
+    if (category === "formal-eligibility" || category === "legal-eligibility") return "eligibility";
+    return REQUIREMENT_CATEGORIES.includes(category) ? category : "other";
+  }
+  function fingerprint(text3) {
+    let left = 2166136261, right = 2654435769;
+    for (let index = 0; index < text3.length; index++) {
+      const code = text3.charCodeAt(index);
+      left = Math.imul(left ^ code, 16777619);
+      right = Math.imul(right ^ code, 2246822507);
+      right ^= right >>> 13;
+    }
+    return (left >>> 0).toString(16).padStart(8, "0") + (right >>> 0).toString(16).padStart(8, "0");
+  }
+  function safeUrl(value) {
     try {
-      return new Intl.DateTimeFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { dateStyle: "medium", timeZone: "Europe/Moscow" }).format(new Date(value));
+      const url = new URL(value);
+      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+  function requirementStateFromText(text3) {
+    const value = sourceText(text3).replace(/\s+/g, " ").toLowerCase().replace(/[.;]$/, "").trim();
+    if (!value) return "source_not_stated";
+    if (/^(?:не указано|не указан|нет данных|не установлено|source_not_stated|not stated|not specified|未说明|未注明)$/.test(value)) return "source_not_stated";
+    if (/^(?:без предъявления требований к стажу|без требований к стажу|требования к стажу не предъявляются|не предъявляются|не требуется|не требуются|not required|no experience required|无要求)$/.test(value)) return "explicitly_not_required";
+    return "stated";
+  }
+  function requirementInput(vacancy) {
+    if (Array.isArray(vacancy?.requirements)) return vacancy.requirements.filter(object);
+    const fields = object(vacancy?.requirements) ? vacancy.requirements : vacancy || {};
+    return REQUIREMENT_CATEGORIES.flatMap((category) => {
+      const field = category === "other" ? fields.otherRequirements ?? fields.other : category === "skills" ? fields.skills ?? fields.skill : fields[category];
+      const entries = Array.isArray(field) ? field : [field];
+      return entries.flatMap((entry) => {
+        if (object(entry)) return [{ ...entry, category }];
+        if (!sourceText(entry)) return [];
+        return [{
+          category,
+          sourceText: sourceText(entry),
+          requirementState: requirementStateFromText(entry),
+          sourceLocator: `feed.${category}`,
+          sourceKind: "published-feed-field"
+        }];
+      });
+    });
+  }
+  function buildVacancyRequirements(vacancy) {
+    if (!vacancy || typeof vacancy.id !== "string" || !vacancy.id.trim()) throw new Error("journey/vacancy-identity-required");
+    const vacancyId = vacancy.id;
+    const rows = [], signatures = /* @__PURE__ */ new Set(), keySignatures = /* @__PURE__ */ new Map();
+    for (const original of requirementInput(vacancy)) {
+      const category = canonicalRequirementCategory(original.category);
+      const text3 = sourceText(original.sourceText ?? original.text);
+      const state2 = typeof original.requirementState === "string" ? original.requirementState : text3 ? "stated" : "source_not_stated";
+      const requirementState = state2 === "as-published" ? "stated" : state2;
+      if (!text3 && requirementState !== "source_not_stated") continue;
+      const signature = JSON.stringify([
+        vacancyId,
+        category,
+        text3.normalize("NFC").replace(/\s+/g, " "),
+        requirementState,
+        original.scope || null,
+        original.selfAssessmentEligible === false ? false : true
+      ]);
+      if (signatures.has(signature)) continue;
+      signatures.add(signature);
+      let key = `jr-${fingerprint(signature)}`;
+      if (keySignatures.has(key) && keySignatures.get(key) !== signature) key += `-${encodeURIComponent(signature)}`;
+      keySignatures.set(key, signature);
+      const assessable = requirementState === "stated" && original.selfAssessmentEligible !== false && Boolean(text3);
+      const assessmentKind = PERSONAL_CATEGORIES.has(category) ? "competency" : FORMAL_CATEGORIES.has(category) ? "formal" : "other";
+      rows.push({
+        ...original,
+        id: key,
+        key,
+        signature,
+        sourceId: original.id || null,
+        vacancyId,
+        category,
+        sourceCategory: original.sourceCategory || original.category || null,
+        sourceRequirementState: original.sourceRequirementState || state2,
+        text: text3,
+        sourceText: original.sourceText ?? original.text ?? null,
+        sourceLocator: original.sourceLocator ?? null,
+        evidenceSourceUrl: original.evidenceSourceUrl ?? vacancy.source?.url ?? vacancy.url ?? null,
+        sourceUrl: safeUrl(original.evidenceSourceUrl || vacancy.source?.url || vacancy.url),
+        requirementState,
+        selfAssessmentEligible: original.selfAssessmentEligible ?? null,
+        competencyDomainId: typeof original.competencyDomainId === "string" && original.competencyDomainId.trim() ? original.competencyDomainId : null,
+        assessable,
+        assessmentKind,
+        learningEligible: assessable && assessmentKind === "competency"
+      });
+    }
+    const groups = REQUIREMENT_CATEGORIES.map((id) => ({ id, rows: rows.filter((row) => row.category === id) }));
+    const missingCategories = CORE_REQUIREMENT_CATEGORIES.filter((category) => !rows.some((row) => row.category === category && row.requirementState !== "source_not_stated"));
+    return {
+      vacancyId,
+      rows,
+      groups,
+      missingCategories,
+      source: vacancy.source || { url: vacancy.url || null, retrievedAt: vacancy.lastSeenAt || null },
+      archive: vacancy.archive || null,
+      coverage: vacancy.coverage || null,
+      assessableCount: rows.filter((row) => row.assessable).length,
+      contextRows: rows.filter((row) => !row.assessable),
+      sourceCompleteness: vacancy.coverage?.requirements || "not-established",
+      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
+    };
+  }
+  function answerStatus(value, signature) {
+    if (object(value) && value.signature && value.signature !== signature) return "unassessed";
+    const status = object(value) ? value.status : value;
+    return status === "met" || status === "gap" ? status : "unassessed";
+  }
+  function countsFor(rows) {
+    const total = rows.length;
+    const met = rows.filter((row) => row.status === "met").length;
+    const gap = rows.filter((row) => row.status === "gap").length;
+    const unassessed = total - met - gap;
+    return {
+      total,
+      met,
+      gap,
+      unassessed,
+      assessed: met + gap,
+      metShare: total ? met / total : null,
+      gapShare: total ? gap / total : null,
+      unassessedShare: total ? unassessed / total : null,
+      coverage: total ? (met + gap) / total : null,
+      targetShare: total ? 1 : null,
+      complete: total > 0 && unassessed === 0
+    };
+  }
+  function summarizeVacancyAssessment(requirements, statuses2 = {}) {
+    const built = Array.isArray(requirements) ? { rows: requirements } : requirements || { rows: [] };
+    const rows = list(built.rows).map((row) => ({
+      ...row,
+      status: row.assessable ? answerStatus(statuses2[row.key || row.id], row.signature) : null
+    }));
+    const assessable = rows.filter((row) => row.assessable);
+    const competencyRows = assessable.filter((row) => row.assessmentKind === "competency");
+    const groups = REQUIREMENT_CATEGORIES.map((id) => {
+      const members = rows.filter((row) => row.category === id);
+      return {
+        id,
+        rows: members,
+        ...countsFor(members.filter((row) => row.assessable)),
+        sourceMissing: members.filter((row) => row.requirementState === "source_not_stated").length,
+        explicitlyNotRequired: members.filter((row) => row.requirementState === "explicitly_not_required").length,
+        contextOnly: members.filter((row) => !row.assessable).length,
+        sourceCoverage: members.length ? "represented-in-record" : "not-extracted"
+      };
+    });
+    const domainIds = [...new Set(competencyRows.map((row) => row.competencyDomainId).filter(Boolean))].sort((left, right) => {
+      const li = COMPETENCY_DOMAIN_IDS.indexOf(left), ri = COMPETENCY_DOMAIN_IDS.indexOf(right);
+      return (li < 0 ? COMPETENCY_DOMAIN_IDS.length : li) - (ri < 0 ? COMPETENCY_DOMAIN_IDS.length : ri) || left.localeCompare(right);
+    });
+    const domains = domainIds.map((id) => {
+      const members = competencyRows.filter((row) => row.competencyDomainId === id);
+      return {
+        id,
+        rows: members,
+        ...countsFor(members),
+        classificationReviewed: members.every((row) => row.classificationProvenance?.reviewStatus === "reviewed")
+      };
+    });
+    const unclassified = competencyRows.filter((row) => !row.competencyDomainId);
+    return {
+      vacancyId: built.vacancyId || rows[0]?.vacancyId || null,
+      rows,
+      groups,
+      domains,
+      ...countsFor(assessable),
+      competencySummary: countsFor(competencyRows),
+      developmentItems: competencyRows.filter((row) => row.status === "gap"),
+      formalRequirements: rows.filter((row) => FORMAL_CATEGORIES.has(row.category)),
+      formalGaps: assessable.filter((row) => FORMAL_CATEGORIES.has(row.category) && row.status === "gap"),
+      otherGaps: assessable.filter((row) => row.assessmentKind === "other" && row.status === "gap"),
+      unassessedItems: assessable.filter((row) => row.status === "unassessed"),
+      sourceContextItems: rows.filter((row) => !row.assessable),
+      missingCategories: built.missingCategories || CORE_REQUIREMENT_CATEGORIES.filter((id) => !rows.some((row) => row.category === id && row.requirementState !== "source_not_stated")),
+      unclassifiedCompetencyRows: unclassified,
+      // Missing domain classifications cannot silently disappear from a full radar.
+      domainRadarAvailable: domains.length >= 3 && unclassified.length === 0 && domains.every((domain) => domain.classificationReviewed),
+      source: built.source || null,
+      archive: built.archive || null,
+      coverageMetadata: built.coverage || null,
+      sourceCompleteness: built.sourceCompleteness || "not-established",
+      eligibilityVerdict: null,
+      abilityScore: null,
+      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
+    };
+  }
+
+  // site/apps/career/assets/journey-visuals.mjs
+  var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var L2 = (ru, en, zh) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh;
+  var display = (value) => E3(translate(typeof value === "string" ? value : ""));
+  var icon = (id) => `<svg aria-hidden="true"><use href="#i-${E3(id)}"></use></svg>`;
+  var number = (value, digits = 0) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  function date2(value) {
+    if (!value || !Number.isFinite(Date.parse(value))) return "";
+    return new Intl.DateTimeFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { dateStyle: "medium", timeZone: "Europe/Moscow" }).format(new Date(value));
+  }
+  function safeURL(value) {
+    try {
+      const url = new URL(value);
+      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? E3(url.href) : "";
     } catch {
       return "";
     }
-  };
-  function createSeminarFlow({ getResult, getProfileContext, radarSvg: radarSvg2, toast: toast2 }) {
-    let feed = null, loaded = false, loading = false, loadError = false, lastRoute = "test", opening = false;
-    const stageKey = storageKey("seminar-profile-stage-v1");
-    let savedStage = null;
+  }
+  function regionName(region) {
+    return getLanguage() === "en" ? region?.name_en || region?.name || "" : getLanguage() === "zh-Hans" ? region?.name_zh || region?.name || "" : region?.name || "";
+  }
+  function groupLabel(id) {
+    return {
+      education: L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"),
+      experience: L2("\u0421\u0442\u0430\u0436 \u0438 \u043E\u043F\u044B\u0442", "Experience", "\u5DE5\u4F5C\u7ECF\u5386"),
+      knowledge: L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6"),
+      skills: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u80FD\u529B\u4E0E\u6280\u80FD"),
+      skill: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u80FD\u529B\u4E0E\u6280\u80FD"),
+      eligibility: L2("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0434\u043E\u043F\u0443\u0441\u043A\u0430", "Eligibility", "\u8D44\u683C\u6761\u4EF6"),
+      other: L2("\u0414\u0440\u0443\u0433\u0438\u0435 \u0438 \u0441\u043E\u0441\u0442\u0430\u0432\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Other and combined requirements", "\u5176\u4ED6\u53CA\u7EFC\u5408\u8981\u6C42"),
+      unclassified: L2("\u0411\u0435\u0437 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043D\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u044B", "Without a subject group", "\u672A\u5206\u7C7B"),
+      "finance-economy": L2("\u0424\u0438\u043D\u0430\u043D\u0441\u044B \u0438 \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430", "Finance and economics", "\u8D22\u653F\u4E0E\u7ECF\u6D4E"),
+      "law-regulation": L2("\u041F\u0440\u0430\u0432\u043E \u0438 \u0440\u0435\u0433\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435", "Law and regulation", "\u6CD5\u5F8B\u4E0E\u76D1\u7BA1"),
+      communication: L2("\u041A\u043E\u043C\u043C\u0443\u043D\u0438\u043A\u0430\u0446\u0438\u044F", "Communication", "\u6C9F\u901A"),
+      "organization-projects": L2("\u041E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u044B", "Organisation and projects", "\u7EC4\u7EC7\u4E0E\u9879\u76EE"),
+      "data-digital": L2("\u0414\u0430\u043D\u043D\u044B\u0435 \u0438 \u0446\u0438\u0444\u0440\u043E\u0432\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B", "Data and digital tools", "\u6570\u636E\u4E0E\u6570\u5B57\u5DE5\u5177"),
+      "documents-records": L2("\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0434\u0435\u043B\u043E\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0441\u0442\u0432\u043E", "Documents and records", "\u6587\u4EF6\u4E0E\u6587\u4E66\u5DE5\u4F5C"),
+      "sector-knowledge": L2("\u0417\u043D\u0430\u043D\u0438\u0435 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043D\u043E\u0439 \u043E\u0431\u043B\u0430\u0441\u0442\u0438", "Subject knowledge", "\u4E13\u4E1A\u9886\u57DF\u77E5\u8BC6"),
+      "analytical-work": L2("\u0410\u043D\u0430\u043B\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Analytical work", "\u5206\u6790\u5DE5\u4F5C")
+    }[id] || E3(id);
+  }
+  function levelLabel(authority) {
+    if (["corporation", "fund"].includes(authority?.entityType) || authority?.level === "national-corporation") return L2("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "Public-sector employer", "\u516C\u5171\u90E8\u95E8\u96C7\u4E3B");
+    if (authority?.level === "municipal") return L2("\u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Municipal level", "\u5E02\u653F\u5C42\u7EA7");
+    if (authority?.regionId) return L2("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Regional level", "\u5730\u533A\u5C42\u7EA7");
+    return L2("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Federal level", "\u8054\u90A6\u5C42\u7EA7");
+  }
+  function requirementRadar(rows) {
+    const valid = rows.filter((row) => row.total > 0).slice(0, 9);
+    if (valid.length < 3) return "";
+    const center2 = 160, radius2 = 112, count = valid.length;
+    const point2 = (index, ratio) => {
+      const angle = -Math.PI / 2 + index * Math.PI * 2 / count;
+      return [center2 + Math.cos(angle) * radius2 * ratio, center2 + Math.sin(angle) * radius2 * ratio];
+    };
+    const polygon = (ratio) => valid.map((_, i) => point2(i, ratio).join(",")).join(" ");
+    const values = valid.map((row) => Math.max(0, Math.min(1, row.met / row.total)));
+    const description = valid.map((row, i) => `${i + 1}. ${groupLabel(row.id)}: ${row.met}/${row.total}`).join("; ");
+    return `<svg class="journey-target-radar" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="${E3(L2("\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u043F\u043E \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0435:", "Self-assessed requirements met:", "\u81EA\u8BC4\u5DF2\u7B26\u5408\u7684\u8981\u6C42\uFF1A") + " " + description)}">
+    <title>${L2("\u041C\u043E\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "My self-assessment and the selected role requirements", "\u6211\u7684\u81EA\u8BC4\u4E0E\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</title>
+    <g fill="none" stroke="#d7e2ec" stroke-width="1">${[0.25, 0.5, 0.75, 1].map((value) => `<polygon points="${polygon(value)}"/>`).join("")}${valid.map((_, i) => {
+      const [x, y] = point2(i, 1);
+      return `<line x1="${center2}" y1="${center2}" x2="${x}" y2="${y}"/>`;
+    }).join("")}</g>
+    <polygon points="${polygon(1)}" fill="#b76a15" fill-opacity=".04" stroke="#9b5914" stroke-width="2.5" stroke-dasharray="7 5"/>
+    <polygon points="${values.map((v, i) => point2(i, v).join(",")).join(" ")}" fill="#087bb5" fill-opacity=".18" stroke="#0874aa" stroke-width="2.5"/>
+    ${values.map((v, i) => {
+      const [x, y] = point2(i, v);
+      return `<circle cx="${x}" cy="${y}" r="4" fill="#0874aa" stroke="#fff" stroke-width="1.5"/>`;
+    }).join("")}
+    <g fill="#294663" font-size="14" font-weight="650" text-anchor="middle" dominant-baseline="middle">${valid.map((_, i) => {
+      const [x, y] = point2(i, 1.23);
+      return `<text x="${x}" y="${y}">${i + 1}</text>`;
+    }).join("")}</g>
+    <g fill="#5d7184" font-size="10" text-anchor="end">${[25, 50, 75, 100].map((v) => `<text x="${center2 - 7}" y="${center2 - radius2 * v / 100 + 3}">${v}%</text>`).join("")}</g>
+  </svg>`;
+  }
+  function requirementBars(rows) {
+    const valid = rows.filter((row) => row.total > 0);
+    return `<div class="journey-coverage-bars">${valid.map((row) => {
+      const width = (value) => Math.max(0, Math.min(100, 100 * value / row.total));
+      return `<div class="journey-coverage-row"><div class="journey-coverage-label"><strong>${groupLabel(row.id)}</strong><span>${number(row.met)} / ${number(row.total)}</span></div><div class="journey-coverage-track" role="img" aria-label="${E3(groupLabel(row.id) + ": " + L2("\u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "met", "\u5DF2\u7B26\u5408") + " " + row.met + ", " + L2("\u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "not yet met", "\u5C1A\u672A\u7B26\u5408") + " " + row.gap + ", " + L2("\u043D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E", "unassessed", "\u672A\u8BC4\u4F30") + " " + row.unassessed)}"><span class="is-met" style="width:${width(row.met)}%"></span><span class="is-gap" style="width:${width(row.gap)}%"></span><span class="is-unassessed" style="width:${width(row.unassessed)}%"></span></div><p>${L2("\u0421\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Met", "\u5DF2\u7B26\u5408")}: ${row.met} \xB7 ${L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not yet met", "\u5C1A\u672A\u7B26\u5408")}: ${row.gap} \xB7 ${L2("\u041D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E", "Unassessed", "\u672A\u8BC4\u4F30")}: ${row.unassessed}</p></div>`;
+    }).join("")}</div>`;
+  }
+
+  // site/apps/career/assets/seminar-flow.mjs
+  var JOURNEY_SCHEMA2 = 1;
+  var DEFAULT_REGION = "ru-77";
+  var preferenceRoutes = /* @__PURE__ */ new Set(["test", "sectors", "conditions", "results"]);
+  var statuses = /* @__PURE__ */ new Set(["met", "gap"]);
+  var isRecord2 = (value) => !!value && typeof value === "object" && !Array.isArray(value);
+  var safeText = (value, max = 2e4) => typeof value === "string" ? value.trim().slice(0, max) : "";
+  function createSeminarFlow({ data: data2, getResult, getProfileContext, getInputs, navigate, resolveResumeRoute: resolveResumeRoute2, radarSvg: radarSvg2, toast: toast2 }) {
+    const key = storageKey("career-journey-v1");
+    let saved;
     try {
-      savedStage = JSON.parse(readLocal(stageKey) || "null");
+      saved = JSON.parse(readLocal(key) || "null");
     } catch {
     }
-    const stage = () => savedStage?.recordId === getProfileContext().recordId && savedStage?.view === "recommendations" ? "recommendations" : "profile";
-    const top = () => getResult()?.ranked.filter((a) => !["fund", "corporation"].includes(a.entityType)).slice(0, 3) || [];
-    const display = (text3) => E2(translate(text3 || ""));
+    let journey = { schemaVersion: JOURNEY_SCHEMA2, regionIds: [DEFAULT_REGION], desiredIds: [], confirmed: false, assessments: {}, customVacancies: [], selectedVacancyId: null, view: "profile", resultRecordId: null, comparisonId: null };
+    if (isRecord2(saved) && saved.schemaVersion === JOURNEY_SCHEMA2) {
+      journey = { ...journey, ...saved, assessments: isRecord2(saved.assessments) ? Object.fromEntries(Object.entries(saved.assessments).filter(([, value]) => isRecord2(value))) : {}, customVacancies: Array.isArray(saved.customVacancies) ? saved.customVacancies.slice(0, 20) : [] };
+      if (!["profile", "recommendations", "requirements", "summary"].includes(journey.view)) journey.view = "profile";
+    }
+    let regions = [], territorial = [], institutions = [...data2.authorities], framework = { trackProfiles: [] }, competencies = [];
+    let catalogLoaded = false, catalogLoading = false, catalogError = false, positionsLoaded = false, positionsLoading = false, positionsError = false, feed = null, positions = [];
+    let lastRoute = "personality", pendingRoute = null, manualSaveTimer = null, picker = null, opening = false, dirty = false, rankingCache = null, catalogGeneration = 0;
+    let authorityQuery = "", authorityScope = "", authorityLimit = 24, vacancyQuery = "", vacancyEmployer = "", vacancyLimit = 12;
+    const root = () => document.querySelector("#results-root");
+    const preferencesRoot = () => document.querySelector("#journey-preferences-root");
+    const byId = () => new Map(institutions.map((a) => [a.id, a]));
+    const selectedRegions = () => regions.filter((region) => journey.regionIds.includes(region.id));
+    const visibleInstitutions = () => institutions.filter((a) => !a.regionId || journey.regionIds.includes(a.regionId));
     const progress = document.createElement("div");
-    progress.className = "seminar-progress";
+    progress.className = "seminar-progress journey-progress";
     progress.setAttribute("data-no-i18n", "");
     progress.setAttribute("role", "list");
     document.querySelector("#main-content").prepend(progress);
+    function save() {
+      if (manualSaveTimer) {
+        clearTimeout(manualSaveTimer);
+        manualSaveTimer = null;
+      }
+      journey.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
+      try {
+        writeLocal(key, JSON.stringify(journey));
+        dirty = false;
+        return true;
+      } catch {
+        dirty = true;
+        toast2(L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439.", "Your choices could not be saved. Keep this page open.", "\u65E0\u6CD5\u4FDD\u5B58\u9009\u62E9\uFF0C\u8BF7\u4FDD\u6301\u6B64\u9875\u9762\u6253\u5F00\u3002"));
+        return false;
+      }
+    }
+    function invalidateRanking() {
+      rankingCache = null;
+    }
+    function guardRoute(route) {
+      if (preferenceRoutes.has(route) && !isReady()) {
+        if (!catalogLoaded && journey.confirmed === true && Array.isArray(journey.desiredIds) && journey.desiredIds.length === 3) pendingRoute = route;
+        return "preferences";
+      }
+      pendingRoute = null;
+      return route;
+    }
+    function isReady() {
+      return catalogLoaded && journey.confirmed === true && journey.desiredIds.length === 3;
+    }
+    function stage() {
+      if (journey.resultRecordId !== getProfileContext().recordId) return "profile";
+      return journey.view;
+    }
     function updateLabels() {
       progress.setAttribute("aria-label", L2("\u041F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u043D\u044F\u0442\u0438\u044F", "Seminar steps", "\u8BFE\u5802\u6B65\u9AA4"));
-      const current = lastRoute === "results" ? stage() === "profile" ? 2 : 3 : ["personality", "personality-results"].includes(lastRoute) ? 0 : 1;
-      progress.innerHTML = [L2("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81"), L2("\u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u044F", "Career interests", "\u804C\u4E1A\u503E\u5411"), L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "My profile", "\u6211\u7684\u753B\u50CF"), L2("\u0412\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0430 \u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Authorities and vacancies", "\u673A\u5173\u4E0E\u804C\u4F4D"), L2("\u0422\u0435\u0441\u0442", "Knowledge test", "\u77E5\u8BC6\u6D4B\u8BD5")].map((label2, index) => `<div role="listitem" class="seminar-step ${index === current ? "is-current" : ""} ${index < current ? "is-done" : ""}" ${index === current ? 'aria-current="step"' : ""}><span>${index < current ? I2("check") : index + 1}</span><strong>${label2}</strong></div>`).join("");
+      const current = ["personality", "personality-results"].includes(lastRoute) ? 0 : lastRoute === "preferences" ? 1 : lastRoute === "results" ? stage() === "requirements" || stage() === "summary" ? 4 : 3 : 2;
+      const labels = [L2("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality", "\u4EBA\u683C\u7279\u5F81"), L2("\u041C\u043E\u0438 \u0446\u0435\u043B\u0438", "My choices", "\u6211\u7684\u76EE\u6807"), L2("\u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u044F", "Career interests", "\u804C\u4E1A\u5174\u8DA3"), L2("\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Recommendations", "\u63A8\u8350"), L2("\u041F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Development plan", "\u53D1\u5C55\u8BA1\u5212"), L2("\u0422\u0435\u0441\u0442 \u0437\u043D\u0430\u043D\u0438\u0439", "Knowledge test", "\u77E5\u8BC6\u6D4B\u8BD5")];
+      progress.innerHTML = labels.map((label2, index) => `<div role="listitem" class="seminar-step ${index === current ? "is-current" : ""} ${index < current ? "is-done" : ""}" ${index === current ? 'aria-current="step"' : ""}><span>${index < current ? icon("check") : index + 1}</span><strong>${label2}</strong></div>`).join("");
       const calculate = document.querySelector("#calculate-button");
       calculate.setAttribute("data-no-i18n", "");
-      calculate.innerHTML = L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "View my profile", "\u67E5\u770B\u6211\u7684\u753B\u50CF") + I2("arrow-right");
+      calculate.innerHTML = L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "View my profile", "\u67E5\u770B\u6211\u7684\u753B\u50CF") + icon("arrow-right");
       const explanation = document.querySelector("#view-conditions .workflow-heading p");
       explanation.setAttribute("data-no-i18n", "");
       explanation.textContent = L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0412\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0442.", "Select the working conditions that suit you.", "\u8BF7\u9009\u62E9\u9002\u5408\u4F60\u7684\u5DE5\u4F5C\u6761\u4EF6\u3002");
@@ -2235,123 +3374,639 @@ var CareerRuntime = (() => {
       storageWarning.setAttribute("data-no-i18n", "");
       storageWarning.textContent = L2("\u041E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0432\u043A\u043B\u0430\u0434\u043A\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435.", "Answers have not been saved yet. Keep this tab open and check your connection.", "\u7B54\u6848\u5C1A\u672A\u4FDD\u5B58\u3002\u8BF7\u4FDD\u6301\u9875\u9762\u6253\u5F00\u5E76\u68C0\u67E5\u7F51\u7EDC\u8FDE\u63A5\u3002");
     }
-    function sourceNote() {
-      if (loading) return L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438\u2026", "Loading vacancies\u2026", "\u6B63\u5728\u52A0\u8F7D\u804C\u4F4D\u2026\u2026");
-      if (loadError || !feed?.lastSuccessAt) return L2("\u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430.", "The selection is temporarily unavailable. Browse the official civil service portal.", "\u804C\u4F4D\u5217\u8868\u6682\u4E0D\u53EF\u7528\u3002\u8BF7\u67E5\u770B\u516C\u52A1\u5458\u5B98\u65B9\u95E8\u6237\u7684\u516C\u544A\u3002");
-      const stale = Date.now() - Date.parse(feed.lastSuccessAt) > FRESH_MS;
-      return `${L2("\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u043E\u0442", "Information retrieved on", "\u4FE1\u606F\u83B7\u53D6\u4E8E")} ${date2(feed.lastSuccessAt).replace(/\.$/, "")}. ${stale ? L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0443\u0442\u043E\u0447\u043D\u0438\u0442\u044C \u043D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435.", "Check the portal for the current application status.", "\u8BF7\u5728\u95E8\u6237\u6838\u5B9E\u5F53\u524D\u7533\u8BF7\u72B6\u6001\u3002") : L2("\u0421\u0440\u043E\u043A\u0438 \u0438 \u043F\u043E\u043B\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0443\u043A\u0430\u0437\u0430\u043D\u044B \u0432 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u0445.", "Official announcements contain deadlines and full requirements.", "\u622A\u6B62\u65E5\u671F\u53CA\u5B8C\u6574\u8981\u6C42\u4EE5\u5B98\u65B9\u516C\u544A\u4E3A\u51C6\u3002")}`;
-    }
-    function vacancyCard(v) {
-      const labels = {
-        accepting: L2("\u041F\u0440\u0438\u0451\u043C \u0432 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0435 \u0441\u0440\u043E\u043A\u0438", "Within the stated application period", "\u5904\u4E8E\u6240\u5217\u7533\u8BF7\u671F"),
-        stale: L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u043D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435", "Check current availability on the portal", "\u8BF7\u5728\u95E8\u6237\u6838\u5B9E\u5F53\u524D\u72B6\u6001"),
-        verify: L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043F\u0440\u0438\u0451\u043C \u043D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435", "Check application status on the portal", "\u8BF7\u5728\u95E8\u6237\u6838\u5B9E\u63A5\u6536\u72B6\u6001"),
-        upcoming: L2("\u041F\u0440\u0438\u0451\u043C \u0435\u0449\u0451 \u043D\u0435 \u043D\u0430\u0447\u0430\u043B\u0441\u044F", "Applications have not started", "\u5C1A\u672A\u5F00\u59CB\u63A5\u53D7\u7533\u8BF7")
-      };
-      const fields = [
-        [L2("\u041C\u0435\u0441\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u044B", "Location", "\u5DE5\u4F5C\u5730\u70B9"), v.location],
-        [L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62"), date2(v.deadline)],
-        [L2("\u041E\u043F\u043B\u0430\u0442\u0430", "Pay", "\u62A5\u916C"), v.salary],
-        [L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"), v.education],
-        [L2("\u0421\u0442\u0430\u0436", "Experience", "\u7ECF\u5386"), v.experience]
-      ].filter(([, value]) => value);
-      return `<article class="seminar-vacancy"><span class="seminar-vacancy-status">${labels[v.status] || labels.verify}</span><h4 lang="ru">${E2(v.title)}</h4><p class="seminar-employer" lang="ru">${E2(v.organization.name)}</p>${v.department ? `<p lang="ru">${E2(v.department)}</p>` : ""}${v.organization.relation === "territorial" ? `<p class="seminar-territorial">${L2("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D", "Territorial authority", "\u5730\u65B9\u6D3E\u51FA\u673A\u5173")}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd lang="ru">${E2(value)}</dd></div>`).join("")}</dl><a href="${E2(v.url)}" target="_blank" rel="noopener noreferrer" class="seminar-vacancy-link">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Open the official vacancy", "\u6253\u5F00\u5B98\u65B9\u804C\u4F4D")}${I2("external")}</a></article>`;
-    }
-    function renderVacancies() {
-      const root = document.querySelector("#seminar-vacancies");
-      if (!root) return;
-      const institutions = top();
-      const items = feed && !feed.testFixture ? selectVacancies(feed, { authorityIds: institutions.map((a) => a.id), includeTerritorial: true }) : [];
-      root.innerHTML = `<p class="seminar-source-note" role="status">${E2(sourceNote())}</p>${institutions.map((a) => {
-        const found = items.filter((v) => v.organization.authorityId === a.id).slice(0, 2);
-        const emptyText = feed ? L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435 \u043D\u0435\u0442 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0445 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u043D\u0430 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0435 \u043F\u043E \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044E \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438.", "The saved selection has no current announcements for this authority. Search the official portal by the organisation name.", "\u5DF2\u4FDD\u5B58\u7684\u5217\u8868\u4E2D\u6CA1\u6709\u8BE5\u673A\u5173\u5F53\u524D\u6709\u6548\u7684\u516C\u544A\u3002\u8BF7\u6309\u673A\u6784\u540D\u79F0\u5728\u5B98\u65B9\u95E8\u6237\u641C\u7D22\u3002") : L2("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0430 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0435 \u043F\u043E \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u044E \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438.", "Search the official portal by the organisation name.", "\u8BF7\u6309\u673A\u6784\u540D\u79F0\u5728\u5B98\u65B9\u95E8\u6237\u641C\u7D22\u516C\u544A\u3002");
-        return `<section class="seminar-vacancy-group"><h3>${E2(authorityName(a))}</h3>${loading && !loaded ? `<p class="seminar-vacancy-empty">${L2("\u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u2026", "Finding announcements\u2026", "\u6B63\u5728\u67E5\u627E\u516C\u544A\u2026\u2026")}</p>` : found.length ? `<div class="seminar-vacancy-grid">${found.map(vacancyCard).join("")}</div>` : `<p class="seminar-vacancy-empty">${emptyText}</p>`}</section>`;
-      }).join("")}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer" class="button button-secondary button-large seminar-portal-link">${L2("\u041F\u043E\u0438\u0441\u043A \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Search the official civil service portal", "\u5728\u516C\u52A1\u5458\u5B98\u65B9\u95E8\u6237\u641C\u7D22\u804C\u4F4D")}${I2("external")}</a>`;
-    }
-    async function loadVacancies() {
-      if (loading || loaded) return;
-      loading = true;
-      renderVacancies();
+    async function loadCatalog() {
+      if (catalogLoading) return;
+      catalogLoading = true;
+      catalogError = false;
+      const ticket = ++catalogGeneration;
       try {
-        const result = await loadJSON("data/vacancies/gossluzhba.json", { timeout: 1e4, validate: (value) => !validateFeed(value).length && !value.testFixture });
-        if (__careerHost.destroyed) return;
-        feed = result;
-        loadError = false;
+        const values = await Promise.all([
+          loadJSON("data/territories.json", { validate: (v) => Array.isArray(v) && v.length === 89 && new Set(v.map((x) => x.id)).size === 89 }),
+          loadJSON("data/territorial-authorities.json", { validate: (v) => Array.isArray(v) || Array.isArray(v?.authorities) }),
+          loadJSON("data/career-framework.json", { validate: (v) => Array.isArray(v?.trackProfiles) }),
+          loadJSON("data/competencies.json", { validate: Array.isArray })
+        ]);
+        if (__careerHost.destroyed || ticket !== catalogGeneration) return;
+        regions = values[0];
+        territorial = expandTerritorialCatalog(values[1]);
+        institutions = [...data2.authorities, ...territorial.filter((a) => !data2.authorities.some((base) => base.id === a.id))];
+        framework = values[2];
+        competencies = values[3];
+        const clean = sanitizeJourneyPreferences(journey, { regions, authorities: institutions, defaultRegionId: DEFAULT_REGION });
+        journey = { ...journey, ...clean };
+        catalogLoaded = true;
+        invalidateRanking();
       } catch {
-        if (__careerHost.destroyed) return;
-        loadError = true;
+        if (!__careerHost.destroyed) catalogError = true;
       } finally {
-        loading = false;
-        loaded = true;
-        if (!__careerHost.destroyed) renderVacancies();
+        catalogLoading = false;
+        if (!__careerHost.destroyed) {
+          if (lastRoute === "preferences" && catalogLoaded && pendingRoute && isReady()) {
+            const resume = pendingRoute;
+            pendingRoute = null;
+            navigate(resume);
+          } else if (lastRoute === "preferences") renderPreferences();
+          else if (lastRoute === "results") renderResults2();
+        }
       }
+    }
+    function changePreferences() {
+      journey.confirmed = false;
+      save();
+      navigate("preferences");
+    }
+    function setRegions(ids2) {
+      const before = new Set(journey.desiredIds), previousVacancy = findSelectedVacancy() || journey.selectedSnapshot;
+      journey.regionIds = [...ids2];
+      const clean = sanitizeJourneyPreferences({ ...journey, confirmed: false }, { regions, authorities: institutions, defaultRegionId: DEFAULT_REGION });
+      journey = { ...journey, ...clean };
+      invalidateRanking();
+      if (journey.selectedVacancyId) {
+        if (previousVacancy?.regionId && !ids2.includes(previousVacancy.regionId)) {
+          journey.selectedVacancyId = null;
+          journey.selectedSnapshot = null;
+        }
+      }
+      save();
+      authorityLimit = 24;
+      if (authorityScope && !ids2.includes(authorityScope) && authorityScope !== "federal") authorityScope = "";
+      renderDesiredChoices();
+      renderAuthorityOptions();
+      renderAuthorityScope();
+      updatePreferenceNext();
+      if (before.size > journey.desiredIds.length) toast2(L2("\u041E\u0440\u0433\u0430\u043D\u044B \u0438\u0437 \u0441\u043D\u044F\u0442\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439 \u0443\u0431\u0440\u0430\u043D\u044B \u0438\u0437 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u043C\u0435\u043D\u0443.", "Employers from deselected territories were removed from your choices. Choose a replacement.", "\u5DF2\u53D6\u6D88\u5730\u533A\u7684\u673A\u6784\u5DF2\u4ECE\u610F\u5411\u4E2D\u79FB\u9664\uFF0C\u8BF7\u9009\u62E9\u66FF\u4EE3\u673A\u6784\u3002"));
+    }
+    function renderPreferences() {
+      const target = preferencesRoot();
+      if (!target) return;
+      picker?.destroy();
+      picker = null;
+      target.setAttribute("data-no-i18n", "");
+      if (!catalogLoaded) {
+        target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0413\u0434\u0435 \u0438 \u043A\u0435\u043C \u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C", "Where would you like to work?", "\u4F60\u5E0C\u671B\u5728\u54EA\u91CC\u5DE5\u4F5C\uFF1F")}</h1></header><p role="status">${catalogError ? L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443.", "The catalogue could not be loaded. Please try again.", "\u76EE\u5F55\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5\u3002") : L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u043B\u0430\u0441\u0442\u0438\u2026", "Loading territories and employers\u2026", "\u6B63\u5728\u52A0\u8F7D\u5730\u533A\u548C\u673A\u6784\u2026\u2026")}</p>${catalogError ? `<button type="button" class="button button-primary" id="journey-retry-catalog">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button>` : ""}`;
+        target.querySelector("#journey-retry-catalog")?.addEventListener("click", () => {
+          void loadCatalog();
+          renderPreferences();
+        });
+        return;
+      }
+      target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0413\u0434\u0435 \u0438 \u043A\u0435\u043C \u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C", "Where would you like to work?", "\u4F60\u5E0C\u671B\u5728\u54EA\u91CC\u5DE5\u4F5C\uFF1F")}</h1><p>${L2("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438, \u0437\u0430\u0442\u0435\u043C \u0442\u0440\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0432\u043B\u0430\u0441\u0442\u0438 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430 \u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435 \u0412\u0430\u0448\u0435\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F. \u041F\u043E\u0441\u043B\u0435 \u0442\u0435\u0441\u0442\u0430 \u0441\u0440\u0430\u0432\u043D\u0438\u043C \u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440 \u0441 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u043C\u0438.", "Choose territories, then rank three public authorities or public-sector employers in order of preference. After the questionnaire, compare your choices with the recommendations.", "\u5148\u9009\u62E9\u5730\u533A\uFF0C\u518D\u6309\u610F\u613F\u987A\u5E8F\u9009\u62E9\u4E09\u4E2A\u653F\u5E9C\u673A\u5173\u6216\u516C\u5171\u90E8\u95E8\u96C7\u4E3B\u3002\u5B8C\u6210\u6D4B\u8BD5\u540E\uFF0C\u53EF\u5C06\u610F\u5411\u4E0E\u63A8\u8350\u8FDB\u884C\u6BD4\u8F83\u3002")}</p></header>
+      <section class="journey-panel" aria-labelledby="journey-regions-heading"><h2 id="journey-regions-heading">${L2("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0440\u0430\u0431\u043E\u0442\u044B", "Work territories", "\u5DE5\u4F5C\u5730\u533A")}</h2><div id="journey-regions"></div></section>
+      <section class="journey-panel" aria-labelledby="journey-wishes-heading"><h2 id="journey-wishes-heading">${L2("\u0422\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B", "Three preferred employers", "\u4E09\u4E2A\u610F\u5411\u5DE5\u4F5C\u5355\u4F4D")}</h2><p class="journey-muted">${L2("\u041F\u043E\u0437\u0438\u0446\u0438\u044F 1 \u2014 \u0441\u0430\u043C\u044B\u0439 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043C\u043E\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0441\u0442\u0440\u0435\u043B\u043A\u0430\u043C\u0438.", "Position 1 is your first choice. Use the arrows to change the order.", "\u7B2C1\u4F4D\u4E3A\u9996\u9009\u3002\u53EF\u901A\u8FC7\u7BAD\u5934\u8C03\u6574\u987A\u5E8F\u3002")}</p><div id="journey-desired-choices" aria-live="polite"></div>
+      <div class="journey-search-row"><label for="journey-authority-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044E", "Find an authority or employer", "\u67E5\u627E\u673A\u5173\u6216\u673A\u6784")}<input type="search" id="journey-authority-search" autocomplete="off" placeholder="${E3(L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 \u0441\u0444\u0435\u0440\u0430 \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Name or policy area", "\u540D\u79F0\u6216\u5DE5\u4F5C\u9886\u57DF"))}" value="${E3(authorityQuery)}"></label><label for="journey-authority-scope">${L2("\u0423\u0440\u043E\u0432\u0435\u043D\u044C \u0438 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044F", "Level and territory", "\u5C42\u7EA7\u4E0E\u5730\u533A")}<select id="journey-authority-scope"></select></label></div><div id="journey-authority-options"></div></section>
+      <div class="seminar-next"><button type="button" class="button button-secondary" id="journey-back-personality">${icon("arrow-left")}${L2("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81")}</button><span id="journey-preference-status" role="status"></span><button type="button" class="button button-primary button-large" id="journey-preferences-next">${L2("\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C", "Continue to the questions", "\u8FDB\u5165\u95EE\u5377")}${icon("arrow-right")}</button></div>`;
+      picker = createRegionPicker({ root: target.querySelector("#journey-regions"), regions, selectedIds: journey.regionIds, onChange: setRegions, getLanguage });
+      renderDesiredChoices();
+      renderAuthorityScope();
+      renderAuthorityOptions();
+      updatePreferenceNext();
+      target.querySelector("#journey-authority-search").addEventListener("input", (event) => {
+        authorityQuery = event.target.value;
+        authorityLimit = 24;
+        renderAuthorityOptions();
+      });
+      target.querySelector("#journey-authority-scope").addEventListener("change", (event) => {
+        authorityScope = event.target.value;
+        authorityLimit = 24;
+        renderAuthorityOptions();
+      });
+      target.querySelector("#journey-back-personality").onclick = () => navigate("personality-results");
+      target.querySelector("#journey-preferences-next").onclick = () => {
+        const clean = sanitizeJourneyPreferences({ ...journey, confirmed: true }, { regions, authorities: institutions, defaultRegionId: DEFAULT_REGION });
+        journey = { ...journey, ...clean };
+        if (!isReady()) {
+          updatePreferenceNext();
+          return;
+        }
+        if (save()) navigate(resolveResumeRoute2());
+      };
+    }
+    function renderAuthorityScope() {
+      const select = preferencesRoot()?.querySelector("#journey-authority-scope");
+      if (!select) return;
+      select.innerHTML = `<option value="">${L2("\u0412\u0441\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B", "All available employers", "\u6240\u6709\u53EF\u9009\u673A\u6784")}</option><option value="federal">${L2("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u0438 \u0433\u043E\u0441\u043A\u043E\u0440\u043F\u043E\u0440\u0430\u0446\u0438\u0438", "Federal level and state corporations", "\u8054\u90A6\u5C42\u7EA7\u4E0E\u56FD\u6709\u4F01\u4E1A")}</option>${selectedRegions().map((r) => `<option value="${E3(r.id)}">${E3(regionName(r))}</option>`).join("")}`;
+      select.value = authorityScope;
+    }
+    function renderDesiredChoices() {
+      const target = preferencesRoot()?.querySelector("#journey-desired-choices");
+      if (!target) return;
+      const lookup = byId();
+      target.innerHTML = `<ol class="journey-wish-slots">${[0, 1, 2].map((index) => {
+        const authority = lookup.get(journey.desiredIds[index]);
+        return `<li class="${authority ? "is-filled" : ""}"><span class="journey-priority">${index + 1}</span>${authority ? `<div><strong>${E3(authorityName(authority))}</strong><small>${levelLabel(authority)}</small></div><div class="journey-order-actions"><button type="button" data-move-wish="${index}" data-direction="-1" aria-label="${E3(L2("\u041F\u043E\u0434\u043D\u044F\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442: ", "Move up: ", "\u63D0\u9AD8\u4F18\u5148\u7EA7\uFF1A") + authorityName(authority))}" ${index === 0 ? "disabled" : ""}>\u2191</button><button type="button" data-move-wish="${index}" data-direction="1" aria-label="${E3(L2("\u041F\u043E\u043D\u0438\u0437\u0438\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442: ", "Move down: ", "\u964D\u4F4E\u4F18\u5148\u7EA7\uFF1A") + authorityName(authority))}" ${index === journey.desiredIds.length - 1 ? "disabled" : ""}>\u2193</button><button type="button" data-remove-wish="${E3(authority.id)}" aria-label="${E3(L2("\u0423\u0431\u0440\u0430\u0442\u044C: ", "Remove: ", "\u79FB\u9664\uFF1A") + authorityName(authority))}">\xD7</button></div>` : `<span class="journey-empty-slot">${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u043D\u0438\u0436\u0435", "Choose an employer below", "\u8BF7\u5728\u4E0B\u65B9\u9009\u62E9\u673A\u6784")}</span>`}</li>`;
+      }).join("")}</ol>`;
+      target.querySelectorAll("[data-remove-wish]").forEach((button) => button.onclick = () => {
+        journey.desiredIds = journey.desiredIds.filter((id) => id !== button.dataset.removeWish);
+        journey.confirmed = false;
+        save();
+        renderDesiredChoices();
+        renderAuthorityOptions();
+        updatePreferenceNext();
+      });
+      target.querySelectorAll("[data-move-wish]").forEach((button) => button.onclick = () => {
+        const from = Number(button.dataset.moveWish), to = from + Number(button.dataset.direction);
+        if (to < 0 || to >= journey.desiredIds.length) return;
+        [journey.desiredIds[from], journey.desiredIds[to]] = [journey.desiredIds[to], journey.desiredIds[from]];
+        journey.confirmed = false;
+        save();
+        renderDesiredChoices();
+        renderAuthorityOptions();
+      });
+    }
+    function renderAuthorityOptions() {
+      const target = preferencesRoot()?.querySelector("#journey-authority-options");
+      if (!target) return;
+      const query = normalizeName(authorityQuery), regionLookup = new Map(regions.map((r) => [r.id, r]));
+      const list2 = visibleInstitutions().filter((a) => (!authorityScope || (authorityScope === "federal" ? !a.regionId : a.regionId === authorityScope)) && (!query || normalizeName([a.name, a.shortName, authorityName(a), a.mission, a.familyId].join(" ")).includes(query))).sort((a, b) => Number(!!a.regionId) - Number(!!b.regionId) || authorityName(a).localeCompare(authorityName(b), getLanguage()));
+      target.innerHTML = `<p class="journey-result-count" role="status">${L2("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")} ${number(list2.length)} \xB7 ${L2("\u0432\u044B\u0431\u0440\u0430\u043D\u043E", "selected", "\u5DF2\u9009\u62E9")} ${journey.desiredIds.length}/3</p><div class="journey-employer-options">${list2.slice(0, authorityLimit).map((a) => {
+        const chosen = journey.desiredIds.indexOf(a.id);
+        return `<button type="button" class="journey-employer-option ${chosen >= 0 ? "is-selected" : ""}" data-add-wish="${E3(a.id)}" aria-pressed="${chosen >= 0}" ${chosen < 0 && journey.desiredIds.length === 3 ? "disabled" : ""}><span class="journey-choice-marker">${chosen >= 0 ? chosen + 1 : "+"}</span><span><strong>${E3(authorityName(a))}</strong><small>${levelLabel(a)}${a.regionId ? " \xB7 " + E3(regionName(regionLookup.get(a.regionId))) : ""}</small></span></button>`;
+      }).join("")}</div>${!list2.length ? `<p class="journey-empty">${L2("\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u0437\u0430\u043F\u0440\u043E\u0441 \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u0443\u044E \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044E.", "No matches. Change the query or select another territory.", "\u6CA1\u6709\u5339\u914D\u7ED3\u679C\uFF0C\u8BF7\u66F4\u6539\u641C\u7D22\u8BCD\u6216\u9009\u62E9\u5176\u4ED6\u5730\u533A\u3002")}</p>` : ""}${list2.length > authorityLimit ? `<button type="button" class="button button-secondary journey-more" id="journey-more-employers">${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button>` : ""}`;
+      target.querySelectorAll("[data-add-wish]").forEach((button) => button.onclick = () => {
+        const id = button.dataset.addWish;
+        if (journey.desiredIds.includes(id)) journey.desiredIds = journey.desiredIds.filter((value) => value !== id);
+        else if (journey.desiredIds.length < 3) journey.desiredIds.push(id);
+        journey.confirmed = false;
+        save();
+        renderDesiredChoices();
+        renderAuthorityOptions();
+        updatePreferenceNext();
+      });
+      target.querySelector("#journey-more-employers")?.addEventListener("click", () => {
+        authorityLimit += 24;
+        renderAuthorityOptions();
+      });
+    }
+    function updatePreferenceNext() {
+      const target = preferencesRoot();
+      if (!target) return;
+      const button = target.querySelector("#journey-preferences-next");
+      if (button) button.disabled = journey.desiredIds.length !== 3;
+      const status = target.querySelector("#journey-preference-status");
+      if (status) status.textContent = L2(`\u0412\u044B\u0431\u0440\u0430\u043D\u043E ${journey.desiredIds.length} \u0438\u0437 3`, `Selected ${journey.desiredIds.length} of 3`, `\u5DF2\u9009\u62E9 ${journey.desiredIds.length} / 3`);
+    }
+    function rankings() {
+      const result = getResult();
+      if (!result || !catalogLoaded) return null;
+      const cacheKey = JSON.stringify([getProfileContext().recordId, journey.regionIds]);
+      if (rankingCache?.key === cacheKey) return rankingCache.value;
+      const value = rankJourneyAuthorities({ authorities: institutions, tracks: data2.tracks, questions: data2.questions, sectors: data2.sectors, inputs: getInputs(), context: result.context, roleProfile: result.roleProfile, regionIds: journey.regionIds, limit: 3 });
+      rankingCache = { key: cacheKey, value };
+      return value;
     }
     function switchStage(view) {
-      savedStage = { recordId: getProfileContext().recordId, view };
-      try {
-        writeLocal(stageKey, JSON.stringify(savedStage));
-      } catch {
-      }
+      journey.resultRecordId = getProfileContext().recordId;
+      journey.view = view;
+      save();
       renderResults2();
       updateLabels();
       window.scrollTo({ top: 0, behavior: "instant" });
-      const heading = document.querySelector("#results-root h1");
+      const heading = root()?.querySelector("h1");
       heading?.setAttribute("tabindex", "-1");
       heading?.focus({ preventScroll: true });
     }
     function profileNote(result) {
       if (result.roleProfile.lowInterest) return L2("\u0412\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0437\u0438\u043B\u0438 \u0443\u0441\u0442\u043E\u0439\u0447\u0438\u0432\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u043E\u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u0437\u043D\u0430\u043A\u043E\u043C\u0438\u0442\u044C\u0441\u044F \u0441 \u043D\u0438\u043C\u0438 \u0438 \u0432\u044B\u0431\u0440\u0430\u0442\u044C, \u0447\u0442\u043E \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435.", "You have not yet expressed a strong interest in these types of work. Use the result to explore them and decide what to learn about.", "\u4F60\u5C1A\u672A\u5BF9\u8FD9\u4E9B\u5DE5\u4F5C\u7C7B\u578B\u8868\u73B0\u51FA\u8F83\u5F3A\u5174\u8DA3\u3002\u53EF\u5229\u7528\u7ED3\u679C\u4E86\u89E3\u5404\u7C7B\u5DE5\u4F5C\uFF0C\u9009\u62E9\u60F3\u8FDB\u4E00\u6B65\u63A2\u7D22\u7684\u65B9\u5411\u3002");
-      if (result.roleProfile.flat) return L2("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438 \u0434\u0440\u0443\u0433 \u043A \u0434\u0440\u0443\u0433\u0443. \u041F\u0440\u0438 \u043F\u043E\u0434\u0431\u043E\u0440\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432 \u043E\u0441\u043E\u0431\u0435\u043D\u043D\u043E \u0432\u0430\u0436\u043D\u044B \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0412\u0430\u043C\u0438 \u0441\u0444\u0435\u0440\u044B \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438.", "Your ratings of these types of work are similar. Your chosen policy areas are especially important when selecting authorities.", "\u4F60\u5BF9\u5404\u7C7B\u5DE5\u4F5C\u7684\u8BC4\u5206\u8F83\u63A5\u8FD1\uFF0C\u56E0\u6B64\u5728\u63A8\u8350\u673A\u5173\u65F6\uFF0C\u4F60\u6240\u9009\u7684\u653F\u7B56\u9886\u57DF\u5C24\u4E3A\u91CD\u8981\u3002");
+      if (result.roleProfile.flat) return L2("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438 \u0434\u0440\u0443\u0433 \u043A \u0434\u0440\u0443\u0433\u0443. \u041F\u0440\u0438 \u043F\u043E\u0434\u0431\u043E\u0440\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432 \u043E\u0441\u043E\u0431\u0435\u043D\u043D\u043E \u0432\u0430\u0436\u043D\u044B \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0412\u0430\u043C\u0438 \u0441\u0444\u0435\u0440\u044B \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438.", "Your ratings of these types of work are similar. Your chosen policy areas are especially important when selecting employers.", "\u4F60\u5BF9\u5404\u7C7B\u5DE5\u4F5C\u7684\u8BC4\u5206\u8F83\u63A5\u8FD1\uFF0C\u56E0\u6B64\u5728\u63A8\u8350\u673A\u6784\u65F6\uFF0C\u4F60\u6240\u9009\u7684\u653F\u7B56\u9886\u57DF\u5C24\u4E3A\u91CD\u8981\u3002");
       return L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u044E\u0442 \u0412\u0430\u0441 \u0431\u043E\u043B\u044C\u0448\u0435, \u043A\u0430\u043A\u0438\u0435 \u0441\u0444\u0435\u0440\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B \u0438 \u043A\u0430\u043A\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0412\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0442.", "Explore the work you find most interesting, your preferred policy areas and the conditions that suit you.", "\u4E86\u89E3\u6700\u5438\u5F15\u4F60\u7684\u5DE5\u4F5C\u7C7B\u578B\u3001\u611F\u5174\u8DA3\u7684\u653F\u7B56\u9886\u57DF\uFF0C\u4EE5\u53CA\u9002\u5408\u4F60\u7684\u5DE5\u4F5C\u6761\u4EF6\u3002");
     }
-    function renderProfile(result, root) {
+    function personalProfile(result) {
       const context = getProfileContext();
-      const scales = context.scales;
-      const strongest = [...scales].sort((a, b) => result.roleProfile.raw[b.id] - result.roleProfile.raw[a.id]).slice(0, 3);
-      const number2 = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-      root.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0412\u0430\u0448 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your profile", "\u4F60\u7684\u804C\u4E1A\u753B\u50CF")}</h1><p>${profileNote(result)}</p></header>
-      <section class="seminar-profile-card" aria-labelledby="seminar-interests-title">
-        <h2 id="seminar-interests-title">${L2("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B", "Interest in types of work", "\u5BF9\u5404\u7C7B\u5DE5\u4F5C\u7684\u5174\u8DA3")}</h2>
-        <p class="seminar-profile-caption">${L2("\u041E\u0442 1 \u0434\u043E 5: \u0447\u0435\u043C \u0434\u0430\u043B\u044C\u0448\u0435 \u0442\u043E\u0447\u043A\u0430 \u043E\u0442 \u0446\u0435\u043D\u0442\u0440\u0430, \u0442\u0435\u043C \u0432\u044B\u0448\u0435 \u0412\u0430\u0448 \u0438\u043D\u0442\u0435\u0440\u0435\u0441. \u042D\u0442\u043E \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432, \u0430 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u0435\u0439.", "From 1 to 5: the farther a point is from the centre, the stronger your interest. This describes your interests, not your abilities.", "\u8BC4\u5206\u4E3A1\u81F35\u5206\uFF1A\u70B9\u79BB\u4E2D\u5FC3\u8D8A\u8FDC\uFF0C\u5174\u8DA3\u8D8A\u5F3A\u3002\u8FD9\u662F\u5174\u8DA3\u81EA\u8BC4\uFF0C\u4E0D\u662F\u80FD\u529B\u8BC4\u4EF7\u3002")}</p>
-        <div class="seminar-profile-chart"><div class="seminar-radar">${radarSvg2(result.roleProfile, { numbered: true, label: L2("\u0414\u0435\u0432\u044F\u0442\u044C \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B: \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043E\u0442 1 \u0434\u043E 5", "Nine types of work: interest from 1 to 5", "\u4E5D\u7C7B\u5DE5\u4F5C\uFF1A\u5174\u8DA3\u8BC4\u52061\u81F35\u5206") })}</div>
-          <ol class="seminar-profile-scores">${scales.map((scale, index) => `<li><span class="seminar-scale-number">${index + 1}</span><span>${display(scale.title)}</span><strong>${number2(result.roleProfile.raw[scale.id])}<small> / 5</small></strong></li>`).join("")}</ol>
-        </div>
-      </section>
+      return `<section class="seminar-profile-card" aria-labelledby="seminar-interests-title"><h2 id="seminar-interests-title">${L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432", "My interest profile", "\u6211\u7684\u5174\u8DA3\u753B\u50CF")}</h2><p class="seminar-profile-caption">${L2("\u041E\u0442 1 \u0434\u043E 5: \u0447\u0435\u043C \u0434\u0430\u043B\u044C\u0448\u0435 \u0442\u043E\u0447\u043A\u0430 \u043E\u0442 \u0446\u0435\u043D\u0442\u0440\u0430, \u0442\u0435\u043C \u0432\u044B\u0448\u0435 \u0412\u0430\u0448 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u043E\u043C\u0443 \u0432\u0438\u0434\u0443 \u0440\u0430\u0431\u043E\u0442\u044B.", "From 1 to 5: the farther a point is from the centre, the stronger your interest in this type of work.", "\u8BC4\u5206\u4E3A1\u81F35\u5206\uFF1A\u70B9\u79BB\u4E2D\u5FC3\u8D8A\u8FDC\uFF0C\u5BF9\u8BE5\u7C7B\u5DE5\u4F5C\u7684\u5174\u8DA3\u8D8A\u5F3A\u3002")}</p><div class="seminar-profile-chart"><div class="seminar-radar">${radarSvg2(result.roleProfile, { numbered: true, label: L2("\u0414\u0435\u0432\u044F\u0442\u044C \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B: \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043E\u0442 1 \u0434\u043E 5", "Nine types of work: interest from 1 to 5", "\u4E5D\u7C7B\u5DE5\u4F5C\uFF1A\u5174\u8DA3\u8BC4\u52061\u81F35\u5206") })}</div><ol class="seminar-profile-scores">${context.scales.map((scale, index) => `<li><span class="seminar-scale-number">${index + 1}</span><span>${display(scale.title)}</span><strong>${number(result.roleProfile.raw[scale.id], 1)}<small> / 5</small></strong></li>`).join("")}</ol></div></section>`;
+    }
+    function renderProfile(result, target) {
+      const context = getProfileContext(), strongest = [...context.scales].sort((a, b) => result.roleProfile.raw[b.id] - result.roleProfile.raw[a.id]).slice(0, 3);
+      target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0412\u0430\u0448 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your profile", "\u4F60\u7684\u804C\u4E1A\u753B\u50CF")}</h1><p>${profileNote(result)}</p></header>${personalProfile(result)}
       ${!result.roleProfile.flat && !result.roleProfile.lowInterest ? `<section class="seminar-profile-section"><h2>${L2("\u0427\u0442\u043E \u0412\u0430\u043C \u0431\u043B\u0438\u0436\u0435", "Your leading interests", "\u4F60\u7684\u4E3B\u8981\u5174\u8DA3")}</h2><div class="seminar-strengths">${strongest.map((scale) => `<article><h3>${display(scale.title)}</h3><p>${display(scale.description)}</p></article>`).join("")}</div></section>` : ""}
-      <div class="seminar-preferences"><section class="seminar-profile-card"><h2>${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B", "Your chosen policy areas", "\u4F60\u9009\u62E9\u7684\u653F\u7B56\u9886\u57DF")}</h2><ol class="seminar-sector-list">${context.prioritySectors.map((id) => `<li>${display(context.sectors.find((sector) => sector.id === id)?.title || id)}</li>`).join("")}</ol></section>
-      <section class="seminar-profile-card"><h2>${L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F", "Your preferred conditions", "\u9002\u5408\u4F60\u7684\u5DE5\u4F5C\u6761\u4EF6")}</h2><dl class="seminar-condition-summary">${context.conditions.map((condition) => {
+      <div class="seminar-preferences"><section class="seminar-profile-card"><h2>${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B", "Your chosen policy areas", "\u4F60\u9009\u62E9\u7684\u653F\u7B56\u9886\u57DF")}</h2><ol class="seminar-sector-list">${context.prioritySectors.map((id) => `<li>${display(context.sectors.find((sector) => sector.id === id)?.title || id)}</li>`).join("")}</ol></section><section class="seminar-profile-card"><h2>${L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F", "Your preferred conditions", "\u9002\u5408\u4F60\u7684\u5DE5\u4F5C\u6761\u4EF6")}</h2><dl class="seminar-condition-summary">${context.conditions.map((condition) => {
         const value = context.conditionValues[condition.id];
         return `<div><dt>${display(condition.title)}</dt><dd>${value <= 2 ? display(condition.low) : value >= 4 ? display(condition.high) : L2("\u0421\u0440\u0435\u0434\u043D\u044F\u044F \u043E\u0446\u0435\u043D\u043A\u0430: 3 \u0438\u0437 5", "Midpoint rating: 3 out of 5", "\u4E2D\u95F4\u8BC4\u5206\uFF1A3\u5206\uFF08\u6EE1\u52065\u5206\uFF09")}</dd></div>`;
       }).join("")}</dl></section></div>
-      <div class="seminar-next"><p>${L2("\u0412\u0430\u0448\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B, \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0441 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C\u0438 \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432. \u041D\u0430 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u043C \u0448\u0430\u0433\u0435 \u0412\u044B \u0443\u0432\u0438\u0434\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0438 \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438.", "Your interests, policy areas and working conditions are compared with authorities\u2019 activities. The next step shows recommendations and vacancies to explore.", "\u7CFB\u7EDF\u5C06\u4F60\u7684\u5174\u8DA3\u3001\u653F\u7B56\u9886\u57DF\u548C\u5DE5\u4F5C\u6761\u4EF6\u4E0E\u5404\u673A\u5173\u7684\u5DE5\u4F5C\u65B9\u5411\u8FDB\u884C\u5339\u914D\u3002\u4E0B\u4E00\u6B65\u5C06\u5C55\u793A\u63A8\u8350\u673A\u5173\u53CA\u5176\u804C\u4F4D\u3002")}</p><button type="button" class="button button-primary button-large" id="seminar-show-authorities">${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0430 \u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "View authorities and vacancies", "\u67E5\u770B\u673A\u5173\u4E0E\u804C\u4F4D")}${I2("arrow-right")}</button></div>`;
-      root.querySelector("#seminar-show-authorities").onclick = () => switchStage("recommendations");
+      <div class="seminar-next"><p>${L2("\u0422\u0435\u043F\u0435\u0440\u044C \u0441\u0440\u0430\u0432\u043D\u0438\u043C \u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0412\u0430\u043C\u0438 \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u043C\u0438 \u0434\u043B\u044F \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0443\u0440\u043E\u0432\u043D\u044F \u0438 \u043A\u0430\u0436\u0434\u043E\u0439 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438.", "Next, compare your three preferred employers with recommendations at national level and in each selected territory.", "\u63A5\u4E0B\u6765\uFF0C\u5C06\u4F60\u7684\u4E09\u4E2A\u610F\u5411\u5355\u4F4D\u4E0E\u8054\u90A6\u5C42\u7EA7\u53CA\u5404\u6240\u9009\u5730\u533A\u7684\u63A8\u8350\u8FDB\u884C\u6BD4\u8F83\u3002")}</p><button type="button" class="button button-primary button-large" id="seminar-show-authorities">${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "View recommendations", "\u67E5\u770B\u63A8\u8350")}${icon("arrow-right")}</button></div>`;
+      target.querySelector("#seminar-show-authorities").onclick = () => switchStage("recommendations");
     }
     function authorityDetails(authority) {
-      const paragraphs = Array.isArray(authority.descriptionParagraphs) ? authority.descriptionParagraphs.filter((value) => typeof value === "string" && value.trim()).slice(0, 3) : [];
-      if (!paragraphs.length) return "";
-      const sources = (authority.descriptionSources || []).filter((source) => /^https:\/\//.test(source.url || ""));
-      return `<details class="seminar-authority-details"><summary>${L2("\u041F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435 \u043E\u0431 \u043E\u0440\u0433\u0430\u043D\u0435", "About this authority", "\u4E86\u89E3\u8BE5\u673A\u5173")}</summary><div>${paragraphs.map((text3) => `<p${getLanguage() !== "ru" && translate(text3) === text3 ? ' lang="ru"' : ""}>${display(text3)}</p>`).join("")}${sources.map((source) => `<a href="${E2(source.url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F", "Official information", "\u5B98\u65B9\u4FE1\u606F")}${I2("external")}</a>`).join("")}</div></details>`;
+      const paragraphs = (authority.descriptionParagraphs || []).filter((value) => typeof value === "string" && value.trim()).slice(0, 3);
+      const sources = (authority.descriptionSources || authority.sources || []).filter((source) => safeURL(source.url));
+      if (!paragraphs.length && !sources.length && !authority.detailPath) return "";
+      return `<details class="seminar-authority-details" data-authority-details="${E3(authority.id)}"><summary>${L2("\u041E\u0431 \u043E\u0440\u0433\u0430\u043D\u0435 \u0438 \u0435\u0433\u043E \u0437\u0430\u0434\u0430\u0447\u0430\u0445", "About the employer and its work", "\u673A\u6784\u4E0E\u804C\u8D23")}</summary><div>${paragraphs.map((text3) => `<p${getLanguage() !== "ru" && translate(text3) === text3 ? ' lang="ru"' : ""}>${display(text3)}</p>`).join("")}${sources.slice(0, 2).map((source) => `<a href="${safeURL(source.url)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F", "Description source", "\u63CF\u8FF0\u6765\u6E90")}${icon("external")}</a>`).join("")}</div></details>`;
+    }
+    const authorityDetailFiles = /* @__PURE__ */ new Map();
+    function bindAuthorityDetails(target) {
+      target.querySelectorAll("[data-authority-details]").forEach((details) => details.addEventListener("toggle", async () => {
+        if (!details.open || details.dataset.detailsLoaded === "true") return;
+        const authority = byId().get(details.dataset.authorityDetails);
+        if (!authority?.detailPath) return;
+        if (!/^data\/territorial-authorities\/[a-z0-9-]+\.json$/.test(authority.detailPath)) return;
+        details.dataset.detailsLoaded = "true";
+        try {
+          if (!authorityDetailFiles.has(authority.detailPath)) authorityDetailFiles.set(authority.detailPath, loadJSON(authority.detailPath, { validate: (value) => Array.isArray(value?.authorities) }));
+          const payload = await authorityDetailFiles.get(authority.detailPath);
+          if (__careerHost.destroyed || !details.isConnected) return;
+          const full = mergeTerritorialAuthorityDetails(authority, payload);
+          const temporary = document.createElement("div");
+          temporary.innerHTML = authorityDetails(full);
+          const content = temporary.querySelector("details>div");
+          if (content) details.querySelector("div").replaceWith(content);
+        } catch {
+          authorityDetailFiles.delete(authority.detailPath);
+          details.dataset.detailsLoaded = "false";
+        }
+      }));
+    }
+    function matchBadge(matched) {
+      return matched ? `<span class="journey-match-badge">${icon("check")}${L2("\u0421\u043E\u0432\u043F\u0430\u043B\u043E \u0441 \u0412\u0430\u0448\u0438\u043C \u0432\u044B\u0431\u043E\u0440\u043E\u043C", "Matches your choice", "\u4E0E\u4F60\u7684\u610F\u5411\u4E00\u81F4")}</span>` : "";
     }
     function authorityCard(authority, index, result) {
-      const context = getProfileContext();
+      const context = getProfileContext(), matched = journey.desiredIds.includes(authority.id);
       const matches = context.prioritySectors.filter((id) => (authority.pathSectors || authority.sectors || []).some((sector) => sector.id === id));
-      return `<article class="seminar-authority"><div class="seminar-authority-heading">${authorityEmblem(authority, "compact")}<div><span class="seminar-rank">${index + 1}</span><h2>${E2(authorityName(authority))}</h2></div></div><p>${display(authority.mission)}</p>${authorityDetails(authority)}<div class="seminar-track"><span>${result.roleProfile.flat || result.roleProfile.lowInterest ? L2("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430", "Type of work to explore", "\u53EF\u4E86\u89E3\u7684\u5DE5\u4F5C\u7C7B\u578B") : L2("\u0411\u043B\u0438\u0437\u043A\u0438\u0439 \u0412\u0430\u043C \u0432\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "A type of work close to your interests", "\u4E0E\u4F60\u5174\u8DA3\u76F8\u8FD1\u7684\u5DE5\u4F5C\u7C7B\u578B")}</span><strong>${display(authority.track?.title || "")}</strong>${matches.length ? `<p>${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0412\u0430\u043C\u0438 \u0441\u0444\u0435\u0440\u044B", "Your chosen policy areas", "\u4F60\u9009\u62E9\u7684\u653F\u7B56\u9886\u57DF")}: ${matches.map((id) => display(context.sectors.find((sector) => sector.id === id)?.title || id)).join(", ")}.</p>` : ""}</div></article>`;
+      return `<article class="seminar-authority ${matched ? "journey-matched" : ""}" data-recommended-authority="${E3(authority.id)}"><div class="seminar-authority-heading">${authorityEmblem(authority, "compact")}<div><span class="seminar-rank">${index + 1} \xB7 ${levelLabel(authority)}</span><h3>${E3(authorityName(authority))}</h3></div></div>${matchBadge(matched)}<p${getLanguage() !== "ru" && translate(authority.mission) === authority.mission ? ' lang="ru"' : ""}>${display(authority.mission)}</p>${authorityDetails(authority)}<div class="seminar-track"><span>${L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B", "A matching work direction", "\u5339\u914D\u7684\u5DE5\u4F5C\u65B9\u5411")}</span><strong>${display(authority.track?.title || "")}</strong>${matches.length ? `<p>${L2("\u0412\u0430\u0448\u0438 \u0441\u0444\u0435\u0440\u044B", "Your policy areas", "\u4F60\u7684\u9886\u57DF")}: ${matches.map((id) => display(context.sectors.find((sector) => sector.id === id)?.title || id)).join(", ")}.</p>` : ""}</div><button type="button" class="button button-secondary journey-card-button" data-authority-vacancies="${E3(authority.id)}">${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Roles and requirements", "\u804C\u4F4D\u4E0E\u8981\u6C42")}${icon("arrow-right")}</button></article>`;
     }
-    function renderResults2() {
-      const result = getResult();
-      if (!result) return;
-      const institutions = top(), root = document.querySelector("#results-root");
-      root.setAttribute("data-no-i18n", "");
-      if (stage() === "profile") {
-        renderProfile(result, root);
+    function choiceComparison(ranked) {
+      const desired = compareDesiredAuthorities(journey.desiredIds, ranked.ranked, ranked);
+      const compact = (authority, index, matched, preferred) => `<li class="journey-compare-item ${matched ? "journey-matched" : ""}"><span class="journey-priority">${index + 1}</span><div><strong>${E3(authorityName(authority))}</strong><small>${levelLabel(authority)}</small>${matched ? `<span class="journey-match-text">\u2713 ${preferred ? L2("\u0415\u0441\u0442\u044C \u0432 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u0445", "Among recommendations", "\u5728\u63A8\u8350\u4E2D") : L2("\u0415\u0441\u0442\u044C \u0432 \u0412\u0430\u0448\u0435\u043C \u0432\u044B\u0431\u043E\u0440\u0435", "Among your choices", "\u5728\u4F60\u7684\u610F\u5411\u4E2D")}</span>` : ""}</div></li>`;
+      return `<section class="journey-comparison" aria-labelledby="journey-comparison-title"><h2 id="journey-comparison-title">${L2("\u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430", "Your choices and the test result", "\u4F60\u7684\u610F\u5411\u4E0E\u6D4B\u8BD5\u7ED3\u679C")}</h2><div class="journey-comparison-columns"><div><h3>${L2("\u0412\u0430\u0448\u0438 \u0442\u0440\u0438 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430", "Your three priorities", "\u4F60\u7684\u4E09\u4E2A\u4F18\u5148\u610F\u5411")}</h3><ol>${desired.map((item, index) => compact(item.authority || byId().get(item.authorityId), index, item.matched, true)).join("")}</ol></div><div><h3>${L2("\u0422\u0440\u0438 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438\u0445 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430", "Three closest matches", "\u6700\u5339\u914D\u7684\u4E09\u4E2A\u9009\u9879")}</h3><ol>${ranked.ranked.slice(0, 3).map((authority, index) => compact(authority, index, journey.desiredIds.includes(authority.id), false)).join("")}</ol></div></div><p class="journey-muted">${L2("\u0417\u0435\u043B\u0451\u043D\u0430\u044F \u0440\u0430\u043C\u043A\u0430 \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0433\u043E \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u043E\u0434\u043D\u043E\u0439 \u0438\u0437 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0439 \u043D\u0438\u0436\u0435. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0412\u0430\u0448\u0438\u0445 \u0436\u0435\u043B\u0430\u043D\u0438\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D.", "A green border marks a preferred employer included in the recommendations below. Your original preference order is preserved.", "\u7EFF\u8272\u8FB9\u6846\u8868\u793A\u610F\u5411\u5355\u4F4D\u51FA\u73B0\u5728\u4E0B\u65B9\u63A8\u8350\u4E2D\u3002\u4F60\u7684\u539F\u59CB\u610F\u5411\u987A\u5E8F\u4FDD\u6301\u4E0D\u53D8\u3002")}</p></section>`;
+    }
+    function wishDevelopment(ranked) {
+      const options = journey.desiredIds.map((id) => ranked.ranked.find((a) => a.id === id) || byId().get(id)).filter(Boolean);
+      if (!options.length) return "";
+      if (!options.some((a) => a.id === journey.comparisonId)) journey.comparisonId = options[0].id;
+      const authority = options.find((a) => a.id === journey.comparisonId), development = buildAuthorityDevelopment(authority, ranked.roleProfile, { tracks: data2.tracks, careerFramework: framework, competencies });
+      const rows = development.lowerInterestDimensions.slice(0, 3);
+      return `<section class="journey-panel journey-development" aria-labelledby="journey-development-title"><h2 id="journey-development-title">${L2("\u041A\u0430\u043A \u043F\u0440\u0438\u0431\u043B\u0438\u0437\u0438\u0442\u044C\u0441\u044F \u043A \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u0435", "Preparing for your preferred role", "\u5982\u4F55\u4E3A\u610F\u5411\u5DE5\u4F5C\u505A\u51C6\u5907")}</h2><label class="journey-field" for="journey-development-authority">${L2("\u0416\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u044B", "Preferred employer", "\u610F\u5411\u5DE5\u4F5C\u5355\u4F4D")}<select id="journey-development-authority">${options.map((a) => `<option value="${E3(a.id)}" ${a.id === authority.id ? "selected" : ""}>${E3(authorityName(a))}</option>`).join("")}</select></label><p><strong>${display(development.track?.title || authority.track?.title || "")}</strong></p>
+      ${!development.available ? `<p class="journey-muted">${L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438, \u0447\u0442\u043E\u0431\u044B \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Examine the selected role requirements to identify preparation priorities.", "\u8BF7\u67E5\u770B\u6240\u9009\u804C\u4F4D\u8981\u6C42\uFF0C\u4EE5\u786E\u5B9A\u51C6\u5907\u65B9\u5411\u3002")}</p>` : rows.length ? `<h3>${L2("\u041A\u0430\u043A\u0438\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Types of work worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u5DE5\u4F5C\u7C7B\u578B")}</h3><div class="journey-reflection-grid">${rows.map((row) => {
+        const scale = data2.scales.find((s) => s.id === row.id);
+        return `<article><strong>${display(scale?.title || row.id)}</strong><span>${L2("\u0412\u0430\u0448 \u0438\u043D\u0442\u0435\u0440\u0435\u0441", "Your interest", "\u4F60\u7684\u5174\u8DA3")}: ${number(row.interest, 1)} / 5</span><p>${display(scale?.description || "")}</p></article>`;
+      }).join("")}</div>` : `<p class="journey-muted">${L2("\u0412\u0430\u0448\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u044D\u0442\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F. \u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u2014 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your interests support the main types of work in this direction. Next, examine the specific role requirements.", "\u4F60\u7684\u5174\u8DA3\u4E0E\u8BE5\u65B9\u5411\u7684\u4E3B\u8981\u5DE5\u4F5C\u7C7B\u578B\u4E00\u81F4\u3002\u4E0B\u4E00\u6B65\uFF0C\u8BF7\u6838\u5BF9\u5177\u4F53\u804C\u4F4D\u8981\u6C42\u3002")}</p>`}
+      <div class="journey-learning-grid">${development.competencies.slice(0, 4).map((item) => `<article><h3>${display(item.title)}</h3><p>${display(item.description)}</p>${item.evidenceIdeas?.[0] ? `<small>${L2("\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430", "Practice", "\u5B9E\u8DF5")}: ${display(item.evidenceIdeas[0])}</small>` : ""}</article>`).join("")}</div><p class="journey-method-note">${L2("\u0422\u0435\u0441\u0442 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B. \u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F \u0441\u0432\u044F\u0437\u0430\u043D\u044B \u0441 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439; \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u0435\u043B\u044B \u0412\u044B \u043E\u0442\u043C\u0435\u0442\u0438\u0442\u0435 \u043F\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F\u043C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "The questionnaire describes interests. These learning directions relate to the chosen work; identify specific gaps by assessing the role requirements.", "\u95EE\u5377\u53CD\u6620\u5174\u8DA3\u3002\u53D1\u5C55\u65B9\u5411\u4E0E\u6240\u9009\u5DE5\u4F5C\u6709\u5173\uFF1B\u5177\u4F53\u5DEE\u8DDD\u9700\u8981\u6839\u636E\u804C\u4F4D\u8981\u6C42\u8FDB\u884C\u81EA\u8BC4\u3002")}</p></section>`;
+    }
+    function bindDevelopment(target, ranked) {
+      target.querySelector("#journey-development-authority")?.addEventListener("change", (event) => {
+        journey.comparisonId = event.target.value;
+        save();
+        const panel = target.querySelector(".journey-development");
+        panel.outerHTML = wishDevelopment(ranked);
+        bindDevelopment(target, ranked);
+      });
+    }
+    function renderRecommendations(result, target) {
+      const ranked = rankings();
+      if (!ranked) return;
+      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="seminar-back-profile">${icon("arrow-left")}${L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "My profile", "\u6211\u7684\u753B\u50CF")}</button><h1>${L2("\u0412\u0430\u0448\u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B", "Your career directions", "\u4F60\u7684\u804C\u4E1A\u65B9\u5411")}</h1><p>${L2("\u0422\u0440\u0438 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0434\u043B\u044F \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0443\u0440\u043E\u0432\u043D\u044F \u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430, \u0437\u0430\u0442\u0435\u043C \u043F\u043E \u0442\u0440\u0438 \u0434\u043B\u044F \u043A\u0430\u0436\u0434\u043E\u0439 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438. \u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435 \u0432\u043B\u0438\u044F\u0435\u0442 \u043D\u0430 \u043F\u043E\u0434\u0431\u043E\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "Three recommendations at federal and public-sector level, followed by three for each selected territory. Employers are recommended independently of vacancy availability.", "\u5148\u5C55\u793A\u8054\u90A6\u5C42\u7EA7\u548C\u516C\u5171\u90E8\u95E8\u7684\u4E09\u4E2A\u63A8\u8350\uFF0C\u518D\u5C55\u793A\u6BCF\u4E2A\u6240\u9009\u5730\u533A\u7684\u4E09\u4E2A\u63A8\u8350\u3002\u673A\u6784\u63A8\u8350\u4E0D\u53D6\u51B3\u4E8E\u662F\u5426\u5B58\u5728\u7A7A\u7F3A\u804C\u4F4D\u3002")}</p></header>${choiceComparison(ranked)}
+      <section class="journey-recommendation-group" data-recommendation-group="federal"><h2>${L2("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "Federal level and public sector", "\u8054\u90A6\u5C42\u7EA7\u4E0E\u516C\u5171\u90E8\u95E8")}</h2><div class="seminar-authorities">${ranked.federal.map((a, i) => authorityCard(a, i, result)).join("")}</div></section>
+      ${ranked.regions.map((group) => {
+        const region = regions.find((r) => r.id === group.regionId);
+        return `<section class="journey-recommendation-group" data-recommendation-group="${E3(group.regionId)}"><h2>${E3(regionName(region))}</h2><p class="journey-muted">${L2("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B", "Regional and municipal authorities", "\u5730\u533A\u4E0E\u5E02\u653F\u673A\u5173")}</p><div class="seminar-authorities">${group.authorities.map((a, i) => authorityCard(a, i, result)).join("")}</div>${group.authorities.length < 3 ? `<p class="journey-muted">${L2("\u0412 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435 \u043F\u043E\u043A\u0430 \u043C\u0435\u043D\u044C\u0448\u0435 \u0442\u0440\u0451\u0445 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0437\u0430\u043F\u0438\u0441\u0435\u0439 \u044D\u0442\u043E\u0439 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438.", "The catalogue currently contains fewer than three matching records for this territory.", "\u8BE5\u5730\u533A\u76EE\u5F55\u4E2D\u76EE\u524D\u5C11\u4E8E\u4E09\u4E2A\u5339\u914D\u8BB0\u5F55\u3002")}</p>` : ""}</section>`;
+      }).join("")}
+      <button type="button" class="seminar-back-profile journey-edit-preferences" id="journey-edit-preferences">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0435 \u043C\u0435\u0441\u0442\u0430", "Edit territories and preferred employers", "\u4FEE\u6539\u5730\u533A\u4E0E\u610F\u5411\u5355\u4F4D")}</button>${wishDevelopment(ranked)}
+      <section class="seminar-vacancy-section" id="journey-vacancy-section"><h2>${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Choose a role to examine", "\u9009\u62E9\u8981\u5206\u6790\u7684\u804C\u4F4D")}</h2><p class="seminar-task">${L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438 \u0438 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u0437\u0430\u0442\u0435\u043C \u043E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u043F\u043E \u043A\u0430\u0436\u0434\u043E\u043C\u0443 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044E, \u0447\u0435\u043C\u0443 \u0412\u044B \u0443\u0436\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442\u0435 \u0438 \u0447\u0442\u043E \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C.", "Review the duties and source, then mark which requirements you already meet and which you need to develop.", "\u4E86\u89E3\u804C\u8D23\u4E0E\u6765\u6E90\uFF0C\u7136\u540E\u9010\u9879\u6807\u8BB0\u5DF2\u7B26\u5408\u7684\u8981\u6C42\u53CA\u9700\u8981\u63D0\u5347\u7684\u90E8\u5206\u3002")}</p><div id="seminar-vacancies"></div></section>
+      <div class="seminar-next"><p>${L2("\u041F\u0435\u0440\u0435\u0434 \u0442\u0435\u0441\u0442\u043E\u043C \u0437\u043D\u0430\u043D\u0438\u0439 \u0412\u044B \u0443\u0432\u0438\u0434\u0438\u0442\u0435 \u0438\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u043F\u043B\u0430\u043D: \u0441\u0432\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0448\u0430\u0433\u0438 \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F.", "Before the knowledge test, you will see your interest profile, the selected role requirements and your development steps.", "\u77E5\u8BC6\u6D4B\u8BD5\u524D\uFF0C\u4F60\u5C06\u770B\u5230\u5174\u8DA3\u753B\u50CF\u3001\u6240\u9009\u804C\u4F4D\u8981\u6C42\u548C\u5177\u4F53\u53D1\u5C55\u6B65\u9AA4\u3002")}</p><button type="button" class="button button-primary button-large" id="journey-show-plan">${L2("\u041C\u043E\u0439 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "My development plan", "\u6211\u7684\u53D1\u5C55\u8BA1\u5212")}${icon("arrow-right")}</button></div>`;
+      target.querySelector("#seminar-back-profile").onclick = () => switchStage("profile");
+      target.querySelector("#journey-edit-preferences").onclick = changePreferences;
+      target.querySelector("#journey-show-plan").onclick = () => switchStage("summary");
+      target.querySelectorAll("[data-authority-vacancies]").forEach((button) => button.onclick = () => {
+        vacancyEmployer = button.dataset.authorityVacancies;
+        vacancyLimit = 12;
+        renderVacancies();
+        document.querySelector("#journey-vacancy-section")?.scrollIntoView({ block: "start", behavior: "instant" });
+      });
+      bindDevelopment(target, ranked);
+      bindAuthorityDetails(target);
+      renderVacancies();
+      void loadVacancies();
+    }
+    let positionSelection = "", positionLoadGeneration = 0;
+    const positionShards = /* @__PURE__ */ new Map();
+    function sourceNote() {
+      if (positionsLoading) return L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439\u2026", "Loading roles for the selected territories\u2026", "\u6B63\u5728\u52A0\u8F7D\u6240\u9009\u5730\u533A\u7684\u804C\u4F4D\u2026\u2026");
+      const savedDate = feed?.lastSuccessAt ? date2(feed.lastSuccessAt) : "";
+      return `${savedDate ? L2("\u0421\u043D\u0438\u043C\u043E\u043A \u043F\u043E\u0440\u0442\u0430\u043B\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430: ", "Civil-service portal snapshot: ", "\u516C\u52A1\u5458\u95E8\u6237\u5FEB\u7167\uFF1A") + savedDate + ". " : ""}${L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u0438 \u0434\u0430\u0442\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430 \u0443\u043A\u0430\u0437\u0430\u043D\u044B \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435. \u0410\u0440\u0445\u0438\u0432\u043D\u044B\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0438 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u043D\u044B\u0435 \u0440\u0435\u0433\u043B\u0430\u043C\u0435\u043D\u0442\u044B \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B \u0434\u043B\u044F \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0440\u0430\u0437\u0431\u043E\u0440\u0430.", "Each card shows its source date and recruitment status. Archived announcements and role regulations are available for study.", "\u5361\u7247\u663E\u793A\u6765\u6E90\u65E5\u671F\u548C\u62DB\u8058\u72B6\u6001\u3002\u5386\u53F2\u516C\u544A\u53CA\u804C\u4F4D\u89C4\u5B9A\u53EF\u7528\u4E8E\u5B66\u4E60\u5206\u6790\u3002")}`;
+    }
+    async function loadVacancies() {
+      const requestedRegions = [...journey.regionIds];
+      const selection = JSON.stringify([...requestedRegions].sort());
+      if (positionsLoading || positionsLoaded && positionSelection === selection) return;
+      positionsLoading = true;
+      positionsError = false;
+      const ticket = ++positionLoadGeneration;
+      renderVacancies();
+      try {
+        const fetched = await Promise.allSettled([
+          feed ? Promise.resolve(feed) : loadJSON("data/vacancies/gossluzhba.json", { timeout: 15e3, validate: (v) => !validateFeed(v).length && !v.testFixture }),
+          loadJSON("data/sourced-position-materials.json", { validate: (v) => v?.schemaVersion === 1 && (Array.isArray(v.positions) || Array.isArray(v.regions)) })
+        ]);
+        if (__careerHost.destroyed || ticket !== positionLoadGeneration) return;
+        if (fetched[0].status === "fulfilled") feed = fetched[0].value;
+        else positionsError = true;
+        const manifest = fetched[1].status === "fulfilled" ? fetched[1].value : null;
+        if (!manifest) {
+          positionsError = true;
+          positions = [];
+        } else if (Array.isArray(manifest.positions)) positions = manifest.positions;
+        else {
+          const entries = [manifest.national, ...manifest.regions.filter((item) => requestedRegions.includes(item.regionId))].filter((item) => item?.path && /^data\/position-materials\/[a-z0-9-]+\.json$/.test(item.path));
+          const loaded = await Promise.allSettled(entries.map(async (item) => {
+            if (!positionShards.has(item.path)) positionShards.set(item.path, await loadJSON(item.path, { validate: (v) => Array.isArray(v?.positions) }));
+            return positionShards.get(item.path).positions;
+          }));
+          if (__careerHost.destroyed || ticket !== positionLoadGeneration) return;
+          positions = loaded.flatMap((result) => result.status === "fulfilled" ? result.value : []);
+          positionsError ||= loaded.some((result) => result.status === "rejected");
+        }
+        positionSelection = selection;
+        positionsLoaded = true;
+      } catch {
+        if (!__careerHost.destroyed) positionsError = true;
+      } finally {
+        positionsLoading = false;
+        if (!__careerHost.destroyed) {
+          if (lastRoute === "results" && ["requirements", "summary"].includes(stage())) renderResults2();
+          else renderVacancies();
+          if (lastRoute === "results" && selection !== JSON.stringify([...journey.regionIds].sort())) void loadVacancies();
+        }
+      }
+    }
+    function inferRegion(location2) {
+      const value = normalizeName(location2);
+      if (!value) return null;
+      const candidates = regions.flatMap((region) => [region.name, ...region.aliases || []].filter(Boolean).map((name2) => ({ id: region.id, name: normalizeName(name2) }))).filter((item) => value === item.name || value.startsWith(item.name + ",") || value.startsWith(item.name + " ") || value.startsWith("\u0433 " + item.name + " ")).sort((a, b) => b.name.length - a.name.length);
+      if (candidates.length) return candidates[0].id;
+      if (/^(?:г )?москва(?:\s|$)/.test(value)) return "ru-77";
+      if (/^(?:г )?санкт петербург(?:\s|$)/.test(value)) return "ru-78";
+      if (/^(?:г )?севастополь(?:\s|$)/.test(value)) return "ru-92";
+      return null;
+    }
+    function roleRecords() {
+      const lookup = byId(), visible = new Set(visibleInstitutions().map((a) => a.id)), names = /* @__PURE__ */ new Map();
+      for (const authority of institutions) {
+        for (const name2 of [authority.name, authority.shortName, ...authority.matchAliases || []]) {
+          if (typeof name2 !== "string") continue;
+          const norm = normalizeName(name2);
+          if (!names.has(norm)) names.set(norm, /* @__PURE__ */ new Set());
+          names.get(norm).add(authority.id);
+        }
+      }
+      const orgs = new Map((feed?.organizations || []).map((o) => [o.id, o]));
+      const portal = (feed?.vacancies || []).flatMap((v) => {
+        const status = currentStatus(v);
+        if (["closed", "expired"].includes(status)) return [];
+        const org = orgs.get(v.organizationId);
+        if (!org) return [];
+        const exactIds = names.get(normalizeName(org.name)), institutionId = org.authorityId || (exactIds?.size === 1 ? [...exactIds][0] : null);
+        if (!institutionId || !visible.has(institutionId)) return [];
+        const regionId = inferRegion(v.location);
+        if (regionId && !journey.regionIds.includes(regionId)) return [];
+        if (org.relation === "territorial" && (!regionId || !journey.regionIds.includes(regionId))) return [];
+        return [{ ...v, id: "portal-" + v.id, sourceVacancyId: v.id, institutionId, employerName: org.name, organization: org, regionId, status, kind: "vacancy", source: { url: v.url, retrievedAt: v.lastSeenAt, publishedAt: v.publishedAt } }];
+      });
+      const combined = [...positions, ...portal, ...journey.customVacancies].filter((v) => visible.has(v.institutionId) && (!v.regionId || journey.regionIds.includes(v.regionId)));
+      const seen = /* @__PURE__ */ new Set();
+      return combined.filter((v) => {
+        if (!v?.id || typeof v.title !== "string" || !safeURL(v.url || v.source?.url) || seen.has(v.id)) return false;
+        seen.add(v.id);
+        return true;
+      }).map((v) => ({ ...v, employerName: v.employerName || lookup.get(v.institutionId)?.name || "" }));
+    }
+    function findSelectedVacancy() {
+      if (!journey.selectedVacancyId) return null;
+      const record = roleRecords().find((v) => v.id === journey.selectedVacancyId);
+      if (record) return record;
+      const snapshot = journey.selectedSnapshot;
+      return snapshot?.id === journey.selectedVacancyId && !(snapshot.organization?.relation === "territorial" && !journey.regionIds.includes(snapshot.regionId)) && visibleInstitutions().some((a) => a.id === snapshot.institutionId) && (!snapshot.regionId || journey.regionIds.includes(snapshot.regionId)) ? snapshot : null;
+    }
+    function roleStatus(v) {
+      if (v.userProvided) return L2("\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E \u0412\u0430\u043C\u0438 \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Added by you from an announcement", "\u7531\u4F60\u4ECE\u516C\u544A\u6DFB\u52A0");
+      if (v.kind === "position-profile" || v.status === "profile") return L2("\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \xB7 \u0443\u0447\u0435\u0431\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440", "Role profile \xB7 study material", "\u804C\u4F4D\u8BF4\u660E \xB7 \u5B66\u4E60\u6750\u6599");
+      if (v.kind === "archived-vacancy" || v.status === "archived") return L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \xB7 \u0443\u0447\u0435\u0431\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440", "Archived announcement \xB7 study material", "\u5386\u53F2\u516C\u544A \xB7 \u5B66\u4E60\u6750\u6599");
+      if (v.status === "accepting") return L2("\u041F\u0440\u0438\u0451\u043C \u0432 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0435 \u0441\u0440\u043E\u043A\u0438", "Within the stated application period", "\u5904\u4E8E\u6240\u5217\u7533\u8BF7\u671F");
+      if (v.status === "upcoming") return L2("\u041F\u0440\u0438\u0451\u043C \u0435\u0449\u0451 \u043D\u0435 \u043D\u0430\u0447\u0430\u043B\u0441\u044F", "Applications have not started", "\u5C1A\u672A\u5F00\u59CB\u63A5\u53D7\u7533\u8BF7");
+      return L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043F\u0440\u0438\u0451\u043C \u0443 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F", "Check recruitment with the employer", "\u8BF7\u5411\u96C7\u4E3B\u6838\u5B9E\u62DB\u8058\u72B6\u6001");
+    }
+    function vacancyCard(v) {
+      const selected = journey.selectedVacancyId === v.id, sourceDate = date2(v.source?.retrievedAt || v.lastSeenAt || v.sourceSnapshotAt);
+      const req = buildVacancyRequirements(v), requirementsCount = req.rows.filter((row) => row.assessable).length;
+      const fields = [
+        [L2("\u041C\u0435\u0441\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u044B", "Location", "\u5DE5\u4F5C\u5730\u70B9"), typeof v.location === "string" ? v.location : v.location?.text],
+        [L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F"), sourceDate],
+        [L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62"), date2(v.deadline)],
+        [L2("\u041E\u043F\u043B\u0430\u0442\u0430", "Pay", "\u62A5\u916C"), typeof v.salary === "string" ? v.salary : v.salary?.rawText]
+      ].filter(([, value]) => value);
+      return `<article class="seminar-vacancy ${selected ? "is-selected" : ""}" data-vacancy-id="${E3(v.id)}"><span class="seminar-vacancy-status">${roleStatus(v)}</span><h3 lang="ru">${E3(v.title)}</h3><p class="seminar-employer" lang="ru">${E3(v.employerName)}</p>${v.department ? `<p lang="ru">${E3(v.department)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl><p class="journey-requirement-count">${L2("\u041F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438", "Self-assessment items", "\u81EA\u8BC4\u9879\u76EE\u6570")}: ${requirementsCount}</p><a class="seminar-vacancy-link" href="${safeURL(v.url || v.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Open source", "\u6253\u5F00\u6765\u6E90")}${icon("external")}</a><button type="button" class="button ${selected ? "button-secondary" : "button-primary"} journey-card-button" data-select-vacancy="${E3(v.id)}">${selected ? L2("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440", "Continue assessment", "\u7EE7\u7EED\u5206\u6790") : L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess requirements", "\u5206\u6790\u804C\u4F4D\u8981\u6C42")}${icon("arrow-right")}</button></article>`;
+    }
+    function renderVacancies() {
+      const target = document.querySelector("#seminar-vacancies");
+      if (!target) return;
+      const ranked = rankings(), eligible = visibleInstitutions(), interestIds = /* @__PURE__ */ new Set([...(ranked?.recommendations || []).map((a) => a.id), ...journey.desiredIds]);
+      const all = roleRecords(), sourceCounts = /* @__PURE__ */ new Map();
+      for (const v of all) sourceCounts.set(v.institutionId, (sourceCounts.get(v.institutionId) || 0) + 1);
+      let list2 = all.filter((v) => (vacancyEmployer === "all" || vacancyEmployer ? vacancyEmployer === "all" || v.institutionId === vacancyEmployer : interestIds.has(v.institutionId)) && (!vacancyQuery || normalizeName([v.title, v.employerName, v.department].join(" ")).includes(normalizeName(vacancyQuery))));
+      list2.sort((a, b) => Number(b.currentRecruitmentVerified === true) - Number(a.currentRecruitmentVerified === true) || Number(journey.desiredIds.includes(b.institutionId)) - Number(journey.desiredIds.includes(a.institutionId)) || Number(a.kind === "position-profile") - Number(b.kind === "position-profile") || a.title.localeCompare(b.title, "ru"));
+      const employerOptions = eligible.filter((a) => interestIds.has(a.id) || sourceCounts.has(a.id) || a.id === vacancyEmployer).sort((a, b) => Number(interestIds.has(b.id)) - Number(interestIds.has(a.id)) || authorityName(a).localeCompare(authorityName(b), getLanguage()));
+      const chosenEmployer = byId().get(vacancyEmployer);
+      const employerUrl = safeURL(chosenEmployer?.governmentUrl || chosenEmployer?.descriptionSources?.[0]?.url);
+      target.innerHTML = `<p class="seminar-source-note" role="status">${E3(sourceNote())}</p>${positionsError ? `<p class="journey-source-status">${L2("\u0427\u0430\u0441\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C. \u0414\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B.", "Some sources could not be loaded. Available materials are still shown.", "\u90E8\u5206\u6765\u6E90\u672A\u80FD\u52A0\u8F7D\uFF0C\u5DF2\u52A0\u8F7D\u7684\u6750\u6599\u4ECD\u53EF\u67E5\u770B\u3002")} <button type="button" class="journey-text-button" id="journey-retry-positions">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button></p>` : ""}
+      <div class="journey-search-row"><label for="journey-vacancy-employer">${L2("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F", "Authority or employer", "\u673A\u5173\u6216\u673A\u6784")}<select id="journey-vacancy-employer"><option value="">${L2("\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0438 \u043C\u043E\u0438 \u0446\u0435\u043B\u0438", "Recommendations and my choices", "\u63A8\u8350\u4E0E\u6211\u7684\u610F\u5411")}</option><option value="all">${L2("\u0412\u0441\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439", "All employers in selected territories", "\u6240\u9009\u5730\u533A\u7684\u6240\u6709\u673A\u6784")}</option>${employerOptions.map((a) => `<option value="${E3(a.id)}">${E3(authorityName(a))}${sourceCounts.has(a.id) ? " \xB7 " + sourceCounts.get(a.id) : ""}</option>`).join("")}</select></label><label for="journey-vacancy-search">${L2("\u041F\u043E\u0438\u0441\u043A \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Find a role", "\u67E5\u627E\u804C\u4F4D")}<input type="search" id="journey-vacancy-search" value="${E3(vacancyQuery)}" autocomplete="off"></label></div>
+      <p class="journey-result-count">${L2("\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u0438 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u043E\u0432", "Roles and source materials found", "\u627E\u5230\u7684\u804C\u4F4D\u548C\u8D44\u6599")}: ${number(list2.length)}</p><div class="seminar-vacancy-grid">${list2.slice(0, vacancyLimit).map(vacancyCard).join("")}</div>${!list2.length ? `<p class="seminar-vacancy-empty">${positionsLoading ? L2("\u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B\u2026", "Finding materials\u2026", "\u6B63\u5728\u67E5\u627E\u6750\u6599\u2026\u2026") : L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u0445 \u043D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0435\u0433\u043E \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0434\u0435\u043B \u043E\u0440\u0433\u0430\u043D\u0430 \u0438\u043B\u0438 \u043F\u043E\u0440\u0442\u0430\u043B \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430; \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043C\u043E\u0436\u043D\u043E \u0434\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043D\u0438\u0436\u0435.", "The saved sources contain no matching announcement. Check the employer\u2019s careers page or the official portal; you can add a selected announcement below.", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u6CA1\u6709\u5339\u914D\u516C\u544A\u3002\u8BF7\u67E5\u770B\u673A\u6784\u62DB\u8058\u9875\u9762\u6216\u5B98\u65B9\u95E8\u6237\uFF0C\u4E5F\u53EF\u5728\u4E0B\u65B9\u6DFB\u52A0\u9009\u5B9A\u516C\u544A\u3002")}</p>` : ""}
+      ${list2.length > vacancyLimit ? `<button type="button" class="button button-secondary journey-more" id="journey-more-vacancies">${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button>` : ""}
+      <div class="journey-source-links">${employerUrl ? `<a class="button button-secondary" href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "Selected employer\u2019s website", "\u6240\u9009\u673A\u6784\u7F51\u7AD9")}${icon("external")}</a>` : ""}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer" class="button button-secondary button-large seminar-portal-link">${L2("\u041F\u043E\u0438\u0441\u043A \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Search the official civil service portal", "\u5728\u516C\u52A1\u5458\u5B98\u65B9\u95E8\u6237\u641C\u7D22\u804C\u4F4D")}${icon("external")}</a></div>${manualVacancyForm(eligible)}`;
+      target.querySelector("#journey-vacancy-employer").value = vacancyEmployer;
+      target.querySelector("#journey-vacancy-employer").onchange = (event) => {
+        vacancyEmployer = event.target.value;
+        vacancyLimit = 12;
+        renderVacancies();
+      };
+      target.querySelector("#journey-vacancy-search").oninput = (event) => {
+        const cursor = event.target.selectionStart;
+        vacancyQuery = event.target.value;
+        vacancyLimit = 12;
+        renderVacancies();
+        const input = document.querySelector("#journey-vacancy-search");
+        input.focus();
+        try {
+          input.setSelectionRange(cursor, cursor);
+        } catch {
+        }
+      };
+      target.querySelector("#journey-more-vacancies")?.addEventListener("click", () => {
+        vacancyLimit += 12;
+        renderVacancies();
+      });
+      target.querySelector("#journey-retry-positions")?.addEventListener("click", () => {
+        positionsLoaded = false;
+        void loadVacancies();
+      });
+      target.querySelectorAll("[data-select-vacancy]").forEach((button) => button.onclick = () => {
+        const vacancy = roleRecords().find((v) => v.id === button.dataset.selectVacancy);
+        if (!vacancy) return;
+        journey.selectedVacancyId = vacancy.id;
+        const { fullDescription, ...snapshot } = vacancy;
+        journey.selectedSnapshot = snapshot;
+        if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
+        save();
+        switchStage("requirements");
+      });
+      bindManualVacancy(target);
+    }
+    function manualVacancyForm(eligible) {
+      const draft = isRecord2(journey.manualDraft) ? journey.manualDraft : {};
+      const chosen = eligible.find((a) => a.id === draft.employer) || eligible.find((a) => a.id === vacancyEmployer) || eligible.find((a) => a.id === journey.desiredIds[0]);
+      const options = [...eligible].sort((a, b) => authorityName(a).localeCompare(authorityName(b), getLanguage()));
+      return `<details class="journey-manual-source" ${draft.open ? "open" : ""}><summary>${L2("\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Add a selected announcement", "\u6DFB\u52A0\u9009\u5B9A\u516C\u544A")}</summary><form id="journey-manual-vacancy"><p>${L2("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u043F\u0435\u0440\u0435\u043D\u0435\u0441\u0438\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u043A\u0438. \u041A\u0430\u0436\u0434\u044B\u0439 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0443\u043D\u043A\u0442 \u043D\u0430\u0447\u0438\u043D\u0430\u0439\u0442\u0435 \u0441 \u043D\u043E\u0432\u043E\u0439 \u0441\u0442\u0440\u043E\u043A\u0438; \u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0439\u0442\u0435 \u0432\u043C\u0435\u0441\u0442\u0435.", "Open the official source and copy the exact wording. Start each separate item on a new line; keep alternative conditions together.", "\u8BF7\u6253\u5F00\u5B98\u65B9\u6765\u6E90\u5E76\u590D\u5236\u51C6\u786E\u8868\u8FF0\u3002\u6BCF\u4E2A\u72EC\u7ACB\u9879\u76EE\u53E6\u8D77\u4E00\u884C\uFF0C\u66FF\u4EE3\u6027\u6761\u4EF6\u987B\u4FDD\u7559\u5728\u540C\u4E00\u9879\u4E2D\u3002")}</p><div class="journey-search-row"><label>${L2("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F", "Authority or employer", "\u673A\u5173\u6216\u673A\u6784")}<select name="employer" required>${options.map((a) => `<option value="${E3(a.id)}" ${a.id === chosen?.id ? "selected" : ""}>${E3(authorityName(a))}</option>`).join("")}</select></label><label>${L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role title", "\u804C\u4F4D\u540D\u79F0")}<input name="title" required maxlength="500" value="${E3(safeText(draft.title, 500))}"></label></div><label class="journey-field">${L2("\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source URL", "\u6765\u6E90\u94FE\u63A5")}<input type="url" name="url" required placeholder="https://" maxlength="2000" value="${E3(safeText(draft.url, 2e3))}"></label><div class="journey-manual-grid">${["education", "experience", "knowledge", "skills"].map((id) => `<label>${groupLabel(id)}<textarea name="${id}" rows="4" maxlength="20000">${E3(safeText(draft[id]))}</textarea></label>`).join("")}</div><p class="journey-form-error" id="journey-manual-error" role="alert"></p><button class="button button-primary" type="submit">${L2("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438 \u0440\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C", "Save and assess", "\u4FDD\u5B58\u5E76\u5206\u6790")}${icon("arrow-right")}</button></form></details>`;
+    }
+    function captureManualDraft(form) {
+      journey.manualDraft = Object.fromEntries(["employer", "title", "url", "education", "experience", "knowledge", "skills"].map((name2) => [name2, safeText(form.elements[name2]?.value, name2 === "title" ? 500 : name2 === "url" ? 2e3 : name2 === "employer" ? 200 : 2e4)]));
+      journey.manualDraft.open = form.closest("details")?.open === true;
+      dirty = true;
+      if (manualSaveTimer) clearTimeout(manualSaveTimer);
+      manualSaveTimer = setTimeout(() => {
+        manualSaveTimer = null;
+        if (!__careerHost.destroyed) save();
+      }, 500);
+    }
+    function bindManualVacancy(target) {
+      const draftForm = target.querySelector("#journey-manual-vacancy");
+      draftForm?.addEventListener("input", () => captureManualDraft(draftForm));
+      draftForm?.addEventListener("change", () => captureManualDraft(draftForm));
+      draftForm?.closest("details")?.addEventListener("toggle", () => {
+        if (draftForm.isConnected) captureManualDraft(draftForm);
+      });
+      target.querySelector("#journey-manual-vacancy")?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = event.currentTarget, values = new FormData(form), authority = byId().get(String(values.get("employer")));
+        const title = safeText(values.get("title"), 500), url = safeText(values.get("url"), 2e3);
+        const requirements = ["education", "experience", "knowledge", "skills"].flatMap((category) => safeText(values.get(category)).split(/\n+/).map((text3) => text3.trim()).filter(Boolean).map((text3, index) => ({ id: `${category}-${index + 1}`, category, sourceText: text3, requirementState: requirementStateFromText(text3), selfAssessmentEligible: true, sourceLocator: L2("\u041F\u0435\u0440\u0435\u043D\u0435\u0441\u0435\u043D\u043E \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u043C \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Copied from the announcement by the student", "\u7531\u5B66\u751F\u4ECE\u516C\u544A\u590D\u5236") })));
+        const error = target.querySelector("#journey-manual-error");
+        if (!title || !safeURL(url) || !authority || !requirements.length) {
+          error.textContent = L2("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C, \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0441\u0441\u044B\u043B\u043A\u0443 \u0438 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0435 \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430.", "Enter a role title, a valid source URL and at least one requirement from the source.", "\u8BF7\u586B\u5199\u804C\u4F4D\u540D\u79F0\u3001\u6709\u6548\u6765\u6E90\u94FE\u63A5\u53CA\u81F3\u5C11\u4E00\u9879\u539F\u6587\u8981\u6C42\u3002");
+          return;
+        }
+        const id = "student-source-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9);
+        const vacancy = { id, institutionId: authority.id, employerName: authority.name, title, url, regionId: authority.regionId || null, userProvided: true, kind: "vacancy", status: "unconfirmed", source: { url, retrievedAt: (/* @__PURE__ */ new Date()).toISOString(), format: "student-transcription" }, requirements, coverage: { requirements: "student-transcription" } };
+        journey.customVacancies = [...journey.customVacancies, vacancy].slice(-20);
+        journey.selectedVacancyId = id;
+        journey.selectedSnapshot = vacancy;
+        journey.assessments[id] = {};
+        journey.manualDraft = {};
+        save();
+        switchStage("requirements");
+      });
+    }
+    function assessment(vacancy) {
+      const requirements = buildVacancyRequirements(vacancy);
+      const summary = summarizeVacancyAssessment(requirements, journey.assessments[vacancy.id] || {});
+      return { requirements, summary };
+    }
+    function assessmentProgress(summary) {
+      return L2(`\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043E ${summary.assessed} \u0438\u0437 ${summary.total}. \u0421\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E: ${summary.met}; \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E: ${summary.gap}; \u043D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E: ${summary.unassessed}.`, `Assessed ${summary.assessed} of ${summary.total}. Met: ${summary.met}; not yet met: ${summary.gap}; unassessed: ${summary.unassessed}.`, `\u5DF2\u8BC4\u4F30 ${summary.assessed} / ${summary.total}\u3002\u5DF2\u7B26\u5408\uFF1A${summary.met}\uFF1B\u5C1A\u672A\u7B26\u5408\uFF1A${summary.gap}\uFF1B\u672A\u8BC4\u4F30\uFF1A${summary.unassessed}\u3002`);
+    }
+    function missingSourceNote(requirements) {
+      if (!requirements.missingCategories.length) return "";
+      return `<p class="journey-source-status">${L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u043E\u043C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E", "Not separately available in the saved source", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u672A\u5355\u72EC\u5217\u660E")}: ${requirements.missingCategories.map(groupLabel).join(", ")}. ${L2("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0440\u0438\u0433\u0438\u043D\u0430\u043B; \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u0439 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044F \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F.", "Check the original; missing information does not mean there is no requirement.", "\u8BF7\u6838\u5BF9\u539F\u6587\uFF1B\u6CA1\u6709\u4FE1\u606F\u4E0D\u4EE3\u8868\u6CA1\u6709\u76F8\u5173\u8981\u6C42\u3002")}</p>`;
+    }
+    function sourceContextLabel(row) {
+      if (row.requirementState === "explicitly_not_required") return L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u0440\u044F\u043C\u043E \u0443\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435 \u044D\u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "The source explicitly states this is not required", "\u6765\u6E90\u660E\u786E\u8BF4\u660E\u4E0D\u4F5C\u6B64\u8981\u6C42");
+      if (row.requirementState === "source_not_stated") return L2("\u0412 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Not stated in the source", "\u6765\u6E90\u672A\u8BF4\u660E");
+      if (row.requirementState === "preferred") return L2("\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435", "Preferred condition", "\u4F18\u5148\u6761\u4EF6");
+      return L2("\u0423\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source context", "\u6765\u6E90\u8BF4\u660E");
+    }
+    function requirementSourceContext(row, mainSource) {
+      const asText = (value) => Array.isArray(value) ? value.filter((item) => typeof item === "string").join("; ") : typeof value === "string" ? value : "";
+      const headings = [...new Set([row.sourceGroup, row.sourceHeading, row.sourceSubheadingAsPublished].map(asText).filter(Boolean))];
+      const notes = [...new Set([row.interpretationNote, row.assessmentNote].map(asText).filter(Boolean))];
+      const locator = asText(row.sourceLocator);
+      return `${headings.length ? `<p class="journey-source-heading" lang="ru">${headings.map(E3).join(" \xB7 ")}</p>` : ""}${notes.map((note) => `<p class="journey-source-note"><strong>${L2("\u041F\u043E\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u043A \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Source note", "\u6765\u6E90\u8BF4\u660E")}:</strong> <span lang="ru">${E3(note)}</span></p>`).join("")}${locator ? `<small class="journey-source-locator" lang="ru">${E3(locator)}</small>` : ""}${safeURL(row.evidenceSourceUrl) && row.evidenceSourceUrl !== mainSource ? `<a class="journey-source-locator" href="${safeURL(row.evidenceSourceUrl)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u044D\u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Source of this requirement", "\u6B64\u9879\u8981\u6C42\u7684\u6765\u6E90")}</a>` : ""}`;
+    }
+    function requirementRow(row, index, mainSource) {
+      const context = requirementSourceContext(row, mainSource);
+      if (!row.assessable) return `<div class="journey-source-context"><span>${sourceContextLabel(row)}</span>${row.text ? `<p lang="ru">${E3(row.text)}</p>` : ""}${context}</div>`;
+      return `<fieldset class="journey-requirement" data-requirement-row="${E3(row.id)}" data-status="${row.status || "unassessed"}"><legend><span class="journey-requirement-index">${index}</span><span lang="ru">${E3(row.text)}</span></legend>${context}<div class="journey-assessment-options">${["met", "gap"].map((value) => `<label class="journey-answer ${value}"><input type="radio" name="assessment-${E3(row.id)}" data-requirement-key="${E3(row.id)}" value="${value}" ${row.status === value ? "checked" : ""}><span aria-hidden="true">${value === "met" ? "\u2713" : "\xD7"}</span><strong>${value === "met" ? L2("\u0423\u0436\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Already meet it", "\u5DF2\u7B26\u5408") : row.assessmentKind === "formal" ? L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Not yet met", "\u6682\u672A\u7B26\u5408") : L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C", "Need to develop", "\u9700\u8981\u63D0\u5347")}</strong></label>`).join("")}</div></fieldset>`;
+    }
+    function renderRequirements(result, target) {
+      const vacancy = findSelectedVacancy();
+      if (!vacancy) {
+        renderMissingSelection(target);
         return;
       }
-      root.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="seminar-back-profile">${I2("arrow-left")}${L2("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u043C\u043E\u0435\u043C\u0443 \u043F\u0440\u043E\u0444\u0438\u043B\u044E", "Back to my profile", "\u8FD4\u56DE\u6211\u7684\u753B\u50CF")}</button><h1>${L2("\u0412\u0430\u0448\u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B", "Your career directions", "\u4F60\u7684\u804C\u4E1A\u65B9\u5411")}</h1><p>${L2("\u041F\u043E \u0412\u0430\u0448\u0435\u043C\u0443 \u043F\u0440\u043E\u0444\u0438\u043B\u044E \u043F\u043E\u0434\u043E\u0431\u0440\u0430\u043D\u044B \u0442\u0440\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0432\u043B\u0430\u0441\u0442\u0438. \u0421\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0438\u0445 \u0437\u0430\u0434\u0430\u0447\u0438 \u0441\u043E \u0441\u0432\u043E\u0438\u043C\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430\u043C\u0438, \u0437\u0430\u0442\u0435\u043C \u0438\u0437\u0443\u0447\u0438\u0442\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438.", "Three authorities have been selected from your profile. Compare their activities with your interests, then explore the vacancies.", "\u6839\u636E\u4F60\u7684\u753B\u50CF\u63A8\u8350\u4E86\u4E09\u4E2A\u653F\u5E9C\u673A\u5173\u3002\u8BF7\u5C06\u5176\u804C\u8D23\u4E0E\u4F60\u7684\u5174\u8DA3\u8FDB\u884C\u6BD4\u8F83\uFF0C\u518D\u4E86\u89E3\u76F8\u5173\u804C\u4F4D\u3002")}</p></header><div class="seminar-authorities">${institutions.map((authority, index) => authorityCard(authority, index, result)).join("")}</div><section class="seminar-vacancy-section"><h2>${L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Explore the vacancies", "\u4E86\u89E3\u804C\u4F4D")}</h2><p class="seminar-task">${L2("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0434\u0432\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E \u0438 \u0441\u0442\u0430\u0436\u0443. \u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435, \u0447\u0442\u043E \u0412\u0430\u043C \u043D\u0443\u0436\u043D\u043E \u043E\u0441\u0432\u043E\u0438\u0442\u044C \u0434\u043B\u044F \u043F\u043E\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u044F \u043D\u0430 \u0442\u0430\u043A\u0443\u044E \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C.", "Open two relevant vacancies and compare their duties, education and experience requirements. Identify what you need to learn to qualify for such a position.", "\u6253\u5F00\u4E24\u4E2A\u76F8\u5173\u804C\u4F4D\uFF0C\u6BD4\u8F83\u804C\u8D23\u3001\u5B66\u5386\u4E0E\u5DE5\u4F5C\u7ECF\u5386\u8981\u6C42\uFF0C\u5E76\u601D\u8003\u5165\u804C\u524D\u9700\u8981\u638C\u63E1\u54EA\u4E9B\u77E5\u8BC6\u3002")}</p><div id="seminar-vacancies"></div></section><div class="seminar-next"><p>${L2("\u041F\u043E\u0441\u043B\u0435 \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043F\u0435\u0440\u0435\u0439\u0434\u0438\u0442\u0435 \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439 \u043E \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "After exploring the vacancies, continue to the public-service knowledge test.", "\u4E86\u89E3\u804C\u4F4D\u540E\uFF0C\u8BF7\u7EE7\u7EED\u5B8C\u6210\u516C\u52A1\u77E5\u8BC6\u6D4B\u8BD5\u3002")}</p><button type="button" class="button button-primary button-large" id="seminar-open-knowledge">${L2("\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0442\u0435\u0441\u0442\u0443", "Continue to the test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}${I2("arrow-right")}</button></div>`;
-      root.querySelector("#seminar-back-profile").onclick = () => switchStage("profile");
-      root.querySelector("#seminar-open-knowledge").onclick = async () => {
-        if (opening) return;
+      const { requirements, summary } = assessment(vacancy);
+      let index = 0;
+      const sourceURL = safeURL(vacancy.url || vacancy.source?.url);
+      const duties = typeof vacancy.duties === "string" ? vacancy.duties : Array.isArray(vacancy.duties) ? vacancy.duties.map((item) => typeof item === "string" ? item : item.sourceText || item.text || "").filter(Boolean).join("\n") : "";
+      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-vacancies">${icon("arrow-left")}${L2("\u041A \u0432\u044B\u0431\u043E\u0440\u0443 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Back to role selection", "\u8FD4\u56DE\u804C\u4F4D\u9009\u62E9")}</button><span class="journey-kicker">${roleStatus(vacancy)}</span><h1>${L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Selected role requirements", "\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</h1><h2 lang="ru">${E3(vacancy.title)}</h2><p lang="ru">${E3(vacancy.employerName)}</p>${vacancy.department ? `<p lang="ru">${E3(vacancy.department)}</p>` : ""}<a class="seminar-vacancy-link" href="${sourceURL}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a><p class="journey-muted">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F")}: ${date2(vacancy.source?.retrievedAt || vacancy.lastSeenAt || vacancy.sourceSnapshotAt) || L2("\u0434\u0430\u0442\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u0430", "date not stated", "\u672A\u6CE8\u660E\u65E5\u671F")}</p></header>
+      ${duties ? `<details class="journey-duties"><summary>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u043D\u044B\u0435 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Duties", "\u5DE5\u4F5C\u804C\u8D23")}</summary><p lang="ru">${E3(duties)}</p></details>` : ""}
+      <p class="journey-assessment-intro">${L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u043A\u0430\u0436\u0434\u044B\u0439 \u043F\u0443\u043D\u043A\u0442. \u0417\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C, \u0432\u043E\u0439\u0434\u0443\u0442 \u0432 \u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F; \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436 \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E.", "Assess every item. Knowledge and skills to develop will enter your development plan; education and experience will be shown separately.", "\u8BF7\u9010\u9879\u8BC4\u4F30\u3002\u9700\u8981\u638C\u63E1\u7684\u77E5\u8BC6\u548C\u6280\u80FD\u5C06\u52A0\u5165\u53D1\u5C55\u8BA1\u5212\uFF1B\u5B66\u5386\u4E0E\u5DE5\u4F5C\u7ECF\u5386\u5C06\u5355\u72EC\u663E\u793A\u3002")}</p>${missingSourceNote(requirements)}${!summary.total ? `<p class="journey-source-status">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u043D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B.", "This card has no assessable items. Open the source and add its exact requirements, or choose another material.", "\u6B64\u5361\u7247\u6CA1\u6709\u53EF\u8BC4\u4F30\u9879\u76EE\u3002\u8BF7\u6253\u5F00\u6765\u6E90\u5E76\u6DFB\u52A0\u539F\u6587\u8981\u6C42\uFF0C\u6216\u9009\u62E9\u5176\u4ED6\u6750\u6599\u3002")}</p>` : ""}${requirements.missingCategories.length ? `<button type="button" class="button button-secondary" id="journey-supplement-requirements">${L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u044C \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Add requirements from the source", "\u4ECE\u6765\u6E90\u8865\u5145\u8981\u6C42")}</button>` : ""}
+      <div class="journey-assessment-progress"><p id="journey-assessment-state" role="status" aria-live="polite">${E3(assessmentProgress(summary))}</p><progress id="journey-assessment-progress" max="${Math.max(1, summary.total)}" value="${summary.assessed}" aria-label="${E3(L2("\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assessed requirements", "\u5DF2\u8BC4\u4F30\u8981\u6C42"))}"></progress></div>
+      <div class="journey-requirements">${summary.groups.filter((group) => group.rows.length).map((group) => `<section class="journey-requirement-group" aria-labelledby="requirement-heading-${group.id}"><h2 id="requirement-heading-${group.id}">${groupLabel(group.id)}</h2>${group.rows.map((row) => requirementRow(row, row.assessable ? ++index : 0, vacancy.url || vacancy.source?.url)).join("")}</section>`).join("")}</div>
+      <div class="seminar-next"><p>${L2("\u041E\u0442\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438. \u0418\u0445 \u043C\u043E\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C, \u0432\u0435\u0440\u043D\u0443\u0432\u0448\u0438\u0441\u044C \u043A \u044D\u0442\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your answers are saved automatically. Return to this role to revise them.", "\u56DE\u7B54\u4F1A\u81EA\u52A8\u4FDD\u5B58\uFF0C\u8FD4\u56DE\u8BE5\u804C\u4F4D\u5373\u53EF\u4FEE\u6539\u3002")}</p><button type="button" class="button button-primary button-large" id="journey-open-plan">${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "View my development plan", "\u67E5\u770B\u53D1\u5C55\u8BA1\u5212")}${icon("arrow-right")}</button></div>`;
+      target.querySelector("#journey-back-vacancies").onclick = () => switchStage("recommendations");
+      target.querySelector("#journey-open-plan").onclick = () => switchStage("summary");
+      target.querySelector("#journey-supplement-requirements")?.addEventListener("click", () => {
+        vacancyEmployer = vacancy.institutionId;
+        switchStage("recommendations");
+        const details = document.querySelector(".journey-manual-source"), form = document.querySelector("#journey-manual-vacancy");
+        if (!details || !form) return;
+        details.open = true;
+        form.elements.title.value = vacancy.title;
+        form.elements.url.value = vacancy.url || vacancy.source?.url || "";
+        for (const category of ["education", "experience", "knowledge", "skills"]) form.elements[category].value = requirements.rows.filter((row) => row.category === category && row.text).map((row) => row.text).join("\n");
+        captureManualDraft(form);
+        details.scrollIntoView({ block: "start", behavior: "instant" });
+        form.elements.knowledge.focus({ preventScroll: true });
+      });
+      target.querySelectorAll("[data-requirement-key]").forEach((input) => input.addEventListener("change", (event) => {
+        const row = requirements.rows.find((item) => item.id === event.target.dataset.requirementKey), value = event.target.value;
+        if (!row?.assessable || !statuses.has(value)) return;
+        if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
+        journey.assessments[vacancy.id][row.id] = { status: value, signature: row.signature };
+        save();
+        event.target.closest("[data-requirement-row]").dataset.status = value;
+        const updated = summarizeVacancyAssessment(requirements, journey.assessments[vacancy.id]);
+        target.querySelector("#journey-assessment-state").textContent = assessmentProgress(updated);
+        target.querySelector("#journey-assessment-progress").value = updated.assessed;
+      }));
+    }
+    function renderMissingSelection(target) {
+      target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Your development plan", "\u4F60\u7684\u53D1\u5C55\u8BA1\u5212")}</h1><p>${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0438 \u043E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u0435\u0451 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0448\u0430\u0433\u0438 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Choose a role and assess its requirements to see your specific preparation steps.", "\u8BF7\u9009\u62E9\u804C\u4F4D\u5E76\u8BC4\u4F30\u8981\u6C42\uFF0C\u4EE5\u67E5\u770B\u5177\u4F53\u51C6\u5907\u6B65\u9AA4\u3002")}</p></header><button type="button" class="button button-primary" id="journey-choose-role">${L2("\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "Choose a role", "\u9009\u62E9\u804C\u4F4D")}${icon("arrow-right")}</button>`;
+      target.querySelector("#journey-choose-role").onclick = () => switchStage("recommendations");
+    }
+    function coverageChart(summary) {
+      const domainRows = summary.domainRadarAvailable ? summary.domains : [];
+      const groups = summary.groups.filter((group) => group.total > 0);
+      const radarRows = domainRows.length ? domainRows : groups.filter((group) => !["eligibility", "other"].includes(group.id));
+      const radar = requirementRadar(radarRows);
+      const heading = domainRows.length ? L2("\u041C\u043E\u0438 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0438 \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "My competencies and role requirements", "\u6211\u7684\u80FD\u529B\u4E0E\u804C\u4F4D\u8981\u6C42") : L2("\u041C\u043E\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u043E \u0433\u0440\u0443\u043F\u043F\u0430\u043C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "My self-assessment by requirement group", "\u6309\u8981\u6C42\u7C7B\u522B\u8FDB\u884C\u81EA\u8BC4");
+      return `<section class="journey-panel" aria-labelledby="journey-target-title"><h2 id="journey-target-title">${heading}</h2><p class="journey-muted">${L2("\u0414\u043E\u043B\u044F \u043F\u0443\u043D\u043A\u0442\u043E\u0432, \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u0412\u044B \u043E\u0442\u043C\u0435\u0442\u0438\u043B\u0438 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435. \u0426\u0435\u043B\u044C \u2014 100% \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u043D\u044B\u0445 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u043A\u0430\u0436\u0434\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u044B. \u041D\u0435\u043E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u043F\u0443\u043D\u043A\u0442\u044B \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E.", "The share of listed items you marked as met. The target is 100% of the listed requirements in each group. Unassessed items are shown separately.", "\u663E\u793A\u4F60\u6807\u8BB0\u4E3A\u5DF2\u7B26\u5408\u7684\u9879\u76EE\u6BD4\u4F8B\uFF0C\u76EE\u6807\u662F\u6BCF\u7C7B\u5DF2\u5217\u8981\u6C42\u7684100%\u3002\u672A\u8BC4\u4F30\u9879\u76EE\u5355\u72EC\u663E\u793A\u3002")}</p>${radar ? `<div class="journey-target-layout"><div><div class="journey-chart-key"><span class="journey-key-current">${L2("\u041C\u043E\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430", "My self-assessment", "\u6211\u7684\u81EA\u8BC4")}</span><span class="journey-key-target">${L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role requirements", "\u804C\u4F4D\u8981\u6C42")}</span></div>${radar}</div><div><ol class="journey-radar-labels">${radarRows.map((row) => `<li><strong>${groupLabel(row.id)}</strong><span>${row.met}/${row.total} \xB7 ${number(100 * row.met / row.total)}%</span></li>`).join("")}</ol>${requirementBars(radarRows)}</div></div>` : requirementBars(groups)}
+      ${radar && groups.some((group) => !radarRows.includes(group)) ? requirementBars(groups.filter((group) => !radarRows.some((row) => row.id === group.id))) : ""}
+      <p class="journey-method-note">${L2("\u041F\u0440\u043E\u0446\u0435\u043D\u0442\u044B \u043E\u0442\u0440\u0430\u0436\u0430\u044E\u0442 \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0443 \u043F\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u043C \u043F\u0443\u043D\u043A\u0442\u0430\u043C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430. \u041F\u043E\u043B\u043D\u043E\u0442\u0430 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u0438 \u0444\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u043F\u043E \u043E\u0440\u0438\u0433\u0438\u043D\u0430\u043B\u0443 \u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u043C.", "Percentages describe self-reports against the saved source items. Check the original for the complete requirements; the employer verifies actual eligibility.", "\u767E\u5206\u6BD4\u53CD\u6620\u5BF9\u5DF2\u4FDD\u5B58\u6765\u6E90\u9879\u76EE\u7684\u81EA\u8BC4\u3002\u5B8C\u6574\u8981\u6C42\u5E94\u6838\u5BF9\u539F\u6587\uFF0C\u5B9E\u9645\u8D44\u683C\u7531\u96C7\u4E3B\u786E\u8BA4\u3002")}</p></section>`;
+    }
+    function developmentList(rows, heading, kind) {
+      if (!rows.length) return "";
+      return `<section class="journey-panel"><h2>${heading}</h2><ol class="journey-gap-list">${rows.map((row) => `<li><strong lang="ru">${E3(row.text)}</strong><p>${kind === "formal" ? L2("\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435, \u043A\u0430\u043A\u043E\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442, \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u043E\u043F\u044B\u0442 \u043D\u0443\u0436\u0435\u043D \u0434\u043B\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u044F.", "Identify the document, qualification or experience needed to meet this condition.", "\u660E\u786E\u6EE1\u8DB3\u8BE5\u6761\u4EF6\u6240\u9700\u7684\u6587\u4EF6\u3001\u5B66\u5386\u6216\u5DE5\u4F5C\u7ECF\u9A8C\u3002") : row.category === "knowledge" ? L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B \u0438 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u044C\u0442\u0435 \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u0439 \u0440\u0430\u0437\u0431\u043E\u0440 \u0435\u0433\u043E \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0432 \u0440\u0430\u0431\u043E\u0442\u0435.", "Study the named material and prepare a short example of how it applies to the work.", "\u5B66\u4E60\u6240\u5217\u6750\u6599\uFF0C\u5E76\u51C6\u5907\u4E00\u4E2A\u5728\u5DE5\u4F5C\u4E2D\u5E94\u7528\u7684\u7B80\u77ED\u793A\u4F8B\u3002") : row.category === "skills" ? L2("\u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0437\u0430\u0434\u0430\u043D\u0438\u0435 \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0432 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E.", "Complete a small practical task and keep the result in your portfolio.", "\u5B8C\u6210\u4E00\u9879\u5C0F\u578B\u5B9E\u8DF5\u4EFB\u52A1\uFF0C\u5E76\u5C06\u6210\u679C\u4FDD\u5B58\u5230\u4F5C\u54C1\u96C6\u4E2D\u3002") : L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u0438 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Review the combined condition in the source and identify your first preparation step.", "\u6838\u5BF9\u539F\u6587\u4E2D\u7684\u7EFC\u5408\u6761\u4EF6\uFF0C\u5E76\u786E\u5B9A\u51C6\u5907\u7684\u7B2C\u4E00\u6B65\u3002")}</p>${row.sourceLocator ? `<small lang="ru">${E3(row.sourceLocator)}</small>` : ""}</li>`).join("")}</ol></section>`;
+    }
+    function renderSummary(result, target) {
+      const vacancy = findSelectedVacancy();
+      if (!vacancy) {
+        renderMissingSelection(target);
+        return;
+      }
+      const { requirements, summary } = assessment(vacancy), ranked = rankings(), complete = summary.total > 0 && summary.unassessed === 0;
+      const selectedAuthority = ranked?.ranked.find((a) => a.id === vacancy.institutionId) || byId().get(vacancy.institutionId);
+      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-requirements">${icon("arrow-left")}${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u0442\u043A\u0438", "Edit my assessment", "\u4FEE\u6539\u81EA\u8BC4")}</button><h1>${L2("\u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Your development plan", "\u4F60\u7684\u53D1\u5C55\u8BA1\u5212")}</h1><p>${L2("\u0421\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0432\u043E\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u0441 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439 \u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u0434\u043B\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 \u043A \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Compare your interests with your preferred work and choose concrete actions to prepare for the role.", "\u5C06\u5174\u8DA3\u4E0E\u610F\u5411\u5DE5\u4F5C\u8FDB\u884C\u6BD4\u8F83\uFF0C\u5E76\u9009\u62E9\u4E3A\u804C\u4F4D\u505A\u51C6\u5907\u7684\u5177\u4F53\u884C\u52A8\u3002")}</p></header>
+      <section class="journey-goal-card"><span class="journey-kicker">${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "Selected role", "\u6240\u9009\u804C\u4F4D")}</span><h2 lang="ru">${E3(vacancy.title)}</h2><p>${E3(selectedAuthority ? authorityName(selectedAuthority) : vacancy.employerName)}</p><p class="journey-muted">${roleStatus(vacancy)}</p><a class="seminar-vacancy-link" href="${safeURL(vacancy.url || vacancy.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a></section>
+      <div class="journey-summary-counts"><div><strong>${summary.met}</strong><span>${L2("\u0421\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Already met", "\u5DF2\u7B26\u5408")}</span></div><div><strong>${summary.gap}</strong><span>${L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C\u0441\u044F", "To prepare", "\u9700\u8981\u51C6\u5907")}</span></div><div><strong>${summary.unassessed}</strong><span>${L2("\u041D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E", "Unassessed", "\u672A\u8BC4\u4F30")}</span></div></div>
+      ${personalProfile(result)}${ranked ? wishDevelopment(ranked) : ""}${coverageChart(summary)}${missingSourceNote(requirements)}
+      ${developmentList(summary.developmentItems, L2("\u041A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0437\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Specific knowledge and skills to develop", "\u9700\u8981\u63D0\u5347\u7684\u5177\u4F53\u77E5\u8BC6\u4E0E\u6280\u80FD"), "skills")}
+      ${developmentList(summary.formalGaps, L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u043E\u043F\u044B\u0442 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0434\u043E\u043F\u0443\u0441\u043A\u0430", "Education, experience and eligibility", "\u5B66\u5386\u3001\u7ECF\u5386\u4E0E\u8D44\u683C\u6761\u4EF6"), "formal")}
+      ${developmentList(summary.otherGaps, L2("\u0414\u0440\u0443\u0433\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u0432\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u044C", "Other requirements to meet", "\u5C1A\u9700\u6EE1\u8DB3\u7684\u5176\u4ED6\u8981\u6C42"), "other")}
+      ${!summary.gap && summary.total && complete ? `<p class="journey-positive">${L2("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u043C\u0435\u0442\u043A\u0430\u043C \u0432\u0441\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u044B. \u041F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u044C\u0442\u0435 \u043F\u0440\u0438\u043C\u0435\u0440\u044B \u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u043C\u0438 \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u044D\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C.", "You marked every available requirement as met. Prepare examples and documents to support your assessment.", "\u4F60\u5C06\u6240\u6709\u53EF\u8BC4\u4F30\u8981\u6C42\u6807\u8BB0\u4E3A\u5DF2\u7B26\u5408\u3002\u8BF7\u51C6\u5907\u793A\u4F8B\u548C\u6587\u4EF6\u4EE5\u652F\u6301\u81EA\u8BC4\u3002")}</p>` : ""}
+      ${summary.unassessed ? `<section class="journey-panel"><h2>${L2("\u041E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Still to assess", "\u4ECD\u9700\u8BC4\u4F30")}</h2><p>${L2(`\u0415\u0449\u0451 ${summary.unassessed} \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F \u0431\u0435\u0437 \u043E\u0442\u043C\u0435\u0442\u043A\u0438. \u041E\u043D\u0438 \u043D\u0435 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u044B \u0432 \u0441\u043F\u0438\u0441\u043E\u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0445 \u043F\u0440\u043E\u0431\u0435\u043B\u043E\u0432.`, `Another ${summary.unassessed} items are unassessed. They are not included in your identified gaps.`, `\u4ECD\u6709 ${summary.unassessed} \u9879\u5C1A\u672A\u8BC4\u4F30\uFF0C\u5B83\u4EEC\u672A\u88AB\u8BA1\u5165\u5DF2\u8BC6\u522B\u5DEE\u8DDD\u3002`)}</p><button type="button" class="button button-secondary" id="journey-complete-checklist">${L2("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F\u043C", "Return to requirements", "\u8FD4\u56DE\u804C\u4F4D\u8981\u6C42")}</button></section>` : ""}
+      <div class="seminar-next"><p>${complete ? L2("\u0421\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430. \u041C\u043E\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u0438\u0442\u044C \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439 \u043E \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "The self-assessment is complete. Continue to the public-service knowledge test.", "\u81EA\u8BC4\u5DF2\u5B8C\u6210\u3002\u73B0\u5728\u53EF\u4EE5\u8FDB\u5165\u516C\u52A1\u77E5\u8BC6\u6D4B\u8BD5\u3002") : L2("\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0443 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u043E\u043C \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439.", "Complete the role self-assessment before continuing to the knowledge test.", "\u8BF7\u5B8C\u6210\u6240\u9009\u804C\u4F4D\u7684\u81EA\u8BC4\uFF0C\u518D\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5\u3002")}</p><button type="button" class="button button-primary button-large" id="seminar-open-knowledge" ${complete ? "" : "disabled"}>${L2("\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439", "Continue to the knowledge test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}${icon("arrow-right")}</button></div>`;
+      target.querySelector("#journey-back-requirements").onclick = () => switchStage("requirements");
+      target.querySelector("#journey-complete-checklist")?.addEventListener("click", () => switchStage("requirements"));
+      if (ranked) bindDevelopment(target, ranked);
+      target.querySelector("#seminar-open-knowledge").onclick = async () => {
+        if (opening || !complete || !save()) return;
         opening = true;
-        const button = root.querySelector("#seminar-open-knowledge");
+        const button = target.querySelector("#seminar-open-knowledge");
         button.disabled = true;
         try {
           await __careerHost.openKnowledge();
@@ -2362,21 +4017,51 @@ var CareerRuntime = (() => {
           if (button.isConnected) button.disabled = false;
         }
       };
-      renderVacancies();
-      void loadVacancies();
+    }
+    function renderResults2() {
+      const result = getResult(), target = root();
+      if (!result || !target) return;
+      target.setAttribute("data-no-i18n", "");
+      if (!catalogLoaded) {
+        navigate("preferences");
+        return;
+      }
+      const view = stage();
+      if (view === "profile") renderProfile(result, target);
+      else if (view === "recommendations") renderRecommendations(result, target);
+      else if (view === "requirements") renderRequirements(result, target);
+      else renderSummary(result, target);
     }
     document.addEventListener("app:language", () => {
       updateLabels();
-      if (lastRoute === "results") renderResults2();
+      if (lastRoute === "preferences") renderPreferences();
+      else if (lastRoute === "results") renderResults2();
     });
     updateLabels();
+    void loadCatalog();
     return {
+      isReady,
+      guardRoute,
       renderResults: renderResults2,
       render(route) {
+        if (lastRoute === "preferences" && route !== "preferences") {
+          picker?.destroy();
+          picker = null;
+        }
         lastRoute = route;
         updateLabels();
+        if (route === "preferences") renderPreferences();
       },
-      updateBusy: () => loading || opening
+      flush: () => !dirty || save(),
+      updateBusy: () => catalogLoading || positionsLoading || opening,
+      captureForUpdate: () => ({ view: journey.view, authorityQuery, authorityScope, vacancyQuery, vacancyEmployer }),
+      restoreForUpdate(value) {
+        if (!isRecord2(value)) return;
+        authorityQuery = safeText(value.authorityQuery, 500);
+        authorityScope = safeText(value.authorityScope, 80);
+        vacancyQuery = safeText(value.vacancyQuery, 500);
+        vacancyEmployer = safeText(value.vacancyEmployer, 200);
+      }
     };
   }
 
@@ -3938,15 +5623,76 @@ var CareerRuntime = (() => {
     return { kind: "differentiated", roles: eligible.filter((role) => role.mean >= cutoff - 1e-10) };
   }
 
+  // site/apps/career/assets/personality-visuals.mjs
+  var E4 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var drawings = {
+    check: '<path d="M8 4h8m-7-1h6v4H9zM7 5H5v16h14V5h-2M8 13l3 3 5-6"/>',
+    people: '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m1-15a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/>',
+    heart: '<path d="M12 20 4.5 12.5a5 5 0 0 1 7-7l.5.5.5-.5a5 5 0 0 1 7 7Z"/>',
+    spark: '<path d="m12 3 2.8 6.2L21 12l-6.2 2.8L12 21l-2.8-6.2L3 12l6.2-2.8Z"/>',
+    wave: '<path d="M3 12h3l2.5-7 5 14 2.5-7h5"/>',
+    flag: '<path d="M5 21V3m0 1c5-4 9 4 14 0v10c-5 4-9-4-14 0"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    search: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5M8 11l2 2 4-5"/>',
+    plan: '<rect x="4" y="4" width="16" height="17" rx="2"/><path d="M8 2v4m8-4v4M4 9h16M8 13h2m4 0h2m-8 4h2m4 0h2"/>',
+    light: '<path d="M9 18h6m-5 3h4m-5-6a6 6 0 1 1 6 0v3H9zM12 2V1M3 5 2 4m19 1 1-1"/>',
+    arrow: '<path d="M4 12h16m-6-6 6 6-6 6"/>'
+  };
+  var iconNames = { C: "check", E: "people", A: "heart", O: "spark", N: "wave", E3: "flag", C3: "check", C4: "target", C5: "clock", C6: "search", A4: "people", coordinator: "flag", organizer: "plan", analyst: "search", supporter: "heart", ideas: "light", implementer: "check" };
+  function personalityIcon(name2) {
+    return `<span class="personality-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false">${drawings[iconNames[name2] || name2] || drawings.spark}</svg></span>`;
+  }
+  var PERSONALITY_RADAR_ORDER = Object.freeze(["C", "E", "A", "O", "N"]);
+  var center = { x: 160, y: 145 };
+  var radius = 94;
+  var point = (index, distance) => {
+    const angle = -Math.PI / 2 + index * Math.PI * 2 / 5;
+    return { x: center.x + Math.cos(angle) * distance, y: center.y + Math.sin(angle) * distance };
+  };
+  var pair = ({ x, y }) => `${x.toFixed(3)},${y.toFixed(3)}`;
+  function personalityRadarGeometry(domains) {
+    return PERSONALITY_RADAR_ORDER.map((id, index) => {
+      const value = domains?.[id]?.mean;
+      if (typeof value !== "number" || !Number.isFinite(value) || value < 1 || value > 5) throw new RangeError(`Invalid personality radar value: ${id}`);
+      return { id, value, ...point(index, (value - 1) / 4 * radius) };
+    });
+  }
+  function renderPersonalityRadar(domains, { labels, title, description, scale, caption, formatValue }) {
+    const vertices = personalityRadarGeometry(domains);
+    const values = vertices.map(({ id, value }) => `${labels[id]}: ${formatValue(value)} / 5`).join("; ");
+    const rings = [2, 3, 4, 5].map((value) => `<polygon class="personality-radar-grid" points="${PERSONALITY_RADAR_ORDER.map((_, index) => pair(point(index, (value - 1) / 4 * radius))).join(" ")}"/>`).join("");
+    const axes = vertices.map((_, index) => {
+      const edge = point(index, radius);
+      return `<line class="personality-radar-axis" x1="${center.x}" y1="${center.y}" x2="${edge.x.toFixed(3)}" y2="${edge.y.toFixed(3)}"/>`;
+    }).join("");
+    const ticks = [1, 2, 3, 4, 5].map((value) => `<text class="personality-radar-tick" x="170" y="${(center.y - (value - 1) / 4 * radius + 5).toFixed(3)}">${value}</text>`).join("");
+    const keyPositions = [{ x: 50, y: 5 }, { x: 92, y: 34 }, { x: 77, y: 88 }, { x: 23, y: 88 }, { x: 8, y: 34 }];
+    return `<section class="personality-overview" aria-labelledby="personality-overview-title">
+    <div class="personality-overview-heading"><h2 id="personality-overview-title">${E4(title)}</h2><p>${E4(description)}</p></div>
+    <figure class="personality-overview-figure">
+      <div class="personality-radar-plot">
+        <svg class="personality-radar" viewBox="0 0 320 290" role="img" aria-labelledby="personality-radar-title personality-radar-desc" focusable="false">
+          <title id="personality-radar-title">${E4(title)}</title><desc id="personality-radar-desc">${E4(scale + " " + values)}</desc>
+          <g aria-hidden="true">${rings}${axes}<polygon class="personality-radar-shape" points="${vertices.map(pair).join(" ")}"/>${vertices.map(({ id, value, x, y }) => `<circle class="personality-radar-point" data-personality-radar-domain="${id}" data-radar-value="${value}" cx="${x.toFixed(3)}" cy="${y.toFixed(3)}" r="4"/>`).join("")}${ticks}</g>
+        </svg>
+        ${vertices.map(({ id }, index) => `<span class="personality-radar-key" aria-hidden="true" style="left:${keyPositions[index].x}%;top:${keyPositions[index].y}%">${id}</span>`).join("")}
+      </div>
+      <figcaption class="personality-radar-summary"><dl class="personality-radar-values">${vertices.map(({ id, value }) => `<div><dt><span class="personality-domain-key" aria-hidden="true">${id}</span><span>${E4(labels[id])}</span></dt><dd>${E4(formatValue(value))}<small> / 5</small></dd></div>`).join("")}</dl><p class="personality-radar-scale">${E4(scale)}</p></figcaption>
+    </figure>
+    <p class="personality-overview-note">${E4(caption)}</p>
+  </section>`;
+  }
+
   // site/apps/career/assets/personality.mjs
   var PAGE_SIZE = 10;
   var PAGE_COUNT = PERSONALITY_ITEMS.length / PAGE_SIZE;
-  var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var E5 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   var L3 = (ru, en, zh) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh;
   var text = (values) => L3(...values);
   var englishFacetLabels = { N3: "Low mood", O5: "Intellectual curiosity", A2: "Straightforwardness" };
   var label = (value) => L3(value.name, englishFacetLabels[value.id] || value.en, value.zh);
-  var number = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+  var number2 = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 2 });
   var facetById = new Map(PERSONALITY_FACETS.map((facet) => [facet.id, facet]));
   var validAnswer = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
   var answerLabels = () => L3(
@@ -3962,7 +5708,7 @@ var CareerRuntime = (() => {
     N: { title: ["\u042D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Emotional sensitivity", "\u60C5\u7EEA\u654F\u611F\u6027"], description: ["\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0447\u0430\u0441\u0442\u043E \u0412\u044B \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442\u0435 \u043D\u0430\u043F\u0440\u044F\u0436\u0435\u043D\u0438\u0435, \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u043D\u0438\u044F \u0438 \u044D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043A\u043E\u043B\u0435\u0431\u0430\u043D\u0438\u044F.", "How often you report tension, worries and emotional fluctuations.", "\u4F60\u611F\u53D7\u5230\u7D27\u5F20\u3001\u62C5\u5FE7\u548C\u60C5\u7EEA\u6CE2\u52A8\u7684\u9891\u7E41\u7A0B\u5EA6\u3002"] }
   };
   function meter(value, name2) {
-    return `<div class="personality-meter" role="meter" aria-label="${E3(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E3(number(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
+    return `<div class="personality-meter" role="meter" aria-label="${E5(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E5(number2(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
   }
   function createPersonality({ navigate, continueCareer }) {
     const storage = __careerHost.personalityStorage;
@@ -4026,8 +5772,8 @@ var CareerRuntime = (() => {
       root.lang = getLanguage();
       root.innerHTML = `<header class="personality-heading"><h1 id="personality-title" tabindex="-1">${L3("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81")}</h1><p>${L3("\u041E\u0446\u0435\u043D\u0438\u0442\u0435, \u043D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u0436\u0434\u043E\u0435 \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0412\u0430\u0441 \u0432 \u043E\u0431\u044B\u0447\u043D\u043E\u0439 \u0436\u0438\u0437\u043D\u0438. \u041E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044C \u043D\u0430 \u0441\u0432\u043E\u0451 \u043F\u0440\u0438\u0432\u044B\u0447\u043D\u043E\u0435 \u043F\u043E\u0432\u0435\u0434\u0435\u043D\u0438\u0435.", "Rate how accurately each statement describes you in everyday life. Think about your usual behaviour.", "\u8BF7\u5224\u65AD\u6BCF\u4E2A\u9648\u8FF0\u5728\u591A\u5927\u7A0B\u5EA6\u4E0A\u7B26\u5408\u65E5\u5E38\u751F\u6D3B\u4E2D\u7684\u4F60\uFF0C\u5E76\u4EE5\u5E73\u65F6\u7684\u884C\u4E3A\u4E3A\u4F9D\u636E\u3002")}</p></header>
       <div class="personality-progress"><div><span id="personality-counter" aria-live="polite"></span><span>${L3(`\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ${state2.page + 1} \u0438\u0437 ${PAGE_COUNT}`, `Page ${state2.page + 1} of ${PAGE_COUNT}`, `\u7B2C${state2.page + 1}\u9875\uFF0C\u5171${PAGE_COUNT}\u9875`)}</span></div><progress max="120" value="${answeredCount()}" aria-label="${L3("\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430", "Personality test progress", "\u4EBA\u683C\u6D4B\u8BD5\u8FDB\u5EA6")}"></progress></div>
-      <div class="personality-scale" aria-hidden="true">${labels.map((caption, index) => `<div><b>${index + 1}</b><span>${E3(caption)}</span></div>`).join("")}</div>
-      <form id="personality-form"><div class="personality-items">${currentItems().map((item) => `<fieldset class="personality-item${validAnswer(state2.answers[item.id]) ? " is-answered" : ""}"><legend><span>${item.order}.</span> ${E3(getLanguage() === "ru" ? item.text : getLanguage() === "en" ? item.en : item.zh)}</legend><div class="personality-options">${labels.map((caption, index) => `<label class="personality-choice" title="${E3(caption)}"><input type="radio" name="${item.id}" data-personality-item="${item.id}" value="${index + 1}" ${state2.answers[item.id] === index + 1 ? "checked" : ""} required><span class="personality-choice-number" aria-hidden="true">${index + 1}</span><span class="personality-sr-only">${E3(caption)}</span></label>`).join("")}</div><p class="personality-selected" aria-live="polite">${validAnswer(state2.answers[item.id]) ? E3(labels[state2.answers[item.id] - 1]) : "&nbsp;"}</p></fieldset>`).join("")}</div>
+      <div class="personality-scale" aria-hidden="true">${labels.map((caption, index) => `<div><b>${index + 1}</b><span>${E5(caption)}</span></div>`).join("")}</div>
+      <form id="personality-form"><div class="personality-items">${currentItems().map((item) => `<fieldset class="personality-item${validAnswer(state2.answers[item.id]) ? " is-answered" : ""}"><legend><span>${item.order}.</span> ${E5(getLanguage() === "ru" ? item.text : getLanguage() === "en" ? item.en : item.zh)}</legend><div class="personality-options">${labels.map((caption, index) => `<label class="personality-choice" title="${E5(caption)}"><input type="radio" name="${item.id}" data-personality-item="${item.id}" value="${index + 1}" ${state2.answers[item.id] === index + 1 ? "checked" : ""} required><span class="personality-choice-number" aria-hidden="true">${index + 1}</span><span class="personality-sr-only">${E5(caption)}</span></label>`).join("")}</div><p class="personality-selected" aria-live="polite">${validAnswer(state2.answers[item.id]) ? E5(labels[state2.answers[item.id] - 1]) : "&nbsp;"}</p></fieldset>`).join("")}</div>
       <p class="personality-save-status" role="status" hidden></p><div class="personality-actions"><button type="button" id="personality-back" class="button button-secondary" ${state2.page === 0 ? "hidden" : ""}>${L3("\u041D\u0430\u0437\u0430\u0434", "Back", "\u4E0A\u4E00\u6B65")}</button><button type="submit" id="personality-next" class="button button-primary" disabled>${state2.page === PAGE_COUNT - 1 ? L3("\u041C\u043E\u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B", "My results", "\u6211\u7684\u7ED3\u679C") : L3("\u0414\u0430\u043B\u0435\u0435", "Next", "\u4E0B\u4E00\u6B65")}</button></div></form>`;
       root.querySelector("#personality-form").addEventListener("change", (event) => {
         const input = event.target.closest("input[data-personality-item]");
@@ -4091,18 +5837,27 @@ var CareerRuntime = (() => {
       }
       const root = document.querySelector("#personality-results-root"), suggestions = suggestTeamRoles(profile);
       root.lang = getLanguage();
+      const radar = renderPersonalityRadar(profile.domains, {
+        labels: Object.fromEntries(Object.entries(domainCopy).map(([id, copy2]) => [id, text(copy2.title)])),
+        title: L3("\u0421\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u0435 \u0412\u0430\u0448\u0438\u0445 \u0447\u0435\u0440\u0442", "Your traits at a glance", "\u4F60\u7684\u7279\u5F81\u7EC4\u5408"),
+        description: L3("\u041F\u044F\u0442\u044C \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0445 \u0448\u043A\u0430\u043B \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043D\u0430 \u043E\u0434\u043D\u043E\u0439 \u0434\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0435.", "The five main personality scales in one chart.", "\u5728\u4E00\u5F20\u56FE\u4E2D\u67E5\u770B\u4E94\u9879\u4E3B\u8981\u4EBA\u683C\u7279\u5F81\u3002"),
+        scale: L3("\u0415\u0434\u0438\u043D\u0430\u044F \u0448\u043A\u0430\u043B\u0430: 1 \u2014 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435, 5 \u2014 \u043D\u0430 \u0432\u043D\u0435\u0448\u043D\u0435\u043C \u043A\u043E\u043D\u0442\u0443\u0440\u0435.", "Shared scale: 1 at the centre, 5 on the outer ring.", "\u7EDF\u4E00\u91CF\u8868\uFF1A\u4E2D\u5FC3\u4E3A1\u5206\uFF0C\u5916\u5708\u4E3A5\u5206\u3002"),
+        caption: L3("\u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0438\u0439 \u0431\u0430\u043B\u043B \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0447\u0435\u0440\u0442\u044B \u0432 \u0412\u0430\u0448\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u0430\u0445. \u0411\u043E\u043B\u044C\u0448\u0430\u044F \u043F\u043B\u043E\u0449\u0430\u0434\u044C \u0434\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u044B \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u043B\u0443\u0447\u0448\u0438\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "A higher score means that a trait is more strongly expressed in your answers. A larger chart area does not mean a better result.", "\u5206\u6570\u8D8A\u9AD8\uFF0C\u8868\u793A\u8BE5\u7279\u5F81\u5728\u4F60\u7684\u56DE\u7B54\u4E2D\u8D8A\u660E\u663E\u3002\u56FE\u5F62\u9762\u79EF\u8F83\u5927\u5E76\u4E0D\u8868\u793A\u7ED3\u679C\u66F4\u597D\u3002"),
+        formatValue: number2
+      });
       const roleIntro = suggestions.kind === "balanced" ? L3("\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u0432 \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u044B\u043C \u043E\u0431\u0440\u0430\u0437\u043E\u043C. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0440\u0430\u0437\u043D\u044B\u0435 \u0440\u043E\u043B\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u0430\u044E\u0442 \u0412\u0430\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u0443\u0434\u043E\u0432\u043B\u0435\u0442\u0432\u043E\u0440\u0435\u043D\u0438\u044F.", "Several ways of contributing to a team are similarly expressed. Try different roles and compare which tasks you find more satisfying.", "\u4F60\u5728\u591A\u79CD\u56E2\u961F\u53C2\u4E0E\u65B9\u5F0F\u4E0A\u8868\u73B0\u76F8\u8FD1\u3002\u53EF\u4EE5\u5C1D\u8BD5\u4E0D\u540C\u89D2\u8272\uFF0C\u6BD4\u8F83\u54EA\u4E9B\u4EFB\u52A1\u66F4\u8BA9\u4F60\u611F\u5230\u6EE1\u610F\u3002") : suggestions.kind === "exploratory" ? L3("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0430\u044F \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0430\u044F \u0440\u043E\u043B\u044C. \u0412 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u043C \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u043C \u0437\u0430\u0434\u0430\u043D\u0438\u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0437\u0430\u0434\u0430\u0447\u0443 \u043F\u043E \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044E, \u0430\u043D\u0430\u043B\u0438\u0437\u0443 \u0438\u043B\u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0435 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432 \u0438 \u043E\u0446\u0435\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u0438 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u044F.", "Your answers do not point clearly to a particular team role. In your next group task, try a small planning, analysis or support responsibility and reflect on the experience.", "\u4F60\u7684\u56DE\u7B54\u5C1A\u672A\u663E\u793A\u51FA\u660E\u786E\u7684\u56E2\u961F\u89D2\u8272\u503E\u5411\u3002\u4E0B\u6B21\u5C0F\u7EC4\u4EFB\u52A1\u4E2D\uFF0C\u53EF\u4EE5\u5C1D\u8BD5\u4E00\u9879\u8BA1\u5212\u3001\u5206\u6790\u6216\u652F\u6301\u6210\u5458\u7684\u5177\u4F53\u5DE5\u4F5C\uFF0C\u518D\u4F53\u4F1A\u81EA\u5DF1\u7684\u611F\u53D7\u3002") : L3("\u0421\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0412\u0430\u0448\u0438\u0445 \u0447\u0435\u0440\u0442 \u0434\u0430\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u044F \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0435 \u0441\u043F\u043E\u0441\u043E\u0431\u044B \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043E\u0431\u0449\u0435\u0439 \u0440\u0430\u0431\u043E\u0442\u0435.", "Your combination of traits suggests the following contributions to try in shared work.", "\u6839\u636E\u4F60\u7684\u7279\u5F81\u7EC4\u5408\uFF0C\u53EF\u4EE5\u5728\u5171\u540C\u5DE5\u4F5C\u4E2D\u5C1D\u8BD5\u4EE5\u4E0B\u53C2\u4E0E\u65B9\u5F0F\u3002");
       root.innerHTML = `<header class="personality-heading personality-result-heading"><button type="button" id="personality-edit" class="personality-text-button">${L3("\u041A \u043E\u0442\u0432\u0435\u0442\u0430\u043C", "Back to answers", "\u8FD4\u56DE\u7B54\u6848")}</button><h1>${L3("\u0412\u0430\u0448 \u0441\u0442\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435", "Your style of working in a team", "\u4F60\u7684\u56E2\u961F\u5DE5\u4F5C\u98CE\u683C")}</h1><p>${L3("\u0411\u0430\u043B\u043B\u044B \u043E\u0442 1 \u0434\u043E 5 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0447\u0435\u0440\u0442 \u0432 \u0412\u0430\u0448\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u0430\u0445. \u0423 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0435\u0441\u0442\u044C \u043F\u043E\u043B\u0435\u0437\u043D\u044B\u0435 \u0441\u0442\u043E\u0440\u043E\u043D\u044B \u0438 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F.", "Scores from 1 to 5 describe the traits expressed in your answers. Each combination has useful aspects and opportunities for development.", "1\u81F35\u5206\u53CD\u6620\u4F60\u7684\u56DE\u7B54\u4E2D\u5404\u9879\u7279\u5F81\u7684\u8868\u73B0\u7A0B\u5EA6\u3002\u6BCF\u79CD\u7EC4\u5408\u90FD\u6709\u6709\u5229\u4E4B\u5904\u548C\u53EF\u4EE5\u53D1\u5C55\u7684\u65B9\u9762\u3002")}</p></header>
+      ${radar}
       <section class="personality-section" aria-labelledby="personality-work-title"><h2 id="personality-work-title">${L3("\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0441\u0442\u044C, \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0438 \u0441\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Responsibility, initiative and collaboration", "\u8D23\u4EFB\u3001\u4E3B\u52A8\u6027\u4E0E\u5408\u4F5C")}</h2><div class="personality-traits">${WORK_TRAITS.map((trait) => {
         const value = profile.facets[trait.facet].mean, title = text(trait.label);
-        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${E3(title)}</h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E3(text(trait[expressionBand(value)]))}</p></article>`;
+        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E5(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E5(text(trait[expressionBand(value)]))}</p></article>`;
       }).join("")}</div></section>
-      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${E3(text(role.label))}</h3><p>${E3(text(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E3(label(facetById.get(id)))}</dt><dd>${number(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E3(text(role.action))}</p></article>`).join("")}</div>` : ""}</section>
+      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E5(text(role.label))}</span></h3><p>${E5(text(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E5(label(facetById.get(id)))}</dt><dd>${number2(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E5(text(role.action))}</p></article>`).join("")}</div>` : ""}</section>
       <section class="personality-section" aria-labelledby="personality-full-title"><h2 id="personality-full-title">${L3("\u041F\u043E\u043B\u043D\u044B\u0439 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your full personality profile", "\u5B8C\u6574\u7684\u4EBA\u683C\u7279\u5F81")}</h2><div class="personality-domains">${["C", "E", "A", "O", "N"].map((id) => {
-        const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy = domainCopy[id], value = profile.domains[id].mean, title = text(copy.title);
-        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${E3(title)}</h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E3(text(copy.description))}</p><dl>${domain.facets.map((facet) => {
+        const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy2 = domainCopy[id], value = profile.domains[id].mean, title = text(copy2.title);
+        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E5(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E5(text(copy2.description))}</p><dl>${domain.facets.map((facet) => {
           const facetLabel = label(facetById.get(facet));
-          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E3(facetLabel)}</dt><dd>${number(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
+          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E5(facetLabel)}</dt><dd>${number2(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
         }).join("")}</dl></article>`;
       }).join("")}</div></section>
       <p class="personality-method">${L3("\u041C\u0435\u0442\u043E\u0434\u0438\u043A\u0430:", "Method:", "\u65B9\u6CD5\uFF1A")} <a href="${PERSONALITY_METHOD.doi}" target="_blank" rel="noopener noreferrer">IPIP-NEO-120</a> (Johnson, 2014)${L3(", \u0440\u0435\u0434\u0430\u043A\u0446\u0438\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0433\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430; \u0440\u043E\u043B\u0438 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u2014 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0448\u043A\u0430\u043B.", "; team roles are an educational interpretation of the scales.", "\uFF0C\u91C7\u7528\u5F00\u653E\u8BD1\u6587\u7684\u4FEE\u8BA2\u7248\u672C\uFF1B\u56E2\u961F\u89D2\u8272\u662F\u5404\u9879\u7279\u5F81\u7684\u6559\u5B66\u6027\u89E3\u8BFB\u3002")}</p>
@@ -4127,257 +5882,6 @@ var CareerRuntime = (() => {
     }
     document.addEventListener("app:language", () => render(currentRoute));
     return { render, isComplete, flush: save, updateBusy: () => saveFailed };
-  }
-
-  // site/apps/career/assets/scoring.mjs
-  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
-  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
-  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
-  function clamp(value, min = 0, max = 1) {
-    return Math.max(min, Math.min(max, value));
-  }
-  function average(values) {
-    if (!values.length) return 0;
-    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
-  }
-  function standardDeviation(values) {
-    if (!values.length) return 0;
-    const mean = average(values);
-    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
-  }
-  function computeRoleProfile(answerMap, questions) {
-    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
-    for (const question of questions) {
-      const raw2 = Number(answerMap[question.id]);
-      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
-        grouped[question.scale].push(raw2);
-      }
-    }
-    const raw = {};
-    const normalized2 = {};
-    for (const id of SCALE_IDS) {
-      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
-      normalized2[id] = (raw[id] - 1) / 4;
-    }
-    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
-  }
-  function profileFromMeans(raw, answered = 27) {
-    const normalized2 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
-    const values = SCALE_IDS.map((id) => Number(raw[id]));
-    const dispersion = standardDeviation(values);
-    const mean = average(values);
-    return {
-      raw,
-      normalized: normalized2,
-      dispersion,
-      flat: dispersion < 0.26,
-      answered,
-      mean,
-      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
-      positiveScales: values.filter((v) => v >= 3.5).length,
-      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
-    };
-  }
-  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
-    const priorityWeights = [1, 0.82, 0.66, 0.5];
-    const lowWeights = [0.08, 0];
-    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
-    priorityIds.slice(0, 4).forEach((id, index) => {
-      if (id in values) values[id] = priorityWeights[index];
-    });
-    lowPriorityIds.slice(0, 2).forEach((id, index) => {
-      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
-    });
-    return values;
-  }
-  function sectorFit(preferences, authority, focusAreas = {}) {
-    const entries = authority.sectors || [];
-    if (!entries.length) return 0.25;
-    return clamp(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
-  }
-  function conditionDetails(userConditions = {}, requirements = {}) {
-    return CONDITION_IDS.map((id) => {
-      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
-      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
-      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
-      const [lo, hi] = interval;
-      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
-      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
-      return { id, willingness, requirement, interval, known: true, fit: clamp(1 - expectedGap / 4), gap: expectedGap };
-    });
-  }
-  function conditionFit(userConditions = {}, requirements = {}) {
-    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
-  }
-  function roleFit(roleProfile, template) {
-    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
-    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
-    const mean = average(user), tmean = average(target);
-    let dot = 0, norm = 0, tnorm = 0;
-    for (let i = 0; i < user.length; i++) {
-      const u = user[i] - mean, t = target[i] - tmean;
-      dot += u * t;
-      norm += u * u;
-      tnorm += t * t;
-    }
-    if (tnorm < 1e-12) return 0.5;
-    return clamp(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
-  }
-  function matchBand(score2) {
-    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
-  }
-  function importanceFactor(importance) {
-    if (Number(importance) >= 3) return 1;
-    if (Number(importance) === 2) return 0.96;
-    return 0.91;
-  }
-  function canonicalValue(value) {
-    if (Array.isArray(value)) return value.map(canonicalValue);
-    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
-    return value;
-  }
-  function pathSignature(path, template, factor) {
-    return JSON.stringify(canonicalValue({
-      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
-      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
-      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids]) => ids?.length).map(([id, ids]) => [id, [...new Set(ids)].sort()])),
-      conditions: CONDITION_IDS.map((id) => {
-        const value = path.conditions?.[id];
-        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
-      }),
-      factor
-    }));
-  }
-  function aggregatePaths(paths) {
-    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
-    const best = ordered[0];
-    const pathMeanScore = average(ordered.map((path) => path.score));
-    const contributions = {};
-    const pathMeanContributions = {};
-    for (const key of ["role", "sector", "conditions"]) {
-      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
-      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
-    }
-    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
-    const { signature, ...bestPath } = best;
-    return {
-      ...bestPath,
-      rawScore,
-      score: Math.round(rawScore * 10) / 10,
-      band: matchBand(rawScore),
-      bestPathScore: best.score,
-      pathMeanScore,
-      portfolioScore: pathMeanScore,
-      pathCount: ordered.length,
-      aggregation: AGENCY_AGGREGATION,
-      bestPathContributions: best.contributions,
-      pathMeanContributions,
-      contributions
-    };
-  }
-  function scoreAuthority(authority, context, trackMap) {
-    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
-    const cFit = conditionFit(context.conditions, authority.conditions);
-    const paths = /* @__PURE__ */ new Map();
-    for (const link of authority.tracks || []) {
-      const template = trackMap.get(link.id);
-      if (!template) continue;
-      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
-      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
-      const cFit2 = conditionFit(context.conditions, link.conditions || {});
-      const rFit = roleFit(context.roleProfile, template);
-      const factor = importanceFactor(link.importance);
-      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
-      const score2 = 100 * base * factor;
-      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
-      const candidate = {
-        score: score2,
-        signature,
-        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
-        roleFit: rFit,
-        sectorFit: sFit2,
-        conditionFit: cFit2,
-        track: template,
-        importance: link.importance,
-        path: link,
-        pathSectors: path.sectors,
-        pathTopics: path.topics || {},
-        pathConditions: link.conditions || {}
-      };
-      const existing = paths.get(signature);
-      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
-    }
-    if (!paths.size) {
-      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
-      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
-      return {
-        ...authority,
-        score: Math.round(score2 * 10) / 10,
-        rawScore: score2,
-        band: matchBand(score2),
-        roleFit: 0.5,
-        sectorFit: sFit,
-        conditionFit: cFit,
-        track: null,
-        importance: 0,
-        bestPathScore: null,
-        pathMeanScore: null,
-        portfolioScore: null,
-        pathCount: 0,
-        aggregation: AGENCY_AGGREGATION,
-        contributions,
-        bestPathContributions: null,
-        pathMeanContributions: null
-      };
-    }
-    return { ...authority, ...aggregatePaths([...paths.values()]) };
-  }
-  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const roleProfile = computeRoleProfile(answers, questions);
-    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
-  }
-  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
-    const trackMap = new Map(tracks.map((track) => [track.id, track]));
-    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
-    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
-    return { ranked, roleProfile, sectorPreferences, context };
-  }
-  function selectDiscoveryCandidate(ranked, topCount = 5) {
-    if (ranked.length <= topCount) return null;
-    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
-    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
-      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
-      return right.score - left.score;
-    });
-    return candidates[0] || null;
-  }
-  function buildExplanation(item, roleProfile, scales, sectors) {
-    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
-    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
-    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
-    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
-    return {
-      strengths: strongest,
-      sectors: authoritySectors,
-      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
-      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
-    };
-  }
-  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
-    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
-    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
-    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
-    return {
-      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
-      missingQuestions,
-      priorityCount: prioritySectors.length,
-      lowPriorityCount: lowPrioritySectors.length,
-      missingConditions
-    };
   }
 
   // site/apps/career/assets/scenarios.mjs
@@ -4440,16 +5944,16 @@ var CareerRuntime = (() => {
       if (errors.length) throw new Error(errors.join(", "));
     }
     if (new Set(bundle.scenarios.map((x) => x.id)).size !== bundle.scenarios.length) throw new Error("duplicate-file-id");
-    const result = structuredClone(existing), ids = new Map(result.map((x) => [x.id, x]));
+    const result = structuredClone(existing), ids2 = new Map(result.map((x) => [x.id, x]));
     let added = 0, duplicates = 0;
     for (const item of bundle.scenarios) {
-      if (ids.has(item.id)) {
-        if (JSON.stringify(ids.get(item.id)) !== JSON.stringify(item)) throw new Error("id-conflict");
+      if (ids2.has(item.id)) {
+        if (JSON.stringify(ids2.get(item.id)) !== JSON.stringify(item)) throw new Error("id-conflict");
         duplicates++;
         continue;
       }
       result.push(item);
-      ids.set(item.id, item);
+      ids2.set(item.id, item);
       added++;
     }
     if (result.length > SCENARIO_LIMIT) throw new Error("limit");
@@ -4484,14 +5988,14 @@ var CareerRuntime = (() => {
         return true;
       }
     })) fail("registry", "unsafe eligibility source");
-    const ids = /* @__PURE__ */ new Set(), trackIds = new Set(data2.tracks.map((t) => t.id)), sectorIds = new Set(data2.sectors.map((s) => s.id));
+    const ids2 = /* @__PURE__ */ new Set(), trackIds = new Set(data2.tracks.map((t) => t.id)), sectorIds = new Set(data2.sectors.map((s) => s.id));
     for (const a of registry.records) {
       if (!a || typeof a !== "object") {
         fail("record", "invalid object");
         continue;
       }
-      if (!/^[a-z][a-z0-9-]+$/.test(a.id) || ids.has(a.id)) fail(a.id, "invalid or duplicate id");
-      ids.add(a.id);
+      if (!/^[a-z][a-z0-9-]+$/.test(a.id) || ids2.has(a.id)) fail(a.id, "invalid or duplicate id");
+      ids2.add(a.id);
       if (a.country !== "RU" || !PUBLIC_SERVICE_COHORTS.includes(a.cohort) || !text2(a.name) || !text2(a.mission) || !text2(a.location) || !text2(a.exercise)) fail(a.id, "scope or translated content");
       if (!["apparatus", "authority"].includes(a.unitType) || a.vacancyStatus !== "not-a-vacancy" || a.educationStatus !== "check-each-position") fail(a.id, "status");
       if (a.cohort === "municipal" && (a.level !== "municipal" || !a.branch?.startsWith("local-"))) fail(a.id, "municipal classification");
@@ -4565,10 +6069,10 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/public-service.mjs
-  var E4 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E6 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L4 = (r, e, z) => getLanguage() === "ru" ? r : getLanguage() === "en" ? e : z;
-  var B = (v) => E4(v?.[getLanguage()] || v?.ru || "");
-  var I3 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
+  var B = (v) => E6(v?.[getLanguage()] || v?.ru || "");
+  var I2 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F = (n) => new Intl.NumberFormat(numberLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
   var cohortLabels = () => ({ all: L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411"), "federal-legislative": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u043F\u0430\u043B\u0430\u0442 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0430", "Federal parliamentary staff", "\u8054\u90A6\u8BAE\u4F1A\u673A\u5173"), "federal-judicial": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u0441\u0443\u0434\u043E\u0432", "Federal court staff", "\u8054\u90A6\u6CD5\u9662\u673A\u5173"), regional: L4("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Regional government", "\u5730\u533A\u5C42\u7EA7"), municipal: L4("\u041C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Local self-government", "\u5730\u65B9\u81EA\u6CBB") });
   var borderNote = () => L4("\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u2013 \u043F\u043E\u0432\u043E\u0434 \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443, \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043F\u0440\u0430\u0432\u0430 \u043D\u0430 \u043F\u043E\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u0435. \u0413\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E, \u0440\u0443\u0441\u0441\u043A\u0438\u0439 \u044F\u0437\u044B\u043A, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u0441\u0442\u0430\u0436 \u0438 \u0438\u043D\u044B\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u043F\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u043C \u043D\u043E\u0440\u043C\u0430\u043C \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438. \u042F\u0437\u044B\u043A \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430 \u043D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F.", "A recommendation invites exploration, not admission to service. Citizenship, Russian-language proficiency, education, experience and other restrictions must be checked under current rules and for the specific position. Interface language does not determine citizenship.", "\u63A8\u8350\u4EC5\u7528\u4E8E\u63A2\u7D22\u804C\u4E1A\uFF0C\u4E0D\u8BC1\u660E\u6709\u8D44\u683C\u4EFB\u804C\u3002\u56FD\u7C4D\u3001\u4FC4\u8BED\u3001\u5B66\u5386\u3001\u7ECF\u5386\u53CA\u5176\u4ED6\u9650\u5236\u987B\u4F9D\u73B0\u884C\u89C4\u5219\u548C\u5177\u4F53\u804C\u4F4D\u6838\u5BF9\u3002\u754C\u9762\u8BED\u8A00\u4E0D\u51B3\u5B9A\u7528\u6237\u56FD\u7C4D\u3002");
@@ -4579,38 +6083,38 @@ var CareerRuntime = (() => {
     root.setAttribute("data-no-i18n", "");
     let cohort = "all", query = "", selected = null, comparison = [], result = null;
     const byId = (id) => registry.records.find((a) => a.id === id);
-    const sourceLink = (s) => `<a class="ps-source" href="${E4(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I3("external")}</a>`;
+    const sourceLink = (s) => `<a class="ps-source" href="${E6(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I2("external")}</a>`;
     function scopeNotice() {
-      return `<div class="ps-scope">${I3("info")}<p>${L4("\u0412\u043E\u0441\u0435\u043C\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u0438\u043C\u0435\u0440\u043E\u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u044F\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0439\u0442\u0438\u043D\u0433. \u042D\u0442\u043E \u043D\u0435 \u043F\u043E\u043B\u043D\u044B\u0439 \u0440\u0435\u0435\u0441\u0442\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u0438\u0442\u0435\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.", "Eight verified examples complement the main federal ranking. This is not a complete regional or municipal register, or a list of live vacancies.", "\u516B\u4E2A\u7ECF\u6838\u5B9E\u793A\u4F8B\u8865\u5145\u4E3B\u8981\u8054\u90A6\u6392\u540D\u3002\u8FD9\u4E0D\u662F\u5168\u90E8\u5730\u533A\u3001\u5E02\u653F\u673A\u5173\u540D\u5F55\uFF0C\u4E5F\u4E0D\u662F\u5B9E\u65F6\u62DB\u8058\u5217\u8868\u3002")}</p></div>`;
+      return `<div class="ps-scope">${I2("info")}<p>${L4("\u0412\u043E\u0441\u0435\u043C\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u0438\u043C\u0435\u0440\u043E\u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u044F\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0439\u0442\u0438\u043D\u0433. \u042D\u0442\u043E \u043D\u0435 \u043F\u043E\u043B\u043D\u044B\u0439 \u0440\u0435\u0435\u0441\u0442\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u0438\u0442\u0435\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.", "Eight verified examples complement the main federal ranking. This is not a complete regional or municipal register, or a list of live vacancies.", "\u516B\u4E2A\u7ECF\u6838\u5B9E\u793A\u4F8B\u8865\u5145\u4E3B\u8981\u8054\u90A6\u6392\u540D\u3002\u8FD9\u4E0D\u662F\u5168\u90E8\u5730\u533A\u3001\u5E02\u653F\u673A\u5173\u540D\u5F55\uFF0C\u4E5F\u4E0D\u662F\u5B9E\u65F6\u62DB\u8058\u5217\u8868\u3002")}</p></div>`;
     }
     function header() {
-      return `<header class="ps-header"><div><h1>${L4("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430: \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438", "Public service: other branches and levels", "\u516C\u804C\u53D1\u5C55\uFF1A\u5176\u4ED6\u6743\u529B\u5206\u652F\u4E0E\u5C42\u7EA7")}</h1><p>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0438\u0435 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0441\u043A\u0438\u0435 \u0438 \u0441\u0443\u0434\u0435\u0431\u043D\u044B\u0435 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u044B, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435.", "Russian parliamentary and court staff, regional authorities and local self-government.", "\u4FC4\u7F57\u65AF\u8BAE\u4F1A\u4E0E\u6CD5\u9662\u673A\u5173\u3001\u5730\u533A\u673A\u5173\u53CA\u5730\u65B9\u81EA\u6CBB\u3002")}</p></div><button type="button" class="button button-secondary" data-ps-route="results">${L4("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Federal result", "\u8054\u90A6\u7ED3\u679C")}${I3("arrow-right")}</button></header>`;
+      return `<header class="ps-header"><div><h1>${L4("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430: \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438", "Public service: other branches and levels", "\u516C\u804C\u53D1\u5C55\uFF1A\u5176\u4ED6\u6743\u529B\u5206\u652F\u4E0E\u5C42\u7EA7")}</h1><p>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0438\u0435 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0441\u043A\u0438\u0435 \u0438 \u0441\u0443\u0434\u0435\u0431\u043D\u044B\u0435 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u044B, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435.", "Russian parliamentary and court staff, regional authorities and local self-government.", "\u4FC4\u7F57\u65AF\u8BAE\u4F1A\u4E0E\u6CD5\u9662\u673A\u5173\u3001\u5730\u533A\u673A\u5173\u53CA\u5730\u65B9\u81EA\u6CBB\u3002")}</p></div><button type="button" class="button button-secondary" data-ps-route="results">${L4("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Federal result", "\u8054\u90A6\u7ED3\u679C")}${I2("arrow-right")}</button></header>`;
     }
     function eligibility() {
-      return `<details class="ps-eligibility"><summary>${I3("shield")}${L4("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E4(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L4("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I3("external")}</a><a href="${E4(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L4("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I3("external")}</a></div></details>`;
+      return `<details class="ps-eligibility"><summary>${I2("shield")}${L4("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E6(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L4("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I2("external")}</a><a href="${E6(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L4("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I2("external")}</a></div></details>`;
     }
     function card(a, index) {
-      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I3(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E4(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L4("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L4("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L4("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L4("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I3("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E4(L4("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I3(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
+      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I2(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E6(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L4("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L4("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L4("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L4("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I2("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E6(L4("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I2(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
     }
     function modelDetails(a) {
       return `<section class="ps-section"><h2>${L4("\u0427\u0442\u043E \u043C\u043E\u0436\u043D\u043E \u0434\u0435\u043B\u0430\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438", "Work to explore", "\u53EF\u63A2\u7D22\u7684\u5DE5\u4F5C")}</h2><p class="small-note">${L4("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0438\u0436\u0435 \u043E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u0427\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u043E\u0440\u0433\u0430\u043D\u0430.", "The following labels are modelled work directions, not confirmed vacancies. Weights are not official institutional ratings.", "\u4E0B\u5217\u540D\u79F0\u662F\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411\uFF0C\u4E0D\u662F\u5DF2\u786E\u8BA4\u7684\u5728\u62DB\u804C\u4F4D\u3002\u6570\u503C\u6743\u91CD\u4E0D\u662F\u5B98\u65B9\u673A\u6784\u8BC4\u5206\u3002")}</p>${a.tracks.map((t) => {
         const opt = a.options?.find((x) => x.link.id === t.id);
-        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I3("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E4(translate(data2.sectors.find((x) => x.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E4(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
+        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I2("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E6(translate(data2.sectors.find((x) => x.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E6(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
       }).join("")}</section>`;
     }
     function detail(a) {
       const match = result?.ranked.find((x) => x.id === a.id);
       a = match || a;
-      return `<button type="button" class="text-link" id="ps-back">${I3("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E4(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E4(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
+      return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E6(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E6(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
     }
     function comparisonView(items) {
       if (comparison.length !== 2) return "";
       const selectedItems = comparison.map((id) => items.find((x) => x.id === id) || byId(id));
       return `<section class="ps-section ps-comparison" id="ps-comparison"><h2>${L4("\u0414\u0432\u0430 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u044F\u0434\u043E\u043C", "Two directions side by side", "\u4E24\u4E2A\u65B9\u5411\u5E76\u5217")}</h2><div class="ps-compare-grid">${selectedItems.map((a) => `<article><h3>${B(a.name)}</h3><p>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</p><strong>${a.match ? F(a.match.score) + " / 100" : L4("\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Complete the test for an index", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u663E\u793A\u6307\u6570")}</strong><p>${a.match ? B(a.match.link.title) : B(a.tracks[0].title)}</p><p>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C.", "Check education requirements and the actual service regime in official materials.", "\u6309\u5B98\u65B9\u8D44\u6599\u6838\u5BF9\u5B66\u5386\u8981\u6C42\u548C\u5B9E\u9645\u670D\u52A1\u5236\u5EA6\u3002")}</p>${sourceLink(a.sources.find((s) => s.id === "hr") || a.sources[0])}</article>`).join("")}</div><button class="text-link" id="ps-clear-compare">${L4("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435", "Clear comparison", "\u6E05\u7A7A\u6BD4\u8F83")}</button></section>`;
     }
-    function list() {
+    function list2() {
       const items = filterPublicRecords(result?.ranked || registry.records, { cohort, query });
-      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I3("search")}<input id="ps-search" type="search" maxlength="120" value="${E4(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I3("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I3("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E4(registry.registryVersion)}</small></details>`;
+      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E6(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E6(registry.registryVersion)}</small></details>`;
     }
     function bind() {
       root.querySelectorAll("[data-ps-notebook]").forEach((b) => b.onclick = () => openNotebook?.(b.dataset.psNotebook));
@@ -4670,7 +6174,7 @@ var CareerRuntime = (() => {
     function render(route) {
       if (route !== "public-service") return;
       result = rankPublicService(registry, data2, state2);
-      root.innerHTML = header() + (selected && byId(selected) ? detail(byId(selected)) : list());
+      root.innerHTML = header() + (selected && byId(selected) ? detail(byId(selected)) : list2());
       root.querySelector(".ps-dossier-heading h2")?.setAttribute("tabindex", "-1");
       bind();
     }
@@ -4873,26 +6377,26 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/decision-lab.mjs
-  var E5 = (x) => String(x ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E7 = (x) => String(x ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L5 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
-  var T = (x) => E5(translate(x));
-  var I4 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
+  var T = (x) => E7(translate(x));
+  var I3 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F2 = (x) => new Intl.NumberFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage() === "en" ? "en-GB" : "ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(x);
   var D = (x) => `${x > 0 ? "+" : ""}${F2(x)}`;
   function createDecisionLab({ data: data2, state: state2, routeTo: routeTo2, openAuthority: openAuthority2, saveScenario, toast: toast2 }) {
     const root = document.querySelector("#decision-root");
-    let mode = "explain", selected = "", baseline = null, draft = null, fingerprint = "", sensitivity = null, busy = false, title = "";
+    let mode = "explain", selected = "", baseline = null, draft = null, fingerprint2 = "", sensitivity = null, busy = false, title = "";
     let stale = false, preview = null, result = null, epoch = 0;
     const agency = (id) => data2.authorities.find((a) => a.id === id);
     const sname = (id) => data2.sectors.find((s) => s.id === id)?.title || id;
     function sync() {
       try {
         const fp = inputFingerprint(state2, data2);
-        if (fp !== fingerprint) {
-          stale = Boolean(fingerprint);
+        if (fp !== fingerprint2) {
+          stale = Boolean(fingerprint2);
           baseline = checkedInputs(state2, data2);
           draft = structuredClone(baseline);
-          fingerprint = fp;
+          fingerprint2 = fp;
           sensitivity = null;
           busy = false;
           title = "";
@@ -4916,8 +6420,8 @@ var CareerRuntime = (() => {
       const x = explainAuthority(selected, baseline, data2, result);
       const labels = [L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B", "Work interests"), L5("\u0421\u0444\u0435\u0440\u044B \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438", "Policy areas"), L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430", "Working conditions")];
       const max = [40, 45, 15];
-      const near = x.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E5(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
-      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x.authority, "compact")}<h2>${E5(authorityName(x.authority))}</h2></div><span>${x.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x.rank} / ${x.categorySize}</span></div><div class="dl-index"><strong>${F2(x.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
+      const near = x.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E7(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
+      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x.authority, "compact")}<h2>${E7(authorityName(x.authority))}</h2></div><span>${x.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x.rank} / ${x.categorySize}</span></div><div class="dl-index"><strong>${F2(x.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
     <p class="dl-track">${L5("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x.item.track?.title)}</strong></p>
     ${x.roleProfile.flat ? `<div class="dl-notice">${L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
     ${x.lowInterest ? `<div class="dl-notice">${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
@@ -4931,7 +6435,7 @@ var CareerRuntime = (() => {
     <details class="dl-details"><summary>${L5("\u0412\u0441\u0435 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "All career tracks in this agency")}</summary><p>${L5("\u041B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u0430\u0451\u0442 70% \u0438\u043D\u0434\u0435\u043A\u0441\u0430, \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u2014 30%. \u041A\u043E\u044D\u0444\u0444\u0438\u0446\u0438\u0435\u043D\u0442 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u0438: 3 \u2192 1,00; 2 \u2192 0,96; 1 \u2192 0,91. \u042D\u0442\u043E \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438.", "The best work direction contributes 70% of the index; the average across all distinct work directions contributes 30%. Representation factors are 3 \u2192 1.00, 2 \u2192 0.96 and 1 \u2192 0.91. These are authored settings.")}</p><div class="dl-tracks">${x.tracks.map((t) => `<div class="${t.selected ? "selected" : ""}"><span>${T(trackName(t.id))}${t.selected ? `<small>${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0435", "Shown in your result")}</small>` : ""}</span><span>${t.importance} / 3</span><strong>${F2(t.score)}</strong></div>`).join("")}</div></details>
     <details class="dl-details"><summary>${L5("\u0420\u043E\u043B\u044C \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Role of the best work direction")}</summary><p>${L5("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 1\u20135 \u0438 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0438 \u0432 \u0440\u043E\u043B\u0438 0\u20131 \u2013 \u0440\u0430\u0437\u043D\u044B\u0435 \u0448\u043A\u0430\u043B\u044B. \u0421\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0444\u043E\u0440\u043C\u0430 \u0434\u0435\u0432\u044F\u0442\u0438 \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u0439, \u0430 \u043D\u0435 \u0438\u0445 \u0430\u0431\u0441\u043E\u043B\u044E\u0442\u043D\u044B\u0435 \u0443\u0440\u043E\u0432\u043D\u0438. \u042D\u0442\u043E \u043D\u0435 \u0438\u0437\u043C\u0435\u0440\u0435\u043D\u0438\u0435 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0439.", "Your 1\u20135 ratings and authored 0\u20131 task relevance are different scales. The shapes of the nine-value profiles are compared, not their absolute levels. This does not measure skills.")}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr><th>${L5("\u0412\u0438\u0434 \u0440\u0430\u0431\u043E\u0442\u044B", "Work area")}</th><th>${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 1\u20135", "Interest 1\u20135")}</th><th>${L5("\u0412\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0432 \u0440\u043E\u043B\u0438 0\u20131", "Role relevance 0\u20131")}</th></tr></thead><tbody>${x.roleRows.map((r) => `<tr><th>${T(data2.scales.find((s) => s.id === r.id).short)}</th><td>${F2(r.interest)}</td><td>${F2(r.relevance)}</td></tr>`).join("")}</tbody></table></div></details>
     </article><aside class="dl-aside"><section class="dl-side-card"><h3>${L5("\u041F\u043E\u0447\u0435\u043C\u0443 \u043D\u0435 \u0441\u0442\u043E\u0438\u0442 \u0441\u043F\u043E\u0440\u0438\u0442\u044C \u043E \u0434\u0435\u0441\u044F\u0442\u044B\u0445", "Why tenths should not decide a career")}</h3><p>${L5("\u042D\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u043D\u0430\u0445\u043E\u0434\u044F\u0442\u0441\u044F \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 2,5 \u0431\u0430\u043B\u043B\u0430 \u043E\u0442 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E. \u041F\u043E\u0440\u043E\u0433 \u2013 \u043F\u0440\u0430\u0432\u0438\u043B\u043E \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430, \u043D\u0435 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0434\u043E\u0432\u0435\u0440\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B.", "These agencies are within 2.5 points of the selected one. The threshold is an interface rule, not a statistical confidence interval.")}</p><div class="dl-neighbours">${near || `<p>${L5("\u0412 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435 \u0441\u043E\u0441\u0435\u0434\u0435\u0439 \u0432 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u0445 \u043F\u043E\u0440\u043E\u0433\u0430 \u043D\u0435\u0442.", "No other agency in this category is within the threshold.")}</p>`}</div><p class="dl-help">${L5("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043D\u0435\u043E\u043A\u0440\u0443\u0433\u043B\u0451\u043D\u043D\u044B\u043C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C; \u0442\u043E\u0447\u043D\u044B\u0435 \u0440\u0430\u0432\u0435\u043D\u0441\u0442\u0432\u0430 \u0440\u0430\u0437\u0440\u0435\u0448\u0430\u044E\u0442\u0441\u044F \u043F\u043E \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0443. \u042D\u0442\u043E \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043F\u043E\u0440\u044F\u0434\u043E\u043A, \u043D\u0435 \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u043F\u0440\u0435\u0438\u043C\u0443\u0449\u0435\u0441\u0442\u0432\u0430.", "Ordering uses the unrounded index; exact ties are resolved by identifier. This technical order is not evidence of superiority.")}</p></section>
-    <section class="dl-side-card"><h3>${L5("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Evidence behind the recommendation")}</h3><p>${L5("\u0424\u0443\u043D\u043A\u0446\u0438\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u043D\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u043E\u0434\u043D\u043E \u0438 \u0442\u043E \u0436\u0435. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u0438; \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0438 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0443\u0447\u0435\u0431\u043D\u044B\u043C \u043C\u043E\u0434\u0435\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435\u043C.", "Official functions and authored weights are not the same. Sources describe functions; numerical profiles are educational modelling.")}</p><button type="button" class="button button-secondary" id="dl-sources">${L5("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438", "Review sources")}${I4("source")}</button></section>
+    <section class="dl-side-card"><h3>${L5("\u041E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Evidence behind the recommendation")}</h3><p>${L5("\u0424\u0443\u043D\u043A\u0446\u0438\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u043D\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u043E\u0434\u043D\u043E \u0438 \u0442\u043E \u0436\u0435. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0444\u0443\u043D\u043A\u0446\u0438\u0438; \u0447\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u043F\u0440\u043E\u0444\u0438\u043B\u0438 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u0443\u0447\u0435\u0431\u043D\u044B\u043C \u043C\u043E\u0434\u0435\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435\u043C.", "Official functions and authored weights are not the same. Sources describe functions; numerical profiles are educational modelling.")}</p><button type="button" class="button button-secondary" id="dl-sources">${L5("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438", "Review sources")}${I3("source")}</button></section>
     ${sensitivityCard(x)}
     </aside></div>`;
     }
@@ -4943,17 +6447,17 @@ var CareerRuntime = (() => {
     function topList(items, comparison = false) {
       return `<ol class="dl-top-list">${items.slice(0, 5).map((a) => {
         const delta = preview.rows.find((r) => r.id === a.id);
-        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E5(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L5("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L5("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L5("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L5("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
+        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E7(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L5("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L5("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L5("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L5("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
       }).join("")}</ol>`;
     }
     function experiment() {
       preview = comparePreview(baseline, draft, data2);
       const changed = preview.changes.priorityChanged || preview.changes.conditions.length > 0;
-      return `<div class="dl-notice dl-safe">${I4("lock")}<p>${L5("\u0412\u044B \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442\u0435 \u0441 \u043A\u043E\u043F\u0438\u0435\u0439. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442, \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F. \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u043C\u043E\u0436\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u043A \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "You are working on a copy. Your original answers, main result, class export and workshop notes remain unchanged. You can only save the variant as a separate scenario.")}</p></div>
+      return `<div class="dl-notice dl-safe">${I3("lock")}<p>${L5("\u0412\u044B \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442\u0435 \u0441 \u043A\u043E\u043F\u0438\u0435\u0439. \u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442, \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0438 \u0437\u0430\u043F\u0438\u0441\u0438 \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u043E\u0439 \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F. \u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u043C\u043E\u0436\u043D\u043E \u0442\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u043A \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "You are working on a copy. Your original answers, main result, class export and workshop notes remain unchanged. You can only save the variant as a separate scenario.")}</p></div>
     <div class="dl-experiment-grid"><aside class="dl-controls"><h2>${L5("\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043C?", "What shall we change?")}</h2><label for="dl-sector">${L5("\u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0441\u0440\u0435\u0434\u0438 \u0441\u0444\u0435\u0440", "First-priority policy area")}</label><select id="dl-sector">${data2.sectors.map((s) => `<option value="${s.id}" ${draft.prioritySectors[0] === s.id ? "selected" : ""} ${draft.lowPrioritySectors.includes(s.id) ? "disabled" : ""}>${T(s.title)}${draft.lowPrioritySectors.includes(s.id) ? " \xB7 " + L5("\u0432 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0445", "among least interesting") : ""}</option>`).join("")}</select><p class="dl-help">${L5("\u0421\u0444\u0435\u0440\u0430 \u0438\u0437 \u043F\u0435\u0440\u0432\u043E\u0439 \u0447\u0435\u0442\u0432\u0451\u0440\u043A\u0438 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438 \u0441 \u043F\u0435\u0440\u0432\u043E\u0439. \u041D\u043E\u0432\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u043F\u0435\u0440\u0432\u0443\u044E; \u043F\u0440\u0435\u0436\u043D\u044F\u044F \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u043D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439. \u041E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B.", "An area already in your top four swaps places with the first. A new area replaces the first; the former first becomes unselected. Least-interest areas cannot be promoted here.")}</p>
     <h3>${L5("\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A \u0443\u0441\u043B\u043E\u0432\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B", "Willingness to accept working conditions")}</h3>${data2.conditions.map((c) => `<label class="dl-condition" for="dl-${c.id}"><span>${T(c.title)}</span><select id="dl-${c.id}" data-dl-condition="${c.id}">${[1, 2, 3, 4, 5].map((v) => `<option value="${v}" ${draft.conditions[c.id] === v ? "selected" : ""}>${v} / 5</option>`).join("")}</select></label>`).join("")}
-    <p class="dl-help">${L5("1 \u2013 \u043D\u0438\u0437\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C; 5 \u2013 \u0432\u044B\u0441\u043E\u043A\u0430\u044F. \u041E\u0446\u0435\u043D\u043A\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0437\u0434\u0435\u0441\u044C \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.", "1 means low willingness; 5 means high willingness. Work-interest answers are not changed here.")}</p><button type="button" id="dl-reset" class="button button-secondary" ${changed ? "" : "disabled"}>${I4("reset")}${L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Reset to original")}</button>
-    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E5(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I4("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
+    <p class="dl-help">${L5("1 \u2013 \u043D\u0438\u0437\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C; 5 \u2013 \u0432\u044B\u0441\u043E\u043A\u0430\u044F. \u041E\u0446\u0435\u043D\u043A\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0437\u0434\u0435\u0441\u044C \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.", "1 means low willingness; 5 means high willingness. Work-interest answers are not changed here.")}</p><button type="button" id="dl-reset" class="button button-secondary" ${changed ? "" : "disabled"}>${I3("reset")}${L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Reset to original")}</button>
+    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E7(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I3("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
     <div class="dl-preview"><div class="dl-preview-summary" role="status"><h2>${L5("\u0414\u0432\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0440\u044F\u0434\u043E\u043C", "Two versions side by side")}</h2><p>${L5("\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043A\u0430\u0445", "Agencies shared by the top fives")}: <b>${preview.overlap} / 5</b> \xB7 ${L5("\u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0439", "conditions changed")}: <b>${preview.changes.conditions.length}</b></p></div>
     <div class="dl-pair"><article><h3>${L5("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Original result")}</h3><div class="dl-priorities">${baseline.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.left)}</article><article class="dl-modified"><h3>${L5("\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Experimental variant")}</h3><div class="dl-priorities">${draft.prioritySectors.map((id, i) => `<span>${i + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.right, true)}</article></div>
     <p class="dl-help">${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E \u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u0432\u0432\u0435\u0434\u0451\u043D\u043D\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u042D\u0442\u043E \u043D\u0435 \u0441\u043E\u0432\u0435\u0442 \u043F\u043E\u0434\u0431\u0438\u0440\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E. \u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443, \u0432\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u0430\u043D\u043A\u0435\u0442\u0435 \u0438\u043B\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "These are the model\u2019s consequences of your changes, not an invitation to tailor answers to a target agency. To reconsider your actual interests, return to the questionnaire or save a separate scenario.")}</p></div></div>`;
@@ -4965,10 +6469,10 @@ var CareerRuntime = (() => {
         root.querySelector("#dl-start").onclick = () => routeTo2("test");
         return;
       }
-      root.innerHTML = `<div data-no-i18n><header class="section-heading"><div><h1>${L5("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L5("\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044E \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u043D\u0435 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u044B\u0432\u0430\u044F \u0441\u0432\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Understand a recommendation and explore variants without changing your result.")}</p></div><button type="button" class="button button-secondary" id="dl-back">${I4("arrow-left")}${L5("\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "My result")}</button></header>
+      root.innerHTML = `<div data-no-i18n><header class="section-heading"><div><h1>${L5("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L5("\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044E \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u043D\u0435 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u044B\u0432\u0430\u044F \u0441\u0432\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Understand a recommendation and explore variants without changing your result.")}</p></div><button type="button" class="button button-secondary" id="dl-back">${I3("arrow-left")}${L5("\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "My result")}</button></header>
     ${stale ? `<p class="dl-notice">${L5("\u041E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438\u0441\u044C. \u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442 \u043D\u0430\u0447\u0430\u0442 \u0437\u0430\u043D\u043E\u0432\u043E \u043E\u0442 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.", "Your main answers changed. The experiment has been reset to the current result.")}</p>` : ""}
     <div class="dl-tabs" role="tablist" aria-label="${L5("\u0420\u0430\u0437\u0434\u0435\u043B \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u0438", "Laboratory section")}">${[["explain", "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D?", "Why this agency?"], ["experiment", "\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u0435\u0441\u043B\u0438\u2026", "What changes if\u2026"]].map(([id, ru, en]) => `<button type="button" role="tab" id="dl-tab-${id}" aria-controls="dl-content" aria-selected="${mode === id}" tabindex="${mode === id ? 0 : -1}" data-dl-mode="${id}">${L5(ru, en)}</button>`).join("")}</div>
-    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E5(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L5("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
+    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E7(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L5("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
     <div id="dl-content" role="tabpanel" aria-labelledby="dl-tab-${mode}">${mode === "explain" ? explain() : experiment()}</div></div>`;
       bind();
     }
@@ -5041,7 +6545,7 @@ var CareerRuntime = (() => {
           root.querySelector("#dl-title").focus();
           return;
         }
-        if (inputFingerprint(state2, data2) !== fingerprint) {
+        if (inputFingerprint(state2, data2) !== fingerprint2) {
           rerender();
           return;
         }
@@ -5060,9 +6564,9 @@ var CareerRuntime = (() => {
     document.addEventListener("app:language", () => {
       if (!document.querySelector("#view-lab").hidden) render("lab");
     });
-    return { render, open: entry, updateBusy: () => busy, captureForUpdate: () => ({ mode, selected, draft: structuredClone(draft), fingerprint, title }), restoreForUpdate(value) {
+    return { render, open: entry, updateBusy: () => busy, captureForUpdate: () => ({ mode, selected, draft: structuredClone(draft), fingerprint: fingerprint2, title }), restoreForUpdate(value) {
       sync();
-      if (value?.fingerprint !== fingerprint) return false;
+      if (value?.fingerprint !== fingerprint2) return false;
       mode = ["explain", "experiment"].includes(value.mode) ? value.mode : "explain";
       selected = agency(value.selected) ? value.selected : selected;
       draft = value.draft ? checkedInputs(value.draft, data2) : draft;
@@ -5139,7 +6643,7 @@ var CareerRuntime = (() => {
   var TEXT_LIMIT = 1200;
   var textFields = ["why", "question", "next"];
   var plain4 = (x) => x !== null && typeof x === "object" && !Array.isArray(x);
-  var keys = (o, list) => plain4(o) && Object.keys(o).length === list.length && list.every((k) => Object.hasOwn(o, k));
+  var keys = (o, list2) => plain4(o) && Object.keys(o).length === list2.length && list2.every((k) => Object.hasOwn(o, k));
   function blankWorkbook() {
     return { schema: NOTEBOOK_SCHEMA, schemaVersion: 1, selected: null, notes: {}, responses: {}, duration: 90 };
   }
@@ -5148,10 +6652,10 @@ var CareerRuntime = (() => {
   }
   function validateWorkbook(value, authorities, cases) {
     if (!keys(value, ["schema", "schemaVersion", "selected", "notes", "responses", "duration"]) || value.schema !== NOTEBOOK_SCHEMA || value.schemaVersion !== 1) return false;
-    const ids = new Set(authorities.map((a) => a.id)), byCase = new Map(cases.map((c) => [c.id, c]));
-    if (value.selected !== null && (!ids.has(value.selected) || !Object.hasOwn(value.notes || {}, value.selected))) return false;
-    if (![45, 90].includes(value.duration) || !plain4(value.notes) || !plain4(value.responses) || Object.keys(value.notes).length > ids.size || Object.keys(value.responses).length > byCase.size) return false;
-    for (const [id, n] of Object.entries(value.notes)) if (!ids.has(id) || !keys(n, [...textFields, "known"]) || !["yes", "no", "unknown"].includes(n.known) || textFields.some((k) => typeof n[k] !== "string" || n[k].length > TEXT_LIMIT || /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(n[k]))) return false;
+    const ids2 = new Set(authorities.map((a) => a.id)), byCase = new Map(cases.map((c) => [c.id, c]));
+    if (value.selected !== null && (!ids2.has(value.selected) || !Object.hasOwn(value.notes || {}, value.selected))) return false;
+    if (![45, 90].includes(value.duration) || !plain4(value.notes) || !plain4(value.responses) || Object.keys(value.notes).length > ids2.size || Object.keys(value.responses).length > byCase.size) return false;
+    for (const [id, n] of Object.entries(value.notes)) if (!ids2.has(id) || !keys(n, [...textFields, "known"]) || !["yes", "no", "unknown"].includes(n.known) || textFields.some((k) => typeof n[k] !== "string" || n[k].length > TEXT_LIMIT || /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(n[k]))) return false;
     for (const [id, response] of Object.entries(value.responses)) if (!byCase.has(id) || !byCase.get(id).choices.some((c) => c.id === response)) return false;
     return true;
   }
@@ -5176,7 +6680,7 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/classroom.mjs
-  var E6 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E8 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L6 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
   var B2 = (v) => v?.[getLanguage()] || translate(v?.ru || "");
   var name = authorityName;
@@ -5218,19 +6722,19 @@ var CareerRuntime = (() => {
       routeTo2("workshop");
     }
     function source(c) {
-      return `<div class="ws-source"><b>${L6("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E6(B2(c.fact))}</p><a href="${E6(c.source.url)}" target="_blank" rel="noopener noreferrer">${E6(B2(c.source.title))}${ico("external")}</a><small>${L6("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
+      return `<div class="ws-source"><b>${L6("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E8(B2(c.fact))}</p><a href="${E8(c.source.url)}" target="_blank" rel="noopener noreferrer">${E8(B2(c.source.title))}${ico("external")}</a><small>${L6("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
     }
     function card(c) {
       const a = agency(c.authorityId);
-      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E6(name(a))}</small><h2>${E6(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
+      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E8(name(a))}</small><h2>${E8(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
     }
     function materials(c) {
-      return c.materials ? `<section class="ws-materials"><h3>${E6(B2(c.materials.title))}</h3><p>${E6(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E6(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i) => i ? `<td>${E6(B2(v))}</td>` : `<th>${E6(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
+      return c.materials ? `<section class="ws-materials"><h3>${E8(B2(c.materials.title))}</h3><p>${E8(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E8(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i) => i ? `<td>${E8(B2(v))}</td>` : `<th>${E8(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
     }
     function renderCases() {
-      if (!activeCase) return `<p class="ws-intro">${E6(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
+      if (!activeCase) return `<p class="ws-intro">${E8(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
       const c = cases.find((c2) => c2.id === activeCase), selected = book.responses[c.id], choice = c.choices.find((x) => x.id === selected), a = agency(c.authorityId);
-      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E6(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E6(B2(c.title))}</h2><p class="ws-situation">${E6(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x, i) => `<button class="ws-option${selected === x.id ? " chosen" : ""}" type="button" data-choice="${x.id}" aria-pressed="${selected === x.id}"><span>${i + 1}</span><p>${E6(B2(x.text))}</p>${selected === x.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E6(B2(choice.feedback))}</p><p>${E6(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E6(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
+      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E8(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E8(B2(c.title))}</h2><p class="ws-situation">${E8(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x, i) => `<button class="ws-option${selected === x.id ? " chosen" : ""}" type="button" data-choice="${x.id}" aria-pressed="${selected === x.id}"><span>${i + 1}</span><p>${E8(B2(x.text))}</p>${selected === x.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E8(B2(choice.feedback))}</p><p>${E8(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E8(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
     }
     function renderNotes() {
       if (!book.selected) {
@@ -5239,10 +6743,10 @@ var CareerRuntime = (() => {
       }
       const a = agency(book.selected), n = a ? book.notes[a.id] || blankNote() : blankNote();
       const fields = [["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u043C\u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E \u044D\u0442\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435?", "Why does this direction interest me?", "\u0421\u0432\u044F\u0436\u0438\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u0441 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0437\u0430\u0434\u0430\u0447\u0435\u0439, \u0430 \u043D\u0435 \u0441 \u043F\u0440\u0435\u0441\u0442\u0438\u0436\u0435\u043C \u043E\u0440\u0433\u0430\u043D\u0430.", "Connect your interest to a specific task rather than the agency\u2019s prestige."], ["question", "\u0427\u0442\u043E \u043C\u043D\u0435 \u0435\u0449\u0451 \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C?", "What do I still need to find out?", "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0435, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u0440\u0430\u0431\u043E\u0442\u044B \u0438\u043B\u0438 \u0433\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u0439.", "For example, education requirements, work activities or limits of responsibility."], ["next", "\u041A\u0430\u043A\u043E\u0439 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u044F \u0441\u0434\u0435\u043B\u0430\u044E?", "What will I do next?", "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442: \u043D\u0430\u0439\u0442\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443, \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0434\u0432\u0430 \u043E\u0440\u0433\u0430\u043D\u0430, \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443.", "State an action and its output: find an official careers page, compare two agencies, prepare a student project."]];
-      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x) => `<option value="${x.id}"${a?.id === x.id ? " selected" : ""}>${E6(name(x))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E6(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E6(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
+      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x) => `<option value="${x.id}"${a?.id === x.id ? " selected" : ""}>${E8(name(x))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E8(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E8(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
     }
     function renderPlan() {
-      return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E6(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
+      return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E8(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
     }
     function planDescription(id) {
       return { intro: L6("\u041F\u043E\u044F\u0441\u043D\u0438\u0442\u0435 \u0446\u0435\u043B\u044C: \u0443\u0437\u043D\u0430\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u0440\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u0430 \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u0445.", "Explain the aim: discover agencies and career possibilities, not receive an assessment of ability."), test: L6("\u0421\u0442\u0443\u0434\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0445\u043E\u0434\u044F\u0442 \u0442\u0440\u0438 \u0431\u043B\u043E\u043A\u0430 \u0442\u0435\u0441\u0442\u0430; \u043A\u0430\u0436\u0434\u044B\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u0441\u0435\u0431\u044F.", "Students complete the three test blocks and save their own result."), explore: L6("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044E \u0432\u044B\u0431\u043E\u0440\u0430. \u041E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0432 \u0438\u043D\u0434\u0435\u043A\u0441, \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u0441\u0444\u0435\u0440\u0443 \u0432 \u043A\u043E\u043F\u0438\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438. \u0417\u0430\u0442\u0435\u043C \u043D\u0430\u0439\u0434\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0432\u043B\u0430\u0441\u0442\u0438.", "Open the choice laboratory. Explain the three index contributions, change one policy area in a copy and compare recommendations. Then locate the agency in the government structure."), case: L6("\u041A\u0430\u0436\u0434\u044B\u0439 \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u043E\u0434\u043D\u0443 \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044E. \u041F\u043E\u0441\u043B\u0435 \u043E\u0442\u0432\u0435\u0442\u0430 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u043E\u0431\u044A\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u0438 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A.", "Choose one case. After responding, read the explanation and official source."), discussion: L6("\u041E\u0431\u0441\u0443\u0434\u0438\u0442\u0435, \u0447\u0442\u043E \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0435\u0442 \u0432 \u0437\u0430\u0434\u0430\u0447\u0435 \u0438 \u0447\u0442\u043E \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0432\u044B\u044F\u0441\u043D\u0435\u043D\u0438\u044F. \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u043B\u0438\u0441\u0442\u0430.", "Discuss what attracts you to the task and what needs investigation. Complete the three worksheet sections."), finish: L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435. \u0414\u043B\u044F \u043E\u0431\u0437\u043E\u0440\u0430 \u0433\u0440\u0443\u043F\u043F\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0442\u0435\u0441\u0442\u0430, \u0430 \u043D\u0435 \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0435 \u0437\u0430\u043F\u0438\u0441\u0438.", "Name one concrete action. For the class overview, use the anonymous test export, not free-text notes.") }[id];
@@ -5362,7 +6866,7 @@ var CareerRuntime = (() => {
         target.id = "workbook-print-root";
         document.body.append(target);
       }
-      target.innerHTML = `<h1>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E6(name(a))}</h2><p>${L6("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L6(ru, en)}</h3><p class="ws-print-text">${E6(n[id]) || L6("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L6("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E6(a.governmentUrl)}</p>`;
+      target.innerHTML = `<h1>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E8(name(a))}</h2><p>${L6("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L6(ru, en)}</h3><p class="ws-print-text">${E8(n[id]) || L6("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L6("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E8(a.governmentUrl)}</p>`;
       document.body.classList.add("print-workbook");
       window.print();
     }
@@ -5841,8 +7345,8 @@ var CareerRuntime = (() => {
         return;
       }
       const comparison = compareScenarioResults(a, b, ra, rb);
-      const list = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x) => x.id))];
-      const rows = comparison.rows.filter((x) => list.includes(x.id));
+      const list2 = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x) => x.id))];
+      const rows = comparison.rows.filter((x) => list2.includes(x.id));
       root.innerHTML = `<div class="comparison-heading"><h2>\u0414\u0432\u0430 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F \u0440\u044F\u0434\u043E\u043C</h2><p>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432: \u0432\u0442\u043E\u0440\u043E\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u043C\u0438\u043D\u0443\u0441 \u043F\u0435\u0440\u0432\u044B\u0439. \u042D\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F, \u043D\u0435 \u043F\u0440\u043E\u0433\u043D\u043E\u0437 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0443\u0441\u043F\u0435\u0445\u0430.</p></div>
     <div class="scenario-summary"><span><b>${comparison.topOverlap} / 5</b>\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u0422\u041E\u041F-5</span><span><b>${comparison.changedAnswers.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</span><span><b>${comparison.changedConditions.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439</span></div>
     <div class="scenario-table-scroll" tabindex="0" aria-label="\u0422\u0430\u0431\u043B\u0438\u0446\u0430 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u0432"><table class="scenario-table"><caption>\u041E\u0440\u0433\u0430\u043D\u044B \u0438\u0437 \u0434\u0432\u0443\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043E\u043A</caption><thead><tr><th>\u041E\u0440\u0433\u0430\u043D</th><th data-no-i18n>${esc(a.title)}</th><th data-no-i18n>${esc(b.title)}</th><th>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C</th></tr></thead><tbody>${rows.map((row) => `<tr><th><button class="text-link" data-dossier="${row.id}">${esc(name2(row.id))}</button></th><td>${row.scoreA.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankA}</small></td><td>${row.scoreB.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankB}</small></td><td class="${row.delta > 0 ? "delta-up" : ""}">${row.delta > 0 ? "+" : ""}${row.delta.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`;
@@ -5974,8 +7478,8 @@ var CareerRuntime = (() => {
     }).filter(Boolean);
   }
   function relevantEntryRoutes(authority, entryRoutes = []) {
-    const ids = new Set(authority?.entryRouteIds || []);
-    return entryRoutes.filter((route) => ids.has(route.id));
+    const ids2 = new Set(authority?.entryRouteIds || []);
+    return entryRoutes.filter((route) => ids2.has(route.id));
   }
   function addCompareId(compareIds = [], authorityId, max = MAX_COMPARE) {
     const clean = [...new Set(compareIds.filter(Boolean))];
@@ -6070,9 +7574,9 @@ var CareerRuntime = (() => {
   var sectorPress = null;
   var $2 = (selector, root = document) => root.querySelector(selector);
   var $$2 = (selector, root = document) => [...root.querySelectorAll(selector)];
-  var icon = (id, className = "") => `<svg class="${className}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
+  var icon2 = (id, className = "") => `<svg class="${className}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
-  var safeUrl = (value = "") => {
+  var safeUrl2 = (value = "") => {
     try {
       const url = new URL(value, location.href);
       return ["https:", "http:"].includes(url.protocol) ? escapeHtml(url.href) : "#";
@@ -6184,8 +7688,8 @@ var CareerRuntime = (() => {
     }
     let saved = true;
     try {
-      const fingerprint = stateFingerprint();
-      if (fingerprint !== persistedFingerprint) {
+      const fingerprint2 = stateFingerprint();
+      if (fingerprint2 !== persistedFingerprint) {
         writeLocal(STORAGE_KEY, JSON.stringify({
           schema: 4,
           questionnaireVersion: QUESTIONNAIRE_VERSION,
@@ -6194,7 +7698,7 @@ var CareerRuntime = (() => {
           ...state,
           updatedAt: (/* @__PURE__ */ new Date()).toISOString()
         }));
-        persistedFingerprint = fingerprint;
+        persistedFingerprint = fingerprint2;
       }
       if ($2("#storage-warning")) $2("#storage-warning").hidden = true;
     } catch {
@@ -6339,7 +7843,7 @@ var CareerRuntime = (() => {
   }
   function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
     finishSectorDrag(false, { focus: false, announce: false });
-    const valid = ["home", "personality", "personality-results", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
+    const valid = ["home", "personality", "personality-results", "preferences", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
     if (route === "main-content") {
       document.getElementById("main-content")?.focus();
       return;
@@ -6348,10 +7852,11 @@ var CareerRuntime = (() => {
     if (SEMINAR_FLOW) {
       if (!personality?.isComplete()) route = "personality";
       else if (route === "home") route = "personality-results";
-      else if (!["personality", "personality-results", "test", "sectors", "conditions", "results"].includes(route)) route = resolveResumeRoute();
+      else if (!["personality", "personality-results", "preferences", "test", "sectors", "conditions", "results"].includes(route)) route = resolveResumeRoute();
       if (route === "sectors" && Object.keys(state.answers).length < data.questions.length) route = "test";
       if (route === "conditions" && (state.prioritySectors.length !== 4 || state.lowPrioritySectors.length !== 2)) route = resolveResumeRoute();
-    } else if (["personality", "personality-results"].includes(route)) route = "home";
+      route = seminarFlow?.guardRoute(route) || route;
+    } else if (["personality", "personality-results", "preferences"].includes(route)) route = "home";
     if (route === "results" && !completionStatus({ ...state, questions: data.questions }).complete) route = resolveResumeRoute();
     const unavailableRoutes = { workshop: "data/agency-studies.json", "public-service": "data/public-service.json", structure: "data/hierarchy.json", opportunities: "data/career-resources.json" };
     if (data.unavailable.includes(unavailableRoutes[route])) {
@@ -6442,8 +7947,8 @@ var CareerRuntime = (() => {
     </button>`;
     }).join("");
     $2("#question-next").disabled = !state.answers[question.id];
-    $2("#question-next").innerHTML = state.questionIndex === total - 1 ? `\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0441\u0444\u0435\u0440\u044B${icon("arrow-right")}` : `\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0432\u043E\u043F\u0440\u043E\u0441${icon("arrow-right")}`;
-    $2("#question-back").innerHTML = `${icon("arrow-left")}${state.questionIndex ? "\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0438\u0439 \u0432\u043E\u043F\u0440\u043E\u0441" : "\u041D\u0430 \u0433\u043B\u0430\u0432\u043D\u0443\u044E"}`;
+    $2("#question-next").innerHTML = state.questionIndex === total - 1 ? `\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0441\u0444\u0435\u0440\u044B${icon2("arrow-right")}` : `\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0432\u043E\u043F\u0440\u043E\u0441${icon2("arrow-right")}`;
+    $2("#question-back").innerHTML = `${icon2("arrow-left")}${state.questionIndex ? "\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0438\u0439 \u0432\u043E\u043F\u0440\u043E\u0441" : "\u041D\u0430 \u0433\u043B\u0430\u0432\u043D\u0443\u044E"}`;
     $2("#question-back").hidden = SEMINAR_FLOW && state.questionIndex === 0;
     renderLiveProfile();
     renderQuestionMap();
@@ -6475,7 +7980,7 @@ var CareerRuntime = (() => {
   }
   function moveQuestion(direction) {
     if (direction < 0) {
-      if (state.questionIndex === 0) return routeTo("home");
+      if (state.questionIndex === 0) return routeTo(SEMINAR_FLOW ? "preferences" : "home");
       state.questionIndex -= 1;
       saveState();
       renderQuestion();
@@ -6538,7 +8043,7 @@ var CareerRuntime = (() => {
       const title = escapeHtml(data.sectors.find((s) => s.id === id)?.title || id);
       return `<li class="sector-order-row ${key === "prioritySectors" ? "priority" : "low"}" data-order-key="${key}" data-sector-id="${id}" tabindex="0" aria-label="${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}" aria-roledescription="${escapeHtml(translate("\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0430\u0435\u043C\u044B\u0439 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}" aria-describedby="sector-drag-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape">
       <span class="sector-order-title"><b class="order-index">${i + 1}.</b><span>${title}</span></span>
-      <button type="button" class="sector-remove" aria-label="${escapeHtml(translate("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}: ${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}">${icon("close")}</button>
+      <button type="button" class="sector-remove" aria-label="${escapeHtml(translate("\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442"))}: ${escapeHtml(translate(data.sectors.find((s) => s.id === id)?.title || id))}">${icon2("close")}</button>
       ${key === "prioritySectors" ? `<div class="sector-card-topics" data-topic-card="${id}" hidden></div>` : ""}
     </li>`;
     }).join("")}</ol>` : "<p>\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0444\u0435\u0440\u044B \u043D\u0438\u0436\u0435.</p>"}</section>`).join("");
@@ -6656,10 +8161,10 @@ var CareerRuntime = (() => {
   }
   function beginSectorDrag(row, mode, event) {
     finishSectorDrag(false, { focus: false, announce: false });
-    const list = row.parentElement, rows = $$2(".sector-order-row", list), index = rows.indexOf(row);
-    sectorDrag = { row, list, rows, mode, key: row.dataset.orderKey, id: row.dataset.sectorId, index, target: index, pointerId: event?.pointerId, touchId: event?.touchId, startY: event?.clientY, clientY: event?.clientY, grabOffset: event ? event.clientY - row.getBoundingClientRect().top : 0, moved: mode === "keyboard" };
+    const list2 = row.parentElement, rows = $$2(".sector-order-row", list2), index = rows.indexOf(row);
+    sectorDrag = { row, list: list2, rows, mode, key: row.dataset.orderKey, id: row.dataset.sectorId, index, target: index, pointerId: event?.pointerId, touchId: event?.touchId, startY: event?.clientY, clientY: event?.clientY, grabOffset: event ? event.clientY - row.getBoundingClientRect().top : 0, moved: mode === "keyboard" };
     row.classList.add("is-dragging");
-    list.classList.add("is-sorting");
+    list2.classList.add("is-sorting");
     announceSectorOrder("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0432\u044B\u0431\u0440\u0430\u043D \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F.");
     if (mode !== "keyboard") {
       const session = sectorDrag;
@@ -6732,7 +8237,7 @@ var CareerRuntime = (() => {
       const rankText = selection.priority ? selection.priorityIndex + 1 : selection.low ? "\u2212" : "";
       return `<article class="sector-card${className}" data-sector="${sector.id}">
       <div class="sector-rank">${rankText}</div>
-      <div class="sector-icon">${icon(iconForSector(sector.id))}</div>
+      <div class="sector-icon">${icon2(iconForSector(sector.id))}</div>
       <h2>${escapeHtml(sector.title)}</h2>
       <p>${escapeHtml(sector.description)}</p>
       <div class="sector-actions">
@@ -6772,7 +8277,7 @@ var CareerRuntime = (() => {
       const selected = Number(state.conditions[condition.id] || 0);
       return `<article class="condition-card">
       <div class="condition-title">
-        <div class="condition-icon">${icon("method")}</div>
+        <div class="condition-icon">${icon2("method")}</div>
         <div><h2>${escapeHtml(condition.title)}</h2><p>${escapeHtml(condition.description)}</p></div>
       </div>
       <div class="condition-control">
@@ -6795,7 +8300,7 @@ var CareerRuntime = (() => {
   }
   function renderReview() {
     const root = $2("#answer-review");
-    const names = (ids) => ids.map((id) => `<li>${escapeHtml(data.sectors.find((s) => s.id === id)?.title || id)}</li>`).join("");
+    const names = (ids2) => ids2.map((id) => `<li>${escapeHtml(data.sectors.find((s) => s.id === id)?.title || id)}</li>`).join("");
     root.innerHTML = `<h2>\u041F\u0435\u0440\u0435\u0434 \u0440\u0430\u0441\u0447\u0451\u0442\u043E\u043C</h2><p>\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u0440\u044F\u0434\u043E\u043A \u0441\u0444\u0435\u0440 \u0438 \u043F\u0440\u0438 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E\u0441\u0442\u0438 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B. \u0418\u043D\u0434\u0435\u043A\u0441 \u043F\u043E\u043A\u0430\u0436\u0435\u0442 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043A \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u0442\u0440\u0443\u0434\u043E\u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430.</p><div class="review-summary"><div><h3>\u0427\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.prioritySectors)}</ol></div><div><h3>\u0414\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.lowPrioritySectors)}</ol></div></div><button class="text-link" type="button" id="review-sectors">\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440 \u0441\u0444\u0435\u0440</button><details class="review-answers"><summary>\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C 27 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</summary>${data.questions.map((q, i) => `<button type="button" class="review-answer" data-review-question="${i}"><span>${i + 1}</span><span>${escapeHtml(q.text)}</span><strong>${state.answers[q.id] || "\u2014"} / 5</strong></button>`).join("")}</details>`;
     $2("#review-sectors").onclick = () => routeTo("sectors");
     $$2("[data-review-question]", root).forEach((b) => b.onclick = () => {
@@ -6848,52 +8353,52 @@ var CareerRuntime = (() => {
   }
   function radarSvg(profile, { numbered = false, label: label2 = "\u0414\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F" } = {}) {
     if (numbered) {
-      const center2 = 155, radius2 = 106;
-      const point2 = (index, ratio) => {
+      const center3 = 155, radius3 = 106;
+      const point3 = (index, ratio) => {
         const angle = -Math.PI / 2 + index * Math.PI * 2 / SCALE_IDS.length;
-        return [center2 + Math.cos(angle) * radius2 * ratio, center2 + Math.sin(angle) * radius2 * ratio];
+        return [center3 + Math.cos(angle) * radius3 * ratio, center3 + Math.sin(angle) * radius3 * ratio];
       };
-      const polygon2 = (ratio) => SCALE_IDS.map((_, index) => point2(index, ratio).join(",")).join(" ");
+      const polygon2 = (ratio) => SCALE_IDS.map((_, index) => point3(index, ratio).join(",")).join(" ");
       const values2 = SCALE_IDS.map((id) => Math.max(1, Math.min(5, Number(profile.raw[id]) || 1)) / 5);
       return `<svg viewBox="0 0 310 310" width="310" height="310" role="img" aria-label="${escapeHtml(label2)}">
       <g fill="none" stroke="#d3e1eb" stroke-width="1">${[1, 2, 3, 4, 5].map((value) => `<polygon points="${polygon2(value / 5)}"/>`).join("")}${SCALE_IDS.map((_, index) => {
-        const [x, y] = point2(index, 1);
-        return `<line x1="${center2}" y1="${center2}" x2="${x}" y2="${y}"/>`;
+        const [x, y] = point3(index, 1);
+        return `<line x1="${center3}" y1="${center3}" x2="${x}" y2="${y}"/>`;
       }).join("")}</g>
-      <polygon points="${values2.map((value, index) => point2(index, value).join(",")).join(" ")}" fill="#087bc1" fill-opacity=".16" stroke="#087bc1" stroke-width="2.5"/>
+      <polygon points="${values2.map((value, index) => point3(index, value).join(",")).join(" ")}" fill="#087bc1" fill-opacity=".16" stroke="#087bc1" stroke-width="2.5"/>
       ${values2.map((value, index) => {
-        const [x, y] = point2(index, value);
+        const [x, y] = point3(index, value);
         return `<circle cx="${x}" cy="${y}" r="3.5" fill="#087bc1" stroke="#fff" stroke-width="1.5"/>`;
       }).join("")}
       <g fill="#1c355f" stroke="none" font-size="15" font-weight="600" text-anchor="middle" dominant-baseline="middle">${SCALE_IDS.map((_, index) => {
-        const [x, y] = point2(index, 1.23);
+        const [x, y] = point3(index, 1.23);
         return `<text x="${x}" y="${y}">${index + 1}</text>`;
       }).join("")}</g>
-      <g fill="#627490" stroke="none" font-size="10" text-anchor="end">${[1, 2, 3, 4, 5].map((value) => `<text x="${center2 - 6}" y="${center2 - radius2 * value / 5 + 3}">${value}</text>`).join("")}</g>
+      <g fill="#627490" stroke="none" font-size="10" text-anchor="end">${[1, 2, 3, 4, 5].map((value) => `<text x="${center3 - 6}" y="${center3 - radius3 * value / 5 + 3}">${value}</text>`).join("")}</g>
     </svg>`;
     }
     const values = SCALE_IDS.map((id) => profile.normalized[id] ?? 0.5);
     const count = values.length;
-    const center = 105;
-    const radius = 78;
-    const point = (index, ratio) => {
+    const center2 = 105;
+    const radius2 = 78;
+    const point2 = (index, ratio) => {
       const angle = -Math.PI / 2 + index * Math.PI * 2 / count;
-      return [center + Math.cos(angle) * radius * ratio, center + Math.sin(angle) * radius * ratio];
+      return [center2 + Math.cos(angle) * radius2 * ratio, center2 + Math.sin(angle) * radius2 * ratio];
     };
-    const polygon = values.map((value, index) => point(index, 0.25 + 0.75 * value).join(",")).join(" ");
-    const grids = [0.25, 0.5, 0.75, 1].map((ratio) => `<polygon points="${SCALE_IDS.map((_, i) => point(i, ratio).join(",")).join(" ")}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>`).join("");
+    const polygon = values.map((value, index) => point2(index, 0.25 + 0.75 * value).join(",")).join(" ");
+    const grids = [0.25, 0.5, 0.75, 1].map((ratio) => `<polygon points="${SCALE_IDS.map((_, i) => point2(i, ratio).join(",")).join(" ")}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>`).join("");
     const axes = SCALE_IDS.map((_, i) => {
-      const [x, y] = point(i, 1);
-      return `<line x1="${center}" y1="${center}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,.17)" stroke-width="1"/>`;
+      const [x, y] = point2(i, 1);
+      return `<line x1="${center2}" y1="${center2}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,.17)" stroke-width="1"/>`;
     }).join("");
     return `<svg viewBox="0 0 210 210" role="img" aria-label="\u0414\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F">
     ${grids}${axes}
     <polygon points="${polygon}" fill="rgba(255,255,255,.23)" stroke="#fff" stroke-width="2.2"/>
     ${values.map((value, i) => {
-      const [x, y] = point(i, 0.25 + 0.75 * value);
+      const [x, y] = point2(i, 0.25 + 0.75 * value);
       return `<circle cx="${x}" cy="${y}" r="3.3" fill="#fff" stroke="#087bc1" stroke-width="1.5"/>`;
     }).join("")}
-    <circle cx="${center}" cy="${center}" r="4" fill="#fff"/>
+    <circle cx="${center2}" cy="${center2}" r="4" fill="#fff"/>
   </svg>`;
   }
   function renderResults() {
@@ -6920,11 +8425,11 @@ var CareerRuntime = (() => {
         <h1>${escapeHtml(result.roleProfile.lowInterest ? "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" : result.roleProfile.flat ? "\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432" : top[0]?.track?.title || "\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435")}</h1>
         <p>${escapeHtml(broadMessage)} \u0418\u043D\u0434\u0435\u043A\u0441 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C \u0432\u043D\u0443\u0442\u0440\u0438 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u0438 \u043D\u0435 \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C\u044E \u0442\u0440\u0443\u0434\u043E\u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430.</p>
         <div class="result-actions">
-          <button id="save-scenario-result" class="button button-primary" type="button">${icon("file")}\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439</button>
-          <button id="print-result" class="button button-primary" type="button">${icon("print")}\u041F\u0435\u0447\u0430\u0442\u044C / PDF</button>
-          <button id="export-result" class="button button-secondary" type="button">${icon("download")}\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u0434\u043B\u044F \u0433\u0440\u0443\u043F\u043F\u044B</button>
-          <button id="copy-result" class="button button-secondary" type="button">${icon("copy")}\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0438\u0442\u043E\u0433</button>
-          <button id="reset-result" class="button button-secondary" type="button">${icon("reset")}\u041F\u0440\u043E\u0439\u0442\u0438 \u0437\u0430\u043D\u043E\u0432\u043E</button>
+          <button id="save-scenario-result" class="button button-primary" type="button">${icon2("file")}\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439</button>
+          <button id="print-result" class="button button-primary" type="button">${icon2("print")}\u041F\u0435\u0447\u0430\u0442\u044C / PDF</button>
+          <button id="export-result" class="button button-secondary" type="button">${icon2("download")}\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u0434\u043B\u044F \u0433\u0440\u0443\u043F\u043F\u044B</button>
+          <button id="copy-result" class="button button-secondary" type="button">${icon2("copy")}\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0438\u0442\u043E\u0433</button>
+          <button id="reset-result" class="button button-secondary" type="button">${icon2("reset")}\u041F\u0440\u043E\u0439\u0442\u0438 \u0437\u0430\u043D\u043E\u0432\u043E</button>
         </div>
       </div>
       <div class="profile-panel">
@@ -6936,32 +8441,32 @@ var CareerRuntime = (() => {
       </div>
     </section>
 
-    <section class="dl-lab-launch"><div><h2>\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435\u0441\u044C, \u043F\u043E\u0447\u0435\u043C\u0443 \u0432\u044B\u0431\u0440\u0430\u043D \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D</h2><p>\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435 \u0432\u043A\u043B\u0430\u0434 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432, \u0441\u0444\u0435\u0440 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u0439. \u0421\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442, \u043D\u0435 \u043C\u0435\u043D\u044F\u044F \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432.</p></div><button id="result-to-lab" class="button button-primary" type="button">\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430${icon("chart")}</button></section>
+    <section class="dl-lab-launch"><div><h2>\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435\u0441\u044C, \u043F\u043E\u0447\u0435\u043C\u0443 \u0432\u044B\u0431\u0440\u0430\u043D \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D</h2><p>\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435 \u0432\u043A\u043B\u0430\u0434 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432, \u0441\u0444\u0435\u0440 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u0439. \u0421\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442, \u043D\u0435 \u043C\u0435\u043D\u044F\u044F \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432.</p></div><button id="result-to-lab" class="button button-primary" type="button">\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430${icon2("chart")}</button></section>
     <section class="results-section">
-      <div class="results-section-header"><div><h2>\u041D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u043B\u0430\u0441\u0442\u0438</h2><p>\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u043B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B (70%) \u0438 \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 \u0432\u0441\u0435\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F (30%).</p></div><button id="compare-top-three" class="button button-secondary" type="button">${icon("compare")}\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u043F\u0435\u0440\u0432\u044B\u0435 \u0442\u0440\u0438</button></div>
+      <div class="results-section-header"><div><h2>\u041D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u043B\u0430\u0441\u0442\u0438</h2><p>\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u043B\u0443\u0447\u0448\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B (70%) \u0438 \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 \u0432\u0441\u0435\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F (30%).</p></div><button id="compare-top-three" class="button button-secondary" type="button">${icon2("compare")}\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u043F\u0435\u0440\u0432\u044B\u0435 \u0442\u0440\u0438</button></div>
       ${leadingTies.length > 1 ? `<p class="app-notice">\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0438\u043C\u0435\u044E\u0442 \u043E\u0434\u0438\u043D\u0430\u043A\u043E\u0432\u044B\u0439 \u043D\u0435\u043E\u043A\u0440\u0443\u0433\u043B\u0451\u043D\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u0432\u043D\u0443\u0442\u0440\u0438 \u044D\u0442\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u044B \u0442\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439, \u0430 \u043D\u0435 \u0441\u0432\u0438\u0434\u0435\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u043E \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u0439 \u0432 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.</p>` : ""}
       <div class="top-match-grid">${top.map((item, index) => matchCard(item, index + 1)).join("")}</div>
       ${cutTies.length ? `<details class="equal-results"><summary>\u0417\u0430 \u0433\u0440\u0430\u043D\u0438\u0446\u0435\u0439 \u0422\u041E\u041F-5 \u0435\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u044B \u0441 \u0442\u0435\u043C \u0436\u0435 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u043C</summary><div class="tag-row">${cutTies.map((a) => `<button type="button" class="button button-secondary open-authority" data-authority="${a.id}">${escapeHtml(authorityName(a))}</button>`).join("")}</div><p>\u041E\u043D\u0438 \u043D\u0435 \u043C\u0435\u043D\u0435\u0435 \u0431\u043B\u0438\u0437\u043A\u0438 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438, \u0447\u0435\u043C \u043F\u044F\u0442\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.</p></details>` : ""}
     </section>
 
     <section id="result-vacancies" class="vac-result-preview" data-no-i18n></section>
-    <section class="ps-entry-link"><div><strong>\u0417\u0430 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u043C\u0438 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u043B\u0430\u0441\u0442\u0438</strong><p>\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u043E\u0432 \u0438 \u0441\u0443\u0434\u043E\u0432, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0420\u043E\u0441\u0441\u0438\u0438. \u041E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E \u0442\u0435\u043C \u0436\u0435 \u043E\u0442\u0432\u0435\u0442\u0430\u043C.</p></div><button type="button" class="button button-primary" id="result-to-public">\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438${icon("arrow-right")}</button></section>
-    <section class="workshop-launch"><div><h2>\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043D\u0430 \u043F\u0440\u0438\u043C\u0435\u0440\u0435 \u0437\u0430\u0434\u0430\u0447\u0438</h2><p>\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0443\u044E \u043F\u0440\u043E\u0431\u0443 \u0438\u043B\u0438 \u0437\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043B\u0438\u0441\u0442 \u0432\u044B\u0431\u043E\u0440\u0430 \u0434\u043B\u044F \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.</p></div><button id="result-to-workshop" class="button button-primary" type="button">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0443\u044E${icon("arrow-right")}</button></section>
+    <section class="ps-entry-link"><div><strong>\u0417\u0430 \u043F\u0440\u0435\u0434\u0435\u043B\u0430\u043C\u0438 \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u043B\u0430\u0441\u0442\u0438</strong><p>\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u043E\u0432 \u0438 \u0441\u0443\u0434\u043E\u0432, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0420\u043E\u0441\u0441\u0438\u0438. \u041E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E \u0442\u0435\u043C \u0436\u0435 \u043E\u0442\u0432\u0435\u0442\u0430\u043C.</p></div><button type="button" class="button button-primary" id="result-to-public">\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438${icon2("arrow-right")}</button></section>
+    <section class="workshop-launch"><div><h2>\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043D\u0430 \u043F\u0440\u0438\u043C\u0435\u0440\u0435 \u0437\u0430\u0434\u0430\u0447\u0438</h2><p>\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0443\u044E \u043F\u0440\u043E\u0431\u0443 \u0438\u043B\u0438 \u0437\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043B\u0438\u0441\u0442 \u0432\u044B\u0431\u043E\u0440\u0430 \u0434\u043B\u044F \u043E\u0434\u043D\u043E\u0433\u043E \u0438\u0437 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.</p></div><button id="result-to-workshop" class="button button-primary" type="button">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0430\u0441\u0442\u0435\u0440\u0441\u043A\u0443\u044E${icon2("arrow-right")}</button></section>
     ${development ? `<section class="results-section career-development-section">
       <div class="results-section-header"><div><span class="step-kicker">\u041D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043D\u0430\u0432\u044B\u043A\u043E\u0432, \u0430 \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440 \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F</span><h2>\u041A\u0430\u043A \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C\u0441\u044F \u043A \u0442\u0440\u0435\u043A\u0443 \xAB${escapeHtml(development.title)}\xBB</h2><p>\u041D\u0438\u0436\u0435 \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u044B \u0442\u0438\u043F\u0438\u0447\u043D\u044B\u0435 \u0437\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u043E\u043B\u0435\u0437\u043D\u043E \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043D\u0435\u0437\u0430\u0432\u0438\u0441\u0438\u043C\u043E \u043E\u0442 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0433\u043E \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u0430.</p></div></div>
       <div class="development-grid">
-        <article class="development-card"><div class="development-icon">${icon("graduation")}</div><h3>\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u0430\u0437\u0430</h3><strong>\u041E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F</strong><ul>${development.education.core.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul><strong>\u0421\u043C\u0435\u0436\u043D\u0430\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0430</strong><ul>${development.education.adjacent.slice(0, 4).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></article>
-        <article class="development-card"><div class="development-icon">${icon("briefcase")}</div><h3>\u041A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0438 \u0442\u0440\u0435\u043A\u0430</h3><div class="competency-cloud">${development.competencies.map((item) => `<button class="competency-pill" type="button" data-competency="${item.id}" title="${escapeHtml(item.description)}">${escapeHtml(item.title)}</button>`).join("")}</div><p class="development-note">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u044E, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u043F\u0440\u0438\u043C\u0435\u0440 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430.</p></article>
-        <article class="development-card"><div class="development-icon">${icon("route")}</div><h3>\u0422\u0440\u0438 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u0448\u0430\u0433\u0430</h3><ol>${development.portfolio.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol><p class="development-note">\u0422\u0430\u043A\u0438\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u043C\u043E\u0436\u043D\u043E \u0432\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0432 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E \u0438 \u043E\u0431\u0441\u0443\u0436\u0434\u0430\u0442\u044C \u043D\u0430 \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0435 \u0438\u043B\u0438 \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u0438.</p></article>
+        <article class="development-card"><div class="development-icon">${icon2("graduation")}</div><h3>\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u0430\u0437\u0430</h3><strong>\u041E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F</strong><ul>${development.education.core.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul><strong>\u0421\u043C\u0435\u0436\u043D\u0430\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0430</strong><ul>${development.education.adjacent.slice(0, 4).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></article>
+        <article class="development-card"><div class="development-icon">${icon2("briefcase")}</div><h3>\u041A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0438 \u0442\u0440\u0435\u043A\u0430</h3><div class="competency-cloud">${development.competencies.map((item) => `<button class="competency-pill" type="button" data-competency="${item.id}" title="${escapeHtml(item.description)}">${escapeHtml(item.title)}</button>`).join("")}</div><p class="development-note">\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u044E, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u043F\u0440\u0438\u043C\u0435\u0440 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0434\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u044C\u0441\u0442\u0432\u0430.</p></article>
+        <article class="development-card"><div class="development-icon">${icon2("route")}</div><h3>\u0422\u0440\u0438 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0445 \u0448\u0430\u0433\u0430</h3><ol>${development.portfolio.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ol><p class="development-note">\u0422\u0430\u043A\u0438\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u043C\u043E\u0436\u043D\u043E \u0432\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0432 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E \u0438 \u043E\u0431\u0441\u0443\u0436\u0434\u0430\u0442\u044C \u043D\u0430 \u043F\u0440\u0430\u043A\u0442\u0438\u043A\u0435 \u0438\u043B\u0438 \u0441\u043E\u0431\u0435\u0441\u0435\u0434\u043E\u0432\u0430\u043D\u0438\u0438.</p></article>
       </div>
     </section>` : ""}
 
     ${discovery ? `<section class="results-section">
       <div class="results-section-header"><div><h2>\u041D\u0435\u043E\u0447\u0435\u0432\u0438\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442</h2><p>\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430. \u0415\u0433\u043E \u043C\u0435\u0441\u0442\u043E \u0438 \u0438\u043D\u0434\u0435\u043A\u0441 \u043C\u043E\u0436\u043D\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432 \u043F\u043E\u043B\u043D\u043E\u043C \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435.</p></div></div>
       <article class="discovery-card">
-        <div class="discovery-icon">${icon("star")}</div>
+        <div class="discovery-icon">${icon2("star")}</div>
         <div><h3>${escapeHtml(authorityName(discovery))}</h3><p>${escapeHtml(discovery.mission)} \u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u0442\u0440\u0435\u043A: ${escapeHtml(discovery.track?.title || "\u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435")}.</p></div>
-        <button class="button button-secondary open-authority" type="button" data-authority="${discovery.id}">\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043E\u0440\u0433\u0430\u043D${icon("arrow-right")}</button>
+        <button class="button button-secondary open-authority" type="button" data-authority="${discovery.id}">\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043E\u0440\u0433\u0430\u043D${icon2("arrow-right")}</button>
       </article>
     </section>` : ""}
 
@@ -6980,8 +8485,8 @@ var CareerRuntime = (() => {
           <button class="ranking-name ranking-open open-authority" type="button" data-authority="${item.id}" aria-label="\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435 ${escapeHtml(authorityName(item))}"><strong>${escapeHtml(authorityName(item))}</strong><small>${escapeHtml(item.entityTypeLabel)}</small></button>
           <span class="ranking-track">${escapeHtml(item.track?.title || "")}</span>
           <strong class="ranking-score">${item.score.toFixed(1)}</strong>
-          <button class="ranking-compare compare-toggle" type="button" data-authority="${item.id}" aria-label="\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C ${escapeHtml(authorityName(item))} \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435">${icon("compare")}</button>
-          ${icon("chevron")}
+          <button class="ranking-compare compare-toggle" type="button" data-authority="${item.id}" aria-label="\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C ${escapeHtml(authorityName(item))} \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435">${icon2("compare")}</button>
+          ${icon2("chevron")}
         </div>`).join("")}
       </div>
     </section>`;
@@ -6995,9 +8500,9 @@ var CareerRuntime = (() => {
     <div class="result-symbol-heading">${authorityEmblem(item, "compact")}<h3>${escapeHtml(authorityName(item))}</h3></div>
     <span class="match-type">${escapeHtml(publicSector ? item.entityTypeLabel : item.entityTypeLabel)}</span>
     <div class="match-track"><b>\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u0442\u0440\u0435\u043A</b>${escapeHtml(item.track?.title || "\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435")}</div>
-    <div class="match-card-actions"><button class="match-more open-authority" type="button" data-authority="${item.id}">${escapeHtml(item.band.label)}${icon("arrow-right")}</button><button class="compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${item.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043E" : "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C"}</span></button></div>
+    <div class="match-card-actions"><button class="match-more open-authority" type="button" data-authority="${item.id}">${escapeHtml(item.band.label)}${icon2("arrow-right")}</button><button class="compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${item.id}" aria-pressed="${selected}">${icon2("compare")}<span>${selected ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043E" : "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C"}</span></button></div>
     <button type="button" class="dl-explain-link" data-explain-authority="${item.id}">\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D?</button>
-    <button type="button" class="vac-card-link" data-vacancy-open="${item.id}">${icon("briefcase")}\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B</button>
+    <button type="button" class="vac-card-link" data-vacancy-open="${item.id}">${icon2("briefcase")}\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B</button>
   </article>`;
   }
   function bindResultEvents() {
@@ -7126,7 +8631,7 @@ var CareerRuntime = (() => {
       <p>${escapeHtml(authority.mission)}</p>
       <div class="authority-card-stat"><strong>${careerRoles.length}</strong><span>${roleCountLabel(careerRoles.length)} \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435</span></div>
       <div class="tag-row">${(authority.sectors || []).slice(0, 2).map((item) => `<span class="tag">${escapeHtml(sectorMap.get(item.id)?.title || item.id)}</span>`).join("")}</div>
-      <div class="authority-card-actions"><button class="authority-open-button open-authority" type="button" data-authority="${authority.id}">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435${icon("arrow-right")}</button><button class="compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043E" : "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C"}</span></button></div>
+      <div class="authority-card-actions"><button class="authority-open-button open-authority" type="button" data-authority="${authority.id}">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435${icon2("arrow-right")}</button><button class="compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon2("compare")}<span>${selected ? "\u0412\u044B\u0431\u0440\u0430\u043D\u043E" : "\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C"}</span></button></div>
     </article>`;
     }).join("") : `<div class="empty-state"><h2>\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E</h2><p>\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0437\u0430\u043F\u0440\u043E\u0441 \u0438\u043B\u0438 \u0441\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u0444\u0438\u043B\u044C\u0442\u0440\u044B.</p></div>`;
     $$2(".authority-card .open-authority").forEach((button) => button.addEventListener("click", () => openAuthority(button.dataset.authority)));
@@ -7148,7 +8653,7 @@ var CareerRuntime = (() => {
   }
   function authorityCareersMarkup(authority) {
     const roles = buildAuthorityCareerRoles(authority, data.careerFramework, data.competencies, 5);
-    return `<div class="career-model-note">${icon("info")}<p>${escapeHtml(data.careerFramework.scopeNote)}</p></div>
+    return `<div class="career-model-note">${icon2("info")}<p>${escapeHtml(data.careerFramework.scopeNote)}</p></div>
     <div class="career-role-list">${roles.map((role, index) => `<article class="career-role-card${index === 0 ? " featured" : ""}">
       <div class="career-role-heading"><span>${String(index + 1).padStart(2, "0")}</span><div><small>${escapeHtml(role.importanceLabel)}</small><h2>${escapeHtml(role.title)}</h2></div></div>
       <p>${escapeHtml(role.description)}</p>
@@ -7162,9 +8667,9 @@ var CareerRuntime = (() => {
   }
   function authorityEntryMarkup(authority) {
     const routes = relevantEntryRoutes(authority, data.entryRoutes);
-    return `<div class="entry-verified"><h2>\u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438</h2><p>\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.</p><div class="resource-grid">${resourceCards(resourcesForAuthority(authority, data.resources))}</div><button class="button button-secondary" type="button" data-open-resources="${authority.id}">\u0412\u0441\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B${icon("arrow-right")}</button></div><div class="entry-summary"><div class="entry-summary-icon">${icon("route")}</div><div><span>\u0421\u0438\u0441\u0442\u0435\u043C\u0430 \u0432\u0445\u043E\u0434\u0430</span><strong>${escapeHtml(careerSystemLabel(authority))}</strong><p>\u0410\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0432\u0441\u0435\u0433\u0434\u0430 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u0438\u043B\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0434\u0435\u043B \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.</p></div></div>
-    <section class="dialog-section"><h2>\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u044B\u0435 \u043C\u0430\u0440\u0448\u0440\u0443\u0442\u044B</h2><div class="entry-route-list">${routes.map((route, index) => `<article class="entry-route-card"><span>${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(route.title)}</h3><p>${escapeHtml(route.description)}</p><ol>${route.steps.slice(0, 4).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol><a href="${safeUrl(route.url)}" target="_blank" rel="noopener noreferrer">${icon("external")}\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0441\u0443\u0440\u0441</a></div></article>`).join("")}</div></section>
-    <section class="dialog-section"><h2>\u0427\u0442\u043E \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0443 \u0413\u041C\u0423</h2><div class="principle-grid">${data.careerFramework.qualificationPrinciples.map((item) => `<div>${icon("check")}<p>${escapeHtml(item)}</p></div>`).join("")}</div></section>`;
+    return `<div class="entry-verified"><h2>\u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438</h2><p>\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.</p><div class="resource-grid">${resourceCards(resourcesForAuthority(authority, data.resources))}</div><button class="button button-secondary" type="button" data-open-resources="${authority.id}">\u0412\u0441\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B${icon2("arrow-right")}</button></div><div class="entry-summary"><div class="entry-summary-icon">${icon2("route")}</div><div><span>\u0421\u0438\u0441\u0442\u0435\u043C\u0430 \u0432\u0445\u043E\u0434\u0430</span><strong>${escapeHtml(careerSystemLabel(authority))}</strong><p>\u0410\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0432\u0441\u0435\u0433\u0434\u0430 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u0438\u043B\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0434\u0435\u043B \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.</p></div></div>
+    <section class="dialog-section"><h2>\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u044B\u0435 \u043C\u0430\u0440\u0448\u0440\u0443\u0442\u044B</h2><div class="entry-route-list">${routes.map((route, index) => `<article class="entry-route-card"><span>${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(route.title)}</h3><p>${escapeHtml(route.description)}</p><ol>${route.steps.slice(0, 4).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol><a href="${safeUrl2(route.url)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0441\u0443\u0440\u0441</a></div></article>`).join("")}</div></section>
+    <section class="dialog-section"><h2>\u0427\u0442\u043E \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0443 \u0413\u041C\u0423</h2><div class="principle-grid">${data.careerFramework.qualificationPrinciples.map((item) => `<div>${icon2("check")}<p>${escapeHtml(item)}</p></div>`).join("")}</div></section>`;
   }
   function authoritySourcesMarkup(authority) {
     const sourceItems = [
@@ -7172,8 +8677,8 @@ var CareerRuntime = (() => {
       ...data.careerFramework.sources.map((item) => ({ ...item, label: item.title }))
     ];
     return `${authoritySymbolCredit(authority)}${classroom?.sourceForAuthority(authority.id) || ""}<div class="source-governance"><h2>\u0427\u0442\u043E \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C, \u0430 \u0447\u0442\u043E \u043C\u043E\u0434\u0435\u043B\u044C\u043D\u044B\u043C</h2><div class="source-governance-grid"><div><strong>\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F</strong><p>\u041D\u0430\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u0438\u0435, \u0438\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0438\u043F, \u043F\u043E\u0434\u0447\u0438\u043D\u0451\u043D\u043D\u043E\u0441\u0442\u044C, \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E \u043E\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0435 \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u044F \u0438 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0440\u0435\u0441\u0443\u0440\u0441\u044B.</p></div><div><strong>\u0423\u0447\u0435\u0431\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C</strong><p>\u0412\u0435\u0441\u0430 \u0441\u0444\u0435\u0440, \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438, \u0442\u0438\u043F\u043E\u0432\u044B\u0435 \u0441\u0435\u043C\u0435\u0439\u0441\u0442\u0432\u0430 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439, \u043F\u0440\u0438\u043C\u0435\u0440\u044B \u0440\u043E\u043B\u0435\u0439 \u0438 \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u0442\u0440\u0443\u0434\u0430.</p></div></div></div>
-    <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator ? `<small>${escapeHtml(source.locator)}</small>` : ""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A")}</small></span>${icon("external")}</a>`).join("")}</div>
-    <div class="career-model-note warning">${icon("info")}<p>${escapeHtml(authority.careerModel?.note || data.careerFramework.scopeNote)}</p></div>`;
+    <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl2(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon2("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator ? `<small>${escapeHtml(source.locator)}</small>` : ""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A")}</small></span>${icon2("external")}</a>`).join("")}</div>
+    <div class="career-model-note warning">${icon2("info")}<p>${escapeHtml(authority.careerModel?.note || data.careerFramework.scopeNote)}</p></div>`;
   }
   function openAuthority(id, initialTab = "overview") {
     const authority = data.authorities.find((item) => item.id === id);
@@ -7188,11 +8693,11 @@ var CareerRuntime = (() => {
     const selected = state.compareIds.includes(authority.id);
     $2("#authority-dialog-content").innerHTML = `
     <div class="dialog-hero">
-      <div class="dialog-hero-top">${authorityEmblem(authority)}<button class="button dialog-compare compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon("compare")}<span>${selected ? "\u0412 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0438" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435"}</span></button></div>
+      <div class="dialog-hero-top">${authorityEmblem(authority)}<button class="button dialog-compare compare-toggle${selected ? " selected" : ""}" type="button" data-authority="${authority.id}" aria-pressed="${selected}">${icon2("compare")}<span>${selected ? "\u0412 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0438" : "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435"}</span></button></div>
       <h1 id="authority-dialog-title">${escapeHtml(authority.name)}</h1>
       <p class="official-russian-name" lang="ru" data-no-i18n>${escapeHtml(authority.name)}</p>
       <span>${escapeHtml(authority.entityTypeLabel)}</span>
-      <button type="button" class="button button-secondary" id="dialog-structure-link">${icon("route")}\u041F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435</button>
+      <button type="button" class="button button-secondary" id="dialog-structure-link">${icon2("route")}\u041F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435 \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435</button>
       <p>${escapeHtml(authority.mission)}</p>
     </div>
     <div class="dialog-tabs" role="tablist" aria-label="\u0420\u0430\u0437\u0434\u0435\u043B\u044B \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0434\u043E\u0441\u044C\u0435">
@@ -7328,7 +8833,7 @@ var CareerRuntime = (() => {
     $2("#compare-nav-count").textContent = selected.length;
     $2("#compare-tray-status").textContent = selected.length < 2 ? "\u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0435\u0449\u0451 \u043E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D" : `${selected.length} \u0438\u0437 ${MAX_COMPARE} \u0432\u044B\u0431\u0440\u0430\u043D\u043E`;
     $2("#compare-open").disabled = selected.length < 2;
-    $2("#compare-tray-items").innerHTML = selected.map((authority) => `<button type="button" data-remove-compare="${authority.id}" title="\u0423\u0434\u0430\u043B\u0438\u0442\u044C ${escapeHtml(authorityName(authority))}"><span>${escapeHtml(authorityName(authority))}</span>${icon("close")}</button>`).join("");
+    $2("#compare-tray-items").innerHTML = selected.map((authority) => `<button type="button" data-remove-compare="${authority.id}" title="\u0423\u0434\u0430\u043B\u0438\u0442\u044C ${escapeHtml(authorityName(authority))}"><span>${escapeHtml(authorityName(authority))}</span>${icon2("close")}</button>`).join("");
     $$2("[data-remove-compare]", tray).forEach((button) => button.addEventListener("click", () => toggleCompare(button.dataset.removeCompare)));
   }
   function compareConditionMarkup(authority) {
@@ -7352,10 +8857,10 @@ var CareerRuntime = (() => {
       return { authority, roles, routes, competencies, education };
     });
     root.innerHTML = `
-    ${selected.length < 2 ? `<div class="compare-guidance">${icon("info")}<p>\u041F\u0435\u0440\u0432\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u0432\u044B\u0431\u0440\u0430\u043D. \u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0435\u0449\u0451 \u043E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0435 \u0438\u043B\u0438 \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430\u0445 \u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435.</p><button class="button button-secondary" type="button" data-route="directory">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0440\u0433\u0430\u043D${icon("arrow-right")}</button></div>` : `<div class="compare-actions"><button id="compare-print" class="button button-secondary" type="button">${icon("print")}\u041F\u0435\u0447\u0430\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F</button><button class="button button-secondary" type="button" data-route="directory">${icon("plus")}\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u043B\u0438 \u0437\u0430\u043C\u0435\u043D\u0438\u0442\u044C</button></div>`}
+    ${selected.length < 2 ? `<div class="compare-guidance">${icon2("info")}<p>\u041F\u0435\u0440\u0432\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442 \u0432\u044B\u0431\u0440\u0430\u043D. \u0414\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0435\u0449\u0451 \u043E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0435 \u0438\u043B\u0438 \u0432 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430\u0445 \u0442\u0435\u0441\u0442\u0430, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435.</p><button class="button button-secondary" type="button" data-route="directory">\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0440\u0433\u0430\u043D${icon2("arrow-right")}</button></div>` : `<div class="compare-actions"><button id="compare-print" class="button button-secondary" type="button">${icon2("print")}\u041F\u0435\u0447\u0430\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F</button><button class="button button-secondary" type="button" data-route="directory">${icon2("plus")}\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0438\u043B\u0438 \u0437\u0430\u043C\u0435\u043D\u0438\u0442\u044C</button></div>`}
     <div class="compare-columns" style="--compare-count:${Math.max(selected.length, 1)}">
       ${columns.map(({ authority, roles, routes, competencies, education }) => `<article class="compare-column">
-        <header class="compare-column-header">${authorityEmblem(authority)}<button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="\u0423\u0434\u0430\u043B\u0438\u0442\u044C ${escapeHtml(authorityName(authority))}">${icon("close")}</button><h2>${escapeHtml(authorityName(authority))}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u043B\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435${icon("arrow-right")}</button></header>
+        <header class="compare-column-header">${authorityEmblem(authority)}<button class="icon-button compare-remove" type="button" data-remove-compare="${authority.id}" aria-label="\u0423\u0434\u0430\u043B\u0438\u0442\u044C ${escapeHtml(authorityName(authority))}">${icon2("close")}</button><h2>${escapeHtml(authorityName(authority))}</h2><span>${escapeHtml(authority.entityTypeLabel)}</span><p>${escapeHtml(authority.mission)}</p><button class="text-link open-authority" type="button" data-authority="${authority.id}">\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u043E\u043B\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435${icon2("arrow-right")}</button></header>
         <section><h3>\u0418\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u0435</h3><dl><div><dt>\u041F\u043E\u0434\u0447\u0438\u043D\u0451\u043D\u043D\u043E\u0441\u0442\u044C</dt><dd>${escapeHtml(authority.parent)}</dd></div><div><dt>\u0423\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043C\u043E\u0434\u0435\u043B\u0438</dt><dd>${confidenceLabel(authority.confidence)}</dd></div></dl></section>
         <section><h3>\u041A\u043B\u044E\u0447\u0435\u0432\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><div class="tag-row">${(authority.sectors || []).slice(0, 4).map((entry) => `<span class="tag">${escapeHtml(sectorMap.get(entry.id)?.title || entry.id)}</span>`).join("")}</div></section>
         <section><h3>\u041D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u043D\u044B\u0435 \u0440\u043E\u043B\u0438</h3><div class="compare-role-list">${roles.map((role) => `<div><strong>${escapeHtml(role.title)}</strong><small>${escapeHtml(role.importanceLabel)}</small><p>${escapeHtml(role.unitFamilies[0] || "\u043F\u0440\u043E\u0444\u0438\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0435")}</p></div>`).join("")}</div></section>
@@ -7363,7 +8868,7 @@ var CareerRuntime = (() => {
         <section><h3>\u041A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0438</h3><div class="tag-row">${competencies.map((item) => `<span class="tag">${escapeHtml(item.title)}</span>`).join("")}</div></section>
         <section><h3>\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B</h3><div class="compare-meters">${compareConditionMarkup(authority)}</div></section>
         <section><h3>\u0421\u043F\u043E\u0441\u043E\u0431\u044B \u0432\u0445\u043E\u0434\u0430</h3><ol>${routes.map((route) => `<li>${escapeHtml(route.title)}</li>`).join("")}</ol></section>
-        <footer><a href="${safeUrl(authority.governmentUrl)}" target="_blank" rel="noopener noreferrer">${icon("external")}\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430</a></footer>
+        <footer><a href="${safeUrl2(authority.governmentUrl)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430</a></footer>
       </article>`).join("")}
     </div>`;
     $$2("[data-remove-compare]", root).forEach((button) => button.addEventListener("click", () => toggleCompare(button.dataset.removeCompare)));
@@ -7512,7 +9017,7 @@ var CareerRuntime = (() => {
     $2("#group-export-summary").disabled = !has || groupBusy;
     $2("#group-mode-note").textContent = groupMode === "demo" ? "\u0414\u0415\u041C\u041E\u041D\u0421\u0422\u0420\u0410\u0426\u0418\u042F: \u0432\u0441\u0435 24 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0441\u0438\u043D\u0442\u0435\u0442\u0438\u0447\u0435\u0441\u043A\u0438\u0435. \u041E\u043D\u0438 \u043D\u0435 \u0441\u043C\u0435\u0448\u0438\u0432\u0430\u044E\u0442\u0441\u044F \u0441 \u0438\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0435\u043C\u044B\u043C\u0438 \u0434\u0430\u043D\u043D\u044B\u043C\u0438." : "\u041D\u0430\u0431\u043E\u0440 \u0445\u0440\u0430\u043D\u0438\u0442\u0441\u044F \u0432 \u043F\u0430\u043C\u044F\u0442\u0438 \u0432\u043A\u043B\u0430\u0434\u043A\u0438. \u0421\u043A\u0430\u0447\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u0443\u044E \u043A\u043E\u043F\u0438\u044E \u043F\u0435\u0440\u0435\u0434 \u0437\u0430\u043A\u0440\u044B\u0442\u0438\u0435\u043C. \u0417\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u2013 \u043D\u0435 \u0447\u0438\u0441\u043B\u043E \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u0445 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432.";
     if (!has) {
-      dashboard.innerHTML = `<div class="group-empty"><div>${icon("users")}</div><h3>\u0417\u0434\u0435\u0441\u044C \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0430\u0433\u0440\u0435\u0433\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0433\u0440\u0443\u043F\u043F\u044B</h3><p>\u0418\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0439\u0442\u0435 \u043E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0435 \u0444\u0430\u0439\u043B\u044B \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u0438\u043B\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0434\u0435\u043C\u043E\u043D\u0441\u0442\u0440\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0414\u0430\u043D\u043D\u044B\u0435 \u043D\u0435 \u043F\u043E\u043A\u0438\u0434\u0430\u044E\u0442 \u044D\u0442\u043E \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u043E.</p></div>`;
+      dashboard.innerHTML = `<div class="group-empty"><div>${icon2("users")}</div><h3>\u0417\u0434\u0435\u0441\u044C \u043F\u043E\u044F\u0432\u0438\u0442\u0441\u044F \u0430\u0433\u0440\u0435\u0433\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0433\u0440\u0443\u043F\u043F\u044B</h3><p>\u0418\u043C\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0439\u0442\u0435 \u043E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0435 \u0444\u0430\u0439\u043B\u044B \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u0438\u043B\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u0435 \u0434\u0435\u043C\u043E\u043D\u0441\u0442\u0440\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0414\u0430\u043D\u043D\u044B\u0435 \u043D\u0435 \u043F\u043E\u043A\u0438\u0434\u0430\u044E\u0442 \u044D\u0442\u043E \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u043E.</p></div>`;
       return;
     }
     const summary = aggregateAnonymousRecords(groupRecords);
@@ -7540,7 +9045,7 @@ var CareerRuntime = (() => {
       <article class="group-panel"><h3>\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438 \u0432 \u0422\u041E\u041F-5</h3>${barsMarkup(trackRows, summary.count * 5, "", "\u0443\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u0439 \u0432 \u0422\u041E\u041F-5")}</article>
       <article class="group-panel"><h3>\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3>${barsMarkup(sectorRows, summary.count, " \u0432\u044B\u0431\u043E\u0440\u043E\u0432")}</article>
     </div>
-    <div class="group-interpretation">${icon("info")}<p>\u0421\u0432\u043E\u0434\u043A\u0430 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u0432 \u0432 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435. \u041E\u043D\u0430 \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0430 \u0434\u043B\u044F \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u0435\u0442 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0442\u044C \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u0438 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430.</p></div>`;
+    <div class="group-interpretation">${icon2("info")}<p>\u0421\u0432\u043E\u0434\u043A\u0430 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u0432 \u0432 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u0435. \u041E\u043D\u0430 \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u0430 \u0434\u043B\u044F \u0440\u0430\u043D\u0436\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0437\u0432\u043E\u043B\u044F\u0435\u0442 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0442\u044C \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u0438 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0447\u0435\u043B\u043E\u0432\u0435\u043A\u0430.</p></div>`;
   }
   function toast(message) {
     const element = $2("#toast");
@@ -7738,7 +9243,7 @@ var CareerRuntime = (() => {
       data.allInstitutions = [...data.authorities, ...data.publicService.records.map((a) => ({ id: a.id, name: a.name.ru, shortName: a.name.ru, mission: a.mission.ru, entityType: "additional", entityTypeLabel: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0439 \u0432\u043B\u0430\u0441\u0442\u0438", tracks: a.tracks, governmentUrl: a.sources?.[0]?.url || "", localizedName: a.name, source: a }))];
       if (SEMINAR_FLOW) {
         personality = createPersonality({ navigate: routeTo, continueCareer: () => routeTo(resolveResumeRoute()) });
-        seminarFlow = createSeminarFlow({ getResult: getResults, getProfileContext: () => ({ recordId: state.resultRecordId, scales: data.scales, sectors: data.sectors, conditions: data.conditions, prioritySectors: state.prioritySectors, conditionValues: state.conditions }), radarSvg, toast });
+        seminarFlow = createSeminarFlow({ data, navigate: routeTo, resolveResumeRoute, getInputs: () => ({ ...state }), getResult: getResults, getProfileContext: () => ({ recordId: state.resultRecordId, scales: data.scales, sectors: data.sectors, conditions: data.conditions, prioritySectors: state.prioritySectors, conditionValues: state.conditions }), radarSvg, toast });
       } else {
         classroom = createClassroom({ data: { ...data, authorities: data.allInstitutions }, routeTo, openAuthority, toast, downloadText, getResult: () => latestResult });
         workspace = createWorkspace({
@@ -7796,11 +9301,11 @@ var CareerRuntime = (() => {
     finishSectorDrag(false, { focus: false, announce: false });
     const personalitySaved = personality?.flush() !== false;
     const careerSaved = saveState();
-    return personalitySaved && careerSaved;
+    return personalitySaved && careerSaved && seminarFlow?.flush() !== false;
   }
   function captureForUpdate() {
     const filters = Object.fromEntries(["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].map((id) => [id, $2("#" + id)?.value || ""]));
-    return { schema: 1, model: MODEL_VERSION, fields: [...document.querySelectorAll("input[id],textarea[id],select[id]")].filter((el) => el.type !== "file" && el.type !== "password" && !el.closest("#view-personality,#view-personality-results")).slice(0, 100).map((el) => ({ id: el.id, value: el.value, checked: el.checked })), route: state.lastRoute, questionIndex: state.questionIndex, filters, authority: currentAuthority?.id || null, authorityTab: document.querySelector("#authority-dialog [role=tab][aria-selected=true]")?.dataset.tab || "overview", seminarAuthority: seminarAuthority?.id || null, groupMode, groupRecords, groupRejected, workspace: workspace?.captureForUpdate?.(), classroom: classroom?.captureForUpdate?.(), decisionLab: decisionLab?.captureForUpdate?.(), publicService: publicService?.captureForUpdate?.(), vacancies: vacancies?.captureForUpdate?.() };
+    return { schema: 1, model: MODEL_VERSION, fields: [...document.querySelectorAll("input[id],textarea[id],select[id]")].filter((el) => el.type !== "file" && el.type !== "password" && !el.closest("#view-personality,#view-personality-results")).slice(0, 100).map((el) => ({ id: el.id, value: el.value, checked: el.checked })), route: state.lastRoute, questionIndex: state.questionIndex, filters, authority: currentAuthority?.id || null, authorityTab: document.querySelector("#authority-dialog [role=tab][aria-selected=true]")?.dataset.tab || "overview", seminarAuthority: seminarAuthority?.id || null, groupMode, groupRecords, groupRejected, workspace: workspace?.captureForUpdate?.(), classroom: classroom?.captureForUpdate?.(), decisionLab: decisionLab?.captureForUpdate?.(), publicService: publicService?.captureForUpdate?.(), vacancies: vacancies?.captureForUpdate?.(), seminarFlow: seminarFlow?.captureForUpdate?.() };
   }
   async function restoreForUpdate(value) {
     if (value?.schema !== 1 || value.model !== MODEL_VERSION) throw Error("update/incompatible");
@@ -7813,6 +9318,7 @@ var CareerRuntime = (() => {
     decisionLab?.restoreForUpdate?.(value.decisionLab);
     publicService?.restoreForUpdate?.(value.publicService);
     vacancies?.restoreForUpdate?.(value.vacancies);
+    seminarFlow?.restoreForUpdate?.(value.seminarFlow);
     groupMode = value.groupMode === "demo" ? "demo" : "uploaded";
     groupRecords = Array.isArray(value.groupRecords) ? value.groupRecords : [];
     groupRejected = Math.max(0, Number(value.groupRejected) || 0);

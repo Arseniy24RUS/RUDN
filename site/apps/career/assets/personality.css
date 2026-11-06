@@ -65,6 +65,36 @@
 .personality-domains .personality-domain:last-child dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:28px; }
 .personality-method { margin:26px 0 0; color:#62798c; font-size:12px; line-height:1.7; }
 .personality-method a { color:#09679f; text-underline-offset:3px; }
+/* Results: quiet editorial framing and one shared 1–5 profile chart. */
+.personality-icon { display:inline-flex; flex:0 0 36px; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; color:#176d72; background:#edf6f5; }
+.personality-icon svg { display:block; width:22px; height:22px; }
+.personality-score-heading h3,.personality-role > h3 { display:flex; align-items:center; gap:11px; }
+.personality-score-heading h3 > span:last-child,.personality-role > h3 > span:last-child { min-width:0; overflow-wrap:anywhere; }
+.personality-score-heading { align-items:center; }
+.personality-role .personality-icon { color:#145a8c; background:#e6f0f6; }
+.personality-overview { margin:28px 0 36px; padding:26px 28px 20px; border:1px solid #cbdedc; border-radius:18px; background:#fff; }
+.personality-overview-heading h2 { margin:0 0 8px; font-size:25px; line-height:1.35; color:#193b56; }
+.personality-overview-heading > p { margin:0; font-size:14px; line-height:1.65; color:#48617b; }
+.personality-overview-figure { display:grid; grid-template-columns:minmax(240px,.85fr) minmax(0,1fr); gap:30px; align-items:center; margin:18px 0 0; }
+.personality-radar-plot { position:relative; width:100%; max-width:360px; justify-self:center; }
+.personality-radar { display:block; width:100%; height:auto; overflow:visible; }
+.personality-radar-grid { fill:none; stroke:#cedddb; stroke-width:1; vector-effect:non-scaling-stroke; }
+.personality-radar-axis { stroke:#dce6e6; stroke-width:1; vector-effect:non-scaling-stroke; }
+.personality-radar-shape { fill:#197f8024; stroke:#176d72; stroke-width:2.5; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+.personality-radar-point { fill:#176d72; stroke:#fff; stroke-width:1.5; vector-effect:non-scaling-stroke; }
+.personality-radar-tick { fill:#476178; font-family:inherit; font-size:16px; font-weight:500; paint-order:stroke; stroke:#fff; stroke-width:4px; stroke-linejoin:round; }
+.personality-radar-key { display:grid; place-items:center; position:absolute; transform:translate(-50%,-50%); width:30px; height:30px; border:1px solid #c8dcda; border-radius:50%; color:#176d72; background:#f4f9f8; font-size:15px; font-weight:700; line-height:1; }
+.personality-radar-summary { min-width:0; }
+.personality-radar-values { margin:0; }
+.personality-radar-values > div { display:flex; justify-content:space-between; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid #e7eeef; }
+.personality-radar-values > div:last-child { border-bottom:0; }
+.personality-radar-values dt { display:flex; align-items:center; gap:11px; min-width:0; color:#254e6e; font-size:15px; line-height:1.45; }
+.personality-radar-values dt > span:last-child { min-width:0; overflow-wrap:anywhere; }
+.personality-domain-key { display:grid; place-items:center; flex:0 0 28px; height:28px; border-radius:8px; color:#176d72; background:#edf6f5; font-size:13px; font-weight:700; }
+.personality-radar-values dd { flex-shrink:0; margin:0; color:#193b56; font-size:19px; font-weight:650; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.personality-radar-values dd small { color:#62798c; font-size:12px; font-weight:400; }
+.personality-radar-scale { margin:16px 0 0; color:#48617b; font-size:13px; line-height:1.6; }
+.personality-overview-note { margin:18px 0 0; padding-top:16px; border-top:1px solid #e1ebea; color:#48617b; font-size:13px; line-height:1.65; }
 @media(max-width:900px) {
   .personality-roles { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
@@ -78,6 +108,12 @@
   .personality-trait,.personality-domain,.personality-role { padding:18px; }
   .personality-section > h2 { font-size:22px; }
   .personality-domains .personality-domain:last-child dl { grid-template-columns:minmax(0,1fr); }
+  .personality-overview { padding:20px 18px 18px; }
+  .personality-overview-heading h2 { font-size:22px; }
+  .personality-overview-figure { grid-template-columns:minmax(0,1fr); gap:6px; margin-top:20px; }
+  .personality-radar-plot { max-width:320px; }
+  .personality-radar-values > div { padding:11px 0; }
+  .personality-radar-scale { margin-top:12px; }
 }
 @media(max-width:420px) {
   .personality-heading h1 { font-size:27px; }
@@ -91,4 +127,10 @@
   .personality-score-heading { gap:10px; }
   .personality-score-heading h3 { font-size:16px; }
   .personality-score-heading > strong { font-size:19px; }
+  .personality-icon { flex-basis:30px; width:30px; height:30px; border-radius:8px; }
+  .personality-icon svg { width:19px; height:19px; }
+  .personality-score-heading h3,.personality-role > h3 { gap:8px; }
+  .personality-overview { padding-inline:14px; }
+  .personality-radar-values dt { font-size:14px; gap:8px; }
+  .personality-radar-values > div { gap:8px; }
 }
