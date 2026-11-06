@@ -2026,6 +2026,8 @@ textarea { font:inherit; }
 .journey-bank-count,.journey-bank-status,.journey-bank-page-note { margin: 8px 0; font-size: 13px; line-height: 1.55; color: #4b6478; }
 .journey-bank-status:empty { display: none; }
 .journey-bank-family { margin: 12px 0; }
+/* WebKit otherwise paints the native option label beyond this sized control. */
+.journey-bank-family select { overflow: hidden; }
 .journey-bank-family small,.journey-bank-note { color: #526a7c; font-size: 12px; line-height: 1.6; }
 .journey-bank-list { display: grid; gap: 12px; margin: 14px 0; }
 .journey-bank-job { min-width: 0; padding: 16px; border: 1px solid #dae4eb; border-radius: 12px; background: #fff; overflow-wrap: anywhere; }
