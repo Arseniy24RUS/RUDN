@@ -11,8 +11,8 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-production
-  cancel-in-progress: false
+  group: ${{ contains(github.event.head_commit.message, '[career-seminar-express]') && 'pages-production' || format('career-skip-{0}', github.run_id) }}
+  cancel-in-progress: true
 
 jobs:
   publish:
@@ -24,8 +24,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     outputs:
       build_id: ${{ steps.archive.outputs.build_id }}
-    env:
-      CAREER_STYLE_PUBLISH: ${{ contains(github.event.head_commit.message, '[career-style-publish]') }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -34,21 +32,36 @@ jobs:
         with:
           node-version: '20'
       - name: Verify the authorized Seminar 5 change scope and syntax
-        if: env.CAREER_STYLE_PUBLISH != 'true'
         run: |
-          git fetch --no-tags --depth=1 origin 40eff0ec2693232dadd8f727c229b15b62829c8c
+          git fetch --no-tags --depth=1 origin 6a0a9699aa6ad882d2ee14554f6936a55432a537 515d05c7d95e7b0cad668cf96c6e167439697a4c
           node scripts/verify-career-express-release.mjs --scope
       - name: Build the career component and existing deterministic assets
         run: |
           npm ci --ignore-scripts
           npm run build:career
-          if [ "$CAREER_STYLE_PUBLISH" != 'true' ]; then
-            git diff --exit-code -- site/apps/career/runtime.bundle.mjs site/apps/career/module.css
-            node scripts/test_career_localization.mjs
-          fi
+          git diff --exit-code -- site/apps/career/runtime.bundle.mjs site/apps/career/module.css
           npm run build:firebase
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs
+      - name: Verify personality scoring, role interpretation and existing career results
+        run: |
+          node scripts/test_personality_model.mjs
+          node scripts/test_personality_insights.mjs
+          node scripts/test_career_localization.mjs
+          node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs
+      - name: Verify completed career browser checks against identical source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: node scripts/verify-career-express-release.mjs --verified-ci --report "${{ runner.temp }}/career-ci-evidence.json"
+      - name: Retain verified career browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: career-verified-ci-${{ github.sha }}
+          path: ${{ runner.temp }}/career-ci-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Retrieve the published baseline and preserve its calendar
         env:
           GH_TOKEN: ${{ github.token }}
@@ -56,12 +69,8 @@ jobs:
       - name: Keep the current vacancy snapshot
         run: node scripts/verify-career-express-release.mjs --seed-vacancies --baseline "${{ runner.temp }}/platform-baseline"
       - name: Build the immutable release with the existing publisher
-        run: |
-          args=()
-          if [ "$CAREER_STYLE_PUBLISH" != 'true' ]; then args+=(--verify); fi
-          node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" "${args[@]}"
+        run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
       - name: Require unchanged published resources outside Seminar 5
-        if: env.CAREER_STYLE_PUBLISH != 'true'
         run: node scripts/verify-career-express-release.mjs --compare --baseline "${{ runner.temp }}/platform-baseline" --staging "${{ runner.temp }}/platform-staging"
       - name: Archive the verified release
         id: archive
@@ -115,9 +124,6 @@ jobs:
             gh release download "$tag" --pattern receipt.json --dir existing
             node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
           else
-            notes="Seminar 5 profile, authority descriptions and mobile layout. Owner requested focused career checks and immediate publication; no full-platform test run. Immutable resources and rollback archive verified."
-            if [ "$CAREER_STYLE_PUBLISH" = 'true' ]; then
-              notes="Seminar 5 vacancy button styling. Owner requested immediate publication without optional checks. Existing immutable release and rollback archive publisher retained."
-            fi
+            notes="Seminar 5 independent IPIP-NEO-120 personality profile. Owner requested focused career checks: scoring, role interpretation, existing career results and UI in three browser engines. Immutable resources and rollback archive verified."
             gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "$notes"
           fi
