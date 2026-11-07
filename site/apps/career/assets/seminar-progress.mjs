@@ -30,6 +30,14 @@ export function seminar5CareerComplete(session) {
     Array.isArray(session.answers) && session.answers.length >= 43 && session.answers.length <= 55 && completion.answerCount === session.answers.length;
 }
 
+/** Some sources repeat a section heading inside a requirements field. */
+export function vacancyReviewHeading(value) {
+  const text=String(value||'').normalize('NFC').toLocaleLowerCase('ru').replace(/ё/g,'е').replace(/\s+/g,' ').trim()
+    .replace(/^(?:[ivxlcdm]+[.)]|\d+(?:\.\d+)*[.)])\s*/i,'').replace(/[.:;]+$/,'').trim();
+  return /^(?:общие положения|образование|стаж|стаж и опыт|опыт работы|профессиональный опыт|должностные обязанности|долж(?:ен|на|ны) (?:знать|уметь|владеть|обладать)|(?:профессиональные )?знания|(?:профессиональные )?умения(?: и навыки)?|(?:профессиональные )?навыки|требования к (?:знаниям|умениям|навыкам|знаниям и умениям|умениям и навыкам))$/u.test(text) ||
+    /^квалификационные требования(?:,? (?:предъявляемые )?(?:для|к) замещени[яю] должност[ьи](?: (?:государственной гражданской|гражданской|муниципальной) службы(?: российской федерации)?)?)?$/u.test(text);
+}
+
 export function seminar5ReviewComplete(session, values) {
   const proof = session?.reviewCompletion;
   if (!seminar5CareerComplete(session) || proof?.schemaVersion !== 1 ||
@@ -39,7 +47,11 @@ export function seminar5ReviewComplete(session, values) {
       !['met','gap'].includes(proof.status)) return false;
   const review = decoded(values?.[VACANCY_REVIEW_KEY + proof.target.vacancyId]);
   const mark = review?.marks?.[proof.markKey];
+  let sourceText;
+  try {const signature=JSON.parse(proof.signature);sourceText=Array.isArray(signature)?signature[2]:null;}
+  catch {return false;}
   return review?.schemaVersion === 1 && review.vacancyId === proof.target.vacancyId &&
+    typeof sourceText==='string' && sourceText.trim().length>0 && !vacancyReviewHeading(sourceText) &&
     mark?.signature === proof.signature && ['met','gap'].includes(mark.status);
 }
 

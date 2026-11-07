@@ -314,6 +314,10 @@ html:has(.career-course-progress) { scroll-padding-top: calc(var(--top) + var(--
 @media (max-width: 1030px) {
   .career-course-progress ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+@media (max-width: 370px) {
+  .career-course-step { gap:4px; padding-inline:4px; font-size:11px; overflow-wrap:normal; }
+  .career-course-step-number { flex-basis:16px; width:16px; height:16px; font-size:10px; }
+}
 @media (max-width: 760px) {
   html:has(.career-course-progress) { scroll-padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
 }

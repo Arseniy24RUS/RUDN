@@ -6,6 +6,7 @@
 .adaptive-review-heading p, .adaptive-review > p, .adaptive-review-section > p { margin: 8px 0; line-height: 1.55; }
 .adaptive-review-heading [lang="ru"], .adaptive-review-duties p, .adaptive-review-plan-list li { white-space: pre-wrap; }
 .adaptive-review-section { margin: 24px 0; }
+.adaptive-review-section > .adaptive-review-source-heading { margin:12px 0;color:#4c687f;font-weight:600; }
 .adaptive-review-duties { box-sizing: border-box; margin: 18px 0; padding: 0 14px; border: 1px solid #d4e2ec; border-radius: 12px; background: #fff; }
 .adaptive-review-duties summary { min-height: 44px; padding-block: 10px; cursor: pointer; font-weight: 650; line-height: 1.5; }
 .adaptive-review-duties p { margin: 8px 0 14px; line-height: 1.6; }

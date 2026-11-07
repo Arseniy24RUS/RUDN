@@ -6709,12 +6709,23 @@ var CareerRuntime = (() => {
     const completion = session?.completion;
     return session?.setupComplete === true && typeof session.completedAt === "string" && Number.isFinite(Date.parse(session.completedAt)) && typeof session.resultRecordId === "string" && /^functional-[\w-]{8,80}$/.test(session.resultRecordId) && completion?.schema === "rudn-career-result" && completion.schemaVersion === 3 && completion.resultKind === "vacancy-functional" && completion.completed === true && completion.recordId === session.resultRecordId && completion.createdAt === session.completedAt && Array.isArray(session.answers) && session.answers.length >= 43 && session.answers.length <= 55 && completion.answerCount === session.answers.length;
   }
+  function vacancyReviewHeading(value) {
+    const text4 = String(value || "").normalize("NFC").toLocaleLowerCase("ru").replace(/ё/g, "\u0435").replace(/\s+/g, " ").trim().replace(/^(?:[ivxlcdm]+[.)]|\d+(?:\.\d+)*[.)])\s*/i, "").replace(/[.:;]+$/, "").trim();
+    return /^(?:общие положения|образование|стаж|стаж и опыт|опыт работы|профессиональный опыт|должностные обязанности|долж(?:ен|на|ны) (?:знать|уметь|владеть|обладать)|(?:профессиональные )?знания|(?:профессиональные )?умения(?: и навыки)?|(?:профессиональные )?навыки|требования к (?:знаниям|умениям|навыкам|знаниям и умениям|умениям и навыкам))$/u.test(text4) || /^квалификационные требования(?:,? (?:предъявляемые )?(?:для|к) замещени[яю] должност[ьи](?: (?:государственной гражданской|гражданской|муниципальной) службы(?: российской федерации)?)?)?$/u.test(text4);
+  }
   function seminar5ReviewComplete(session, values) {
     const proof = session?.reviewCompletion;
     if (!seminar5CareerComplete(session) || proof?.schemaVersion !== 1 || proof.resultRecordId !== session.resultRecordId || !seminar5ReviewTarget(proof.target) || typeof proof.markKey !== "string" || !proof.markKey || proof.markKey.length > 1e3 || typeof proof.signature !== "string" || !proof.signature || proof.signature.length > 1048576 || !["met", "gap"].includes(proof.status)) return false;
     const review = decoded(values?.[VACANCY_REVIEW_KEY + proof.target.vacancyId]);
     const mark = review?.marks?.[proof.markKey];
-    return review?.schemaVersion === 1 && review.vacancyId === proof.target.vacancyId && mark?.signature === proof.signature && ["met", "gap"].includes(mark.status);
+    let sourceText2;
+    try {
+      const signature = JSON.parse(proof.signature);
+      sourceText2 = Array.isArray(signature) ? signature[2] : null;
+    } catch {
+      return false;
+    }
+    return review?.schemaVersion === 1 && review.vacancyId === proof.target.vacancyId && typeof sourceText2 === "string" && sourceText2.trim().length > 0 && !vacancyReviewHeading(sourceText2) && mark?.signature === proof.signature && ["met", "gap"].includes(mark.status);
   }
 
   // site/apps/career/assets/adaptive-vacancy-review.mjs
@@ -6769,6 +6780,7 @@ var CareerRuntime = (() => {
     return row.requirementState === "explicitly_not_required" ? L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0443\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442, \u0447\u0442\u043E \u044D\u0442\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F", "The source states this condition is not required", "\u539F\u6587\u6CE8\u660E\u65E0\u6B64\u8981\u6C42") : L2("\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Information from the announcement", "\u516C\u544A\u4E2D\u7684\u8BF4\u660E");
   }
   function requirementCard(row, disabled) {
+    if (row.sourceHeadingOnly) return `<p class="adaptive-review-source-heading" lang="ru">${E2(row.text)}</p>`;
     if (!row.assessable) return `<div class="journey-source-context"><span>${contextLabel(row)}</span>${row.text ? `<p lang="ru">${E2(row.text)}</p>` : ""}</div>`;
     return `<fieldset class="journey-requirement" data-requirement-row="${E2(row.key)}" data-review-kind="${E2(row.assessmentKind)}" data-status="${E2(row.status)}">
     <legend lang="ru">${E2(row.text)}</legend>
@@ -6941,6 +6953,7 @@ var CareerRuntime = (() => {
         if (loaded?.status !== "ready") throw new Error("Source requirements unavailable");
         const vacancy = bankVacancySnapshot(row, loaded.record, { institutionId: descriptor.authorityId, employerId: descriptor.employerId, employerName: descriptor.name, provenance: loaded.provenance });
         const requirements = buildVacancyRequirements(vacancy);
+        requirements.rows = requirements.rows.map((item) => vacancyReviewHeading(item.text) ? { ...item, assessable: false, sourceHeadingOnly: true } : item);
         const saved = loadMarks(vacancy);
         const restored = summarizeVacancyAssessment(requirements, saved.marks);
         state2.row = row;

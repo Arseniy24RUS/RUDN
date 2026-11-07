@@ -3,7 +3,7 @@ import {buildVacancyRequirements, summarizeVacancyAssessment} from './career-jou
 import {createEmployerVacancyBank, platformEmployerId, vacancyBankStatus} from './employer-vacancies-bank.mjs';
 import {date, E, groupLabel, icon, L, safeURL} from './journey-visuals.mjs';
 import {readLocal, storageKey, writeLocal} from './storage.mjs';
-import {seminar5ReviewTarget,VACANCY_REVIEW_KEY} from './seminar-progress.mjs';
+import {seminar5ReviewTarget,VACANCY_REVIEW_KEY,vacancyReviewHeading} from './seminar-progress.mjs';
 import {vacancySalaryText,vacancyStatusText} from './adaptive-vacancy-pay.mjs';
 
 const UUID = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
@@ -64,6 +64,7 @@ function contextLabel(row) {
 }
 
 function requirementCard(row, disabled) {
+  if (row.sourceHeadingOnly) return `<p class="adaptive-review-source-heading" lang="ru">${E(row.text)}</p>`;
   if (!row.assessable) return `<div class="journey-source-context"><span>${contextLabel(row)}</span>${row.text ? `<p lang="ru">${E(row.text)}</p>` : ''}</div>`;
   return `<fieldset class="journey-requirement" data-requirement-row="${E(row.key)}" data-review-kind="${E(row.assessmentKind)}" data-status="${E(row.status)}">
     <legend lang="ru">${E(row.text)}</legend>
@@ -221,6 +222,7 @@ export function createAdaptiveVacancyReview({onClose = () => {}, onSelect = () =
       if (loaded?.status !== 'ready') throw new Error('Source requirements unavailable');
       const vacancy = bankVacancySnapshot(row,loaded.record,{institutionId:descriptor.authorityId,employerId:descriptor.employerId,employerName:descriptor.name,provenance:loaded.provenance});
       const requirements = buildVacancyRequirements(vacancy);
+      requirements.rows = requirements.rows.map(item=>vacancyReviewHeading(item.text)?{...item,assessable:false,sourceHeadingOnly:true}:item);
       const saved = loadMarks(vacancy);
       const restored = summarizeVacancyAssessment(requirements,saved.marks);
       state.row = row;
