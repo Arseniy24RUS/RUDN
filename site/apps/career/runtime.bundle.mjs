@@ -28,7 +28,7 @@ var CareerRuntime = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // ../RUDN/node_modules/fflate/esm/browser.js
+  // node_modules/fflate/esm/browser.js
   var browser_exports = {};
   __export(browser_exports, {
     AsyncCompress: () => AsyncGzip,
@@ -521,7 +521,7 @@ var CareerRuntime = (() => {
   }
   var ch2, wk, u8, u16, i32, fleb, fdeb, clim, freb, _a, fl, revfl, _b, fd, revfd, rev, x, i, hMap, flt, i, i, i, i, fdt, i, flm, flrm, fdm, fdrm, max, bits, bits16, shft, slc, FlateErrorCode, ec, err, inflt, wbits, wbits16, hTree, ln, lc, clen, wfblk, wblk, deo, et, dflt, crct, crc, adler, dopt, mrg, wcln, ch, cbfs, wrkr, bInflt, bDflt, gze, guze, zle, zule, pbf, gopt, cbify, astrm, astrmify, b2, b4, b8, wbytes, gzh, gzs, gzl, gzhl, zlh, zls, Deflate, AsyncDeflate, Inflate, AsyncInflate, Gzip, AsyncGzip, Gunzip, AsyncGunzip, Zlib, AsyncZlib, Unzlib, AsyncUnzlib, Decompress, AsyncDecompress, fltn, te, td, tds, dutf8, DecodeUTF8, EncodeUTF8, dbf, slzh, zh, z64e, exfl, wzh, wzf, ZipPassThrough, ZipDeflate, AsyncZipDeflate, Zip, UnzipPassThrough, UnzipInflate, AsyncUnzipInflate, Unzip, mt;
   var init_browser = __esm({
-    "../RUDN/node_modules/fflate/esm/browser.js"() {
+    "node_modules/fflate/esm/browser.js"() {
       ch2 = {};
       wk = (function(c, id, msg, transfer, cb) {
         var w = new Worker(ch2[id] || (ch2[id] = URL.createObjectURL(new Blob([
