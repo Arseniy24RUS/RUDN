@@ -189,7 +189,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          name: github-pages-${{ steps.archive.outputs.build_id }}
+          name: github-pages-${{ steps.archive.outputs.build_id }}-attempt-${{ github.run_attempt }}
           path: ${{ runner.temp }}/platform-staging
       - name: Check that the source and live baseline have not moved
         env:
@@ -209,7 +209,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: github-pages-${{ steps.archive.outputs.build_id }}
+          artifact_name: github-pages-${{ steps.archive.outputs.build_id }}-attempt-${{ github.run_attempt }}
       - name: Retain the published release for updates and rollback
         env:
           GH_TOKEN: ${{ github.token }}
