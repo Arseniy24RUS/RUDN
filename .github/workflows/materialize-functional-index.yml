@@ -1,0 +1,37 @@
+name: Materialize packaged functional career data
+
+on:
+  push:
+    branches: [codex/career-adaptive-index-20261107]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-functional-index-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.ref == 'refs/heads/codex/career-adaptive-index-20261107' && !contains(github.event.head_commit.message, '[materialized-functional-index]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/career-adaptive-index-20261107
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Concatenate exact source bytes
+        run: python3 career-adaptive-materialization/materialize.py
+      - name: Commit materialized objects on the dedicated data branch
+        run: |
+          git add -- career-adaptive-index/all.b64 career-adaptive-index/national/n0000.b64 career-adaptive-index/national/n0001.b64 career-adaptive-index/national/n0002.b64 career-adaptive-index/national/n0003.b64 career-adaptive-index/regions/ru-77.b64 source-audit/adaptive-career/source-members.json.gz
+          if git diff --cached --quiet; then
+            echo 'All exact data objects are already materialized.'
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m '[materialized-functional-index] Restore exact packaged data objects'
+            git push --porcelain origin HEAD:refs/heads/codex/career-adaptive-index-20261107
+          fi
