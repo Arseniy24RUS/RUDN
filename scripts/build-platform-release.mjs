@@ -8,6 +8,7 @@ import {promisify} from 'node:util';
 
 const TOKEN='__RUDN_RELEASE_ID__', SCHEMA=1;
 const CAREER_BANK_PREFIX='apps/career/data/vacancies/bank/', CAREER_BANK_SUMMARY=CAREER_BANK_PREFIX+'summary.json';
+const ADAPTIVE_PREFIX='apps/career/data/adaptive-index/', ADAPTIVE_MANIFEST=ADAPTIVE_PREFIX+'manifest.json';
 const controls=new Set(['index.html','404.html','service-worker.js','release.json','platform-baseline.json','platform-build-report.json']);
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const execute=promisify(execFile);
@@ -51,6 +52,19 @@ function detailsMetadata(value,baseTreeSHA){
   return Object.fromEntries(keys.sort().map(k=>[k,value[k]]));
 }
 function detailsSummary(value){return {detailsCollectionRoot:value.collectionRoot,detailsCollectionEncoding:value.encoding,detailsBaseTreeSHA:value.baseTreeSHA,detailsTreeSHA:value.treeSHA};}
+function adaptiveMetadata(value){
+  if(!value||Object.keys(value).sort().join(',')!=='collectionRoot,encoding,schemaVersion,treeSHA'||value.schemaVersion!==1||value.encoding!=='base64-gzip'||!/^https:\/\/raw\.githubusercontent\.com\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-adaptive-index\/$/.test(value.collectionRoot||'')||!/^[a-f0-9]{64}$/.test(value.treeSHA||''))fail('release/invalid-adaptive-hosting');
+  return {schemaVersion:1,collectionRoot:value.collectionRoot,encoding:value.encoding,treeSHA:value.treeSHA};
+}
+function adaptiveResourceMetadata(value){return {adaptiveCollectionRoot:value.collectionRoot,adaptiveCollectionEncoding:value.encoding,adaptiveTreeSHA:value.treeSHA};}
+function adaptiveManifestMetadata(resources){
+  const entry=resources[ADAPTIVE_MANIFEST];
+  if(!entry||!Object.keys(entry).some(key=>key.startsWith('adaptive')))return null;
+  const value=adaptiveMetadata({schemaVersion:1,collectionRoot:entry.adaptiveCollectionRoot,encoding:entry.adaptiveCollectionEncoding,treeSHA:entry.adaptiveTreeSHA});
+  if(Object.keys(resources).some(name=>name.startsWith(ADAPTIVE_PREFIX)&&name!==ADAPTIVE_MANIFEST))fail('release/adaptive-global-file-index');
+  return value;
+}
+function adaptiveIdentity(hash,resources){const value=adaptiveManifestMetadata(resources);if(value)hash.update('hosted-adaptive-index:'+json(value));return value;}
 function careerCollection(source,base,hosting){
   const entries=Object.fromEntries(Object.entries(source).filter(([name])=>name.startsWith(CAREER_BANK_PREFIX)).map(([name,item])=>[name.slice(CAREER_BANK_PREFIX.length),item]));
   if(!Object.keys(entries).length){if(hosting)fail('release/hosted-collection-local-tree-missing');return null;}
@@ -167,6 +181,7 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     });
     for(const name of Object.keys(manifest.resources))identity.update(name+'\0'+canonicalHashes.get(name)+'\n');
     collectionIdentity(identity,collections);
+    const adaptive=adaptiveIdentity(identity,manifest.resources);if(adaptive)externalCollections.add(adaptive.collectionRoot);
     if(!/^[a-f0-9]{64}$/.test(manifest.workerTemplateSha256||'')||identity.update(manifest.workerTemplateSha256).digest('hex').slice(0,32)!==target.buildId)fail('release/build-identity');
     if(target===pointer.current){const worker=await fs.readFile(path.join(out,'service-worker.js'),'utf8'),template=worker.replace(/^const PLATFORM_RELEASE=.*;$/m,'const PLATFORM_RELEASE=null;');if(digest(template)!==manifest.workerTemplateSha256)fail('release/worker-integrity');}
     for(const names of Object.values(manifest.packs))for(const name of names)if(!manifest.resources[name])fail('release/unknown-pack-resource');
@@ -210,6 +225,7 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   for(const source of [site,baselineDir])if(out===source||out.startsWith(source+path.sep)||source.startsWith(out+path.sep))fail('release/output-overlaps-source');
   try{await fs.access(out);fail('release/output-exists');}catch(error){if(error.code!=='ENOENT')throw error;}
   let hosting=null;try{hosting=JSON.parse(await fs.readFile(path.resolve(site,'../source-audit/career-vacancies/hosting.json'),'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+  let adaptiveHosting=null;try{adaptiveHosting=adaptiveMetadata(JSON.parse(await fs.readFile(path.resolve(site,'../source-audit/adaptive-career/hosting.json'),'utf8')));}catch(error){if(error.code!=='ENOENT')throw error;}
   if(hosting){
     try{await fs.access(path.join(site,CAREER_BANK_SUMMARY));}catch(error){
       if(error.code!=='ENOENT')throw error;
@@ -235,12 +251,14 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   const resources={};for(const [name,item] of Object.entries(source)){
     if(controls.has(name)&&name!=='index.html')continue;
     if(name.startsWith(CAREER_BANK_PREFIX)&&name!==CAREER_BANK_SUMMARY)continue;
+    if(adaptiveHosting&&name.startsWith(ADAPTIVE_PREFIX)&&name!==ADAPTIVE_MANIFEST)continue;
     const runtime=isRuntime(name),same=!runtime&&frozen[name]?.sha256===item.sha256;
     const ext=name.endsWith('.json.gz')?'.json.gz':path.posix.extname(name);
     resources[name]={...item,kind:runtime?'runtime':'resource',url:runtime?`${base}_releases/${TOKEN}/${name}`:same?base+name:`${base}_objects/${item.sha256}${ext}`};
   }
   if(currentCollection){const {treeSHA,fileCount,bytes,collectionRoot,encoding}=currentCollection.descriptor;Object.assign(resources[CAREER_BANK_SUMMARY],{collectionRoot,collection:{treeSHA,fileCount,bytes},...(encoding?{collectionEncoding:encoding}:{})});}
   if(currentCollection?.descriptor.details)Object.assign(resources[CAREER_BANK_SUMMARY],detailsSummary(currentCollection.descriptor.details));
+  if(adaptiveHosting){if(!resources[ADAPTIVE_MANIFEST])fail('release/adaptive-manifest-missing');Object.assign(resources[ADAPTIVE_MANIFEST],adaptiveResourceMetadata(adaptiveHosting));}
   const recovery=await fs.readFile(path.join(site,'assets/js/release-recovery.js'),'utf8');
   onProgress('transform-runtime');const runtime=new Map();for(const [name,item] of Object.entries(resources))if(item.kind==='runtime'){
     let text=await fs.readFile(path.join(site,name),'utf8');if(/\.html$/.test(name))text=rewriteHTML(text,name,resources,base,runtime,recovery);else if(/\.css$/.test(name))text=rewriteCSS(text,name,resources,base);runtime.set(name,text);
@@ -248,6 +266,7 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   const inputHash=crypto.createHash('sha256').update(`schema:${SCHEMA}\nbase:${base}\nbaseline:${baselineId}\n`);
   for(const [name,item] of Object.entries(resources))inputHash.update(name+'\0'+(runtime.has(name)?digest(runtime.get(name)):item.sha256)+'\n');
   collectionIdentity(inputHash,collections);
+  adaptiveIdentity(inputHash,resources);
   inputHash.update(source['service-worker.js'].sha256);const buildId=inputHash.digest('hex').slice(0,32);
   onProgress('write-frozen-baseline');await ensureDirectory(out);
   await parallel(Object.entries(frozen),async([name,item])=>{if(baselineSource[name]?.sha256!==item.sha256)fail('release/frozen-baseline-mismatch:'+name);await copy(baselineDir,out,name);});

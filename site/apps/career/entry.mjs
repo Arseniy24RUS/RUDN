@@ -7,8 +7,21 @@ import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.j
 
 const MODULE_BASE = new URL('./', import.meta.url);
 const BANK_PREFIX = 'data/vacancies/bank/';
+const ADAPTIVE_PREFIX = 'data/adaptive-index/';
 function careerFetchURL(input) {
   const value=String(input),context=getReleaseContext();
+  if(value.startsWith(ADAPTIVE_PREFIX)) {
+    const suffix=value.slice(ADAPTIVE_PREFIX.length);
+    if(suffix==='manifest.json')return {url:resourceURL(input,MODULE_BASE)};
+    if(!/^(?:all|national\/n\d{4}|regions\/(?:ru-\d{2}|unknown)|details\/d\d{4})\.json\.gz$/.test(suffix))throw new TypeError('Invalid adaptive index path');
+    const metadata=context?.resources?.['apps/career/data/adaptive-index/manifest.json'];
+    if(metadata?.adaptiveCollectionRoot){
+      const base=new URL(metadata.adaptiveCollectionRoot);
+      if(metadata.adaptiveCollectionEncoding!=='base64-gzip'||!/^[a-f0-9]{64}$/.test(metadata.adaptiveTreeSHA||'')||base.origin!=='https://raw.githubusercontent.com'||base.username||base.password||base.search||base.hash||!/^\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-adaptive-index\/$/.test(base.pathname))throw new TypeError('Invalid adaptive index immutable publisher boundary');
+      return {url:new URL(suffix.replace(/\.json\.gz$/,'.b64'),base),base64Gzip:true,maxDecodedBytes:32*1024*1024};
+    }
+    return {url:resourceURL(input,MODULE_BASE)};
+  }
   if(value.startsWith('data/vacancies/details/')) {
     const suffix=value.slice('data/vacancies/details/'.length),metadata=context?.resources?.['apps/career/data/vacancies/bank/summary.json'];
     if(!/^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}(?:\.part[0-9]{4})?\.json\.gz$/.test(suffix))throw new TypeError('Invalid vacancy detail path');

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "url": "https://raw.githubusercontent.com/Arseniy24RUS/RUDN/2826c6704f08f571bbb1b2cf1116089c970598c2/source-audit/adaptive-career/source-members.json.gz",
+  "bytes": 12949829,
+  "sha256": "961c30b17f165d57d32507bd8b0bb30d6a84548333efabfee7c1c66c79abebda",
+  "description": "Exact source-members audit from the supplied functional update; kept outside the Pages payload."
+}

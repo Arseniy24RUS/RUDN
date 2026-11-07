@@ -16,6 +16,11 @@ const allowedFiles=new Set([
   'package-lock.json',
   '.github/workflows/publish-career-seminar.yml',
   'scripts/build-career.mjs',
+  'scripts/build-adaptive-career-index.py',
+  'scripts/test_adaptive_career_index.py',
+  'scripts/test_adaptive_career_ui.mjs',
+  'tests/adaptive-career-model.test.mjs',
+  'tests/adaptive-career-index-codec.test.mjs',
   'scripts/build-platform-release.mjs',
   'scripts/unpack-career-vacancies.py',
   'scripts/repack-career-vacancies.py',
@@ -42,7 +47,7 @@ const allowedFiles=new Set([
   'tests/career-region-map.test.mjs',
   'tests/career-wish-sortable.test.mjs'
 ]);
-const allowedPrefixes=['site/apps/career/','source-audit/career-vacancies/'];
+const allowedPrefixes=['site/apps/career/','source-audit/career-vacancies/','source-audit/adaptive-career/'];
 const isAllowed=name=>allowedFiles.has(name)||allowedPrefixes.some(prefix=>name.startsWith(prefix));
 const git=(...args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -88,6 +93,15 @@ if(args.includes('--scope')){
     const seed=read('source-audit/career-vacancies','seed.json');
     assert.equal(details.qaSubset,undefined,'A development subset cannot be published to students');
     assert.equal(details.vacancies,seed.vacancies,'The requirements bank must cover every source vacancy');
+  }
+  const adaptiveHosting='source-audit/adaptive-career/hosting.json';
+  if(fs.existsSync(adaptiveHosting)){
+    const adaptive=JSON.parse(fs.readFileSync(adaptiveHosting,'utf8'));
+    assert.deepEqual(Object.keys(adaptive).sort(),['collectionRoot','encoding','schemaVersion','treeSHA']);
+    assert.equal(adaptive.schemaVersion,1);assert.equal(adaptive.encoding,'base64-gzip');
+    assert.match(adaptive.collectionRoot,/^https:\/\/raw\.githubusercontent\.com\/Arseniy24RUS\/RUDN\/[a-f0-9]{40}\/career-adaptive-index\/$/);
+    assert.match(adaptive.treeSHA,/^[a-f0-9]{64}$/);
+    assert.ok(fs.existsSync('site/apps/career/data/adaptive-index/manifest.json'),'The adaptive descriptor stays in the release');
   }
   const authorities=read('site/apps/career/data','authorities.json');
   assert.equal(authorities.length,73,'Every catalogued authority is retained');

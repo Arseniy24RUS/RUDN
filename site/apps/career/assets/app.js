@@ -3,7 +3,7 @@ import {upgradePreviousDraft} from './model-upgrade.mjs';
 import {authorityEmblem,authoritySymbolCredit} from './authority-symbols.mjs';
 import {authorityName} from './authority-names.mjs';
 import {createVacancies} from './vacancies.mjs';
-import {createSeminarFlow} from './seminar-flow.mjs';
+import {createAdaptiveFlow} from './adaptive-flow.mjs';
 import {createPersonality} from './personality.mjs';
 import {MODEL_VERSION as CURRENT_MODEL,QUESTIONNAIRE_VERSION,REGISTRY_VERSION} from './versions.mjs';
 import {TOPIC_GROUPS,activeTopicGroups,sanitizeFocusAreas} from './topics.mjs';
@@ -202,6 +202,9 @@ function stateFingerprint() {
   return JSON.stringify(content);
 }
 function saveState() {
+  // Preserve earlier questionnaire drafts; the functional flow has a separate,
+  // versioned store and its own flush contract.
+  if(SEMINAR_FLOW)return true;
   if(protectedStorage||pendingLegacyChoice){if($("#storage-warning"))$("#storage-warning").hidden=false;lastSaveStatus="failed";updateSaveIndicator();updateResumeButton();renderCompareTray();return false;}
   let saved=true;
   try {const fingerprint=stateFingerprint();
@@ -294,6 +297,7 @@ async function loadData() {
 }
 
 function updateResumeButton() {
+  if (SEMINAR_FLOW) return;
   const answered = Object.keys(state.answers).length;
   const button = $("#resume-button");
   if (!button) return;
@@ -311,6 +315,7 @@ function firstUnansweredIndex() {
 }
 
 function resolveResumeRoute() {
+  if (SEMINAR_FLOW && seminarFlow) return seminarFlow.resolveResumeRoute();
   if (state.completedAt) return "results";
   if (Object.keys(state.answers).length < data.questions.length) {
     state.questionIndex = firstUnansweredIndex();
@@ -334,11 +339,9 @@ function routeTo(route, { updateHash = true, replace = false, focus = true } = {
     if(!personality?.isComplete())route='personality';
     else if(route==='home')route='personality-results';
     else if(!['personality','personality-results','preferences','test','sectors','conditions','results'].includes(route))route=resolveResumeRoute();
-    if(route==='sectors'&&Object.keys(state.answers).length<data.questions.length)route='test';
-    if(route==='conditions'&&(state.prioritySectors.length!==4||state.lowPrioritySectors.length!==2))route=resolveResumeRoute();
     route=seminarFlow?.guardRoute(route)||route;
   }else if(['personality','personality-results','preferences'].includes(route))route='home';
-  if(route==='results'&&!completionStatus({...state,questions:data.questions}).complete)route=resolveResumeRoute();
+  if(!SEMINAR_FLOW&&route==='results'&&!completionStatus({...state,questions:data.questions}).complete)route=resolveResumeRoute();
   const unavailableRoutes={workshop:'data/agency-studies.json','public-service':'data/public-service.json',structure:'data/hierarchy.json',opportunities:'data/career-resources.json'};
   if(data.unavailable.includes(unavailableRoutes[route])){
     toast('Раздел временно недоступен. Основной тест продолжает работать.');return;
@@ -353,7 +356,10 @@ function routeTo(route, { updateHash = true, replace = false, focus = true } = {
   });
   $$(".mobile-bottom-nav button").forEach((button) => button.classList.toggle("active", button.dataset.route === route));
 
-  if (route === "test") {
+  if (SEMINAR_FLOW) {
+    // The functional flow owns its questions, continuation and result. Legacy
+    // authority scoring remains isolated in the optional free-play module.
+  } else if (route === "test") {
     if (state.questionIndex >= data.questions.length) state.questionIndex = firstUnansweredIndex();
     renderQuestion();
   } else if (route === "sectors") {
@@ -1455,6 +1461,11 @@ function trapDialogFocus(event) {
 }
 
 function bindStaticEvents() {
+  if(SEMINAR_FLOW) {
+    $("#start-test-button")?.addEventListener("click", startOrResume);
+    $("#resume-button")?.addEventListener("click", startOrResume);
+    return;
+  }
   $$("[data-route]").forEach((button) => button.addEventListener("click", (event) => {
     event.preventDefault();
     const route = button.dataset.route;
@@ -1575,13 +1586,13 @@ async function init() {
     [data] = await Promise.all([loadData(),initializeI18n()]);
     if (__careerHost.destroyed) return;
     configureValidationRegistry(data);
-    loadStoredState();
+    if(!SEMINAR_FLOW)loadStoredState();
     bindReliabilityNotices();
     state.compareIds = sanitizeCompareIds(state.compareIds, data.authorities, MAX_COMPARE);
     data.allInstitutions=[...data.authorities,...data.publicService.records.map(a=>({id:a.id,name:a.name.ru,shortName:a.name.ru,mission:a.mission.ru,entityType:'additional',entityTypeLabel:'Другие ветви и уровни публичной власти',tracks:a.tracks,governmentUrl:a.sources?.[0]?.url||'',localizedName:a.name,source:a}))];
     if(SEMINAR_FLOW){
       personality=createPersonality({navigate:routeTo,continueCareer:()=>routeTo(resolveResumeRoute())});
-      seminarFlow=createSeminarFlow({data,navigate:routeTo,resolveResumeRoute,getInputs:()=>({...state}),getResult:getResults,getProfileContext:()=>({recordId:state.resultRecordId,scales:data.scales,sectors:data.sectors,conditions:data.conditions,prioritySectors:state.prioritySectors,conditionValues:state.conditions}),radarSvg,toast});
+      seminarFlow=createAdaptiveFlow({navigate:routeTo,toast});
     }else{
       classroom=createClassroom({data:{...data,authorities:data.allInstitutions},routeTo,openAuthority,toast,downloadText,getResult:()=>latestResult});
       workspace = createWorkspace({data,state,modelVersion:MODEL_VERSION,

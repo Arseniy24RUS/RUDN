@@ -16,3 +16,8 @@ site/apps/career/data/vacancies/bank/
 
 # Local backups, never publish
 .reception-backup-*/
+
+# Generated functional index is served from its immutable hosting commit.
+site/apps/career/data/adaptive-index/**/*.gz
+site/apps/career/data/adaptive-index/*.gz
+source-audit/adaptive-career/source-members.json.gz

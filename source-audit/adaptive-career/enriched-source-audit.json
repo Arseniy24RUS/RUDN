@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "9bdaea0a82a37516f554c6d68fc3866b8c774ffe",
+  "baseTreeSHA": "4e0a0659c22cf71830f25ac6772264297a50ad7baf82f9e3f1bd265e6fa19f92",
+  "details": {
+    "files": 15958,
+    "gzipBytes": 580029763,
+    "hostedBytes": 773394368,
+    "treeSHA": "8093c0aca170168f46632b72d2af2db44912614798b713345b60bfeb5bd6a17f"
+  },
+  "records": 457627,
+  "categoryPresent": {
+    "duties": 421135,
+    "knowledge": 221230,
+    "skills": 221979,
+    "departmentLabels": 438559,
+    "otherRequirements": 457623,
+    "additionalRequirements": 166840,
+    "knowledgeDescription": 232144
+  },
+  "categoryNonPlaceholder": {
+    "duties": 407732,
+    "knowledge": 220001,
+    "skills": 220949,
+    "departmentLabels": 437755,
+    "otherRequirements": 457623,
+    "additionalRequirements": 158651,
+    "knowledgeDescription": 228226
+  },
+  "placeholderOnlyRows": {
+    "duties": 13403,
+    "departmentLabels": 804,
+    "knowledge": 1229,
+    "knowledgeDescription": 3918,
+    "additionalRequirements": 8189,
+    "skills": 1030
+  },
+  "tokenCounts": {
+    "duties": 808881,
+    "knowledge": 2232212,
+    "skills": 1219896,
+    "knowledgeDescription": 232144,
+    "additionalRequirements": 166840,
+    "departmentLabels": 557163,
+    "otherRequirements": 1907103
+  },
+  "distinctTokenTexts": {
+    "duties": 385931,
+    "knowledge": 170085,
+    "skills": 85350,
+    "knowledgeDescription": 102829,
+    "additionalRequirements": 60713,
+    "departmentLabels": 56306,
+    "otherRequirements": 14352
+  },
+  "sourceFields": {
+    "duties|jobResponsibilitiyFromVacancy": 419538,
+    "knowledge|knowledgeRequirements": 2232212,
+    "skills|skillRequirements": 1219896,
+    "departmentLabels|structuralUnits": 438668,
+    "otherRequirements|educationLevelName": 454993,
+    "otherRequirements|governmentExperienceName": 457451,
+    "otherRequirements|professionalExperienceName": 457456,
+    "otherRequirements|trainingTypes": 44039,
+    "otherRequirements|trainingTypesCollection": 493162,
+    "additionalRequirements|additionalRequirements": 166840,
+    "knowledgeDescription|knowledgeDescription": 232144,
+    "departmentLabels|subdivisions": 118495,
+    "duties|jobResponsibilities": 389343,
+    "otherRequirements|mandatoryStateCivilServicePassingConditions": 1,
+    "otherRequirements|targetedTrainingEducationLevelName": 1
+  },
+  "sourceNamespaces": {
+    "publicFields": 6335910,
+    "extendedPublicFields": 788329
+  },
+  "sourceDatabaseSHA256": {
+    "a81e76d2f47e108b082339c0794d363b5dcb725fb147df189378bdd3c3b058cd": 457627
+  },
+  "scopes": {
+    "individual-role": 292392,
+    "group-or-reserve-context": 165228,
+    "unknown": 7
+  },
+  "categoryCountHistogram": {
+    "5": 234798,
+    "3": 18239,
+    "7": 7720,
+    "6": 55397,
+    "4": 130900,
+    "2": 10208,
+    "1": 365
+  },
+  "seconds": 269.59,
+  "method": "Complete structural audit; exact identity and digest checks over every detail file and every base record. Presence/non-placeholder is not functional coverage."
+}

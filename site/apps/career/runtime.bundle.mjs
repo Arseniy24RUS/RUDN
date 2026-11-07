@@ -28,7 +28,7 @@ var CareerRuntime = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // node_modules/fflate/esm/browser.js
+  // ../RUDN/node_modules/fflate/esm/browser.js
   var browser_exports = {};
   __export(browser_exports, {
     AsyncCompress: () => AsyncGzip,
@@ -521,7 +521,7 @@ var CareerRuntime = (() => {
   }
   var ch2, wk, u8, u16, i32, fleb, fdeb, clim, freb, _a, fl, revfl, _b, fd, revfd, rev, x, i, hMap, flt, i, i, i, i, fdt, i, flm, flrm, fdm, fdrm, max, bits, bits16, shft, slc, FlateErrorCode, ec, err, inflt, wbits, wbits16, hTree, ln, lc, clen, wfblk, wblk, deo, et, dflt, crct, crc, adler, dopt, mrg, wcln, ch, cbfs, wrkr, bInflt, bDflt, gze, guze, zle, zule, pbf, gopt, cbify, astrm, astrmify, b2, b4, b8, wbytes, gzh, gzs, gzl, gzhl, zlh, zls, Deflate, AsyncDeflate, Inflate, AsyncInflate, Gzip, AsyncGzip, Gunzip, AsyncGunzip, Zlib, AsyncZlib, Unzlib, AsyncUnzlib, Decompress, AsyncDecompress, fltn, te, td, tds, dutf8, DecodeUTF8, EncodeUTF8, dbf, slzh, zh, z64e, exfl, wzh, wzf, ZipPassThrough, ZipDeflate, AsyncZipDeflate, Zip, UnzipPassThrough, UnzipInflate, AsyncUnzipInflate, Unzip, mt;
   var init_browser = __esm({
-    "node_modules/fflate/esm/browser.js"() {
+    "../RUDN/node_modules/fflate/esm/browser.js"() {
       ch2 = {};
       wk = (function(c, id, msg, transfer, cb) {
         var w = new Worker(ch2[id] || (ch2[id] = URL.createObjectURL(new Blob([
@@ -2421,9 +2421,9 @@ var CareerRuntime = (() => {
       })
     };
   }
-  function parseSession(text3, questions, sectors) {
-    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > SESSION_LIMIT) throw Error("file-size");
-    const v = JSON.parse(text3);
+  function parseSession(text4, questions, sectors) {
+    if (typeof text4 !== "string" || new TextEncoder().encode(text4).length > SESSION_LIMIT) throw Error("file-size");
+    const v = JSON.parse(text4);
     if (!allowed(v, ["schema", "schemaVersion", "releaseVersion", "modelVersion", "questionnaireVersion", "registryVersion", "savedAt", "inputs"]) || v.schema !== SESSION_SCHEMA || v.schemaVersion !== 1 || !compatibleInputModel(v.modelVersion) || v.questionnaireVersion !== QUESTIONNAIRE_VERSION || v.registryVersion !== REGISTRY_VERSION) throw Error("version");
     const i2 = v.inputs, qids = questions.map((q) => q.id), sids = sectors.map((s) => s.id);
     if (!allowed(i2, ["answers", "prioritySectors", "lowPrioritySectors", "conditions", "focusAreas"]) || !allowed(i2.answers, qids) || !Object.values(i2.answers).every(score) || !allowed(i2.conditions, conditions) || !Object.values(i2.conditions).every(score)) throw Error("answers");
@@ -4021,8 +4021,8 @@ var CareerRuntime = (() => {
   var originals = /* @__PURE__ */ new WeakMap();
   var attributeOriginals = /* @__PURE__ */ new WeakMap();
   var missingTranslations = /* @__PURE__ */ new Set();
-  var normalized = (text3) => String(text3).replace(/\s+/g, " ").trim();
-  var escapeRE = (text3) => text3.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  var normalized = (text4) => String(text4).replace(/\s+/g, " ").trim();
+  var escapeRE = (text4) => text4.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   function normalizeLanguage(value = "") {
     const v = String(value).toLowerCase();
     return v === "en" || v.startsWith("en-") ? "en" : v === "zh" || v.startsWith("zh-") ? "zh-Hans" : "ru";
@@ -4140,8 +4140,8 @@ var CareerRuntime = (() => {
   }
   function translateText(node) {
     if (ignored(node.parentElement) || !node.nodeValue?.trim()) return;
-    const value = node.nodeValue, record2 = originals.get(node);
-    const source = record2 && value === record2.rendered ? record2.source : value;
+    const value = node.nodeValue, record = originals.get(node);
+    const source = record && value === record.rendered ? record.source : value;
     const rendered = translate(source);
     originals.set(node, { source, rendered });
     if (value !== rendered) node.nodeValue = rendered;
@@ -4181,9 +4181,9 @@ var CareerRuntime = (() => {
     observer = new MutationObserver((records) => {
       observer.disconnect();
       const roots = /* @__PURE__ */ new Set();
-      for (const record2 of records) {
-        if (record2.type === "childList") record2.addedNodes.forEach((n) => roots.add(n));
-        else roots.add(record2.target);
+      for (const record of records) {
+        if (record.type === "childList") record.addedNodes.forEach((n) => roots.add(n));
+        else roots.add(record.target);
       }
       for (const root of roots) {
         if (!root.isConnected) continue;
@@ -4223,9 +4223,9 @@ var CareerRuntime = (() => {
   function authorityName(authority) {
     if (!authority) return "";
     const language2 = getLanguage();
-    const localized = (value) => typeof value === "object" && value ? value[language2] || value.ru || "" : translate(value || "");
-    const full = localized(authority.localizedName || authority.name) || localized(authority.shortName);
-    const short = localized(authority.shortName);
+    const localized2 = (value) => typeof value === "object" && value ? value[language2] || value.ru || "" : translate(value || "");
+    const full = localized2(authority.localizedName || authority.name) || localized2(authority.shortName);
+    const short = localized2(authority.shortName);
     return short && short !== full && !full.endsWith(`(${short})`) ? `${full} (${short})` : full;
   }
 
@@ -4287,10 +4287,10 @@ var CareerRuntime = (() => {
       else orgs.set(o.id, o);
       if (o?.authorityId && !["exact", "territorial", "subordinate"].includes(o.relation)) errors.push("invalid-relationship");
     }
-    const ids2 = /* @__PURE__ */ new Set();
+    const ids = /* @__PURE__ */ new Set();
     for (const v of feed.vacancies) {
-      if (!v || !vacancyUrl(v.id) || !plain2(v.title) || !orgs.has(v.organizationId) || ids2.has(v.id)) errors.push("invalid-or-duplicate-vacancy");
-      ids2.add(v?.id);
+      if (!v || !vacancyUrl(v.id) || !plain2(v.title) || !orgs.has(v.organizationId) || ids.has(v.id)) errors.push("invalid-or-duplicate-vacancy");
+      ids.add(v?.id);
       if (v?.url !== vacancyUrl(v?.id) || !isoDate(v?.lastSeenAt)) errors.push("invalid-vacancy-provenance");
       for (const key of ["deadline", "acceptFrom", "publishedAt"]) if (v?.[key] && !isoDate(v[key])) errors.push(`invalid-${key}`);
     }
@@ -4328,7 +4328,7 @@ var CareerRuntime = (() => {
     root.setAttribute("data-no-i18n", "");
     let feed = null, sync = null, loading = false, loaded = false, loadError = "", selected = "", territorial = false, query = "", limit = 12, connection = null, busy = false;
     const institutions = data2.allInstitutions || data2.authorities;
-    const ids2 = () => selected ? [selected] : (getResult()?.ranked || []).filter((a) => !["fund", "corporation"].includes(a.entityType)).slice(0, 5).map((a) => a.id);
+    const ids = () => selected ? [selected] : (getResult()?.ranked || []).filter((a) => !["fund", "corporation"].includes(a.entityType)).slice(0, 5).map((a) => a.id);
     const displayName = (id) => authorityName(institutions.find((a) => a.id === id)) || id;
     const isVisible = () => !document.querySelector("#view-vacancies")?.hidden;
     async function localJSON(file) {
@@ -4395,7 +4395,7 @@ var CareerRuntime = (() => {
       return items.map((v) => `<article class="vac-card"><div class="vac-card-meta"><span>${E(strings()[v.status])}</span><span>${E(v.location || L("\u041C\u0435\u0441\u0442\u043E \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Location not supplied", "\u672A\u6CE8\u660E\u5730\u70B9"))}</span></div><div class="result-symbol-heading">${authorityEmblem(institutions.find((a) => a.id === v.organization.authorityId) || { id: "" }, "compact")}<h3 lang="ru">${E(v.title)}</h3></div><p class="vac-employer" lang="ru">${E(v.organization.name)}</p>${v.organization.relation === "territorial" ? `<p class="vac-relation">${L("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D, \u043D\u0435 \u0446\u0435\u043D\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0430\u043F\u043F\u0430\u0440\u0430\u0442", "Territorial authority, not the central office", "\u5730\u65B9\u6D3E\u51FA\u673A\u5173\uFF0C\u975E\u4E2D\u592E\u673A\u5173")}</p>` : ""}${v.department ? `<p lang="ru">${E(v.department)}</p>` : ""}<dl>${v.deadline ? `<div><dt>${L("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62")}</dt><dd>${E(date(v.deadline))}</dd></div>` : ""}${v.salary ? `<div><dt>${L("\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Pay as stated", "\u6765\u6E90\u6240\u5217\u62A5\u916C")}</dt><dd lang="ru">${E(v.salary)}</dd></div>` : ""}${v.education ? `<div><dt>${L("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386")}</dt><dd lang="ru">${E(v.education)}</dd></div>` : ""}${v.experience ? `<div><dt>${L("\u041E\u043F\u044B\u0442", "Experience", "\u7ECF\u5386")}</dt><dd lang="ru">${E(v.experience)}</dd></div>` : ""}${v.kind ? `<div><dt>${L("\u0412\u0438\u0434 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Announcement type", "\u516C\u544A\u7C7B\u578B")}</dt><dd lang="ru">${E(v.kind)}</dd></div>` : ""}</dl><p class="vac-card-note">${L("\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u044B", "Retrieved", "\u83B7\u53D6\u4E8E")}: ${E(date(v.lastSeenAt))}. ${L("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C.", "Titles and requirements retain their original Russian wording.", "\u6807\u9898\u53CA\u8981\u6C42\u4FDD\u7559\u4FC4\u6587\u539F\u6587\u3002")}</p><a class="button button-primary" href="${E(v.url)}" target="_blank" rel="noopener noreferrer">${L("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Open official vacancy", "\u6253\u5F00\u5B98\u65B9\u804C\u4F4D")}${I("external")}</a></article>`).join("");
     }
     function nothing() {
-      const targets = ids2();
+      const targets = ids();
       if (!targets.length) return `<div class="vac-empty">${I("briefcase")}<h3>${L("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0442\u0435\u0441\u0442", "Choose an authority or complete the test", "\u8BF7\u9009\u62E9\u673A\u5173\u6216\u5B8C\u6210\u6D4B\u8BD5")}</h3><p>${L("\u041F\u043E\u0441\u043B\u0435 \u0442\u0435\u0441\u0442\u0430 \u0437\u0434\u0435\u0441\u044C \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u044E\u0442\u0441\u044F \u043F\u044F\u0442\u044C \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "The five recommended federal authorities are selected automatically after the test.", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u5C06\u81EA\u52A8\u4F7F\u7528\u63A8\u8350\u7684\u4E94\u4E2A\u8054\u90A6\u673A\u5173\u3002")}</p></div>`;
       const matched = (feed?.organizations || []).filter((o) => targets.includes(o.authorityId));
       return `<div class="vac-empty">${I("briefcase")}<h3>${!matched.length ? L("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0438 \u0435\u0449\u0451 \u043D\u0435 \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u044B", "Employers not yet matched", "\u96C7\u4E3B\u5C1A\u672A\u5339\u914D") : L("\u0412 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u043E\u0439 \u0447\u0430\u0441\u0442\u0438 \u0432\u044B\u0434\u0430\u0447\u0438 \u043D\u0435\u0442 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439", "No matching announcements in the retrieved results", "\u5DF2\u83B7\u53D6\u7ED3\u679C\u4E2D\u6CA1\u6709\u5339\u914D\u516C\u544A")}</h3><p>${L("\u042D\u0442\u043E \u043D\u0435 \u0432\u044B\u0432\u043E\u0434 \u043E\u0431 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435. \u0414\u043E\u0441\u0442\u0443\u043F\u0435\u043D \u043F\u0435\u0440\u0435\u0445\u043E\u0434 \u043A \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0438\u0441\u043A\u0443.", "This is not evidence that the authority has no vacancies. You can open the official search.", "\u8FD9\u4E0D\u8BC1\u660E\u673A\u5173\u6CA1\u6709\u7A7A\u7F3A\uFF1B\u53EF\u4EE5\u6253\u5F00\u5B98\u65B9\u641C\u7D22\u3002")}</p><a class="button button-secondary" href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L("\u041F\u043E\u0438\u0441\u043A \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Search the official portal", "\u5728\u5B98\u65B9\u95E8\u6237\u641C\u7D22")}${I("external")}</a></div>`;
@@ -4406,7 +4406,7 @@ var CareerRuntime = (() => {
     }
     function draw() {
       if (!isVisible()) return;
-      const items = feed ? selectVacancies(feed, { authorityIds: ids2(), includeTerritorial: territorial, query }) : [];
+      const items = feed ? selectVacancies(feed, { authorityIds: ids(), includeTerritorial: territorial, query }) : [];
       root.innerHTML = `<header class="vac-heading"><div><h1>${L("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432", "Vacancies in recommended authorities", "\u63A8\u8350\u673A\u5173\u7684\u804C\u4F4D")}</h1><p>${L("\u041A\u0440\u0430\u0442\u043A\u0438\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u2013 \u0437\u0434\u0435\u0441\u044C. \u041F\u043E\u043B\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0438 \u043F\u043E\u0434\u0430\u0447\u0430 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u043E\u0432 \u2013 \u043D\u0430 \u043F\u043E\u0440\u0442\u0430\u043B\u0435 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430.", "Brief cards here. Full terms and applications stay on the official portal.", "\u6B64\u5904\u5C55\u793A\u7B80\u8981\u5361\u7247\uFF1B\u5B8C\u6574\u6761\u4EF6\u53CA\u7533\u8BF7\u7559\u5728\u5B98\u65B9\u95E8\u6237\u3002")}</p></div><a class="button button-secondary" href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">gossluzhba.gov.ru${I("external")}</a></header>${statusPanel()}<div class="vac-controls"><label>${L("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Authority", "\u673A\u5173")}<select id="vac-authority"><option value="">${L("\u041F\u043E \u043C\u043E\u0435\u043C\u0443 \u0422\u041E\u041F-5", "My top five", "\u6211\u7684\u524D\u4E94\u63A8\u8350")}</option>${institutions.map((a) => `<option value="${E(a.id)}" ${selected === a.id ? "selected" : ""}>${E(displayName(a.id))}</option>`).join("")}</select></label><label>${L("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0438\u043B\u0438 \u043C\u0435\u0441\u0442\u043E", "Position or location", "\u804C\u4F4D\u6216\u5730\u70B9")}<input id="vac-query" type="search" maxlength="150" value="${E(query)}" placeholder="${L("\u041F\u043E\u0438\u0441\u043A \u0432 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u043D\u044B\u0445 \u0434\u0430\u043D\u043D\u044B\u0445", "Search retrieved data", "\u641C\u7D22\u5DF2\u83B7\u53D6\u6570\u636E")}"></label><label class="vac-checkbox"><input id="vac-territory" type="checkbox" ${territorial ? "checked" : ""}>${L("\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B", "Include confirmed territorial employers", "\u5305\u542B\u5DF2\u786E\u8BA4\u7684\u6D3E\u51FA\u673A\u5173")}</label></div><div class="vac-toolbar"><span>${L("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0432 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Announcements in this selection", "\u9009\u96C6\u4E2D\u516C\u544A")}: <b>${items.length}</b></span><button type="button" class="button button-secondary" id="vac-reload" ${loading ? "disabled" : ""}>${L("\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0431\u043D\u043E\u0432\u043B\u0435\u043D\u0438\u0435 \u043A\u043E\u043F\u0438\u0438", "Check snapshot update", "\u68C0\u67E5\u526F\u672C\u66F4\u65B0")}${I("reset")}</button>${connection?.refreshEnabled ? `<button type="button" class="button button-secondary" id="vac-sync" ${busy ? "disabled" : ""}>${L("\u041F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0434\u0430\u043D\u043D\u044B\u0435 \u0441 \u043F\u043E\u0440\u0442\u0430\u043B\u0430", "Fetch from the portal", "\u4ECE\u95E8\u6237\u83B7\u53D6\u6570\u636E")}</button>` : ""}</div>${busy ? `<p role="status">${L("\u041F\u043E\u043B\u0443\u0447\u0430\u0435\u043C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435. \u041C\u043E\u0436\u043D\u043E \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0442\u044C \u0440\u0430\u0431\u043E\u0442\u0443 \u0441 \u0442\u0435\u0441\u0442\u043E\u043C.", "Retrieving public data. You can continue using the test.", "\u6B63\u5728\u83B7\u53D6\u516C\u5171\u6570\u636E\uFF1B\u4F60\u53EF\u4EE5\u7EE7\u7EED\u4F7F\u7528\u6D4B\u8BD5\u3002")}</p>` : ""}<div class="vac-cards">${items.length ? cards(items.slice(0, limit)) : nothing()}</div>${items.length > limit ? `<button type="button" id="vac-more" class="button button-secondary">${L("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button>` : ""}<p class="vac-boundary">${I("shield")}${L("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442 \u0431\u0430\u043B\u043B\u044B \u043F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u0438. \u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u0443, \u044F\u0437\u044B\u043A\u0443, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E \u0438 \u0441\u0442\u0430\u0436\u0443 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u0432 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438. \u042F\u0437\u044B\u043A \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0430 \u043D\u0435 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u0442\u0432\u043E.", "Vacancies do not change career scores. Check citizenship, language, education and experience in the specific announcement. Interface language does not determine citizenship.", "\u804C\u4F4D\u4E0D\u6539\u53D8\u804C\u4E1A\u6D4B\u8BD5\u5206\u6570\u3002\u56FD\u7C4D\u3001\u8BED\u8A00\u3001\u5B66\u5386\u548C\u7ECF\u5386\u8981\u6C42\u5E94\u6309\u5177\u4F53\u516C\u544A\u6838\u5BF9\uFF1B\u754C\u9762\u8BED\u8A00\u4E0D\u51B3\u5B9A\u56FD\u7C4D\u3002")}</p>${setup()}`;
       root.querySelector("#vac-authority").onchange = (e) => {
         selected = e.target.value;
@@ -4518,24 +4518,6 @@ var CareerRuntime = (() => {
 
   // site/apps/career/assets/employer-vacancies-bank.mjs
   var BANK_COLUMNS = Object.freeze(["id", "title", "scope", "region", "locality", "salaryFrom", "salaryTo", "announcedAt", "expiresAt", "state", "archive", "sourceURL", "education", "professionalExperience", "governmentExperience"]);
-  var abortError = () => new DOMException("Vacancy request cancelled", "AbortError");
-  var record = (v) => v && typeof v === "object" && !Array.isArray(v);
-  var safePath = (p) => typeof p === "string" && /^[a-zA-Z0-9][a-zA-Z0-9_./-]*\.gz$/.test(p) && !p.split("/").some((s) => s === "." || s === ".." || !s);
-  function platformEmployerId(value) {
-    const id = String(value || "").replace(/^(?:ps:|territorial:)/, "");
-    if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,246}$/.test(id)) throw new Error("Invalid employer identifier");
-    return id;
-  }
-  function validateDescriptor(value, id) {
-    if (!record(value) || value.schemaVersion !== 2 || value.authorityId !== id || !Number.isInteger(value.jobCount) || value.jobCount < 0 || !Array.isArray(value.pages)) throw new Error("Invalid employer descriptor");
-    if (value.pages.some((p) => !record(p) || !safePath(p.path) || !Number.isInteger(p.count) || p.count < 1 || p.count > 250 || !Number.isInteger(p.bytes) || p.bytes < 18 || p.bytes > 4 * 1024 * 1024 || !Number.isInteger(p.uncompressedBytes) || p.uncompressedBytes < 1 || p.uncompressedBytes > 8 * 1024 * 1024 || !/^[a-f0-9]{64}$/.test(p.sha256) || !/^[a-f0-9]{64}$/.test(p.uncompressedSHA256))) throw new Error("Invalid employer page");
-    if (value.pages.reduce((n, p) => n + p.count, 0) !== value.jobCount) throw new Error("Employer count differs from pages");
-    return value;
-  }
-  async function digest(bytes) {
-    if (!globalThis.crypto?.subtle) return null;
-    return [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map((b) => b.toString(16).padStart(2, "0")).join("");
-  }
   async function decodeGzip(bytes, { expectedBytes, maxBytes = 8 * 1024 * 1024 } = {}) {
     const input = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
     if (input[0] !== 31 || input[1] !== 139 || input[2] !== 8) throw new Error("Invalid gzip page");
@@ -4571,2014 +4553,159 @@ var CareerRuntime = (() => {
     if (output.length > maxBytes || expectedBytes !== void 0 && output.length !== expectedBytes) throw new Error("Vacancy page length mismatch");
     return output;
   }
-  function unpackVacancyPage(value, descriptor, page) {
-    if (!record(value) || value.schemaVersion !== 2 || value.employerId !== descriptor.employerId || JSON.stringify(value.columns) !== JSON.stringify(BANK_COLUMNS) || !Array.isArray(value.rows) || value.rows.length !== page.count) throw new Error("Invalid vacancy page");
-    return value.rows.map((row) => {
-      if (!Array.isArray(row) || row.length !== BANK_COLUMNS.length || typeof row[0] !== "string" || row[1] !== null && typeof row[1] !== "string" || ![true, false, null].includes(row[10])) throw new Error("Invalid vacancy row");
-      const result = Object.fromEntries(BANK_COLUMNS.map((key, i2) => [key, row[i2]]));
-      if (result.sourceURL !== null) {
-        let url;
-        try {
-          url = new URL(result.sourceURL);
-        } catch {
-          throw new Error("Invalid vacancy source");
-        }
-        if (url.protocol !== "https:" || url.hostname !== "gossluzhba.gov.ru") throw new Error("Invalid vacancy source");
-      }
-      return result;
-    });
-  }
-  function vacancyBankStatus(row, now = /* @__PURE__ */ new Date()) {
-    const state2 = String(row.state || "").toLowerCase();
-    if (row.archive === true || /закрыт|архив|отмен[её]н|заверш[её]н/.test(state2)) return "archived";
-    const deadline = typeof row.expiresAt === "string" && /^\d{4}-\d{2}-\d{2}/.test(row.expiresAt) ? row.expiresAt.slice(0, 10) : null;
-    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
-    if (deadline && deadline < today) return "expired";
-    return row.archive === false ? "source-active" : "unknown";
-  }
-  function createEmployerVacancyBank({ baseURL = "data/vacancies/bank/", fetchImpl = (...args) => fetch(...args), maxEmployers = 8, maxPages = 12, maxConcurrent = 2, timeout = 2e4, decompress: decompress2 = decodeGzip } = {}) {
-    const entries = /* @__PURE__ */ new Map(), pages = /* @__PURE__ */ new Map(), inflight = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set(), queue = [];
-    let active = 0, disposed = false;
-    const invalidState = (input) => ({ authorityId: String(input || ""), descriptor: null, rows: [], pageIndex: 0, targetPage: 0, loading: false, error: "invalid-employer", status: "error" });
-    const notify = (id) => {
-      if (!disposed) for (const listener of listeners) listener(id);
-    };
-    function limited(fn, signal) {
-      return new Promise((resolve, reject) => {
-        const task = { fn, resolve, reject, signal };
-        const cancelled = () => {
-          const i2 = queue.indexOf(task);
-          if (i2 >= 0) {
-            queue.splice(i2, 1);
-            reject(abortError());
-          }
-        };
-        task.cleanup = () => signal.removeEventListener("abort", cancelled);
-        signal.addEventListener("abort", cancelled, { once: true });
-        queue.push(task);
-        pump();
-      });
-    }
-    function pump() {
-      while (active < maxConcurrent && queue.length) {
-        const task = queue.shift();
-        task.cleanup();
-        if (task.signal.aborted) {
-          task.reject(abortError());
-          continue;
-        }
-        active++;
-        Promise.resolve().then(task.fn).then(task.resolve, task.reject).finally(() => {
-          active--;
-          pump();
-        });
-      }
-    }
-    async function request(url, signal, asJSON) {
-      return limited(async () => {
-        const control = new AbortController(), abort = () => control.abort(signal.reason || abortError());
-        signal.addEventListener("abort", abort, { once: true });
-        let timer;
-        const deadline = new Promise((_, reject) => {
-          timer = setTimeout(() => {
-            control.abort();
-            reject(new DOMException("Vacancy loading timed out", "TimeoutError"));
-          }, timeout);
-        });
-        try {
-          return await Promise.race([(async () => {
-            if (signal.aborted) throw abortError();
-            const response = await fetchImpl(url, { cache: "no-store", signal: control.signal });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const value = asJSON ? await response.json() : new Uint8Array(await response.arrayBuffer());
-            if (signal.aborted) throw abortError();
-            return value;
-          })(), deadline]);
-        } finally {
-          clearTimeout(timer);
-          signal.removeEventListener("abort", abort);
-        }
-      }, signal);
-    }
-    function touch(map, key, value) {
-      map.delete(key);
-      map.set(key, value);
-    }
-    function entryFor(input) {
-      const id = platformEmployerId(input);
-      let entry = entries.get(id);
-      if (!entry) {
-        entry = { id, descriptor: null, rows: [], loaded: false, pageIndex: 0, targetPage: 0, loading: false, error: null, generation: 0, controller: null, promise: null };
-        entries.set(id, entry);
-        while (entries.size > maxEmployers) {
-          const first = entries.keys().next().value;
-          entries.get(first).controller?.abort();
-          entries.delete(first);
-        }
-      } else touch(entries, id, entry);
-      return entry;
-    }
-    function snapshot(entry) {
-      return { authorityId: entry.id, descriptor: entry.descriptor, rows: entry.rows, pageIndex: entry.pageIndex, targetPage: entry.targetPage, loading: entry.loading, error: entry.error, status: entry.loading ? "loading" : entry.error ? "error" : entry.descriptor ? "ready" : "idle" };
-    }
-    function sharedPage(descriptor, page, signal) {
-      const key = descriptor.employerId + "|" + page.path;
-      if (pages.has(key)) {
-        const value = pages.get(key);
-        touch(pages, key, value);
-        return Promise.resolve(value);
-      }
-      let job = inflight.get(key);
-      if (job?.control.signal.aborted) {
-        inflight.delete(key);
-        job = null;
-      }
-      if (!job) {
-        const control = new AbortController();
-        job = { control, consumers: /* @__PURE__ */ new Set() };
-        job.promise = (async () => {
-          const compressed = await request(baseURL + page.path, control.signal, false);
-          if (compressed.length !== page.bytes) throw new Error("Vacancy page download length mismatch");
-          const actual = await digest(compressed);
-          if (actual && actual !== page.sha256) throw new Error("Vacancy page checksum mismatch");
-          const raw = await decompress2(compressed, { expectedBytes: page.uncompressedBytes });
-          if (control.signal.aborted) throw abortError();
-          const decoded = await digest(raw);
-          if (decoded && decoded !== page.uncompressedSHA256) throw new Error("Decoded vacancy page checksum mismatch");
-          const rows = unpackVacancyPage(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)), descriptor, page);
-          touch(pages, key, rows);
-          while (pages.size > maxPages) pages.delete(pages.keys().next().value);
-          return rows;
-        })();
-        inflight.set(key, job);
-        job.promise.finally(() => {
-          if (inflight.get(key) === job) inflight.delete(key);
-        }).catch(() => {
-        });
-      }
-      return new Promise((resolve, reject) => {
-        const consumer = {};
-        job.consumers.add(consumer);
-        let settled = false;
-        const cleanup = () => {
-          job.consumers.delete(consumer);
-          signal.removeEventListener("abort", cancel);
-        };
-        const cancel = () => {
-          if (settled) return;
-          settled = true;
-          cleanup();
-          if (!job.consumers.size) job.control.abort();
-          reject(abortError());
-        };
-        if (signal.aborted) {
-          cancel();
-          return;
-        }
-        signal.addEventListener("abort", cancel, { once: true });
-        job.promise.then((value) => {
-          if (!settled) {
-            settled = true;
-            cleanup();
-            resolve(value);
-          }
-        }, (error) => {
-          if (!settled) {
-            settled = true;
-            cleanup();
-            reject(error);
-          }
-        });
-      });
-    }
-    function loadPage(input, index = 0) {
-      if (disposed) return Promise.resolve(null);
-      let entry;
-      try {
-        entry = entryFor(input);
-      } catch {
-        return Promise.resolve(invalidState(input));
-      }
-      if (entry.loading && entry.targetPage === index) return entry.promise;
-      entry.controller?.abort();
-      const generation = ++entry.generation, controller = new AbortController();
-      entry.controller = controller;
-      entry.targetPage = index;
-      entry.loading = true;
-      entry.error = null;
-      notify(entry.id);
-      entry.promise = (async () => {
-        try {
-          let descriptor = entry.descriptor;
-          if (!descriptor) {
-            const compressed = await request(baseURL + "employers/" + entry.id + ".json.gz", controller.signal, false);
-            if (compressed.length > 256 * 1024) throw new Error("Employer descriptor exceeds size limit");
-            const raw = await decompress2(compressed, { maxBytes: 2 * 1024 * 1024 });
-            descriptor = validateDescriptor(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)), entry.id);
-          }
-          if (controller.signal.aborted || generation !== entry.generation) return snapshot(entry);
-          entry.descriptor = descriptor;
-          if (index < 0 || index >= Math.max(1, descriptor.pages.length)) throw new Error("Invalid vacancy page number");
-          const rows = descriptor.pages.length ? await sharedPage(descriptor, descriptor.pages[index], controller.signal) : [];
-          if (controller.signal.aborted || generation !== entry.generation) return snapshot(entry);
-          entry.rows = rows;
-          entry.loaded = true;
-          entry.pageIndex = index;
-          entry.error = null;
-        } catch (error) {
-          if (generation === entry.generation && error.name !== "AbortError") entry.error = error.name === "TimeoutError" ? "timeout" : "load-failed";
-        } finally {
-          if (generation === entry.generation) {
-            entry.loading = false;
-            entry.controller = null;
-            entry.promise = null;
-            notify(entry.id);
-          }
-        }
-        return snapshot(entry);
-      })();
-      return entry.promise;
-    }
-    return { get: (input) => {
-      try {
-        return snapshot(entryFor(input));
-      } catch {
-        return invalidState(input);
-      }
-    }, loadPage, ensure(input) {
-      let e;
-      try {
-        e = entryFor(input);
-      } catch {
-        return Promise.resolve(invalidState(input));
-      }
-      return e.descriptor && e.loaded && !e.error ? Promise.resolve(snapshot(e)) : loadPage(e.id, e.pageIndex);
-    }, retry: (input) => {
-      let e;
-      try {
-        e = entryFor(input);
-      } catch {
-        return Promise.resolve(invalidState(input));
-      }
-      return loadPage(e.id, e.targetPage);
-    }, cancel(input) {
-      let e;
-      try {
-        e = entries.get(platformEmployerId(input));
-      } catch {
-        return;
-      }
-      if (e) {
-        e.controller?.abort();
-        e.generation++;
-        e.loading = false;
-        e.controller = null;
-        e.promise = null;
-        notify(e.id);
-      }
-    }, subscribe(listener) {
-      listeners.add(listener);
-      return () => listeners.delete(listener);
-    }, isBusy: () => [...entries.values()].some((e) => e.loading), cacheInfo: () => ({ employers: entries.size, pages: pages.size, pending: inflight.size, activeRequests: active }), dispose() {
-      disposed = true;
-      for (const e of entries.values()) e.controller?.abort();
-      for (const job of inflight.values()) job.control.abort();
-      listeners.clear();
-      entries.clear();
-      pages.clear();
-    } };
-  }
 
-  // site/apps/career/assets/scoring.mjs
-  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
-  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
-  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
-  function clamp(value, min = 0, max2 = 1) {
-    return Math.max(min, Math.min(max2, value));
-  }
-  function average(values) {
-    if (!values.length) return 0;
-    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
-  }
-  function standardDeviation(values) {
-    if (!values.length) return 0;
-    const mean = average(values);
-    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
-  }
-  function computeRoleProfile(answerMap, questions) {
-    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
-    for (const question of questions) {
-      const raw2 = Number(answerMap[question.id]);
-      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
-        grouped[question.scale].push(raw2);
-      }
-    }
-    const raw = {};
-    const normalized2 = {};
-    for (const id of SCALE_IDS) {
-      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
-      normalized2[id] = (raw[id] - 1) / 4;
-    }
-    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
-  }
-  function profileFromMeans(raw, answered = 27) {
-    const normalized2 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
-    const values = SCALE_IDS.map((id) => Number(raw[id]));
-    const dispersion = standardDeviation(values);
-    const mean = average(values);
-    return {
-      raw,
-      normalized: normalized2,
-      dispersion,
-      flat: dispersion < 0.26,
-      answered,
-      mean,
-      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
-      positiveScales: values.filter((v) => v >= 3.5).length,
-      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
-    };
-  }
-  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
-    const priorityWeights = [1, 0.82, 0.66, 0.5];
-    const lowWeights = [0.08, 0];
-    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
-    priorityIds.slice(0, 4).forEach((id, index) => {
-      if (id in values) values[id] = priorityWeights[index];
-    });
-    lowPriorityIds.slice(0, 2).forEach((id, index) => {
-      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
-    });
-    return values;
-  }
-  function sectorFit(preferences, authority, focusAreas = {}) {
-    const entries = authority.sectors || [];
-    if (!entries.length) return 0.25;
-    return clamp(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
-  }
-  function conditionDetails(userConditions = {}, requirements = {}) {
-    return CONDITION_IDS.map((id) => {
-      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
-      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
-      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
-      const [lo, hi] = interval;
-      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
-      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
-      return { id, willingness, requirement, interval, known: true, fit: clamp(1 - expectedGap / 4), gap: expectedGap };
-    });
-  }
-  function conditionFit(userConditions = {}, requirements = {}) {
-    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
-  }
-  function roleFit(roleProfile, template) {
-    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
-    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
-    const mean = average(user), tmean = average(target);
-    let dot = 0, norm = 0, tnorm = 0;
-    for (let i2 = 0; i2 < user.length; i2++) {
-      const u = user[i2] - mean, t = target[i2] - tmean;
-      dot += u * t;
-      norm += u * u;
-      tnorm += t * t;
-    }
-    if (tnorm < 1e-12) return 0.5;
-    return clamp(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
-  }
-  function matchBand(score2) {
-    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
-  }
-  function importanceFactor(importance) {
-    if (Number(importance) >= 3) return 1;
-    if (Number(importance) === 2) return 0.96;
-    return 0.91;
-  }
-  function canonicalValue(value) {
-    if (Array.isArray(value)) return value.map(canonicalValue);
-    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
-    return value;
-  }
-  function pathSignature(path, template, factor) {
-    return JSON.stringify(canonicalValue({
-      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
-      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
-      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids2]) => ids2?.length).map(([id, ids2]) => [id, [...new Set(ids2)].sort()])),
-      conditions: CONDITION_IDS.map((id) => {
-        const value = path.conditions?.[id];
-        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
-      }),
-      factor
-    }));
-  }
-  function aggregatePaths(paths) {
-    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
-    const best = ordered[0];
-    const pathMeanScore = average(ordered.map((path) => path.score));
-    const contributions = {};
-    const pathMeanContributions = {};
-    for (const key of ["role", "sector", "conditions"]) {
-      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
-      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
-    }
-    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
-    const { signature, ...bestPath } = best;
-    return {
-      ...bestPath,
-      rawScore,
-      score: Math.round(rawScore * 10) / 10,
-      band: matchBand(rawScore),
-      bestPathScore: best.score,
-      pathMeanScore,
-      portfolioScore: pathMeanScore,
-      pathCount: ordered.length,
-      aggregation: AGENCY_AGGREGATION,
-      bestPathContributions: best.contributions,
-      pathMeanContributions,
-      contributions
-    };
-  }
-  function scoreAuthority(authority, context, trackMap) {
-    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
-    const cFit = conditionFit(context.conditions, authority.conditions);
-    const paths = /* @__PURE__ */ new Map();
-    for (const link of authority.tracks || []) {
-      const template = trackMap.get(link.id);
-      if (!template) continue;
-      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
-      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
-      const cFit2 = conditionFit(context.conditions, link.conditions || {});
-      const rFit = roleFit(context.roleProfile, template);
-      const factor = importanceFactor(link.importance);
-      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
-      const score2 = 100 * base * factor;
-      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
-      const candidate = {
-        score: score2,
-        signature,
-        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
-        roleFit: rFit,
-        sectorFit: sFit2,
-        conditionFit: cFit2,
-        track: template,
-        importance: link.importance,
-        path: link,
-        pathSectors: path.sectors,
-        pathTopics: path.topics || {},
-        pathConditions: link.conditions || {}
-      };
-      const existing = paths.get(signature);
-      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
-    }
-    if (!paths.size) {
-      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
-      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
-      return {
-        ...authority,
-        score: Math.round(score2 * 10) / 10,
-        rawScore: score2,
-        band: matchBand(score2),
-        roleFit: 0.5,
-        sectorFit: sFit,
-        conditionFit: cFit,
-        track: null,
-        importance: 0,
-        bestPathScore: null,
-        pathMeanScore: null,
-        portfolioScore: null,
-        pathCount: 0,
-        aggregation: AGENCY_AGGREGATION,
-        contributions,
-        bestPathContributions: null,
-        pathMeanContributions: null
-      };
-    }
-    return { ...authority, ...aggregatePaths([...paths.values()]) };
-  }
-  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const roleProfile = computeRoleProfile(answers, questions);
-    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
-  }
-  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
-    const trackMap = new Map(tracks.map((track) => [track.id, track]));
-    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
-    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
-    return { ranked, roleProfile, sectorPreferences, context };
-  }
-  function selectDiscoveryCandidate(ranked, topCount = 5) {
-    if (ranked.length <= topCount) return null;
-    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
-    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
-      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
-      return right.score - left.score;
-    });
-    return candidates[0] || null;
-  }
-  function buildExplanation(item, roleProfile, scales, sectors) {
-    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
-    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
-    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
-    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
-    return {
-      strengths: strongest,
-      sectors: authoritySectors,
-      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
-      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
-    };
-  }
-  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
-    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
-    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
-    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
-    return {
-      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
-      missingQuestions,
-      priorityCount: prioritySectors.length,
-      lowPriorityCount: lowPrioritySectors.length,
-      missingConditions
-    };
-  }
-
-  // site/apps/career/assets/career-journey-model.mjs
-  var JOURNEY_SCHEMA = 1;
-  var DESIRED_AUTHORITY_COUNT = 3;
-  var REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills", "eligibility", "other"]);
-  var CORE_REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills"]);
-  var COMPETENCY_DOMAIN_IDS = Object.freeze([
-    "law-regulation",
-    "documents-records",
-    "data-digital",
-    "finance-economy",
-    "communication",
-    "organization-projects",
-    "sector-knowledge",
-    "analytical-work"
+  // site/apps/career/assets/adaptive-index-codec.mjs
+  var ADAPTIVE_INDEX_SCHEMA_VERSION = 2;
+  var CANDIDATE_ENCODING = "career-candidates-dictionary-v1";
+  var CANDIDATE_COLUMNS = Object.freeze([
+    "id",
+    "title",
+    "department",
+    "employer",
+    "regionId",
+    "location",
+    "profile",
+    "evidenceLevel",
+    "responsibilityLevel",
+    "status",
+    "archive",
+    "sourceURL",
+    "sourcePath",
+    "sourceType",
+    "sourceRecordCount",
+    "detailPath"
   ]);
-  var PERSONAL_CATEGORIES = /* @__PURE__ */ new Set(["knowledge", "skills"]);
-  var FORMAL_CATEGORIES = /* @__PURE__ */ new Set(["education", "experience", "eligibility"]);
-  var object = (value) => value && typeof value === "object" && !Array.isArray(value);
-  var list = (value) => Array.isArray(value) ? value : [];
-  var ids = (value) => [...new Set(list(value).filter((id) => typeof id === "string" && id.trim()))];
-  var sourceText = (value) => typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
-  function isNationalAuthority(authority) {
-    if (!authority) return false;
-    if (["federal", "national", "national-corporation"].includes(authority.level)) return true;
-    if (authority.level === "regional" || authority.level === "municipal" || authority.regionId) return false;
-    if (String(authority.cohort || "").startsWith("federal-")) return true;
-    return !authority.level || ["corporation", "fund"].includes(authority.entityType);
-  }
-  function authorityInSelectedTerritories(authority, regionIds = []) {
-    return isNationalAuthority(authority) || ids(regionIds).includes(authority?.regionId);
-  }
-  function sanitizeJourneyPreferences(value, { regions = [], authorities = [], defaultRegionId = "ru-77" } = {}) {
-    const stored = object(value) ? value : {};
-    const knownRegions = new Set(list(regions).map((region) => typeof region === "string" ? region : region?.id));
-    const candidateRegions = Array.isArray(stored.regionIds) ? stored.regionIds : [defaultRegionId];
-    const regionIds = ids(candidateRegions).filter((id) => knownRegions.has(id));
-    const knownAuthorities = new Map(list(authorities).filter((authority) => authority?.id).map((authority) => [authority.id, authority]));
-    const desiredIds = ids(stored.desiredIds).filter((id) => {
-      const authority = knownAuthorities.get(id);
-      return authority && authorityInSelectedTerritories(authority, regionIds);
-    }).slice(0, DESIRED_AUTHORITY_COUNT);
-    return {
-      schemaVersion: JOURNEY_SCHEMA,
-      regionIds,
-      desiredIds,
-      confirmed: stored.confirmed === true && desiredIds.length === DESIRED_AUTHORITY_COUNT
-    };
-  }
-  function validProfile(profile) {
-    return profile && SCALE_IDS.every((id) => Number.isFinite(profile.raw?.[id]) && profile.raw[id] >= 1 && profile.raw[id] <= 5);
-  }
-  function rankJourneyAuthorities(options = {}) {
-    const { authorities = [], tracks = [], questions = [], sectors = [] } = options;
-    const input = { ...options, ...object(options.inputs) ? options.inputs : {} };
-    let roleProfile = options.context?.roleProfile || options.roleProfile;
-    if (!roleProfile) {
-      if (!questions.length || questions.some((question) => !Number.isInteger(input.answers?.[question.id]) || input.answers[question.id] < 1 || input.answers[question.id] > 5)) {
-        throw new Error("journey/incomplete-interest-profile");
-      }
-      roleProfile = computeRoleProfile(input.answers, questions);
-    }
-    if (!validProfile(roleProfile)) throw new Error("journey/invalid-interest-profile");
-    const context = {
-      roleProfile,
-      sectorPreferences: options.context?.sectorPreferences || buildSectorPreference(input.prioritySectors, input.lowPrioritySectors, sectors),
-      conditions: options.context?.conditions || input.conditions || {},
-      focusAreas: options.context?.focusAreas || input.focusAreas || {}
-    };
-    const regionIds = ids(options.regionIds);
-    const regionsWanted = new Set(regionIds);
-    const count = Number.isSafeInteger(options.limit) && options.limit >= 0 ? options.limit : 3;
-    const trackMap = new Map(list(tracks).map((track) => [track.id, track]));
-    const distinct = /* @__PURE__ */ new Map();
-    for (const authority of list(authorities)) {
-      if (!authority || typeof authority.id !== "string" || !authority.id || distinct.has(authority.id)) continue;
-      if (isNationalAuthority(authority) || regionsWanted.has(authority.regionId)) distinct.set(authority.id, authority);
-    }
-    const ranked = [...distinct.values()].map((authority) => scoreAuthority(authority, context, trackMap)).sort((left, right) => right.rawScore - left.rawScore || left.id.localeCompare(right.id)).map((authority, index) => ({ ...authority, rank: index + 1 }));
-    if (ranked.some((authority) => !Number.isFinite(authority.rawScore))) throw new Error("journey/invalid-model-score");
-    const federalPool = ranked.filter(isNationalAuthority);
-    const federal = federalPool.slice(0, count);
-    const regions = regionIds.map((regionId) => {
-      const pool = ranked.filter((authority) => !isNationalAuthority(authority) && authority.regionId === regionId);
-      return {
-        regionId,
-        authorities: pool.slice(0, count),
-        total: pool.length,
-        municipalCount: pool.filter((authority) => authority.level === "municipal").length
-      };
-    });
-    return {
-      ranked,
-      federal,
-      federalTotal: federalPool.length,
-      regions,
-      recommendations: [...federal, ...regions.flatMap((region) => region.authorities)],
-      roleProfile,
-      context
-    };
-  }
-  function buildAuthorityDevelopment(authority, roleProfile, { tracks = [], careerFramework = {}, competencies = [] } = {}) {
-    const templates = new Map(list(tracks).map((track2) => [track2.id, track2]));
-    const scoredTrack = authority?.track || authority?.match?.track;
-    const link = list(authority?.tracks).slice().sort((left, right) => Number(right.importance || 0) - Number(left.importance || 0) || String(left.id).localeCompare(String(right.id))).find((candidate) => templates.has(candidate.id));
-    const track = scoredTrack?.vector ? scoredTrack : templates.get(scoredTrack?.id || link?.id);
-    const base = {
-      authorityId: authority?.id || null,
-      modelReference: true,
-      comparableToQuestionnaireUnits: false,
-      overlayOnPersonalInterestRadarAllowed: false,
-      skillDeficits: null,
-      eligibilityVerdict: null
-    };
-    if (!track || !validProfile(roleProfile)) return {
-      ...base,
-      available: false,
-      trackId: null,
-      rows: [],
-      lowerInterestDimensions: [],
-      competencies: [],
-      portfolio: [],
-      tasks: []
-    };
-    const rows = SCALE_IDS.map((id) => ({
-      id,
-      interest: roleProfile.raw[id],
-      emphasis: Number.isFinite(track.vector?.[id]) && track.vector[id] >= 0 && track.vector[id] <= 1 ? track.vector[id] : null
-    }));
-    const profile = list(careerFramework.trackProfiles).find((candidate) => candidate.id === track.id);
-    const competencyMap2 = new Map(list(competencies).map((competency) => [competency.id, competency]));
-    return {
-      ...base,
-      available: rows.some((row) => row.emphasis !== null),
-      trackId: track.id,
-      track,
-      rows,
-      lowerInterestDimensions: rows.filter((row) => row.emphasis >= 0.5 && row.interest < 3.5).sort((left, right) => right.emphasis - left.emphasis || left.interest - right.interest || SCALE_IDS.indexOf(left.id) - SCALE_IDS.indexOf(right.id)),
-      // This selection is a teaching prompt; it is not a psychometric cut-off.
-      reflectionRule: { minimumModelEmphasis: 0.5, belowInterest: 3.5, meaning: "topics-to-explore" },
-      competencies: ids(profile?.competencyIds).map((id) => competencyMap2.get(id)).filter(Boolean),
-      portfolio: list(profile?.portfolio).slice(),
-      tasks: list(profile?.tasks).slice(),
-      competencyMeaning: "authored-learning-suggestions-not-measured-deficits"
-    };
-  }
-  function canonicalRequirementCategory(category) {
-    if (category === "skill") return "skills";
-    if (category === "formal-eligibility" || category === "legal-eligibility") return "eligibility";
-    return REQUIREMENT_CATEGORIES.includes(category) ? category : "other";
-  }
-  function fingerprint(text3) {
-    let left = 2166136261, right = 2654435769;
-    for (let index = 0; index < text3.length; index++) {
-      const code = text3.charCodeAt(index);
-      left = Math.imul(left ^ code, 16777619);
-      right = Math.imul(right ^ code, 2246822507);
-      right ^= right >>> 13;
-    }
-    return (left >>> 0).toString(16).padStart(8, "0") + (right >>> 0).toString(16).padStart(8, "0");
-  }
-  function safeUrl(value) {
-    try {
-      const url = new URL(value);
-      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : null;
-    } catch {
-      return null;
-    }
-  }
-  function requirementStateFromText(text3) {
-    const value = sourceText(text3).replace(/\s+/g, " ").toLowerCase().replace(/[.;]$/, "").trim();
-    if (!value) return "source_not_stated";
-    if (/^(?:не указано|не указан|нет данных|не установлено|source_not_stated|not stated|not specified|未说明|未注明)$/.test(value)) return "source_not_stated";
-    if (/^(?:без предъявления требований к стажу|без требований к стажу|требования к стажу не предъявляются|не предъявляются|не требуется|не требуются|not required|no experience required|无要求)$/.test(value)) return "explicitly_not_required";
-    return "stated";
-  }
-  function requirementInput(vacancy) {
-    if (Array.isArray(vacancy?.requirements)) return vacancy.requirements.filter(object);
-    const fields = object(vacancy?.requirements) ? vacancy.requirements : vacancy || {};
-    return REQUIREMENT_CATEGORIES.flatMap((category) => {
-      const field = category === "other" ? fields.otherRequirements ?? fields.other : category === "skills" ? fields.skills ?? fields.skill : fields[category];
-      const entries = Array.isArray(field) ? field : [field];
-      return entries.flatMap((entry) => {
-        if (object(entry)) return [{ ...entry, category }];
-        if (!sourceText(entry)) return [];
-        return [{
-          category,
-          sourceText: sourceText(entry),
-          requirementState: requirementStateFromText(entry),
-          sourceLocator: `feed.${category}`,
-          sourceKind: "published-feed-field"
-        }];
-      });
-    });
-  }
-  function buildVacancyRequirements(vacancy) {
-    if (!vacancy || typeof vacancy.id !== "string" || !vacancy.id.trim()) throw new Error("journey/vacancy-identity-required");
-    const vacancyId = vacancy.id;
-    const rows = [], signatures = /* @__PURE__ */ new Set(), keySignatures = /* @__PURE__ */ new Map();
-    for (const original of requirementInput(vacancy)) {
-      const category = canonicalRequirementCategory(original.category);
-      const text3 = sourceText(original.sourceText ?? original.text);
-      const state2 = typeof original.requirementState === "string" ? original.requirementState : text3 ? "stated" : "source_not_stated";
-      const requirementState = state2 === "as-published" ? "stated" : state2;
-      if (!text3 && requirementState !== "source_not_stated") continue;
-      const signature = JSON.stringify([
-        vacancyId,
-        category,
-        text3.normalize("NFC").replace(/\s+/g, " "),
-        requirementState,
-        original.scope || null,
-        original.selfAssessmentEligible === false ? false : true
-      ]);
-      if (signatures.has(signature)) continue;
-      signatures.add(signature);
-      let key = `jr-${fingerprint(signature)}`;
-      if (keySignatures.has(key) && keySignatures.get(key) !== signature) key += `-${encodeURIComponent(signature)}`;
-      keySignatures.set(key, signature);
-      const assessable = requirementState === "stated" && original.selfAssessmentEligible !== false && Boolean(text3);
-      const assessmentKind = PERSONAL_CATEGORIES.has(category) ? "competency" : FORMAL_CATEGORIES.has(category) ? "formal" : "other";
-      rows.push({
-        ...original,
-        id: key,
-        key,
-        signature,
-        sourceId: original.id || null,
-        vacancyId,
-        category,
-        sourceCategory: original.sourceCategory || original.category || null,
-        sourceRequirementState: original.sourceRequirementState || state2,
-        text: text3,
-        sourceText: original.sourceText ?? original.text ?? null,
-        sourceLocator: original.sourceLocator ?? null,
-        evidenceSourceUrl: original.evidenceSourceUrl ?? vacancy.source?.url ?? vacancy.url ?? null,
-        sourceUrl: safeUrl(original.evidenceSourceUrl || vacancy.source?.url || vacancy.url),
-        requirementState,
-        selfAssessmentEligible: original.selfAssessmentEligible ?? null,
-        competencyDomainId: typeof original.competencyDomainId === "string" && original.competencyDomainId.trim() ? original.competencyDomainId : null,
-        assessable,
-        assessmentKind,
-        learningEligible: assessable && assessmentKind === "competency"
-      });
-    }
-    const groups = REQUIREMENT_CATEGORIES.map((id) => ({ id, rows: rows.filter((row) => row.category === id) }));
-    const missingCategories = CORE_REQUIREMENT_CATEGORIES.filter((category) => !rows.some((row) => row.category === category && row.requirementState !== "source_not_stated"));
-    return {
-      vacancyId,
-      rows,
-      groups,
-      missingCategories,
-      source: vacancy.source || { url: vacancy.url || null, retrievedAt: vacancy.lastSeenAt || null },
-      archive: vacancy.archive || null,
-      coverage: vacancy.coverage || null,
-      assessableCount: rows.filter((row) => row.assessable).length,
-      contextRows: rows.filter((row) => !row.assessable),
-      sourceCompleteness: vacancy.coverage?.requirements || "not-established",
-      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
-    };
-  }
-  function answerStatus(value, signature) {
-    if (object(value) && value.signature && value.signature !== signature) return "unassessed";
-    const status = object(value) ? value.status : value;
-    return status === "met" || status === "gap" ? status : "unassessed";
-  }
-  function countsFor(rows) {
-    const total = rows.length;
-    const met = rows.filter((row) => row.status === "met").length;
-    const gap = rows.filter((row) => row.status === "gap").length;
-    const unassessed = total - met - gap;
-    return {
-      total,
-      met,
-      gap,
-      unassessed,
-      assessed: met + gap,
-      metShare: total ? met / total : null,
-      gapShare: total ? gap / total : null,
-      unassessedShare: total ? unassessed / total : null,
-      coverage: total ? (met + gap) / total : null,
-      targetShare: total ? 1 : null,
-      complete: total > 0 && unassessed === 0
-    };
-  }
-  function summarizeVacancyAssessment(requirements, statuses2 = {}) {
-    const built = Array.isArray(requirements) ? { rows: requirements } : requirements || { rows: [] };
-    const rows = list(built.rows).map((row) => ({
-      ...row,
-      status: row.assessable ? answerStatus(statuses2[row.key || row.id], row.signature) : null
-    }));
-    const assessable = rows.filter((row) => row.assessable);
-    const competencyRows = assessable.filter((row) => row.assessmentKind === "competency");
-    const groups = REQUIREMENT_CATEGORIES.map((id) => {
-      const members = rows.filter((row) => row.category === id);
-      return {
-        id,
-        rows: members,
-        ...countsFor(members.filter((row) => row.assessable)),
-        sourceMissing: members.filter((row) => row.requirementState === "source_not_stated").length,
-        explicitlyNotRequired: members.filter((row) => row.requirementState === "explicitly_not_required").length,
-        contextOnly: members.filter((row) => !row.assessable).length,
-        sourceCoverage: members.length ? "represented-in-record" : "not-extracted"
-      };
-    });
-    const domainIds = [...new Set(competencyRows.map((row) => row.competencyDomainId).filter(Boolean))].sort((left, right) => {
-      const li = COMPETENCY_DOMAIN_IDS.indexOf(left), ri = COMPETENCY_DOMAIN_IDS.indexOf(right);
-      return (li < 0 ? COMPETENCY_DOMAIN_IDS.length : li) - (ri < 0 ? COMPETENCY_DOMAIN_IDS.length : ri) || left.localeCompare(right);
-    });
-    const domains = domainIds.map((id) => {
-      const members = competencyRows.filter((row) => row.competencyDomainId === id);
-      return {
-        id,
-        rows: members,
-        ...countsFor(members),
-        classificationReviewed: members.every((row) => row.classificationProvenance?.reviewStatus === "reviewed")
-      };
-    });
-    const unclassified = competencyRows.filter((row) => !row.competencyDomainId);
-    return {
-      vacancyId: built.vacancyId || rows[0]?.vacancyId || null,
-      rows,
-      groups,
-      domains,
-      ...countsFor(assessable),
-      competencySummary: countsFor(competencyRows),
-      developmentItems: competencyRows.filter((row) => row.status === "gap"),
-      formalRequirements: rows.filter((row) => FORMAL_CATEGORIES.has(row.category)),
-      formalGaps: assessable.filter((row) => FORMAL_CATEGORIES.has(row.category) && row.status === "gap"),
-      otherGaps: assessable.filter((row) => row.assessmentKind === "other" && row.status === "gap"),
-      unassessedItems: assessable.filter((row) => row.status === "unassessed"),
-      sourceContextItems: rows.filter((row) => !row.assessable),
-      missingCategories: built.missingCategories || CORE_REQUIREMENT_CATEGORIES.filter((id) => !rows.some((row) => row.category === id && row.requirementState !== "source_not_stated")),
-      unclassifiedCompetencyRows: unclassified,
-      // Missing domain classifications cannot silently disappear from a full radar.
-      domainRadarAvailable: domains.length >= 3 && unclassified.length === 0 && domains.every((domain) => domain.classificationReviewed),
-      source: built.source || null,
-      archive: built.archive || null,
-      coverageMetadata: built.coverage || null,
-      sourceCompleteness: built.sourceCompleteness || "not-established",
-      eligibilityVerdict: null,
-      abilityScore: null,
-      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
-    };
-  }
-
-  // site/apps/career/assets/career-vacancy-details.mjs
-  var object2 = (value) => value && typeof value === "object" && !Array.isArray(value);
-  var HEX = /^[a-f0-9]{64}$/;
-  var BASE_PAGE = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}\.json\.gz$/;
-  var PART_PAGE = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}\.part[0-9]{4}\.json\.gz$/;
-  var abortError2 = () => new DOMException("Vacancy details cancelled", "AbortError");
-  async function digest2(raw) {
-    if (!globalThis.crypto?.subtle) throw new Error("Source verification is unavailable");
-    return [...new Uint8Array(await crypto.subtle.digest("SHA-256", raw))].map((v) => v.toString(16).padStart(2, "0")).join("");
-  }
-  function sameIDs(actual, expected) {
-    return actual.length === expected.length && new Set(actual).size === actual.length && actual.every((id) => expected.includes(id));
-  }
-  function validateDetailsPack(pack, binding, expectedIDs = binding.uuids) {
-    if (!object2(pack) || pack.schemaVersion !== 1 || pack.baseTreeSHA !== binding.baseTreeSHA || pack.basePage !== binding.basePage || pack.basePageSHA256 !== binding.basePageSHA256 || pack.employerId !== binding.employerId) throw new Error("Source detail/base-page identity mismatch");
-    if (Array.isArray(pack.shards)) {
-      if (pack.records !== void 0 && Object.keys(pack.records).length || pack.recordCount !== binding.uuids.length) throw new Error("Invalid detail index");
-      const ids2 = [], paths = /* @__PURE__ */ new Set();
-      for (const part of pack.shards) {
-        if (!object2(part) || !PART_PAGE.test(part.path) || !part.path.startsWith(binding.basePage.slice(0, -8) + ".part") || paths.has(part.path) || !Array.isArray(part.uuids) || !part.uuids.length || !HEX.test(part.sha256) || !HEX.test(part.uncompressedSHA256) || !Number.isInteger(part.bytes) || part.bytes < 18 || part.bytes > 4 * 1024 * 1024 || !Number.isInteger(part.uncompressedBytes) || part.uncompressedBytes < 1 || part.uncompressedBytes > 8 * 1024 * 1024) throw new Error("Invalid bound source-detail shard");
-        paths.add(part.path);
-        ids2.push(...part.uuids);
-      }
-      if (!sameIDs(ids2, binding.uuids)) throw new Error("Detail index UUID coverage mismatch");
-    } else if (!object2(pack.records) || !sameIDs(Object.keys(pack.records), expectedIDs)) throw new Error("Source detail UUID coverage mismatch");
-    return pack;
-  }
-  function createVacancyDetailsStore({ getMetadata = () => null, fetchImpl = (...args) => fetch(...args), baseURL = "data/vacancies/details/", maxPages = 4, maxStates = 16, timeout = 2e4 } = {}) {
-    const cache = /* @__PURE__ */ new Map(), pending = /* @__PURE__ */ new Map(), states = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set();
-    let disposed = false, active = 0;
-    const waiting = [];
-    async function acquire(signal) {
-      if (signal.aborted) throw abortError2();
-      if (active < 2) {
-        active++;
-        return;
-      }
-      await new Promise((resolve, reject) => {
-        const item = { resolve: () => {
-          signal.removeEventListener("abort", cancel);
-          resolve();
-        } }, cancel = () => {
-          const index = waiting.indexOf(item);
-          if (index >= 0) waiting.splice(index, 1);
-          reject(abortError2());
-        };
-        waiting.push(item);
-        signal.addEventListener("abort", cancel, { once: true });
-      });
-    }
-    function release() {
-      const next = waiting.shift();
-      if (next) next.resolve();
-      else active--;
-    }
-    const notify = (key) => {
-      if (!disposed) for (const fn of listeners) fn(key);
-    };
-    function context(binding) {
-      const meta = getMetadata();
-      if (!meta?.available || !HEX.test(meta.baseTreeSHA) || meta.baseTreeSHA !== meta.detailsBaseTreeSHA || !HEX.test(meta.detailsTreeSHA)) throw new Error("Full source details are not connected");
-      if (!BASE_PAGE.test(binding.basePage) || !HEX.test(binding.basePageSHA256) || !Array.isArray(binding.uuids) || new Set(binding.uuids).size !== binding.uuids.length || !binding.uuids.length || binding.uuids.length > 250 || !binding.employerId) throw new Error("Invalid current vacancy page");
-      return { ...binding, baseTreeSHA: meta.baseTreeSHA, detailsTreeSHA: meta.detailsTreeSHA, sourceHosting: meta.collectionRoot || null };
-    }
-    const pageKey = (b) => JSON.stringify([b.detailsTreeSHA, b.baseTreeSHA, b.basePage, b.basePageSHA256, b.employerId, b.uuids]);
-    const stateKey = (b, id) => pageKey(b) + "|" + id;
-    function touch(key, value) {
-      cache.delete(key);
-      cache.set(key, value);
-      while (cache.size > maxPages) cache.delete(cache.keys().next().value);
-    }
-    function locate(b, id) {
-      const root = cache.get(pageKey(b) + "|" + b.basePage);
-      if (!root) return null;
-      let found = root;
-      if (root.pack.shards) {
-        const part = root.pack.shards.find((p) => p.uuids.includes(id));
-        if (!part) return null;
-        found = cache.get(pageKey(b) + "|" + part.path);
-        if (!found) return null;
-      }
-      const record2 = found.pack.records?.[id];
-      return record2 ? { record: hydrateDetailRecord(found.pack, id), provenance: { baseTreeSHA: b.baseTreeSHA, basePage: b.basePage, basePageSHA256: b.basePageSHA256, employerId: b.employerId, detailsTreeSHA: b.detailsTreeSHA, sourceHosting: b.sourceHosting, detailPage: found.path, gzipSHA256: found.gzipSHA256, uncompressedSHA256: found.uncompressedSHA256, recordJSONPointer: "/records/" + id, sourceDatabaseSHA256: found.pack.sourceDatabaseSHA256 || root.pack.sourceDatabaseSHA256 || null, sourceFields: found.pack.sourceFields || root.pack.sourceFields || null } } : null;
-    }
-    async function readFile(path, b, ref, signal) {
-      const key = pageKey(b) + "|" + path;
-      if (cache.has(key)) {
-        const value = cache.get(key);
-        touch(key, value);
-        return value;
-      }
-      let job = pending.get(key);
-      if (job?.controller.signal.aborted) {
-        pending.delete(key);
-        job = null;
-      }
-      if (!job) {
-        const controller = new AbortController();
-        job = { controller, consumers: /* @__PURE__ */ new Set() };
-        job.promise = (async () => {
-          let timer;
-          const deadline = new Promise((_, reject) => {
-            timer = setTimeout(() => {
-              controller.abort();
-              reject(new DOMException("Source detail timeout", "TimeoutError"));
-            }, timeout);
-          });
-          try {
-            const value = await Promise.race([(async () => {
-              await acquire(controller.signal);
-              let response;
-              try {
-                response = await fetchImpl(baseURL + path, { cache: "no-store", signal: controller.signal });
-              } catch (error) {
-                release();
-                throw error;
-              }
-              if (!response.ok) {
-                release();
-                throw new Error("Source detail HTTP " + response.status);
-              }
-              let raw;
-              try {
-                raw = new Uint8Array(await response.arrayBuffer());
-              } finally {
-                release();
-              }
-              if (raw.length > 4 * 1024 * 1024) throw new Error("Compressed source detail exceeds limit");
-              const compressedSHA = await digest2(raw);
-              if (ref && (raw.length !== ref.bytes || compressedSHA !== ref.sha256)) throw new Error("Source detail shard compressed checksum mismatch");
-              const decoded = await decodeGzip(raw, { expectedBytes: ref?.uncompressedBytes, maxBytes: 8 * 1024 * 1024 });
-              const decodedSHA = await digest2(decoded);
-              if (ref && decodedSHA !== ref.uncompressedSHA256) throw new Error("Source detail shard checksum mismatch");
-              if (controller.signal.aborted) throw abortError2();
-              const pack = validateDetailsPack(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(decoded)), b, ref?.uuids || b.uuids);
-              const result = { pack, path, gzipSHA256: compressedSHA, uncompressedSHA256: decodedSHA };
-              touch(key, result);
-              return result;
-            })(), deadline]);
-            return value;
-          } finally {
-            clearTimeout(timer);
-          }
-        })();
-        pending.set(key, job);
-        job.promise.finally(() => {
-          if (pending.get(key) === job) pending.delete(key);
-        }).catch(() => {
-        });
-      }
-      return new Promise((resolve, reject) => {
-        const consumer = {};
-        job.consumers.add(consumer);
-        let settled = false;
-        const cleanup = () => {
-          job.consumers.delete(consumer);
-          signal.removeEventListener("abort", cancel);
-        };
-        const cancel = () => {
-          if (settled) return;
-          settled = true;
-          cleanup();
-          if (!job.consumers.size) job.controller.abort();
-          reject(abortError2());
-        };
-        if (signal.aborted) {
-          cancel();
-          return;
-        }
-        signal.addEventListener("abort", cancel, { once: true });
-        job.promise.then((v) => {
-          if (!settled) {
-            settled = true;
-            cleanup();
-            resolve(v);
-          }
-        }, (e) => {
-          if (!settled) {
-            settled = true;
-            cleanup();
-            reject(e);
-          }
-        });
-      });
-    }
-    function status(binding, id) {
-      try {
-        const b = context(binding), key = stateKey(b, id), state2 = states.get(key), ready2 = locate(b, id);
-        return { key, status: state2?.loading ? "loading" : state2?.error ? "error" : ready2 ? "ready" : "idle", error: state2?.error || null, ...ready2 };
-      } catch {
-        return { key: null, status: "unavailable", error: "not-connected" };
-      }
-    }
-    function load(binding, id) {
-      if (disposed) return Promise.resolve(null);
-      let b;
-      try {
-        b = context(binding);
-        if (!b.uuids.includes(id)) throw new Error("Vacancy not in current page");
-      } catch {
-        return Promise.resolve({ status: "error", error: "source-mismatch" });
-      }
-      const key = stateKey(b, id), existing = states.get(key);
-      if (existing?.loading) return existing.promise;
-      const ready2 = locate(b, id);
-      if (ready2 && !existing?.error) return Promise.resolve({ key, status: "ready", ...ready2 });
-      existing?.controller?.abort();
-      const state2 = { loading: true, error: null, controller: new AbortController() };
-      states.delete(key);
-      states.set(key, state2);
-      while (states.size > maxStates) {
-        const first = states.keys().next().value;
-        states.get(first).controller.abort();
-        states.delete(first);
-      }
-      notify(key);
-      state2.promise = (async () => {
-        try {
-          const root = await readFile(b.basePage, b, null, state2.controller.signal);
-          if (root.pack.shards) {
-            const part = root.pack.shards.find((p) => p.uuids.includes(id));
-            await readFile(part.path, b, part, state2.controller.signal);
-            touch(pageKey(b) + "|" + b.basePage, root);
-          }
-          if (state2.controller.signal.aborted) throw abortError2();
-          const found = locate(b, id);
-          if (!found) throw new Error("Selected source detail missing");
-          return { key, status: "ready", ...found };
-        } catch (error) {
-          if (error.name !== "AbortError") state2.error = error.name === "TimeoutError" ? "timeout" : "load-failed";
-          return { key, status: "error", error: state2.error || "cancelled" };
-        } finally {
-          state2.loading = false;
-          state2.promise = null;
-          notify(key);
-        }
-      })();
-      return state2.promise;
-    }
-    return { get: status, load, cancelAll() {
-      for (const state2 of states.values()) state2.controller.abort();
-    }, subscribe(fn) {
-      listeners.add(fn);
-      return () => listeners.delete(fn);
-    }, cancel(binding, id) {
-      try {
-        const key = stateKey(context(binding), id), state2 = states.get(key);
-        state2?.controller?.abort();
-        if (state2) {
-          state2.loading = false;
-          state2.error = null;
-        }
-        notify(key);
-      } catch {
-      }
-    }, cacheInfo: () => ({ pages: cache.size, pending: pending.size, activeRequests: active, states: states.size }), dispose() {
-      disposed = true;
-      for (const state2 of states.values()) state2.controller.abort();
-      for (const job of pending.values()) job.controller.abort();
-      cache.clear();
-      states.clear();
-      listeners.clear();
-    } };
-  }
-  var DETAIL_CATEGORIES = ["duties", "knowledge", "skills", "knowledgeDescription", "additionalRequirements", "departmentLabels", "otherRequirements"];
-  function hydrateDetailRecord(pack, id) {
-    const input = pack.records?.[id];
-    if (!object2(input)) throw new Error("Missing selected source record");
-    const result = {};
-    for (const category of DETAIL_CATEGORIES) {
-      const tokens = input[category] ?? [];
-      if (!Array.isArray(tokens)) throw new Error("Invalid source text category");
-      result[category] = tokens.map((token) => {
-        if (!object2(token) || typeof token.sourceField !== "string" || typeof token.sourcePointer !== "string" || !token.sourcePointer.startsWith("/")) throw new Error("Invalid source text locator");
-        let text3 = token.text;
-        if (Object.hasOwn(token, "textIndex")) {
-          if (pack.tokenEncoding !== "page-strings-v1" || !Array.isArray(pack.strings) || !Number.isInteger(token.textIndex) || token.textIndex < 0 || token.textIndex >= pack.strings.length) throw new Error("Invalid source string reference");
-          text3 = pack.strings[token.textIndex];
-        }
-        if (typeof text3 !== "string") throw new Error("Invalid source text");
-        const { textIndex, ...rest } = token;
-        return { ...rest, text: text3 };
-      });
-    }
-    return result;
-  }
-  var educationFields = /* @__PURE__ */ new Set(["educationLevelName", "trainingTypes", "trainingTypesCollection", "targetedTrainingEducationLevelName", "academicPerformanceRequirements"]);
-  var experienceFields = /* @__PURE__ */ new Set(["governmentExperienceName", "professionalExperienceName"]);
-  var SOURCE_LABELS = { knowledge: "\u0417\u043D\u0430\u043D\u0438\u044F", skills: "\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", education: "\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", experience: "\u0421\u0442\u0430\u0436", majors: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 (\u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u044B)", other: "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", service: "\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043B\u0443\u0436\u0431\u044B" };
-  function sourceLabelKey(field, category) {
-    return ["trainingTypes", "trainingTypesCollection"].includes(field) ? "majors" : /CivilServicePassingConditions|withoutCompetitionReason/.test(field) ? "service" : category;
-  }
-  function sourceLabel(field, category) {
-    return SOURCE_LABELS[sourceLabelKey(field, category)] || SOURCE_LABELS.other;
-  }
-  function bankVacancySnapshot(row, detail, { institutionId, employerId, employerName, provenance } = {}) {
-    const requirements = [], seen = /* @__PURE__ */ new Map();
-    function add(category, token) {
-      if (!token.text.trim()) return;
-      const paragraphs = token.alternativeGroup ? [token.text] : token.text.split(/\n\s*\n|\n(?=\s*(?:[•●▪–—-]\s|\d+[.)]\s))/).filter((text3) => text3.trim());
-      for (const text3 of paragraphs) {
-        const key = category + "|" + text3;
-        const ref = { sourceField: token.sourceField, sourcePointer: token.sourcePointer, sourceNamespace: token.sourceNamespace };
-        if (seen.has(key)) {
-          seen.get(key).sourceReferences.push(ref);
-          continue;
-        }
-        const item = { category, sourceText: text3, requirementState: requirementStateFromText(text3), selfAssessmentEligible: true, sourceLocator: sourceLabel(token.sourceField, category), sourceHeading: sourceLabel(token.sourceField, category), sourceLabelKey: sourceLabelKey(token.sourceField, category), evidenceSourceUrl: row.sourceURL, sourceKind: "published-vacancy-field", scope: row.scope, sourceReferences: [ref, ...token.sourceProvenance || []] };
-        seen.set(key, item);
-        requirements.push(item);
-      }
-    }
-    for (const [field, category] of [["knowledge", "knowledge"], ["skills", "skills"], ["knowledgeDescription", "knowledge"], ["additionalRequirements", "other"]]) for (const token of detail[field] || []) add(category, token);
-    const other = detail.otherRequirements || [], majors = other.filter((token) => token.sourceField === "trainingTypesCollection" && token.text.trim());
-    if (majors.length) {
-      const first = majors[0], references = majors.flatMap((token) => [{ sourceField: token.sourceField, sourcePointer: token.sourcePointer, sourceNamespace: token.sourceNamespace }, ...token.sourceProvenance || []]);
-      add("education", { ...first, text: [...new Set(majors.map((token) => token.text))].join(" / "), alternativeGroup: true, sourceProvenance: references });
-    }
-    for (const token of other) {
-      if (majors.length && ["trainingTypes", "trainingTypesCollection"].includes(token.sourceField)) continue;
-      add(educationFields.has(token.sourceField) ? "education" : experienceFields.has(token.sourceField) ? "experience" : "other", token);
-    }
-    for (const [field, category] of [["education", "education"], ["professionalExperience", "experience"], ["governmentExperience", "experience"]]) if (typeof row[field] === "string" && row[field].trim()) add(category, { text: row[field], sourceField: field, sourcePointer: "/basePage/" + field, sourceNamespace: "base-public-summary" });
-    return { id: "bank-" + row.id, sourceVacancyId: row.id, sourceCategory: "public-vacancy-bank", bankVacancy: true, institutionId, employerId, employerName, title: row.title, regionId: null, regionName: row.region, url: row.sourceURL, scope: row.scope, archive: row.archive, announcedAt: row.announcedAt, expiresAt: row.expiresAt, state: row.state, currentness: "unknown", requirements, duties: detail.duties, department: detail.departmentLabels.map((t) => t.text).join("\n"), source: { url: row.sourceURL, kind: "published-vacancy-bank", provenance }, sourceDetails: detail };
-  }
-
-  // site/apps/career/assets/region-map-geometry.mjs
-  var REGION_MAP_MAX_ZOOM = 40;
-  var clampMapZoom = (value) => Math.max(1, Math.min(REGION_MAP_MAX_ZOOM, value));
-  function zoomMapAt(view, value, point2) {
-    const zoom = clampMapZoom(value), ratio = zoom / view.zoom;
-    return { zoom, x: point2.x - (point2.x - view.x) * ratio, y: point2.y - (point2.y - view.y) * ratio };
-  }
-  function containMapView(view, { width, height, left = 0, top = 0, right = width, bottom = height }) {
-    const zoom = clampMapZoom(view.zoom);
-    const axis = (offset, size, min, max2) => size <= max2 - min ? (min + max2 - size) / 2 : Math.min(min, Math.max(max2 - size, offset));
-    return { zoom, x: axis(view.x, width * zoom, left, right), y: axis(view.y, height * zoom, top, bottom) };
-  }
-
-  // site/apps/career/assets/region-picker.mjs
-  var E2 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
-  var normalize = (value) => String(value ?? "").normalize("NFKC").toLowerCase().replace(/ё/g, "\u0435").replace(/[—–−]/g, "-").replace(/\s+/g, " ").trim();
-  var languageCode = (value) => String(value || "ru").startsWith("zh") ? "zh-Hans" : String(value).startsWith("en") ? "en" : "ru";
-  var isMoscow = (region) => String(region.mapId) === "102269" || region.id === "ru-77" || normalize(region.name) === "\u043C\u043E\u0441\u043A\u0432\u0430";
-  var copy = {
-    ru: { search: "\u041D\u0430\u0439\u0442\u0438 \u0441\u0443\u0431\u044A\u0435\u043A\u0442", searchHint: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430", list: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B", map: "\u0412\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u043D\u0430 \u043A\u0430\u0440\u0442\u0435", mapHelp: "\u041A\u043E\u0441\u043D\u0438\u0442\u0435\u0441\u044C \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430 \u0434\u043B\u044F \u0432\u044B\u0431\u043E\u0440\u0430. \u0420\u0430\u0437\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0432\u0430 \u043F\u0430\u043B\u044C\u0446\u0430 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0434\u0432\u0438\u0433\u0430\u0439\u0442\u0435 \u043A\u0430\u0440\u0442\u0443 \u043E\u0434\u043D\u0438\u043C \u043F\u0430\u043B\u044C\u0446\u0435\u043C. \u041D\u0430 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u2014 \u043A\u043E\u043B\u0451\u0441\u0438\u043A\u043E \u0438 \u043F\u0435\u0440\u0435\u0442\u0430\u0441\u043A\u0438\u0432\u0430\u043D\u0438\u0435. \u0421 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: +/\u2212 \u2014 \u043C\u0430\u0441\u0448\u0442\u0430\u0431, 0 \u2014 \u0432\u0441\u044F \u043A\u0430\u0440\u0442\u0430; \u0441\u0442\u0440\u0435\u043B\u043A\u0438 \u2014 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u0435, Tab \u2014 \u0432\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430, \u043F\u0440\u043E\u0431\u0435\u043B \u0438\u043B\u0438 Enter \u2014 \u043E\u0442\u043C\u0435\u0442\u0438\u0442\u044C.", selected: "\u0412\u044B\u0431\u0440\u0430\u043D\u043E", notSelected: "\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043E", of: "\u0438\u0437", add: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C", remove: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0432\u044B\u0431\u043E\u0440\u0430", none: "\u0412\u044B\u0431\u0440\u0430\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438.", noMatches: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u0441 \u0442\u0430\u043A\u0438\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", loading: "\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043A\u0430\u0440\u0442\u0443\u2026", unavailable: "\u041A\u0430\u0440\u0442\u0430 \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", zoomIn: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", zoomOut: "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", reset: "\u0412\u0441\u044F \u043A\u0430\u0440\u0442\u0430", zoom: "\u041C\u0430\u0441\u0448\u0442\u0430\u0431 \u043A\u0430\u0440\u0442\u044B", hint: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044E \u043D\u0430 \u043A\u0430\u0440\u0442\u0435 \u0438\u043B\u0438 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", searchResults: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432", chosenLegend: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B" },
-    en: { search: "Find a region", searchHint: "Region name", list: "Regions to work in", map: "Select regions on the map", mapHelp: "Tap a region to select it. Spread two fingers to zoom and drag with one finger to move. On a computer, use the wheel and drag. Keyboard: +/\u2212 to zoom, 0 for the whole map; arrows to move, Tab to focus a region, Space or Enter to select.", selected: "Selected", notSelected: "Not selected", of: "of", add: "Select", remove: "Deselect", none: "Only federal authorities and organisations are selected.", noMatches: "No regions match this name.", loading: "Loading the map\u2026", unavailable: "The map is temporarily unavailable. Select regions in the list.", zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Whole map", zoom: "Map zoom", hint: "Select a region on the map or in the list.", searchResults: "Regions found", chosenLegend: "Selected regions" },
-    "zh-Hans": { search: "\u641C\u7D22\u5730\u533A", searchHint: "\u5730\u533A\u540D\u79F0", list: "\u5E0C\u671B\u5DE5\u4F5C\u7684\u5730\u533A", map: "\u5728\u5730\u56FE\u4E0A\u9009\u62E9\u5730\u533A", mapHelp: "\u70B9\u51FB\u5730\u533A\u8FDB\u884C\u9009\u62E9\u3002\u53CC\u6307\u5F20\u5F00\u653E\u5927\uFF0C\u5355\u6307\u62D6\u52A8\u5E73\u79FB\uFF1B\u7535\u8111\u4E0A\u4F7F\u7528\u6EDA\u8F6E\u548C\u62D6\u52A8\u3002\u952E\u76D8\uFF1A+/\u2212\u7F29\u653E\uFF0C0\u663E\u793A\u5168\u56FE\uFF1B\u65B9\u5411\u952E\u79FB\u52A8\uFF0CTab\u805A\u7126\u5730\u533A\uFF0C\u7A7A\u683C\u6216\u56DE\u8F66\u9009\u62E9\u3002", selected: "\u5DF2\u9009\u62E9", notSelected: "\u672A\u9009\u62E9", of: "/", add: "\u9009\u62E9", remove: "\u53D6\u6D88\u9009\u62E9", none: "\u76EE\u524D\u4EC5\u9009\u62E9\u8054\u90A6\u673A\u5173\u548C\u7EC4\u7EC7\u3002", noMatches: "\u672A\u627E\u5230\u7B26\u5408\u8BE5\u540D\u79F0\u7684\u5730\u533A\u3002", loading: "\u6B63\u5728\u52A0\u8F7D\u5730\u56FE\u2026\u2026", unavailable: "\u5730\u56FE\u6682\u4E0D\u53EF\u7528\u3002\u8BF7\u5728\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", zoomIn: "\u653E\u5927\u5730\u56FE", zoomOut: "\u7F29\u5C0F\u5730\u56FE", reset: "\u5B8C\u6574\u5730\u56FE", zoom: "\u5730\u56FE\u7F29\u653E", hint: "\u5728\u5730\u56FE\u6216\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", searchResults: "\u627E\u5230\u7684\u5730\u533A", chosenLegend: "\u5DF2\u9009\u62E9\u5730\u533A" }
+  var FUNCTIONAL_EVIDENCE_LEVELS = Object.freeze(["duties", "skills", "knowledge", "requirements", "functional"]);
+  var functionalLevels = new Set(FUNCTIONAL_EVIDENCE_LEVELS);
+  var responsibilityLevels = /* @__PURE__ */ new Set(["specialist", "leadership", "unspecified"]);
+  var statuses = /* @__PURE__ */ new Set(["archived", "profile", "unconfirmed"]);
+  var sourceTypes = /* @__PURE__ */ new Set(["bank", "portal", "position"]);
+  var detailPathPattern = /^data\/adaptive-index\/details\/d\d{4}\.json\.gz$/;
+  var object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+  var text = (value, maximum, allowEmpty = false) => typeof value === "string" && value.length <= maximum && (allowEmpty || value.trim().length > 0);
+  var fail = (message) => {
+    throw new TypeError("Invalid functional candidate index: " + message);
   };
-  var instanceCounter = 0;
-  var mapRequests = /* @__PURE__ */ new Map();
-  function regionLabel(region, language2 = "ru") {
-    const locale = languageCode(language2);
-    return String(locale === "en" ? region.name_en || region.name : locale === "zh-Hans" ? region.name_zh || region.name : region.name || region.name_ru || region.id);
-  }
-  function orderRegions(regions, language2 = "ru") {
-    const locale = languageCode(language2);
-    const collator = new Intl.Collator(locale === "zh-Hans" ? "zh-CN" : locale, { sensitivity: "base", numeric: true });
-    return [...regions].sort((a, b) => Number(isMoscow(b)) - Number(isMoscow(a)) || collator.compare(regionLabel(a, locale), regionLabel(b, locale)) || String(a.id).localeCompare(String(b.id)));
-  }
-  function sanitizeRegionSelection(ids2, regions) {
-    const valid = new Set(regions.map((region) => String(region.id)));
-    return [...new Set((Array.isArray(ids2) ? ids2 : []).map(String))].filter((id) => valid.has(id));
-  }
-  function loadMap(url) {
-    if (!mapRequests.has(url)) {
-      const promise = loadJSON(url, { timeout: 1e4, validate: (value) => value?.schema === "rudn-career-region-map" && value.schemaVersion === 1 && value.width > 0 && value.height > 0 && Array.isArray(value.features) && value.features.length === 89 && value.features.every((feature) => typeof feature.mapId === "string" && typeof feature.d === "string" && Array.isArray(feature.anchor) && feature.anchor.every(Number.isFinite)) }).catch((error) => {
-        mapRequests.delete(url);
-        throw error;
-      });
-      mapRequests.set(url, promise);
+  function decodeCandidatePayload(payload, { version, count, featureIds, profileCache } = {}) {
+    if (!text(version, 128) || !Number.isInteger(count) || count < 0 || count > 1e6) fail("invalid expected identity");
+    if (!object(payload) || payload.schemaVersion !== ADAPTIVE_INDEX_SCHEMA_VERSION || payload.version !== version || payload.encoding !== CANDIDATE_ENCODING || !Array.isArray(payload.rows) || payload.rows.length !== count) fail("payload identity mismatch");
+    if (!Array.isArray(payload.columns) || payload.columns.length !== CANDIDATE_COLUMNS.length || CANDIDATE_COLUMNS.some((column, index) => payload.columns[index] !== column)) fail("column mismatch");
+    const dictionaries = payload.dictionaries;
+    if (!object(dictionaries) || !Array.isArray(dictionaries.strings) || !Array.isArray(dictionaries.employers) || !Array.isArray(dictionaries.profiles)) fail("missing dictionaries");
+    const { strings: strings2, employers } = dictionaries;
+    for (const value of strings2) if (!text(value, 65536, true)) fail("invalid string dictionary");
+    for (const value of employers) if (!Array.isArray(value) || value.length !== 2 || !text(value[0], 600, true) || !text(value[1], 1e4, true)) fail("invalid employer dictionary");
+    let allowedFeatures = null;
+    if (featureIds !== void 0) {
+      if (!Array.isArray(featureIds) && !(featureIds instanceof Set)) fail("invalid feature catalogue");
+      allowedFeatures = new Set(featureIds);
+      if (!allowedFeatures.size || [...allowedFeatures].some((id) => !text(id, 128))) fail("invalid feature catalogue");
     }
-    return mapRequests.get(url);
-  }
-  function createRegionPicker({ root, regions = [], selectedIds, onChange = () => {
-  }, getLanguage: getLanguage2 = getLanguage, mapURL = "data/region-map.json" } = {}) {
-    if (!root?.replaceChildren) throw new TypeError("A region picker root element is required.");
-    const catalog = regions.filter((region) => region && region.id != null && region.name).map((region) => ({ ...region, id: String(region.id) }));
-    if (new Set(catalog.map((region) => region.id)).size !== catalog.length) throw new TypeError("Region identifiers must be unique.");
-    const byId = new Map(catalog.map((region) => [region.id, region]));
-    const defaultRegion = catalog.find(isMoscow) || catalog.find((region) => region.defaultSelected);
-    let selection = new Set(sanitizeRegionSelection(selectedIds === void 0 ? defaultRegion ? [defaultRegion.id] : [] : selectedIds, catalog));
-    let language2 = languageCode(getLanguage2()), ordered = orderRegions(catalog, language2), data2 = null, destroyed = false, zoom = 1;
-    let query = "", activeId = defaultRegion?.id || ordered[0]?.id, hoveredId = null, ignoreMapClick = false, ignoreTimer;
-    let mapX = 0, mapY = 0, resizeObserver = null, labelNodes = [];
-    const pointers = /* @__PURE__ */ new Map();
-    let gesture = null, gestureMoved = false;
-    const key = `career-regions-${++instanceCounter}`;
-    const ui = () => copy[language2];
-    const selected = () => orderRegions(catalog, "ru").filter((region) => selection.has(region.id)).map((region) => region.id);
-    const canonicalByMap = new Map(catalog.filter((region) => region.mapId != null).map((region) => [String(region.mapId), region.id]));
-    const canonicalByName = new Map(catalog.map((region) => [normalize(region.name), region.id]));
-    const mappedFeatures = /* @__PURE__ */ new Map();
-    const bindings = [];
-    const listen = (target, type, listener, options) => {
-      target.addEventListener(type, listener, options);
-      bindings.push(() => target.removeEventListener(type, listener, options));
-    };
-    const label2 = (id) => regionLabel(byId.get(id) || {}, language2);
-    const emit = (source, regionId = null) => onChange(selected(), { source, regionId });
-    const badge = (id) => selection.has(id) ? ui().selected : ui().notSelected;
-    const setText = (element, value) => {
-      if (element.textContent !== value) element.textContent = value;
-    };
-    function updateStatus() {
-      const status = root.querySelector("[data-region-selection-status]");
-      setText(status, `${ui().selected}: ${selection.size} ${ui().of} ${catalog.length}`);
-      root.querySelector("[data-region-empty-selection]").hidden = selection.size > 0;
-      root.dataset.selectedRegionCount = String(selection.size);
-      const describedId = hoveredId || activeId;
-      const hint = root.querySelector("[data-region-map-current]");
-      setText(hint, describedId && byId.has(describedId) ? `${label2(describedId)} \xB7 ${badge(describedId)}` : ui().hint);
-    }
-    function updateSelection() {
-      if (destroyed) return;
-      for (const checkbox of root.querySelectorAll("[data-region-checkbox]")) {
-        const checked = selection.has(checkbox.dataset.regionCheckbox);
-        checkbox.checked = checked;
-        checkbox.closest(".career-region-option").classList.toggle("is-selected", checked);
-      }
-      for (const shape of root.querySelectorAll("[data-region-map-id]")) {
-        const id = shape.dataset.regionMapId, checked = selection.has(id);
-        shape.setAttribute("aria-checked", String(checked));
-        shape.setAttribute("aria-label", label2(id));
-        shape.classList.toggle("is-selected", checked);
-        shape.classList.toggle("is-active", id === activeId);
-        shape.setAttribute("tabindex", id === activeId ? "0" : "-1");
-        const title = shape.querySelector("title");
-        if (title) title.textContent = `${label2(id)} \xB7 ${badge(id)}`;
-      }
-      for (const boundary of root.querySelectorAll("[data-region-boundary]")) boundary.classList.toggle("is-selected", selection.has(boundary.dataset.regionBoundary));
-      updateStatus();
-      updateMapLabels();
-    }
-    function toggle(id, source) {
-      if (!byId.has(id) || destroyed) return;
-      if (selection.has(id)) selection.delete(id);
-      else selection.add(id);
-      if (source === "map") activeId = id;
-      updateSelection();
-      emit(source, id);
-    }
-    function filterList() {
-      const normalized2 = normalize(query);
-      let count = 0;
-      for (const option of root.querySelectorAll(".career-region-option")) {
-        const record2 = byId.get(option.dataset.regionOption);
-        const searchable = [record2.name, record2.name_en, record2.name_zh, record2.code, record2.id].map(normalize).join(" ");
-        option.hidden = !!normalized2 && !searchable.includes(normalized2);
-        if (!option.hidden) count++;
-      }
-      root.querySelector("[data-region-no-matches]").hidden = count > 0;
-      const status = root.querySelector("[data-region-search-status]");
-      status.textContent = normalized2 ? `${ui().searchResults}: ${count}` : "";
-    }
-    function metrics() {
-      const svg = root.querySelector(".career-region-map");
-      if (!svg || !data2) return null;
-      const rect = svg.getBoundingClientRect(), width = rect.width || data2.width, height = rect.height || data2.height;
-      const scale = Math.min(width / data2.width, height / data2.height);
-      return { rect, width, height, scale, offsetX: (width - data2.width * scale) / 2, offsetY: (height - data2.height * scale) / 2 };
-    }
-    function svgPoint(event) {
-      const m = metrics();
-      return { x: (event.clientX - m.rect.left - m.offsetX) / m.scale, y: (event.clientY - m.rect.top - m.offsetY) / m.scale };
-    }
-    const textWidth = (value) => [...value].reduce((sum, char) => sum + (/[\p{Script=Han}]/u.test(char) ? 13 : /[MWЖШЩЮФ]/.test(char) ? 10 : /[il1.,' ]/.test(char) ? 4 : 7), 0);
-    function labelLines(value) {
-      const words = language2 === "zh-Hans" ? [...value] : value.split(/\s+/), lines = [];
-      let line = "";
-      for (const word of words) {
-        const next = line + (line && language2 !== "zh-Hans" ? " " : "") + word;
-        if (line && textWidth(next) > 168) {
-          lines.push(line);
-          line = word;
-        } else line = next;
-      }
-      if (line) lines.push(line);
-      return lines;
-    }
-    function updateMapLabels(m = metrics()) {
-      if (!m) return;
-      const pixels = m.scale * zoom, placed = [];
-      const candidates = labelNodes.map((item) => {
-        const bounds = item.feature.bounds, area = (bounds[2] - bounds[0]) * (bounds[3] - bounds[1]);
-        return { ...item, area, priority: (item.feature.city ? 1e9 : 0) + (selection.has(item.id) ? 1e8 : 0) + area };
-      }).sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
-      for (const item of candidates) {
-        const { node, feature, id, lines } = item;
-        const threshold = feature.city ? 1.5 : item.area > 1e4 ? 1.2 : item.area > 2500 ? 2 : item.area > 600 ? 3.5 : 6;
-        let visible = zoom >= threshold;
-        const width = Math.max(...lines.map(textWidth)) + 10, height = lines.length * 16 + 4;
-        const x2 = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
-        const options = feature.city ? [[width / 2 + 14, 0], [0, -height / 2 - 14], [0, height / 2 + 14], [-width / 2 - 14, 0]] : [[0, 0]];
-        let chosen = null;
-        if (visible) for (const [dx, dy] of options) {
-          const box = { left: x2 + dx - width / 2, right: x2 + dx + width / 2, top: y + dy - height / 2, bottom: y + dy + height / 2 };
-          if (box.left < 5 || box.right > m.width - 5 || box.top < 5 || box.bottom > m.height - 5) continue;
-          if (placed.some((other) => box.left < other.right + 5 && box.right > other.left - 5 && box.top < other.bottom + 4 && box.bottom > other.top - 4)) continue;
-          chosen = { dx, dy, box };
-          break;
-        }
-        visible = visible && !!chosen;
-        node.style.display = visible ? "" : "none";
-        node.dataset.labelVisible = String(visible);
-        if (!visible) continue;
-        placed.push(chosen.box);
-        node.setAttribute("font-size", String(13 / pixels));
-        node.setAttribute("stroke-width", String(3 / pixels));
-        node.setAttribute("x", String(feature.anchor[0] + chosen.dx / pixels));
-        node.setAttribute("y", String(feature.anchor[1] + (chosen.dy - (lines.length - 1) * 8 + 4) / pixels));
-        [...node.children].forEach((span, index) => {
-          span.setAttribute("x", node.getAttribute("x"));
-          span.setAttribute("dy", index ? String(16 / pixels) : "0");
-        });
-      }
-    }
-    function applyView() {
-      const m = metrics(), viewport = root.querySelector(".career-region-map-viewport"), content = root.querySelector(".career-region-map-content");
-      if (!m || !viewport || !content) return;
-      const view = containMapView({ zoom, x: mapX, y: mapY }, { width: data2.width, height: data2.height, left: -m.offsetX / m.scale, top: -m.offsetY / m.scale, right: (m.width - m.offsetX) / m.scale, bottom: (m.height - m.offsetY) / m.scale });
-      zoom = view.zoom;
-      mapX = view.x;
-      mapY = view.y;
-      content.setAttribute("transform", `translate(${mapX} ${mapY}) scale(${zoom})`);
-      viewport.dataset.mapZoom = String(zoom);
-      viewport.dataset.mapPanX = String(mapX);
-      viewport.dataset.mapPanY = String(mapY);
-      viewport.classList.toggle("is-zoomed", zoom > 1);
-      root.querySelector('[data-region-zoom="reset"]').disabled = zoom <= 1;
-      root.querySelector("[data-region-zoom-value]").textContent = `${Math.round(zoom * 100)}%`;
-      updateMapLabels(m);
-    }
-    function setZoom(value, { point: point2, focusId } = {}) {
-      if (!data2) return;
-      if (focusId && mappedFeatures.has(focusId)) {
-        zoom = Math.min(REGION_MAP_MAX_ZOOM, Math.max(1, value));
-        const anchor = mappedFeatures.get(focusId).anchor;
-        mapX = data2.width / 2 - anchor[0] * zoom;
-        mapY = data2.height / 2 - anchor[1] * zoom;
+    if (profileCache !== void 0 && !(profileCache instanceof Map)) fail("invalid profile cache");
+    const profileIds = /* @__PURE__ */ new Set(), profiles = [], additions = /* @__PURE__ */ new Map();
+    for (const profile of dictionaries.profiles) {
+      if (!object(profile) || !text(profile.id, 128) || profileIds.has(profile.id) || !object(profile.features)) fail("invalid profile identity");
+      profileIds.add(profile.id);
+      const entries = Object.entries(profile.features);
+      if (!entries.length || entries.some(([id, value]) => !/^[a-z][a-z0-9_-]{0,127}$/.test(id) || ["constructor", "prototype", "__proto__"].includes(id) || allowedFeatures && !allowedFeatures.has(id) || !Number.isFinite(value) || value <= 0 || value > 1)) fail("invalid functional profile");
+      let features = profileCache?.get(profile.id);
+      if (profileCache?.has(profile.id)) {
+        if (!object(features) || !Object.isFrozen(features) || Object.keys(features).length !== entries.length || entries.some(([id, value]) => features[id] !== value)) fail("inconsistent shared profile");
       } else {
-        const next = zoomMapAt({ zoom, x: mapX, y: mapY }, value, point2 || { x: data2.width / 2, y: data2.height / 2 });
-        zoom = next.zoom;
-        mapX = next.x;
-        mapY = next.y;
+        features = Object.freeze(Object.fromEntries(entries));
+        if (profileCache) additions.set(profile.id, features);
       }
-      if (zoom === 1) {
-        mapX = 0;
-        mapY = 0;
-      }
-      applyView();
+      profiles.push({ id: profile.id, features });
     }
-    function revealMapRegion(id) {
-      const m = metrics(), feature = mappedFeatures.get(id);
-      if (!m || !feature) return;
-      const x2 = (feature.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
-      if (x2 < 30 || x2 > m.width - 30 || y < 30 || y > m.height - 30) {
-        mapX = data2.width / 2 - feature.anchor[0] * zoom;
-        mapY = data2.height / 2 - feature.anchor[1] * zoom;
-        applyView();
-      }
-    }
-    function moveMapFocus(keyName) {
-      const available = ordered.filter((region) => mappedFeatures.has(region.id));
-      if (!available.length) return;
-      let id = activeId;
-      if (keyName === "Home") id = available[0].id;
-      else if (keyName === "End") id = available.at(-1).id;
-      else {
-        const origin = mappedFeatures.get(activeId)?.anchor || mappedFeatures.get(available[0].id).anchor;
-        const direction = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowDown: [0, 1], ArrowUp: [0, -1] }[keyName];
-        let score2 = Infinity;
-        for (const region of available) {
-          if (region.id === activeId) continue;
-          const point2 = mappedFeatures.get(region.id).anchor, dx = point2[0] - origin[0], dy = point2[1] - origin[1];
-          const forward = dx * direction[0] + dy * direction[1], side = Math.abs(dx * direction[1] - dy * direction[0]);
-          if (forward <= 0.01) continue;
-          const distance = Math.hypot(dx, dy) + side * 1.4;
-          if (distance < score2) {
-            score2 = distance;
-            id = region.id;
-          }
-        }
-      }
-      activeId = id;
-      hoveredId = null;
-      updateSelection();
-      const shape = [...root.querySelectorAll("[data-region-map-id]")].find((element) => element.dataset.regionMapId === id);
-      shape?.focus({ preventScroll: true });
-      revealMapRegion(id);
-    }
-    function renderMap() {
-      const frame = root.querySelector("[data-region-map-frame]");
-      if (!data2 || !frame || destroyed) return;
-      mappedFeatures.clear();
-      for (const feature of data2.features) {
-        const id = canonicalByMap.get(String(feature.mapId)) || canonicalByName.get(normalize(feature.name));
-        if (id) mappedFeatures.set(id, feature);
-      }
-      if (!mappedFeatures.has(activeId)) activeId = ordered.find((region) => mappedFeatures.has(region.id))?.id;
-      const featureMarkup = (region) => {
-        const feature = mappedFeatures.get(region.id);
-        if (!feature) return "";
-        const city = feature.city ? ` data-region-marker` : "";
-        return `<g class="career-region-shape${feature.city ? " career-region-city" : ""}" data-region-map-id="${E2(region.id)}"${city} role="checkbox" aria-checked="false" aria-label="${E2(label2(region.id))}" tabindex="-1"><title>${E2(label2(region.id))} \xB7 ${badge(region.id)}</title><path class="career-region-fill" data-region-fill="${E2(region.id)}" d="${E2(feature.d)}"/><path class="career-region-outline" data-region-outline="${E2(region.id)}" d="${E2(feature.outlineD || feature.d)}"/>${feature.city ? `<g transform="translate(${feature.anchor.join(" ")})"><circle class="career-region-city-hit" r=".01"/><circle class="career-region-city-halo" r=".01"/><circle class="career-region-city-dot" r=".01"/></g>` : ""}</g>`;
-      };
-      const labelMarkup = ordered.filter((region) => mappedFeatures.has(region.id)).map((region) => `<text class="career-region-label" data-region-label="${E2(region.id)}" data-label-visible="false" aria-hidden="true" style="display:none">${labelLines(label2(region.id)).map((line) => `<tspan>${E2(line)}</tspan>`).join("")}</text>`).join("");
-      frame.innerHTML = `<div class="career-region-map-viewport" tabindex="0" role="group" aria-label="${ui().map}" aria-describedby="${key}-map-help"><svg class="career-region-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${data2.width} ${data2.height}" width="${data2.width}" height="${data2.height}" role="group" aria-label="${ui().map}"><g class="career-region-map-content"><g class="career-region-boundaries" fill-rule="evenodd">${ordered.filter((region) => !mappedFeatures.get(region.id)?.city).map(featureMarkup).join("")}</g><g class="career-region-city-markers" fill-rule="evenodd">${ordered.filter((region) => mappedFeatures.get(region.id)?.city).map(featureMarkup).join("")}</g><g class="career-region-labels" aria-hidden="true">${labelMarkup}</g></g></svg></div>`;
-      root.dataset.regionMapState = "ready";
-      root.querySelector("[data-region-map-controls]").hidden = false;
-      const viewport = frame.querySelector(".career-region-map-viewport");
-      labelNodes = [...frame.querySelectorAll("[data-region-label]")].map((node) => ({ node, id: node.dataset.regionLabel, feature: mappedFeatures.get(node.dataset.regionLabel), lines: labelLines(label2(node.dataset.regionLabel)) }));
-      const suppressClick = () => {
-        ignoreMapClick = true;
-        clearTimeout(ignoreTimer);
-        ignoreTimer = setTimeout(() => {
-          ignoreMapClick = false;
-        }, 350);
-      };
-      const startGesture = () => {
-        const values = [...pointers.values()];
-        if (values.length >= 2) {
-          const a = svgPoint(values[0]), b = svgPoint(values[1]), mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-          gesture = { kind: "pinch", distance: Math.max(0.01, Math.hypot(a.x - b.x, a.y - b.y)), zoom, anchor: { x: (mid.x - mapX) / zoom, y: (mid.y - mapY) / zoom } };
-          gestureMoved = true;
-          suppressClick();
-        } else if (values.length) {
-          gesture = { kind: "pan", point: svgPoint(values[0]), x: mapX, y: mapY };
-        } else gesture = null;
-      };
-      listen(viewport, "pointerdown", (event) => {
-        if (event.pointerType === "mouse" && event.button !== 0 || pointers.has(event.pointerId)) return;
-        if (!pointers.size) {
-          gestureMoved = false;
-          ignoreMapClick = false;
-          clearTimeout(ignoreTimer);
-        }
-        pointers.set(event.pointerId, { pointerId: event.pointerId, clientX: event.clientX, clientY: event.clientY, regionId: event.target.closest?.("[data-region-map-id]")?.dataset.regionMapId });
-        viewport.setPointerCapture?.(event.pointerId);
-        startGesture();
-        event.preventDefault();
-      });
-      listen(viewport, "pointermove", (event) => {
-        const previous = pointers.get(event.pointerId);
-        if (!previous || !gesture) return;
-        pointers.set(event.pointerId, { ...previous, clientX: event.clientX, clientY: event.clientY });
-        const values = [...pointers.values()];
-        if (gesture.kind === "pinch" && values.length >= 2) {
-          const a = svgPoint(values[0]), b = svgPoint(values[1]), mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-          zoom = Math.min(REGION_MAP_MAX_ZOOM, Math.max(1, gesture.zoom * Math.hypot(a.x - b.x, a.y - b.y) / gesture.distance));
-          mapX = mid.x - gesture.anchor.x * zoom;
-          mapY = mid.y - gesture.anchor.y * zoom;
-          gestureMoved = true;
-        } else if (gesture.kind === "pan") {
-          const point2 = svgPoint(event), dx = point2.x - gesture.point.x, dy = point2.y - gesture.point.y;
-          if (!gestureMoved && Math.hypot(dx, dy) * (metrics()?.scale || 1) < 6) return;
-          gestureMoved = true;
-          mapX = gesture.x + dx;
-          mapY = gesture.y + dy;
-        }
-        viewport.classList.add("is-panning");
-        ignoreMapClick = true;
-        applyView();
-        event.preventDefault();
-      });
-      const endPointer = (event, cancelled = false) => {
-        const pointer = pointers.get(event.pointerId);
-        if (!pointer) return;
-        if (!cancelled && pointers.size === 1 && !gestureMoved && pointer.regionId) {
-          hoveredId = pointer.regionId;
-          toggle(pointer.regionId, "map");
-          [...frame.querySelectorAll("[data-region-map-id]")].find((shape) => shape.dataset.regionMapId === pointer.regionId)?.focus({ preventScroll: true });
-        }
-        pointers.delete(event.pointerId);
-        if (viewport.hasPointerCapture?.(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
-        if (cancelled) gestureMoved = true;
-        suppressClick();
-        startGesture();
-        if (!pointers.size) viewport.classList.remove("is-panning");
-      };
-      listen(viewport, "pointerup", (event) => endPointer(event));
-      listen(viewport, "pointercancel", (event) => endPointer(event, true));
-      listen(viewport, "lostpointercapture", (event) => endPointer(event, true));
-      listen(viewport, "wheel", (event) => {
-        const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? viewport.clientHeight : 1);
-        if (!delta) return;
-        event.preventDefault();
-        setZoom(zoom * Math.exp(-Math.max(-1e3, Math.min(1e3, delta)) * 2e-3), { point: svgPoint(event) });
-      }, { passive: false });
-      resizeObserver?.disconnect();
-      if (typeof ResizeObserver !== "undefined") {
-        resizeObserver = new ResizeObserver(() => {
-          if (!destroyed) applyView();
-        });
-        resizeObserver.observe(viewport);
-      }
-      applyView();
-      updateSelection();
-    }
-    function render() {
-      if (destroyed) return;
-      const focused = root.querySelector(":focus"), focusRegion = focused?.dataset?.regionCheckbox, searchFocused = focused?.hasAttribute("data-region-search");
-      const scroll = root.querySelector(".career-region-options")?.scrollTop || 0;
-      for (const off of bindings.splice(0)) off();
-      root.classList.add("career-region-picker");
-      root.setAttribute("data-no-i18n", "");
-      pointers.clear();
-      gesture = null;
-      resizeObserver?.disconnect();
-      root.innerHTML = `<div class="career-region-picker-heading"><strong data-region-selection-status role="status" aria-live="polite"></strong><span class="career-region-legend"><i aria-hidden="true"></i>${ui().chosenLegend}</span></div><p class="career-region-federal-only" data-region-empty-selection hidden>${ui().none}</p><div class="career-region-grid"><div class="career-region-list-panel"><label class="career-region-search-label" for="${key}-search">${ui().search}</label><input id="${key}-search" class="career-region-search" type="search" autocomplete="off" placeholder="${ui().searchHint}" data-region-search value="${E2(query)}"><span class="career-region-sr-only" role="status" data-region-search-status></span><fieldset class="career-region-options"><legend class="career-region-sr-only">${ui().list}</legend>${ordered.map((region) => `<label class="career-region-option" data-region-option="${E2(region.id)}"><input type="checkbox" value="${E2(region.id)}" data-region-checkbox="${E2(region.id)}"><span>${E2(regionLabel(region, language2))}</span></label>`).join("")}<p class="career-region-no-matches" data-region-no-matches hidden>${ui().noMatches}</p></fieldset></div><div class="career-region-map-panel"><div class="career-region-map-controls" data-region-map-controls hidden><span class="career-region-zoom" aria-label="${ui().zoom}"><span data-region-zoom-value>100%</span></span><button type="button" class="career-region-map-reset" data-region-zoom="reset">${ui().reset}</button></div><p id="${key}-map-help" class="career-region-map-help">${ui().mapHelp}</p><div data-region-map-frame class="career-region-map-frame"><p class="career-region-map-loading" role="status">${ui().loading}</p></div><p class="career-region-map-current" data-region-map-current aria-live="polite"></p></div></div>`;
-      listen(root, "change", (event) => {
-        const checkbox = event.target.closest?.("[data-region-checkbox]");
-        if (checkbox) toggle(checkbox.dataset.regionCheckbox, "list");
-      });
-      listen(root, "input", (event) => {
-        if (event.target.matches?.("[data-region-search]")) {
-          query = event.target.value;
-          filterList();
-        }
-      });
-      listen(root, "click", (event) => {
-        const zoomButton = event.target.closest?.("[data-region-zoom]");
-        if (zoomButton) {
-          setZoom(1);
-          return;
-        }
-        const shape = event.target.closest?.("[data-region-map-id]");
-        if (shape && (!ignoreMapClick || event.detail === 0)) {
-          const id = shape.dataset.regionMapId;
-          hoveredId = id;
-          toggle(id, "map");
-          shape.focus({ preventScroll: true });
-        }
-      });
-      listen(root, "keydown", (event) => {
-        const shape = event.target.closest?.("[data-region-map-id]"), viewport = event.target.closest?.(".career-region-map-viewport");
-        if (!viewport) return;
-        if (shape) activeId = shape.dataset.regionMapId;
-        if (shape && (event.key === " " || event.key === "Enter")) {
-          event.preventDefault();
-          toggle(activeId, "map");
-        } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
-          event.preventDefault();
-          if (shape && !event.shiftKey) moveMapFocus(event.key);
-          else {
-            const step = 60 / (metrics()?.scale || 1);
-            mapX += event.key === "ArrowLeft" ? step : event.key === "ArrowRight" ? -step : 0;
-            mapY += event.key === "ArrowUp" ? step : event.key === "ArrowDown" ? -step : 0;
-            applyView();
-          }
-        } else if (shape && ["Home", "End"].includes(event.key)) {
-          event.preventDefault();
-          moveMapFocus(event.key);
-        } else if (event.key === "+" || event.key === "=") {
-          event.preventDefault();
-          setZoom(zoom * 1.6, shape ? { focusId: activeId } : {});
-        } else if (event.key === "-" || event.key === "\u2212") {
-          event.preventDefault();
-          setZoom(zoom / 1.6, shape ? { focusId: activeId } : {});
-        } else if (event.key === "0") {
-          event.preventDefault();
-          setZoom(1);
-        }
-      });
-      listen(root, "pointerover", (event) => {
-        const shape = event.target.closest?.("[data-region-map-id]");
-        if (shape) {
-          hoveredId = shape.dataset.regionMapId;
-          updateStatus();
-        }
-      });
-      listen(root, "pointerout", (event) => {
-        const shape = event.target.closest?.("[data-region-map-id]");
-        if (shape && !shape.contains(event.relatedTarget)) {
-          hoveredId = null;
-          updateStatus();
-        }
-      });
-      listen(root, "focusin", (event) => {
-        const shape = event.target.closest?.("[data-region-map-id]");
-        if (shape) {
-          activeId = shape.dataset.regionMapId;
-          hoveredId = null;
-          updateSelection();
-        }
-      });
-      filterList();
-      updateSelection();
-      if (data2) renderMap();
-      else if (root.dataset.regionMapState === "unavailable") showMapUnavailable();
-      root.querySelector(".career-region-options").scrollTop = scroll;
-      if (searchFocused) root.querySelector("[data-region-search]").focus({ preventScroll: true });
-      else if (focusRegion) [...root.querySelectorAll("[data-region-checkbox]")].find((checkbox) => checkbox.dataset.regionCheckbox === focusRegion)?.focus({ preventScroll: true });
-    }
-    function showMapUnavailable() {
-      if (destroyed) return;
-      root.dataset.regionMapState = "unavailable";
-      const frame = root.querySelector("[data-region-map-frame]");
-      frame.innerHTML = `<p class="career-region-map-loading" role="status">${ui().unavailable}</p>`;
-    }
-    function refresh() {
-      if (destroyed) return;
-      language2 = languageCode(getLanguage2());
-      ordered = orderRegions(catalog, language2);
-      render();
-    }
-    root.dataset.regionMapState = "loading";
-    render();
-    const languageListener = () => refresh();
-    document.addEventListener("app:language", languageListener);
-    const ready2 = loadMap(mapURL).then((value) => {
-      if (destroyed) return false;
-      data2 = value;
-      renderMap();
-      return true;
-    }).catch(() => {
-      showMapUnavailable();
-      return false;
-    });
-    return {
-      ready: ready2,
-      getSelection: () => selected(),
-      setSelection(ids2, { emit: shouldEmit = false } = {}) {
-        if (destroyed) return;
-        selection = new Set(sanitizeRegionSelection(ids2, catalog));
-        updateSelection();
-        if (shouldEmit) emit("external");
-      },
-      refresh,
-      destroy() {
-        if (destroyed) return;
-        destroyed = true;
-        for (const off of bindings.splice(0)) off();
-        clearTimeout(ignoreTimer);
-        resizeObserver?.disconnect();
-        pointers.clear();
-        gesture = null;
-        document.removeEventListener("app:language", languageListener);
-        root.replaceChildren();
-        root.classList.remove("career-region-picker");
-        delete root.dataset.regionMapState;
-        delete root.dataset.selectedRegionCount;
-      }
+    const lookup = (dictionary, index, field) => {
+      if (!Number.isInteger(index) || index < 0 || index >= dictionary.length) fail("invalid " + field + " reference");
+      return dictionary[index];
     };
-  }
-
-  // site/apps/career/assets/wish-sortable.mjs
-  function moveWishId(ids2, from, to) {
-    if (!Array.isArray(ids2) || ids2.length > 3 || new Set(ids2).size !== ids2.length || ids2.some((id) => typeof id !== "string" || !id)) throw new TypeError("Expected up to three unique employer IDs.");
-    if (!Number.isInteger(from) || !Number.isInteger(to) || from < 0 || to < 0 || from >= ids2.length || to >= ids2.length) throw new RangeError("Invalid employer position.");
-    const next = [...ids2];
-    next.splice(to, 0, next.splice(from, 1)[0]);
-    return next;
-  }
-  function wishTargetIndex(boxes, from, clientY) {
-    return boxes.reduce((target, box, index) => index !== from && clientY > box.top + box.height / 2 ? target + 1 : target, 0);
-  }
-  function createWishSortable({ list: list2, status, labels, onCommit }) {
-    let drag = null, destroyed = false;
-    const listeners = [];
-    const listen = (node, type, listener, options) => {
-      node.addEventListener(type, listener, options);
-      listeners.push(() => node.removeEventListener(type, listener, options));
+    const checkedURLs = /* @__PURE__ */ new Set(), ids = /* @__PURE__ */ new Set();
+    const checkURL = (value) => {
+      if (checkedURLs.has(value)) return;
+      if (!text(value, 1e4)) fail("missing source URL");
+      try {
+        const url = new URL(value);
+        if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) fail("invalid source URL");
+      } catch {
+        fail("invalid source URL");
+      }
+      checkedURLs.add(value);
     };
-    const announce = (message) => {
-      if (!destroyed && status?.isConnected) status.textContent = message;
-    };
-    const handleFor = (id) => [...list2.querySelectorAll("[data-wish-drag-handle]")].find((node) => node.dataset.wishDragHandle === id);
-    const rows = () => [...list2.querySelectorAll(":scope > [data-wish-id]")];
-    function suppressClickAfterPointer() {
-      let timer;
-      const release = () => {
-        document.removeEventListener("click", block, true);
-        clearTimeout(timer);
+    const decoded = new Array(count);
+    for (let index = 0; index < count; index += 1) {
+      const tuple = payload.rows[index];
+      if (!Array.isArray(tuple) || tuple.length !== CANDIDATE_COLUMNS.length) fail("invalid row width");
+      const [
+        id,
+        titleRef,
+        departmentRef,
+        employerRef,
+        regionId,
+        locationRef,
+        profileRef,
+        evidenceLevel,
+        responsibilityLevel,
+        status,
+        archive,
+        sourceURLRef,
+        sourcePathRef,
+        sourceType,
+        sourceRecordCount,
+        detailPathRef
+      ] = tuple;
+      if (!text(id, 600) || ids.has(id)) fail("invalid or duplicate vacancy identity");
+      ids.add(id);
+      if (regionId !== null && (typeof regionId !== "string" || !/^ru-\d{2}$/.test(regionId))) fail("invalid region");
+      if (!functionalLevels.has(evidenceLevel)) fail("non-functional source evidence");
+      if (!responsibilityLevels.has(responsibilityLevel) || !statuses.has(status) || archive !== null && typeof archive !== "boolean") fail("invalid role metadata");
+      if (!sourceTypes.has(sourceType) || sourceRecordCount !== 1) fail("invalid individual source record");
+      const title = lookup(strings2, titleRef, "title");
+      if (!text(title, 1e4)) fail("missing role title");
+      const department = lookup(strings2, departmentRef, "department");
+      const [employerId, employerName] = lookup(employers, employerRef, "employer");
+      const location2 = lookup(strings2, locationRef, "location");
+      const profile = lookup(profiles, profileRef, "profile");
+      const sourceURL = lookup(strings2, sourceURLRef, "source URL");
+      checkURL(sourceURL);
+      const sourcePath = lookup(strings2, sourcePathRef, "source path");
+      if (!text(sourcePath, 1e4)) fail("missing source locator");
+      const detailPath = lookup(strings2, detailPathRef, "detail path");
+      if (!detailPathPattern.test(detailPath)) fail("invalid detail path");
+      decoded[index] = {
+        id,
+        title,
+        department,
+        employerId,
+        employerName,
+        regionId,
+        location: location2,
+        profileId: profile.id,
+        features: profile.features,
+        evidenceLevel,
+        responsibilityLevel,
+        status,
+        archive,
+        sourceURL,
+        sourcePath,
+        sourceType,
+        sourceRecordCount,
+        detailPath
       };
-      const block = (event) => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        release();
-      };
-      document.addEventListener("click", block, true);
-      timer = setTimeout(release, 350);
     }
-    function clearPreview(session) {
-      session.rows.forEach((row, index) => {
-        row.style.removeProperty("transform");
-        row.classList.remove("is-wish-dragging");
-        row.removeAttribute("data-wish-preview-position");
-        row.querySelector(".journey-priority").textContent = String(index + 1);
-      });
-      session.placeholder.remove();
-      list2.classList.remove("is-wish-sorting");
-      session.handle.setAttribute("aria-pressed", "false");
-    }
-    function finish(commit, { focus = true, announceResult = true } = {}) {
-      const session = drag;
-      if (!session) return;
-      drag = null;
-      clearPreview(session);
-      if (session.pointerId !== void 0 && session.handle.hasPointerCapture?.(session.pointerId)) session.handle.releasePointerCapture(session.pointerId);
-      const changed = commit && session.target !== session.from;
-      if (changed) {
-        const next = moveWishId(session.ids, session.from, session.target);
-        const empty = list2.querySelector(":scope > li:not([data-wish-id])");
-        next.forEach((id, index) => {
-          const row = session.rows[session.ids.indexOf(id)];
-          list2.insertBefore(row, empty);
-          row.querySelector(".journey-priority").textContent = String(index + 1);
-        });
-        onCommit(next);
-      }
-      if (focus && !destroyed) (handleFor(session.id) || session.handle).focus({ preventScroll: true });
-      if (announceResult) announce(commit ? labels.dropped(session.name, session.target + 1) : labels.cancelled(session.name, session.from + 1));
-    }
-    function preview() {
-      const session = drag;
-      if (!session) return;
-      session.rows.forEach((row) => row.style.removeProperty("transform"));
-      const boxes = session.rows.map((row) => row.getBoundingClientRect());
-      if (session.mode === "pointer") session.target = wishTargetIndex(boxes, session.from, session.clientY);
-      const order = moveWishId(session.ids, session.from, session.target);
-      const gap = boxes.length > 1 ? boxes[1].top - boxes[0].bottom : 0;
-      const listTop = list2.getBoundingClientRect().top;
-      let top = boxes[0].top, placeholderTop = top;
-      for (let position = 0; position < order.length; position++) {
-        const index = session.ids.indexOf(order[position]), row = session.rows[index];
-        const offset = session.mode === "pointer" && index === session.from ? session.clientY - session.grabOffset - boxes[index].top : top - boxes[index].top;
-        row.style.transform = `translateY(${offset}px)`;
-        row.querySelector(".journey-priority").textContent = String(position + 1);
-        if (index === session.from) {
-          placeholderTop = top;
-          row.dataset.wishPreviewPosition = String(position + 1);
-        }
-        top += boxes[index].height + gap;
-      }
-      session.placeholder.style.top = `${placeholderTop - listTop}px`;
-      session.placeholder.style.height = `${boxes[session.from].height}px`;
-    }
-    function begin(handle, mode, event) {
-      finish(false, { focus: false, announceResult: false });
-      const filled = rows(), row = handle.closest("[data-wish-id]"), from = filled.indexOf(row);
-      if (filled.length < 2 || from < 0) return;
-      const box = row.getBoundingClientRect(), placeholder = document.createElement("li");
-      placeholder.className = "journey-wish-placeholder";
-      placeholder.setAttribute("aria-hidden", "true");
-      const session = {
-        handle,
-        row,
-        rows: filled,
-        ids: filled.map((item) => item.dataset.wishId),
-        id: row.dataset.wishId,
-        from,
-        target: from,
-        mode,
-        name: row.querySelector("strong").textContent,
-        pointerId: event?.pointerId,
-        startX: event?.clientX,
-        startY: event?.clientY,
-        clientY: event?.clientY,
-        grabOffset: event ? event.clientY - box.top : 0,
-        moved: false,
-        placeholder
-      };
-      drag = session;
-      list2.append(placeholder);
-      list2.classList.add("is-wish-sorting");
-      row.classList.add("is-wish-dragging");
-      handle.setAttribute("aria-pressed", "true");
-      handle.focus({ preventScroll: true });
-      preview();
-      announce(labels.grabbed(session.name, from + 1));
-      if (mode === "pointer") {
-        const tick = () => {
-          if (destroyed || drag !== session) return;
-          if (!list2.isConnected) {
-            finish(false, { focus: false, announceResult: false });
-            return;
-          }
-          if (session.moved) {
-            const height = window.innerHeight, edge = 56;
-            const speed = session.clientY < edge ? -Math.min(12, (edge - session.clientY) / 4) : session.clientY > height - edge ? Math.min(12, (session.clientY - height + edge) / 4) : 0;
-            if (speed) window.scrollBy({ top: speed, behavior: "instant" });
-            preview();
-          }
-          requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      }
-    }
-    listen(list2, "pointerdown", (event) => {
-      const handle = event.target.closest("[data-wish-drag-handle]");
-      if (!handle || handle.disabled || event.button !== 0 || event.isPrimary === false) return;
-      event.preventDefault();
-      begin(handle, "pointer", event);
-      if (drag) handle.setPointerCapture(event.pointerId);
-    });
-    listen(list2, "pointermove", (event) => {
-      if (drag?.mode !== "pointer" || drag.pointerId !== event.pointerId) return;
-      event.preventDefault();
-      drag.clientY = event.clientY;
-      if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 6) drag.moved = true;
-      if (drag.moved) preview();
-    });
-    listen(list2, "pointerup", (event) => {
-      if (drag?.mode !== "pointer" || drag.pointerId !== event.pointerId) return;
-      event.preventDefault();
-      drag.clientY = event.clientY;
-      const moved = drag.moved;
-      if (moved) preview();
-      if (moved) suppressClickAfterPointer();
-      finish(moved, { announceResult: moved });
-    });
-    const cancelPointer = (event) => {
-      if (drag?.mode === "pointer" && drag.pointerId === event.pointerId) finish(false);
-    };
-    listen(list2, "pointercancel", cancelPointer);
-    listen(list2, "lostpointercapture", cancelPointer);
-    listen(list2, "contextmenu", (event) => {
-      if (drag || event.target.closest("[data-wish-drag-handle]")) event.preventDefault();
-    });
-    listen(list2, "dragstart", (event) => event.preventDefault());
-    listen(list2, "click", (event) => {
-      const handle = event.target.closest("[data-wish-drag-handle]");
-      if (!handle) return;
-      event.preventDefault();
-      if (event.detail === 0) {
-        if (drag?.handle === handle) finish(true);
-        else begin(handle, "keyboard");
-      }
-    });
-    listen(list2, "keydown", (event) => {
-      const handle = event.target.closest("[data-wish-drag-handle]");
-      if (!handle || handle.disabled) return;
-      const grabbed = drag?.mode === "keyboard" && drag.handle === handle;
-      if (event.key === " " || event.key === "Enter") {
-        event.preventDefault();
-        if (event.repeat) return;
-        if (grabbed) finish(true);
-        else begin(handle, "keyboard");
-      } else if (grabbed && ["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
-        event.preventDefault();
-        drag.target = event.key === "Home" ? 0 : event.key === "End" ? drag.rows.length - 1 : Math.max(0, Math.min(drag.rows.length - 1, drag.target + (event.key === "ArrowUp" ? -1 : 1)));
-        preview();
-        handle.scrollIntoView({ block: "nearest", behavior: "instant" });
-        announce(labels.moved(drag.name, drag.target + 1));
-      } else if (grabbed && event.key === "Tab") finish(false, { focus: false });
-    });
-    listen(list2, "focusout", (event) => {
-      if (drag?.mode === "keyboard" && event.target === drag.handle) finish(false, { focus: false });
-    });
-    listen(document, "keydown", (event) => {
-      if (drag && event.key === "Escape") {
-        event.preventDefault();
-        event.stopPropagation();
-        finish(false);
-      }
-    }, true);
-    listen(document, "pointerdown", (event) => {
-      if (drag?.mode === "pointer" && event.pointerId !== drag.pointerId) finish(false, { focus: false });
-      else if (drag?.mode === "keyboard" && !drag.handle.contains(event.target)) finish(false, { focus: false });
-    }, true);
-    return {
-      isBusy: () => Boolean(drag),
-      cancel: (options) => finish(false, options),
-      destroy() {
-        if (destroyed) return;
-        finish(false, { focus: false, announceResult: false });
-        destroyed = true;
-        listeners.splice(0).forEach((remove) => remove());
-      }
-    };
-  }
-
-  // site/apps/career/assets/territorial-catalog.mjs
-  function expandTerritorialCatalog(payload) {
-    if (Array.isArray(payload)) return payload;
-    if (payload?.schemaVersion !== 1 || !Array.isArray(payload.authorities) || !payload.templates || typeof payload.templates !== "object") {
-      throw new Error("career/invalid-territorial-catalog");
-    }
-    const seen = /* @__PURE__ */ new Set();
-    return payload.authorities.map((item) => {
-      const template = payload.templates[item.scoringKey];
-      if (!item.id || seen.has(item.id) || !template?.tracks?.length || !template?.sectors?.length) {
-        throw new Error("career/invalid-territorial-authority");
-      }
-      seen.add(item.id);
-      const corporation = item.level === "national-corporation";
-      return {
-        ...item,
-        shortName: item.shortName || "",
-        entityType: corporation ? "corporation" : item.level,
-        entityTypeLabel: corporation ? "\u0413\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u043A\u043E\u0440\u043F\u043E\u0440\u0430\u0446\u0438\u044F" : item.level === "municipal" ? "\u041E\u0440\u0433\u0430\u043D \u043C\u0435\u0441\u0442\u043D\u043E\u0433\u043E \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F" : "\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430 \u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u043E\u0439 \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u0438",
-        employerType: corporation ? "state-corporation" : item.level === "municipal" ? "municipal-service-authority" : "regional-state-body",
-        descriptionParagraphs: [item.mission],
-        descriptionSources: [{ url: item.sourceUrl, checkedAt: item.verifiedAt }],
-        tracks: template.tracks,
-        sectors: template.sectors,
-        sourceSnapshotAt: item.sourceSnapshotAt || payload.sourceSnapshotAt,
-        familiarity: 1,
-        confidence: "limited",
-        entryRouteIds: [],
-        scoringProvenance: {
-          kind: item.coding === 0 ? "retained-editorial-functional-families" : "editorial-description-and-function-coding",
-          donorIds: template.donorIds,
-          workingConditionsInherited: false,
-          jobRequirementsInherited: false,
-          psychometricallyValidated: false
-        }
-      };
-    });
-  }
-  function mergeTerritorialAuthorityDetails(authority, payload) {
-    if (payload?.schemaVersion !== 1 || !Array.isArray(payload.authorities)) {
-      throw new Error("career/invalid-authority-details");
-    }
-    const detail = payload.authorities.find((item) => item.id === authority.id);
-    if (!detail || detail.regionId !== authority.regionId || detail.level !== authority.level) {
-      throw new Error("career/authority-details-mismatch");
-    }
-    return { ...authority, ...detail };
+    if (profileCache) for (const [id, features] of additions) profileCache.set(id, features);
+    return decoded;
   }
 
   // site/apps/career/assets/journey-visuals.mjs
-  var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E2 = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L2 = (ru, en, zh2) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh2;
-  var display = (value) => E3(translate(typeof value === "string" ? value : ""));
-  var icon = (id) => `<svg aria-hidden="true"><use href="#i-${E3(id)}"></use></svg>`;
-  var number = (value, digits = 0) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
-  function date2(value) {
-    if (!value || !Number.isFinite(Date.parse(value))) return "";
-    return new Intl.DateTimeFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { dateStyle: "medium", timeZone: "Europe/Moscow" }).format(new Date(value));
-  }
+  var icon = (id) => `<svg aria-hidden="true"><use href="#i-${E2(id)}"></use></svg>`;
   function safeURL(value) {
     try {
       const url = new URL(value);
-      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? E3(url.href) : "";
+      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? E2(url.href) : "";
     } catch {
       return "";
     }
@@ -6586,1065 +4713,1323 @@ var CareerRuntime = (() => {
   function regionName(region) {
     return getLanguage() === "en" ? region?.name_en || region?.name || "" : getLanguage() === "zh-Hans" ? region?.name_zh || region?.name || "" : region?.name || "";
   }
-  function groupLabel(id) {
+
+  // site/apps/career/assets/adaptive-model.mjs
+  var FUNCTIONAL_MODEL_VERSION = "functional-2.0.0";
+  var MIN_ANSWERS = 43;
+  var MAX_ANSWERS = 55;
+  var taxonomyCache = /* @__PURE__ */ new WeakMap();
+  var candidateCache = /* @__PURE__ */ new WeakMap();
+  var scoreCache = /* @__PURE__ */ new WeakMap();
+  var SCORE_CACHE_STATES = 5;
+  var functionalLevels2 = /* @__PURE__ */ new Set(["duties", "skills", "knowledge", "requirements", "functional"]);
+  var clamp = (n, lo = 0, hi = 1) => Math.max(lo, Math.min(hi, n));
+  var normalized2 = (value) => String(value || "").toLocaleLowerCase("ru").replace(/ё/g, "\u0435").replace(/\s+/g, " ").trim();
+  function compiled(taxonomy) {
+    if (!taxonomy || !Array.isArray(taxonomy.facets) || !taxonomy.facets.length) throw new TypeError("Invalid functional taxonomy");
+    if (taxonomyCache.has(taxonomy)) return taxonomyCache.get(taxonomy);
+    const questions = [], ids = /* @__PURE__ */ new Set(), facets = /* @__PURE__ */ new Map();
+    for (const facet of taxonomy.facets) {
+      if (!facet.id || facets.has(facet.id) || !Array.isArray(facet.questions) || !facet.questions.length) throw new TypeError("Invalid functional facet");
+      facets.set(facet.id, facet);
+      facet.questions.forEach((question, index) => {
+        if (!question.id || ids.has(question.id)) throw new TypeError("Duplicate functional question");
+        ids.add(question.id);
+        questions.push({ ...question, facetId: facet.id, broad: question.broad === true || index === 0 });
+      });
+    }
+    const value = { questions, byId: new Map(questions.map((q) => [q.id, q])), facets };
+    taxonomyCache.set(taxonomy, value);
+    return value;
+  }
+  function buildQuestionBank(taxonomy) {
+    return compiled(taxonomy).questions.slice();
+  }
+  function validAnswers(taxonomy, answers = []) {
+    const { byId } = compiled(taxonomy), seen = /* @__PURE__ */ new Set(), output = [];
+    if (!Array.isArray(answers)) return output;
+    for (const answer of answers.slice(0, MAX_ANSWERS)) {
+      if (!byId.has(answer?.questionId) || seen.has(answer.questionId) || !Number.isInteger(answer.value) || answer.value < 0 || answer.value > 5) continue;
+      seen.add(answer.questionId);
+      output.push({ questionId: answer.questionId, value: answer.value });
+    }
+    return output;
+  }
+  function preferences(taxonomy, answers) {
+    const { byId, facets } = compiled(taxonomy), clean = validAnswers(taxonomy, answers);
+    const broad = {}, detail = {}, count = {}, detailByFacet = {};
+    for (const answer of clean) {
+      const q = byId.get(answer.questionId);
+      count[q.facetId] = (count[q.facetId] || 0) + 1;
+      if (answer.value === 0) continue;
+      const interest = (answer.value - 3) / 2;
+      if (q.broad) broad[q.facetId] = interest;
+      else {
+        detail[q.id] = interest;
+        (detailByFacet[q.facetId] ||= []).push(interest);
+      }
+    }
+    const steering = { ...broad };
+    for (const [id, values] of Object.entries(detailByFacet)) {
+      if (!(id in steering)) steering[id] = values.reduce((a, b) => a + b, 0) / values.length * 0.5;
+    }
+    const profile = [...facets.values()].map((facet) => ({
+      id: facet.id,
+      label: facet.label,
+      interest: facet.id in steering ? steering[facet.id] : null,
+      answers: count[facet.id] || 0
+    }));
     return {
-      education: L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"),
-      experience: L2("\u0421\u0442\u0430\u0436 \u0438 \u043E\u043F\u044B\u0442", "Experience", "\u5DE5\u4F5C\u7ECF\u5386"),
-      knowledge: L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6"),
-      skills: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u80FD\u529B\u4E0E\u6280\u80FD"),
-      skill: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u80FD\u529B\u4E0E\u6280\u80FD"),
-      eligibility: L2("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0434\u043E\u043F\u0443\u0441\u043A\u0430", "Eligibility", "\u8D44\u683C\u6761\u4EF6"),
-      other: L2("\u0414\u0440\u0443\u0433\u0438\u0435 \u0438 \u0441\u043E\u0441\u0442\u0430\u0432\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Other and combined requirements", "\u5176\u4ED6\u53CA\u7EFC\u5408\u8981\u6C42"),
-      unclassified: L2("\u0411\u0435\u0437 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043D\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u044B", "Without a subject group", "\u672A\u5206\u7C7B"),
-      "finance-economy": L2("\u0424\u0438\u043D\u0430\u043D\u0441\u044B \u0438 \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430", "Finance and economics", "\u8D22\u653F\u4E0E\u7ECF\u6D4E"),
-      "law-regulation": L2("\u041F\u0440\u0430\u0432\u043E \u0438 \u0440\u0435\u0433\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435", "Law and regulation", "\u6CD5\u5F8B\u4E0E\u76D1\u7BA1"),
-      communication: L2("\u041A\u043E\u043C\u043C\u0443\u043D\u0438\u043A\u0430\u0446\u0438\u044F", "Communication", "\u6C9F\u901A"),
-      "organization-projects": L2("\u041E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u044B", "Organisation and projects", "\u7EC4\u7EC7\u4E0E\u9879\u76EE"),
-      "data-digital": L2("\u0414\u0430\u043D\u043D\u044B\u0435 \u0438 \u0446\u0438\u0444\u0440\u043E\u0432\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B", "Data and digital tools", "\u6570\u636E\u4E0E\u6570\u5B57\u5DE5\u5177"),
-      "documents-records": L2("\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0434\u0435\u043B\u043E\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0441\u0442\u0432\u043E", "Documents and records", "\u6587\u4EF6\u4E0E\u6587\u4E66\u5DE5\u4F5C"),
-      "sector-knowledge": L2("\u0417\u043D\u0430\u043D\u0438\u0435 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043D\u043E\u0439 \u043E\u0431\u043B\u0430\u0441\u0442\u0438", "Subject knowledge", "\u4E13\u4E1A\u9886\u57DF\u77E5\u8BC6"),
-      "analytical-work": L2("\u0410\u043D\u0430\u043B\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Analytical work", "\u5206\u6790\u5DE5\u4F5C")
-    }[id] || E3(id);
-  }
-  function levelLabel(authority) {
-    if (["corporation", "fund"].includes(authority?.entityType) || authority?.level === "national-corporation") return L2("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "Public-sector employer", "\u516C\u5171\u90E8\u95E8\u96C7\u4E3B");
-    if (authority?.level === "municipal") return L2("\u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Municipal level", "\u5E02\u653F\u5C42\u7EA7");
-    if (authority?.regionId) return L2("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Regional level", "\u5730\u533A\u5C42\u7EA7");
-    return L2("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Federal level", "\u8054\u90A6\u5C42\u7EA7");
-  }
-  function requirementRadar(rows) {
-    const valid = rows.filter((row) => row.total > 0).slice(0, 9);
-    if (valid.length < 3) return "";
-    const center2 = 160, radius2 = 112, count = valid.length;
-    const point2 = (index, ratio) => {
-      const angle = -Math.PI / 2 + index * Math.PI * 2 / count;
-      return [center2 + Math.cos(angle) * radius2 * ratio, center2 + Math.sin(angle) * radius2 * ratio];
+      clean,
+      broad,
+      detail,
+      steering,
+      count,
+      profile,
+      informativeAnswers: clean.filter((a) => a.value !== 0 && a.value !== 3).length,
+      positiveAnswers: clean.filter((a) => a.value >= 4).length
     };
-    const polygon = (ratio) => valid.map((_, i2) => point2(i2, ratio).join(",")).join(" ");
-    const values = valid.map((row) => Math.max(0, Math.min(1, row.met / row.total)));
-    const description = valid.map((row, i2) => `${i2 + 1}. ${groupLabel(row.id)}: ${row.met}/${row.total}`).join("; ");
-    return `<svg class="journey-target-radar" viewBox="0 0 320 320" width="320" height="320" role="img" aria-label="${E3(L2("\u0412\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u043F\u043E \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0435:", "Self-assessed requirements met:", "\u81EA\u8BC4\u5DF2\u7B26\u5408\u7684\u8981\u6C42\uFF1A") + " " + description)}">
-    <title>${L2("\u041C\u043E\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "My self-assessment and the selected role requirements", "\u6211\u7684\u81EA\u8BC4\u4E0E\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</title>
-    <g fill="none" stroke="#d7e2ec" stroke-width="1">${[0.25, 0.5, 0.75, 1].map((value) => `<polygon points="${polygon(value)}"/>`).join("")}${valid.map((_, i2) => {
-      const [x2, y] = point2(i2, 1);
-      return `<line x1="${center2}" y1="${center2}" x2="${x2}" y2="${y}"/>`;
-    }).join("")}</g>
-    <polygon points="${polygon(1)}" fill="#b76a15" fill-opacity=".04" stroke="#9b5914" stroke-width="2.5" stroke-dasharray="7 5"/>
-    <polygon points="${values.map((v, i2) => point2(i2, v).join(",")).join(" ")}" fill="#087bb5" fill-opacity=".18" stroke="#0874aa" stroke-width="2.5"/>
-    ${values.map((v, i2) => {
-      const [x2, y] = point2(i2, v);
-      return `<circle cx="${x2}" cy="${y}" r="4" fill="#0874aa" stroke="#fff" stroke-width="1.5"/>`;
-    }).join("")}
-    <g fill="#294663" font-size="14" font-weight="650" text-anchor="middle" dominant-baseline="middle">${valid.map((_, i2) => {
-      const [x2, y] = point2(i2, 1.23);
-      return `<text x="${x2}" y="${y}">${i2 + 1}</text>`;
-    }).join("")}</g>
-    <g fill="#5d7184" font-size="10" text-anchor="end">${[25, 50, 75, 100].map((v) => `<text x="${center2 - 7}" y="${center2 - radius2 * v / 100 + 3}">${v}%</text>`).join("")}</g>
-  </svg>`;
   }
-  function requirementBars(rows) {
-    const valid = rows.filter((row) => row.total > 0);
-    return `<div class="journey-coverage-bars">${valid.map((row) => {
-      const width = (value) => Math.max(0, Math.min(100, 100 * value / row.total));
-      return `<div class="journey-coverage-row"><div class="journey-coverage-label"><strong>${groupLabel(row.id)}</strong><span>${number(row.met)} / ${number(row.total)}</span></div><div class="journey-coverage-track" role="img" aria-label="${E3(groupLabel(row.id) + ": " + L2("\u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "met", "\u5DF2\u7B26\u5408") + " " + row.met + ", " + L2("\u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "not yet met", "\u5C1A\u672A\u7B26\u5408") + " " + row.gap + ", " + L2("\u043D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E", "unassessed", "\u672A\u8BC4\u4F30") + " " + row.unassessed)}"><span class="is-met" style="width:${width(row.met)}%"></span><span class="is-gap" style="width:${width(row.gap)}%"></span><span class="is-unassessed" style="width:${width(row.unassessed)}%"></span></div><p>${L2("\u0421\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Met", "\u5DF2\u7B26\u5408")}: ${row.met} \xB7 ${L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not yet met", "\u5C1A\u672A\u7B26\u5408")}: ${row.gap} \xB7 ${L2("\u041D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E", "Unassessed", "\u672A\u8BC4\u4F30")}: ${row.unassessed}</p></div>`;
-    }).join("")}</div>`;
+  function feature(row, id) {
+    const value = row?.features?.[id];
+    return typeof value === "number" && Number.isFinite(value) ? clamp(value) : 0;
+  }
+  function candidateGroups(taxonomy, candidates) {
+    if (!Array.isArray(candidates)) return [];
+    let cache = candidateCache.get(candidates);
+    if (!cache) {
+      cache = /* @__PURE__ */ new WeakMap();
+      candidateCache.set(candidates, cache);
+    }
+    const prior = cache.get(taxonomy);
+    if (prior?.length === candidates.length) return prior.groups;
+    const { facets, byId } = compiled(taxonomy), groups = /* @__PURE__ */ new Map(), ids = /* @__PURE__ */ new Set(), signatures = /* @__PURE__ */ new WeakMap();
+    for (const row of candidates) {
+      if (!row?.id || !row.title || !row.features || typeof row.features !== "object" || ids.has(row.id) || !functionalLevels2.has(row.evidenceLevel)) continue;
+      ids.add(row.id);
+      let prepared = signatures.get(row.features);
+      if (!prepared) {
+        const entries = Object.entries(row.features).filter(([id, value]) => (facets.has(id) || byId.has(id) && !byId.get(id).broad) && Number.isFinite(value) && value > 0).map(([id, value]) => [id, clamp(value)]).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0);
+        const signature = entries.map(([id, value]) => id + ":" + value).join("|");
+        const functions = /* @__PURE__ */ new Map();
+        for (const [id, strength] of entries) {
+          const facetId = facets.has(id) ? id : byId.get(id).facetId;
+          if (!functions.has(facetId)) functions.set(facetId, { id: facetId, strength: 0, details: [] });
+          const family = functions.get(facetId);
+          family.strength = Math.max(family.strength, strength);
+          if (id !== facetId) family.details.push({ id, strength });
+        }
+        prepared = { signature, functions: [...functions.values()], features: Object.fromEntries(entries) };
+        signatures.set(row.features, prepared);
+      }
+      if (!prepared.signature) continue;
+      let group = groups.get(prepared.signature);
+      if (!group) {
+        group = { ...prepared, members: [] };
+        groups.set(prepared.signature, group);
+      }
+      group.members.push(row);
+    }
+    const result = [...groups.values()];
+    for (const group of result) group.members.sort((a, b) => String(a.id) < String(b.id) ? -1 : String(a.id) > String(b.id) ? 1 : 0);
+    cache.set(taxonomy, { length: candidates.length, groups: result });
+    return result;
+  }
+  function prepareCandidatePool({ taxonomy, candidates = [] }) {
+    const groups = candidateGroups(taxonomy, candidates);
+    return { considered: groups.reduce((sum, group) => sum + group.members.length, 0), functionalProfilesConsidered: groups.length };
+  }
+  function candidateStatistics(taxonomy, candidates) {
+    const groups = candidateGroups(taxonomy, candidates);
+    const cache = Array.isArray(candidates) ? candidateCache.get(candidates)?.get(taxonomy) : null;
+    if (cache?.statistics) return cache.statistics;
+    const features = /* @__PURE__ */ new Map();
+    for (const group of groups) for (const [id, value] of Object.entries(group.features)) {
+      const item = features.get(id) || { sum: 0, square: 0 };
+      item.sum += value;
+      item.square += value * value;
+      features.set(id, item);
+    }
+    const result = { features, count: groups.length };
+    if (cache) cache.statistics = result;
+    return result;
+  }
+  function scoredCandidates(taxonomy, answers, candidates) {
+    if (!Array.isArray(candidates)) candidates = [];
+    const pref = preferences(taxonomy, answers);
+    let byTaxonomy = scoreCache.get(candidates);
+    if (!byTaxonomy) {
+      byTaxonomy = /* @__PURE__ */ new WeakMap();
+      scoreCache.set(candidates, byTaxonomy);
+    }
+    let cache = byTaxonomy.get(taxonomy);
+    if (!cache || cache.length !== candidates.length) {
+      cache = { length: candidates.length, states: /* @__PURE__ */ new Map() };
+      byTaxonomy.set(taxonomy, cache);
+    }
+    const answerKey = JSON.stringify(pref.clean);
+    if (cache.states.has(answerKey)) {
+      return cache.states.get(answerKey);
+    }
+    const positiveTotal = Object.values(pref.broad).reduce((sum, value) => sum + Math.max(0, value), 0);
+    const rows = [];
+    for (const group of candidateGroups(taxonomy, candidates)) {
+      let total = 0, positive = 0, negative = 0, overlap = 0, confidenceSum = 0, positiveSpecific = 0;
+      for (const family of group.functions) {
+        const broad = pref.broad[family.id];
+        const detail = family.details.filter((item) => Object.hasOwn(pref.detail, item.id));
+        const detailMass = detail.reduce((sum, item) => sum + item.strength, 0);
+        const broadShare = detail.length ? 0.3 : 1;
+        const detailShare = broad === void 0 ? 1 : 0.7;
+        const add = (interest, strength, weight) => {
+          const yes = Math.max(0, interest) * weight, no = Math.max(0, -interest) * weight;
+          total += weight;
+          positive += yes;
+          negative += no;
+          confidenceSum += yes * strength;
+        };
+        if (broad !== void 0) {
+          add(broad, family.strength, family.strength * broadShare);
+          overlap += Math.max(0, broad) * family.strength;
+        }
+        for (const item of detail) {
+          const interest = pref.detail[item.id];
+          add(interest, item.strength, item.strength * detailShare / Math.max(1, detailMass));
+          if (interest > 0) {
+            positiveSpecific += interest * item.strength;
+          }
+        }
+      }
+      const alignment = total ? (positive - negative) / total : 0;
+      const confidence = positive ? confidenceSum / positive : 0;
+      const support = 1 - Math.exp(-positive / 1.75), specificity = 1 - Math.exp(-positiveSpecific);
+      const coverage = positiveTotal ? Math.min(1, overlap / positiveTotal) : 0;
+      const penalty = total ? negative / total : 0;
+      const score2 = clamp(50 * Math.max(0, alignment) + 22 * support + 12 * specificity + 10 * confidence + 6 * coverage - 15 * penalty, 0, 100);
+      rows.push({
+        group,
+        features: group.features,
+        score: Number(score2.toFixed(4)),
+        _alignment: alignment,
+        _positive: positive,
+        _negative: negative,
+        _evidence: confidence
+      });
+    }
+    rows.sort((a, b) => b.score - a.score || b._evidence - a._evidence || a.group.signature.localeCompare(b.group.signature, "en"));
+    const result = { rows, pref };
+    cache.states.set(answerKey, result);
+    while (cache.states.size > SCORE_CACHE_STATES) cache.states.delete(cache.states.keys().next().value);
+    return result;
+  }
+  function identity(row, signature) {
+    return [row.employerId || row.employerName, row.department, row.title, row.regionId, row.location, signature].map(normalized2).join("|");
+  }
+  function matchingEvidence(group, pref, facets) {
+    const matchedFeatures = [], matchedFacets = [];
+    for (const family of group.functions) {
+      const broad = pref.broad[family.id];
+      const detail = family.details.filter((item) => Object.hasOwn(pref.detail, item.id));
+      const detailMass = detail.reduce((sum, item) => sum + item.strength, 0);
+      const broadShare = detail.length ? 0.3 : 1, detailShare = broad === void 0 ? 1 : 0.7;
+      const broadWeight = family.strength * broadShare;
+      let positive = broad === void 0 ? 0 : Math.max(0, broad) * broadWeight;
+      let negative = broad === void 0 ? 0 : Math.max(0, -broad) * broadWeight;
+      for (const item of detail) {
+        const interest = pref.detail[item.id], weight = item.strength * detailShare / Math.max(1, detailMass);
+        positive += Math.max(0, interest) * weight;
+        negative += Math.max(0, -interest) * weight;
+        if (interest > 0) matchedFeatures.push({ id: item.id, weight: interest * item.strength, interest, strength: item.strength, specific: true });
+      }
+      if (broad > 0 && positive > negative) {
+        matchedFeatures.push({ id: family.id, weight: broad * family.strength, interest: broad, strength: family.strength, specific: false });
+        matchedFacets.push({ id: family.id, label: facets.get(family.id)?.label, strength: family.strength, interest: broad });
+      }
+    }
+    matchedFeatures.sort((a, b) => Number(b.specific) - Number(a.specific) || b.weight - a.weight || a.id.localeCompare(b.id, "en"));
+    matchedFacets.sort((a, b) => b.interest * b.strength - a.interest * a.strength);
+    return { matchedFeatures, matchedFacets };
+  }
+  function selectMatches(rows, limit, pref, facets) {
+    const selected = [], identities = /* @__PURE__ */ new Set(), taskSignatures = /* @__PURE__ */ new Map();
+    const annotations = /* @__PURE__ */ new Map();
+    const eligible = rows.filter((row) => row._positive >= 0.2 && row._alignment > 0.08 && row._negative <= row._positive * 0.9);
+    const add = (scored, row) => {
+      const key = identity(row, scored.group.signature);
+      if (identities.has(key)) return false;
+      identities.add(key);
+      if (!annotations.has(scored.group)) annotations.set(scored.group, matchingEvidence(scored.group, pref, facets));
+      selected.push({ ...row, score: scored.score, ...annotations.get(scored.group) });
+      return true;
+    };
+    for (const scored of eligible) {
+      if (scored.score < eligible[0].score - 8) break;
+      const signature = Object.keys(scored.features).sort().join("|");
+      for (const row of scored.group.members) {
+        if ((taskSignatures.get(signature) || 0) >= 2) break;
+        if (add(scored, row)) taskSignatures.set(signature, (taskSignatures.get(signature) || 0) + 1);
+        if (selected.length >= limit) break;
+      }
+      if (selected.length >= limit) break;
+    }
+    for (const scored of eligible) {
+      if (selected.length >= limit) break;
+      for (const row of scored.group.members) {
+        add(scored, row);
+        if (selected.length >= limit) break;
+      }
+    }
+    selected.sort((a, b) => b.score - a.score || String(a.id).localeCompare(String(b.id), "en"));
+    return selected;
+  }
+  function rankVacancies({ taxonomy, answers = [], candidates = [], limit = 5, regionIds = [], responsibilityPreference = "all" }) {
+    const scoped = !regionIds.length && responsibilityPreference === "all" ? candidates : candidates.filter((row) => (!regionIds.length || regionIds.includes(row.regionId)) && (responsibilityPreference === "all" || row.responsibilityLevel === responsibilityPreference));
+    const { rows, pref } = scoredCandidates(taxonomy, answers, scoped);
+    const matches = pref.positiveAnswers ? selectMatches(rows, Math.max(1, Math.min(10, limit)), pref, compiled(taxonomy).facets) : [];
+    return {
+      matches,
+      profile: pref.profile,
+      considered: rows.reduce((sum, row) => sum + row.group.members.length, 0),
+      functionalProfilesConsidered: rows.length,
+      informativeAnswers: pref.informativeAnswers,
+      resultStatus: !pref.positiveAnswers ? "no-preference" : matches.length ? "matched" : "no-matches"
+    };
+  }
+  function questionUtilities({ taxonomy, answers, candidates }) {
+    const { questions } = compiled(taxonomy), { rows, pref } = scoredCandidates(taxonomy, answers, candidates);
+    const answered = new Set(pref.clean.map((a) => a.questionId));
+    const pool = rows.slice(0, 160);
+    const top = pool[0]?.score || 0;
+    const near = pool.filter((row) => row.score >= top - 22);
+    const relevantPool = near.length >= 8 ? near : pool.slice(0, 80);
+    const remaining = questions.filter((q) => !answered.has(q.id));
+    const makeOption = (question, sum, square, relevant, n) => {
+      const interest = pref.steering[question.facetId] ?? 0;
+      const mean = sum / n, variance = Math.max(0, square / n - mean * mean);
+      const utility = 3 * variance + 0.35 * mean + 0.18 * relevant / n + 0.32 * Math.max(0, interest) + 0.12 / (1 + (pref.count[question.facetId] || 0)) - 0.16 * Math.max(0, -interest);
+      return { question, utility, variance, evidence: sum };
+    };
+    const options = remaining.map((question) => {
+      let sum = 0, square = 0, relevant = 0;
+      for (const row of relevantPool) {
+        const value = question.broad ? feature(row, question.facetId) : feature(row, question.id);
+        sum += value;
+        square += value * value;
+        relevant += feature(row, question.facetId);
+      }
+      return makeOption(question, sum, square, relevant, relevantPool.length || 1);
+    });
+    let supported = options.filter((option) => option.evidence > 0);
+    if (!supported.length && relevantPool.length < rows.length) {
+      const all = candidateStatistics(taxonomy, candidates), n = all.count || 1;
+      supported = remaining.map((question) => {
+        const item = all.features.get(question.broad ? question.facetId : question.id) || { sum: 0, square: 0 };
+        return makeOption(question, item.sum, item.square, all.features.get(question.facetId)?.sum || 0, n);
+      }).filter((option) => option.evidence > 0);
+    }
+    return (supported.length ? supported : options).sort((a, b) => b.utility - a.utility || a.question.id.localeCompare(b.question.id, "en"));
+  }
+  function nextQuestion({ taxonomy, answers = [], candidates = [] }) {
+    const { questions } = compiled(taxonomy), clean = validAnswers(taxonomy, answers), used = new Set(clean.map((a) => a.questionId));
+    if (clean.length >= Math.min(MAX_ANSWERS, questions.length)) return null;
+    const core2 = questions.find((q) => q.broad && !used.has(q.id));
+    if (core2) return core2;
+    return questionUtilities({ taxonomy, answers: clean, candidates })[0]?.question || null;
+  }
+  function shouldFinish({ taxonomy, answers = [], candidates = [] }) {
+    const { questions } = compiled(taxonomy), clean = validAnswers(taxonomy, answers);
+    if (clean.length >= Math.min(MAX_ANSWERS, questions.length)) return true;
+    if (clean.length < Math.min(MIN_ANSWERS, questions.length)) return false;
+    if (questions.some((q) => q.broad && !clean.some((a) => a.questionId === q.id))) return false;
+    const ranking = rankVacancies({ taxonomy, answers: clean, candidates });
+    if (!clean.some((a) => a.value >= 4) || !candidates.length) return true;
+    const current = ranking.matches.map((row) => row.id).join("|");
+    if (!current) return clean.length >= MIN_ANSWERS + 4;
+    const previous = [2, 4].map((step) => rankVacancies({ taxonomy, answers: clean.slice(0, -step), candidates }).matches.map((row) => row.id).join("|"));
+    const stable2 = previous.every((value) => value === current);
+    const information = questionUtilities({ taxonomy, answers: clean, candidates })[0];
+    return stable2 && (clean.length >= MIN_ANSWERS + 4 || !information || information.variance < 0.025);
+  }
+  function makeCompletionRecord({ taxonomy, answers = [], regionIds = [], responsibilityPreference = "all", ranking, indexVersion, recordId, createdAt }) {
+    const clean = validAnswers(taxonomy, answers);
+    const bank = compiled(taxonomy).questions;
+    if (clean.length < Math.min(MIN_ANSWERS, bank.length) || bank.some((q) => q.broad && !clean.some((a) => a.questionId === q.id))) throw new TypeError("Functional questionnaire is incomplete");
+    if (!ranking || !["matched", "no-preference", "no-matches"].includes(ranking.resultStatus)) throw new TypeError("Invalid functional ranking");
+    if (!["specialist", "leadership", "all"].includes(responsibilityPreference)) throw new TypeError("Invalid responsibility preference");
+    if (ranking.matches.some((row) => regionIds.length && !regionIds.includes(row.regionId) || responsibilityPreference !== "all" && row.responsibilityLevel !== responsibilityPreference)) throw new TypeError("Functional recommendation violates an explicit preference");
+    const resultId = recordId || "functional-" + (globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + "-" + Math.random().toString(36).slice(2));
+    return {
+      schema: "rudn-career-result",
+      schemaVersion: 3,
+      resultKind: "vacancy-functional",
+      completed: true,
+      recordId: resultId,
+      createdAt: createdAt || (/* @__PURE__ */ new Date()).toISOString(),
+      modelVersion: FUNCTIONAL_MODEL_VERSION,
+      featureBasis: "published-source-content",
+      questionnaireVersion: String(taxonomy.version || "1.0.0"),
+      registryVersion: String(indexVersion || "functional-index-1"),
+      answerCount: clean.length,
+      broadQuestionIds: bank.filter((q) => q.broad).map((q) => q.id),
+      informativeAnswers: clean.filter((a) => a.value !== 0 && a.value !== 3).length,
+      answeredQuestionIds: clean.map((a) => a.questionId),
+      regionIds: [...new Set(regionIds)].filter((id) => /^ru-\d{2}$/.test(id)),
+      responsibilityPreference,
+      resultStatus: ranking.resultStatus,
+      ranking: ranking.matches.slice(0, 5).map((row, index) => ({
+        rank: index + 1,
+        vacancyId: row.id,
+        title: row.title,
+        department: row.department || "",
+        employerName: row.employerName || "",
+        regionId: row.regionId || null,
+        sourceURL: row.sourceURL || "",
+        evidenceLevel: row.evidenceLevel || "title",
+        responsibilityLevel: row.responsibilityLevel || "unspecified",
+        score: Number(row.score.toFixed(2))
+      }))
+    };
   }
 
-  // site/apps/career/assets/seminar-flow.mjs
-  var JOURNEY_SCHEMA2 = 1;
-  var DEFAULT_REGION = "ru-77";
-  var preferenceRoutes = /* @__PURE__ */ new Set(["test", "sectors", "conditions", "results"]);
-  var statuses = /* @__PURE__ */ new Set(["met", "gap"]);
-  var isRecord2 = (value) => !!value && typeof value === "object" && !Array.isArray(value);
-  var safeText = (value, max2 = 2e4) => typeof value === "string" ? value.trim().slice(0, max2) : "";
-  function createSeminarFlow({ data: data2, getResult, getProfileContext, getInputs, navigate, resolveResumeRoute: resolveResumeRoute2, radarSvg: radarSvg2, toast: toast2 }) {
-    const key = storageKey("career-journey-v1");
-    let saved;
+  // site/apps/career/assets/adaptive-flow.mjs
+  var SESSION_SCHEMA2 = 1;
+  var SESSION_MODEL = FUNCTIONAL_MODEL_VERSION;
+  var INDEX_ROOT = "data/adaptive-index/";
+  var MIB = 1024 * 1024;
+  var MAX_RAW = { all: 128 * MIB, national: 32 * MIB, region: 16 * MIB, detail: 4 * MIB };
+  var CAREER_ROUTES = /* @__PURE__ */ new Set(["preferences", "test", "sectors", "conditions", "results"]);
+  var RESPONSIBILITY_PREFERENCES = /* @__PURE__ */ new Set(["specialist", "leadership", "all"]);
+  var EVIDENCE_CATEGORIES = /* @__PURE__ */ new Set(["duties", "skills", "knowledge"]);
+  var DETAIL_CACHE_LIMIT = 8;
+  var DETAIL_CONCURRENCY = 2;
+  var validRegion = (value) => typeof value === "string" && /^ru-\d{2}$/.test(value);
+  var validValue = (value) => Number.isInteger(value) && value >= 0 && value <= 5;
+  var localized = (value) => typeof value === "string" ? value : value?.[getLanguage()] || value?.ru || "";
+  var compact = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
+  var snippet = (value, maximum = 500) => {
+    const text4 = compact(value);
+    if (text4.length <= maximum) return text4;
+    const boundary = text4.lastIndexOf(" ", maximum);
+    return text4.slice(0, boundary > maximum * 0.6 ? boundary : maximum).trimEnd() + "\u2026";
+  };
+  function validDescriptor(value, kind) {
+    const pattern = kind === "all" ? /^data\/adaptive-index\/all\.json\.gz$/ : kind === "region" ? /^data\/adaptive-index\/regions\/(?:ru-\d{2}|unknown)\.json\.gz$/ : kind === "national" ? /^data\/adaptive-index\/national\/n\d{4}\.json\.gz$/ : /^data\/adaptive-index\/details\/d\d{4}\.json\.gz$/;
+    return isRecord(value) && pattern.test(value.path || "") && Number.isSafeInteger(value.count) && value.count >= 0 && Number.isInteger(value.bytes) && value.bytes >= 18 && value.bytes <= 32 * MIB && Number.isInteger(value.uncompressedBytes) && value.uncompressedBytes > 0 && value.uncompressedBytes <= MAX_RAW[kind] && /^[a-f0-9]{64}$/.test(value.sha256 || "");
+  }
+  function validateManifest(value) {
+    return isRecord(value) && value.schemaVersion === ADAPTIVE_INDEX_SCHEMA_VERSION && typeof value.version === "string" && value.version.startsWith(FUNCTIONAL_MODEL_VERSION + "-") && value.version.length <= 128 && typeof value.taxonomyVersion === "string" && value.taxonomyVersion.length > 0 && value.taxonomyVersion.length <= 128 && validDescriptor(value.all, "all") && Array.isArray(value.nationalParts) && value.nationalParts.length <= 1e4 && value.nationalParts.every((item) => validDescriptor(item, "national")) && value.nationalParts.reduce((sum, item) => sum + item.count, 0) === value.all.count && new Set(value.nationalParts.map((item) => item.path)).size === value.nationalParts.length && Array.isArray(value.shards) && value.shards.length <= 90 && value.shards.every((item) => (item.regionId === null || validRegion(item.regionId)) && validDescriptor(item, "region")) && Array.isArray(value.details) && value.details.length <= 1e4 && value.details.every((item) => validDescriptor(item, "detail")) && new Set(value.shards.map((item) => item.regionId)).size === value.shards.length && new Set(value.details.map((item) => item.path)).size === value.details.length;
+  }
+  async function boundedBytes(response, expected, signal) {
+    const announced = Number(response.headers?.get("content-length"));
+    if (Number.isFinite(announced) && announced > expected) throw new Error("Adaptive index size mismatch");
+    if (!response.body?.getReader) {
+      const bytes2 = new Uint8Array(await response.arrayBuffer());
+      if (bytes2.length !== expected) throw new Error("Adaptive index size mismatch");
+      return bytes2;
+    }
+    const reader = response.body.getReader(), chunks = [];
+    let size = 0;
     try {
-      saved = JSON.parse(readLocal(key) || "null");
-    } catch {
-    }
-    let journey = { schemaVersion: JOURNEY_SCHEMA2, regionIds: [DEFAULT_REGION], desiredIds: [], confirmed: false, assessments: {}, customVacancies: [], selectedVacancyId: null, view: "profile", resultRecordId: null, comparisonId: null };
-    if (isRecord2(saved) && saved.schemaVersion === JOURNEY_SCHEMA2) {
-      journey = { ...journey, ...saved, assessments: isRecord2(saved.assessments) ? Object.fromEntries(Object.entries(saved.assessments).filter(([, value]) => isRecord2(value))) : {}, customVacancies: Array.isArray(saved.customVacancies) ? saved.customVacancies.slice(0, 20) : [] };
-      if (!["profile", "recommendations", "requirements", "summary"].includes(journey.view)) journey.view = "profile";
-    }
-    let regions = [], territorial = [], institutions = [...data2.authorities], framework = { trackProfiles: [] }, competencies = [];
-    let catalogLoaded = false, catalogLoading = false, catalogError = false, positionsLoaded = false, positionsLoading = false, positionsError = false, feed = null, positions = [];
-    let lastRoute = "personality", pendingRoute = null, manualSaveTimer = null, picker = null, wishSorter = null, opening = false, dirty = false, rankingCache = null, catalogGeneration = 0;
-    let authorityQuery = "", authorityScope = "", authorityLimit = 24, vacancyQuery = "", vacancyEmployer = "", vacancyLimit = 12;
-    const rolePanelStates = /* @__PURE__ */ new Map();
-    const vacancyBank = createEmployerVacancyBank();
-    const vacancyDetails = createVacancyDetailsStore({ getMetadata: () => __careerHost.vacancyDetailsMetadata?.() });
-    vacancyBank.subscribe((id) => {
-      if (!__careerHost.destroyed && lastRoute === "results") document.querySelectorAll("[data-authority-roles]").forEach((panel) => {
-        const state2 = rolePanelState(panel.dataset.rolePanel);
-        if (bankId(state2.bankAuthorityId || panel.dataset.authorityRoles) === id) renderEmployerVacancies(panel);
-      });
-    });
-    const root = () => document.querySelector("#results-root");
-    const preferencesRoot = () => document.querySelector("#journey-preferences-root");
-    const byId = () => new Map(institutions.map((a) => [a.id, a]));
-    const selectedRegions = () => regions.filter((region) => journey.regionIds.includes(region.id));
-    const visibleInstitutions = () => institutions.filter((a) => !a.regionId || journey.regionIds.includes(a.regionId));
-    const progress = document.createElement("div");
-    progress.className = "seminar-progress journey-progress";
-    progress.setAttribute("data-no-i18n", "");
-    progress.setAttribute("role", "list");
-    document.querySelector("#main-content").prepend(progress);
-    function save() {
-      if (manualSaveTimer) {
-        clearTimeout(manualSaveTimer);
-        manualSaveTimer = null;
+      for (; ; ) {
+        if (signal.aborted) throw new DOMException("Aborted", "AbortError");
+        const { done, value } = await reader.read();
+        if (done) break;
+        size += value.length;
+        if (size > expected) throw new Error("Adaptive index size mismatch");
+        chunks.push(value);
       }
-      journey.updatedAt = (/* @__PURE__ */ new Date()).toISOString();
+    } catch (error) {
+      await reader.cancel(error).catch(() => {
+      });
+      throw error;
+    }
+    if (size !== expected) throw new Error("Adaptive index size mismatch");
+    const bytes = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return bytes;
+  }
+  async function loadPacked(descriptor, kind, parentSignal) {
+    if (!validDescriptor(descriptor, kind)) throw new Error("Invalid adaptive index descriptor");
+    const controller = new AbortController();
+    const abort = () => controller.abort();
+    if (parentSignal?.aborted) controller.abort();
+    parentSignal?.addEventListener("abort", abort, { once: true });
+    let timer;
+    const deadline = new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        controller.abort();
+        reject(new DOMException("Adaptive index loading timed out", "TimeoutError"));
+      }, 3e4);
+    });
+    const request = (async () => {
+      const response = await fetch(descriptor.path, { cache: "no-store", signal: controller.signal });
+      if (!response.ok) throw new Error("Adaptive index HTTP " + response.status);
+      const bytes = await boundedBytes(response, descriptor.bytes, controller.signal);
+      if (globalThis.crypto?.subtle) {
+        const hash = [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))].map((value2) => value2.toString(16).padStart(2, "0")).join("");
+        if (hash !== descriptor.sha256) throw new Error("Adaptive index checksum mismatch");
+      }
+      const raw = await decodeGzip(bytes, { expectedBytes: descriptor.uncompressedBytes, maxBytes: MAX_RAW[kind] });
+      if (controller.signal.aborted) throw new DOMException("Aborted", "AbortError");
+      const value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw));
+      if (!isRecord(value) || value.schemaVersion !== ADAPTIVE_INDEX_SCHEMA_VERSION || !Array.isArray(value.rows) || value.rows.length !== descriptor.count) throw new Error("Invalid adaptive index payload");
+      return value;
+    })();
+    try {
+      return await Promise.race([request, deadline]);
+    } finally {
+      clearTimeout(timer);
+      parentSignal?.removeEventListener("abort", abort);
+    }
+  }
+  function createAdaptiveFlow({ navigate }) {
+    const key = storageKey("functional-career-v1");
+    const empty = () => ({
+      schemaVersion: SESSION_SCHEMA2,
+      modelVersion: SESSION_MODEL,
+      questionnaireVersion: null,
+      indexVersion: null,
+      regionIds: [],
+      locationConfirmed: false,
+      responsibilityPreference: null,
+      responsibilityDraft: null,
+      setupComplete: false,
+      setupStep: "location",
+      locationDraft: null,
+      answers: [],
+      pending: null,
+      completedAt: null,
+      resultRecordId: null,
+      completion: null
+    });
+    let session = empty(), hydrationChanged = false, corruptStorage = false;
+    function restoreSession(saved) {
+      const migrating = isRecord(saved) && saved.schemaVersion === SESSION_SCHEMA2 && saved.modelVersion === "functional-1.0.0" && SESSION_MODEL === "functional-2.0.0";
+      if (!isRecord(saved) || saved.schemaVersion !== SESSION_SCHEMA2 || !migrating && (saved.modelVersion !== SESSION_MODEL || !Array.isArray(saved.answers))) throw new Error("Incompatible functional-career draft");
+      const regionIds = [...new Set((Array.isArray(saved.regionIds) ? saved.regionIds : []).filter(validRegion))].slice(0, 89);
+      const regionInvalid = !Array.isArray(saved.regionIds) || regionIds.length !== saved.regionIds.length;
+      const locationConfirmed = !regionInvalid && (saved.locationConfirmed === true || saved.setupComplete === true);
+      const responsibilityPreference = RESPONSIBILITY_PREFERENCES.has(saved.responsibilityPreference) ? saved.responsibilityPreference : null;
+      const setup = {
+        regionIds,
+        locationConfirmed,
+        responsibilityPreference,
+        setupComplete: saved.setupComplete === true && locationConfirmed && responsibilityPreference !== null,
+        setupStep: locationConfirmed && saved.setupStep !== "location" ? "responsibility" : "location"
+      };
+      hydrationChanged = migrating || regionInvalid || saved.answers.length > MAX_ANSWERS;
+      if (migrating) return { ...empty(), ...setup };
+      return {
+        ...empty(),
+        ...saved,
+        ...setup,
+        responsibilityDraft: RESPONSIBILITY_PREFERENCES.has(saved.responsibilityDraft) ? saved.responsibilityDraft : null,
+        answers: saved.answers.slice(0, MAX_ANSWERS),
+        pending: isRecord(saved.pending) && typeof saved.pending.questionId === "string" && validValue(saved.pending.value) ? saved.pending : null
+      };
+    }
+    try {
+      const raw = readLocal(key);
+      if (raw) {
+        session = restoreSession(JSON.parse(raw));
+      } else {
+        try {
+          const previous = JSON.parse(readLocal(storageKey("career-journey-v1")) || "null");
+          if (isRecord(previous) && Array.isArray(previous.regionIds)) session.regionIds = [...new Set(previous.regionIds.filter(validRegion))].slice(0, 89);
+        } catch {
+        }
+      }
+    } catch {
+      corruptStorage = true;
+    }
+    let taxonomy = null, manifest = null, territories = [], questions = /* @__PURE__ */ new Map();
+    let metadataReady = false, metadataLoading = false, metadataError = false, metadataPromise = null;
+    let candidates = [], candidateKey = "", poolLoading = false, poolError = false, poolGeneration = 0, poolController = null, poolPromise = null;
+    let lastRoute = "personality", dirty = false, saveFailed = false, opening = false, transitionBusy = false;
+    let regionQuery = "", regionMode = session.regionIds.length ? "selected" : "all", draftRegions = [...session.regionIds];
+    if (isRecord(session.locationDraft) && ["all", "selected"].includes(session.locationDraft.mode) && Array.isArray(session.locationDraft.regionIds)) {
+      regionMode = session.locationDraft.mode;
+      draftRegions = [...new Set(session.locationDraft.regionIds.filter(validRegion))].slice(0, 89);
+    }
+    let rankingCache = null, questionCache = null, notifiedRecordId = null;
+    const detailCache = /* @__PURE__ */ new Map(), detailPending = /* @__PURE__ */ new Map(), detailErrors = /* @__PURE__ */ new Set();
+    let detailGeneration = 0, detailSelection = "", detailQueue = [];
+    const resultRoot = () => document.querySelector("#results-root");
+    const questionRoot = () => document.querySelector("#view-test");
+    const preferenceRoot = () => document.querySelector("#journey-preferences-root");
+    const live = () => !__careerHost.destroyed;
+    const poolIdentity = () => manifest?.version + "|" + [...session.regionIds].sort().join(",") + "|" + session.responsibilityPreference;
+    function save(next = session) {
+      if (corruptStorage) {
+        saveFailed = true;
+        return false;
+      }
       try {
-        writeLocal(key, JSON.stringify(journey));
+        writeLocal(key, JSON.stringify({ ...next, updatedAt: (/* @__PURE__ */ new Date()).toISOString() }));
+        session = next;
         dirty = false;
+        saveFailed = false;
         return true;
       } catch {
         dirty = true;
-        toast2(L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439.", "Your choices could not be saved. Keep this page open.", "\u65E0\u6CD5\u4FDD\u5B58\u9009\u62E9\uFF0C\u8BF7\u4FDD\u6301\u6B64\u9875\u9762\u6253\u5F00\u3002"));
+        saveFailed = true;
         return false;
       }
     }
-    function invalidateRanking() {
-      rankingCache = null;
+    function saveError() {
+      return saveFailed || corruptStorage ? `<div class="adaptive-save-error" role="alert"><span>${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u044D\u0442\u0443 \u0432\u043A\u043B\u0430\u0434\u043A\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439.", "Answers could not be saved. Keep this tab open.", "\u65E0\u6CD5\u4FDD\u5B58\u7B54\u6848\u3002\u8BF7\u4FDD\u6301\u6B64\u9875\u9762\u6253\u5F00\u3002")}</span><button type="button" class="adaptive-text-button" data-adaptive-save-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button></div>` : "";
     }
-    function guardRoute(route) {
-      if (preferenceRoutes.has(route) && !isReady()) {
-        if (!catalogLoaded && journey.confirmed === true && Array.isArray(journey.desiredIds) && journey.desiredIds.length === 3) pendingRoute = route;
-        return "preferences";
-      }
-      pendingRoute = null;
-      return route;
-    }
-    function isReady() {
-      return catalogLoaded && journey.confirmed === true && journey.desiredIds.length === 3;
-    }
-    function stage() {
-      if (journey.resultRecordId !== getProfileContext().recordId) return "profile";
-      return journey.view;
-    }
-    function updateLabels() {
-      progress.setAttribute("aria-label", L2("\u041F\u043E\u0441\u043B\u0435\u0434\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C \u0437\u0430\u043D\u044F\u0442\u0438\u044F", "Seminar steps", "\u8BFE\u5802\u6B65\u9AA4"));
-      const current = ["personality", "personality-results"].includes(lastRoute) ? 0 : lastRoute === "preferences" ? 1 : lastRoute === "results" ? stage() === "requirements" || stage() === "summary" ? 4 : 3 : 2;
-      const labels = [L2("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality", "\u4EBA\u683C\u7279\u5F81"), L2("\u041C\u043E\u0438 \u0446\u0435\u043B\u0438", "My choices", "\u6211\u7684\u76EE\u6807"), L2("\u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u044F", "Career interests", "\u804C\u4E1A\u5174\u8DA3"), L2("\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Recommendations", "\u63A8\u8350"), L2("\u041F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Development plan", "\u53D1\u5C55\u8BA1\u5212"), L2("\u0422\u0435\u0441\u0442 \u0437\u043D\u0430\u043D\u0438\u0439", "Knowledge test", "\u77E5\u8BC6\u6D4B\u8BD5")];
-      progress.innerHTML = labels.map((label2, index) => `<div role="listitem" class="seminar-step ${index === current ? "is-current" : ""} ${index < current ? "is-done" : ""}" ${index === current ? 'aria-current="step"' : ""}><span>${index < current ? icon("check") : index + 1}</span><strong>${label2}</strong></div>`).join("");
-      const calculate = document.querySelector("#calculate-button");
-      calculate.setAttribute("data-no-i18n", "");
-      calculate.innerHTML = L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "View my profile", "\u67E5\u770B\u6211\u7684\u753B\u50CF") + icon("arrow-right");
-      const explanation = document.querySelector("#view-conditions .workflow-heading p");
-      explanation.setAttribute("data-no-i18n", "");
-      explanation.textContent = L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B \u0412\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0442.", "Select the working conditions that suit you.", "\u8BF7\u9009\u62E9\u9002\u5408\u4F60\u7684\u5DE5\u4F5C\u6761\u4EF6\u3002");
-      const storageWarning = document.querySelector("#storage-warning");
-      storageWarning.setAttribute("data-no-i18n", "");
-      storageWarning.textContent = L2("\u041E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B. \u041E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0432\u043A\u043B\u0430\u0434\u043A\u0443 \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0439 \u0438 \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u043E\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435.", "Answers have not been saved yet. Keep this tab open and check your connection.", "\u7B54\u6848\u5C1A\u672A\u4FDD\u5B58\u3002\u8BF7\u4FDD\u6301\u9875\u9762\u6253\u5F00\u5E76\u68C0\u67E5\u7F51\u7EDC\u8FDE\u63A5\u3002");
-    }
-    async function loadCatalog() {
-      if (catalogLoading) return;
-      catalogLoading = true;
-      catalogError = false;
-      const ticket = ++catalogGeneration;
-      try {
-        const values = await Promise.all([
-          loadJSON("data/territories.json", { validate: (v) => Array.isArray(v) && v.length === 89 && new Set(v.map((x2) => x2.id)).size === 89 }),
-          loadJSON("data/territorial-authorities.json", { validate: (v) => Array.isArray(v) || Array.isArray(v?.authorities) }),
-          loadJSON("data/career-framework.json", { validate: (v) => Array.isArray(v?.trackProfiles) }),
-          loadJSON("data/competencies.json", { validate: Array.isArray })
-        ]);
-        if (__careerHost.destroyed || ticket !== catalogGeneration) return;
-        regions = values[0];
-        territorial = expandTerritorialCatalog(values[1]);
-        institutions = [...data2.authorities, ...territorial.filter((a) => !data2.authorities.some((base) => base.id === a.id))];
-        prepareManualDrafts();
-        framework = values[2];
-        competencies = values[3];
-        const clean = sanitizeJourneyPreferences(journey, { regions, authorities: institutions, defaultRegionId: DEFAULT_REGION });
-        journey = { ...journey, ...clean };
-        catalogLoaded = true;
-        invalidateRanking();
-      } catch {
-        if (!__careerHost.destroyed) catalogError = true;
-      } finally {
-        catalogLoading = false;
-        if (!__careerHost.destroyed) {
-          if (lastRoute === "preferences" && catalogLoaded && pendingRoute && isReady()) {
-            const resume = pendingRoute;
-            pendingRoute = null;
-            navigate(resume);
-          } else if (lastRoute === "preferences") renderPreferences();
-          else if (lastRoute === "results") renderResults2();
+    function bindSaveRetry(root) {
+      root?.querySelector("[data-adaptive-save-retry]")?.addEventListener("click", () => {
+        if (corruptStorage) {
+          try {
+            session = restoreSession(JSON.parse(readLocal(key) || "null"));
+            corruptStorage = false;
+            if (metadataReady) validateSession();
+            resetCandidatePool();
+          } catch {
+          }
         }
+        if (!corruptStorage) save();
+        render(lastRoute);
+      });
+    }
+    function invalidateCompletion(value) {
+      return { ...value, completedAt: null, resultRecordId: null, completion: null };
+    }
+    function validateSession() {
+      const validIds = new Set(territories.map((region) => region.id)), seen = /* @__PURE__ */ new Set();
+      const clean = [], coreIds = [...questions.values()].filter((question) => question.broad).map((question) => question.id);
+      for (const answer of session.answers || []) {
+        if (!isRecord(answer) || !questions.has(answer.questionId) || seen.has(answer.questionId) || !validValue(answer.value)) break;
+        if (clean.length < coreIds.length && answer.questionId !== coreIds[clean.length]) break;
+        seen.add(answer.questionId);
+        clean.push({ questionId: answer.questionId, value: answer.value });
       }
-    }
-    function changePreferences() {
-      journey.confirmed = false;
-      save();
-      navigate("preferences");
-    }
-    function setRegions(ids2) {
-      const before = new Set(journey.desiredIds), previousVacancy = findSelectedVacancy() || journey.selectedSnapshot;
-      journey.regionIds = [...ids2];
-      const clean = sanitizeJourneyPreferences({ ...journey, confirmed: false }, { regions, authorities: institutions, defaultRegionId: DEFAULT_REGION });
-      journey = { ...journey, ...clean };
-      invalidateRanking();
-      if (journey.selectedVacancyId) {
-        if (!previousVacancy?.bankVacancy && previousVacancy?.regionId && !ids2.includes(previousVacancy.regionId)) {
-          journey.selectedVacancyId = null;
-          journey.selectedSnapshot = null;
-        }
+      const wrongVersion = session.questionnaireVersion && session.questionnaireVersion !== taxonomy.version;
+      const wrongIndex = session.indexVersion && session.indexVersion !== manifest.version;
+      const changed = hydrationChanged || clean.length !== session.answers.length || wrongVersion || wrongIndex;
+      if (wrongVersion) session = invalidateCompletion({ ...session, answers: [], pending: null });
+      else if (changed) session = invalidateCompletion({ ...session, answers: clean, pending: null });
+      else session.answers = clean;
+      if (session.pending && (!questions.has(session.pending.questionId) || seen.has(session.pending.questionId))) session.pending = null;
+      const oldRegions = session.regionIds;
+      session.regionIds = session.regionIds.filter((id) => validIds.has(id));
+      if (oldRegions.length !== session.regionIds.length) {
+        session = invalidateCompletion({ ...session, setupComplete: false, locationConfirmed: false, setupStep: "location" });
+        draftRegions = [...session.regionIds];
+        regionMode = draftRegions.length ? "selected" : "all";
       }
-      save();
-      authorityLimit = 24;
-      if (authorityScope && !ids2.includes(authorityScope) && authorityScope !== "federal") authorityScope = "";
-      renderDesiredChoices();
-      renderAuthorityOptions();
-      renderAuthorityScope();
-      updatePreferenceNext();
-      if (before.size > journey.desiredIds.length) toast2(L2("\u041E\u0440\u0433\u0430\u043D\u044B \u0438\u0437 \u0441\u043D\u044F\u0442\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439 \u0443\u0431\u0440\u0430\u043D\u044B \u0438\u0437 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0430\u043C\u0435\u043D\u0443.", "Employers from deselected territories were removed from your choices. Choose a replacement.", "\u5DF2\u53D6\u6D88\u5730\u533A\u7684\u673A\u6784\u5DF2\u4ECE\u610F\u5411\u4E2D\u79FB\u9664\uFF0C\u8BF7\u9009\u62E9\u66FF\u4EE3\u673A\u6784\u3002"));
-    }
-    function renderPreferences() {
-      const target = preferencesRoot();
-      if (!target) return;
-      picker?.destroy();
-      picker = null;
-      wishSorter?.destroy();
-      wishSorter = null;
-      target.setAttribute("data-no-i18n", "");
-      if (!catalogLoaded) {
-        target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0413\u0434\u0435 \u0438 \u043A\u0435\u043C \u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C", "Where would you like to work?", "\u4F60\u5E0C\u671B\u5728\u54EA\u91CC\u5DE5\u4F5C\uFF1F")}</h1></header><p role="status">${catalogError ? L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043A\u0430\u0442\u0430\u043B\u043E\u0433. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443.", "The catalogue could not be loaded. Please try again.", "\u76EE\u5F55\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5\u3002") : L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0438 \u043E\u0440\u0433\u0430\u043D\u044B \u0432\u043B\u0430\u0441\u0442\u0438\u2026", "Loading territories and employers\u2026", "\u6B63\u5728\u52A0\u8F7D\u5730\u533A\u548C\u673A\u6784\u2026\u2026")}</p>${catalogError ? `<button type="button" class="button button-primary" id="journey-retry-catalog">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button>` : ""}`;
-        target.querySelector("#journey-retry-catalog")?.addEventListener("click", () => {
-          void loadCatalog();
-          renderPreferences();
+      if (!RESPONSIBILITY_PREFERENCES.has(session.responsibilityPreference)) {
+        session = invalidateCompletion({
+          ...session,
+          responsibilityPreference: null,
+          setupComplete: false,
+          setupStep: session.locationConfirmed ? "responsibility" : "location"
         });
-        return;
+        dirty = true;
       }
-      target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0413\u0434\u0435 \u0438 \u043A\u0435\u043C \u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C", "Where would you like to work?", "\u4F60\u5E0C\u671B\u5728\u54EA\u91CC\u5DE5\u4F5C\uFF1F")}</h1><p>${L2("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438, \u0437\u0430\u0442\u0435\u043C \u0442\u0440\u0438 \u043E\u0440\u0433\u0430\u043D\u0430 \u0432\u043B\u0430\u0441\u0442\u0438 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430 \u0432 \u043F\u043E\u0440\u044F\u0434\u043A\u0435 \u0412\u0430\u0448\u0435\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F. \u041F\u043E\u0441\u043B\u0435 \u0442\u0435\u0441\u0442\u0430 \u0441\u0440\u0430\u0432\u043D\u0438\u043C \u0412\u0430\u0448 \u0432\u044B\u0431\u043E\u0440 \u0441 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u043C\u0438.", "Choose territories, then rank three public authorities or public-sector employers in order of preference. After the questionnaire, compare your choices with the recommendations.", "\u5148\u9009\u62E9\u5730\u533A\uFF0C\u518D\u6309\u610F\u613F\u987A\u5E8F\u9009\u62E9\u4E09\u4E2A\u653F\u5E9C\u673A\u5173\u6216\u516C\u5171\u90E8\u95E8\u96C7\u4E3B\u3002\u5B8C\u6210\u6D4B\u8BD5\u540E\uFF0C\u53EF\u5C06\u610F\u5411\u4E0E\u63A8\u8350\u8FDB\u884C\u6BD4\u8F83\u3002")}</p></header>
-      <section class="journey-panel" aria-labelledby="journey-regions-heading"><h2 id="journey-regions-heading">${L2("\u0422\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0440\u0430\u0431\u043E\u0442\u044B", "Work territories", "\u5DE5\u4F5C\u5730\u533A")}</h2><div id="journey-regions"></div></section>
-      <section class="journey-panel" aria-labelledby="journey-wishes-heading"><h2 id="journey-wishes-heading">${L2("\u0422\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B", "Three preferred employers", "\u4E09\u4E2A\u610F\u5411\u5DE5\u4F5C\u5355\u4F4D")}</h2><p class="journey-muted" id="journey-wish-sort-help">${L2("\u041F\u043E\u0437\u0438\u0446\u0438\u044F 1 \u2014 \u0441\u0430\u043C\u044B\u0439 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442. \u041F\u0435\u0440\u0435\u0442\u044F\u043D\u0438\u0442\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D \u0437\u0430 \u0440\u0443\u0447\u043A\u0443 \u0441 \u0442\u043E\u0447\u043A\u0430\u043C\u0438. \u0421 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: \u043F\u0440\u043E\u0431\u0435\u043B \u0438\u043B\u0438 Enter \u2014 \u0432\u0437\u044F\u0442\u044C \u0438 \u043E\u0442\u043F\u0443\u0441\u0442\u0438\u0442\u044C, \u2191 \u0438 \u2193 \u2014 \u043F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C, Esc \u2014 \u043E\u0442\u043C\u0435\u043D\u0438\u0442\u044C.", "Position 1 is your first choice. Drag a selected employer by its dotted handle. Keyboard: Space or Enter to pick up and drop, \u2191 and \u2193 to move, Esc to cancel.", "\u7B2C1\u4F4D\u4E3A\u9996\u9009\u3002\u62D6\u52A8\u70B9\u72B6\u624B\u67C4\u8C03\u6574\u5DF2\u9009\u673A\u6784\u7684\u987A\u5E8F\u3002\u952E\u76D8\uFF1A\u7A7A\u683C\u6216 Enter \u62FF\u8D77\u548C\u653E\u4E0B\uFF0C\u2191 \u548C \u2193 \u79FB\u52A8\uFF0CEsc \u53D6\u6D88\u3002")}</p><div id="journey-desired-choices"></div><p class="journey-sort-status" data-wish-sort-status role="status" aria-live="polite" aria-atomic="true"></p>
-      <div class="journey-search-row"><label for="journey-authority-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044E", "Find an authority or employer", "\u67E5\u627E\u673A\u5173\u6216\u673A\u6784")}<input type="search" id="journey-authority-search" autocomplete="off" placeholder="${E3(L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 \u0441\u0444\u0435\u0440\u0430 \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Name or policy area", "\u540D\u79F0\u6216\u5DE5\u4F5C\u9886\u57DF"))}" value="${E3(authorityQuery)}"></label><label for="journey-authority-scope">${L2("\u0423\u0440\u043E\u0432\u0435\u043D\u044C \u0438 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044F", "Level and territory", "\u5C42\u7EA7\u4E0E\u5730\u533A")}<select id="journey-authority-scope"></select></label></div><div id="journey-authority-options"></div></section>
-      <div class="seminar-next"><button type="button" class="button button-secondary" id="journey-back-personality">${icon("arrow-left")}${L2("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81")}</button><span id="journey-preference-status" role="status"></span><button type="button" class="button button-primary button-large" id="journey-preferences-next">${L2("\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C", "Continue to the questions", "\u8FDB\u5165\u95EE\u5377")}${icon("arrow-right")}</button></div>`;
-      picker = createRegionPicker({ root: target.querySelector("#journey-regions"), regions, selectedIds: journey.regionIds, onChange: setRegions, getLanguage });
-      renderDesiredChoices();
-      renderAuthorityScope();
-      renderAuthorityOptions();
-      updatePreferenceNext();
-      target.querySelector("#journey-authority-search").addEventListener("input", (event) => {
-        authorityQuery = event.target.value;
-        authorityLimit = 24;
-        renderAuthorityOptions();
-      });
-      target.querySelector("#journey-authority-scope").addEventListener("change", (event) => {
-        authorityScope = event.target.value;
-        authorityLimit = 24;
-        renderAuthorityOptions();
-      });
-      target.querySelector("#journey-back-personality").onclick = () => navigate("personality-results");
-      target.querySelector("#journey-preferences-next").onclick = () => {
-        const clean = sanitizeJourneyPreferences({ ...journey, confirmed: true }, { regions, authorities: institutions, defaultRegionId: DEFAULT_REGION });
-        journey = { ...journey, ...clean };
-        if (!isReady()) {
-          updatePreferenceNext();
+      if (!session.locationConfirmed) session = invalidateCompletion({ ...session, setupComplete: false, setupStep: "location" });
+      if (!RESPONSIBILITY_PREFERENCES.has(session.responsibilityDraft)) session.responsibilityDraft = null;
+      session.questionnaireVersion = taxonomy.version;
+      session.indexVersion = manifest.version;
+      draftRegions = draftRegions.filter((id) => validIds.has(id));
+      const allCoreAnswered = coreIds.every((id) => clean.some((answer) => answer.questionId === id));
+      const record = session.completion;
+      const sameRegions = (value) => Array.isArray(value) && JSON.stringify([...value].sort()) === JSON.stringify([...session.regionIds].sort());
+      const validCompletion = session.setupComplete && clean.length >= Math.min(MIN_ANSWERS, questions.size) && allCoreAnswered && typeof session.completedAt === "string" && Number.isFinite(Date.parse(session.completedAt)) && typeof session.resultRecordId === "string" && /^[\w-]{8,80}$/.test(session.resultRecordId) && isRecord(record) && record.schema === "rudn-career-result" && record.schemaVersion === 3 && record.resultKind === "vacancy-functional" && record.completed === true && record.recordId === session.resultRecordId && record.createdAt === session.completedAt && record.modelVersion === SESSION_MODEL && record.questionnaireVersion === taxonomy.version && record.registryVersion === manifest.version && record.answerCount === clean.length && record.informativeAnswers === clean.filter((answer) => answer.value !== 0 && answer.value !== 3).length && JSON.stringify(record.answeredQuestionIds) === JSON.stringify(clean.map((answer) => answer.questionId)) && JSON.stringify(record.broadQuestionIds) === JSON.stringify(coreIds) && sameRegions(record.regionIds) && record.responsibilityPreference === session.responsibilityPreference && ["matched", "no-preference", "no-matches"].includes(record.resultStatus) && Array.isArray(record.ranking) && record.ranking.length <= 5 && (record.resultStatus === "matched" ? record.ranking.length > 0 : record.ranking.length === 0);
+      if (session.completedAt && !validCompletion) {
+        session = invalidateCompletion(session);
+        dirty = true;
+      }
+      hydrationChanged = false;
+      if (changed) {
+        dirty = true;
+        questionCache = null;
+      }
+    }
+    async function ensureMetadata(force = false) {
+      if (metadataReady && !force) return true;
+      if (metadataPromise) return metadataPromise;
+      metadataLoading = true;
+      metadataError = false;
+      metadataPromise = (async () => {
+        try {
+          const [nextTaxonomy, nextManifest, nextTerritories] = await Promise.all([
+            loadJSON("data/adaptive-taxonomy.json", { validate: (value) => isRecord(value) && value.schemaVersion === 1 && typeof value.version === "string" && Array.isArray(value.facets) && value.facets.length > 0 }),
+            loadJSON(INDEX_ROOT + "manifest.json", { validate: validateManifest }),
+            loadJSON("data/territories.json", { validate: (value) => Array.isArray(value) && value.length <= 100 && value.every((region) => validRegion(region.id)) })
+          ]);
+          if (!live()) return false;
+          if (nextManifest.taxonomyVersion !== nextTaxonomy.version) throw new Error("Functional questionnaire/index version mismatch");
+          if (manifest && manifest.version !== nextManifest.version) {
+            resetCandidatePool();
+            detailCache.clear();
+          }
+          taxonomy = nextTaxonomy;
+          manifest = nextManifest;
+          territories = nextTerritories;
+          const bank = buildQuestionBank(taxonomy);
+          questions = new Map(bank.map((question) => [question.id, question]));
+          questionCache = null;
+          if (!questions.size || questions.size !== bank.length) throw new Error("Invalid functional question bank");
+          validateSession();
+          metadataReady = true;
+          return true;
+        } catch (error) {
+          if (live() && error.name !== "AbortError") metadataError = true;
+          return false;
+        } finally {
+          metadataLoading = false;
+          metadataPromise = null;
+          if (live() && CAREER_ROUTES.has(lastRoute)) render(lastRoute);
+        }
+      })();
+      return metadataPromise;
+    }
+    async function ensureCandidates(force = false) {
+      if (!metadataReady || !session.setupComplete || !RESPONSIBILITY_PREFERENCES.has(session.responsibilityPreference)) return false;
+      const wanted = poolIdentity();
+      if (candidateKey === wanted && !poolError && !force) return true;
+      if (poolLoading && poolPromise && poolController?.wanted === wanted && !force) return poolPromise;
+      poolController?.abort();
+      const controller = new AbortController(), ticket = ++poolGeneration;
+      controller.wanted = wanted;
+      poolController = controller;
+      poolLoading = true;
+      poolError = false;
+      candidates = [];
+      candidateKey = "";
+      rankingCache = null;
+      questionCache = null;
+      poolPromise = (async () => {
+        try {
+          const regionIds = new Set(session.regionIds), responsibilityPreference = session.responsibilityPreference;
+          const regional = regionIds.size > 0;
+          const selected = regional ? manifest.shards.filter((shard) => regionIds.has(shard.regionId)) : manifest.nationalParts;
+          const concurrency = regional ? 4 : 2;
+          const version = manifest.version;
+          const featureIds = /* @__PURE__ */ new Set([
+            ...taxonomy.facets.map((facet) => facet.id),
+            ...[...questions.values()].filter((question) => !question.broad).map((question) => question.id)
+          ]);
+          const profileCache = /* @__PURE__ */ new Map();
+          const gathered = [], seenIds = /* @__PURE__ */ new Set();
+          for (let index = 0; index < selected.length; index += concurrency) {
+            const part = await Promise.all(selected.slice(index, index + concurrency).map(async (descriptor) => {
+              const payload = await loadPacked(descriptor, regional ? "region" : "national", controller.signal);
+              return decodeCandidatePayload(payload, { version, count: descriptor.count, featureIds, profileCache });
+            }));
+            if (!live() || controller.signal.aborted || ticket !== poolGeneration) return false;
+            for (const rows of part) {
+              for (const row of rows) {
+                if (regional && !regionIds.has(row.regionId)) throw new Error("Vacancy outside selected regions");
+                if (seenIds.has(row.id)) throw new Error("Duplicate functional vacancy identity");
+                seenIds.add(row.id);
+                if (responsibilityPreference === "all" || row.responsibilityLevel === responsibilityPreference) gathered.push(row);
+              }
+            }
+          }
+          if (!live() || controller.signal.aborted || ticket !== poolGeneration) return false;
+          prepareCandidatePool({ taxonomy, candidates: gathered });
+          candidates = gathered;
+          candidateKey = wanted;
+          return true;
+        } catch (error) {
+          if (ticket === poolGeneration && live() && error.name !== "AbortError") poolError = true;
+          controller.abort();
+          return false;
+        } finally {
+          if (ticket === poolGeneration) {
+            poolLoading = false;
+            poolPromise = null;
+          }
+          if (live() && ticket === poolGeneration && ["test", "results"].includes(lastRoute)) render(lastRoute);
+        }
+      })();
+      return poolPromise;
+    }
+    function loadingMarkup(error, retryId) {
+      return `<div class="adaptive-status" data-no-i18n ${error ? 'role="alert"' : 'role="status" aria-live="polite"'}><h1>${error ? L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0442\u0435\u0441\u0442", "The assessment could not be loaded", "\u65E0\u6CD5\u52A0\u8F7D\u6D4B\u8BD5") : L2("\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026", "Loading\u2026", "\u52A0\u8F7D\u4E2D\u2026\u2026")}</h1>${error ? `<button type="button" class="button button-primary" id="${retryId}">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}${icon("reset")}</button>` : '<span class="adaptive-loading-dot" aria-hidden="true"></span>'}</div>`;
+    }
+    function readyFor(root, needsPool = false) {
+      root.setAttribute("data-no-i18n", "");
+      if (!metadataReady) {
+        root.innerHTML = loadingMarkup(metadataError, "adaptive-retry-metadata");
+        root.querySelector("#adaptive-retry-metadata")?.addEventListener("click", () => {
+          void ensureMetadata(true);
+          render(lastRoute);
+        });
+        if (!metadataLoading && !metadataError) void ensureMetadata();
+        return false;
+      }
+      if (needsPool && (candidateKey !== poolIdentity() || poolLoading || poolError)) {
+        root.innerHTML = loadingMarkup(poolError, "adaptive-retry-pool");
+        root.querySelector("#adaptive-retry-pool")?.addEventListener("click", () => {
+          void ensureCandidates(true);
+          render(lastRoute);
+        });
+        if (!poolLoading && !poolError) void ensureCandidates();
+        return false;
+      }
+      return true;
+    }
+    function regionList() {
+      const query = regionQuery.trim().toLocaleLowerCase();
+      const visible = territories.filter((region) => !query || [region.name, region.name_en, region.name_zh, region.id].some((value) => String(value || "").toLocaleLowerCase().includes(query)));
+      return visible.length ? visible.map((region) => `<label class="adaptive-region"><input type="checkbox" data-adaptive-region="${E2(region.id)}" ${draftRegions.includes(region.id) ? "checked" : ""}><span>${E2(regionName(region))}</span></label>`).join("") : `<p class="adaptive-empty-search">${L2("\u0420\u0435\u0433\u0438\u043E\u043D \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D", "No region found", "\u672A\u627E\u5230\u5730\u533A")}</p>`;
+    }
+    function saveLocationDraft(root) {
+      session.locationDraft = { mode: regionMode, regionIds: [...draftRegions] };
+      dirty = true;
+      save();
+      root.querySelector("#adaptive-save-feedback").innerHTML = saveError();
+      bindSaveRetry(root);
+    }
+    function resetCandidatePool() {
+      poolController?.abort();
+      poolGeneration += 1;
+      poolLoading = false;
+      poolPromise = null;
+      candidateKey = "";
+      candidates = [];
+      rankingCache = null;
+      questionCache = null;
+      notifiedRecordId = null;
+      resetDetailRequests();
+    }
+    function renderResponsibility(root) {
+      const selected = session.responsibilityDraft || session.responsibilityPreference;
+      const options = [
+        { id: "specialist", label: L2("\u041B\u0438\u0447\u043D\u043E \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0442\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0437\u0430\u0434\u0430\u0447\u0438", "Carry out professional tasks myself", "\u4EB2\u81EA\u5B8C\u6210\u4E13\u4E1A\u5DE5\u4F5C\u4EFB\u52A1") },
+        { id: "leadership", label: L2("\u0420\u0443\u043A\u043E\u0432\u043E\u0434\u0438\u0442\u044C \u0441\u043E\u0442\u0440\u0443\u0434\u043D\u0438\u043A\u0430\u043C\u0438 \u0438 \u043E\u0442\u0432\u0435\u0447\u0430\u0442\u044C \u0437\u0430 \u0440\u0430\u0431\u043E\u0442\u0443 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F", "Lead employees and take responsibility for a department\u2019s work", "\u9886\u5BFC\u5458\u5DE5\u5E76\u5BF9\u90E8\u95E8\u5DE5\u4F5C\u8D1F\u8D23") },
+        { id: "all", label: L2("\u0420\u0430\u0441\u0441\u043C\u0430\u0442\u0440\u0438\u0432\u0430\u044E \u043E\u0431\u0430 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430", "I am considering both options", "\u4E24\u79CD\u65B9\u5411\u90FD\u8003\u8651") }
+      ];
+      root.innerHTML = `<div class="adaptive-workflow adaptive-responsibility">
+      <header class="adaptive-topline"><button type="button" class="adaptive-back" id="adaptive-responsibility-back">${icon("arrow-left")}${L2("\u041D\u0430\u0437\u0430\u0434", "Back", "\u8FD4\u56DE")}</button></header>
+      <h1 id="adaptive-responsibility-question">${L2("\u041A\u0430\u043A\u0430\u044F \u0440\u043E\u043B\u044C \u0412\u0430\u043C \u0431\u043B\u0438\u0436\u0435?", "Which role appeals to you more?", "\u4F60\u66F4\u503E\u5411\u4E8E\u54EA\u79CD\u89D2\u8272\uFF1F")}</h1>
+      <div class="adaptive-responsibility-options" role="radiogroup" aria-labelledby="adaptive-responsibility-question">
+        ${options.map((option) => `<label class="adaptive-location-mode adaptive-responsibility-option"><input type="radio" name="adaptive-responsibility" value="${option.id}" data-adaptive-responsibility="${option.id}" ${selected === option.id ? "checked" : ""}><span>${E2(option.label)}</span></label>`).join("")}
+      </div>
+      <div id="adaptive-save-feedback">${saveError()}</div>
+      <footer class="adaptive-controls"><button type="button" class="button button-primary" id="adaptive-responsibility-next" ${RESPONSIBILITY_PREFERENCES.has(selected) ? "" : "disabled"}>${L2("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C", "Continue", "\u7EE7\u7EED")}${icon("arrow-right")}</button></footer>
+    </div>`;
+      root.querySelector("#adaptive-responsibility-back").onclick = () => {
+        if (!save({ ...session, setupStep: "location" })) {
+          root.querySelector("#adaptive-save-feedback").innerHTML = saveError();
+          bindSaveRetry(root);
           return;
         }
-        if (save()) navigate(resolveResumeRoute2());
+        navigate("preferences");
       };
-    }
-    function renderAuthorityScope() {
-      const select = preferencesRoot()?.querySelector("#journey-authority-scope");
-      if (!select) return;
-      select.innerHTML = `<option value="">${L2("\u0412\u0441\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B", "All available employers", "\u6240\u6709\u53EF\u9009\u673A\u6784")}</option><option value="federal">${L2("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u0438 \u0433\u043E\u0441\u043A\u043E\u0440\u043F\u043E\u0440\u0430\u0446\u0438\u0438", "Federal level and state corporations", "\u8054\u90A6\u5C42\u7EA7\u4E0E\u56FD\u6709\u4F01\u4E1A")}</option>${selectedRegions().map((r) => `<option value="${E3(r.id)}">${E3(regionName(r))}</option>`).join("")}`;
-      select.value = authorityScope;
-    }
-    function renderDesiredChoices() {
-      wishSorter?.destroy();
-      wishSorter = null;
-      const target = preferencesRoot()?.querySelector("#journey-desired-choices");
-      if (!target) return;
-      const lookup = byId();
-      target.innerHTML = `<ol class="journey-wish-slots" data-wish-list>${[0, 1, 2].map((index) => {
-        const authority = lookup.get(journey.desiredIds[index]);
-        return `<li class="${authority ? "is-filled" : ""}" ${authority ? `data-wish-id="${E3(authority.id)}"` : ""}><span class="journey-priority">${index + 1}</span>${authority ? `<div><strong>${E3(authorityName(authority))}</strong><small>${levelLabel(authority)}</small></div><div class="journey-order-actions"><button type="button" class="journey-wish-handle" data-wish-drag-handle="${E3(authority.id)}" aria-label="${E3(L2("\u041F\u0435\u0440\u0435\u043C\u0435\u0441\u0442\u0438\u0442\u044C: ", "Reorder: ", "\u8C03\u6574\u987A\u5E8F\uFF1A") + authorityName(authority))}" aria-describedby="journey-wish-sort-help" aria-keyshortcuts="Space Enter ArrowUp ArrowDown Home End Escape" aria-pressed="false" ${journey.desiredIds.length < 2 ? "disabled" : ""}><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="8" cy="5" r="1.6"/><circle cx="16" cy="5" r="1.6"/><circle cx="8" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/><circle cx="8" cy="19" r="1.6"/><circle cx="16" cy="19" r="1.6"/></svg></button><button type="button" data-remove-wish="${E3(authority.id)}" aria-label="${E3(L2("\u0423\u0431\u0440\u0430\u0442\u044C: ", "Remove: ", "\u79FB\u9664\uFF1A") + authorityName(authority))}">\xD7</button></div>` : `<span class="journey-empty-slot">${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u043D\u0438\u0436\u0435", "Choose an employer below", "\u8BF7\u5728\u4E0B\u65B9\u9009\u62E9\u673A\u6784")}</span>`}</li>`;
-      }).join("")}</ol>`;
-      target.querySelectorAll("[data-remove-wish]").forEach((button) => button.onclick = () => {
-        journey.desiredIds = journey.desiredIds.filter((id) => id !== button.dataset.removeWish);
-        journey.confirmed = false;
+      root.querySelectorAll("[data-adaptive-responsibility]").forEach((input) => input.addEventListener("change", () => {
+        session.responsibilityDraft = input.value;
+        dirty = true;
         save();
-        renderDesiredChoices();
-        renderAuthorityOptions();
-        updatePreferenceNext();
-      });
-      wishSorter = createWishSortable({
-        list: target.querySelector("[data-wish-list]"),
-        status: preferencesRoot().querySelector("[data-wish-sort-status]"),
-        labels: {
-          grabbed: (name2, position) => L2(`${name2}: \u0432\u0437\u044F\u0442\u043E \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F, \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}.`, `${name2}: picked up, position ${position}.`, `${name2}\uFF1A\u5DF2\u62FF\u8D77\uFF0C\u5F53\u524D\u4F4D\u7F6E ${position}\u3002`),
-          moved: (name2, position) => L2(`${name2}: \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}. \u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u043F\u0440\u043E\u0431\u0435\u043B\u043E\u043C \u0438\u043B\u0438 Enter.`, `${name2}: new position ${position}. Press Space or Enter to confirm.`, `${name2}\uFF1A\u65B0\u4F4D\u7F6E ${position}\u3002\u6309\u7A7A\u683C\u6216 Enter \u786E\u8BA4\u3002`),
-          dropped: (name2, position) => L2(`${name2}: \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}. \u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D.`, `${name2}: position ${position}. Order confirmed.`, `${name2}\uFF1A\u7B2C ${position} \u4F4D\u3002\u987A\u5E8F\u5DF2\u786E\u8BA4\u3002`),
-          cancelled: (name2, position) => L2(`\u041F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u0435 \u043E\u0442\u043C\u0435\u043D\u0435\u043D\u043E. ${name2}: \u043F\u043E\u0437\u0438\u0446\u0438\u044F ${position}.`, `Move cancelled. ${name2}: position ${position}.`, `\u5DF2\u53D6\u6D88\u79FB\u52A8\u3002${name2}\uFF1A\u7B2C ${position} \u4F4D\u3002`)
-        },
-        onCommit: (ids2) => {
-          journey.desiredIds = ids2;
-          journey.confirmed = false;
-          save();
-          renderAuthorityOptions();
-          updatePreferenceNext();
+        root.querySelector("#adaptive-responsibility-next").disabled = false;
+        root.querySelector("#adaptive-save-feedback").innerHTML = saveError();
+        bindSaveRetry(root);
+      }));
+      root.querySelector("#adaptive-responsibility-next").onclick = () => {
+        const responsibilityPreference = session.responsibilityDraft || session.responsibilityPreference;
+        if (!RESPONSIBILITY_PREFERENCES.has(responsibilityPreference) || !session.locationConfirmed) return;
+        const changed = responsibilityPreference !== session.responsibilityPreference;
+        const next = { ...session, responsibilityPreference, responsibilityDraft: null, setupComplete: true, setupStep: "responsibility" };
+        const updated = changed ? invalidateCompletion({ ...next, answers: [], pending: null }) : next;
+        if (!save(updated)) {
+          root.querySelector("#adaptive-save-feedback").innerHTML = saveError();
+          bindSaveRetry(root);
+          return;
         }
-      });
+        if (changed) resetCandidatePool();
+        navigate(resolveResumeRoute2());
+      };
+      bindSaveRetry(root);
     }
-    function renderAuthorityOptions() {
-      const target = preferencesRoot()?.querySelector("#journey-authority-options");
-      if (!target) return;
-      const query = normalizeName(authorityQuery), regionLookup = new Map(regions.map((r) => [r.id, r]));
-      const list2 = visibleInstitutions().filter((a) => (!authorityScope || (authorityScope === "federal" ? !a.regionId : a.regionId === authorityScope)) && (!query || normalizeName([a.name, a.shortName, authorityName(a), a.mission, a.familyId].join(" ")).includes(query))).sort((a, b) => Number(!!a.regionId) - Number(!!b.regionId) || authorityName(a).localeCompare(authorityName(b), getLanguage()));
-      target.innerHTML = `<p class="journey-result-count" role="status">${L2("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")} ${number(list2.length)} \xB7 ${L2("\u0432\u044B\u0431\u0440\u0430\u043D\u043E", "selected", "\u5DF2\u9009\u62E9")} ${journey.desiredIds.length}/3</p><div class="journey-employer-options">${list2.slice(0, authorityLimit).map((a) => {
-        const chosen = journey.desiredIds.indexOf(a.id);
-        return `<button type="button" class="journey-employer-option ${chosen >= 0 ? "is-selected" : ""}" data-add-wish="${E3(a.id)}" aria-pressed="${chosen >= 0}" ${chosen < 0 && journey.desiredIds.length === 3 ? "disabled" : ""}><span class="journey-choice-marker">${chosen >= 0 ? chosen + 1 : "+"}</span><span><strong>${E3(authorityName(a))}</strong><small>${levelLabel(a)}${a.regionId ? " \xB7 " + E3(regionName(regionLookup.get(a.regionId))) : ""}</small></span></button>`;
-      }).join("")}</div>${!list2.length ? `<p class="journey-empty">${L2("\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u0437\u0430\u043F\u0440\u043E\u0441 \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u0443\u044E \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044E.", "No matches. Change the query or select another territory.", "\u6CA1\u6709\u5339\u914D\u7ED3\u679C\uFF0C\u8BF7\u66F4\u6539\u641C\u7D22\u8BCD\u6216\u9009\u62E9\u5176\u4ED6\u5730\u533A\u3002")}</p>` : ""}${list2.length > authorityLimit ? `<button type="button" class="button button-secondary journey-more" id="journey-more-employers">${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button>` : ""}`;
-      target.querySelectorAll("[data-add-wish]").forEach((button) => button.onclick = () => {
-        const id = button.dataset.addWish;
-        if (journey.desiredIds.includes(id)) journey.desiredIds = journey.desiredIds.filter((value) => value !== id);
-        else if (journey.desiredIds.length < 3) journey.desiredIds.push(id);
-        journey.confirmed = false;
-        save();
-        renderDesiredChoices();
-        renderAuthorityOptions();
-        updatePreferenceNext();
+    function renderPreferences() {
+      const root = preferenceRoot();
+      if (!root || !readyFor(root)) return;
+      if (session.setupStep === "responsibility" && session.locationConfirmed) {
+        renderResponsibility(root);
+        return;
+      }
+      root.innerHTML = `<div class="adaptive-workflow adaptive-location">
+      <header class="adaptive-topline"><button type="button" class="adaptive-back" id="adaptive-location-back">${icon("arrow-left")}${L2("\u041D\u0430\u0437\u0430\u0434", "Back", "\u8FD4\u56DE")}</button></header>
+      <h1>${L2("\u0413\u0434\u0435 \u0412\u044B \u0445\u043E\u0442\u0435\u043B\u0438 \u0431\u044B \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C?", "Where would you like to work?", "\u4F60\u5E0C\u671B\u5728\u54EA\u91CC\u5DE5\u4F5C\uFF1F")}</h1>
+      <div class="adaptive-location-modes" role="radiogroup" aria-label="${E2(L2("\u041C\u0435\u0441\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u044B", "Work location", "\u5DE5\u4F5C\u5730\u70B9"))}">
+        <label class="adaptive-location-mode"><input type="radio" name="adaptive-location-mode" value="all" ${regionMode === "all" ? "checked" : ""}><span>${L2("\u0411\u0435\u0437 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439 \u043F\u043E \u0440\u0435\u0433\u0438\u043E\u043D\u0443", "No region restriction", "\u4E0D\u9650\u5730\u533A")}</span></label>
+        <label class="adaptive-location-mode"><input type="radio" name="adaptive-location-mode" value="selected" ${regionMode === "selected" ? "checked" : ""}><span>${L2("\u0412 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u0445", "In selected regions", "\u6240\u9009\u5730\u533A")}</span></label>
+      </div>
+      <div id="adaptive-region-picker" class="adaptive-region-picker" ${regionMode === "all" ? "hidden" : ""}>
+        <label class="adaptive-region-search"><span class="adaptive-sr-only">${L2("\u041D\u0430\u0439\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D", "Find a region", "\u67E5\u627E\u5730\u533A")}</span><input id="adaptive-region-search" type="search" value="${E2(regionQuery)}" placeholder="${E2(L2("\u041D\u0430\u0439\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D", "Find a region", "\u67E5\u627E\u5730\u533A"))}" autocomplete="off"></label>
+        <div id="adaptive-region-list" class="adaptive-region-list">${regionList()}</div>
+        <p id="adaptive-region-count" class="adaptive-region-count" aria-live="polite">${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432: ", "Regions selected: ", "\u5DF2\u9009\u5730\u533A\uFF1A")}${draftRegions.length}</p>
+      </div>
+      <div id="adaptive-save-feedback">${saveError()}</div>
+      <footer class="adaptive-controls"><button type="button" class="button button-primary" id="adaptive-location-next" ${regionMode === "selected" && !draftRegions.length ? "disabled" : ""}>${L2("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C", "Continue", "\u7EE7\u7EED")}${icon("arrow-right")}</button></footer>
+    </div>`;
+      root.querySelector("#adaptive-location-back").onclick = () => navigate("personality-results");
+      root.querySelectorAll('input[name="adaptive-location-mode"]').forEach((input) => input.addEventListener("change", () => {
+        regionMode = input.value;
+        root.querySelector("#adaptive-region-picker").hidden = regionMode === "all";
+        root.querySelector("#adaptive-location-next").disabled = regionMode === "selected" && !draftRegions.length;
+        saveLocationDraft(root);
+        if (regionMode === "selected") root.querySelector("#adaptive-region-search").focus();
+      }));
+      root.querySelector("#adaptive-region-search").addEventListener("input", (event) => {
+        regionQuery = event.target.value.slice(0, 100);
+        root.querySelector("#adaptive-region-list").innerHTML = regionList();
       });
-      target.querySelector("#journey-more-employers")?.addEventListener("click", () => {
-        authorityLimit += 24;
-        renderAuthorityOptions();
+      root.querySelector("#adaptive-region-list").addEventListener("change", (event) => {
+        const input = event.target.closest("[data-adaptive-region]");
+        if (!input) return;
+        const id = input.dataset.adaptiveRegion;
+        draftRegions = input.checked ? [.../* @__PURE__ */ new Set([...draftRegions, id])] : draftRegions.filter((value) => value !== id);
+        root.querySelector("#adaptive-region-count").textContent = L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432: ", "Regions selected: ", "\u5DF2\u9009\u5730\u533A\uFF1A") + draftRegions.length;
+        root.querySelector("#adaptive-location-next").disabled = regionMode === "selected" && !draftRegions.length;
+        saveLocationDraft(root);
       });
+      root.querySelector("#adaptive-location-next").onclick = () => {
+        if (regionMode === "selected" && !draftRegions.length) return;
+        const regionIds = regionMode === "all" ? [] : [...draftRegions].sort();
+        const changed = JSON.stringify([...session.regionIds].sort()) !== JSON.stringify(regionIds);
+        const next = {
+          ...session,
+          regionIds,
+          locationConfirmed: true,
+          setupComplete: false,
+          setupStep: "responsibility",
+          locationDraft: null,
+          questionnaireVersion: taxonomy.version,
+          indexVersion: manifest.version
+        };
+        const updated = changed ? invalidateCompletion({ ...next, answers: [], pending: null }) : next;
+        if (!save(updated)) {
+          root.querySelector("#adaptive-save-feedback").innerHTML = saveError();
+          bindSaveRetry(root);
+          return;
+        }
+        if (changed) resetCandidatePool();
+        navigate("preferences");
+      };
+      bindSaveRetry(root);
     }
-    function updatePreferenceNext() {
-      const target = preferencesRoot();
-      if (!target) return;
-      const button = target.querySelector("#journey-preferences-next");
-      if (button) button.disabled = journey.desiredIds.length !== 3;
-      const status = target.querySelector("#journey-preference-status");
-      if (status) status.textContent = L2(`\u0412\u044B\u0431\u0440\u0430\u043D\u043E ${journey.desiredIds.length} \u0438\u0437 3`, `Selected ${journey.desiredIds.length} of 3`, `\u5DF2\u9009\u62E9 ${journey.desiredIds.length} / 3`);
+    function questionFor(answers) {
+      const signature = JSON.stringify(answers);
+      if (questionCache?.taxonomy === taxonomy && questionCache.candidates === candidates && questionCache.signature === signature) return questionCache.value;
+      const value = nextQuestion({ taxonomy, answers, candidates });
+      questionCache = { taxonomy, candidates, signature, value };
+      return value;
     }
-    function rankings() {
-      const result = getResult();
-      if (!result || !catalogLoaded) return null;
-      const cacheKey = JSON.stringify([getProfileContext().recordId, journey.regionIds]);
+    function currentQuestion() {
+      if (!metadataReady || poolLoading || poolError || candidateKey !== poolIdentity()) return null;
+      if (session.pending && questions.has(session.pending.questionId) && !session.answers.some((answer) => answer.questionId === session.pending.questionId)) return questions.get(session.pending.questionId);
+      return questionFor(session.answers);
+    }
+    const answerLabels2 = () => [
+      { value: 1, text: L2("\u0421\u043E\u0432\u0441\u0435\u043C \u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Not at all interested", "\u5B8C\u5168\u4E0D\u611F\u5174\u8DA3") },
+      { value: 2, text: L2("\u0421\u043A\u043E\u0440\u0435\u0435 \u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Rather uninterested", "\u4E0D\u592A\u611F\u5174\u8DA3") },
+      { value: 3, text: L2("\u041D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u043E", "Neutral", "\u6001\u5EA6\u4E2D\u7ACB") },
+      { value: 4, text: L2("\u0421\u043A\u043E\u0440\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Rather interested", "\u6BD4\u8F83\u611F\u5174\u8DA3") },
+      { value: 5, text: L2("\u041E\u0447\u0435\u043D\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Very interested", "\u975E\u5E38\u611F\u5174\u8DA3") },
+      { value: 0, text: L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0437\u043D\u0430\u044E", "Not sure yet", "\u6682\u65F6\u4E0D\u786E\u5B9A") }
+    ];
+    function chooseAnswer(value, { focus = false } = {}) {
+      if (!validValue(value) || transitionBusy || poolLoading || !metadataReady) return;
+      const question = currentQuestion();
+      if (!question) return;
+      session.pending = { questionId: question.id, value };
+      dirty = true;
+      save();
+      const root = questionRoot();
+      root.querySelectorAll("[data-adaptive-answer]").forEach((button) => {
+        const selected = Number(button.dataset.adaptiveAnswer) === value;
+        button.classList.toggle("is-selected", selected);
+        button.setAttribute("aria-checked", String(selected));
+        button.tabIndex = selected ? 0 : -1;
+        if (selected && focus) button.focus({ preventScroll: true });
+      });
+      root.querySelector("#adaptive-next").disabled = false;
+      root.querySelector("#adaptive-save-feedback").innerHTML = saveError();
+      bindSaveRetry(root);
+    }
+    function backQuestion() {
+      if (transitionBusy) return;
+      if (!session.answers.length) {
+        navigate("preferences");
+        return;
+      }
+      const answers = session.answers.slice(), previous = answers.pop();
+      const updated = invalidateCompletion({ ...session, answers, pending: { ...previous } });
+      if (!save(updated)) {
+        render(lastRoute);
+        return;
+      }
+      rankingCache = null;
+      questionCache = null;
+      notifiedRecordId = null;
+      navigate("test");
+    }
+    function resultRanking() {
+      const cacheKey = candidateKey + "|" + JSON.stringify(session.answers);
       if (rankingCache?.key === cacheKey) return rankingCache.value;
-      const value = rankJourneyAuthorities({ authorities: institutions, tracks: data2.tracks, questions: data2.questions, sectors: data2.sectors, inputs: getInputs(), context: result.context, roleProfile: result.roleProfile, regionIds: journey.regionIds, limit: 3 });
+      const value = rankVacancies({ taxonomy, answers: session.answers, candidates, limit: 5 });
       rankingCache = { key: cacheKey, value };
       return value;
     }
-    function switchStage(view) {
-      journey.resultRecordId = getProfileContext().recordId;
-      journey.view = view;
-      save();
-      renderResults2();
-      updateLabels();
-      window.scrollTo({ top: 0, behavior: "instant" });
-      const heading = root()?.querySelector("h1");
-      heading?.setAttribute("tabindex", "-1");
-      heading?.focus({ preventScroll: true });
-    }
-    function profileNote(result) {
-      if (result.roleProfile.lowInterest) return L2("\u0412\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0437\u0438\u043B\u0438 \u0443\u0441\u0442\u043E\u0439\u0447\u0438\u0432\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u043E\u043C\u043E\u0436\u0435\u0442 \u043F\u043E\u0437\u043D\u0430\u043A\u043E\u043C\u0438\u0442\u044C\u0441\u044F \u0441 \u043D\u0438\u043C\u0438 \u0438 \u0432\u044B\u0431\u0440\u0430\u0442\u044C, \u0447\u0442\u043E \u0438\u0437\u0443\u0447\u0438\u0442\u044C \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u0435\u0435.", "You have not yet expressed a strong interest in these types of work. Use the result to explore them and decide what to learn about.", "\u4F60\u5C1A\u672A\u5BF9\u8FD9\u4E9B\u5DE5\u4F5C\u7C7B\u578B\u8868\u73B0\u51FA\u8F83\u5F3A\u5174\u8DA3\u3002\u53EF\u5229\u7528\u7ED3\u679C\u4E86\u89E3\u5404\u7C7B\u5DE5\u4F5C\uFF0C\u9009\u62E9\u60F3\u8FDB\u4E00\u6B65\u63A2\u7D22\u7684\u65B9\u5411\u3002");
-      if (result.roleProfile.flat) return L2("\u0412\u0430\u0448\u0438 \u043E\u0446\u0435\u043D\u043A\u0438 \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438 \u0434\u0440\u0443\u0433 \u043A \u0434\u0440\u0443\u0433\u0443. \u041F\u0440\u0438 \u043F\u043E\u0434\u0431\u043E\u0440\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432 \u043E\u0441\u043E\u0431\u0435\u043D\u043D\u043E \u0432\u0430\u0436\u043D\u044B \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0412\u0430\u043C\u0438 \u0441\u0444\u0435\u0440\u044B \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438.", "Your ratings of these types of work are similar. Your chosen policy areas are especially important when selecting employers.", "\u4F60\u5BF9\u5404\u7C7B\u5DE5\u4F5C\u7684\u8BC4\u5206\u8F83\u63A5\u8FD1\uFF0C\u56E0\u6B64\u5728\u63A8\u8350\u673A\u6784\u65F6\uFF0C\u4F60\u6240\u9009\u7684\u653F\u7B56\u9886\u57DF\u5C24\u4E3A\u91CD\u8981\u3002");
-      return L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u044E\u0442 \u0412\u0430\u0441 \u0431\u043E\u043B\u044C\u0448\u0435, \u043A\u0430\u043A\u0438\u0435 \u0441\u0444\u0435\u0440\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B \u0438 \u043A\u0430\u043A\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0412\u0430\u043C \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0442.", "Explore the work you find most interesting, your preferred policy areas and the conditions that suit you.", "\u4E86\u89E3\u6700\u5438\u5F15\u4F60\u7684\u5DE5\u4F5C\u7C7B\u578B\u3001\u611F\u5174\u8DA3\u7684\u653F\u7B56\u9886\u57DF\uFF0C\u4EE5\u53CA\u9002\u5408\u4F60\u7684\u5DE5\u4F5C\u6761\u4EF6\u3002");
-    }
-    function personalProfile(result) {
-      const context = getProfileContext();
-      return `<section class="seminar-profile-card" aria-labelledby="seminar-interests-title"><h2 id="seminar-interests-title">${L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432", "My interest profile", "\u6211\u7684\u5174\u8DA3\u753B\u50CF")}</h2><p class="seminar-profile-caption">${L2("\u041E\u0442 1 \u0434\u043E 5: \u0447\u0435\u043C \u0434\u0430\u043B\u044C\u0448\u0435 \u0442\u043E\u0447\u043A\u0430 \u043E\u0442 \u0446\u0435\u043D\u0442\u0440\u0430, \u0442\u0435\u043C \u0432\u044B\u0448\u0435 \u0412\u0430\u0448 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u043E\u043C\u0443 \u0432\u0438\u0434\u0443 \u0440\u0430\u0431\u043E\u0442\u044B.", "From 1 to 5: the farther a point is from the centre, the stronger your interest in this type of work.", "\u8BC4\u5206\u4E3A1\u81F35\u5206\uFF1A\u70B9\u79BB\u4E2D\u5FC3\u8D8A\u8FDC\uFF0C\u5BF9\u8BE5\u7C7B\u5DE5\u4F5C\u7684\u5174\u8DA3\u8D8A\u5F3A\u3002")}</p><div class="seminar-profile-chart"><div class="seminar-radar">${radarSvg2(result.roleProfile, { numbered: true, label: L2("\u0414\u0435\u0432\u044F\u0442\u044C \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B: \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043E\u0442 1 \u0434\u043E 5", "Nine types of work: interest from 1 to 5", "\u4E5D\u7C7B\u5DE5\u4F5C\uFF1A\u5174\u8DA3\u8BC4\u52061\u81F35\u5206") })}</div><ol class="seminar-profile-scores">${context.scales.map((scale, index) => `<li><span class="seminar-scale-number">${index + 1}</span><span>${display(scale.title)}</span><strong>${number(result.roleProfile.raw[scale.id], 1)}<small> / 5</small></strong></li>`).join("")}</ol></div></section>`;
-    }
-    function renderProfile(result, target) {
-      const context = getProfileContext(), strongest = [...context.scales].sort((a, b) => result.roleProfile.raw[b.id] - result.roleProfile.raw[a.id]).slice(0, 3);
-      target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0412\u0430\u0448 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your profile", "\u4F60\u7684\u804C\u4E1A\u753B\u50CF")}</h1><p>${profileNote(result)}</p></header>${personalProfile(result)}
-      ${!result.roleProfile.flat && !result.roleProfile.lowInterest ? `<section class="seminar-profile-section"><h2>${L2("\u0427\u0442\u043E \u0412\u0430\u043C \u0431\u043B\u0438\u0436\u0435", "Your leading interests", "\u4F60\u7684\u4E3B\u8981\u5174\u8DA3")}</h2><div class="seminar-strengths">${strongest.map((scale) => `<article><h3>${display(scale.title)}</h3><p>${display(scale.description)}</p></article>`).join("")}</div></section>` : ""}
-      <div class="seminar-preferences"><section class="seminar-profile-card"><h2>${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B", "Your chosen policy areas", "\u4F60\u9009\u62E9\u7684\u653F\u7B56\u9886\u57DF")}</h2><ol class="seminar-sector-list">${context.prioritySectors.map((id) => `<li>${display(context.sectors.find((sector) => sector.id === id)?.title || id)}</li>`).join("")}</ol></section><section class="seminar-profile-card"><h2>${L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F", "Your preferred conditions", "\u9002\u5408\u4F60\u7684\u5DE5\u4F5C\u6761\u4EF6")}</h2><dl class="seminar-condition-summary">${context.conditions.map((condition) => {
-        const value = context.conditionValues[condition.id];
-        return `<div><dt>${display(condition.title)}</dt><dd>${value <= 2 ? display(condition.low) : value >= 4 ? display(condition.high) : L2("\u0421\u0440\u0435\u0434\u043D\u044F\u044F \u043E\u0446\u0435\u043D\u043A\u0430: 3 \u0438\u0437 5", "Midpoint rating: 3 out of 5", "\u4E2D\u95F4\u8BC4\u5206\uFF1A3\u5206\uFF08\u6EE1\u52065\u5206\uFF09")}</dd></div>`;
-      }).join("")}</dl></section></div>
-      <div class="seminar-next"><p>${L2("\u0422\u0435\u043F\u0435\u0440\u044C \u0441\u0440\u0430\u0432\u043D\u0438\u043C \u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0412\u0430\u043C\u0438 \u043C\u0435\u0441\u0442\u0430 \u0440\u0430\u0431\u043E\u0442\u044B \u0441 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F\u043C\u0438 \u0434\u043B\u044F \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0443\u0440\u043E\u0432\u043D\u044F \u0438 \u043A\u0430\u0436\u0434\u043E\u0439 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438.", "Next, compare your three preferred employers with recommendations at national level and in each selected territory.", "\u63A5\u4E0B\u6765\uFF0C\u5C06\u4F60\u7684\u4E09\u4E2A\u610F\u5411\u5355\u4F4D\u4E0E\u8054\u90A6\u5C42\u7EA7\u53CA\u5404\u6240\u9009\u5730\u533A\u7684\u63A8\u8350\u8FDB\u884C\u6BD4\u8F83\u3002")}</p><button type="button" class="button button-primary button-large" id="seminar-show-authorities">${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "View recommendations", "\u67E5\u770B\u63A8\u8350")}${icon("arrow-right")}</button></div>`;
-      target.querySelector("#seminar-show-authorities").onclick = () => switchStage("recommendations");
-    }
-    function authorityDetails(authority) {
-      const paragraphs = (authority.descriptionParagraphs || []).filter((value) => typeof value === "string" && value.trim()).slice(0, 3);
-      const sources = (authority.descriptionSources || authority.sources || []).filter((source) => safeURL(source.url));
-      if (!paragraphs.length && !sources.length && !authority.detailPath) return "";
-      return `<details class="seminar-authority-details" data-authority-details="${E3(authority.id)}"><summary>${L2("\u041E\u0431 \u043E\u0440\u0433\u0430\u043D\u0435 \u0438 \u0435\u0433\u043E \u0437\u0430\u0434\u0430\u0447\u0430\u0445", "About the employer and its work", "\u673A\u6784\u4E0E\u804C\u8D23")}</summary><div>${paragraphs.map((text3) => `<p${getLanguage() !== "ru" && translate(text3) === text3 ? ' lang="ru"' : ""}>${display(text3)}</p>`).join("")}${sources.slice(0, 2).map((source) => `<a href="${safeURL(source.url)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F", "Description source", "\u63CF\u8FF0\u6765\u6E90")}${icon("external")}</a>`).join("")}</div></details>`;
-    }
-    const authorityDetailFiles = /* @__PURE__ */ new Map();
-    function bindAuthorityDetails(target) {
-      target.querySelectorAll("[data-authority-details]").forEach((details) => details.addEventListener("toggle", async () => {
-        if (!details.open || details.dataset.detailsLoaded === "true") return;
-        const authority = byId().get(details.dataset.authorityDetails);
-        if (!authority?.detailPath) return;
-        if (!/^data\/territorial-authorities\/[a-z0-9-]+\.json$/.test(authority.detailPath)) return;
-        details.dataset.detailsLoaded = "true";
-        try {
-          if (!authorityDetailFiles.has(authority.detailPath)) authorityDetailFiles.set(authority.detailPath, loadJSON(authority.detailPath, { validate: (value) => Array.isArray(value?.authorities) }));
-          const payload = await authorityDetailFiles.get(authority.detailPath);
-          if (__careerHost.destroyed || !details.isConnected) return;
-          const full = mergeTerritorialAuthorityDetails(authority, payload);
-          const temporary = document.createElement("div");
-          temporary.innerHTML = authorityDetails(full);
-          const content = temporary.querySelector("details>div");
-          if (content) details.querySelector("div").replaceWith(content);
-        } catch {
-          authorityDetailFiles.delete(authority.detailPath);
-          details.dataset.detailsLoaded = "false";
-        }
-      }));
-    }
-    function matchBadge(matched, preferred) {
-      return matched ? `<span class="journey-match-badge">${icon("check")}${preferred ? L2("\u0415\u0441\u0442\u044C \u0441\u0440\u0435\u0434\u0438 \u0442\u0440\u0451\u0445 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0439", "Among your three recommendations", "\u5728\u4E09\u4E2A\u63A8\u8350\u4E4B\u4E2D") : L2("\u0421\u043E\u0432\u043F\u0430\u043B\u043E \u0441 \u0412\u0430\u0448\u0438\u043C \u0432\u044B\u0431\u043E\u0440\u043E\u043C", "Matches your choice", "\u4E0E\u4F60\u7684\u610F\u5411\u4E00\u81F4")}</span>` : "";
-    }
-    function authorityCard(authority, index, { matched = false, preferred = false } = {}) {
-      const context = getProfileContext();
-      const matches = context.prioritySectors.filter((id) => (authority.pathSectors || authority.sectors || []).some((sector) => sector.id === id));
-      const rankLabel = preferred ? L2(`\u0412\u0430\u0448 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 ${index + 1}`, `Your priority ${index + 1}`, `\u4F60\u7684\u7B2C ${index + 1} \u610F\u5411`) : L2(`\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F ${index + 1}`, `Recommendation ${index + 1}`, `\u63A8\u8350 ${index + 1}`);
-      return `<article class="seminar-authority ${matched ? "journey-matched" : ""}" data-recommended-authority="${E3(authority.id)}"><div class="seminar-authority-heading">${authorityEmblem(authority, "compact")}<div><span class="seminar-rank">${rankLabel} \xB7 ${levelLabel(authority)}</span><h3>${E3(authorityName(authority))}</h3></div></div>${matchBadge(matched, preferred)}<p${getLanguage() !== "ru" && translate(authority.mission) === authority.mission ? ' lang="ru"' : ""}>${display(authority.mission)}</p>${authorityDetails(authority)}<div class="seminar-track"><span>${L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0435\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B", "A matching work direction", "\u5339\u914D\u7684\u5DE5\u4F5C\u65B9\u5411")}</span><strong>${display(authority.track?.title || "")}</strong>${matches.length ? `<p>${L2("\u0412\u0430\u0448\u0438 \u0441\u0444\u0435\u0440\u044B", "Your policy areas", "\u4F60\u7684\u9886\u57DF")}: ${matches.map((id) => display(context.sectors.find((sector) => sector.id === id)?.title || id)).join(", ")}.</p>` : ""}</div>${authorityRolePanel(authority, `${preferred ? "preferred" : "recommended"}-${authority.id}`)}</article>`;
-    }
-    function wishDevelopment(ranked) {
-      const options = journey.desiredIds.map((id) => ranked.ranked.find((a) => a.id === id) || byId().get(id)).filter(Boolean);
-      if (!options.length) return "";
-      if (!options.some((a) => a.id === journey.comparisonId)) journey.comparisonId = options[0].id;
-      const authority = options.find((a) => a.id === journey.comparisonId), development = buildAuthorityDevelopment(authority, ranked.roleProfile, { tracks: data2.tracks, careerFramework: framework, competencies });
-      const rows = development.lowerInterestDimensions.slice(0, 3);
-      return `<section class="journey-panel journey-development" aria-labelledby="journey-development-title"><h2 id="journey-development-title">${L2("\u041A\u0430\u043A \u043F\u0440\u0438\u0431\u043B\u0438\u0437\u0438\u0442\u044C\u0441\u044F \u043A \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u0435", "Preparing for your preferred role", "\u5982\u4F55\u4E3A\u610F\u5411\u5DE5\u4F5C\u505A\u51C6\u5907")}</h2><label class="journey-field" for="journey-development-authority">${L2("\u0416\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u044B", "Preferred employer", "\u610F\u5411\u5DE5\u4F5C\u5355\u4F4D")}<select id="journey-development-authority">${options.map((a) => `<option value="${E3(a.id)}" ${a.id === authority.id ? "selected" : ""}>${E3(authorityName(a))}</option>`).join("")}</select></label><p><strong>${display(development.track?.title || authority.track?.title || "")}</strong></p>
-      ${!development.available ? `<p class="journey-muted">${L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438, \u0447\u0442\u043E\u0431\u044B \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Examine the selected role requirements to identify preparation priorities.", "\u8BF7\u67E5\u770B\u6240\u9009\u804C\u4F4D\u8981\u6C42\uFF0C\u4EE5\u786E\u5B9A\u51C6\u5907\u65B9\u5411\u3002")}</p>` : rows.length ? `<h3>${L2("\u041A\u0430\u043A\u0438\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Types of work worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u5DE5\u4F5C\u7C7B\u578B")}</h3><div class="journey-reflection-grid">${rows.map((row) => {
-        const scale = data2.scales.find((s) => s.id === row.id);
-        return `<article><strong>${display(scale?.title || row.id)}</strong><span>${L2("\u0412\u0430\u0448 \u0438\u043D\u0442\u0435\u0440\u0435\u0441", "Your interest", "\u4F60\u7684\u5174\u8DA3")}: ${number(row.interest, 1)} / 5</span><p>${display(scale?.description || "")}</p></article>`;
-      }).join("")}</div>` : `<p class="journey-muted">${L2("\u0412\u0430\u0448\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u044D\u0442\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F. \u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u2014 \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your interests support the main types of work in this direction. Next, examine the specific role requirements.", "\u4F60\u7684\u5174\u8DA3\u4E0E\u8BE5\u65B9\u5411\u7684\u4E3B\u8981\u5DE5\u4F5C\u7C7B\u578B\u4E00\u81F4\u3002\u4E0B\u4E00\u6B65\uFF0C\u8BF7\u6838\u5BF9\u5177\u4F53\u804C\u4F4D\u8981\u6C42\u3002")}</p>`}
-      <div class="journey-learning-grid">${development.competencies.slice(0, 4).map((item) => `<article><h3>${display(item.title)}</h3><p>${display(item.description)}</p>${item.evidenceIdeas?.[0] ? `<small>${L2("\u041F\u0440\u0430\u043A\u0442\u0438\u043A\u0430", "Practice", "\u5B9E\u8DF5")}: ${display(item.evidenceIdeas[0])}</small>` : ""}</article>`).join("")}</div><p class="journey-method-note">${L2("\u0422\u0435\u0441\u0442 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B. \u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F \u0441\u0432\u044F\u0437\u0430\u043D\u044B \u0441 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439; \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u0435\u043B\u044B \u0412\u044B \u043E\u0442\u043C\u0435\u0442\u0438\u0442\u0435 \u043F\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F\u043C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "The questionnaire describes interests. These learning directions relate to the chosen work; identify specific gaps by assessing the role requirements.", "\u95EE\u5377\u53CD\u6620\u5174\u8DA3\u3002\u53D1\u5C55\u65B9\u5411\u4E0E\u6240\u9009\u5DE5\u4F5C\u6709\u5173\uFF1B\u5177\u4F53\u5DEE\u8DDD\u9700\u8981\u6839\u636E\u804C\u4F4D\u8981\u6C42\u8FDB\u884C\u81EA\u8BC4\u3002")}</p></section>`;
-    }
-    function bindDevelopment(target, ranked) {
-      target.querySelector("#journey-development-authority")?.addEventListener("change", (event) => {
-        journey.comparisonId = event.target.value;
-        save();
-        const panel = target.querySelector(".journey-development");
-        panel.outerHTML = wishDevelopment(ranked);
-        bindDevelopment(target, ranked);
+    function completedSession(answers) {
+      const ranking = rankVacancies({ taxonomy, answers, candidates, limit: 5 });
+      const record = makeCompletionRecord({
+        taxonomy,
+        answers,
+        regionIds: session.regionIds,
+        responsibilityPreference: session.responsibilityPreference,
+        ranking,
+        indexVersion: manifest.version
       });
+      return { ...session, answers, pending: null, completedAt: record.createdAt, resultRecordId: record.recordId, completion: record };
     }
-    function renderRecommendations(result, target) {
-      const ranked = rankings();
-      if (!ranked) return;
-      const recommended = ranked.ranked.slice(0, 3), recommendedIds = new Set(recommended.map((authority) => authority.id));
-      const rankedById = new Map(ranked.ranked.map((authority) => [authority.id, authority]));
-      const preferred = journey.desiredIds.map((id) => rankedById.get(id) || byId().get(id)).filter(Boolean);
-      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="seminar-back-profile">${icon("arrow-left")}${L2("\u041C\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "My profile", "\u6211\u7684\u753B\u50CF")}</button><h1>${L2("\u0412\u0430\u0448\u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B", "Your career directions", "\u4F60\u7684\u804C\u4E1A\u65B9\u5411")}</h1><p>${L2("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u2014 \u0442\u0440\u0438 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430 \u043F\u043E \u0412\u0430\u0448\u0435\u043C\u0443 \u043F\u0440\u043E\u0444\u0438\u043B\u044E \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u0441 \u0443\u0447\u0451\u0442\u043E\u043C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439. \u0417\u0430\u0442\u0435\u043C \u2014 \u0442\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430 \u0432 \u0412\u0430\u0448\u0435\u043C \u043F\u043E\u0440\u044F\u0434\u043A\u0435. \u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435 \u0432\u043B\u0438\u044F\u0435\u0442 \u043D\u0430 \u043F\u043E\u0434\u0431\u043E\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "First, the three closest matches to your interest profile within your chosen territories. Then, your three preferred employers in your own order. Employers are recommended independently of vacancy availability.", "\u5148\u5C55\u793A\u5728\u6240\u9009\u5730\u533A\u8303\u56F4\u5185\u4E0E\u5174\u8DA3\u753B\u50CF\u6700\u5339\u914D\u7684\u4E09\u4E2A\u9009\u9879\uFF0C\u518D\u6309\u4F60\u7684\u610F\u613F\u987A\u5E8F\u5C55\u793A\u4E09\u4E2A\u610F\u5411\u5355\u4F4D\u3002\u673A\u6784\u63A8\u8350\u4E0D\u53D6\u51B3\u4E8E\u662F\u5426\u5B58\u5728\u7A7A\u7F3A\u804C\u4F4D\u3002")}</p></header>
-      <section class="journey-recommendation-group" data-recommendation-group="recommended"><h2>${L2("\u0422\u0440\u0438 \u043D\u0430\u0438\u0431\u043E\u043B\u0435\u0435 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u0430", "Your three closest matches", "\u6700\u5339\u914D\u7684\u4E09\u4E2A\u9009\u9879")}</h2><p class="journey-muted">${L2("\u0417\u0435\u043B\u0451\u043D\u0430\u044F \u0440\u0430\u043C\u043A\u0430 \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u0441 \u043E\u0434\u043D\u0438\u043C \u0438\u0437 \u0412\u0430\u0448\u0438\u0445 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442.", "A green border marks a recommendation that is also one of your preferred employers.", "\u7EFF\u8272\u8FB9\u6846\u8868\u793A\u63A8\u8350\u673A\u6784\u4E5F\u662F\u4F60\u7684\u610F\u5411\u5355\u4F4D\u3002")}</p><div class="seminar-authorities">${recommended.map((authority, index) => authorityCard(authority, index, { matched: journey.desiredIds.includes(authority.id) })).join("")}</div></section>
-      <section class="journey-recommendation-group" data-recommendation-group="preferred"><h2>${L2("\u0412\u0430\u0448\u0438 \u0442\u0440\u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0445 \u043C\u0435\u0441\u0442\u0430", "Your three preferred employers", "\u4F60\u7684\u4E09\u4E2A\u610F\u5411\u5355\u4F4D")}</h2><p class="journey-muted">${L2("\u041F\u043E\u0440\u044F\u0434\u043E\u043A \u043A\u0430\u0440\u0442\u043E\u0447\u0435\u043A \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0412\u0430\u0448\u0438\u043C \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u0430\u043C: \u043E\u0442 \u043F\u0435\u0440\u0432\u043E\u0433\u043E \u043A \u0442\u0440\u0435\u0442\u044C\u0435\u043C\u0443.", "The cards follow your preference order, from first to third.", "\u5361\u7247\u6309\u4F60\u7684\u610F\u613F\u6392\u5E8F\uFF0C\u4ECE\u7B2C\u4E00\u5230\u7B2C\u4E09\u3002")}</p><div class="seminar-authorities">${preferred.map((authority, index) => authorityCard(authority, index, { preferred: true, matched: recommendedIds.has(authority.id) })).join("")}</div></section>
-      <button type="button" class="seminar-back-profile journey-edit-preferences" id="journey-edit-preferences">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0438 \u0438 \u0436\u0435\u043B\u0430\u0435\u043C\u044B\u0435 \u043C\u0435\u0441\u0442\u0430", "Edit territories and preferred employers", "\u4FEE\u6539\u5730\u533A\u4E0E\u610F\u5411\u5355\u4F4D")}</button>${wishDevelopment(ranked)}
-      <div class="seminar-next"><p>${L2("\u041F\u0435\u0440\u0435\u0434 \u0442\u0435\u0441\u0442\u043E\u043C \u0437\u043D\u0430\u043D\u0438\u0439 \u0412\u044B \u0443\u0432\u0438\u0434\u0438\u0442\u0435 \u0438\u0442\u043E\u0433\u043E\u0432\u044B\u0439 \u043F\u043B\u0430\u043D: \u0441\u0432\u043E\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0448\u0430\u0433\u0438 \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F.", "Before the knowledge test, you will see your interest profile, the selected role requirements and your development steps.", "\u77E5\u8BC6\u6D4B\u8BD5\u524D\uFF0C\u4F60\u5C06\u770B\u5230\u5174\u8DA3\u753B\u50CF\u3001\u6240\u9009\u804C\u4F4D\u8981\u6C42\u548C\u5177\u4F53\u53D1\u5C55\u6B65\u9AA4\u3002")}</p><button type="button" class="button button-primary button-large" id="journey-show-plan">${L2("\u041C\u043E\u0439 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "My development plan", "\u6211\u7684\u53D1\u5C55\u8BA1\u5212")}${icon("arrow-right")}</button></div>`;
-      target.querySelector("#seminar-back-profile").onclick = () => switchStage("profile");
-      target.querySelector("#journey-edit-preferences").onclick = changePreferences;
-      target.querySelector("#journey-show-plan").onclick = () => switchStage("summary");
-      bindDevelopment(target, ranked);
-      bindAuthorityDetails(target);
-      bindAuthorityRolePanels(target);
-      renderVacancies();
-      renderEmployerVacancyPanels();
-    }
-    let positionSelection = "", positionLoadGeneration = 0;
-    const positionShards = /* @__PURE__ */ new Map();
-    function sourceNote() {
-      if (positionsLoading) return L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439\u2026", "Loading roles for the selected territories\u2026", "\u6B63\u5728\u52A0\u8F7D\u6240\u9009\u5730\u533A\u7684\u804C\u4F4D\u2026\u2026");
-      const savedDate = feed?.lastSuccessAt ? date2(feed.lastSuccessAt) : "";
-      return `${savedDate ? L2("\u0421\u043D\u0438\u043C\u043E\u043A \u043F\u043E\u0440\u0442\u0430\u043B\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430: ", "Civil-service portal snapshot: ", "\u516C\u52A1\u5458\u95E8\u6237\u5FEB\u7167\uFF1A") + savedDate + ". " : ""}${L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u0438 \u0434\u0430\u0442\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430 \u0443\u043A\u0430\u0437\u0430\u043D\u044B \u0432 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435. \u0410\u0440\u0445\u0438\u0432\u043D\u044B\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0438 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u043D\u044B\u0435 \u0440\u0435\u0433\u043B\u0430\u043C\u0435\u043D\u0442\u044B \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B \u0434\u043B\u044F \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0440\u0430\u0437\u0431\u043E\u0440\u0430.", "Each card shows its source date and recruitment status. Archived announcements and role regulations are available for study.", "\u5361\u7247\u663E\u793A\u6765\u6E90\u65E5\u671F\u548C\u62DB\u8058\u72B6\u6001\u3002\u5386\u53F2\u516C\u544A\u53CA\u804C\u4F4D\u89C4\u5B9A\u53EF\u7528\u4E8E\u5B66\u4E60\u5206\u6790\u3002")}`;
-    }
-    async function loadVacancies() {
-      const requestedRegions = [...journey.regionIds];
-      const selection = JSON.stringify([...requestedRegions].sort());
-      if (positionsLoading || positionsLoaded && positionSelection === selection) return;
-      positionsLoading = true;
-      positionsError = false;
-      const ticket = ++positionLoadGeneration;
-      renderVacancies();
+    function advanceQuestion() {
+      if (transitionBusy || !session.pending || !metadataReady || poolLoading) return;
+      const question = currentQuestion();
+      if (!question || question.id !== session.pending.questionId) return;
+      transitionBusy = true;
       try {
-        const fetched = await Promise.allSettled([
-          feed ? Promise.resolve(feed) : loadJSON("data/vacancies/gossluzhba.json", { timeout: 15e3, validate: (v) => !validateFeed(v).length && !v.testFixture }),
-          loadJSON("data/sourced-position-materials.json", { validate: (v) => v?.schemaVersion === 1 && (Array.isArray(v.positions) || Array.isArray(v.regions)) })
-        ]);
-        if (__careerHost.destroyed || ticket !== positionLoadGeneration) return;
-        if (fetched[0].status === "fulfilled") feed = fetched[0].value;
-        else positionsError = true;
-        const manifest = fetched[1].status === "fulfilled" ? fetched[1].value : null;
-        if (!manifest) {
-          positionsError = true;
-        } else if (Array.isArray(manifest.positions)) positions = manifest.positions;
-        else {
-          const entries = [manifest.national, ...manifest.regions.filter((item) => requestedRegions.includes(item.regionId))].filter((item) => item?.path && /^data\/position-materials\/[a-z0-9-]+\.json$/.test(item.path));
-          const loaded = await Promise.allSettled(entries.map(async (item) => {
-            if (!positionShards.has(item.path)) positionShards.set(item.path, await loadJSON(item.path, { validate: (v) => Array.isArray(v?.positions) }));
-            return positionShards.get(item.path).positions;
-          }));
-          if (__careerHost.destroyed || ticket !== positionLoadGeneration) return;
-          positions = loaded.flatMap((result) => result.status === "fulfilled" ? result.value : []);
-          positionsError ||= loaded.some((result) => result.status === "rejected");
-        }
-        positionSelection = selection;
-        positionsLoaded = true;
-      } catch {
-        if (!__careerHost.destroyed) positionsError = true;
-      } finally {
-        positionsLoading = false;
-        if (!__careerHost.destroyed) {
-          renderVacancies();
-          if (lastRoute === "results" && selection !== JSON.stringify([...journey.regionIds].sort())) void loadVacancies();
-        }
-      }
-    }
-    function inferRegion(location2) {
-      const value = normalizeName(location2);
-      if (!value) return null;
-      const candidates = regions.flatMap((region) => [region.name, ...region.aliases || []].filter(Boolean).map((name2) => ({ id: region.id, name: normalizeName(name2) }))).filter((item) => value === item.name || value.startsWith(item.name + ",") || value.startsWith(item.name + " ") || value.startsWith("\u0433 " + item.name + " ")).sort((a, b) => b.name.length - a.name.length);
-      if (candidates.length) return candidates[0].id;
-      if (/^(?:г )?москва(?:\s|$)/.test(value)) return "ru-77";
-      if (/^(?:г )?санкт петербург(?:\s|$)/.test(value)) return "ru-78";
-      if (/^(?:г )?севастополь(?:\s|$)/.test(value)) return "ru-92";
-      return null;
-    }
-    function roleRecords() {
-      const lookup = byId(), visible = new Set(visibleInstitutions().map((a) => a.id)), names = /* @__PURE__ */ new Map();
-      for (const authority of institutions) {
-        for (const name2 of [authority.name, authority.shortName, ...authority.matchAliases || []]) {
-          if (typeof name2 !== "string") continue;
-          const norm = normalizeName(name2);
-          if (!names.has(norm)) names.set(norm, /* @__PURE__ */ new Set());
-          names.get(norm).add(authority.id);
-        }
-      }
-      const orgs = new Map((feed?.organizations || []).map((o) => [o.id, o]));
-      const portal = (feed?.vacancies || []).flatMap((v) => {
-        const status = currentStatus(v);
-        if (["closed", "expired"].includes(status)) return [];
-        const org = orgs.get(v.organizationId);
-        if (!org) return [];
-        const exactIds = names.get(normalizeName(org.name)), institutionId = org.authorityId || (exactIds?.size === 1 ? [...exactIds][0] : null);
-        if (!institutionId || !visible.has(institutionId)) return [];
-        const regionId = inferRegion(v.location);
-        if (regionId && !journey.regionIds.includes(regionId)) return [];
-        if (org.relation === "territorial" && (!regionId || !journey.regionIds.includes(regionId))) return [];
-        return [{ ...v, id: "portal-" + v.id, sourceVacancyId: v.id, institutionId, employerName: org.name, organization: org, regionId, status, kind: "vacancy", source: { url: v.url, retrievedAt: v.lastSeenAt, publishedAt: v.publishedAt } }];
-      });
-      const combined = [...positions, ...portal, ...journey.customVacancies].filter((v) => visible.has(v.institutionId) && (!v.regionId || journey.regionIds.includes(v.regionId)));
-      const seen = /* @__PURE__ */ new Set();
-      return combined.filter((v) => {
-        if (!v?.id || typeof v.title !== "string" || !safeURL(v.url || v.source?.url) || seen.has(v.id)) return false;
-        seen.add(v.id);
-        return true;
-      }).map((v) => ({ ...v, employerName: v.employerName || lookup.get(v.institutionId)?.name || "" }));
-    }
-    function findSelectedVacancy() {
-      if (!journey.selectedVacancyId) return null;
-      const record2 = roleRecords().find((v) => v.id === journey.selectedVacancyId);
-      if (record2) return record2;
-      const snapshot = journey.selectedSnapshot;
-      if (snapshot?.bankVacancy && snapshot.id === journey.selectedVacancyId && byId().has(snapshot.institutionId)) return snapshot;
-      return snapshot?.id === journey.selectedVacancyId && !(snapshot.organization?.relation === "territorial" && !journey.regionIds.includes(snapshot.regionId)) && visibleInstitutions().some((a) => a.id === snapshot.institutionId) && (!snapshot.regionId || journey.regionIds.includes(snapshot.regionId)) ? snapshot : null;
-    }
-    function roleStatus(v) {
-      if (v.bankVacancy) return v.archive ? L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u516C\u544A") : L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0440\u0442\u0430\u043B\u0430: \u0441\u0440\u043E\u043A\u0438 \u0443\u0442\u043E\u0447\u043D\u044F\u0439\u0442\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435", "Portal announcement: check dates at source", "\u95E8\u6237\u516C\u544A\uFF1A\u8BF7\u5728\u6765\u6E90\u6838\u5BF9\u65E5\u671F");
-      if (v.userProvided) return L2("\u0414\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u043E \u0412\u0430\u043C\u0438 \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Added by you from an announcement", "\u7531\u4F60\u4ECE\u516C\u544A\u6DFB\u52A0");
-      if (v.kind === "position-profile" || v.status === "profile") return L2("\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \xB7 \u0443\u0447\u0435\u0431\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440", "Role profile \xB7 study material", "\u804C\u4F4D\u8BF4\u660E \xB7 \u5B66\u4E60\u6750\u6599");
-      if (v.kind === "archived-vacancy" || v.status === "archived") return L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \xB7 \u0443\u0447\u0435\u0431\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440", "Archived announcement \xB7 study material", "\u5386\u53F2\u516C\u544A \xB7 \u5B66\u4E60\u6750\u6599");
-      if (v.status === "accepting") return L2("\u041F\u0440\u0438\u0451\u043C \u0432 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0435 \u0441\u0440\u043E\u043A\u0438", "Within the stated application period", "\u5904\u4E8E\u6240\u5217\u7533\u8BF7\u671F");
-      if (v.status === "upcoming") return L2("\u041F\u0440\u0438\u0451\u043C \u0435\u0449\u0451 \u043D\u0435 \u043D\u0430\u0447\u0430\u043B\u0441\u044F", "Applications have not started", "\u5C1A\u672A\u5F00\u59CB\u63A5\u53D7\u7533\u8BF7");
-      return L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043F\u0440\u0438\u0451\u043C \u0443 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F", "Check recruitment with the employer", "\u8BF7\u5411\u96C7\u4E3B\u6838\u5B9E\u62DB\u8058\u72B6\u6001");
-    }
-    function normalizedManualDraft(value, employer) {
-      return { ...Object.fromEntries(["title", "url", "education", "experience", "knowledge", "skills"].map((name2) => [name2, safeText(value[name2], name2 === "title" ? 500 : name2 === "url" ? 2e3 : 2e4)])), employer, open: value.open === true, panelKey: safeText(value.panelKey, 300) };
-    }
-    function prepareManualDrafts() {
-      const canonical = new Set(institutions.map((authority) => authority.id));
-      const drafts = isRecord2(journey.manualDrafts) ? journey.manualDrafts : {};
-      journey.manualDrafts = Object.fromEntries(Object.entries(drafts).filter(([id, value]) => canonical.has(id) && isRecord2(value)).map(([id, value]) => [id, normalizedManualDraft(value, id)]));
-      const legacy = journey.manualDraft;
-      if (isRecord2(legacy) && canonical.has(legacy.employer) && !journey.manualDrafts[legacy.employer]) journey.manualDrafts[legacy.employer] = normalizedManualDraft(legacy, legacy.employer);
-    }
-    function draftForAuthority(id) {
-      return isRecord2(journey.manualDrafts?.[id]) ? journey.manualDrafts[id] : {};
-    }
-    function defaultRolePanel(id) {
-      return `${journey.desiredIds.includes(id) ? "preferred" : "recommended"}-${id}`;
-    }
-    function rolePanelState(key2) {
-      if (!rolePanelStates.has(key2)) rolePanelStates.set(key2, { open: false, query: "", limit: 5, sourceOpen: /* @__PURE__ */ new Set() });
-      return rolePanelStates.get(key2);
-    }
-    function authorityRolePanel(authority, panelKey) {
-      const state2 = rolePanelState(panelKey), draft = draftForAuthority(authority.id);
-      const draftHere = draft.open && (draft.panelKey || defaultRolePanel(authority.id)) === panelKey;
-      const employerUrl = safeURL(authority.governmentUrl || authority.descriptionSources?.[0]?.url);
-      return `<details class="journey-authority-roles" data-authority-roles="${E3(authority.id)}" data-role-panel="${E3(panelKey)}" ${state2.open || draftHere ? "open" : ""}><summary><span>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0438 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Roles and vacancies", "\u804C\u4F4D\u4E0E\u62DB\u8058\u516C\u544A")}</span></summary><div class="journey-authority-roles-content"><section class="journey-bank" data-employer-bank></section><h4 class="journey-study-heading">${L2("\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0434\u043B\u044F \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Materials for role assessment", "\u804C\u4F4D\u5206\u6790\u5B66\u4E60\u6750\u6599")} <span class="journey-role-total" data-role-total>\u2026</span></h4><p class="seminar-source-note" data-role-source-note role="status"></p><div data-role-load-status></div><label class="journey-field journey-role-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043E\u0440\u0433\u0430\u043D\u0435", "Find a role with this employer", "\u67E5\u627E\u8BE5\u673A\u6784\u7684\u804C\u4F4D")}<input type="search" data-role-search autocomplete="off" value="${E3(state2.query)}"></label><p class="journey-result-count" data-role-result-count></p><div class="journey-local-role-list" data-authority-role-list></div><button type="button" class="button button-secondary journey-more" data-role-more hidden>${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451", "Show more", "\u663E\u793A\u66F4\u591A")}</button><div class="journey-source-links">${employerUrl ? `<a href="${employerUrl}" target="_blank" rel="noopener noreferrer">${L2("\u0421\u0430\u0439\u0442 \u043E\u0440\u0433\u0430\u043D\u0430", "Employer website", "\u673A\u6784\u7F51\u7AD9")}${icon("external")}</a>` : ""}<a href="${PORTAL}/vacancy/" target="_blank" rel="noopener noreferrer">${L2("\u041F\u043E\u0440\u0442\u0430\u043B \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0430", "Civil service portal", "\u516C\u52A1\u5458\u95E8\u6237")}${icon("external")}</a></div>${manualVacancyForm(authority, panelKey)}</div></details>`;
-    }
-    function bankId(value) {
-      try {
-        return platformEmployerId(value);
-      } catch {
-        return String(value || "");
-      }
-    }
-    function bankAuthority(panel) {
-      return bankId(rolePanelState(panel.dataset.rolePanel).bankAuthorityId || panel.dataset.authorityRoles);
-    }
-    function bankStatus(row) {
-      const status = vacancyBankStatus(row);
-      const label2 = {
-        "source-active": L2("\u041F\u0440\u0438\u0451\u043C \u043F\u043E \u0434\u0430\u043D\u043D\u044B\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0430", "Accepting as listed by the portal", "\u95E8\u6237\u663E\u793A\u6B63\u5728\u62DB\u52DF"),
-        archived: L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u516C\u544A"),
-        expired: L2("\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u0441\u0440\u043E\u043A \u0438\u0441\u0442\u0451\u043A", "Listed deadline has passed", "\u6240\u5217\u622A\u6B62\u65E5\u671F\u5DF2\u8FC7"),
-        unknown: L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Recruitment status not stated", "\u672A\u6CE8\u660E\u62DB\u8058\u72B6\u6001")
-      }[status];
-      return `<span class="journey-bank-badge ${status}">${label2}</span>`;
-    }
-    function bankJob(row) {
-      const salary = [row.salaryFrom, row.salaryTo].filter((value) => typeof value === "number" && Number.isFinite(value));
-      const pay = salary.length ? salary.map((value) => number(value)).join(" \u2013 ") + " \u20BD" : "";
-      const location2 = [row.region, row.locality].filter((value) => typeof value === "string" && value.trim()).join(", ");
-      const fields = [
-        [L2("\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Published", "\u53D1\u5E03\u65E5\u671F"), row.announcedAt ? date2(row.announcedAt) : L2("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Not stated", "\u672A\u6CE8\u660E")],
-        [L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62"), row.expiresAt ? date2(row.expiresAt) : L2("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Not stated", "\u672A\u6CE8\u660E")],
-        [L2("\u041E\u043F\u043B\u0430\u0442\u0430 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Pay as published", "\u6765\u6E90\u6240\u5217\u62A5\u916C"), pay]
-      ].filter(([, value]) => value);
-      const requirements = [[L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"), row.education], [L2("\u041E\u043F\u044B\u0442 \u043F\u043E \u0441\u043F\u0435\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Professional experience", "\u4E13\u4E1A\u7ECF\u5386"), row.professionalExperience], [L2("\u0421\u0442\u0430\u0436 \u0433\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u044B", "Public-service experience", "\u516C\u52A1\u7ECF\u5386"), row.governmentExperience]].filter(([, value]) => typeof value === "string" && value.trim());
-      const url = safeURL(row.sourceURL);
-      return `<article class="journey-bank-job" data-bank-job="${E3(row.id)}"><div class="journey-bank-badges">${bankStatus(row)}${row.scope === "group-or-reserve-context" ? `<span class="journey-bank-badge scope">${L2("\u0413\u0440\u0443\u043F\u043F\u0430 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 / \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0440\u0432", "Position group / talent reserve", "\u804C\u4F4D\u7EC4\uFF0F\u4EBA\u624D\u50A8\u5907")}</span>` : ""}</div><h5 lang="ru">${E3(row.title || L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Role title not stated", "\u672A\u6CE8\u660E\u804C\u4F4D\u540D\u79F0"))}</h5>${location2 ? `<p class="journey-bank-location" lang="ru">${E3(location2)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl>${requirements.length ? `<details class="journey-bank-requirements"><summary>${L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436", "Education and experience", "\u5B66\u5386\u4E0E\u7ECF\u5386")}</summary><dl>${requirements.map(([label2, value]) => `<div><dt>${label2}</dt><dd lang="ru">${E3(value)}</dd></div>`).join("")}</dl></details>` : ""}${`<details class="journey-bank-full" data-bank-full="${E3(row.id)}"><summary>${L2("\u041F\u043E\u043B\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Full requirements and duties", "\u5B8C\u6574\u8981\u6C42\u4E0E\u804C\u8D23")}</summary><div data-bank-full-content></div></details><button type="button" class="button button-secondary" data-bank-choose="${E3(row.id)}">${L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess these requirements", "\u8BC4\u4F30\u8FD9\u4E9B\u8981\u6C42")}</button><p data-bank-choice-status role="status"></p>`}${url ? `<a class="seminar-vacancy-link" href="${E3(url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Open announcement", "\u6253\u5F00\u516C\u544A")}${icon("external")}</a>` : ""}</article>`;
-    }
-    function renderEmployerVacancies(panel) {
-      const target = panel.querySelector("[data-employer-bank]");
-      if (!target || !panel.isConnected) return;
-      const state2 = rolePanelState(panel.dataset.rolePanel), id = bankAuthority(panel), view = vacancyBank.get(id), descriptor = view.descriptor;
-      state2.bankLimit = state2.bankLimit || 10;
-      if (id === bankId(panel.dataset.authorityRoles) && descriptor?.familyConnections) {
-        state2.bankFamilyConnections = descriptor.familyConnections;
-        state2.bankPrimaryEmpty = descriptor.jobCount === 0;
-        const related = descriptor.familyConnections.find((item) => item.jobCount > 0);
-        if (state2.bankPrimaryEmpty && related && !state2.bankAutoSelected) {
-          state2.bankAutoSelected = true;
-          state2.bankAuthorityId = related.authorityId;
-          state2.bankLimit = 10;
-          renderEmployerVacancies(panel);
-          void vacancyBank.ensure(related.authorityId);
+        const answers = [...session.answers, { questionId: question.id, value: session.pending.value }];
+        const finished = shouldFinish({ taxonomy, answers, candidates }) || !questionFor(answers);
+        const updated = finished ? completedSession(answers) : invalidateCompletion({ ...session, answers, pending: null });
+        if (!save(updated)) {
+          renderQuestion2();
           return;
         }
+        rankingCache = null;
+        navigate(finished ? "results" : "test");
+      } finally {
+        transitionBusy = false;
       }
-      const family = state2.bankFamilyConnections || [], parentName = authorityName(byId().get(panel.dataset.authorityRoles) || { name: panel.dataset.authorityRoles });
-      const selector = family.length ? `<label class="journey-field journey-bank-family">${L2("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C", "Employer", "\u96C7\u4E3B")}<select data-bank-family><option value="${E3(panel.dataset.authorityRoles)}" ${id === bankId(panel.dataset.authorityRoles) ? "selected" : ""}>${E3(parentName)}</option>${family.map((item) => `<option value="${E3(item.authorityId)}" ${id === item.authorityId ? "selected" : ""}>${E3(item.name)} (${number(item.jobCount)})</option>`).join("")}</select><small>${L2("\u0421\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E: \u0438\u0445 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u043E\u0431\u044A\u0435\u0434\u0438\u043D\u044F\u044E\u0442\u0441\u044F \u0441 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u043C\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Related employers are separate; their announcements are not merged with this employer\u2019s listings.", "\u76F8\u5173\u673A\u6784\u5206\u522B\u5C55\u793A\uFF0C\u5176\u516C\u544A\u4E0D\u4F1A\u4E0E\u5F53\u524D\u96C7\u4E3B\u5408\u5E76\u3002")}</small></label>` : "";
-      const selectedName = descriptor?.name || (state2.bankFamilyConnections || []).find((item) => item.authorityId === id)?.name || parentName;
-      const heading = `<div class="journey-bank-heading"><h4>${L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0430 \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u0435", "Civil-service portal announcements", "\u516C\u52A1\u5458\u95E8\u6237\u516C\u544A")}</h4>${descriptor ? `<span>${number(descriptor.jobCount)}</span>` : ""}</div>`;
-      if (view.status === "idle") {
-        target.innerHTML = heading + `<p class="journey-muted">${L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0437\u0430\u0433\u0440\u0443\u0437\u044F\u0442\u0441\u044F \u043F\u0440\u0438 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u0438 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438.", "Announcements load when you open this panel.", "\u6253\u5F00\u6B64\u9762\u677F\u65F6\u52A0\u8F7D\u516C\u544A\u3002")}</p>`;
-        return;
-      }
-      const copyDate = descriptor?.snapshotAt ? date2(descriptor.snapshotAt) : "";
-      const total = descriptor?.jobCount || 0, pageCount = descriptor?.pages.length || 0, shown = view.rows.slice(0, state2.bankLimit);
-      const empty = descriptor && !total ? !descriptor.employerId ? L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u043A\u0430 \u043D\u0435 \u0441\u0432\u044F\u0437\u0430\u043D\u044B \u0441 \u044D\u0442\u0438\u043C \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u043C. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u043F\u043E\u0440\u0442\u0430\u043B.", "Announcements have not yet been linked to this employer. Check the official portal.", "\u5C1A\u672A\u5C06\u516C\u544A\u5173\u8054\u5230\u6B64\u96C7\u4E3B\uFF0C\u8BF7\u67E5\u770B\u5B98\u65B9\u95E8\u6237\u3002") : L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u043E\u043F\u0438\u0438 \u043D\u0435\u0442 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u044D\u0442\u043E\u0433\u043E \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F. \u042D\u0442\u043E \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442, \u0447\u0442\u043E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439 \u043D\u0435\u0442.", "This snapshot has no announcements for this employer. This does not mean there are no vacancies.", "\u6B64\u526F\u672C\u6CA1\u6709\u8BE5\u96C7\u4E3B\u7684\u516C\u544A\uFF0C\u4F46\u8FD9\u5E76\u4E0D\u8868\u793A\u6CA1\u6709\u7A7A\u7F3A\u3002") : "";
-      target.innerHTML = heading + selector + `<p class="journey-bank-current-employer" lang="ru">${E3(selectedName)}</p>${state2.bankPrimaryEmpty && id !== bankId(panel.dataset.authorityRoles) ? `<p class="journey-bank-note">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u043E\u043F\u0438\u0438 \u043D\u0435\u0442 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430. \u041F\u043E\u043A\u0430\u0437\u0430\u043D \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0432\u044F\u0437\u0430\u043D\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C.", "This snapshot has no listings for the selected authority. A separate related employer is shown.", "\u6B64\u526F\u672C\u6CA1\u6709\u6240\u9009\u673A\u5173\u7684\u516C\u544A\uFF0C\u73B0\u663E\u793A\u4E00\u4E2A\u72EC\u7ACB\u7684\u76F8\u5173\u96C7\u4E3B\u3002")}</p>` : ""}` + (descriptor ? `<p class="journey-bank-count">${L2("\u0412\u0441\u0435\u0433\u043E", "Total", "\u603B\u8BA1")}: ${number(total)} \xB7 ${L2("\u0410\u0440\u0445\u0438\u0432\u043D\u044B\u0445 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Archived as published", "\u6765\u6E90\u6807\u4E3A\u5386\u53F2")}: ${number(descriptor.archiveCount || 0)}</p>` : "") + `<p class="journey-bank-status" role="status" aria-live="polite">${view.loading ? L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u2026", "Loading announcements\u2026", "\u6B63\u5728\u52A0\u8F7D\u516C\u544A\u2026\u2026") : view.error ? L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F. \u0423\u0436\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u043D\u044B\u0435 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B.", "Announcements could not be loaded. Previously loaded cards remain available.", "\u516C\u544A\u52A0\u8F7D\u5931\u8D25\uFF0C\u5DF2\u52A0\u8F7D\u7684\u5361\u7247\u4ECD\u53EF\u67E5\u770B\u3002") : empty || ""}</p>${view.error ? `<button type="button" class="button button-secondary" data-bank-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button>` : ""}<div class="journey-bank-list" aria-busy="${view.loading}">${shown.map(bankJob).join("")}</div>${view.rows.length ? `<p class="journey-bank-page-note">${L2(`\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ${view.pageIndex + 1} \u0438\u0437 ${pageCount}. \u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E ${shown.length} \u0438\u0437 ${view.rows.length} \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B.`, `Page ${view.pageIndex + 1} of ${pageCount}. Showing ${shown.length} of ${view.rows.length} announcements on this page.`, `\u7B2C ${view.pageIndex + 1}\uFF0F${pageCount} \u9875\uFF0C\u663E\u793A\u672C\u9875 ${view.rows.length} \u6761\u516C\u544A\u4E2D\u7684 ${shown.length} \u6761\u3002`)}</p>` : ""}${view.rows.length > state2.bankLimit ? `<button type="button" class="button button-secondary journey-bank-more" data-bank-more>${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0435\u0449\u0451 \u043D\u0430 \u044D\u0442\u043E\u0439 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435", "Show more on this page", "\u663E\u793A\u672C\u9875\u66F4\u591A\u516C\u544A")}</button>` : ""}${pageCount > 1 ? `<nav class="journey-bank-pages" aria-label="${L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F", "Employer announcement pages", "\u96C7\u4E3B\u516C\u544A\u5206\u9875")}"><button type="button" class="button button-secondary" data-bank-prev ${view.loading || view.pageIndex === 0 ? "disabled" : ""}>${L2("\u041F\u0440\u0435\u0434\u044B\u0434\u0443\u0449\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", "Previous page", "\u4E0A\u4E00\u9875")}</button><span>${view.pageIndex + 1} / ${pageCount}</span><button type="button" class="button button-secondary" data-bank-next ${view.loading || view.pageIndex >= pageCount - 1 ? "disabled" : ""}>${L2("\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", "Next page", "\u4E0B\u4E00\u9875")}</button></nav>` : ""}<p class="journey-bank-note">${copyDate ? L2("\u0414\u0430\u0442\u0430 \u043A\u043E\u043F\u0438\u0438: ", "Snapshot prepared: ", "\u526F\u672C\u65E5\u671F\uFF1A") + E3(copyDate) + (copyDate.trim().endsWith(".") ? " " : L2(". ", ". ", "\u3002")) : ""}${L2("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u0432\u0441\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F, \u0432\u043A\u043B\u044E\u0447\u0430\u044F \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435. \u0421\u0440\u043E\u043A\u0438 \u0438 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0441\u0442\u044C \u043E\u0442\u043A\u043B\u0438\u043A\u0430 \u0443\u0442\u043E\u0447\u043D\u044F\u0439\u0442\u0435 \u0432 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438.", "All this employer\u2019s announcements are included, including archived listings. Check dates and application availability in the official announcement.", "\u5305\u542B\u8BE5\u96C7\u4E3B\u7684\u5168\u90E8\u516C\u544A\u53CA\u5386\u53F2\u8BB0\u5F55\uFF0C\u8BF7\u5728\u5B98\u65B9\u516C\u544A\u4E2D\u6838\u5BF9\u671F\u9650\u53CA\u7533\u8BF7\u72B6\u6001\u3002")}</p>`;
-      const page = descriptor?.pages[view.pageIndex], binding = page ? { basePage: page.path, basePageSHA256: page.sha256, employerId: descriptor.employerId, uuids: view.rows.map((row) => row.id) } : null;
-      const labels = { duties: L2("\u041E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Duties", "\u804C\u8D23"), knowledge: L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6"), skills: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u6280\u80FD"), knowledgeDescription: L2("\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0437\u043D\u0430\u043D\u0438\u0439 \u0438 \u0443\u043C\u0435\u043D\u0438\u0439", "Knowledge and skills description", "\u77E5\u8BC6\u4E0E\u6280\u80FD\u8BF4\u660E"), additionalRequirements: L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Additional requirements", "\u5176\u4ED6\u8981\u6C42"), departmentLabels: L2("\u041F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0435 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Department as published", "\u6765\u6E90\u6240\u5217\u90E8\u95E8"), otherRequirements: L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u0441\u0442\u0430\u0436 \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F", "Education, experience and other conditions", "\u5B66\u5386\u3001\u7ECF\u5386\u4E0E\u5176\u4ED6\u6761\u4EF6") };
-      async function detailsFor(article, row) {
-        const content = article.querySelector("[data-bank-full-content]");
-        content.textContent = L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043F\u043E\u043B\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442\u2026", "Loading full text\u2026", "\u6B63\u5728\u52A0\u8F7D\u5168\u6587\u2026\u2026");
-        const loaded = await vacancyDetails.load(binding, row.id);
-        if (!article.isConnected) return loaded;
-        if (loaded.status !== "ready") {
-          content.innerHTML = `<p role="status">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043F\u043E\u043B\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437 \u0438\u043B\u0438 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A.", "Full text could not be loaded. Try again or open the source.", "\u5168\u6587\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u91CD\u8BD5\u6216\u6253\u5F00\u6765\u6E90\u3002")}</p><button type="button" class="button button-secondary" data-full-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button>`;
-          content.querySelector("button").onclick = () => void detailsFor(article, row);
-          return loaded;
+    }
+    function renderQuestion2() {
+      const root = questionRoot();
+      if (!root || !readyFor(root, true)) return;
+      const question = currentQuestion();
+      if (!question) {
+        if (session.answers.length && save(completedSession(session.answers))) navigate("results");
+        else {
+          root.innerHTML = loadingMarkup(true, "adaptive-retry-question");
+          root.querySelector("#adaptive-retry-question").onclick = () => renderQuestion2();
         }
-        content.innerHTML = DETAIL_CATEGORIES.map((category) => `<section><h6>${labels[category]}</h6>${loaded.record[category].length ? loaded.record[category].map((token) => `<p lang="ru">${E3(token.text)}</p>`).join("") : `<p class="journey-muted">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E.", "Not stated in this source card.", "\u6B64\u6765\u6E90\u5361\u7247\u672A\u6CE8\u660E\u3002")}</p>`}</section>`).join("");
-        return loaded;
+        return;
       }
-      target.querySelectorAll("[data-bank-job]").forEach((article) => {
-        const row = view.rows.find((row2) => row2.id === article.dataset.bankJob), full = article.querySelector("[data-bank-full]");
-        full.addEventListener("toggle", () => {
-          if (full.open) void detailsFor(article, row);
-          else vacancyDetails.cancel(binding, row.id);
-        });
-        article.querySelector("[data-bank-choose]").onclick = async (event) => {
-          const button = event.currentTarget;
-          button.disabled = true;
-          const loaded = await detailsFor(article, row);
-          button.disabled = false;
-          if (!article.isConnected || loaded?.status !== "ready") return;
-          const previous = { id: journey.selectedVacancyId, snapshot: journey.selectedSnapshot };
-          const vacancy = bankVacancySnapshot(row, loaded.record, { institutionId: panel.dataset.authorityRoles, employerId: descriptor.employerId, employerName: selectedName, provenance: loaded.provenance });
-          journey.selectedVacancyId = vacancy.id;
-          journey.selectedSnapshot = vacancy;
-          if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
-          if (save() === false) {
-            journey.selectedVacancyId = previous.id;
-            journey.selectedSnapshot = previous.snapshot;
-            article.querySelector("[data-bank-choice-status]").textContent = L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440.", "The selection could not be saved.", "\u65E0\u6CD5\u4FDD\u5B58\u9009\u62E9\u3002");
-            return;
+      const selected = session.pending?.questionId === question.id ? session.pending.value : null;
+      root.innerHTML = `<div class="adaptive-workflow">
+      <header class="adaptive-topline"><button type="button" class="adaptive-back" id="adaptive-back">${icon("arrow-left")}${L2("\u041D\u0430\u0437\u0430\u0434", "Back", "\u8FD4\u56DE")}</button><span class="adaptive-counter">${L2("\u0412\u043E\u043F\u0440\u043E\u0441 ", "Question ", "\u95EE\u9898 ")}${session.answers.length + 1}</span></header>
+      <article class="adaptive-question-card">
+        <p class="adaptive-prompt">${L2("\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0412\u0430\u043C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0442\u044C \u0442\u0430\u043A\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443?", "How interested are you in doing this work?", "\u4F60\u5BF9\u4ECE\u4E8B\u8FD9\u9879\u5DE5\u4F5C\u6709\u591A\u5927\u5174\u8DA3\uFF1F")}</p>
+        <h1 id="adaptive-question" data-question-id="${E2(question.id)}">${E2(localized(question.text))}</h1>
+        <div id="adaptive-answer-options" class="adaptive-answer-options" role="radiogroup" aria-labelledby="adaptive-question">
+          ${answerLabels2().map((answer, index) => `<button type="button" role="radio" aria-checked="${selected === answer.value}" tabindex="${selected === answer.value || selected === null && index === 0 ? 0 : -1}" data-adaptive-answer="${answer.value}" class="adaptive-answer${selected === answer.value ? " is-selected" : ""}${answer.value === 0 ? " adaptive-answer-unknown" : ""}"><span class="adaptive-answer-dot" aria-hidden="true"></span><span>${E2(answer.text)}</span></button>`).join("")}
+        </div>
+        <div id="adaptive-save-feedback">${saveError()}</div>
+        <footer class="adaptive-controls"><button type="button" class="button button-primary" id="adaptive-next" ${selected === null ? "disabled" : ""}>${L2("\u0414\u0430\u043B\u0435\u0435", "Next", "\u4E0B\u4E00\u9898")}${icon("arrow-right")}</button></footer>
+      </article>
+    </div>`;
+      root.querySelectorAll("[data-adaptive-answer]").forEach((button) => button.addEventListener("click", () => chooseAnswer(Number(button.dataset.adaptiveAnswer))));
+      root.querySelector("#adaptive-back").onclick = backQuestion;
+      root.querySelector("#adaptive-next").onclick = advanceQuestion;
+      bindSaveRetry(root);
+    }
+    function statusLabel(row) {
+      if (row.archive === true || row.status === "archived") return L2("\u0410\u0440\u0445\u0438\u0432", "Archived", "\u5386\u53F2\u62DB\u8058");
+      if (row.status === "profile") return L2("\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role profile", "\u804C\u4F4D\u8D44\u6599");
+      return L2("\u041F\u0440\u0438\u0451\u043C \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D", "Recruitment unconfirmed", "\u62DB\u8058\u72B6\u6001\u672A\u786E\u8BA4");
+    }
+    function detailFor(row) {
+      const cacheKey = detailKey(row.detailPath), chunk = detailCache.get(cacheKey);
+      if (chunk) {
+        detailCache.delete(cacheKey);
+        detailCache.set(cacheKey, chunk);
+      }
+      const detail = chunk?.get(row.id);
+      return detail && detail.sourceURL === row.sourceURL ? detail : null;
+    }
+    function cleanDisplayLocation(row) {
+      const region = territories.find((item) => item.id === row.regionId);
+      const knownRegion = region ? regionName(region) : "";
+      const location2 = compact(row.location), locality = compact(row.locality);
+      const editorial = /адрес[а-я]*\s+при[её]ма|не\s+(?:принят|подтвержд[её]н|установлен)|(?:точное|конкретное)\s+рабочее место/i;
+      if (editorial.test(location2) || editorial.test(locality)) return { text: knownRegion, lang: getLanguage() };
+      if (locality) return { text: [knownRegion, locality].filter(Boolean).join(", "), lang: "ru" };
+      return location2 ? { text: location2, lang: "ru" } : { text: knownRegion, lang: getLanguage() };
+    }
+    function displayEvidence(row, detail) {
+      if (!Array.isArray(row.matchedFeatures) || !Array.isArray(detail?.evidence)) return [];
+      const answers = new Map(session.answers.map((answer) => [answer.questionId, answer.value]));
+      const matched = new Map(row.matchedFeatures.filter((feature2) => isRecord(feature2) && typeof feature2.id === "string" && Number.isFinite(feature2.weight) && feature2.weight > 0 && Number.isFinite(feature2.interest) && feature2.interest > 0 && Number.isFinite(feature2.strength) && feature2.strength > 0 && (!feature2.specific || answers.get(feature2.id) >= 4)).map((feature2) => [feature2.id, feature2]));
+      const categoryOrder = { duties: 0, skills: 1, knowledge: 2 };
+      const relevant = detail.evidence.filter((item) => validEvidence(item) && matched.has(item.featureId)).slice().sort((left, right) => {
+        const a = matched.get(left.featureId), b = matched.get(right.featureId);
+        return Number(b.specific === true) - Number(a.specific === true) || b.weight - a.weight || categoryOrder[left.category] - categoryOrder[right.category];
+      });
+      const selected = [], seen = [];
+      for (const item of relevant) {
+        const normalized3 = compact(item.sourceText).toLocaleLowerCase("ru");
+        if (seen.some((text4) => text4 === normalized3 || text4.includes(normalized3) || normalized3.includes(text4))) continue;
+        selected.push(item);
+        seen.push(normalized3);
+        if (selected.length === 2) break;
+      }
+      return selected;
+    }
+    function evidenceSections(row, detail) {
+      const groups = /* @__PURE__ */ new Map();
+      for (const item of displayEvidence(row, detail)) {
+        if (!groups.has(item.category)) groups.set(item.category, []);
+        groups.get(item.category).push(item);
+      }
+      const label2 = (category) => category === "duties" ? L2("\u0417\u0430\u0434\u0430\u0447\u0438", "Tasks", "\u5DE5\u4F5C\u4EFB\u52A1") : category === "skills" ? L2("\u0423\u043C\u0435\u043D\u0438\u044F", "Skills", "\u6280\u80FD") : L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6");
+      return [...groups].map(([category, items]) => `<section class="adaptive-role-section"><h3>${label2(category)}</h3>${items.map((item) => `<p lang="ru" data-adaptive-evidence="${E2(item.featureId)}" data-evidence-category="${E2(category)}">${E2(snippet(item.sourceText, 560))}</p>`).join("")}</section>`).join("");
+    }
+    function roleCard(row, index) {
+      const detail = detailFor(row), location2 = cleanDisplayLocation(row);
+      const url = safeURL(row.sourceURL);
+      return `<article class="adaptive-role" data-adaptive-vacancy="${E2(row.id)}">
+      <div class="adaptive-role-topline"><span class="adaptive-role-rank">${index + 1}</span><span class="adaptive-role-status">${E2(statusLabel(row))}</span></div>
+      <h2 lang="ru">${E2(row.title)}</h2>
+      ${row.department ? `<p class="adaptive-role-department" lang="ru">${E2(row.department)}</p>` : ""}
+      ${row.employerName ? `<p class="adaptive-role-employer" lang="ru">${E2(row.employerName)}</p>` : ""}
+      ${location2.text ? `<p class="adaptive-role-location" lang="${E2(location2.lang)}">${E2(location2.text)}</p>` : ""}
+      ${evidenceSections(row, detail)}
+      ${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source", "\u6765\u6E90")}${icon("external")}</a>` : ""}
+    </article>`;
+    }
+    function detailKey(path, version = manifest?.version) {
+      return version + "|" + path;
+    }
+    function validEvidence(item) {
+      return isRecord(item) && typeof item.featureId === "string" && item.featureId.length > 0 && EVIDENCE_CATEGORIES.has(item.category) && typeof item.sourceText === "string" && compact(item.sourceText) && typeof item.sourcePointer === "string";
+    }
+    function validDetail(row) {
+      return isRecord(row) && typeof row.id === "string" && typeof row.sourceURL === "string" && Array.isArray(row.evidence) && row.evidence.every(validEvidence);
+    }
+    function hasRequestedDetails(chunk, rows) {
+      return rows.every((row) => {
+        const detail = chunk?.get(row.id);
+        return detail && detail.sourceURL === row.sourceURL;
+      });
+    }
+    function resetDetailRequests() {
+      detailGeneration += 1;
+      for (const job of detailPending.values()) job.controller.abort();
+      detailPending.clear();
+      detailQueue = [];
+      detailSelection = "";
+      detailErrors.clear();
+    }
+    function pumpDetails() {
+      if (!live() || lastRoute !== "results") return;
+      while (detailPending.size < DETAIL_CONCURRENCY && detailQueue.length) {
+        const request = detailQueue.shift();
+        const job = { ...request, controller: new AbortController(), ticket: detailGeneration };
+        detailPending.set(job.key, job);
+        job.promise = (async () => {
+          const current = () => live() && !job.controller.signal.aborted && job.ticket === detailGeneration && manifest.version === job.version;
+          try {
+            const payload = await loadPacked(job.descriptor, "detail", job.controller.signal);
+            if (!current()) return;
+            if (payload.version !== job.version || !payload.rows.every(validDetail)) throw new Error("Invalid vacancy details");
+            const chunk = new Map(payload.rows.map((row) => [row.id, row]));
+            if (chunk.size !== payload.rows.length || !hasRequestedDetails(chunk, job.rows)) throw new Error("Vacancy detail identity mismatch");
+            detailCache.set(job.key, chunk);
+            while (detailCache.size > DETAIL_CACHE_LIMIT) detailCache.delete(detailCache.keys().next().value);
+          } catch (error) {
+            if (current() && error.name !== "AbortError") detailErrors.add(job.key);
+          } finally {
+            if (detailPending.get(job.key) === job) detailPending.delete(job.key);
+            if (current() && lastRoute === "results") {
+              pumpDetails();
+              renderResults2();
+            }
           }
-          switchStage("requirements");
-        };
-      });
-      target.querySelector("[data-bank-more]")?.addEventListener("click", () => {
-        state2.bankLimit += 10;
-        renderEmployerVacancies(panel);
-      });
-      target.querySelector("[data-bank-retry]")?.addEventListener("click", () => void vacancyBank.retry(id));
-      const turn = (delta) => {
-        state2.bankLimit = 10;
-        void vacancyBank.loadPage(id, view.pageIndex + delta);
-      };
-      target.querySelector("[data-bank-prev]")?.addEventListener("click", () => turn(-1));
-      target.querySelector("[data-bank-next]")?.addEventListener("click", () => turn(1));
-      target.querySelector("[data-bank-family]")?.addEventListener("change", (event) => {
-        const previous = id;
-        state2.bankAuthorityId = event.target.value;
-        state2.bankLimit = 10;
-        cancelUnusedBank(previous, panel);
-        renderEmployerVacancies(panel);
-        void vacancyBank.ensure(state2.bankAuthorityId);
-      });
-    }
-    function cancelUnusedBank(id, except) {
-      if (![...document.querySelectorAll("[data-authority-roles][open]")].some((panel) => panel !== except && bankAuthority(panel) === id)) vacancyBank.cancel(id);
-    }
-    function renderEmployerVacancyPanels() {
-      document.querySelectorAll("[data-authority-roles]").forEach((panel) => {
-        renderEmployerVacancies(panel);
-        if (panel.open) void vacancyBank.ensure(bankAuthority(panel));
-      });
-    }
-    function cancelEmployerVacancyRequests() {
-      vacancyDetails.cancelAll();
-      document.querySelectorAll("[data-authority-roles]").forEach((panel) => vacancyBank.cancel(bankAuthority(panel)));
-    }
-    function vacancyCard(v, sourceOpen) {
-      const selected = journey.selectedVacancyId === v.id, sourceDate = date2(v.source?.retrievedAt || v.lastSeenAt || v.sourceSnapshotAt);
-      const requirementsCount = buildVacancyRequirements(v).rows.filter((row) => row.assessable).length;
-      const fields = [
-        [L2("\u041C\u0435\u0441\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u044B", "Location", "\u5DE5\u4F5C\u5730\u70B9"), typeof v.location === "string" ? v.location : v.location?.text],
-        [L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F"), sourceDate],
-        [L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62"), date2(v.deadline)],
-        [L2("\u041E\u043F\u043B\u0430\u0442\u0430", "Pay", "\u62A5\u916C"), typeof v.salary === "string" ? v.salary : v.salary?.rawText]
-      ].filter(([, value]) => value);
-      return `<article class="journey-local-role ${selected ? "is-selected" : ""}" data-vacancy-id="${E3(v.id)}" data-role-institution="${E3(v.institutionId)}"><h4 lang="ru">${E3(v.title)}</h4><p class="seminar-vacancy-status">${roleStatus(v)}</p><details class="journey-role-source" data-role-source="${E3(v.id)}" ${sourceOpen ? "open" : ""}><summary>${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u043F\u043E\u0434\u0440\u043E\u0431\u043D\u043E\u0441\u0442\u0438", "Source and details", "\u6765\u6E90\u4E0E\u8BE6\u60C5")}</summary>${v.department ? `<p lang="ru">${E3(v.department)}</p>` : ""}<dl>${fields.map(([label2, value]) => `<div><dt>${label2}</dt><dd>${E3(value)}</dd></div>`).join("")}</dl><p class="journey-requirement-count">${L2("\u041F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438", "Self-assessment items", "\u81EA\u8BC4\u9879\u76EE\u6570")}: ${requirementsCount}</p><a class="seminar-vacancy-link" href="${safeURL(v.url || v.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Open source", "\u6253\u5F00\u6765\u6E90")}${icon("external")}</a></details><button type="button" class="button ${selected ? "button-secondary" : "button-primary"} journey-role-select" data-select-vacancy="${E3(v.id)}">${selected ? L2("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440", "Continue assessment", "\u7EE7\u7EED\u5206\u6790") : L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess requirements", "\u5206\u6790\u804C\u4F4D\u8981\u6C42")}${icon("arrow-right")}</button></article>`;
-    }
-    function renderVacancies(onlyPanel) {
-      const panels = onlyPanel ? [onlyPanel] : [...document.querySelectorAll("[data-authority-roles]")];
-      if (!panels.length) return;
-      const all = roleRecords(), grouped = /* @__PURE__ */ new Map();
-      for (const record2 of all) {
-        if (!grouped.has(record2.institutionId)) grouped.set(record2.institutionId, []);
-        grouped.get(record2.institutionId).push(record2);
+        })();
       }
-      for (const panel of panels) {
-        if (!panel.isConnected) continue;
-        const authorityId = panel.dataset.authorityRoles, state2 = rolePanelState(panel.dataset.rolePanel), target = panel.querySelector("[data-authority-role-list]");
-        const records = grouped.get(authorityId) || [];
-        const query = normalizeName(state2.query), list2 = records.filter((v) => !query || normalizeName([v.title, v.department].join(" ")).includes(query));
-        list2.sort((a, b) => Number(b.currentRecruitmentVerified === true) - Number(a.currentRecruitmentVerified === true) || Number(a.kind === "position-profile") - Number(b.kind === "position-profile") || a.title.localeCompare(b.title, "ru"));
-        if (target.dataset.rendered) state2.sourceOpen = new Set([...target.querySelectorAll("[data-role-source][open]")].map((node) => node.dataset.roleSource));
-        const active = document.activeElement, focused = target.contains(active) ? { role: active?.dataset.selectVacancy, source: active?.closest("[data-role-source]")?.dataset.roleSource, summary: active?.tagName === "SUMMARY", link: active?.tagName === "A" } : null;
-        const loadStatus = panel.querySelector("[data-role-load-status]"), retryFocused = loadStatus.contains(active);
-        panel.querySelector("[data-role-total]").textContent = positionsLoading && !records.length ? "\u2026" : number(records.length);
-        panel.querySelector("[data-role-source-note]").textContent = sourceNote();
-        loadStatus.innerHTML = positionsError ? `<p class="journey-source-status">${L2("\u0427\u0430\u0441\u0442\u044C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u0432 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u0430\u0441\u044C. \u0414\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B.", "Some sources could not be loaded. Available materials are still shown.", "\u90E8\u5206\u6765\u6E90\u672A\u80FD\u52A0\u8F7D\uFF0C\u5DF2\u52A0\u8F7D\u7684\u6750\u6599\u4ECD\u53EF\u67E5\u770B\u3002")} <button type="button" class="journey-text-button" data-role-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button></p>` : "";
-        panel.querySelector("[data-role-result-count]").textContent = L2(`\u041C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u043E\u0432 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430: ${list2.length}`, `Materials from this employer: ${list2.length}`, `\u8BE5\u673A\u6784\u7684\u8D44\u6599\u6570\uFF1A${list2.length}`);
-        target.innerHTML = list2.slice(0, state2.limit).map((record2) => vacancyCard(record2, state2.sourceOpen.has(record2.id))).join("") || `<p class="journey-local-role-empty">${positionsLoading ? L2("\u041F\u043E\u0434\u0431\u0438\u0440\u0430\u0435\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B\u2026", "Finding materials\u2026", "\u6B63\u5728\u67E5\u627E\u6750\u6599\u2026\u2026") : query ? L2("\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u0437\u0430\u043F\u0440\u043E\u0441.", "No matches. Try a different search.", "\u6CA1\u6709\u5339\u914D\u7ED3\u679C\uFF0C\u8BF7\u66F4\u6539\u641C\u7D22\u8BCD\u3002") : L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0445 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u0445 \u043D\u0435\u0442 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430 \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u0439. \u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0441\u0430\u0439\u0442 \u0438\u043B\u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043D\u0438\u0436\u0435.", "The saved sources contain no roles for this employer in your chosen territories. Check its official website or add an announcement below.", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u6CA1\u6709\u8BE5\u673A\u6784\u5728\u6240\u9009\u5730\u533A\u7684\u804C\u4F4D\u3002\u8BF7\u67E5\u770B\u5B98\u65B9\u7F51\u7AD9\uFF0C\u6216\u5728\u4E0B\u65B9\u6DFB\u52A0\u516C\u544A\u3002")}</p>`;
-        target.dataset.rendered = "true";
-        panel.querySelector("[data-role-more]").hidden = list2.length <= state2.limit;
-        if (focused) {
-          const restore = focused.role ? [...target.querySelectorAll("[data-select-vacancy]")].find((node) => node.dataset.selectVacancy === focused.role) : focused.source ? [...target.querySelectorAll("[data-role-source]")].find((node) => node.dataset.roleSource === focused.source)?.querySelector(focused.summary ? "summary" : focused.link ? "a" : "[tabindex]") : null;
-          restore?.focus({ preventScroll: true });
+    }
+    function loadDetails(matches, retry = false) {
+      const version = manifest.version;
+      const selection = JSON.stringify([version, candidateKey, matches.map((row) => [row.id, row.detailPath, row.sourceURL])]);
+      if (selection !== detailSelection) {
+        resetDetailRequests();
+        detailSelection = selection;
+      }
+      const requested = /* @__PURE__ */ new Map();
+      for (const row of matches) {
+        if (!requested.has(row.detailPath)) requested.set(row.detailPath, []);
+        requested.get(row.detailPath).push(row);
+      }
+      for (const [path, rows] of requested) {
+        const key2 = detailKey(path, version);
+        if (retry && detailErrors.delete(key2)) detailCache.delete(key2);
+        if (detailPending.has(key2) || detailQueue.some((job) => job.key === key2) || detailErrors.has(key2)) continue;
+        if (detailCache.has(key2)) {
+          if (!hasRequestedDetails(detailCache.get(key2), rows)) detailErrors.add(key2);
+          continue;
         }
-        if (retryFocused) (loadStatus.querySelector("[data-role-retry]") || panel.querySelector(":scope > summary"))?.focus({ preventScroll: true });
+        const descriptor = manifest.details.find((item) => item.path === path);
+        if (!descriptor) {
+          detailErrors.add(key2);
+          continue;
+        }
+        detailQueue.push({ key: key2, version, descriptor, rows });
       }
+      pumpDetails();
     }
-    function bindAuthorityRolePanels(target) {
-      target.querySelectorAll("[data-authority-roles]").forEach((panel) => {
-        const state2 = rolePanelState(panel.dataset.rolePanel);
-        panel.addEventListener("toggle", (event) => {
-          if (event.target === panel) {
-            state2.open = panel.open;
-            if (panel.open) {
-              renderEmployerVacancies(panel);
-              void vacancyBank.ensure(bankAuthority(panel));
-              void loadVacancies();
-            } else cancelUnusedBank(bankAuthority(panel), panel);
-          } else if (event.target.dataset.roleSource) {
-            if (event.target.open) state2.sourceOpen.add(event.target.dataset.roleSource);
-            else state2.sourceOpen.delete(event.target.dataset.roleSource);
-          }
-        }, true);
-        panel.querySelector("[data-role-search]").addEventListener("input", (event) => {
-          state2.query = event.target.value;
-          state2.limit = 5;
-          renderVacancies(panel);
-        });
-        panel.addEventListener("click", (event) => {
-          if (event.target.closest("[data-role-retry]")) {
-            positionsLoaded = false;
-            void loadVacancies();
-            return;
-          }
-          if (event.target.closest("[data-role-more]")) {
-            state2.limit += 5;
-            renderVacancies(panel);
-            return;
-          }
-          const button = event.target.closest("[data-select-vacancy]");
-          if (!button) return;
-          const vacancy = roleRecords().find((v) => v.id === button.dataset.selectVacancy && v.institutionId === panel.dataset.authorityRoles);
-          if (!vacancy) return;
-          journey.selectedVacancyId = vacancy.id;
-          const { fullDescription, ...snapshot } = vacancy;
-          journey.selectedSnapshot = snapshot;
-          if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
-          save();
-          switchStage("requirements");
-        });
-        bindManualVacancy(panel);
+    function notifyCompletion(ranking) {
+      if (!session.completedAt || !session.resultRecordId || saveFailed || corruptStorage) return;
+      if (session.resultRecordId === notifiedRecordId) return;
+      const record = makeCompletionRecord({
+        taxonomy,
+        answers: session.answers,
+        regionIds: session.regionIds,
+        ranking,
+        indexVersion: manifest.version,
+        responsibilityPreference: session.responsibilityPreference,
+        recordId: session.resultRecordId,
+        createdAt: session.completedAt
       });
+      if (JSON.stringify(session.completion) !== JSON.stringify(record) && !save({ ...session, completion: record })) return;
+      __careerHost.resultCalculated(record);
+      notifiedRecordId = record.recordId;
     }
-    function manualVacancyForm(authority, panelKey) {
-      const draft = draftForAuthority(authority.id), open = draft.open && (draft.panelKey || defaultRolePanel(authority.id)) === panelKey;
-      return `<details class="journey-manual-source" data-manual-authority="${E3(authority.id)}" ${open ? "open" : ""}><summary>${L2("\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430", "Add this employer\u2019s announcement", "\u6DFB\u52A0\u8BE5\u673A\u6784\u7684\u516C\u544A")}</summary><form data-manual-vacancy="${E3(authority.id)}" data-manual-panel="${E3(panelKey)}"><input type="hidden" name="employer" value="${E3(authority.id)}"><p>${L2("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u043F\u0435\u0440\u0435\u043D\u0435\u0441\u0438\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u043A\u0438. \u041A\u0430\u0436\u0434\u044B\u0439 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u043F\u0443\u043D\u043A\u0442 \u043D\u0430\u0447\u0438\u043D\u0430\u0439\u0442\u0435 \u0441 \u043D\u043E\u0432\u043E\u0439 \u0441\u0442\u0440\u043E\u043A\u0438; \u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0439\u0442\u0435 \u0432\u043C\u0435\u0441\u0442\u0435.", "Open the official source and copy the exact wording. Start each separate item on a new line; keep alternative conditions together.", "\u8BF7\u6253\u5F00\u5B98\u65B9\u6765\u6E90\u5E76\u590D\u5236\u51C6\u786E\u8868\u8FF0\u3002\u6BCF\u4E2A\u72EC\u7ACB\u9879\u76EE\u53E6\u8D77\u4E00\u884C\uFF0C\u66FF\u4EE3\u6027\u6761\u4EF6\u987B\u4FDD\u7559\u5728\u540C\u4E00\u9879\u4E2D\u3002")}</p><label class="journey-field">${L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role title", "\u804C\u4F4D\u540D\u79F0")}<input name="title" required maxlength="500" value="${E3(safeText(draft.title, 500))}"></label><label class="journey-field">${L2("\u0421\u0441\u044B\u043B\u043A\u0430 \u043D\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source URL", "\u6765\u6E90\u94FE\u63A5")}<input type="url" name="url" required placeholder="https://" maxlength="2000" value="${E3(safeText(draft.url, 2e3))}"></label><div class="journey-manual-grid">${["education", "experience", "knowledge", "skills"].map((id) => `<label>${groupLabel(id)}<textarea name="${id}" rows="3" maxlength="20000">${E3(safeText(draft[id]))}</textarea></label>`).join("")}</div><p class="journey-form-error" data-manual-error role="alert"></p><button class="button button-primary" type="submit">${L2("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438 \u0440\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C", "Save and assess", "\u4FDD\u5B58\u5E76\u5206\u6790")}${icon("arrow-right")}</button></form></details>`;
-    }
-    function captureManualDraft(form) {
-      const employer = form.dataset.manualVacancy;
-      if (!byId().has(employer)) return;
-      const fields = Object.fromEntries(["title", "url", "education", "experience", "knowledge", "skills"].map((name2) => [name2, form.elements[name2]?.value]));
-      const draft = normalizedManualDraft({ ...fields, open: form.closest("details")?.open === true, panelKey: form.dataset.manualPanel }, employer);
-      journey.manualDrafts = { ...journey.manualDrafts, [employer]: draft };
-      journey.manualDraft = { ...draft };
-      dirty = true;
-      document.querySelectorAll("[data-manual-vacancy]").forEach((other) => {
-        if (other === form || other.dataset.manualVacancy !== employer || other.contains(document.activeElement)) return;
-        for (const name2 of ["title", "url", "education", "experience", "knowledge", "skills"]) other.elements[name2].value = draft[name2];
-      });
-      if (manualSaveTimer) clearTimeout(manualSaveTimer);
-      manualSaveTimer = setTimeout(() => {
-        manualSaveTimer = null;
-        if (!__careerHost.destroyed) save();
-      }, 500);
-    }
-    function bindManualVacancy(target) {
-      target.querySelectorAll("[data-manual-vacancy]").forEach((form) => {
-        form.addEventListener("input", () => captureManualDraft(form));
-        form.addEventListener("change", () => captureManualDraft(form));
-        const details = form.closest("details");
-        let wasOpen = details.open;
-        details.addEventListener("toggle", (event) => {
-          if (event.target !== details || !form.isConnected || details.open === wasOpen) return;
-          wasOpen = details.open;
-          captureManualDraft(form);
-        });
-        form.addEventListener("submit", (event) => {
-          event.preventDefault();
-          const values = new FormData(form), authority = byId().get(form.dataset.manualVacancy);
-          const title = safeText(values.get("title"), 500), url = safeText(values.get("url"), 2e3);
-          const requirements = ["education", "experience", "knowledge", "skills"].flatMap((category) => safeText(values.get(category)).split(/\n+/).map((text3) => text3.trim()).filter(Boolean).map((text3, index) => ({ id: `${category}-${index + 1}`, category, sourceText: text3, requirementState: requirementStateFromText(text3), selfAssessmentEligible: true, sourceLocator: L2("\u041F\u0435\u0440\u0435\u043D\u0435\u0441\u0435\u043D\u043E \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u043C \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Copied from the announcement by the student", "\u7531\u5B66\u751F\u4ECE\u516C\u544A\u590D\u5236") })));
-          const error = form.querySelector("[data-manual-error]");
-          if (!title || !safeURL(url) || !authority || values.get("employer") !== authority.id || !visibleInstitutions().some((item) => item.id === authority.id) || !requirements.length) {
-            error.textContent = L2("\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C, \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0441\u0441\u044B\u043B\u043A\u0443 \u0438 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0435 \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430 \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430.", "Enter a role title, a valid source URL and at least one requirement from this employer\u2019s source.", "\u8BF7\u586B\u5199\u804C\u4F4D\u540D\u79F0\u3001\u6709\u6548\u6765\u6E90\u94FE\u63A5\u53CA\u8BE5\u673A\u6784\u539F\u6587\u4E2D\u7684\u81F3\u5C11\u4E00\u9879\u8981\u6C42\u3002");
-            return;
-          }
-          const id = "student-source-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 9);
-          const vacancy = { id, institutionId: authority.id, employerName: authority.name, title, url, regionId: authority.regionId || null, userProvided: true, kind: "vacancy", status: "unconfirmed", source: { url, retrievedAt: (/* @__PURE__ */ new Date()).toISOString(), format: "student-transcription" }, requirements, coverage: { requirements: "student-transcription" } };
-          journey.customVacancies = [...journey.customVacancies, vacancy].slice(-20);
-          journey.selectedVacancyId = id;
-          journey.selectedSnapshot = vacancy;
-          journey.assessments[id] = {};
-          delete journey.manualDrafts[authority.id];
-          if (journey.manualDraft?.employer === authority.id) journey.manualDraft = {};
-          save();
-          switchStage("requirements");
-        });
-      });
-    }
-    function assessment(vacancy) {
-      const requirements = buildVacancyRequirements(vacancy);
-      const summary = summarizeVacancyAssessment(requirements, journey.assessments[vacancy.id] || {});
-      return { requirements, summary };
-    }
-    function assessmentProgress(summary) {
-      return L2(`\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043E ${summary.assessed} \u0438\u0437 ${summary.total}. \u0421\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E: ${summary.met}; \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u043E: ${summary.gap}; \u043D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E: ${summary.unassessed}.`, `Assessed ${summary.assessed} of ${summary.total}. Met: ${summary.met}; not yet met: ${summary.gap}; unassessed: ${summary.unassessed}.`, `\u5DF2\u8BC4\u4F30 ${summary.assessed} / ${summary.total}\u3002\u5DF2\u7B26\u5408\uFF1A${summary.met}\uFF1B\u5C1A\u672A\u7B26\u5408\uFF1A${summary.gap}\uFF1B\u672A\u8BC4\u4F30\uFF1A${summary.unassessed}\u3002`);
-    }
-    function missingSourceNote(requirements) {
-      if (!requirements.missingCategories.length) return "";
-      return `<p class="journey-source-status">${L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u043E\u043C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E", "Not separately available in the saved source", "\u5DF2\u4FDD\u5B58\u6765\u6E90\u4E2D\u672A\u5355\u72EC\u5217\u660E")}: ${requirements.missingCategories.map(groupLabel).join(", ")}. ${L2("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0440\u0438\u0433\u0438\u043D\u0430\u043B; \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u0439 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u044F \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F.", "Check the original; missing information does not mean there is no requirement.", "\u8BF7\u6838\u5BF9\u539F\u6587\uFF1B\u6CA1\u6709\u4FE1\u606F\u4E0D\u4EE3\u8868\u6CA1\u6709\u76F8\u5173\u8981\u6C42\u3002")}</p>`;
-    }
-    function sourceContextLabel(row) {
-      if (row.requirementState === "explicitly_not_required") return L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u0440\u044F\u043C\u043E \u0443\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0435 \u044D\u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "The source explicitly states this is not required", "\u6765\u6E90\u660E\u786E\u8BF4\u660E\u4E0D\u4F5C\u6B64\u8981\u6C42");
-      if (row.requirementState === "source_not_stated") return L2("\u0412 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Not stated in the source", "\u6765\u6E90\u672A\u8BF4\u660E");
-      if (row.requirementState === "preferred") return L2("\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435", "Preferred condition", "\u4F18\u5148\u6761\u4EF6");
-      return L2("\u0423\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source context", "\u6765\u6E90\u8BF4\u660E");
-    }
-    function bankSourceLabel(row) {
-      const labels = { knowledge: L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6"), skills: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u6280\u80FD"), education: L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"), experience: L2("\u0421\u0442\u0430\u0436", "Experience", "\u7ECF\u5386"), majors: L2("\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 (\u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u044B)", "Fields of study (alternatives)", "\u4E13\u4E1A\u65B9\u5411\uFF08\u4EFB\u9009\u7B26\u5408\u7684\u4E00\u9879\uFF09"), other: L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Additional requirements", "\u5176\u4ED6\u8981\u6C42"), service: L2("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043B\u0443\u0436\u0431\u044B", "Service conditions", "\u4EFB\u804C\u6761\u4EF6") };
-      return labels[row.sourceLabelKey] || row.sourceLocator;
-    }
-    function requirementSourceContext(row, mainSource) {
-      const asText = (value) => Array.isArray(value) ? value.filter((item) => typeof item === "string").join("; ") : typeof value === "string" ? value : "";
-      const headings = [...new Set([row.sourceGroup, row.sourceLabelKey ? bankSourceLabel(row) : row.sourceHeading, row.sourceSubheadingAsPublished].map(asText).filter(Boolean))];
-      const notes = [...new Set([row.interpretationNote, row.assessmentNote].map(asText).filter(Boolean))];
-      const locator = row.sourceLabelKey ? "" : asText(row.sourceLocator);
-      return `${headings.length ? `<p class="journey-source-heading" lang="ru">${headings.map(E3).join(" \xB7 ")}</p>` : ""}${notes.map((note) => `<p class="journey-source-note"><strong>${L2("\u041F\u043E\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u043A \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443", "Source note", "\u6765\u6E90\u8BF4\u660E")}:</strong> <span lang="ru">${E3(note)}</span></p>`).join("")}${locator ? `<small class="journey-source-locator" lang="ru">${E3(locator)}</small>` : ""}${safeURL(row.evidenceSourceUrl) && row.evidenceSourceUrl !== mainSource ? `<a class="journey-source-locator" href="${safeURL(row.evidenceSourceUrl)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u044D\u0442\u043E\u0433\u043E \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Source of this requirement", "\u6B64\u9879\u8981\u6C42\u7684\u6765\u6E90")}</a>` : ""}`;
-    }
-    function requirementRow(row, index, mainSource, bankVacancy = false) {
-      const context = requirementSourceContext(row, mainSource);
-      if (!row.assessable) return `<div class="journey-source-context"><span>${sourceContextLabel(row)}</span>${row.text ? `<p lang="ru">${E3(row.text)}</p>` : ""}${context}</div>`;
-      return `<fieldset class="journey-requirement" data-requirement-row="${E3(row.id)}" data-status="${row.status || "unassessed"}"><legend><span class="journey-requirement-index">${index}</span><span lang="ru">${E3(row.text)}</span></legend>${context}<div class="journey-assessment-options">${["met", "gap"].map((value) => `<label class="journey-answer ${value}"><input type="radio" name="assessment-${E3(row.id)}" data-requirement-key="${E3(row.id)}" value="${value}" ${row.status === value ? "checked" : ""}><span aria-hidden="true">${value === "met" ? "\u2713" : "\xD7"}</span><strong>${value === "met" ? bankVacancy && ["knowledge", "skills"].includes(row.category) ? L2("\u0423\u0436\u0435 \u0437\u043D\u0430\u044E/\u0443\u043C\u0435\u044E", "I know / can do this", "\u5DF2\u7ECF\u638C\u63E1/\u4F1A\u505A") : L2("\u0423\u0436\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Already meet it", "\u5DF2\u7B26\u5408") : row.assessmentKind === "formal" ? L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Not yet met", "\u6682\u672A\u7B26\u5408") : L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C", "Need to develop", "\u9700\u8981\u63D0\u5347")}</strong></label>`).join("")}</div></fieldset>`;
-    }
-    function renderRequirements(result, target) {
-      const vacancy = findSelectedVacancy();
-      if (!vacancy) {
-        renderMissingSelection(target);
+    function renderResults2() {
+      const root = resultRoot();
+      if (!session.completedAt) {
+        navigate(resolveResumeRoute2());
         return;
       }
-      const { requirements, summary } = assessment(vacancy);
-      let index = 0;
-      const sourceURL = safeURL(vacancy.url || vacancy.source?.url);
-      const manualAuthority = byId().get(vacancy.institutionId), manualPanelKey = `requirements-${vacancy.institutionId}`;
-      const manualDraft = draftForAuthority(vacancy.institutionId);
-      const duties = typeof vacancy.duties === "string" ? vacancy.duties : Array.isArray(vacancy.duties) ? vacancy.duties.map((item) => typeof item === "string" ? item : item.sourceText || item.text || "").filter(Boolean).join("\n") : "";
-      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-vacancies">${icon("arrow-left")}${L2("\u041A \u0432\u044B\u0431\u043E\u0440\u0443 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Back to role selection", "\u8FD4\u56DE\u804C\u4F4D\u9009\u62E9")}</button><span class="journey-kicker">${roleStatus(vacancy)}</span><h1>${L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Selected role requirements", "\u6240\u9009\u804C\u4F4D\u8981\u6C42")}</h1><h2 lang="ru">${E3(vacancy.title)}</h2><p lang="ru">${E3(vacancy.employerName)}</p>${vacancy.department ? `<p lang="ru">${E3(vacancy.department)}</p>` : ""}<a class="seminar-vacancy-link" href="${sourceURL}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a><p class="journey-muted">${vacancy.bankVacancy ? L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Announcement published", "\u516C\u544A\u53D1\u5E03\u65E5\u671F") : L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043F\u043E\u043B\u0443\u0447\u0435\u043D", "Source retrieved", "\u6765\u6E90\u83B7\u53D6\u65E5\u671F")}: ${date2(vacancy.bankVacancy ? vacancy.announcedAt : vacancy.source?.retrievedAt || vacancy.lastSeenAt || vacancy.sourceSnapshotAt) || L2("\u0434\u0430\u0442\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u0430", "date not stated", "\u672A\u6CE8\u660E\u65E5\u671F")}${vacancy.bankVacancy && vacancy.expiresAt ? " \xB7 " + L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62") + ": " + E3(date2(vacancy.expiresAt)) : ""}</p></header>
-      ${duties ? `<details class="journey-duties"><summary>${L2("\u0414\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u043D\u044B\u0435 \u043E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438", "Duties", "\u5DE5\u4F5C\u804C\u8D23")}</summary><p lang="ru">${E3(duties)}</p></details>` : ""}
-      <p class="journey-assessment-intro">${L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u043A\u0430\u0436\u0434\u044B\u0439 \u043F\u0443\u043D\u043A\u0442. \u0417\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C, \u0432\u043E\u0439\u0434\u0443\u0442 \u0432 \u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F; \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u0441\u0442\u0430\u0436 \u0431\u0443\u0434\u0443\u0442 \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E.", "Assess every item. Knowledge and skills to develop will enter your development plan; education and experience will be shown separately.", "\u8BF7\u9010\u9879\u8BC4\u4F30\u3002\u9700\u8981\u638C\u63E1\u7684\u77E5\u8BC6\u548C\u6280\u80FD\u5C06\u52A0\u5165\u53D1\u5C55\u8BA1\u5212\uFF1B\u5B66\u5386\u4E0E\u5DE5\u4F5C\u7ECF\u5386\u5C06\u5355\u72EC\u663E\u793A\u3002")}</p>${missingSourceNote(requirements)}${!summary.total ? `<p class="journey-source-status">${L2("\u0412 \u044D\u0442\u043E\u0439 \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0435 \u043D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0438 \u0434\u043E\u0431\u0430\u0432\u044C\u0442\u0435 \u0442\u043E\u0447\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u043E\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B.", "This card has no assessable items. Open the source and add its exact requirements, or choose another material.", "\u6B64\u5361\u7247\u6CA1\u6709\u53EF\u8BC4\u4F30\u9879\u76EE\u3002\u8BF7\u6253\u5F00\u6765\u6E90\u5E76\u6DFB\u52A0\u539F\u6587\u8981\u6C42\uFF0C\u6216\u9009\u62E9\u5176\u4ED6\u6750\u6599\u3002")}</p>` : ""}${!vacancy.bankVacancy && requirements.missingCategories.length ? `<button type="button" class="button button-secondary" id="journey-supplement-requirements">${L2("\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u044C \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Add requirements from the source", "\u4ECE\u6765\u6E90\u8865\u5145\u8981\u6C42")}</button>` : ""}
-      <div class="journey-supplement-form" data-requirement-manual-slot>${!vacancy.bankVacancy && manualAuthority && manualDraft.open && manualDraft.panelKey === manualPanelKey ? manualVacancyForm(manualAuthority, manualPanelKey) : ""}</div>
-      <div class="journey-assessment-progress"><p id="journey-assessment-state" role="status" aria-live="polite">${E3(assessmentProgress(summary))}</p><progress id="journey-assessment-progress" max="${Math.max(1, summary.total)}" value="${summary.assessed}" aria-label="${E3(L2("\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assessed requirements", "\u5DF2\u8BC4\u4F30\u8981\u6C42"))}"></progress></div>
-      <div class="journey-requirements">${summary.groups.filter((group) => group.rows.length).map((group) => `<section class="journey-requirement-group" aria-labelledby="requirement-heading-${group.id}"><h2 id="requirement-heading-${group.id}">${groupLabel(group.id)}</h2>${group.rows.map((row) => requirementRow(row, row.assessable ? ++index : 0, vacancy.url || vacancy.source?.url, vacancy.bankVacancy)).join("")}</section>`).join("")}</div>
-      <div class="seminar-next"><p>${L2("\u041E\u0442\u043C\u0435\u0442\u043A\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u044E\u0442\u0441\u044F \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438. \u0418\u0445 \u043C\u043E\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C, \u0432\u0435\u0440\u043D\u0443\u0432\u0448\u0438\u0441\u044C \u043A \u044D\u0442\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your answers are saved automatically. Return to this role to revise them.", "\u56DE\u7B54\u4F1A\u81EA\u52A8\u4FDD\u5B58\uFF0C\u8FD4\u56DE\u8BE5\u804C\u4F4D\u5373\u53EF\u4FEE\u6539\u3002")}</p><button type="button" class="button button-primary button-large" id="journey-open-plan">${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "View my development plan", "\u67E5\u770B\u53D1\u5C55\u8BA1\u5212")}${icon("arrow-right")}</button></div>`;
-      target.querySelector("#journey-back-vacancies").onclick = () => switchStage("recommendations");
-      target.querySelector("#journey-open-plan").onclick = () => switchStage("summary");
-      bindManualVacancy(target.querySelector("[data-requirement-manual-slot]"));
-      target.querySelector("#journey-supplement-requirements")?.addEventListener("click", () => {
-        if (!manualAuthority) return;
-        const previous = draftForAuthority(manualAuthority.id), hasDraft = ["title", "url", "education", "experience", "knowledge", "skills"].some((name2) => safeText(previous[name2]));
-        const sourceFields = { title: vacancy.title, url: vacancy.url || vacancy.source?.url || "", ...Object.fromEntries(["education", "experience", "knowledge", "skills"].map((category) => [category, requirements.rows.filter((row) => row.category === category && row.text).map((row) => row.text).join("\n")])) };
-        const draft = normalizedManualDraft({ ...hasDraft ? previous : sourceFields, open: true, panelKey: manualPanelKey }, manualAuthority.id);
-        journey.manualDrafts = { ...journey.manualDrafts, [manualAuthority.id]: draft };
-        journey.manualDraft = { ...draft };
-        const slot = target.querySelector("[data-requirement-manual-slot]");
-        slot.innerHTML = (hasDraft ? `<p class="journey-muted">${L2("\u041E\u0442\u043A\u0440\u044B\u0442 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0439 \u0447\u0435\u0440\u043D\u043E\u0432\u0438\u043A \u044D\u0442\u043E\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430. \u0421\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u0441 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Your saved draft for this employer is open. Check it against the selected role\u2019s source.", "\u5DF2\u6253\u5F00\u8BE5\u673A\u6784\u7684\u5DF2\u4FDD\u5B58\u8349\u7A3F\uFF0C\u8BF7\u4E0E\u6240\u9009\u804C\u4F4D\u7684\u6765\u6E90\u6838\u5BF9\u3002")}</p>` : "") + manualVacancyForm(manualAuthority, manualPanelKey);
-        bindManualVacancy(slot);
-        const form = slot.querySelector("[data-manual-vacancy]");
-        captureManualDraft(form);
-        form.elements.title.focus({ preventScroll: true });
+      if (!root || !readyFor(root, true)) return;
+      const ranking = resultRanking(), matches = ranking.matches || [];
+      loadDetails(matches);
+      const focused = document.activeElement?.id;
+      const noPreference = ranking.resultStatus === "no-preference";
+      const missing = matches.some((row) => detailErrors.has(detailKey(row.detailPath)));
+      root.innerHTML = `<div class="adaptive-results">
+      <header class="adaptive-results-heading"><h1>${matches.length ? L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Matching roles", "\u9002\u5408\u7684\u804C\u4F4D") : L2("\u0412\u0430\u0448 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Your result", "\u4F60\u7684\u7ED3\u679C")}</h1></header>
+      ${matches.length ? `<div class="adaptive-role-list">${matches.map(roleCard).join("")}</div>` : `<p class="adaptive-no-matches">${noPreference ? L2("\u0412\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0438\u043B\u0438 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B. \u041C\u043E\u0436\u043D\u043E \u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C \u0438 \u0443\u0442\u043E\u0447\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B.", "You have not yet identified preferred types of work. You can return to the questions and refine your answers.", "\u4F60\u5C1A\u672A\u786E\u5B9A\u504F\u597D\u7684\u5DE5\u4F5C\u7C7B\u578B\u3002\u53EF\u4EE5\u8FD4\u56DE\u95EE\u9898\uFF0C\u8FDB\u4E00\u6B65\u660E\u786E\u7B54\u6848\u3002") : L2("\u0414\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", "No matching roles were found for the selected conditions.", "\u672A\u627E\u5230\u7B26\u5408\u6240\u9009\u6761\u4EF6\u7684\u804C\u4F4D\u3002")}</p>`}
+      ${missing ? `<div class="adaptive-detail-error" role="status"><span>${L2("\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u043E\u0441\u044C.", "Role descriptions could not be loaded.", "\u65E0\u6CD5\u52A0\u8F7D\u804C\u4F4D\u8BF4\u660E\u3002")}</span><button type="button" class="adaptive-text-button" id="adaptive-retry-details">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button></div>` : ""}
+      <div id="adaptive-save-feedback">${saveError()}</div>
+      <footer class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B", "Edit answers", "\u4FEE\u6539\u7B54\u6848")}</button>${typeof __careerHost.openKnowledge === "function" ? `<button type="button" class="button button-primary" id="adaptive-open-knowledge" ${opening || saveFailed || corruptStorage ? "disabled" : ""}>${L2("\u041A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439", "Continue to the knowledge test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}${icon("arrow-right")}</button>` : ""}</footer>
+    </div>`;
+      root.querySelector("#adaptive-edit").onclick = backQuestion;
+      root.querySelector("#adaptive-retry-details")?.addEventListener("click", () => {
+        loadDetails(matches, true);
+        renderResults2();
       });
-      target.querySelectorAll("[data-requirement-key]").forEach((input) => input.addEventListener("change", (event) => {
-        const row = requirements.rows.find((item) => item.id === event.target.dataset.requirementKey), value = event.target.value;
-        if (!row?.assessable || !statuses.has(value)) return;
-        if (!isRecord2(journey.assessments[vacancy.id])) journey.assessments[vacancy.id] = {};
-        journey.assessments[vacancy.id][row.id] = { status: value, signature: row.signature };
-        save();
-        event.target.closest("[data-requirement-row]").dataset.status = value;
-        const updated = summarizeVacancyAssessment(requirements, journey.assessments[vacancy.id]);
-        target.querySelector("#journey-assessment-state").textContent = assessmentProgress(updated);
-        target.querySelector("#journey-assessment-progress").value = updated.assessed;
-      }));
-    }
-    function renderMissingSelection(target) {
-      target.innerHTML = `<header class="seminar-results-heading"><h1>${L2("\u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Your development plan", "\u4F60\u7684\u53D1\u5C55\u8BA1\u5212")}</h1><p>${L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C \u0438 \u043E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u0435\u0451 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F, \u0447\u0442\u043E\u0431\u044B \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0448\u0430\u0433\u0438 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Choose a role and assess its requirements to see your specific preparation steps.", "\u8BF7\u9009\u62E9\u804C\u4F4D\u5E76\u8BC4\u4F30\u8981\u6C42\uFF0C\u4EE5\u67E5\u770B\u5177\u4F53\u51C6\u5907\u6B65\u9AA4\u3002")}</p></header><button type="button" class="button button-primary" id="journey-choose-role">${L2("\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "Choose a role", "\u9009\u62E9\u804C\u4F4D")}${icon("arrow-right")}</button>`;
-      target.querySelector("#journey-choose-role").onclick = () => switchStage("recommendations");
-    }
-    function coverageChart(summary) {
-      const domainRows = summary.domainRadarAvailable ? summary.domains : [];
-      const groups = summary.groups.filter((group) => group.total > 0);
-      const radarRows = domainRows.length ? domainRows : groups.filter((group) => !["eligibility", "other"].includes(group.id));
-      const radar = requirementRadar(radarRows);
-      const heading = domainRows.length ? L2("\u041C\u043E\u0438 \u043A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0438 \u0438 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "My competencies and role requirements", "\u6211\u7684\u80FD\u529B\u4E0E\u804C\u4F4D\u8981\u6C42") : L2("\u041C\u043E\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u043E \u0433\u0440\u0443\u043F\u043F\u0430\u043C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "My self-assessment by requirement group", "\u6309\u8981\u6C42\u7C7B\u522B\u8FDB\u884C\u81EA\u8BC4");
-      return `<section class="journey-panel" aria-labelledby="journey-target-title"><h2 id="journey-target-title">${heading}</h2><p class="journey-muted">${L2("\u0414\u043E\u043B\u044F \u043F\u0443\u043D\u043A\u0442\u043E\u0432, \u043A\u043E\u0442\u043E\u0440\u044B\u043C \u0412\u044B \u043E\u0442\u043C\u0435\u0442\u0438\u043B\u0438 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435. \u0426\u0435\u043B\u044C \u2014 100% \u043F\u0435\u0440\u0435\u0447\u0438\u0441\u043B\u0435\u043D\u043D\u044B\u0445 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u043A\u0430\u0436\u0434\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u044B. \u041D\u0435\u043E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u043F\u0443\u043D\u043A\u0442\u044B \u043F\u043E\u043A\u0430\u0437\u0430\u043D\u044B \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u043E.", "The share of listed items you marked as met. The target is 100% of the listed requirements in each group. Unassessed items are shown separately.", "\u663E\u793A\u4F60\u6807\u8BB0\u4E3A\u5DF2\u7B26\u5408\u7684\u9879\u76EE\u6BD4\u4F8B\uFF0C\u76EE\u6807\u662F\u6BCF\u7C7B\u5DF2\u5217\u8981\u6C42\u7684100%\u3002\u672A\u8BC4\u4F30\u9879\u76EE\u5355\u72EC\u663E\u793A\u3002")}</p>${radar ? `<div class="journey-target-layout"><div><div class="journey-chart-key"><span class="journey-key-current">${L2("\u041C\u043E\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430", "My self-assessment", "\u6211\u7684\u81EA\u8BC4")}</span><span class="journey-key-target">${L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role requirements", "\u804C\u4F4D\u8981\u6C42")}</span></div>${radar}</div><div><ol class="journey-radar-labels">${radarRows.map((row) => `<li><strong>${groupLabel(row.id)}</strong><span>${row.met}/${row.total} \xB7 ${number(100 * row.met / row.total)}%</span></li>`).join("")}</ol>${requirementBars(radarRows)}</div></div>` : requirementBars(groups)}
-      ${radar && groups.some((group) => !radarRows.includes(group)) ? requirementBars(groups.filter((group) => !radarRows.some((row) => row.id === group.id))) : ""}
-      <p class="journey-method-note">${L2("\u041F\u0440\u043E\u0446\u0435\u043D\u0442\u044B \u043E\u0442\u0440\u0430\u0436\u0430\u044E\u0442 \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0443 \u043F\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u043C \u043F\u0443\u043D\u043A\u0442\u0430\u043C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430. \u041F\u043E\u043B\u043D\u043E\u0442\u0430 \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043D\u044B\u0445 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439 \u0438 \u0444\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u0435 \u043F\u0440\u043E\u0432\u0435\u0440\u044F\u044E\u0442\u0441\u044F \u043F\u043E \u043E\u0440\u0438\u0433\u0438\u043D\u0430\u043B\u0443 \u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u043C.", "Percentages describe self-reports against the saved source items. Check the original for the complete requirements; the employer verifies actual eligibility.", "\u767E\u5206\u6BD4\u53CD\u6620\u5BF9\u5DF2\u4FDD\u5B58\u6765\u6E90\u9879\u76EE\u7684\u81EA\u8BC4\u3002\u5B8C\u6574\u8981\u6C42\u5E94\u6838\u5BF9\u539F\u6587\uFF0C\u5B9E\u9645\u8D44\u683C\u7531\u96C7\u4E3B\u786E\u8BA4\u3002")}</p></section>`;
-    }
-    function developmentList(rows, heading, kind) {
-      if (!rows.length) return "";
-      return `<section class="journey-panel"><h2>${heading}</h2><ol class="journey-gap-list">${rows.map((row) => `<li><strong lang="ru">${E3(row.text)}</strong><p>${kind === "formal" ? L2("\u041E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435, \u043A\u0430\u043A\u043E\u0439 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442, \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u043B\u0438 \u043E\u043F\u044B\u0442 \u043D\u0443\u0436\u0435\u043D \u0434\u043B\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u044F.", "Identify the document, qualification or experience needed to meet this condition.", "\u660E\u786E\u6EE1\u8DB3\u8BE5\u6761\u4EF6\u6240\u9700\u7684\u6587\u4EF6\u3001\u5B66\u5386\u6216\u5DE5\u4F5C\u7ECF\u9A8C\u3002") : row.category === "knowledge" ? L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B \u0438 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u044C\u0442\u0435 \u043A\u043E\u0440\u043E\u0442\u043A\u0438\u0439 \u0440\u0430\u0437\u0431\u043E\u0440 \u0435\u0433\u043E \u043F\u0440\u0438\u043C\u0435\u043D\u0435\u043D\u0438\u044F \u0432 \u0440\u0430\u0431\u043E\u0442\u0435.", "Study the named material and prepare a short example of how it applies to the work.", "\u5B66\u4E60\u6240\u5217\u6750\u6599\uFF0C\u5E76\u51C6\u5907\u4E00\u4E2A\u5728\u5DE5\u4F5C\u4E2D\u5E94\u7528\u7684\u7B80\u77ED\u793A\u4F8B\u3002") : row.category === "skills" ? L2("\u0412\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0435 \u043F\u0440\u0430\u043A\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0435 \u0437\u0430\u0434\u0430\u043D\u0438\u0435 \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0432 \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E.", "Complete a small practical task and keep the result in your portfolio.", "\u5B8C\u6210\u4E00\u9879\u5C0F\u578B\u5B9E\u8DF5\u4EFB\u52A1\uFF0C\u5E76\u5C06\u6210\u679C\u4FDD\u5B58\u5230\u4F5C\u54C1\u96C6\u4E2D\u3002") : L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0441\u043E\u0441\u0442\u0430\u0432\u043D\u043E\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u0438 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438.", "Review the combined condition in the source and identify your first preparation step.", "\u6838\u5BF9\u539F\u6587\u4E2D\u7684\u7EFC\u5408\u6761\u4EF6\uFF0C\u5E76\u786E\u5B9A\u51C6\u5907\u7684\u7B2C\u4E00\u6B65\u3002")}</p>${row.sourceLocator ? `<small lang="ru">${E3(row.sourceLabelKey ? bankSourceLabel(row) : row.sourceLocator)}</small>` : ""}</li>`).join("")}</ol></section>`;
-    }
-    function renderSummary(result, target) {
-      const vacancy = findSelectedVacancy();
-      if (!vacancy) {
-        renderMissingSelection(target);
-        return;
-      }
-      const { requirements, summary } = assessment(vacancy), ranked = rankings(), complete = summary.total > 0 && summary.unassessed === 0;
-      const selectedAuthority = ranked?.ranked.find((a) => a.id === vacancy.institutionId) || byId().get(vacancy.institutionId);
-      target.innerHTML = `<header class="seminar-results-heading"><button type="button" class="seminar-back-profile" id="journey-back-requirements">${icon("arrow-left")}${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u0442\u043A\u0438", "Edit my assessment", "\u4FEE\u6539\u81EA\u8BC4")}</button><h1>${L2("\u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Your development plan", "\u4F60\u7684\u53D1\u5C55\u8BA1\u5212")}</h1><p>${L2("\u0421\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0441\u0432\u043E\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u0441 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439 \u0438 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u0434\u043B\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 \u043A \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438.", "Compare your interests with your preferred work and choose concrete actions to prepare for the role.", "\u5C06\u5174\u8DA3\u4E0E\u610F\u5411\u5DE5\u4F5C\u8FDB\u884C\u6BD4\u8F83\uFF0C\u5E76\u9009\u62E9\u4E3A\u804C\u4F4D\u505A\u51C6\u5907\u7684\u5177\u4F53\u884C\u52A8\u3002")}</p></header>
-      <section class="journey-goal-card"><span class="journey-kicker">${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "Selected role", "\u6240\u9009\u804C\u4F4D")}</span><h2 lang="ru">${E3(vacancy.title)}</h2><p>${E3(vacancy.bankVacancy ? vacancy.employerName : selectedAuthority ? authorityName(selectedAuthority) : vacancy.employerName)}</p><p class="journey-muted">${roleStatus(vacancy)}</p><a class="seminar-vacancy-link" href="${safeURL(vacancy.url || vacancy.source?.url)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Requirements source", "\u8981\u6C42\u6765\u6E90")}${icon("external")}</a></section>
-      <div class="journey-summary-counts"><div><strong>${summary.met}</strong><span>${L2("\u0421\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "Already met", "\u5DF2\u7B26\u5408")}</span></div><div><strong>${summary.gap}</strong><span>${L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C\u0441\u044F", "To prepare", "\u9700\u8981\u51C6\u5907")}</span></div><div><strong>${summary.unassessed}</strong><span>${L2("\u041D\u0435 \u043E\u0446\u0435\u043D\u0435\u043D\u043E", "Unassessed", "\u672A\u8BC4\u4F30")}</span></div></div>
-      ${personalProfile(result)}${ranked ? wishDevelopment(ranked) : ""}${coverageChart(summary)}${missingSourceNote(requirements)}
-      ${developmentList(summary.developmentItems, L2("\u041A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0435 \u0437\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Specific knowledge and skills to develop", "\u9700\u8981\u63D0\u5347\u7684\u5177\u4F53\u77E5\u8BC6\u4E0E\u6280\u80FD"), "skills")}
-      ${developmentList(summary.formalGaps, L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u043E\u043F\u044B\u0442 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0434\u043E\u043F\u0443\u0441\u043A\u0430", "Education, experience and eligibility", "\u5B66\u5386\u3001\u7ECF\u5386\u4E0E\u8D44\u683C\u6761\u4EF6"), "formal")}
-      ${developmentList(summary.otherGaps, L2("\u0414\u0440\u0443\u0433\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u0432\u044B\u043F\u043E\u043B\u043D\u0438\u0442\u044C", "Other requirements to meet", "\u5C1A\u9700\u6EE1\u8DB3\u7684\u5176\u4ED6\u8981\u6C42"), "other")}
-      ${!summary.gap && summary.total && complete ? `<p class="journey-positive">${L2("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u043C\u0435\u0442\u043A\u0430\u043C \u0432\u0441\u0435 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u044B. \u041F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u044C\u0442\u0435 \u043F\u0440\u0438\u043C\u0435\u0440\u044B \u0438 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B, \u043A\u043E\u0442\u043E\u0440\u044B\u043C\u0438 \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u044D\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C.", "You marked every available requirement as met. Prepare examples and documents to support your assessment.", "\u4F60\u5C06\u6240\u6709\u53EF\u8BC4\u4F30\u8981\u6C42\u6807\u8BB0\u4E3A\u5DF2\u7B26\u5408\u3002\u8BF7\u51C6\u5907\u793A\u4F8B\u548C\u6587\u4EF6\u4EE5\u652F\u6301\u81EA\u8BC4\u3002")}</p>` : ""}
-      ${summary.unassessed ? `<section class="journey-panel"><h2>${L2("\u041E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Still to assess", "\u4ECD\u9700\u8BC4\u4F30")}</h2><p>${L2(`\u0415\u0449\u0451 ${summary.unassessed} \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u043E\u0441\u0442\u0430\u044E\u0442\u0441\u044F \u0431\u0435\u0437 \u043E\u0442\u043C\u0435\u0442\u043A\u0438. \u041E\u043D\u0438 \u043D\u0435 \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u044B \u0432 \u0441\u043F\u0438\u0441\u043E\u043A \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0445 \u043F\u0440\u043E\u0431\u0435\u043B\u043E\u0432.`, `Another ${summary.unassessed} items are unassessed. They are not included in your identified gaps.`, `\u4ECD\u6709 ${summary.unassessed} \u9879\u5C1A\u672A\u8BC4\u4F30\uFF0C\u5B83\u4EEC\u672A\u88AB\u8BA1\u5165\u5DF2\u8BC6\u522B\u5DEE\u8DDD\u3002`)}</p><button type="button" class="button button-secondary" id="journey-complete-checklist">${L2("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F\u043C", "Return to requirements", "\u8FD4\u56DE\u804C\u4F4D\u8981\u6C42")}</button></section>` : ""}
-      <div class="seminar-next"><p>${complete ? L2("\u0421\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0430 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u0430. \u041C\u043E\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u0438\u0442\u044C \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439 \u043E \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "The self-assessment is complete. Continue to the public-service knowledge test.", "\u81EA\u8BC4\u5DF2\u5B8C\u6210\u3002\u73B0\u5728\u53EF\u4EE5\u8FDB\u5165\u516C\u52A1\u77E5\u8BC6\u6D4B\u8BD5\u3002") : L2("\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0443 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0445\u043E\u0434\u043E\u043C \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439.", "Complete the role self-assessment before continuing to the knowledge test.", "\u8BF7\u5B8C\u6210\u6240\u9009\u804C\u4F4D\u7684\u81EA\u8BC4\uFF0C\u518D\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5\u3002")}</p><button type="button" class="button button-primary button-large" id="seminar-open-knowledge" ${complete ? "" : "disabled"}>${L2("\u041F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439", "Continue to the knowledge test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}${icon("arrow-right")}</button></div>`;
-      target.querySelector("#journey-back-requirements").onclick = () => switchStage("requirements");
-      target.querySelector("#journey-complete-checklist")?.addEventListener("click", () => switchStage("requirements"));
-      if (ranked) bindDevelopment(target, ranked);
-      target.querySelector("#seminar-open-knowledge").onclick = async () => {
-        if (opening || !complete || !save()) return;
+      root.querySelector("#adaptive-open-knowledge")?.addEventListener("click", async () => {
+        if (opening || !save()) {
+          renderResults2();
+          return;
+        }
+        notifyCompletion(ranking);
+        if (saveFailed || corruptStorage) {
+          renderResults2();
+          return;
+        }
         opening = true;
-        const button = target.querySelector("#seminar-open-knowledge");
+        const button = root.querySelector("#adaptive-open-knowledge");
         button.disabled = true;
         try {
           await __careerHost.openKnowledge();
         } catch {
-          toast2(L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0442\u0435\u0441\u0442. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0435\u0445\u043E\u0434.", "The test could not be opened. Please try again.", "\u65E0\u6CD5\u6253\u5F00\u6D4B\u8BD5\uFF0C\u8BF7\u91CD\u8BD5\u3002"));
+          const feedback = root.querySelector("#adaptive-save-feedback");
+          if (feedback && live()) feedback.innerHTML = `<p class="adaptive-save-error" role="alert">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0442\u0435\u0441\u0442. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0435\u0445\u043E\u0434.", "The test could not be opened. Please try again.", "\u65E0\u6CD5\u6253\u5F00\u6D4B\u8BD5\uFF0C\u8BF7\u91CD\u8BD5\u3002")}</p>`;
         } finally {
           opening = false;
           if (button.isConnected) button.disabled = false;
         }
-      };
+      });
+      bindSaveRetry(root);
+      notifyCompletion(ranking);
+      if (saveFailed || corruptStorage) {
+        root.querySelector("#adaptive-save-feedback").innerHTML = saveError();
+        bindSaveRetry(root);
+        const button = root.querySelector("#adaptive-open-knowledge");
+        if (button) button.disabled = true;
+      }
+      if (focused) root.querySelector("#" + focused)?.focus({ preventScroll: true });
     }
-    function renderResults2() {
-      const result = getResult(), target = root();
-      if (!result || !target) return;
-      target.setAttribute("data-no-i18n", "");
-      if (!catalogLoaded) {
-        navigate("preferences");
+    function resolveResumeRoute2() {
+      return !session.setupComplete ? "preferences" : session.completedAt ? "results" : "test";
+    }
+    function guardRoute(route) {
+      if (!CAREER_ROUTES.has(route)) return route;
+      if (route === "preferences") return route;
+      if (!session.setupComplete) return "preferences";
+      if (session.completedAt) return "results";
+      return "test";
+    }
+    function render(route) {
+      if (route !== "results" && (detailSelection || detailPending.size || detailQueue.length)) resetDetailRequests();
+      lastRoute = route;
+      const guarded = guardRoute(route);
+      if (metadataReady && guarded !== route) {
+        navigate(guarded);
         return;
       }
-      const view = stage();
-      if (view !== "recommendations") cancelEmployerVacancyRequests();
-      if (view === "profile") renderProfile(result, target);
-      else if (view === "recommendations") renderRecommendations(result, target);
-      else if (view === "requirements") renderRequirements(result, target);
-      else renderSummary(result, target);
+      document.body.classList.toggle("adaptive-flow-active", ["preferences", "test", "results"].includes(route));
+      if (route === "preferences") renderPreferences();
+      else if (route === "test") renderQuestion2();
+      else if (route === "results") renderResults2();
     }
     document.addEventListener("app:language", () => {
-      updateLabels();
-      if (lastRoute === "preferences") renderPreferences();
-      else if (lastRoute === "results") renderResults2();
+      if (["preferences", "test", "results"].includes(lastRoute)) render(lastRoute);
     });
-    updateLabels();
-    void loadCatalog();
+    document.addEventListener("keydown", (event) => {
+      if (lastRoute !== "test" || !metadataReady || poolLoading || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = event.target;
+      if (target.closest?.('input,textarea,select,[contenteditable="true"]')) return;
+      const answerButton = target.closest?.("[data-adaptive-answer]");
+      if (answerButton && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+        const values = [1, 2, 3, 4, 5, 0], index = values.indexOf(Number(answerButton.dataset.adaptiveAnswer));
+        const next = event.key === "Home" ? 0 : event.key === "End" ? values.length - 1 : (index + (["ArrowLeft", "ArrowUp"].includes(event.key) ? -1 : 1) + values.length) % values.length;
+        event.preventDefault();
+        chooseAnswer(values[next], { focus: true });
+      } else if (/^[1-6]$/.test(event.key) && (!target.closest?.("button,a,summary") || answerButton)) {
+        event.preventDefault();
+        chooseAnswer(event.key === "6" ? 0 : Number(event.key), { focus: true });
+      } else if (event.key === "Enter" && !target.closest?.("button,a,summary")) {
+        event.preventDefault();
+        advanceQuestion();
+      }
+    });
+    void ensureMetadata();
     return {
-      isReady,
       guardRoute,
+      render,
       renderResults: renderResults2,
-      render(route) {
-        if (lastRoute === "preferences" && route !== "preferences") {
-          picker?.destroy();
-          picker = null;
-          wishSorter?.destroy();
-          wishSorter = null;
-        }
-        if (route !== "results") cancelEmployerVacancyRequests();
-        lastRoute = route;
-        updateLabels();
-        if (route === "preferences") renderPreferences();
-      },
-      flush: () => {
-        wishSorter?.cancel({ focus: false, announceResult: false });
-        return !dirty || save();
-      },
-      updateBusy: () => catalogLoading || positionsLoading || vacancyBank.isBusy() || vacancyDetails.cacheInfo().pending > 0 || opening || Boolean(wishSorter?.isBusy()),
-      captureForUpdate: () => ({ view: journey.view, authorityQuery, authorityScope, vacancyQuery, vacancyEmployer }),
+      resolveResumeRoute: resolveResumeRoute2,
+      isReady: () => session.setupComplete,
+      flush: () => !dirty && !saveFailed && !corruptStorage || save(),
+      updateBusy: () => metadataLoading || poolLoading || detailPending.size > 0 || detailQueue.length > 0 || opening || transitionBusy,
+      captureForUpdate: () => ({
+        schemaVersion: 1,
+        regionQuery,
+        regionMode,
+        draftRegions: [...draftRegions],
+        setupStep: session.setupStep,
+        responsibilityDraft: session.responsibilityDraft
+      }),
       restoreForUpdate(value) {
-        if (!isRecord2(value)) return;
-        authorityQuery = safeText(value.authorityQuery, 500);
-        authorityScope = safeText(value.authorityScope, 80);
-        vacancyQuery = safeText(value.vacancyQuery, 500);
-        vacancyEmployer = safeText(value.vacancyEmployer, 200);
+        if (!isRecord(value) || value.schemaVersion !== 1) return;
+        regionQuery = typeof value.regionQuery === "string" ? value.regionQuery.slice(0, 100) : "";
+        regionMode = value.regionMode === "selected" ? "selected" : "all";
+        draftRegions = [...new Set((Array.isArray(value.draftRegions) ? value.draftRegions : []).filter(validRegion))].slice(0, 89);
+        if (value.setupStep === "responsibility" && session.locationConfirmed) session.setupStep = "responsibility";
+        else if (value.setupStep === "location") session.setupStep = "location";
+        if (RESPONSIBILITY_PREFERENCES.has(value.responsibilityDraft)) session.responsibilityDraft = value.responsibilityDraft;
+        if (live() && lastRoute === "preferences") renderPreferences();
       }
     };
   }
@@ -9208,7 +7593,7 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/personality-visuals.mjs
-  var E4 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   var drawings = {
     check: '<path d="M8 4h8m-7-1h6v4H9zM7 5H5v16h14V5h-2M8 13l3 3 5-6"/>',
     people: '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m1-15a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/>',
@@ -9253,30 +7638,30 @@ var CareerRuntime = (() => {
     const ticks = [1, 2, 3, 4, 5].map((value) => `<text class="personality-radar-tick" x="170" y="${(center.y - (value - 1) / 4 * radius + 5).toFixed(3)}">${value}</text>`).join("");
     const keyPositions = [{ x: 50, y: 5 }, { x: 92, y: 34 }, { x: 77, y: 88 }, { x: 23, y: 88 }, { x: 8, y: 34 }];
     return `<section class="personality-overview" aria-labelledby="personality-overview-title">
-    <div class="personality-overview-heading"><h2 id="personality-overview-title">${E4(title)}</h2><p>${E4(description)}</p></div>
+    <div class="personality-overview-heading"><h2 id="personality-overview-title">${E3(title)}</h2><p>${E3(description)}</p></div>
     <figure class="personality-overview-figure">
       <div class="personality-radar-plot">
         <svg class="personality-radar" viewBox="0 0 320 290" role="img" aria-labelledby="personality-radar-title personality-radar-desc" focusable="false">
-          <title id="personality-radar-title">${E4(title)}</title><desc id="personality-radar-desc">${E4(scale + " " + values)}</desc>
+          <title id="personality-radar-title">${E3(title)}</title><desc id="personality-radar-desc">${E3(scale + " " + values)}</desc>
           <g aria-hidden="true">${rings}${axes}<polygon class="personality-radar-shape" points="${vertices.map(pair).join(" ")}"/>${vertices.map(({ id, value, x: x2, y }) => `<circle class="personality-radar-point" data-personality-radar-domain="${id}" data-radar-value="${value}" cx="${x2.toFixed(3)}" cy="${y.toFixed(3)}" r="4"/>`).join("")}${ticks}</g>
         </svg>
         ${vertices.map(({ id }, index) => `<span class="personality-radar-key" aria-hidden="true" style="left:${keyPositions[index].x}%;top:${keyPositions[index].y}%">${id}</span>`).join("")}
       </div>
-      <figcaption class="personality-radar-summary"><dl class="personality-radar-values">${vertices.map(({ id, value }) => `<div><dt><span class="personality-domain-key" aria-hidden="true">${id}</span><span>${E4(labels[id])}</span></dt><dd>${E4(formatValue(value))}<small> / 5</small></dd></div>`).join("")}</dl><p class="personality-radar-scale">${E4(scale)}</p></figcaption>
+      <figcaption class="personality-radar-summary"><dl class="personality-radar-values">${vertices.map(({ id, value }) => `<div><dt><span class="personality-domain-key" aria-hidden="true">${id}</span><span>${E3(labels[id])}</span></dt><dd>${E3(formatValue(value))}<small> / 5</small></dd></div>`).join("")}</dl><p class="personality-radar-scale">${E3(scale)}</p></figcaption>
     </figure>
-    <p class="personality-overview-note">${E4(caption)}</p>
+    <p class="personality-overview-note">${E3(caption)}</p>
   </section>`;
   }
 
   // site/apps/career/assets/personality.mjs
   var PAGE_SIZE = 10;
   var PAGE_COUNT = PERSONALITY_ITEMS.length / PAGE_SIZE;
-  var E5 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var E4 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   var L3 = (ru, en, zh2) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh2;
-  var text = (values) => L3(...values);
+  var text2 = (values) => L3(...values);
   var englishFacetLabels = { N3: "Low mood", O5: "Intellectual curiosity", A2: "Straightforwardness" };
   var label = (value) => L3(value.name, englishFacetLabels[value.id] || value.en, value.zh);
-  var number2 = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+  var number = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 2 });
   var facetById = new Map(PERSONALITY_FACETS.map((facet) => [facet.id, facet]));
   var validAnswer = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
   var answerLabels = () => L3(
@@ -9292,7 +7677,7 @@ var CareerRuntime = (() => {
     N: { title: ["\u042D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Emotional sensitivity", "\u60C5\u7EEA\u654F\u611F\u6027"], description: ["\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0447\u0430\u0441\u0442\u043E \u0412\u044B \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442\u0435 \u043D\u0430\u043F\u0440\u044F\u0436\u0435\u043D\u0438\u0435, \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u043D\u0438\u044F \u0438 \u044D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043A\u043E\u043B\u0435\u0431\u0430\u043D\u0438\u044F.", "How often you report tension, worries and emotional fluctuations.", "\u4F60\u611F\u53D7\u5230\u7D27\u5F20\u3001\u62C5\u5FE7\u548C\u60C5\u7EEA\u6CE2\u52A8\u7684\u9891\u7E41\u7A0B\u5EA6\u3002"] }
   };
   function meter(value, name2) {
-    return `<div class="personality-meter" role="meter" aria-label="${E5(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E5(number2(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
+    return `<div class="personality-meter" role="meter" aria-label="${E4(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E4(number(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
   }
   function createPersonality({ navigate, continueCareer }) {
     const storage = __careerHost.personalityStorage;
@@ -9356,8 +7741,8 @@ var CareerRuntime = (() => {
       root.lang = getLanguage();
       root.innerHTML = `<header class="personality-heading"><h1 id="personality-title" tabindex="-1">${L3("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81")}</h1><p>${L3("\u041E\u0446\u0435\u043D\u0438\u0442\u0435, \u043D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u0436\u0434\u043E\u0435 \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0412\u0430\u0441 \u0432 \u043E\u0431\u044B\u0447\u043D\u043E\u0439 \u0436\u0438\u0437\u043D\u0438. \u041E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044C \u043D\u0430 \u0441\u0432\u043E\u0451 \u043F\u0440\u0438\u0432\u044B\u0447\u043D\u043E\u0435 \u043F\u043E\u0432\u0435\u0434\u0435\u043D\u0438\u0435.", "Rate how accurately each statement describes you in everyday life. Think about your usual behaviour.", "\u8BF7\u5224\u65AD\u6BCF\u4E2A\u9648\u8FF0\u5728\u591A\u5927\u7A0B\u5EA6\u4E0A\u7B26\u5408\u65E5\u5E38\u751F\u6D3B\u4E2D\u7684\u4F60\uFF0C\u5E76\u4EE5\u5E73\u65F6\u7684\u884C\u4E3A\u4E3A\u4F9D\u636E\u3002")}</p></header>
       <div class="personality-progress"><div><span id="personality-counter" aria-live="polite"></span><span>${L3(`\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ${state2.page + 1} \u0438\u0437 ${PAGE_COUNT}`, `Page ${state2.page + 1} of ${PAGE_COUNT}`, `\u7B2C${state2.page + 1}\u9875\uFF0C\u5171${PAGE_COUNT}\u9875`)}</span></div><progress max="120" value="${answeredCount()}" aria-label="${L3("\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430", "Personality test progress", "\u4EBA\u683C\u6D4B\u8BD5\u8FDB\u5EA6")}"></progress></div>
-      <div class="personality-scale" aria-hidden="true">${labels.map((caption, index) => `<div><b>${index + 1}</b><span>${E5(caption)}</span></div>`).join("")}</div>
-      <form id="personality-form"><div class="personality-items">${currentItems().map((item) => `<fieldset class="personality-item${validAnswer(state2.answers[item.id]) ? " is-answered" : ""}"><legend><span>${item.order}.</span> ${E5(getLanguage() === "ru" ? item.text : getLanguage() === "en" ? item.en : item.zh)}</legend><div class="personality-options">${labels.map((caption, index) => `<label class="personality-choice" title="${E5(caption)}"><input type="radio" name="${item.id}" data-personality-item="${item.id}" value="${index + 1}" ${state2.answers[item.id] === index + 1 ? "checked" : ""} required><span class="personality-choice-number" aria-hidden="true">${index + 1}</span><span class="personality-sr-only">${E5(caption)}</span></label>`).join("")}</div><p class="personality-selected" aria-live="polite">${validAnswer(state2.answers[item.id]) ? E5(labels[state2.answers[item.id] - 1]) : "&nbsp;"}</p></fieldset>`).join("")}</div>
+      <div class="personality-scale" aria-hidden="true">${labels.map((caption, index) => `<div><b>${index + 1}</b><span>${E4(caption)}</span></div>`).join("")}</div>
+      <form id="personality-form"><div class="personality-items">${currentItems().map((item) => `<fieldset class="personality-item${validAnswer(state2.answers[item.id]) ? " is-answered" : ""}"><legend><span>${item.order}.</span> ${E4(getLanguage() === "ru" ? item.text : getLanguage() === "en" ? item.en : item.zh)}</legend><div class="personality-options">${labels.map((caption, index) => `<label class="personality-choice" title="${E4(caption)}"><input type="radio" name="${item.id}" data-personality-item="${item.id}" value="${index + 1}" ${state2.answers[item.id] === index + 1 ? "checked" : ""} required><span class="personality-choice-number" aria-hidden="true">${index + 1}</span><span class="personality-sr-only">${E4(caption)}</span></label>`).join("")}</div><p class="personality-selected" aria-live="polite">${validAnswer(state2.answers[item.id]) ? E4(labels[state2.answers[item.id] - 1]) : "&nbsp;"}</p></fieldset>`).join("")}</div>
       <p class="personality-save-status" role="status" hidden></p><div class="personality-actions"><button type="button" id="personality-back" class="button button-secondary" ${state2.page === 0 ? "hidden" : ""}>${L3("\u041D\u0430\u0437\u0430\u0434", "Back", "\u4E0A\u4E00\u6B65")}</button><button type="submit" id="personality-next" class="button button-primary" disabled>${state2.page === PAGE_COUNT - 1 ? L3("\u041C\u043E\u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B", "My results", "\u6211\u7684\u7ED3\u679C") : L3("\u0414\u0430\u043B\u0435\u0435", "Next", "\u4E0B\u4E00\u6B65")}</button></div></form>`;
       root.querySelector("#personality-form").addEventListener("change", (event) => {
         const input = event.target.closest("input[data-personality-item]");
@@ -9422,26 +7807,26 @@ var CareerRuntime = (() => {
       const root = document.querySelector("#personality-results-root"), suggestions = suggestTeamRoles(profile);
       root.lang = getLanguage();
       const radar = renderPersonalityRadar(profile.domains, {
-        labels: Object.fromEntries(Object.entries(domainCopy).map(([id, copy2]) => [id, text(copy2.title)])),
+        labels: Object.fromEntries(Object.entries(domainCopy).map(([id, copy]) => [id, text2(copy.title)])),
         title: L3("\u0421\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u0435 \u0412\u0430\u0448\u0438\u0445 \u0447\u0435\u0440\u0442", "Your traits at a glance", "\u4F60\u7684\u7279\u5F81\u7EC4\u5408"),
         description: L3("\u041F\u044F\u0442\u044C \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0445 \u0448\u043A\u0430\u043B \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043D\u0430 \u043E\u0434\u043D\u043E\u0439 \u0434\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0435.", "The five main personality scales in one chart.", "\u5728\u4E00\u5F20\u56FE\u4E2D\u67E5\u770B\u4E94\u9879\u4E3B\u8981\u4EBA\u683C\u7279\u5F81\u3002"),
         scale: L3("\u0415\u0434\u0438\u043D\u0430\u044F \u0448\u043A\u0430\u043B\u0430: 1 \u2014 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435, 5 \u2014 \u043D\u0430 \u0432\u043D\u0435\u0448\u043D\u0435\u043C \u043A\u043E\u043D\u0442\u0443\u0440\u0435.", "Shared scale: 1 at the centre, 5 on the outer ring.", "\u7EDF\u4E00\u91CF\u8868\uFF1A\u4E2D\u5FC3\u4E3A1\u5206\uFF0C\u5916\u5708\u4E3A5\u5206\u3002"),
         caption: L3("\u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0438\u0439 \u0431\u0430\u043B\u043B \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0447\u0435\u0440\u0442\u044B \u0432 \u0412\u0430\u0448\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u0430\u0445. \u0411\u043E\u043B\u044C\u0448\u0430\u044F \u043F\u043B\u043E\u0449\u0430\u0434\u044C \u0434\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u044B \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u043B\u0443\u0447\u0448\u0438\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "A higher score means that a trait is more strongly expressed in your answers. A larger chart area does not mean a better result.", "\u5206\u6570\u8D8A\u9AD8\uFF0C\u8868\u793A\u8BE5\u7279\u5F81\u5728\u4F60\u7684\u56DE\u7B54\u4E2D\u8D8A\u660E\u663E\u3002\u56FE\u5F62\u9762\u79EF\u8F83\u5927\u5E76\u4E0D\u8868\u793A\u7ED3\u679C\u66F4\u597D\u3002"),
-        formatValue: number2
+        formatValue: number
       });
       const roleIntro = suggestions.kind === "balanced" ? L3("\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u0432 \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u044B\u043C \u043E\u0431\u0440\u0430\u0437\u043E\u043C. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0440\u0430\u0437\u043D\u044B\u0435 \u0440\u043E\u043B\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u0430\u044E\u0442 \u0412\u0430\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u0443\u0434\u043E\u0432\u043B\u0435\u0442\u0432\u043E\u0440\u0435\u043D\u0438\u044F.", "Several ways of contributing to a team are similarly expressed. Try different roles and compare which tasks you find more satisfying.", "\u4F60\u5728\u591A\u79CD\u56E2\u961F\u53C2\u4E0E\u65B9\u5F0F\u4E0A\u8868\u73B0\u76F8\u8FD1\u3002\u53EF\u4EE5\u5C1D\u8BD5\u4E0D\u540C\u89D2\u8272\uFF0C\u6BD4\u8F83\u54EA\u4E9B\u4EFB\u52A1\u66F4\u8BA9\u4F60\u611F\u5230\u6EE1\u610F\u3002") : suggestions.kind === "exploratory" ? L3("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0430\u044F \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0430\u044F \u0440\u043E\u043B\u044C. \u0412 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u043C \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u043C \u0437\u0430\u0434\u0430\u043D\u0438\u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0437\u0430\u0434\u0430\u0447\u0443 \u043F\u043E \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044E, \u0430\u043D\u0430\u043B\u0438\u0437\u0443 \u0438\u043B\u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0435 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432 \u0438 \u043E\u0446\u0435\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u0438 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u044F.", "Your answers do not point clearly to a particular team role. In your next group task, try a small planning, analysis or support responsibility and reflect on the experience.", "\u4F60\u7684\u56DE\u7B54\u5C1A\u672A\u663E\u793A\u51FA\u660E\u786E\u7684\u56E2\u961F\u89D2\u8272\u503E\u5411\u3002\u4E0B\u6B21\u5C0F\u7EC4\u4EFB\u52A1\u4E2D\uFF0C\u53EF\u4EE5\u5C1D\u8BD5\u4E00\u9879\u8BA1\u5212\u3001\u5206\u6790\u6216\u652F\u6301\u6210\u5458\u7684\u5177\u4F53\u5DE5\u4F5C\uFF0C\u518D\u4F53\u4F1A\u81EA\u5DF1\u7684\u611F\u53D7\u3002") : L3("\u0421\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0412\u0430\u0448\u0438\u0445 \u0447\u0435\u0440\u0442 \u0434\u0430\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u044F \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0435 \u0441\u043F\u043E\u0441\u043E\u0431\u044B \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043E\u0431\u0449\u0435\u0439 \u0440\u0430\u0431\u043E\u0442\u0435.", "Your combination of traits suggests the following contributions to try in shared work.", "\u6839\u636E\u4F60\u7684\u7279\u5F81\u7EC4\u5408\uFF0C\u53EF\u4EE5\u5728\u5171\u540C\u5DE5\u4F5C\u4E2D\u5C1D\u8BD5\u4EE5\u4E0B\u53C2\u4E0E\u65B9\u5F0F\u3002");
       root.innerHTML = `<header class="personality-heading personality-result-heading"><button type="button" id="personality-edit" class="personality-text-button">${L3("\u041A \u043E\u0442\u0432\u0435\u0442\u0430\u043C", "Back to answers", "\u8FD4\u56DE\u7B54\u6848")}</button><h1>${L3("\u0412\u0430\u0448 \u0441\u0442\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435", "Your style of working in a team", "\u4F60\u7684\u56E2\u961F\u5DE5\u4F5C\u98CE\u683C")}</h1><p>${L3("\u0411\u0430\u043B\u043B\u044B \u043E\u0442 1 \u0434\u043E 5 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0447\u0435\u0440\u0442 \u0432 \u0412\u0430\u0448\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u0430\u0445. \u0423 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0435\u0441\u0442\u044C \u043F\u043E\u043B\u0435\u0437\u043D\u044B\u0435 \u0441\u0442\u043E\u0440\u043E\u043D\u044B \u0438 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F.", "Scores from 1 to 5 describe the traits expressed in your answers. Each combination has useful aspects and opportunities for development.", "1\u81F35\u5206\u53CD\u6620\u4F60\u7684\u56DE\u7B54\u4E2D\u5404\u9879\u7279\u5F81\u7684\u8868\u73B0\u7A0B\u5EA6\u3002\u6BCF\u79CD\u7EC4\u5408\u90FD\u6709\u6709\u5229\u4E4B\u5904\u548C\u53EF\u4EE5\u53D1\u5C55\u7684\u65B9\u9762\u3002")}</p></header>
       ${radar}
       <section class="personality-section" aria-labelledby="personality-work-title"><h2 id="personality-work-title">${L3("\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0441\u0442\u044C, \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0438 \u0441\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Responsibility, initiative and collaboration", "\u8D23\u4EFB\u3001\u4E3B\u52A8\u6027\u4E0E\u5408\u4F5C")}</h2><div class="personality-traits">${WORK_TRAITS.map((trait) => {
-        const value = profile.facets[trait.facet].mean, title = text(trait.label);
-        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E5(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E5(text(trait[expressionBand(value)]))}</p></article>`;
+        const value = profile.facets[trait.facet].mean, title = text2(trait.label);
+        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E4(title)}</span></h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(trait[expressionBand(value)]))}</p></article>`;
       }).join("")}</div></section>
-      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E5(text(role.label))}</span></h3><p>${E5(text(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E5(label(facetById.get(id)))}</dt><dd>${number2(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E5(text(role.action))}</p></article>`).join("")}</div>` : ""}</section>
+      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E4(text2(role.label))}</span></h3><p>${E4(text2(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E4(label(facetById.get(id)))}</dt><dd>${number(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E4(text2(role.action))}</p></article>`).join("")}</div>` : ""}</section>
       <section class="personality-section" aria-labelledby="personality-full-title"><h2 id="personality-full-title">${L3("\u041F\u043E\u043B\u043D\u044B\u0439 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your full personality profile", "\u5B8C\u6574\u7684\u4EBA\u683C\u7279\u5F81")}</h2><div class="personality-domains">${["C", "E", "A", "O", "N"].map((id) => {
-        const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy2 = domainCopy[id], value = profile.domains[id].mean, title = text(copy2.title);
-        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E5(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E5(text(copy2.description))}</p><dl>${domain.facets.map((facet) => {
+        const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy = domainCopy[id], value = profile.domains[id].mean, title = text2(copy.title);
+        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E4(title)}</span></h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(copy.description))}</p><dl>${domain.facets.map((facet) => {
           const facetLabel = label(facetById.get(facet));
-          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E5(facetLabel)}</dt><dd>${number2(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
+          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E4(facetLabel)}</dt><dd>${number(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
         }).join("")}</dl></article>`;
       }).join("")}</div></section>
       <p class="personality-method">${L3("\u041C\u0435\u0442\u043E\u0434\u0438\u043A\u0430:", "Method:", "\u65B9\u6CD5\uFF1A")} <a href="${PERSONALITY_METHOD.doi}" target="_blank" rel="noopener noreferrer">IPIP-NEO-120</a> (Johnson, 2014)${L3(", \u0440\u0435\u0434\u0430\u043A\u0446\u0438\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0433\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430; \u0440\u043E\u043B\u0438 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u2014 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0448\u043A\u0430\u043B.", "; team roles are an educational interpretation of the scales.", "\uFF0C\u91C7\u7528\u5F00\u653E\u8BD1\u6587\u7684\u4FEE\u8BA2\u7248\u672C\uFF1B\u56E2\u961F\u89D2\u8272\u662F\u5404\u9879\u7279\u5F81\u7684\u6559\u5B66\u6027\u89E3\u8BFB\u3002")}</p>
@@ -9466,6 +7851,257 @@ var CareerRuntime = (() => {
     }
     document.addEventListener("app:language", () => render(currentRoute));
     return { render, isComplete, flush: save, updateBusy: () => saveFailed };
+  }
+
+  // site/apps/career/assets/scoring.mjs
+  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
+  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
+  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
+  function clamp2(value, min = 0, max2 = 1) {
+    return Math.max(min, Math.min(max2, value));
+  }
+  function average(values) {
+    if (!values.length) return 0;
+    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
+  }
+  function standardDeviation(values) {
+    if (!values.length) return 0;
+    const mean = average(values);
+    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
+  }
+  function computeRoleProfile(answerMap, questions) {
+    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
+    for (const question of questions) {
+      const raw2 = Number(answerMap[question.id]);
+      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
+        grouped[question.scale].push(raw2);
+      }
+    }
+    const raw = {};
+    const normalized3 = {};
+    for (const id of SCALE_IDS) {
+      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
+      normalized3[id] = (raw[id] - 1) / 4;
+    }
+    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
+  }
+  function profileFromMeans(raw, answered = 27) {
+    const normalized3 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
+    const values = SCALE_IDS.map((id) => Number(raw[id]));
+    const dispersion = standardDeviation(values);
+    const mean = average(values);
+    return {
+      raw,
+      normalized: normalized3,
+      dispersion,
+      flat: dispersion < 0.26,
+      answered,
+      mean,
+      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
+      positiveScales: values.filter((v) => v >= 3.5).length,
+      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
+    };
+  }
+  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
+    const priorityWeights = [1, 0.82, 0.66, 0.5];
+    const lowWeights = [0.08, 0];
+    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
+    priorityIds.slice(0, 4).forEach((id, index) => {
+      if (id in values) values[id] = priorityWeights[index];
+    });
+    lowPriorityIds.slice(0, 2).forEach((id, index) => {
+      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
+    });
+    return values;
+  }
+  function sectorFit(preferences2, authority, focusAreas = {}) {
+    const entries = authority.sectors || [];
+    if (!entries.length) return 0.25;
+    return clamp2(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences2[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
+  }
+  function conditionDetails(userConditions = {}, requirements = {}) {
+    return CONDITION_IDS.map((id) => {
+      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
+      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
+      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
+      const [lo, hi] = interval;
+      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
+      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
+      return { id, willingness, requirement, interval, known: true, fit: clamp2(1 - expectedGap / 4), gap: expectedGap };
+    });
+  }
+  function conditionFit(userConditions = {}, requirements = {}) {
+    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
+  }
+  function roleFit(roleProfile, template) {
+    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
+    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
+    const mean = average(user), tmean = average(target);
+    let dot = 0, norm = 0, tnorm = 0;
+    for (let i2 = 0; i2 < user.length; i2++) {
+      const u = user[i2] - mean, t = target[i2] - tmean;
+      dot += u * t;
+      norm += u * u;
+      tnorm += t * t;
+    }
+    if (tnorm < 1e-12) return 0.5;
+    return clamp2(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
+  }
+  function matchBand(score2) {
+    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
+  }
+  function importanceFactor(importance) {
+    if (Number(importance) >= 3) return 1;
+    if (Number(importance) === 2) return 0.96;
+    return 0.91;
+  }
+  function canonicalValue(value) {
+    if (Array.isArray(value)) return value.map(canonicalValue);
+    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
+    return value;
+  }
+  function pathSignature(path, template, factor) {
+    return JSON.stringify(canonicalValue({
+      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
+      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
+      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids]) => ids?.length).map(([id, ids]) => [id, [...new Set(ids)].sort()])),
+      conditions: CONDITION_IDS.map((id) => {
+        const value = path.conditions?.[id];
+        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
+      }),
+      factor
+    }));
+  }
+  function aggregatePaths(paths) {
+    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
+    const best = ordered[0];
+    const pathMeanScore = average(ordered.map((path) => path.score));
+    const contributions = {};
+    const pathMeanContributions = {};
+    for (const key of ["role", "sector", "conditions"]) {
+      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
+      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
+    }
+    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
+    const { signature, ...bestPath } = best;
+    return {
+      ...bestPath,
+      rawScore,
+      score: Math.round(rawScore * 10) / 10,
+      band: matchBand(rawScore),
+      bestPathScore: best.score,
+      pathMeanScore,
+      portfolioScore: pathMeanScore,
+      pathCount: ordered.length,
+      aggregation: AGENCY_AGGREGATION,
+      bestPathContributions: best.contributions,
+      pathMeanContributions,
+      contributions
+    };
+  }
+  function scoreAuthority(authority, context, trackMap) {
+    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
+    const cFit = conditionFit(context.conditions, authority.conditions);
+    const paths = /* @__PURE__ */ new Map();
+    for (const link of authority.tracks || []) {
+      const template = trackMap.get(link.id);
+      if (!template) continue;
+      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
+      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
+      const cFit2 = conditionFit(context.conditions, link.conditions || {});
+      const rFit = roleFit(context.roleProfile, template);
+      const factor = importanceFactor(link.importance);
+      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
+      const score2 = 100 * base * factor;
+      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
+      const candidate = {
+        score: score2,
+        signature,
+        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
+        roleFit: rFit,
+        sectorFit: sFit2,
+        conditionFit: cFit2,
+        track: template,
+        importance: link.importance,
+        path: link,
+        pathSectors: path.sectors,
+        pathTopics: path.topics || {},
+        pathConditions: link.conditions || {}
+      };
+      const existing = paths.get(signature);
+      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
+    }
+    if (!paths.size) {
+      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
+      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
+      return {
+        ...authority,
+        score: Math.round(score2 * 10) / 10,
+        rawScore: score2,
+        band: matchBand(score2),
+        roleFit: 0.5,
+        sectorFit: sFit,
+        conditionFit: cFit,
+        track: null,
+        importance: 0,
+        bestPathScore: null,
+        pathMeanScore: null,
+        portfolioScore: null,
+        pathCount: 0,
+        aggregation: AGENCY_AGGREGATION,
+        contributions,
+        bestPathContributions: null,
+        pathMeanContributions: null
+      };
+    }
+    return { ...authority, ...aggregatePaths([...paths.values()]) };
+  }
+  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const roleProfile = computeRoleProfile(answers, questions);
+    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
+  }
+  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
+    const trackMap = new Map(tracks.map((track) => [track.id, track]));
+    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
+    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
+    return { ranked, roleProfile, sectorPreferences, context };
+  }
+  function selectDiscoveryCandidate(ranked, topCount = 5) {
+    if (ranked.length <= topCount) return null;
+    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
+    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
+      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
+      return right.score - left.score;
+    });
+    return candidates[0] || null;
+  }
+  function buildExplanation(item, roleProfile, scales, sectors) {
+    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
+    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
+    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
+    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
+    return {
+      strengths: strongest,
+      sectors: authoritySectors,
+      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
+      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
+    };
+  }
+  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
+    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
+    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
+    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
+    return {
+      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
+      missingQuestions,
+      priorityCount: prioritySectors.length,
+      lowPriorityCount: lowPrioritySectors.length,
+      missingConditions
+    };
   }
 
   // site/apps/career/assets/scenarios.mjs
@@ -9519,25 +8155,25 @@ var CareerRuntime = (() => {
   function scenarioBundle(items) {
     return { schema: SCENARIO_SCHEMA, schemaVersion: SCENARIO_VERSION, scenarios: structuredClone(items) };
   }
-  function importScenarios(text3, existing, questions, sectors) {
-    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > SCENARIO_FILE_LIMIT) throw new Error("file-too-large");
-    const bundle = JSON.parse(text3);
+  function importScenarios(text4, existing, questions, sectors) {
+    if (typeof text4 !== "string" || new TextEncoder().encode(text4).length > SCENARIO_FILE_LIMIT) throw new Error("file-too-large");
+    const bundle = JSON.parse(text4);
     if (!allowedKeys(bundle, ["schema", "schemaVersion", "scenarios"]) || bundle.schema !== SCENARIO_SCHEMA || bundle.schemaVersion !== SCENARIO_VERSION || !Array.isArray(bundle.scenarios) || bundle.scenarios.length > SCENARIO_LIMIT) throw new Error("bundle-schema");
     for (const item of bundle.scenarios) {
       const errors = validateScenario(item, questions, sectors);
       if (errors.length) throw new Error(errors.join(", "));
     }
     if (new Set(bundle.scenarios.map((x2) => x2.id)).size !== bundle.scenarios.length) throw new Error("duplicate-file-id");
-    const result = structuredClone(existing), ids2 = new Map(result.map((x2) => [x2.id, x2]));
+    const result = structuredClone(existing), ids = new Map(result.map((x2) => [x2.id, x2]));
     let added = 0, duplicates = 0;
     for (const item of bundle.scenarios) {
-      if (ids2.has(item.id)) {
-        if (JSON.stringify(ids2.get(item.id)) !== JSON.stringify(item)) throw new Error("id-conflict");
+      if (ids.has(item.id)) {
+        if (JSON.stringify(ids.get(item.id)) !== JSON.stringify(item)) throw new Error("id-conflict");
         duplicates++;
         continue;
       }
       result.push(item);
-      ids2.set(item.id, item);
+      ids.set(item.id, item);
       added++;
     }
     if (result.length > SCENARIO_LIMIT) throw new Error("limit");
@@ -9559,10 +8195,10 @@ var CareerRuntime = (() => {
   var PUBLIC_SERVICE_COHORTS = ["federal-legislative", "federal-judicial", "regional", "municipal"];
   var LANGS = ["ru", "en", "zh-Hans"];
   var OFFICIAL_HOSTS = /* @__PURE__ */ new Set(["duma.gov.ru", "council.gov.ru", "www.ksrf.ru", "vsrf.ru", "www.vsrf.ru", "www.zs74.ru", "www.gov.spb.ru", "novo-sibirsk.ru", "gorsovetnsk.ru"]);
-  var text2 = (v) => v && LANGS.every((l) => typeof v[l] === "string" && v[l].trim());
+  var text3 = (v) => v && LANGS.every((l) => typeof v[l] === "string" && v[l].trim());
   function validatePublicRegistry(registry, data2) {
     const errors = [];
-    const fail = (id, reason) => errors.push(`${id}: ${reason}`);
+    const fail2 = (id, reason) => errors.push(`${id}: ${reason}`);
     if (registry?.country !== "RU" || registry?.schemaVersion !== 1 || !Array.isArray(registry?.records)) return ["Invalid registry"];
     if (!Array.isArray(registry.eligibilitySources) || registry.eligibilitySources.length !== 2 || registry.eligibilitySources.some((url) => {
       try {
@@ -9571,59 +8207,59 @@ var CareerRuntime = (() => {
       } catch {
         return true;
       }
-    })) fail("registry", "unsafe eligibility source");
-    const ids2 = /* @__PURE__ */ new Set(), trackIds = new Set(data2.tracks.map((t) => t.id)), sectorIds = new Set(data2.sectors.map((s) => s.id));
+    })) fail2("registry", "unsafe eligibility source");
+    const ids = /* @__PURE__ */ new Set(), trackIds = new Set(data2.tracks.map((t) => t.id)), sectorIds = new Set(data2.sectors.map((s) => s.id));
     for (const a of registry.records) {
       if (!a || typeof a !== "object") {
-        fail("record", "invalid object");
+        fail2("record", "invalid object");
         continue;
       }
-      if (!/^[a-z][a-z0-9-]+$/.test(a.id) || ids2.has(a.id)) fail(a.id, "invalid or duplicate id");
-      ids2.add(a.id);
-      if (a.country !== "RU" || !PUBLIC_SERVICE_COHORTS.includes(a.cohort) || !text2(a.name) || !text2(a.mission) || !text2(a.location) || !text2(a.exercise)) fail(a.id, "scope or translated content");
-      if (!["apparatus", "authority"].includes(a.unitType) || a.vacancyStatus !== "not-a-vacancy" || a.educationStatus !== "check-each-position") fail(a.id, "status");
-      if (a.cohort === "municipal" && (a.level !== "municipal" || !a.branch?.startsWith("local-"))) fail(a.id, "municipal classification");
-      if (a.cohort.startsWith("federal-") && (a.level !== "federal" || a.unitType !== "apparatus")) fail(a.id, "federal staff classification");
-      if (a.cohort === "regional" && a.level !== "regional") fail(a.id, "regional classification");
-      if (a.cohort === "federal-judicial" && a.branch !== "judicial" || a.cohort === "federal-legislative" && a.branch !== "legislative") fail(a.id, "branch mismatch");
-      if (!Array.isArray(a.verifiedUnits) || a.verifiedUnits.some((v) => typeof v !== "string")) fail(a.id, "official unit labels");
+      if (!/^[a-z][a-z0-9-]+$/.test(a.id) || ids.has(a.id)) fail2(a.id, "invalid or duplicate id");
+      ids.add(a.id);
+      if (a.country !== "RU" || !PUBLIC_SERVICE_COHORTS.includes(a.cohort) || !text3(a.name) || !text3(a.mission) || !text3(a.location) || !text3(a.exercise)) fail2(a.id, "scope or translated content");
+      if (!["apparatus", "authority"].includes(a.unitType) || a.vacancyStatus !== "not-a-vacancy" || a.educationStatus !== "check-each-position") fail2(a.id, "status");
+      if (a.cohort === "municipal" && (a.level !== "municipal" || !a.branch?.startsWith("local-"))) fail2(a.id, "municipal classification");
+      if (a.cohort.startsWith("federal-") && (a.level !== "federal" || a.unitType !== "apparatus")) fail2(a.id, "federal staff classification");
+      if (a.cohort === "regional" && a.level !== "regional") fail2(a.id, "regional classification");
+      if (a.cohort === "federal-judicial" && a.branch !== "judicial" || a.cohort === "federal-legislative" && a.branch !== "legislative") fail2(a.id, "branch mismatch");
+      if (!Array.isArray(a.verifiedUnits) || a.verifiedUnits.some((v) => typeof v !== "string")) fail2(a.id, "official unit labels");
       const sourceIds = /* @__PURE__ */ new Set();
       if (!Array.isArray(a.sources)) {
-        fail(a.id, "sources schema");
+        fail2(a.id, "sources schema");
         continue;
       }
       for (const s of a.sources) {
         if (!s || typeof s !== "object") {
-          fail(a.id, "invalid source");
+          fail2(a.id, "invalid source");
           continue;
         }
-        if (!["full-page", "official-indexed-text"].includes(s.access) || !s.doesNotSupport?.includes("model-weights") || !s.doesNotSupport?.includes("vacancy-status")) fail(a.id, "evidence status");
+        if (!["full-page", "official-indexed-text"].includes(s.access) || !s.doesNotSupport?.includes("model-weights") || !s.doesNotSupport?.includes("vacancy-status")) fail2(a.id, "evidence status");
         try {
           const u = new URL(s.url);
-          if (u.protocol !== "https:" || !OFFICIAL_HOSTS.has(u.hostname) || u.username || u.password) fail(a.id, "non-official or unsafe source");
+          if (u.protocol !== "https:" || !OFFICIAL_HOSTS.has(u.hostname) || u.username || u.password) fail2(a.id, "non-official or unsafe source");
         } catch {
-          fail(a.id, "invalid URL");
+          fail2(a.id, "invalid URL");
         }
-        if (sourceIds.has(s.id) || !text2(s.title) || !/^\d{4}-\d{2}-\d{2}$/.test(s.checkedAt)) fail(a.id, "invalid source metadata");
+        if (sourceIds.has(s.id) || !text3(s.title) || !/^\d{4}-\d{2}-\d{2}$/.test(s.checkedAt)) fail2(a.id, "invalid source metadata");
         sourceIds.add(s.id);
       }
-      if (!sourceIds.has("structure") || !a.tracks?.length) fail(a.id, "missing evidence or role");
+      if (!sourceIds.has("structure") || !a.tracks?.length) fail2(a.id, "missing evidence or role");
       const seenTracks = /* @__PURE__ */ new Set();
       if (!Array.isArray(a.tracks)) {
-        fail(a.id, "tracks schema");
+        fail2(a.id, "tracks schema");
         continue;
       }
       for (const t of a.tracks) {
         if (!t || typeof t !== "object") {
-          fail(a.id, "invalid track");
+          fail2(a.id, "invalid track");
           continue;
         }
-        if (t.status !== "authored-functional-mapping") fail(a.id, "model classification");
-        if (!trackIds.has(t.id) || seenTracks.has(t.id) || ![1, 2, 3].includes(t.importance) || !text2(t.title) || !text2(t.rationale)) fail(a.id, "invalid role");
+        if (t.status !== "authored-functional-mapping") fail2(a.id, "model classification");
+        if (!trackIds.has(t.id) || seenTracks.has(t.id) || ![1, 2, 3].includes(t.importance) || !text3(t.title) || !text3(t.rationale)) fail2(a.id, "invalid role");
         seenTracks.add(t.id);
-        if (!t.sourceIds?.length || t.sourceIds.some((id) => !sourceIds.has(id))) fail(a.id, "role without source");
-        if (!t.sectors?.length || new Set(t.sectors.map((s) => s.id)).size !== t.sectors.length || t.sectors.some((s) => !sectorIds.has(s.id) || !Number.isFinite(s.weight) || s.weight <= 0 || s.weight > 1)) fail(a.id, "invalid sectors");
-        if (["FIELD", "SCHEDULE", "FORMAL", "SECURITY"].some((k) => !Number.isInteger(t.conditions?.[k]) || t.conditions[k] < 1 || t.conditions[k] > 5)) fail(a.id, "invalid conditions");
+        if (!t.sourceIds?.length || t.sourceIds.some((id) => !sourceIds.has(id))) fail2(a.id, "role without source");
+        if (!t.sectors?.length || new Set(t.sectors.map((s) => s.id)).size !== t.sectors.length || t.sectors.some((s) => !sectorIds.has(s.id) || !Number.isFinite(s.weight) || s.weight <= 0 || s.weight > 1)) fail2(a.id, "invalid sectors");
+        if (["FIELD", "SCHEDULE", "FORMAL", "SECURITY"].some((k) => !Number.isInteger(t.conditions?.[k]) || t.conditions[k] < 1 || t.conditions[k] > 5)) fail2(a.id, "invalid conditions");
       }
     }
     return errors;
@@ -9634,13 +8270,13 @@ var CareerRuntime = (() => {
     const sectorPreferences = buildSectorPreference(inputs.prioritySectors, inputs.lowPrioritySectors, data2.sectors);
     const context = { roleProfile, sectorPreferences, conditions: inputs.conditions, focusAreas: inputs.focusAreas || {} };
     const map = new Map(data2.tracks.map((t) => [t.id, t]));
-    const ranked = registry.records.map((record2) => {
-      const options = record2.tracks.map((link) => {
-        const scored = scoreAuthority({ id: record2.id, shortName: record2.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
+    const ranked = registry.records.map((record) => {
+      const options = record.tracks.map((link) => {
+        const scored = scoreAuthority({ id: record.id, shortName: record.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
         return { ...scored, link };
       }).sort((a, b) => b.rawScore - a.rawScore || b.sectorFit - a.sectorFit || a.link.id.localeCompare(b.link.id));
-      const overall = scoreAuthority({ id: record2.id, shortName: record2.name.ru, tracks: record2.tracks }, context, map);
-      return { ...record2, match: { ...overall, link: overall.path }, options };
+      const overall = scoreAuthority({ id: record.id, shortName: record.name.ru, tracks: record.tracks }, context, map);
+      return { ...record, match: { ...overall, link: overall.path }, options };
     }).sort((a, b) => b.match.rawScore - a.match.rawScore || b.match.sectorFit - a.match.sectorFit || a.name.ru.localeCompare(b.name.ru, "ru"));
     return { ranked, roleProfile, sectorPreferences };
   }
@@ -9653,9 +8289,9 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/public-service.mjs
-  var E6 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E5 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L4 = (r, e, z) => getLanguage() === "ru" ? r : getLanguage() === "en" ? e : z;
-  var B = (v) => E6(v?.[getLanguage()] || v?.ru || "");
+  var B = (v) => E5(v?.[getLanguage()] || v?.ru || "");
   var I2 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F = (n) => new Intl.NumberFormat(numberLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
   var cohortLabels = () => ({ all: L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411"), "federal-legislative": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u043F\u0430\u043B\u0430\u0442 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0430", "Federal parliamentary staff", "\u8054\u90A6\u8BAE\u4F1A\u673A\u5173"), "federal-judicial": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u0441\u0443\u0434\u043E\u0432", "Federal court staff", "\u8054\u90A6\u6CD5\u9662\u673A\u5173"), regional: L4("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Regional government", "\u5730\u533A\u5C42\u7EA7"), municipal: L4("\u041C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Local self-government", "\u5730\u65B9\u81EA\u6CBB") });
@@ -9667,7 +8303,7 @@ var CareerRuntime = (() => {
     root.setAttribute("data-no-i18n", "");
     let cohort = "all", query = "", selected = null, comparison = [], result = null;
     const byId = (id) => registry.records.find((a) => a.id === id);
-    const sourceLink = (s) => `<a class="ps-source" href="${E6(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I2("external")}</a>`;
+    const sourceLink = (s) => `<a class="ps-source" href="${E5(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I2("external")}</a>`;
     function scopeNotice() {
       return `<div class="ps-scope">${I2("info")}<p>${L4("\u0412\u043E\u0441\u0435\u043C\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u0438\u043C\u0435\u0440\u043E\u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u044F\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0439\u0442\u0438\u043D\u0433. \u042D\u0442\u043E \u043D\u0435 \u043F\u043E\u043B\u043D\u044B\u0439 \u0440\u0435\u0435\u0441\u0442\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u0438\u0442\u0435\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.", "Eight verified examples complement the main federal ranking. This is not a complete regional or municipal register, or a list of live vacancies.", "\u516B\u4E2A\u7ECF\u6838\u5B9E\u793A\u4F8B\u8865\u5145\u4E3B\u8981\u8054\u90A6\u6392\u540D\u3002\u8FD9\u4E0D\u662F\u5168\u90E8\u5730\u533A\u3001\u5E02\u653F\u673A\u5173\u540D\u5F55\uFF0C\u4E5F\u4E0D\u662F\u5B9E\u65F6\u62DB\u8058\u5217\u8868\u3002")}</p></div>`;
     }
@@ -9675,30 +8311,30 @@ var CareerRuntime = (() => {
       return `<header class="ps-header"><div><h1>${L4("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430: \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438", "Public service: other branches and levels", "\u516C\u804C\u53D1\u5C55\uFF1A\u5176\u4ED6\u6743\u529B\u5206\u652F\u4E0E\u5C42\u7EA7")}</h1><p>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0438\u0435 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0441\u043A\u0438\u0435 \u0438 \u0441\u0443\u0434\u0435\u0431\u043D\u044B\u0435 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u044B, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435.", "Russian parliamentary and court staff, regional authorities and local self-government.", "\u4FC4\u7F57\u65AF\u8BAE\u4F1A\u4E0E\u6CD5\u9662\u673A\u5173\u3001\u5730\u533A\u673A\u5173\u53CA\u5730\u65B9\u81EA\u6CBB\u3002")}</p></div><button type="button" class="button button-secondary" data-ps-route="results">${L4("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Federal result", "\u8054\u90A6\u7ED3\u679C")}${I2("arrow-right")}</button></header>`;
     }
     function eligibility() {
-      return `<details class="ps-eligibility"><summary>${I2("shield")}${L4("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E6(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L4("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I2("external")}</a><a href="${E6(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L4("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I2("external")}</a></div></details>`;
+      return `<details class="ps-eligibility"><summary>${I2("shield")}${L4("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E5(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L4("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I2("external")}</a><a href="${E5(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L4("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I2("external")}</a></div></details>`;
     }
     function card(a, index) {
-      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I2(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E6(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L4("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L4("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L4("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L4("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I2("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E6(L4("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I2(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
+      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I2(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E5(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L4("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L4("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L4("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L4("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I2("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E5(L4("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I2(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
     }
     function modelDetails(a) {
       return `<section class="ps-section"><h2>${L4("\u0427\u0442\u043E \u043C\u043E\u0436\u043D\u043E \u0434\u0435\u043B\u0430\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438", "Work to explore", "\u53EF\u63A2\u7D22\u7684\u5DE5\u4F5C")}</h2><p class="small-note">${L4("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0438\u0436\u0435 \u043E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u0427\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u043E\u0440\u0433\u0430\u043D\u0430.", "The following labels are modelled work directions, not confirmed vacancies. Weights are not official institutional ratings.", "\u4E0B\u5217\u540D\u79F0\u662F\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411\uFF0C\u4E0D\u662F\u5DF2\u786E\u8BA4\u7684\u5728\u62DB\u804C\u4F4D\u3002\u6570\u503C\u6743\u91CD\u4E0D\u662F\u5B98\u65B9\u673A\u6784\u8BC4\u5206\u3002")}</p>${a.tracks.map((t) => {
         const opt = a.options?.find((x2) => x2.link.id === t.id);
-        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I2("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E6(translate(data2.sectors.find((x2) => x2.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E6(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
+        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I2("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E5(translate(data2.sectors.find((x2) => x2.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E5(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
       }).join("")}</section>`;
     }
     function detail(a) {
       const match = result?.ranked.find((x2) => x2.id === a.id);
       a = match || a;
-      return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E6(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E6(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
+      return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E5(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E5(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
     }
     function comparisonView(items) {
       if (comparison.length !== 2) return "";
       const selectedItems = comparison.map((id) => items.find((x2) => x2.id === id) || byId(id));
       return `<section class="ps-section ps-comparison" id="ps-comparison"><h2>${L4("\u0414\u0432\u0430 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u044F\u0434\u043E\u043C", "Two directions side by side", "\u4E24\u4E2A\u65B9\u5411\u5E76\u5217")}</h2><div class="ps-compare-grid">${selectedItems.map((a) => `<article><h3>${B(a.name)}</h3><p>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</p><strong>${a.match ? F(a.match.score) + " / 100" : L4("\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Complete the test for an index", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u663E\u793A\u6307\u6570")}</strong><p>${a.match ? B(a.match.link.title) : B(a.tracks[0].title)}</p><p>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C.", "Check education requirements and the actual service regime in official materials.", "\u6309\u5B98\u65B9\u8D44\u6599\u6838\u5BF9\u5B66\u5386\u8981\u6C42\u548C\u5B9E\u9645\u670D\u52A1\u5236\u5EA6\u3002")}</p>${sourceLink(a.sources.find((s) => s.id === "hr") || a.sources[0])}</article>`).join("")}</div><button class="text-link" id="ps-clear-compare">${L4("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435", "Clear comparison", "\u6E05\u7A7A\u6BD4\u8F83")}</button></section>`;
     }
-    function list2() {
+    function list() {
       const items = filterPublicRecords(result?.ranked || registry.records, { cohort, query });
-      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E6(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E6(registry.registryVersion)}</small></details>`;
+      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E5(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E5(registry.registryVersion)}</small></details>`;
     }
     function bind() {
       root.querySelectorAll("[data-ps-notebook]").forEach((b) => b.onclick = () => openNotebook?.(b.dataset.psNotebook));
@@ -9758,7 +8394,7 @@ var CareerRuntime = (() => {
     function render(route) {
       if (route !== "public-service") return;
       result = rankPublicService(registry, data2, state2);
-      root.innerHTML = header() + (selected && byId(selected) ? detail(byId(selected)) : list2());
+      root.innerHTML = header() + (selected && byId(selected) ? detail(byId(selected)) : list());
       root.querySelector(".ps-dossier-heading h2")?.setAttribute("tabindex", "-1");
       bind();
     }
@@ -9961,26 +8597,26 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/decision-lab.mjs
-  var E7 = (x2) => String(x2 ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E6 = (x2) => String(x2 ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L5 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
-  var T = (x2) => E7(translate(x2));
+  var T = (x2) => E6(translate(x2));
   var I3 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F2 = (x2) => new Intl.NumberFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage() === "en" ? "en-GB" : "ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(x2);
   var D = (x2) => `${x2 > 0 ? "+" : ""}${F2(x2)}`;
   function createDecisionLab({ data: data2, state: state2, routeTo: routeTo2, openAuthority: openAuthority2, saveScenario, toast: toast2 }) {
     const root = document.querySelector("#decision-root");
-    let mode = "explain", selected = "", baseline = null, draft = null, fingerprint2 = "", sensitivity = null, busy = false, title = "";
+    let mode = "explain", selected = "", baseline = null, draft = null, fingerprint = "", sensitivity = null, busy = false, title = "";
     let stale = false, preview = null, result = null, epoch = 0;
     const agency = (id) => data2.authorities.find((a) => a.id === id);
     const sname = (id) => data2.sectors.find((s) => s.id === id)?.title || id;
     function sync() {
       try {
         const fp = inputFingerprint(state2, data2);
-        if (fp !== fingerprint2) {
-          stale = Boolean(fingerprint2);
+        if (fp !== fingerprint) {
+          stale = Boolean(fingerprint);
           baseline = checkedInputs(state2, data2);
           draft = structuredClone(baseline);
-          fingerprint2 = fp;
+          fingerprint = fp;
           sensitivity = null;
           busy = false;
           title = "";
@@ -10004,8 +8640,8 @@ var CareerRuntime = (() => {
       const x2 = explainAuthority(selected, baseline, data2, result);
       const labels = [L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B", "Work interests"), L5("\u0421\u0444\u0435\u0440\u044B \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438", "Policy areas"), L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430", "Working conditions")];
       const max2 = [40, 45, 15];
-      const near = x2.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E7(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
-      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x2.authority, "compact")}<h2>${E7(authorityName(x2.authority))}</h2></div><span>${x2.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x2.rank} / ${x2.categorySize}</span></div><div class="dl-index"><strong>${F2(x2.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
+      const near = x2.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E6(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
+      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x2.authority, "compact")}<h2>${E6(authorityName(x2.authority))}</h2></div><span>${x2.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x2.rank} / ${x2.categorySize}</span></div><div class="dl-index"><strong>${F2(x2.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
     <p class="dl-track">${L5("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x2.item.track?.title)}</strong></p>
     ${x2.roleProfile.flat ? `<div class="dl-notice">${L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
     ${x2.lowInterest ? `<div class="dl-notice">${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
@@ -10031,7 +8667,7 @@ var CareerRuntime = (() => {
     function topList(items, comparison = false) {
       return `<ol class="dl-top-list">${items.slice(0, 5).map((a) => {
         const delta = preview.rows.find((r) => r.id === a.id);
-        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E7(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L5("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L5("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L5("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L5("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
+        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E6(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L5("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L5("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L5("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L5("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
       }).join("")}</ol>`;
     }
     function experiment() {
@@ -10041,7 +8677,7 @@ var CareerRuntime = (() => {
     <div class="dl-experiment-grid"><aside class="dl-controls"><h2>${L5("\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043C?", "What shall we change?")}</h2><label for="dl-sector">${L5("\u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0441\u0440\u0435\u0434\u0438 \u0441\u0444\u0435\u0440", "First-priority policy area")}</label><select id="dl-sector">${data2.sectors.map((s) => `<option value="${s.id}" ${draft.prioritySectors[0] === s.id ? "selected" : ""} ${draft.lowPrioritySectors.includes(s.id) ? "disabled" : ""}>${T(s.title)}${draft.lowPrioritySectors.includes(s.id) ? " \xB7 " + L5("\u0432 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0445", "among least interesting") : ""}</option>`).join("")}</select><p class="dl-help">${L5("\u0421\u0444\u0435\u0440\u0430 \u0438\u0437 \u043F\u0435\u0440\u0432\u043E\u0439 \u0447\u0435\u0442\u0432\u0451\u0440\u043A\u0438 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438 \u0441 \u043F\u0435\u0440\u0432\u043E\u0439. \u041D\u043E\u0432\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u043F\u0435\u0440\u0432\u0443\u044E; \u043F\u0440\u0435\u0436\u043D\u044F\u044F \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u043D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439. \u041E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B.", "An area already in your top four swaps places with the first. A new area replaces the first; the former first becomes unselected. Least-interest areas cannot be promoted here.")}</p>
     <h3>${L5("\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A \u0443\u0441\u043B\u043E\u0432\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B", "Willingness to accept working conditions")}</h3>${data2.conditions.map((c) => `<label class="dl-condition" for="dl-${c.id}"><span>${T(c.title)}</span><select id="dl-${c.id}" data-dl-condition="${c.id}">${[1, 2, 3, 4, 5].map((v) => `<option value="${v}" ${draft.conditions[c.id] === v ? "selected" : ""}>${v} / 5</option>`).join("")}</select></label>`).join("")}
     <p class="dl-help">${L5("1 \u2013 \u043D\u0438\u0437\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C; 5 \u2013 \u0432\u044B\u0441\u043E\u043A\u0430\u044F. \u041E\u0446\u0435\u043D\u043A\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0437\u0434\u0435\u0441\u044C \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.", "1 means low willingness; 5 means high willingness. Work-interest answers are not changed here.")}</p><button type="button" id="dl-reset" class="button button-secondary" ${changed ? "" : "disabled"}>${I3("reset")}${L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Reset to original")}</button>
-    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E7(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I3("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
+    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E6(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I3("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
     <div class="dl-preview"><div class="dl-preview-summary" role="status"><h2>${L5("\u0414\u0432\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0440\u044F\u0434\u043E\u043C", "Two versions side by side")}</h2><p>${L5("\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043A\u0430\u0445", "Agencies shared by the top fives")}: <b>${preview.overlap} / 5</b> \xB7 ${L5("\u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0439", "conditions changed")}: <b>${preview.changes.conditions.length}</b></p></div>
     <div class="dl-pair"><article><h3>${L5("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Original result")}</h3><div class="dl-priorities">${baseline.prioritySectors.map((id, i2) => `<span>${i2 + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.left)}</article><article class="dl-modified"><h3>${L5("\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Experimental variant")}</h3><div class="dl-priorities">${draft.prioritySectors.map((id, i2) => `<span>${i2 + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.right, true)}</article></div>
     <p class="dl-help">${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E \u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u0432\u0432\u0435\u0434\u0451\u043D\u043D\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u042D\u0442\u043E \u043D\u0435 \u0441\u043E\u0432\u0435\u0442 \u043F\u043E\u0434\u0431\u0438\u0440\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E. \u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443, \u0432\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u0430\u043D\u043A\u0435\u0442\u0435 \u0438\u043B\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "These are the model\u2019s consequences of your changes, not an invitation to tailor answers to a target agency. To reconsider your actual interests, return to the questionnaire or save a separate scenario.")}</p></div></div>`;
@@ -10056,7 +8692,7 @@ var CareerRuntime = (() => {
       root.innerHTML = `<div data-no-i18n><header class="section-heading"><div><h1>${L5("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L5("\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044E \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u043D\u0435 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u044B\u0432\u0430\u044F \u0441\u0432\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Understand a recommendation and explore variants without changing your result.")}</p></div><button type="button" class="button button-secondary" id="dl-back">${I3("arrow-left")}${L5("\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "My result")}</button></header>
     ${stale ? `<p class="dl-notice">${L5("\u041E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438\u0441\u044C. \u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442 \u043D\u0430\u0447\u0430\u0442 \u0437\u0430\u043D\u043E\u0432\u043E \u043E\u0442 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.", "Your main answers changed. The experiment has been reset to the current result.")}</p>` : ""}
     <div class="dl-tabs" role="tablist" aria-label="${L5("\u0420\u0430\u0437\u0434\u0435\u043B \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u0438", "Laboratory section")}">${[["explain", "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D?", "Why this agency?"], ["experiment", "\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u0435\u0441\u043B\u0438\u2026", "What changes if\u2026"]].map(([id, ru, en]) => `<button type="button" role="tab" id="dl-tab-${id}" aria-controls="dl-content" aria-selected="${mode === id}" tabindex="${mode === id ? 0 : -1}" data-dl-mode="${id}">${L5(ru, en)}</button>`).join("")}</div>
-    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E7(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L5("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
+    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E6(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L5("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
     <div id="dl-content" role="tabpanel" aria-labelledby="dl-tab-${mode}">${mode === "explain" ? explain() : experiment()}</div></div>`;
       bind();
     }
@@ -10129,7 +8765,7 @@ var CareerRuntime = (() => {
           root.querySelector("#dl-title").focus();
           return;
         }
-        if (inputFingerprint(state2, data2) !== fingerprint2) {
+        if (inputFingerprint(state2, data2) !== fingerprint) {
           rerender();
           return;
         }
@@ -10148,9 +8784,9 @@ var CareerRuntime = (() => {
     document.addEventListener("app:language", () => {
       if (!document.querySelector("#view-lab").hidden) render("lab");
     });
-    return { render, open: entry, updateBusy: () => busy, captureForUpdate: () => ({ mode, selected, draft: structuredClone(draft), fingerprint: fingerprint2, title }), restoreForUpdate(value) {
+    return { render, open: entry, updateBusy: () => busy, captureForUpdate: () => ({ mode, selected, draft: structuredClone(draft), fingerprint, title }), restoreForUpdate(value) {
       sync();
-      if (value?.fingerprint !== fingerprint2) return false;
+      if (value?.fingerprint !== fingerprint) return false;
       mode = ["explain", "experiment"].includes(value.mode) ? value.mode : "explain";
       selected = agency(value.selected) ? value.selected : selected;
       draft = value.draft ? checkedInputs(value.draft, data2) : draft;
@@ -10227,7 +8863,7 @@ var CareerRuntime = (() => {
   var TEXT_LIMIT = 1200;
   var textFields = ["why", "question", "next"];
   var plain4 = (x2) => x2 !== null && typeof x2 === "object" && !Array.isArray(x2);
-  var keys = (o, list2) => plain4(o) && Object.keys(o).length === list2.length && list2.every((k) => Object.hasOwn(o, k));
+  var keys = (o, list) => plain4(o) && Object.keys(o).length === list.length && list.every((k) => Object.hasOwn(o, k));
   function blankWorkbook() {
     return { schema: NOTEBOOK_SCHEMA, schemaVersion: 1, selected: null, notes: {}, responses: {}, duration: 90 };
   }
@@ -10236,16 +8872,16 @@ var CareerRuntime = (() => {
   }
   function validateWorkbook(value, authorities, cases) {
     if (!keys(value, ["schema", "schemaVersion", "selected", "notes", "responses", "duration"]) || value.schema !== NOTEBOOK_SCHEMA || value.schemaVersion !== 1) return false;
-    const ids2 = new Set(authorities.map((a) => a.id)), byCase = new Map(cases.map((c) => [c.id, c]));
-    if (value.selected !== null && (!ids2.has(value.selected) || !Object.hasOwn(value.notes || {}, value.selected))) return false;
-    if (![45, 90].includes(value.duration) || !plain4(value.notes) || !plain4(value.responses) || Object.keys(value.notes).length > ids2.size || Object.keys(value.responses).length > byCase.size) return false;
-    for (const [id, n] of Object.entries(value.notes)) if (!ids2.has(id) || !keys(n, [...textFields, "known"]) || !["yes", "no", "unknown"].includes(n.known) || textFields.some((k) => typeof n[k] !== "string" || n[k].length > TEXT_LIMIT || /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(n[k]))) return false;
+    const ids = new Set(authorities.map((a) => a.id)), byCase = new Map(cases.map((c) => [c.id, c]));
+    if (value.selected !== null && (!ids.has(value.selected) || !Object.hasOwn(value.notes || {}, value.selected))) return false;
+    if (![45, 90].includes(value.duration) || !plain4(value.notes) || !plain4(value.responses) || Object.keys(value.notes).length > ids.size || Object.keys(value.responses).length > byCase.size) return false;
+    for (const [id, n] of Object.entries(value.notes)) if (!ids.has(id) || !keys(n, [...textFields, "known"]) || !["yes", "no", "unknown"].includes(n.known) || textFields.some((k) => typeof n[k] !== "string" || n[k].length > TEXT_LIMIT || /[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(n[k]))) return false;
     for (const [id, response] of Object.entries(value.responses)) if (!byCase.has(id) || !byCase.get(id).choices.some((c) => c.id === response)) return false;
     return true;
   }
-  function importWorkbook(text3, authorities, cases) {
-    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > NOTEBOOK_FILE_LIMIT) throw Error("file-size");
-    const value = JSON.parse(text3);
+  function importWorkbook(text4, authorities, cases) {
+    if (typeof text4 !== "string" || new TextEncoder().encode(text4).length > NOTEBOOK_FILE_LIMIT) throw Error("file-size");
+    const value = JSON.parse(text4);
     if (!validateWorkbook(value, authorities, cases)) throw Error("schema");
     return value;
   }
@@ -10264,7 +8900,7 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/classroom.mjs
-  var E8 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E7 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L6 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
   var B2 = (v) => v?.[getLanguage()] || translate(v?.ru || "");
   var name = authorityName;
@@ -10306,19 +8942,19 @@ var CareerRuntime = (() => {
       routeTo2("workshop");
     }
     function source(c) {
-      return `<div class="ws-source"><b>${L6("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E8(B2(c.fact))}</p><a href="${E8(c.source.url)}" target="_blank" rel="noopener noreferrer">${E8(B2(c.source.title))}${ico("external")}</a><small>${L6("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
+      return `<div class="ws-source"><b>${L6("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E7(B2(c.fact))}</p><a href="${E7(c.source.url)}" target="_blank" rel="noopener noreferrer">${E7(B2(c.source.title))}${ico("external")}</a><small>${L6("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
     }
     function card(c) {
       const a = agency(c.authorityId);
-      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E8(name(a))}</small><h2>${E8(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
+      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E7(name(a))}</small><h2>${E7(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
     }
     function materials(c) {
-      return c.materials ? `<section class="ws-materials"><h3>${E8(B2(c.materials.title))}</h3><p>${E8(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E8(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i2) => i2 ? `<td>${E8(B2(v))}</td>` : `<th>${E8(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
+      return c.materials ? `<section class="ws-materials"><h3>${E7(B2(c.materials.title))}</h3><p>${E7(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E7(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i2) => i2 ? `<td>${E7(B2(v))}</td>` : `<th>${E7(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
     }
     function renderCases() {
-      if (!activeCase) return `<p class="ws-intro">${E8(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
+      if (!activeCase) return `<p class="ws-intro">${E7(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
       const c = cases.find((c2) => c2.id === activeCase), selected = book.responses[c.id], choice = c.choices.find((x2) => x2.id === selected), a = agency(c.authorityId);
-      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E8(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E8(B2(c.title))}</h2><p class="ws-situation">${E8(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x2, i2) => `<button class="ws-option${selected === x2.id ? " chosen" : ""}" type="button" data-choice="${x2.id}" aria-pressed="${selected === x2.id}"><span>${i2 + 1}</span><p>${E8(B2(x2.text))}</p>${selected === x2.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E8(B2(choice.feedback))}</p><p>${E8(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E8(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
+      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E7(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E7(B2(c.title))}</h2><p class="ws-situation">${E7(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x2, i2) => `<button class="ws-option${selected === x2.id ? " chosen" : ""}" type="button" data-choice="${x2.id}" aria-pressed="${selected === x2.id}"><span>${i2 + 1}</span><p>${E7(B2(x2.text))}</p>${selected === x2.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E7(B2(choice.feedback))}</p><p>${E7(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E7(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
     }
     function renderNotes() {
       if (!book.selected) {
@@ -10327,10 +8963,10 @@ var CareerRuntime = (() => {
       }
       const a = agency(book.selected), n = a ? book.notes[a.id] || blankNote() : blankNote();
       const fields = [["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u043C\u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E \u044D\u0442\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435?", "Why does this direction interest me?", "\u0421\u0432\u044F\u0436\u0438\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u0441 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0437\u0430\u0434\u0430\u0447\u0435\u0439, \u0430 \u043D\u0435 \u0441 \u043F\u0440\u0435\u0441\u0442\u0438\u0436\u0435\u043C \u043E\u0440\u0433\u0430\u043D\u0430.", "Connect your interest to a specific task rather than the agency\u2019s prestige."], ["question", "\u0427\u0442\u043E \u043C\u043D\u0435 \u0435\u0449\u0451 \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C?", "What do I still need to find out?", "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0435, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u0440\u0430\u0431\u043E\u0442\u044B \u0438\u043B\u0438 \u0433\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u0439.", "For example, education requirements, work activities or limits of responsibility."], ["next", "\u041A\u0430\u043A\u043E\u0439 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u044F \u0441\u0434\u0435\u043B\u0430\u044E?", "What will I do next?", "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442: \u043D\u0430\u0439\u0442\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443, \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0434\u0432\u0430 \u043E\u0440\u0433\u0430\u043D\u0430, \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443.", "State an action and its output: find an official careers page, compare two agencies, prepare a student project."]];
-      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x2) => `<option value="${x2.id}"${a?.id === x2.id ? " selected" : ""}>${E8(name(x2))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E8(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E8(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
+      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x2) => `<option value="${x2.id}"${a?.id === x2.id ? " selected" : ""}>${E7(name(x2))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E7(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E7(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
     }
     function renderPlan() {
-      return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E8(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
+      return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E7(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
     }
     function planDescription(id) {
       return { intro: L6("\u041F\u043E\u044F\u0441\u043D\u0438\u0442\u0435 \u0446\u0435\u043B\u044C: \u0443\u0437\u043D\u0430\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u0440\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u0430 \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u0445.", "Explain the aim: discover agencies and career possibilities, not receive an assessment of ability."), test: L6("\u0421\u0442\u0443\u0434\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0445\u043E\u0434\u044F\u0442 \u0442\u0440\u0438 \u0431\u043B\u043E\u043A\u0430 \u0442\u0435\u0441\u0442\u0430; \u043A\u0430\u0436\u0434\u044B\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u0441\u0435\u0431\u044F.", "Students complete the three test blocks and save their own result."), explore: L6("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044E \u0432\u044B\u0431\u043E\u0440\u0430. \u041E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0432 \u0438\u043D\u0434\u0435\u043A\u0441, \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u0441\u0444\u0435\u0440\u0443 \u0432 \u043A\u043E\u043F\u0438\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438. \u0417\u0430\u0442\u0435\u043C \u043D\u0430\u0439\u0434\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0432\u043B\u0430\u0441\u0442\u0438.", "Open the choice laboratory. Explain the three index contributions, change one policy area in a copy and compare recommendations. Then locate the agency in the government structure."), case: L6("\u041A\u0430\u0436\u0434\u044B\u0439 \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u043E\u0434\u043D\u0443 \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044E. \u041F\u043E\u0441\u043B\u0435 \u043E\u0442\u0432\u0435\u0442\u0430 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u043E\u0431\u044A\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u0438 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A.", "Choose one case. After responding, read the explanation and official source."), discussion: L6("\u041E\u0431\u0441\u0443\u0434\u0438\u0442\u0435, \u0447\u0442\u043E \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0435\u0442 \u0432 \u0437\u0430\u0434\u0430\u0447\u0435 \u0438 \u0447\u0442\u043E \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0432\u044B\u044F\u0441\u043D\u0435\u043D\u0438\u044F. \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u043B\u0438\u0441\u0442\u0430.", "Discuss what attracts you to the task and what needs investigation. Complete the three worksheet sections."), finish: L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435. \u0414\u043B\u044F \u043E\u0431\u0437\u043E\u0440\u0430 \u0433\u0440\u0443\u043F\u043F\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0442\u0435\u0441\u0442\u0430, \u0430 \u043D\u0435 \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0435 \u0437\u0430\u043F\u0438\u0441\u0438.", "Name one concrete action. For the class overview, use the anonymous test export, not free-text notes.") }[id];
@@ -10450,7 +9086,7 @@ var CareerRuntime = (() => {
         target.id = "workbook-print-root";
         document.body.append(target);
       }
-      target.innerHTML = `<h1>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E8(name(a))}</h2><p>${L6("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L6(ru, en)}</h3><p class="ws-print-text">${E8(n[id]) || L6("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L6("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E8(a.governmentUrl)}</p>`;
+      target.innerHTML = `<h1>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E7(name(a))}</h2><p>${L6("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L6(ru, en)}</h3><p class="ws-print-text">${E7(n[id]) || L6("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L6("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E7(a.governmentUrl)}</p>`;
       document.body.classList.add("print-workbook");
       window.print();
     }
@@ -10510,51 +9146,51 @@ var CareerRuntime = (() => {
   var plainObject = (value) => !!value && typeof value === "object" && !Array.isArray(value);
   var exactKeys = (value, keys3) => plainObject(value) && Object.keys(value).length === keys3.length && keys3.every((key) => Object.hasOwn(value, key));
   var TRACK_IDS = ["POLICY", "LEGAL", "INSPECT", "PROGRAM", "FINANCE", "DIGITAL", "SERVICE", "TERRITORIAL", "INTERNATIONAL"];
-  function validateAnonymousRecord(record2, registry = validationRegistry) {
+  function validateAnonymousRecord(record, registry = validationRegistry) {
     const errors = [];
-    if (!record2 || typeof record2 !== "object" || Array.isArray(record2)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
-    if (record2.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
-    const schemaOK = exactKeys(record2, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record2.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record2.roleProfile.raw, SCALE_IDS2) && exactKeys(record2.conditions, CONDITION_IDS3) && Array.isArray(record2.ranking) && record2.ranking.length >= 5 && record2.ranking.length <= 10 && record2.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
+    if (!record || typeof record !== "object" || Array.isArray(record)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
+    if (record.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
+    const schemaOK = exactKeys(record, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record.roleProfile.raw, SCALE_IDS2) && exactKeys(record.conditions, CONDITION_IDS3) && Array.isArray(record.ranking) && record.ranking.length >= 5 && record.ranking.length <= 10 && record.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
     if (!schemaOK) return { valid: false, errors: ["\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0444\u0430\u0439\u043B\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0437\u0430\u043A\u0440\u044B\u0442\u043E\u0439 \u0441\u0445\u0435\u043C\u0435. \u041F\u043E\u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u0435, \u0432 \u0442\u043E\u043C \u0447\u0438\u0441\u043B\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u043E\u043B\u044F, \u043D\u0435 \u0434\u043E\u043F\u0443\u0441\u043A\u0430\u044E\u0442\u0441\u044F."] };
-    if (!Array.isArray(record2.leadingTieIds) || !record2.leadingTieIds.length || record2.leadingTieIds.length > 69 || new Set(record2.leadingTieIds).size !== record2.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
-    if (record2.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
-    if (record2.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
-    if (record2.questionnaireVersion !== QUESTIONNAIRE_VERSION || record2.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
-    if (!validateFocusAreas(record2.focusAreas, record2.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
-    if (record2.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
-    if (typeof record2.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record2.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
-    if (typeof record2.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record2.createdAt) || Number.isNaN(Date.parse(record2.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
-    if (!record2.roleProfile || typeof record2.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
+    if (!Array.isArray(record.leadingTieIds) || !record.leadingTieIds.length || record.leadingTieIds.length > 69 || new Set(record.leadingTieIds).size !== record.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
+    if (record.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
+    if (record.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
+    if (record.questionnaireVersion !== QUESTIONNAIRE_VERSION || record.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
+    if (!validateFocusAreas(record.focusAreas, record.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
+    if (record.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
+    if (typeof record.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
+    if (typeof record.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record.createdAt) || Number.isNaN(Date.parse(record.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
+    if (!record.roleProfile || typeof record.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
     for (const id of SCALE_IDS2) {
-      const value = record2.roleProfile?.raw?.[id];
+      const value = record.roleProfile?.raw?.[id];
       if (!Number.isFinite(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0448\u043A\u0430\u043B\u044B ${id}.`);
     }
-    const dispersion = record2.roleProfile?.dispersion;
+    const dispersion = record.roleProfile?.dispersion;
     if (!Number.isFinite(dispersion) || dispersion < 0 || dispersion > 2) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0438\u0441\u043F\u0435\u0440\u0441\u0438\u044F \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    if (typeof record2.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    const values = SCALE_IDS2.map((id) => record2.roleProfile.raw[id]);
+    if (typeof record.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
+    const values = SCALE_IDS2.map((id) => record.roleProfile.raw[id]);
     if (values.every((v) => typeof v === "number" && Number.isFinite(v))) {
       const mean = values.reduce((a, b) => a + b, 0) / values.length;
       const sd = Math.sqrt(values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length);
-      if (Math.abs(sd - dispersion) > 1e-6 || record2.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
+      if (Math.abs(sd - dispersion) > 1e-6 || record.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
     }
-    if (!Array.isArray(record2.prioritySectors) || record2.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    if (!Array.isArray(record2.lowPrioritySectors) || record2.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    const priority = Array.isArray(record2.prioritySectors) ? record2.prioritySectors : [];
-    const low = Array.isArray(record2.lowPrioritySectors) ? record2.lowPrioritySectors : [];
+    if (!Array.isArray(record.prioritySectors) || record.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    if (!Array.isArray(record.lowPrioritySectors) || record.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    const priority = Array.isArray(record.prioritySectors) ? record.prioritySectors : [];
+    const low = Array.isArray(record.lowPrioritySectors) ? record.lowPrioritySectors : [];
     if (new Set(priority).size !== priority.length || new Set(low).size !== low.length) errors.push("\u0421\u0444\u0435\u0440\u044B \u0432\u043D\u0443\u0442\u0440\u0438 \u0441\u043F\u0438\u0441\u043A\u0430 \u043D\u0435 \u0434\u043E\u043B\u0436\u043D\u044B \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0442\u044C\u0441\u044F.");
     if (priority.some((id) => !SECTOR_IDS.includes(id)) || low.some((id) => !SECTOR_IDS.includes(id))) errors.push("\u0424\u0430\u0439\u043B \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0443\u044E \u0441\u0444\u0435\u0440\u0443 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438.");
     if (priority.some((id) => low.includes(id))) errors.push("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0438 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u043F\u0435\u0440\u0435\u0441\u0435\u043A\u0430\u044E\u0442\u0441\u044F.");
-    if (!record2.conditions || typeof record2.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
+    if (!record.conditions || typeof record.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
     for (const id of CONDITION_IDS3) {
-      const value = record2.conditions?.[id];
+      const value = record.conditions?.[id];
       if (!Number.isInteger(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F ${id}.`);
     }
-    if (!Array.isArray(record2.ranking) || record2.ranking.length < 5 || record2.ranking.length > 10) {
+    if (!Array.isArray(record.ranking) || record.ranking.length < 5 || record.ranking.length > 10) {
       errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0434\u043E\u043B\u0436\u0435\u043D \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043E\u0442 \u043F\u044F\u0442\u0438 \u0434\u043E \u0434\u0435\u0441\u044F\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.");
     } else {
       const authorityIds = /* @__PURE__ */ new Set();
-      record2.ranking.forEach((item, index) => {
+      record.ranking.forEach((item, index) => {
         if (!item || typeof item !== "object") {
           errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0441\u0442\u0440\u043E\u043A\u0430 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 ${index + 1}.`);
           return;
@@ -10564,7 +9200,7 @@ var CareerRuntime = (() => {
         if (authorityIds.has(item.authorityId)) errors.push("\u041E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0435\u0442\u0441\u044F \u0432 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435.");
         authorityIds.add(item.authorityId);
         if (typeof item.score !== "number" || !Number.isFinite(item.score) || item.score < 0 || item.score > 100) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441 \u0432 \u0441\u0442\u0440\u043E\u043A\u0435 ${index + 1}.`);
-        if (index && item.score > record2.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
+        if (index && item.score > record.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
         if (Array.isArray(registry?.authorities)) {
           const authority = registry.authorities.find((a) => a.id === item.authorityId);
           if (!authority || ["corporation", "fund"].includes(authority.entityType)) errors.push("\u0412 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0432\u043D\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0433\u043E \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430.");
@@ -10580,35 +9216,35 @@ var CareerRuntime = (() => {
         authorities: registry.authorities,
         tracks: registry.tracks,
         sectors: registry.sectors,
-        roleProfile: profileFromMeans(record2.roleProfile.raw),
+        roleProfile: profileFromMeans(record.roleProfile.raw),
         prioritySectors: priority,
         lowPrioritySectors: low,
-        conditions: record2.conditions,
-        focusAreas: record2.focusAreas
+        conditions: record.conditions,
+        focusAreas: record.focusAreas
       }).ranked.filter((item) => !["corporation", "fund"].includes(item.entityType));
       const expectedTies = expected.filter((x2) => Math.abs(x2.rawScore - expected[0].rawScore) < 1e-8).map((x2) => x2.id);
-      if (JSON.stringify(expectedTies) !== JSON.stringify(record2.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
-      expected.splice(record2.ranking.length);
-      if (expected.length !== record2.ranking.length || expected.some((item, i2) => item.id !== record2.ranking[i2].authorityId || Math.abs(item.score - record2.ranking[i2].score) > 1e-8 || (item.track?.id || null) !== record2.ranking[i2].trackId)) {
+      if (JSON.stringify(expectedTies) !== JSON.stringify(record.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
+      expected.splice(record.ranking.length);
+      if (expected.length !== record.ranking.length || expected.some((item, i2) => item.id !== record.ranking[i2].authorityId || Math.abs(item.score - record.ranking[i2].score) > 1e-8 || (item.track?.id || null) !== record.ranking[i2].trackId)) {
         errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u0438 \u0432\u0435\u0440\u0441\u0438\u0438 \u043C\u043E\u0434\u0435\u043B\u0438. \u041F\u0435\u0440\u0435\u0441\u0447\u0451\u0442 \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0438\u043B \u0440\u0430\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.");
       }
     }
     return { valid: errors.length === 0, errors: [...new Set(errors)] };
   }
   function aggregateAnonymousRecords(records = [], registry = validationRegistry) {
-    const validRecords = records.filter((record2) => validateAnonymousRecord(record2, registry).valid);
+    const validRecords = records.filter((record) => validateAnonymousRecord(record, registry).valid);
     const authorityTopOne = /* @__PURE__ */ new Map();
     const authorityTopFive = /* @__PURE__ */ new Map();
     const tracks = /* @__PURE__ */ new Map();
     const sectors = /* @__PURE__ */ new Map();
     const scaleSums = Object.fromEntries(SCALE_IDS2.map((id) => [id, 0]));
     let flatCount = 0;
-    for (const record2 of validRecords) {
-      if (record2.roleProfile.flat) flatCount += 1;
-      for (const id of SCALE_IDS2) scaleSums[id] += Number(record2.roleProfile.raw[id] || 0);
-      for (const id of record2.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
-      for (const id of record2.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record2.leadingTieIds.length);
-      for (const item of (record2.ranking || []).slice(0, 5)) {
+    for (const record of validRecords) {
+      if (record.roleProfile.flat) flatCount += 1;
+      for (const id of SCALE_IDS2) scaleSums[id] += Number(record.roleProfile.raw[id] || 0);
+      for (const id of record.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
+      for (const id of record.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record.leadingTieIds.length);
+      for (const item of (record.ranking || []).slice(0, 5)) {
         authorityTopFive.set(item.authorityId, (authorityTopFive.get(item.authorityId) || 0) + 1);
         if (item.trackId) tracks.set(item.trackId, (tracks.get(item.trackId) || 0) + 1);
       }
@@ -10628,27 +9264,27 @@ var CareerRuntime = (() => {
     };
   }
   function csvCell(value) {
-    const text3 = String(value ?? "");
-    return /[;"\n]/.test(text3) ? `"${text3.replaceAll('"', '""')}"` : text3;
+    const text4 = String(value ?? "");
+    return /[;"\n]/.test(text4) ? `"${text4.replaceAll('"', '""')}"` : text4;
   }
   function recordsToCsv(records = [], registry = validationRegistry) {
     const header = ["record_id", "created_at", ...SCALE_IDS2.map((id) => `scale_${id}`), "dispersion", "flat", "priority_sectors", "low_priority_sectors", ...CONDITION_IDS3.map((id) => `condition_${id}`), "first_displayed_authority", "top1_score", "top1_track", "equal_leading_authorities"];
     const lines = [header.join(";")];
-    for (const record2 of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
-      const top = record2.ranking[0] || {};
+    for (const record of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
+      const top = record.ranking[0] || {};
       const row = [
-        record2.recordId,
-        record2.createdAt,
-        ...SCALE_IDS2.map((id) => Number(record2.roleProfile.raw[id]).toFixed(2)),
-        Number(record2.roleProfile.dispersion || 0).toFixed(3),
-        record2.roleProfile.flat ? 1 : 0,
-        record2.prioritySectors.join("|"),
-        record2.lowPrioritySectors.join("|"),
-        ...CONDITION_IDS3.map((id) => record2.conditions[id]),
+        record.recordId,
+        record.createdAt,
+        ...SCALE_IDS2.map((id) => Number(record.roleProfile.raw[id]).toFixed(2)),
+        Number(record.roleProfile.dispersion || 0).toFixed(3),
+        record.roleProfile.flat ? 1 : 0,
+        record.prioritySectors.join("|"),
+        record.lowPrioritySectors.join("|"),
+        ...CONDITION_IDS3.map((id) => record.conditions[id]),
         top.authorityId || "",
         top.score ?? "",
         top.trackId || "",
-        record2.leadingTieIds.join("|")
+        record.leadingTieIds.join("|")
       ];
       lines.push(row.map(csvCell).join(";"));
     }
@@ -10684,11 +9320,11 @@ var CareerRuntime = (() => {
   function groupBundle(records, origin = "uploaded", exportedAt = (/* @__PURE__ */ new Date()).toISOString()) {
     return { schema: GROUP_SCHEMA, schemaVersion: 1, modelVersion: MODEL_VERSION, origin, exportedAt, records: structuredClone(records) };
   }
-  function readGroupInput(text3, registry) {
-    if (typeof text3 !== "string" || new TextEncoder().encode(text3).length > GROUP_FILE_LIMIT) throw Error("file-size");
+  function readGroupInput(text4, registry) {
+    if (typeof text4 !== "string" || new TextEncoder().encode(text4).length > GROUP_FILE_LIMIT) throw Error("file-size");
     let value;
     try {
-      value = JSON.parse(text3);
+      value = JSON.parse(text4);
     } catch {
       throw Error("json");
     }
@@ -10698,30 +9334,30 @@ var CareerRuntime = (() => {
     if (!records.length || records.length > GROUP_LIMIT) throw Error("record-limit");
     if (bundle && value.origin === "demo" || records.some((r) => typeof r?.recordId === "string" && r.recordId.startsWith("demo-"))) throw Error("demo-data");
     const seen = /* @__PURE__ */ new Set();
-    for (const record2 of records) {
-      const validation = validateAnonymousRecord(record2, registry);
+    for (const record of records) {
+      const validation = validateAnonymousRecord(record, registry);
       if (!validation.valid) {
         const error = new Error("record-schema");
         error.validationErrors = validation.errors;
         throw error;
       }
-      if (seen.has(record2.recordId)) throw Error("duplicate-in-bundle");
-      seen.add(record2.recordId);
+      if (seen.has(record.recordId)) throw Error("duplicate-in-bundle");
+      seen.add(record.recordId);
     }
     return records;
   }
   function mergeGroupRecords(existing, incoming) {
     const records = [...existing], byId = new Map(existing.map((x2) => [x2.recordId, x2]));
     let added = 0, duplicates = 0;
-    for (const record2 of incoming) {
-      const prior = byId.get(record2.recordId);
+    for (const record of incoming) {
+      const prior = byId.get(record.recordId);
       if (prior) {
-        if (!sameRecord(prior, record2)) throw Error("id-conflict");
+        if (!sameRecord(prior, record)) throw Error("id-conflict");
         duplicates++;
         continue;
       }
-      records.push(record2);
-      byId.set(record2.recordId, record2);
+      records.push(record);
+      byId.set(record.recordId, record);
       added++;
     }
     if (records.length > GROUP_LIMIT) throw Error("record-limit");
@@ -10770,7 +9406,7 @@ var CareerRuntime = (() => {
   var external = (url, label2) => `<a class="text-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label2}${glyph("external")}</a>`;
   var uid = () => globalThis.crypto?.randomUUID?.() || `scenario-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   var authorityCore = (a) => !["corporation", "fund"].includes(a.entityType);
-  var date3 = (value) => new Intl.DateTimeFormat(numberLocale(), { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
+  var date2 = (value) => new Intl.DateTimeFormat(numberLocale(), { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
   function resourceCards(resources2) {
     const labels = { closed: "\u041F\u0440\u0438\u0451\u043C \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D", directory: "\u041A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", indirect: "\u0410\u0434\u0440\u0435\u0441 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D \u043A\u043E\u0441\u0432\u0435\u043D\u043D\u043E", recheck: "\u041D\u0443\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C", "check-deadline": "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u0440\u043E\u043A \u043F\u0440\u0438\u0451\u043C\u0430" };
     return resources2.map((r) => {
@@ -10858,7 +9494,7 @@ var CareerRuntime = (() => {
       $("#scenario-storage-warning").hidden = storageAvailable;
       root.innerHTML = scenarios.length ? scenarios.map((item) => {
         const result = resultFor(item), top = result?.ranked.filter(authorityCore).slice(0, 3) || [], checked = selection.includes(item.id);
-        return `<article class="saved-scenario ${checked ? "selected" : ""}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date3(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked ? "checked" : ""} ${result ? "" : "disabled"}><span>\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</span></label></div>
+        return `<article class="saved-scenario ${checked ? "selected" : ""}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date2(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked ? "checked" : ""} ${result ? "" : "disabled"}><span>\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</span></label></div>
       <div class="tag-row">${item.inputs.prioritySectors.map((id) => `<span class="tag">${esc(data2.sectors.find((s) => s.id === id)?.title || id)}</span>`).join("")}</div>
       <div class="scenario-top">${top.map((a, i2) => `<span><b>${i2 + 1}</b>${esc(authorityName(a))}<strong>${a.score.toFixed(1)}</strong></span>`).join("")}</div>
       ${!result ? '<p class="scenario-warning">\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0438.</p>' : ""}
@@ -10929,8 +9565,8 @@ var CareerRuntime = (() => {
         return;
       }
       const comparison = compareScenarioResults(a, b, ra, rb);
-      const list2 = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x2) => x2.id))];
-      const rows = comparison.rows.filter((x2) => list2.includes(x2.id));
+      const list = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x2) => x2.id))];
+      const rows = comparison.rows.filter((x2) => list.includes(x2.id));
       root.innerHTML = `<div class="comparison-heading"><h2>\u0414\u0432\u0430 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F \u0440\u044F\u0434\u043E\u043C</h2><p>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432: \u0432\u0442\u043E\u0440\u043E\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u043C\u0438\u043D\u0443\u0441 \u043F\u0435\u0440\u0432\u044B\u0439. \u042D\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F, \u043D\u0435 \u043F\u0440\u043E\u0433\u043D\u043E\u0437 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0443\u0441\u043F\u0435\u0445\u0430.</p></div>
     <div class="scenario-summary"><span><b>${comparison.topOverlap} / 5</b>\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u0422\u041E\u041F-5</span><span><b>${comparison.changedAnswers.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</span><span><b>${comparison.changedConditions.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439</span></div>
     <div class="scenario-table-scroll" tabindex="0" aria-label="\u0422\u0430\u0431\u043B\u0438\u0446\u0430 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u0432"><table class="scenario-table"><caption>\u041E\u0440\u0433\u0430\u043D\u044B \u0438\u0437 \u0434\u0432\u0443\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043E\u043A</caption><thead><tr><th>\u041E\u0440\u0433\u0430\u043D</th><th data-no-i18n>${esc(a.title)}</th><th data-no-i18n>${esc(b.title)}</th><th>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C</th></tr></thead><tbody>${rows.map((row) => `<tr><th><button class="text-link" data-dossier="${row.id}">${esc(name2(row.id))}</button></th><td>${row.scoreA.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankA}</small></td><td>${row.scoreB.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankB}</small></td><td class="${row.delta > 0 ? "delta-up" : ""}">${row.delta > 0 ? "+" : ""}${row.delta.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`;
@@ -11062,8 +9698,8 @@ var CareerRuntime = (() => {
     }).filter(Boolean);
   }
   function relevantEntryRoutes(authority, entryRoutes = []) {
-    const ids2 = new Set(authority?.entryRouteIds || []);
-    return entryRoutes.filter((route) => ids2.has(route.id));
+    const ids = new Set(authority?.entryRouteIds || []);
+    return entryRoutes.filter((route) => ids.has(route.id));
   }
   function addCompareId(compareIds = [], authorityId, max2 = MAX_COMPARE) {
     const clean = [...new Set(compareIds.filter(Boolean))];
@@ -11160,7 +9796,7 @@ var CareerRuntime = (() => {
   var $$2 = (selector, root = document) => [...root.querySelectorAll(selector)];
   var icon2 = (id, className = "") => `<svg class="${className}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
-  var safeUrl2 = (value = "") => {
+  var safeUrl = (value = "") => {
     try {
       const url = new URL(value, location.href);
       return ["https:", "http:"].includes(url.protocol) ? escapeHtml(url.href) : "#";
@@ -11262,6 +9898,7 @@ var CareerRuntime = (() => {
     return JSON.stringify(content);
   }
   function saveState() {
+    if (SEMINAR_FLOW) return true;
     if (protectedStorage || pendingLegacyChoice) {
       if ($2("#storage-warning")) $2("#storage-warning").hidden = false;
       lastSaveStatus = "failed";
@@ -11272,8 +9909,8 @@ var CareerRuntime = (() => {
     }
     let saved = true;
     try {
-      const fingerprint2 = stateFingerprint();
-      if (fingerprint2 !== persistedFingerprint) {
+      const fingerprint = stateFingerprint();
+      if (fingerprint !== persistedFingerprint) {
         writeLocal(STORAGE_KEY, JSON.stringify({
           schema: 4,
           questionnaireVersion: QUESTIONNAIRE_VERSION,
@@ -11282,7 +9919,7 @@ var CareerRuntime = (() => {
           ...state,
           updatedAt: (/* @__PURE__ */ new Date()).toISOString()
         }));
-        persistedFingerprint = fingerprint2;
+        persistedFingerprint = fingerprint;
       }
       if ($2("#storage-warning")) $2("#storage-warning").hidden = true;
     } catch {
@@ -11398,6 +10035,7 @@ var CareerRuntime = (() => {
     };
   }
   function updateResumeButton() {
+    if (SEMINAR_FLOW) return;
     const answered = Object.keys(state.answers).length;
     const button = $2("#resume-button");
     if (!button) return;
@@ -11413,6 +10051,7 @@ var CareerRuntime = (() => {
     return index === -1 ? data.questions.length - 1 : index;
   }
   function resolveResumeRoute() {
+    if (SEMINAR_FLOW && seminarFlow) return seminarFlow.resolveResumeRoute();
     if (state.completedAt) return "results";
     if (Object.keys(state.answers).length < data.questions.length) {
       state.questionIndex = firstUnansweredIndex();
@@ -11437,11 +10076,9 @@ var CareerRuntime = (() => {
       if (!personality?.isComplete()) route = "personality";
       else if (route === "home") route = "personality-results";
       else if (!["personality", "personality-results", "preferences", "test", "sectors", "conditions", "results"].includes(route)) route = resolveResumeRoute();
-      if (route === "sectors" && Object.keys(state.answers).length < data.questions.length) route = "test";
-      if (route === "conditions" && (state.prioritySectors.length !== 4 || state.lowPrioritySectors.length !== 2)) route = resolveResumeRoute();
       route = seminarFlow?.guardRoute(route) || route;
     } else if (["personality", "personality-results", "preferences"].includes(route)) route = "home";
-    if (route === "results" && !completionStatus({ ...state, questions: data.questions }).complete) route = resolveResumeRoute();
+    if (!SEMINAR_FLOW && route === "results" && !completionStatus({ ...state, questions: data.questions }).complete) route = resolveResumeRoute();
     const unavailableRoutes = { workshop: "data/agency-studies.json", "public-service": "data/public-service.json", structure: "data/hierarchy.json", opportunities: "data/career-resources.json" };
     if (data.unavailable.includes(unavailableRoutes[route])) {
       toast("\u0420\u0430\u0437\u0434\u0435\u043B \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u0435\u043D. \u041E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0442\u0435\u0441\u0442 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u0430\u0442\u044C.");
@@ -11457,7 +10094,8 @@ var CareerRuntime = (() => {
       else button.removeAttribute("aria-current");
     });
     $$2(".mobile-bottom-nav button").forEach((button) => button.classList.toggle("active", button.dataset.route === route));
-    if (route === "test") {
+    if (SEMINAR_FLOW) {
+    } else if (route === "test") {
       if (state.questionIndex >= data.questions.length) state.questionIndex = firstUnansweredIndex();
       renderQuestion();
     } else if (route === "sectors") {
@@ -11745,10 +10383,10 @@ var CareerRuntime = (() => {
   }
   function beginSectorDrag(row, mode, event) {
     finishSectorDrag(false, { focus: false, announce: false });
-    const list2 = row.parentElement, rows = $$2(".sector-order-row", list2), index = rows.indexOf(row);
-    sectorDrag = { row, list: list2, rows, mode, key: row.dataset.orderKey, id: row.dataset.sectorId, index, target: index, pointerId: event?.pointerId, touchId: event?.touchId, startY: event?.clientY, clientY: event?.clientY, grabOffset: event ? event.clientY - row.getBoundingClientRect().top : 0, moved: mode === "keyboard" };
+    const list = row.parentElement, rows = $$2(".sector-order-row", list), index = rows.indexOf(row);
+    sectorDrag = { row, list, rows, mode, key: row.dataset.orderKey, id: row.dataset.sectorId, index, target: index, pointerId: event?.pointerId, touchId: event?.touchId, startY: event?.clientY, clientY: event?.clientY, grabOffset: event ? event.clientY - row.getBoundingClientRect().top : 0, moved: mode === "keyboard" };
     row.classList.add("is-dragging");
-    list2.classList.add("is-sorting");
+    list.classList.add("is-sorting");
     announceSectorOrder("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0432\u044B\u0431\u0440\u0430\u043D \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F.");
     if (mode !== "keyboard") {
       const session = sectorDrag;
@@ -11884,7 +10522,7 @@ var CareerRuntime = (() => {
   }
   function renderReview() {
     const root = $2("#answer-review");
-    const names = (ids2) => ids2.map((id) => `<li>${escapeHtml(data.sectors.find((s) => s.id === id)?.title || id)}</li>`).join("");
+    const names = (ids) => ids.map((id) => `<li>${escapeHtml(data.sectors.find((s) => s.id === id)?.title || id)}</li>`).join("");
     root.innerHTML = `<h2>\u041F\u0435\u0440\u0435\u0434 \u0440\u0430\u0441\u0447\u0451\u0442\u043E\u043C</h2><p>\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043F\u043E\u0440\u044F\u0434\u043E\u043A \u0441\u0444\u0435\u0440 \u0438 \u043F\u0440\u0438 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E\u0441\u0442\u0438 \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B. \u0418\u043D\u0434\u0435\u043A\u0441 \u043F\u043E\u043A\u0430\u0436\u0435\u0442 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043A \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E\u0441\u0442\u044C \u0442\u0440\u0443\u0434\u043E\u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430.</p><div class="review-summary"><div><h3>\u0427\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.prioritySectors)}</ol></div><div><h3>\u0414\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B</h3><ol>${names(state.lowPrioritySectors)}</ol></div></div><button class="text-link" type="button" id="review-sectors">\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0432\u044B\u0431\u043E\u0440 \u0441\u0444\u0435\u0440</button><details class="review-answers"><summary>\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C 27 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</summary>${data.questions.map((q, i2) => `<button type="button" class="review-answer" data-review-question="${i2}"><span>${i2 + 1}</span><span>${escapeHtml(q.text)}</span><strong>${state.answers[q.id] || "\u2014"} / 5</strong></button>`).join("")}</details>`;
     $2("#review-sectors").onclick = () => routeTo("sectors");
     $$2("[data-review-question]", root).forEach((b) => b.onclick = () => {
@@ -11934,56 +10572,6 @@ var CareerRuntime = (() => {
   function getResults() {
     if (latestResult) return latestResult;
     return calculateResults();
-  }
-  function radarSvg(profile, { numbered = false, label: label2 = "\u0414\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F" } = {}) {
-    if (numbered) {
-      const center3 = 155, radius3 = 106;
-      const point3 = (index, ratio) => {
-        const angle = -Math.PI / 2 + index * Math.PI * 2 / SCALE_IDS.length;
-        return [center3 + Math.cos(angle) * radius3 * ratio, center3 + Math.sin(angle) * radius3 * ratio];
-      };
-      const polygon2 = (ratio) => SCALE_IDS.map((_, index) => point3(index, ratio).join(",")).join(" ");
-      const values2 = SCALE_IDS.map((id) => Math.max(1, Math.min(5, Number(profile.raw[id]) || 1)) / 5);
-      return `<svg viewBox="0 0 310 310" width="310" height="310" role="img" aria-label="${escapeHtml(label2)}">
-      <g fill="none" stroke="#d3e1eb" stroke-width="1">${[1, 2, 3, 4, 5].map((value) => `<polygon points="${polygon2(value / 5)}"/>`).join("")}${SCALE_IDS.map((_, index) => {
-        const [x2, y] = point3(index, 1);
-        return `<line x1="${center3}" y1="${center3}" x2="${x2}" y2="${y}"/>`;
-      }).join("")}</g>
-      <polygon points="${values2.map((value, index) => point3(index, value).join(",")).join(" ")}" fill="#087bc1" fill-opacity=".16" stroke="#087bc1" stroke-width="2.5"/>
-      ${values2.map((value, index) => {
-        const [x2, y] = point3(index, value);
-        return `<circle cx="${x2}" cy="${y}" r="3.5" fill="#087bc1" stroke="#fff" stroke-width="1.5"/>`;
-      }).join("")}
-      <g fill="#1c355f" stroke="none" font-size="15" font-weight="600" text-anchor="middle" dominant-baseline="middle">${SCALE_IDS.map((_, index) => {
-        const [x2, y] = point3(index, 1.23);
-        return `<text x="${x2}" y="${y}">${index + 1}</text>`;
-      }).join("")}</g>
-      <g fill="#627490" stroke="none" font-size="10" text-anchor="end">${[1, 2, 3, 4, 5].map((value) => `<text x="${center3 - 6}" y="${center3 - radius3 * value / 5 + 3}">${value}</text>`).join("")}</g>
-    </svg>`;
-    }
-    const values = SCALE_IDS.map((id) => profile.normalized[id] ?? 0.5);
-    const count = values.length;
-    const center2 = 105;
-    const radius2 = 78;
-    const point2 = (index, ratio) => {
-      const angle = -Math.PI / 2 + index * Math.PI * 2 / count;
-      return [center2 + Math.cos(angle) * radius2 * ratio, center2 + Math.sin(angle) * radius2 * ratio];
-    };
-    const polygon = values.map((value, index) => point2(index, 0.25 + 0.75 * value).join(",")).join(" ");
-    const grids = [0.25, 0.5, 0.75, 1].map((ratio) => `<polygon points="${SCALE_IDS.map((_, i2) => point2(i2, ratio).join(",")).join(" ")}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1"/>`).join("");
-    const axes = SCALE_IDS.map((_, i2) => {
-      const [x2, y] = point2(i2, 1);
-      return `<line x1="${center2}" y1="${center2}" x2="${x2}" y2="${y}" stroke="rgba(255,255,255,.17)" stroke-width="1"/>`;
-    }).join("");
-    return `<svg viewBox="0 0 210 210" role="img" aria-label="\u0414\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F">
-    ${grids}${axes}
-    <polygon points="${polygon}" fill="rgba(255,255,255,.23)" stroke="#fff" stroke-width="2.2"/>
-    ${values.map((value, i2) => {
-      const [x2, y] = point2(i2, 0.25 + 0.75 * value);
-      return `<circle cx="${x2}" cy="${y}" r="3.3" fill="#fff" stroke="#087bc1" stroke-width="1.5"/>`;
-    }).join("")}
-    <circle cx="${center2}" cy="${center2}" r="4" fill="#fff"/>
-  </svg>`;
   }
   function renderResults() {
     if (SEMINAR_FLOW) return seminarFlow?.renderResults();
@@ -12127,13 +10715,13 @@ var CareerRuntime = (() => {
     const result = getResults();
     if (!result) return;
     const government = result.ranked.filter((item) => !["corporation", "fund"].includes(item.entityType)).slice(0, 5);
-    const text3 = [
+    const text4 = [
       "\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430 \u0434\u043B\u044F \u0433\u043E\u0441\u0441\u043B\u0443\u0436\u0430\u0449\u0438\u0445:",
       ...government.map((item, index) => `${index + 1}. ${authorityName(item)} \u2014 ${item.score.toFixed(1)}; \u0442\u0440\u0435\u043A: ${item.track?.title || "\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0435 \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435"}.`),
       "\u0418\u043D\u0434\u0435\u043A\u0441 \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u043C \u043F\u043E\u043A\u0430\u0437\u0430\u0442\u0435\u043B\u0435\u043C \u0432\u043D\u0443\u0442\u0440\u0438 \u0443\u0447\u0435\u0431\u043D\u043E\u0439 \u043C\u043E\u0434\u0435\u043B\u0438."
     ].join("\n");
     try {
-      await navigator.clipboard.writeText(getLanguage() !== "ru" ? text3.split("\n").map((line) => translate(line)).join("\n") : text3);
+      await navigator.clipboard.writeText(getLanguage() !== "ru" ? text4.split("\n").map((line) => translate(line)).join("\n") : text4);
       toast("\u041A\u0440\u0430\u0442\u043A\u0438\u0439 \u0438\u0442\u043E\u0433 \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D.");
     } catch {
       toast("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0434\u043E\u0441\u0442\u0443\u043F \u043A \u0431\u0443\u0444\u0435\u0440\u0443 \u043E\u0431\u043C\u0435\u043D\u0430.");
@@ -12157,7 +10745,7 @@ var CareerRuntime = (() => {
   function exportAnonymousResult() {
     const result = getResults();
     if (!result) return;
-    const record2 = createAnonymousRecord({
+    const record = createAnonymousRecord({
       recordId: state.resultRecordId || anonymousId(),
       createdAt: state.completedAt || (/* @__PURE__ */ new Date()).toISOString(),
       roleProfile: result.roleProfile,
@@ -12168,7 +10756,7 @@ var CareerRuntime = (() => {
       ranked: result.ranked
     });
     const stamp = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
-    downloadText(`rudn-career-result-${stamp}-${record2.recordId.slice(0, 8)}.json`, JSON.stringify(record2, null, 2), "application/json;charset=utf-8");
+    downloadText(`rudn-career-result-${stamp}-${record.recordId.slice(0, 8)}.json`, JSON.stringify(record, null, 2), "application/json;charset=utf-8");
     toast("\u041E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u0444\u0430\u0439\u043B \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043B\u0435\u043D.");
   }
   function directoryMatches(authority, query, type, sector, track) {
@@ -12222,7 +10810,7 @@ var CareerRuntime = (() => {
     $$2(".authority-card .compare-toggle").forEach((button) => button.addEventListener("click", () => toggleCompare(button.dataset.authority)));
     syncCompareButtons();
   }
-  function pathConditionsMarkup(authority, compact = false) {
+  function pathConditionsMarkup(authority, compact2 = false) {
     const trackMap = new Map(data.tracks.map((t) => [t.id, t]));
     return `<p class="small-note">\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0434\u043B\u044F \u0432\u0441\u0435\u0433\u043E \u043E\u0440\u0433\u0430\u043D\u0430. \u0414\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u044B \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0441\u0446\u0435\u043D\u0430\u0440\u043D\u044B\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F, \u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0432\u0430\u043B\u044B \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439. \xAB\u041D\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E\xBB \u0434\u0430\u0451\u0442 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u043A\u043B\u0430\u0434.</p><div class="requirement-table-wrap" tabindex="0" role="region" aria-label="\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043F\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B"><table class="requirement-table"><caption>\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043F\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B</caption><thead><tr><th>\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435</th>${data.conditions.map((c) => `<th>${escapeHtml(c.title)}</th>`).join("")}</tr></thead><tbody>${authority.tracks.map((link) => `<tr><th>${escapeHtml(trackMap.get(link.id)?.title || link.id)}</th>${CONDITION_IDS.map((id) => {
       const v = link.conditions?.[id];
@@ -12252,7 +10840,7 @@ var CareerRuntime = (() => {
   function authorityEntryMarkup(authority) {
     const routes = relevantEntryRoutes(authority, data.entryRoutes);
     return `<div class="entry-verified"><h2>\u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438</h2><p>\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.</p><div class="resource-grid">${resourceCards(resourcesForAuthority(authority, data.resources))}</div><button class="button button-secondary" type="button" data-open-resources="${authority.id}">\u0412\u0441\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B${icon2("arrow-right")}</button></div><div class="entry-summary"><div class="entry-summary-icon">${icon2("route")}</div><div><span>\u0421\u0438\u0441\u0442\u0435\u043C\u0430 \u0432\u0445\u043E\u0434\u0430</span><strong>${escapeHtml(careerSystemLabel(authority))}</strong><p>\u0410\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0432\u0441\u0435\u0433\u0434\u0430 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u0438\u043B\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0434\u0435\u043B \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.</p></div></div>
-    <section class="dialog-section"><h2>\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u044B\u0435 \u043C\u0430\u0440\u0448\u0440\u0443\u0442\u044B</h2><div class="entry-route-list">${routes.map((route, index) => `<article class="entry-route-card"><span>${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(route.title)}</h3><p>${escapeHtml(route.description)}</p><ol>${route.steps.slice(0, 4).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol><a href="${safeUrl2(route.url)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0441\u0443\u0440\u0441</a></div></article>`).join("")}</div></section>
+    <section class="dialog-section"><h2>\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u044B\u0435 \u043C\u0430\u0440\u0448\u0440\u0443\u0442\u044B</h2><div class="entry-route-list">${routes.map((route, index) => `<article class="entry-route-card"><span>${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(route.title)}</h3><p>${escapeHtml(route.description)}</p><ol>${route.steps.slice(0, 4).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol><a href="${safeUrl(route.url)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0441\u0443\u0440\u0441</a></div></article>`).join("")}</div></section>
     <section class="dialog-section"><h2>\u0427\u0442\u043E \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0443 \u0413\u041C\u0423</h2><div class="principle-grid">${data.careerFramework.qualificationPrinciples.map((item) => `<div>${icon2("check")}<p>${escapeHtml(item)}</p></div>`).join("")}</div></section>`;
   }
   function authoritySourcesMarkup(authority) {
@@ -12261,7 +10849,7 @@ var CareerRuntime = (() => {
       ...data.careerFramework.sources.map((item) => ({ ...item, label: item.title }))
     ];
     return `${authoritySymbolCredit(authority)}${classroom?.sourceForAuthority(authority.id) || ""}<div class="source-governance"><h2>\u0427\u0442\u043E \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C, \u0430 \u0447\u0442\u043E \u043C\u043E\u0434\u0435\u043B\u044C\u043D\u044B\u043C</h2><div class="source-governance-grid"><div><strong>\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F</strong><p>\u041D\u0430\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u0438\u0435, \u0438\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0438\u043F, \u043F\u043E\u0434\u0447\u0438\u043D\u0451\u043D\u043D\u043E\u0441\u0442\u044C, \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E \u043E\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0435 \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u044F \u0438 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0440\u0435\u0441\u0443\u0440\u0441\u044B.</p></div><div><strong>\u0423\u0447\u0435\u0431\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C</strong><p>\u0412\u0435\u0441\u0430 \u0441\u0444\u0435\u0440, \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438, \u0442\u0438\u043F\u043E\u0432\u044B\u0435 \u0441\u0435\u043C\u0435\u0439\u0441\u0442\u0432\u0430 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439, \u043F\u0440\u0438\u043C\u0435\u0440\u044B \u0440\u043E\u043B\u0435\u0439 \u0438 \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u0442\u0440\u0443\u0434\u0430.</p></div></div></div>
-    <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl2(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon2("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator ? `<small>${escapeHtml(source.locator)}</small>` : ""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A")}</small></span>${icon2("external")}</a>`).join("")}</div>
+    <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon2("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator ? `<small>${escapeHtml(source.locator)}</small>` : ""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A")}</small></span>${icon2("external")}</a>`).join("")}</div>
     <div class="career-model-note warning">${icon2("info")}<p>${escapeHtml(authority.careerModel?.note || data.careerFramework.scopeNote)}</p></div>`;
   }
   function openAuthority(id, initialTab = "overview") {
@@ -12452,7 +11040,7 @@ var CareerRuntime = (() => {
         <section><h3>\u041A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0438</h3><div class="tag-row">${competencies.map((item) => `<span class="tag">${escapeHtml(item.title)}</span>`).join("")}</div></section>
         <section><h3>\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B</h3><div class="compare-meters">${compareConditionMarkup(authority)}</div></section>
         <section><h3>\u0421\u043F\u043E\u0441\u043E\u0431\u044B \u0432\u0445\u043E\u0434\u0430</h3><ol>${routes.map((route) => `<li>${escapeHtml(route.title)}</li>`).join("")}</ol></section>
-        <footer><a href="${safeUrl2(authority.governmentUrl)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430</a></footer>
+        <footer><a href="${safeUrl(authority.governmentUrl)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430</a></footer>
       </article>`).join("")}
     </div>`;
     $$2("[data-remove-compare]", root).forEach((button) => button.addEventListener("click", () => toggleCompare(button.dataset.removeCompare)));
@@ -12654,6 +11242,11 @@ var CareerRuntime = (() => {
     }
   }
   function bindStaticEvents() {
+    if (SEMINAR_FLOW) {
+      $2("#start-test-button")?.addEventListener("click", startOrResume);
+      $2("#resume-button")?.addEventListener("click", startOrResume);
+      return;
+    }
     $$2("[data-route]").forEach((button) => button.addEventListener("click", (event) => {
       event.preventDefault();
       const route = button.dataset.route;
@@ -12821,13 +11414,13 @@ var CareerRuntime = (() => {
       [data] = await Promise.all([loadData(), initializeI18n()]);
       if (__careerHost.destroyed) return;
       configureValidationRegistry(data);
-      loadStoredState();
+      if (!SEMINAR_FLOW) loadStoredState();
       bindReliabilityNotices();
       state.compareIds = sanitizeCompareIds(state.compareIds, data.authorities, MAX_COMPARE);
       data.allInstitutions = [...data.authorities, ...data.publicService.records.map((a) => ({ id: a.id, name: a.name.ru, shortName: a.name.ru, mission: a.mission.ru, entityType: "additional", entityTypeLabel: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0439 \u0432\u043B\u0430\u0441\u0442\u0438", tracks: a.tracks, governmentUrl: a.sources?.[0]?.url || "", localizedName: a.name, source: a }))];
       if (SEMINAR_FLOW) {
         personality = createPersonality({ navigate: routeTo, continueCareer: () => routeTo(resolveResumeRoute()) });
-        seminarFlow = createSeminarFlow({ data, navigate: routeTo, resolveResumeRoute, getInputs: () => ({ ...state }), getResult: getResults, getProfileContext: () => ({ recordId: state.resultRecordId, scales: data.scales, sectors: data.sectors, conditions: data.conditions, prioritySectors: state.prioritySectors, conditionValues: state.conditions }), radarSvg, toast });
+        seminarFlow = createAdaptiveFlow({ navigate: routeTo, toast });
       } else {
         classroom = createClassroom({ data: { ...data, authorities: data.allInstitutions }, routeTo, openAuthority, toast, downloadText, getResult: () => latestResult });
         workspace = createWorkspace({
@@ -12894,8 +11487,8 @@ var CareerRuntime = (() => {
   async function restoreForUpdate(value) {
     if (value?.schema !== 1 || value.model !== MODEL_VERSION) throw Error("update/incompatible");
     if (Number.isInteger(value.questionIndex)) state.questionIndex = Math.max(0, Math.min(data.questions.length - 1, value.questionIndex));
-    for (const [id, text3] of Object.entries(value.filters || {})) {
-      if (["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].includes(id) && $2("#" + id)) $2("#" + id).value = String(text3).slice(0, 500);
+    for (const [id, text4] of Object.entries(value.filters || {})) {
+      if (["directory-search", "directory-type-filter", "directory-sector-filter", "directory-track-filter"].includes(id) && $2("#" + id)) $2("#" + id).value = String(text4).slice(0, 500);
     }
     workspace?.restoreForUpdate?.(value.workspace);
     classroom?.restoreForUpdate?.(value.classroom);

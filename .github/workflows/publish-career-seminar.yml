@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   career-ui:
-    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[career-seminar-express]')
+    if: ${{ github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-functional-live]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:
@@ -54,33 +54,38 @@ jobs:
         timeout-minutes: 5
         run: python -m playwright install "${{ matrix.browser }}"
       - name: Verify recommended-employer vacancies and bounded lazy loading
-        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') && hashFiles('site/apps/career/data/adaptive-taxonomy.json') == '' }}
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_career_vacancy_bank_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/vacancies"
       - name: Verify the personality stage in Russian, English and Chinese
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && hashFiles('site/apps/career/data/adaptive-taxonomy.json') == '' }}
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_personality_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/personality"
       - name: Verify touch map gestures and preferred employer reordering
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && hashFiles('site/apps/career/data/adaptive-taxonomy.json') == '' }}
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_career_preferences_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/preferences"
       - name: Restore existing Seminar 5 work through personality and preferences
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && hashFiles('site/apps/career/data/adaptive-taxonomy.json') == '' }}
         run: |
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/test_career_update_migration.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/migration"
       - name: Keep course and free career sessions independent
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && hashFiles('site/apps/career/data/adaptive-taxonomy.json') == '' }}
         env:
           FREE_MODULES: career
           DURABLE_TEST_BROWSERS: ${{ matrix.browser }}
         run: |
           export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package")')"
           node scripts/test_free_module_contexts.mjs
+      - name: Verify adaptive functional questions and source-backed results
+        if: ${{ hashFiles('site/apps/career/data/adaptive-taxonomy.json') != '' }}
+        run: |
+          export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          node scripts/test_adaptive_career_ui.mjs --browser "${{ matrix.browser }}" --output "${{ runner.temp }}/career-ui/adaptive"
       - name: Retain focused browser evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -91,7 +96,7 @@ jobs:
           retention-days: 30
   publish:
     needs: career-ui
-    if: github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[career-seminar-express]')
+    if: ${{ !cancelled() && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, '[career-seminar-express]') && (needs.career-ui.result == 'success' || contains(github.event.head_commit.message, '[career-functional-live]')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment:
@@ -124,25 +129,30 @@ jobs:
           node site/apps/reception/localization/extract.mjs
           node site/apps/reception/localization/compile.mjs
       - name: Verify vacancy codec, source links, paging and lazy release metadata
-        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ contains(github.event.head_commit.message, '[career-vacancies]') && !contains(github.event.head_commit.message, '[career-functional-live]') }}
         run: |
           node --test tests/employer-vacancies-bank.test.mjs tests/career-vacancy-lazy-release.test.mjs tests/career-vacancy-details.test.mjs
           python3 scripts/test_repack_career_vacancies.py
       - name: Verify scoring, territory ranking and sourced requirement assessment
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && !contains(github.event.head_commit.message, '[career-functional-live]') }}
         run: |
           node scripts/test_personality_model.mjs
           node scripts/test_personality_insights.mjs
           node scripts/test_career_localization.mjs
           node --test tests/career-scoring-portfolio.test.mjs tests/career-model-upgrade.test.mjs tests/career-course-prerequisite.test.mjs tests/career-journey-model.test.mjs tests/career-territorial-catalog.test.mjs tests/personality-visuals.test.mjs tests/career-region-map.test.mjs tests/career-wish-sortable.test.mjs
+      - name: Verify functional ranking and the published source-evidence index
+        if: ${{ hashFiles('site/apps/career/data/adaptive-taxonomy.json') != '' && !contains(github.event.head_commit.message, '[career-functional-live]') }}
+        run: |
+          node --test tests/adaptive-career-model.test.mjs tests/adaptive-career-index-codec.test.mjs tests/career-course-prerequisite.test.mjs
+          python3 scripts/test_adaptive_career_index.py
       - name: Verify the reusable territory map is deterministic
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && !contains(github.event.head_commit.message, '[career-functional-live]') }}
         run: node site/apps/career/data/regions/build-map.mjs --check
       - name: Install the isolated DOM test dependency
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && hashFiles('site/apps/career/data/adaptive-taxonomy.json') == '' && !contains(github.event.head_commit.message, '[career-functional-live]') }}
         run: npm install --ignore-scripts --no-audit --no-fund --prefix "${{ runner.temp }}/career-dom-qa" happy-dom@21.0.4
       - name: Verify the complete career journey with DOM interactions
-        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[career-vacancies]') && hashFiles('site/apps/career/data/adaptive-taxonomy.json') == '' && !contains(github.event.head_commit.message, '[career-functional-live]') }}
         env:
           HAPPY_DOM_MODULE_PATH: ${{ runner.temp }}/career-dom-qa/node_modules/happy-dom/lib/index.js
         run: node scripts/test_career_journey_ui.mjs --output "${{ runner.temp }}/career-dom-qa/report.json"
@@ -206,6 +216,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           BUILD_ID: ${{ steps.archive.outputs.build_id }}
           TARGET_SHA: ${{ github.sha }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         working-directory: ${{ runner.temp }}/platform-archive
         run: |
           set -euo pipefail
@@ -217,5 +228,8 @@ jobs:
             node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
           else
             notes="Seminar 5: source-backed employer vacancies with active and archived labels, lazy compressed paging and bounded client loading. Focused checks cover this vacancy flow in Chromium, Firefox and WebKit, the dataset codec and immutable collection routing. The source seed and rollback release are retained. No full-platform UI testing is claimed."
+            if [[ "$COMMIT_MESSAGE" == *"[career-functional-live]"* ]]; then
+              notes="Seminar 5 functional update: published before full scoped live-site QA as requested. Packaging, source scope, unchanged resources outside Seminar 5, immutable artifact integrity and rollback retention are checked. This publication receipt does not claim completed browser or balance acceptance."
+            fi
             gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "$notes"
           fi
