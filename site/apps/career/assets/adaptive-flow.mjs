@@ -4,7 +4,9 @@ import {loadJSON, isRecord} from './loader.mjs';
 import {decodeGzip} from './employer-vacancies-bank.mjs';
 import {ADAPTIVE_INDEX_SCHEMA_VERSION, decodeCandidatePayload} from './adaptive-index-codec.mjs';
 import {E, L, icon, regionName, safeURL} from './journey-visuals.mjs';
-import {FUNCTIONAL_MODEL_VERSION, MIN_ANSWERS, MAX_ANSWERS, buildQuestionBank, prepareCandidatePool, nextQuestion, rankVacancies, shouldFinish, makeCompletionRecord} from './adaptive-model.mjs';
+import {FUNCTIONAL_MODEL_VERSION, MIN_ANSWERS, MAX_ANSWERS, buildQuestionBank, prepareCandidatePool, nextQuestion, rankVacancies, listMatchingVacancies, shouldFinish, makeCompletionRecord} from './adaptive-model.mjs';
+import {createAdaptiveBankBrowse} from './adaptive-bank-browse.mjs';
+import {createAdaptiveVacancyReview} from './adaptive-vacancy-review.mjs';
 
 const SESSION_SCHEMA = 1;
 const SESSION_MODEL = FUNCTIONAL_MODEL_VERSION;
@@ -18,6 +20,8 @@ const DETAIL_CACHE_LIMIT = 8;
 const DETAIL_CONCURRENCY = 2;
 const validRegion = value => typeof value === 'string' && /^ru-\d{2}$/.test(value);
 const validValue = value => Number.isInteger(value) && value >= 0 && value <= 5;
+const validSelectionSeed = value => typeof value === 'string' && /^[a-f0-9]{32}$/.test(value);
+const newSelectionSeed = () => (globalThis.crypto?.randomUUID?.() || Date.now().toString(16)+Math.random().toString(16).slice(2)).replace(/-/g,'').slice(0,32).padEnd(32,'0');
 const localized = value => typeof value === 'string' ? value : value?.[getLanguage()] || value?.ru || '';
 const compact = value => String(value ?? '').replace(/\s+/g, ' ').trim();
 const snippet = (value, maximum = 500) => {
@@ -117,7 +121,7 @@ export function createAdaptiveFlow({navigate}) {
   const key = storageKey('functional-career-v1');
   const empty = () => ({schemaVersion:SESSION_SCHEMA, modelVersion:SESSION_MODEL, questionnaireVersion:null, indexVersion:null,
     regionIds:[], locationConfirmed:false, responsibilityPreference:null, responsibilityDraft:null,
-    setupComplete:false, setupStep:'location', locationDraft:null, answers:[], pending:null, completedAt:null, resultRecordId:null, completion:null});
+    setupComplete:false, setupStep:'location', locationDraft:null, answers:[], pending:null, completedAt:null, resultRecordId:null, completion:null, selectionSeed:newSelectionSeed()});
   let session = empty(), hydrationChanged = false, corruptStorage = false;
   function restoreSession(saved) {
     const migrating = isRecord(saved) && saved.schemaVersion === SESSION_SCHEMA &&
@@ -135,6 +139,7 @@ export function createAdaptiveFlow({navigate}) {
     // Recognized earlier results are not evidence for the new model. Keep only confirmed setup choices.
     if (migrating) return {...empty(), ...setup};
     return {...empty(), ...saved, ...setup,
+      selectionSeed:validSelectionSeed(saved.selectionSeed) ? saved.selectionSeed : saved.completedAt ? '' : newSelectionSeed(),
       responsibilityDraft:RESPONSIBILITY_PREFERENCES.has(saved.responsibilityDraft) ? saved.responsibilityDraft : null,
       answers:saved.answers.slice(0, MAX_ANSWERS),
       pending:isRecord(saved.pending) && typeof saved.pending.questionId === 'string' && validValue(saved.pending.value) ? saved.pending : null};
@@ -164,6 +169,9 @@ export function createAdaptiveFlow({navigate}) {
   let rankingCache = null, questionCache = null, notifiedRecordId = null;
   const detailCache = new Map(), detailPending = new Map(), detailErrors = new Set();
   let detailGeneration = 0, detailSelection = '', detailQueue = [];
+  let matchBrowseOpen = false, matchOffset = 0, matchQuery = '', expandedMatchId = null;
+  const review = createAdaptiveVacancyReview({onClose:() => {if (lastRoute === 'results') renderResults();}});
+  const bankBrowse = createAdaptiveBankBrowse({onReview:(row,descriptor,pageRef,pageRows) => {void review.open(row,descriptor,pageRef,pageRows); renderResults();}});
   const resultRoot = () => document.querySelector('#results-root');
   const questionRoot = () => document.querySelector('#view-test');
   const preferenceRoot = () => document.querySelector('#journey-preferences-root');
@@ -523,22 +531,22 @@ export function createAdaptiveFlow({navigate}) {
     if (transitionBusy) return;
     if (!session.answers.length) {navigate('preferences'); return;}
     const answers = session.answers.slice(), previous = answers.pop();
-    const updated = invalidateCompletion({...session, answers, pending:{...previous}});
+    const updated = invalidateCompletion({...session, answers, pending:{...previous}, selectionSeed:session.selectionSeed || newSelectionSeed()});
     if (!save(updated)) {render(lastRoute); return;}
     rankingCache = null; questionCache = null; notifiedRecordId = null;
     navigate('test');
   }
 
   function resultRanking() {
-    const cacheKey = candidateKey + '|' + JSON.stringify(session.answers);
+    const cacheKey = candidateKey + '|' + session.selectionSeed + '|' + JSON.stringify(session.answers);
     if (rankingCache?.key === cacheKey) return rankingCache.value;
-    const value = rankVacancies({taxonomy, answers:session.answers, candidates, limit:5});
+    const value = rankVacancies({taxonomy, answers:session.answers, candidates, limit:5, selectionSeed:session.selectionSeed});
     rankingCache = {key:cacheKey, value};
     return value;
   }
 
   function completedSession(answers) {
-    const ranking = rankVacancies({taxonomy, answers, candidates, limit:5});
+    const ranking = rankVacancies({taxonomy, answers, candidates, limit:5, selectionSeed:session.selectionSeed});
     const record = makeCompletionRecord({taxonomy, answers, regionIds:session.regionIds,
       responsibilityPreference:session.responsibilityPreference, ranking, indexVersion:manifest.version});
     return {...session, answers, pending:null, completedAt:record.createdAt, resultRecordId:record.recordId, completion:record};
@@ -551,7 +559,7 @@ export function createAdaptiveFlow({navigate}) {
     transitionBusy = true;
     try {
       const answers = [...session.answers, {questionId:question.id, value:session.pending.value}];
-      const finished = shouldFinish({taxonomy, answers, candidates}) || !questionFor(answers);
+      const finished = shouldFinish({taxonomy, answers, candidates, selectionSeed:session.selectionSeed}) || !questionFor(answers);
       const updated = finished ? completedSession(answers) : invalidateCompletion({...session, answers, pending:null});
       if (!save(updated)) {renderQuestion(); return;}
       rankingCache = null;
@@ -657,7 +665,38 @@ export function createAdaptiveFlow({navigate}) {
       ${location.text ? `<p class="adaptive-role-location" lang="${E(location.lang)}">${E(location.text)}</p>` : ''}
       ${evidenceSections(row, detail)}
       ${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L('Источник', 'Source', '来源')}${icon('external')}</a>` : ''}
+      ${reviewAction(row)}
     </article>`;
+  }
+
+  function reviewAction(row) {
+    return review.canOpenCandidate(row) ? `<button type="button" class="adaptive-text-button adaptive-review-action" data-adaptive-review-id="${E(row.id)}">${L('Разобрать требования', 'Review requirements', '分析职位要求')}</button>` : '';
+  }
+
+  function matchBrowseMarkup(ranking, page, expanded) {
+    if (!ranking.matchingCount) return '';
+    const number = new Intl.NumberFormat(getLanguage());
+    const pager = page?.total ? `<nav class="adaptive-match-pager" aria-label="${L('Страницы совпадений', 'Matching role pages', '匹配职位分页')}">
+      <button type="button" class="button button-secondary" data-adaptive-match-page="previous" ${page.offset ? '' : 'disabled'}>${L('Назад', 'Previous', '上一页')}</button>
+      <span>${number.format(Math.floor(page.offset/page.limit)+1)} / ${number.format(Math.ceil(page.total/page.limit))}</span>
+      <button type="button" class="button button-secondary" data-adaptive-match-page="next" ${page.offset+page.limit < page.total ? '' : 'disabled'}>${L('Дальше', 'Next', '下一页')}</button></nav>` : '';
+    const card = row => {
+      const url = safeURL(row.sourceURL), location = cleanDisplayLocation(row), open = expanded?.id === row.id;
+      const detail = open ? detailFor(row) : null;
+      return `<article class="adaptive-match-item" data-adaptive-match-id="${E(row.id)}">
+        <h3 lang="ru">${E(row.title)}</h3><p lang="ru">${E(row.employerName)}</p>
+        ${row.department ? `<p lang="ru">${E(row.department)}</p>` : ''}${location.text ? `<p lang="${E(location.lang)}">${E(location.text)}</p>` : ''}
+        <div class="adaptive-match-actions"><span>${E(statusLabel(row))}</span><button type="button" class="adaptive-text-button" data-adaptive-match-evidence="${E(row.id)}" aria-expanded="${open}">${L('Совпавшие функции', 'Matching tasks', '匹配的工作任务')}</button>${reviewAction(row)}${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L('Источник', 'Source', '来源')}${icon('external')}</a>` : ''}</div>
+        ${open ? detail ? evidenceSections(row,detail) : `<p role="status">${detailErrors.has(detailKey(row.detailPath)) ? L('Описание не загрузилось.', 'The description could not be loaded.', '无法加载职位说明。') : L('Загрузка описания…', 'Loading the description…', '正在加载职位说明……')}</p>` : ''}
+      </article>`;
+    };
+    return `<details class="adaptive-match-browser" id="adaptive-all-matches" ${matchBrowseOpen ? 'open' : ''}>
+      <summary id="adaptive-match-summary">${L('Все совпадения', 'All matches', '全部匹配职位')} · ${number.format(ranking.matchingCount)}</summary>
+      ${page ? `<div class="adaptive-match-body"><p>${L('Все объявления, которые совпали с Вашими интересами и выбранными условиями.', 'All roles that match your interests and selected conditions.', '符合你的兴趣和所选条件的所有职位。')}</p>
+        <form id="adaptive-match-search" class="adaptive-match-search"><label for="adaptive-match-query">${L('Поиск по должности, работодателю или месту', 'Search by role, employer or location', '按职位、用人单位或地点搜索')}</label><div><input type="search" name="query" id="adaptive-match-query" maxlength="160" value="${E(matchQuery)}"><button type="submit" class="button button-secondary">${L('Найти', 'Search', '搜索')}</button></div></form>
+        <h2 id="adaptive-match-list-title" tabindex="-1" class="adaptive-match-count" aria-live="polite">${page.total ? L(`Показано ${number.format(page.offset+1)}–${number.format(page.offset+page.rows.length)} из ${number.format(page.total)}`, `Showing ${number.format(page.offset+1)}–${number.format(page.offset+page.rows.length)} of ${number.format(page.total)}`, `显示第 ${number.format(page.offset+1)}–${number.format(page.offset+page.rows.length)} 条，共 ${number.format(page.total)} 条`) : L('По этому запросу совпадений нет.', 'No matches for this search.', '没有符合该搜索条件的职位。')}</h2>
+        <div class="adaptive-match-list">${page.rows.map(card).join('')}</div>${pager}</div>` : ''}
+    </details>`;
   }
 
   function detailKey(path, version = manifest?.version) {return version + '|' + path;}
@@ -751,8 +790,18 @@ export function createAdaptiveFlow({navigate}) {
     const root = resultRoot();
     if (!session.completedAt) {navigate(resolveResumeRoute()); return;}
     if (!root || !readyFor(root, true)) return;
+    if (review.isOpen()) {
+      if (detailSelection || detailPending.size || detailQueue.length) resetDetailRequests();
+      root.innerHTML = '<div id="adaptive-vacancy-review"></div>';
+      review.mount(root.querySelector('#adaptive-vacancy-review'));
+      return;
+    }
     const ranking = resultRanking(), matches = ranking.matches || [];
-    loadDetails(matches);
+    const page = matchBrowseOpen && ranking.matchingCount ? listMatchingVacancies({taxonomy, answers:session.answers, candidates, selectionSeed:session.selectionSeed, query:matchQuery, offset:matchOffset}) : null;
+    if (page) matchOffset = page.offset;
+    const expanded = page?.rows.find(row => row.id === expandedMatchId);
+    const detailRows = expanded && !matches.some(row => row.id === expanded.id) ? [...matches, expanded] : matches;
+    loadDetails(detailRows);
     const focused = document.activeElement?.id;
     const noPreference = ranking.resultStatus === 'no-preference';
     const missing = matches.some(row => detailErrors.has(detailKey(row.detailPath)));
@@ -760,11 +809,40 @@ export function createAdaptiveFlow({navigate}) {
       <header class="adaptive-results-heading"><h1>${matches.length ? L('Подходящие должности', 'Matching roles', '适合的职位') : L('Ваш результат', 'Your result', '你的结果')}</h1></header>
       ${matches.length ? `<div class="adaptive-role-list">${matches.map(roleCard).join('')}</div>` : `<p class="adaptive-no-matches">${noPreference ? L('Вы пока не выделили предпочтительные виды работы. Можно вернуться к вопросам и уточнить ответы.', 'You have not yet identified preferred types of work. You can return to the questions and refine your answers.', '你尚未确定偏好的工作类型。可以返回问题，进一步明确答案。') : L('Для выбранных условий подходящих должностей не найдено.', 'No matching roles were found for the selected conditions.', '未找到符合所选条件的职位。')}</p>`}
       ${missing ? `<div class="adaptive-detail-error" role="status"><span>${L('Описание должностей не загрузилось.', 'Role descriptions could not be loaded.', '无法加载职位说明。')}</span><button type="button" class="adaptive-text-button" id="adaptive-retry-details">${L('Повторить', 'Retry', '重试')}</button></div>` : ''}
+      ${matchBrowseMarkup(ranking,page,expanded)}
+      <div id="adaptive-bank-browser"></div>
       <div id="adaptive-save-feedback">${saveError()}</div>
       <footer class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit">${L('Изменить ответы', 'Edit answers', '修改答案')}</button>${typeof __careerHost.openKnowledge === 'function' ? `<button type="button" class="button button-primary" id="adaptive-open-knowledge" ${opening || saveFailed || corruptStorage ? 'disabled' : ''}>${L('К тесту знаний', 'Continue to the knowledge test', '进入知识测试')}${icon('arrow-right')}</button>` : ''}</footer>
     </div>`;
     root.querySelector('#adaptive-edit').onclick = backQuestion;
-    root.querySelector('#adaptive-retry-details')?.addEventListener('click', () => {loadDetails(matches, true); renderResults();});
+    root.querySelector('#adaptive-retry-details')?.addEventListener('click', () => {loadDetails(detailRows, true); renderResults();});
+    const browse = root.querySelector('#adaptive-all-matches');
+    browse?.addEventListener('toggle', () => {
+      if (!browse.isConnected || browse.open === matchBrowseOpen) return;
+      matchBrowseOpen = browse.open;
+      if (!matchBrowseOpen) expandedMatchId = null;
+      renderResults();
+    });
+    const refreshMatchPage = () => {
+      expandedMatchId = null; renderResults();
+      root.querySelector('#adaptive-match-list-title')?.focus();
+    };
+    root.querySelector('#adaptive-match-search')?.addEventListener('submit', event => {
+      event.preventDefault(); matchQuery = event.currentTarget.elements.namedItem('query').value.trim().slice(0,160); matchOffset = 0; refreshMatchPage();
+    });
+    root.querySelectorAll('[data-adaptive-match-page]').forEach(button => button.addEventListener('click', () => {
+      matchOffset = Math.max(0,matchOffset+(button.dataset.adaptiveMatchPage === 'next' ? page.limit : -page.limit)); refreshMatchPage();
+    }));
+    root.querySelectorAll('[data-adaptive-match-evidence]').forEach(button => button.addEventListener('click', () => {
+      const id = button.dataset.adaptiveMatchEvidence;
+      expandedMatchId = expandedMatchId === id ? null : id; renderResults();
+      [...root.querySelectorAll('[data-adaptive-match-evidence]')].find(item => item.dataset.adaptiveMatchEvidence === id)?.focus({preventScroll:true});
+    }));
+    root.querySelectorAll('[data-adaptive-review-id]').forEach(button => button.addEventListener('click', () => {
+      const row = matches.find(item => item.id === button.dataset.adaptiveReviewId) || page?.rows.find(item => item.id === button.dataset.adaptiveReviewId);
+      if (row) {void review.openCandidate(row); renderResults();}
+    }));
+    bankBrowse.mount(root.querySelector('#adaptive-bank-browser'));
     root.querySelector('#adaptive-open-knowledge')?.addEventListener('click', async () => {
       if (opening || !save()) {renderResults(); return;}
       notifyCompletion(ranking);
@@ -802,6 +880,10 @@ export function createAdaptiveFlow({navigate}) {
 
   function render(route) {
     if (route !== 'results' && (detailSelection || detailPending.size || detailQueue.length)) resetDetailRequests();
+    if (route !== 'results' && lastRoute === 'results') {
+      matchBrowseOpen = false; matchOffset = 0; matchQuery = ''; expandedMatchId = null;
+      bankBrowse.reset?.(); review.close({notify:false});
+    }
     lastRoute = route;
     const guarded = guardRoute(route);
     if (metadataReady && guarded !== route) {navigate(guarded); return;}

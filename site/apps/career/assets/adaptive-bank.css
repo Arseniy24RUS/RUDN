@@ -1,0 +1,157 @@
+/* The source catalogue is visually separate from the ranked recommendations. */
+.adaptive-bank {
+  min-width: 0;
+  margin-top: 26px;
+  padding: clamp(16px, 3cqi, 24px);
+  border: 1px solid #d7e4ee;
+  border-radius: 16px;
+  background: #f6fafc;
+  color: #24465f;
+  overflow-wrap: anywhere;
+}
+
+.adaptive-bank h2 { margin: 0; font-size: 20px; line-height: 1.4; }
+.adaptive-bank h3 { margin: 8px 0; font-size: 19px; line-height: 1.45; }
+.adaptive-bank h4 { margin: 9px 0; color: #193951; font-size: 16px; line-height: 1.5; }
+.adaptive-bank [data-adaptive-bank-content][hidden] { display: none; }
+
+.adaptive-bank-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 5px 0;
+  border: 0;
+  border-radius: 7px;
+  color: #193951;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.adaptive-bank-toggle::after {
+  content: '';
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  margin-inline-end: 4px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.adaptive-bank-toggle[aria-expanded="true"]::after { transform: rotate(225deg); }
+.adaptive-bank-intro, .adaptive-bank-note, .adaptive-bank-location {
+  margin: 6px 0 12px;
+  color: #49677e;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.adaptive-bank [data-adaptive-bank-content] { padding-top: 6px; }
+.adaptive-bank-search { display: grid; gap: 7px; margin: 14px 0 6px; font-weight: 650; }
+.adaptive-bank-search input {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  min-height: 46px;
+  padding: 9px 12px;
+  border: 1px solid #b9ccd9;
+  border-radius: 9px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+}
+
+.adaptive-bank-employers, .adaptive-bank-vacancies {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adaptive-bank-employers > li { min-width: 0; }
+.adaptive-bank-employer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid #d5e2ec;
+  border-radius: 10px;
+  background: #fff;
+  color: #193951;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.adaptive-bank-employer:hover { border-color: #8db5ce; background: #f1f8fc; }
+.adaptive-bank-employer span { color: #49677e; font-size: 12px; }
+.adaptive-bank-employer .adaptive-bank-identifier { font-size: 11px; }
+.adaptive-bank-vacancy {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #d5e2ec;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.adaptive-bank-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.adaptive-bank-badges span {
+  max-width: 100%;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #edf3f7;
+  color: #456478;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.adaptive-bank-badges [data-adaptive-bank-status="source-active"] { background: #e9f4fc; color: #165778; }
+.adaptive-bank-vacancy dl { display: grid; gap: 6px; margin: 12px 0; font-size: 13px; line-height: 1.55; }
+.adaptive-bank-vacancy dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.adaptive-bank-vacancy dd { min-width: 0; margin: 0; font-weight: 600; }
+.adaptive-bank-vacancy dt { min-width: 0; color: #49677e; }
+.adaptive-bank-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.adaptive-bank-actions .adaptive-source { margin-top: 0; }
+.adaptive-bank .button {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.adaptive-bank-pager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.adaptive-bank-pager span { min-width: 0; text-align: center; font-size: 13px; font-variant-numeric: tabular-nums; }
+.adaptive-bank button:focus-visible, .adaptive-bank input:focus-visible, .adaptive-bank a:focus-visible {
+  outline: 3px solid #75b5da;
+  outline-offset: 2px;
+}
+
+@container career (max-width: 380px) {
+  .adaptive-bank { padding: 14px; }
+  .adaptive-bank-pager { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .adaptive-bank-pager span { grid-column: 1 / -1; grid-row: 1; }
+}

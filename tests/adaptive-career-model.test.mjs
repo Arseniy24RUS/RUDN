@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {buildQuestionBank,validAnswers,nextQuestion,rankVacancies,shouldFinish,makeCompletionRecord,MIN_ANSWERS,MAX_ANSWERS} from '../site/apps/career/assets/adaptive-model.mjs';
+import {buildQuestionBank,validAnswers,nextQuestion,rankVacancies,listMatchingVacancies,shouldFinish,makeCompletionRecord,MIN_ANSWERS,MAX_ANSWERS} from '../site/apps/career/assets/adaptive-model.mjs';
 import {completedCareerRecord} from '../site/assets/js/career-course.js';
 
 const text = value => ({ru:value,en:value,'zh-Hans':value});
@@ -174,6 +174,46 @@ test('a large archive is fully considered while identical profiles never multipl
   assert.equal(result.considered,150000);assert.equal(result.functionalProfilesConsidered,4);
   assert.equal(result.matches[0].features.f0,1);
   assert.equal(nextQuestion({taxonomy,answers,candidates:large}).id,nextQuestion({taxonomy,answers,candidates}).id);
+});
+
+test('every matching announcement remains reachable across result pages',()=>{
+  const common={title:'Специалист по учёту',department:'Отдел выплат',employerName:'Городская служба',
+    regionId:'ru-57',location:'Орёл',responsibilityLevel:'specialist'};
+  const repeated=Array.from({length:14},(_,index)=>row(`bank-copy-${index}`,{f0:1},common));
+  const roles=[...repeated,
+    row('other-region',{f0:1},{...common,regionId:'ru-77'}),
+    row('other-level',{f0:1},{...common,responsibilityLevel:'leadership'}),
+    row('disliked',{f1:1},common),
+    row('title-only',{f0:1},{...common,evidenceLevel:'title'})];
+  const args={taxonomy,answers:core({f0:5,f1:1}),candidates:roles,regionIds:['ru-57'],
+    responsibilityPreference:'specialist',selectionSeed:'fixed-attempt'};
+  const ranking=rankVacancies(args);
+  assert.equal(ranking.matches.length,1);
+  assert.equal(ranking.matchingCount,14);
+  const pages=[0,4,8,12].map(offset=>listMatchingVacancies({...args,offset,limit:4}));
+  assert.deepEqual(pages.map(page=>[page.total,page.rows.length]),[[14,4],[14,4],[14,4],[14,2]]);
+  const visible=pages.flatMap(page=>page.rows);
+  assert.deepEqual(visible.map(role=>role.id).sort(),repeated.map(role=>role.id).sort());
+  assert.ok(visible.every(role=>role.score===ranking.matches[0].score && role.matchedFeatures[0].id==='f0'));
+  for(const query of ['ОРЕЛ','УЧЕТУ','ГОРОДСКАЯ','ОТДЕЛ ВЫПЛАТ']){
+    assert.equal(listMatchingVacancies({...args,query}).total,14);
+  }
+  assert.deepEqual(listMatchingVacancies({...args,query:'BANK-COPY-13'}).rows.map(role=>role.id),['bank-copy-13']);
+  assert.deepEqual(listMatchingVacancies({...args,offset:1e9,limit:4}),pages[3]);
+  assert.deepEqual(listMatchingVacancies({...args,query:'missing',offset:8,limit:4}),{rows:[],total:0,offset:0,limit:4});
+  assert.deepEqual(listMatchingVacancies({...args,answers:core(),limit:4}),{rows:[],total:0,offset:0,limit:4});
+});
+
+test('a stable attempt seed rotates equal functional profiles without changing their scores',()=>{
+  const roles=Array.from({length:12},(_,index)=>row('equal-'+String(index).padStart(2,'0'),{f0:1}));
+  const args={taxonomy,answers:core({f0:5}),candidates:roles};
+  const unseeded=rankVacancies(args);
+  assert.deepEqual(unseeded.matches.map(role=>role.id),roles.slice(0,5).map(role=>role.id));
+  const seeded=Array.from({length:16},(_,index)=>rankVacancies({...args,selectionSeed:`attempt-${index}`}));
+  assert.deepEqual(rankVacancies({...args,selectionSeed:'attempt-0'}),seeded[0]);
+  assert.ok(seeded.every(result=>result.matchingCount===12 && new Set(result.matches.map(role=>role.id)).size===5));
+  assert.ok(seeded.every(result=>result.matches.every(role=>role.score===unseeded.matches[0].score)));
+  assert.ok(new Set(seeded.map(result=>result.matches.map(role=>role.id).sort().join('|'))).size>1);
 });
 
 test('the v2 course record declares its source-content basis while valid historical results remain usable',()=>{

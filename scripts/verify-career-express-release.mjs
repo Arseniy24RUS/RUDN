@@ -17,6 +17,7 @@ const allowedFiles=new Set([
   '.github/workflows/publish-career-seminar.yml',
   'scripts/build-career.mjs',
   'scripts/build-adaptive-career-index.py',
+  'scripts/build-career-employer-directory.py',
   'scripts/test_adaptive_career_index.py',
   'scripts/test_adaptive_career_ui.mjs',
   'tests/adaptive-career-model.test.mjs',

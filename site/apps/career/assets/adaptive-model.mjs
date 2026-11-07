@@ -204,6 +204,42 @@ function identity(row, signature) {
   return [row.employerId || row.employerName,row.department,row.title,row.regionId,row.location,signature].map(normalized).join('|');
 }
 
+function memberScope(regionIds, responsibilityPreference) {
+  const regions = new Set(regionIds);
+  if (!regions.size && responsibilityPreference === 'all') return null;
+  return row => (!regions.size || regions.has(row.regionId)) &&
+    (responsibilityPreference === 'all' || row.responsibilityLevel === responsibilityPreference);
+}
+
+function meetsInterestThreshold(scored) {
+  return scored._positive >= .2 && scored._alignment > .08 && scored._negative <= scored._positive * .9;
+}
+
+function hashText(text, initial = 2166136261) {
+  let hash = initial;
+  for (let index = 0; index < text.length; index++) {
+    hash = Math.imul(hash ^ text.charCodeAt(index), 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seedHash(selectionSeed) {
+  return typeof selectionSeed === 'string' && selectionSeed.length ? hashText(selectionSeed) : null;
+}
+
+function memberStart(group, seed) {
+  if (seed === null || group.members.length < 2) return 0;
+  return hashText(group.signature, seed) % group.members.length;
+}
+
+function* orderedMembers(group, seed) {
+  const {members} = group;
+  const start = memberStart(group, seed);
+  for (let index = 0; index < members.length; index++) {
+    yield members[(start + index) % members.length];
+  }
+}
+
 function matchingEvidence(group, pref, facets) {
   const matchedFeatures = [], matchedFacets = [];
   for (const family of group.functions) {
@@ -229,15 +265,21 @@ function matchingEvidence(group, pref, facets) {
   return {matchedFeatures,matchedFacets};
 }
 
-function selectMatches(rows, limit, pref, facets) {
+function annotatedMatch(scored, row, pref, facets, annotations) {
+  if (!annotations.has(scored.group)) {
+    annotations.set(scored.group, matchingEvidence(scored.group, pref, facets));
+  }
+  return {...row, score:scored.score, ...annotations.get(scored.group)};
+}
+
+function selectMatches(eligible, limit, pref, facets, scope, seed) {
   const selected = [], identities = new Set(), taskSignatures = new Map();
   const annotations = new Map();
-  const eligible = rows.filter(row => row._positive >= .2 && row._alignment > .08 && row._negative <= row._positive*.9);
   const add = (scored,row) => {
+    if (scope && !scope(row)) return false;
     const key = identity(row,scored.group.signature); if (identities.has(key)) return false;
     identities.add(key);
-    if (!annotations.has(scored.group)) annotations.set(scored.group,matchingEvidence(scored.group,pref,facets));
-    selected.push({...row,score:scored.score,...annotations.get(scored.group)});
+    selected.push(annotatedMatch(scored, row, pref, facets, annotations));
     return true;
   };
   // Preserve different published task profiles, including different functions
@@ -245,7 +287,7 @@ function selectMatches(rows, limit, pref, facets) {
   for (const scored of eligible) {
     if (scored.score < eligible[0].score-8) break;
     const signature = Object.keys(scored.features).sort().join('|');
-    for (const row of scored.group.members) {
+    for (const row of orderedMembers(scored.group, seed)) {
       if ((taskSignatures.get(signature)||0) >= 2) break;
       if (add(scored,row)) taskSignatures.set(signature,(taskSignatures.get(signature)||0)+1);
       if (selected.length >= limit) break;
@@ -254,21 +296,87 @@ function selectMatches(rows, limit, pref, facets) {
   }
   for (const scored of eligible) {
     if (selected.length >= limit) break;
-    for (const row of scored.group.members) {
+    for (const row of orderedMembers(scored.group, seed)) {
       add(scored,row); if (selected.length >= limit) break;
     }
   }
-  selected.sort((a,b) => b.score-a.score || String(a.id).localeCompare(String(b.id),'en'));
+  selected.sort((a,b) => b.score-a.score || (seed === null ? String(a.id).localeCompare(String(b.id),'en') : 0));
   return selected;
 }
 
-export function rankVacancies({taxonomy, answers = [], candidates = [], limit = 5, regionIds = [], responsibilityPreference = 'all'}) {
-  const scoped = !regionIds.length && responsibilityPreference === 'all' ? candidates : candidates.filter(row =>
-    (!regionIds.length || regionIds.includes(row.regionId)) && (responsibilityPreference === 'all' || row.responsibilityLevel === responsibilityPreference));
-  const {rows, pref} = scoredCandidates(taxonomy, answers, scoped);
-  const matches = pref.positiveAnswers ? selectMatches(rows, Math.max(1, Math.min(10, limit)),pref,compiled(taxonomy).facets) : [];
-  return {matches, profile:pref.profile, considered:rows.reduce((sum,row) => sum+row.group.members.length,0),functionalProfilesConsidered:rows.length, informativeAnswers:pref.informativeAnswers,
+export function rankVacancies({taxonomy, answers = [], candidates = [], limit = 5, regionIds = [], responsibilityPreference = 'all', selectionSeed = ''}) {
+  const {rows, pref} = scoredCandidates(taxonomy, answers, candidates);
+  const scope = memberScope(regionIds, responsibilityPreference);
+  const shortlistSize = Number.isFinite(limit) ? clamp(Math.trunc(limit), 1, 10) : 5;
+  const eligible = [];
+  let considered = 0, functionalProfilesConsidered = 0, matchingCount = 0;
+  for (const scored of rows) {
+    const members = scored.group.members;
+    const count = scope ? members.reduce((sum, row) => sum + Number(scope(row)), 0) : members.length;
+    if (!count) continue;
+    considered += count;
+    functionalProfilesConsidered++;
+    if (pref.positiveAnswers && meetsInterestThreshold(scored)) {
+      eligible.push(scored);
+      matchingCount += count;
+    }
+  }
+  const matches = selectMatches(eligible, shortlistSize, pref, compiled(taxonomy).facets, scope, seedHash(selectionSeed));
+  return {matches, matchingCount, profile:pref.profile, considered, functionalProfilesConsidered, informativeAnswers:pref.informativeAnswers,
     resultStatus:!pref.positiveAnswers ? 'no-preference' : matches.length ? 'matched' : 'no-matches'};
+}
+
+/** Page through source vacancies that meet the same interest and scope criteria
+ * as the shortlist. Repeated announcements retain their separate source IDs.
+ */
+export function listMatchingVacancies({taxonomy, answers = [], candidates = [], regionIds = [], responsibilityPreference = 'all', query = '', offset = 0, limit = 12, selectionSeed = ''}) {
+  const pageSize = Number.isFinite(limit) ? clamp(Math.trunc(limit), 1, 100) : 12;
+  const position = Number.isFinite(offset) ? clamp(offset, 0, Number.MAX_SAFE_INTEGER) : 0;
+  const requestedOffset = Math.floor(position / pageSize) * pageSize;
+  const {rows, pref} = scoredCandidates(taxonomy, answers, candidates);
+  if (!pref.positiveAnswers) return {rows:[], total:0, offset:0, limit:pageSize};
+
+  const scope = memberScope(regionIds, responsibilityPreference);
+  const term = normalized(query);
+  const accepts = term ? row => (!scope || scope(row)) && normalized([
+    row.title, row.employerName, row.employerId, row.department, row.location, row.regionId, row.id
+  ].join(' ')).includes(term) : scope;
+  const seed = seedHash(selectionSeed);
+  const scan = start => {
+    const page = [];
+    let total = 0;
+    for (const scored of rows) {
+      if (!meetsInterestThreshold(scored)) continue;
+      const {group} = scored;
+      if (accepts) {
+        for (const row of orderedMembers(group, seed)) {
+          if (!accepts(row)) continue;
+          if (total >= start && page.length < pageSize) page.push({scored, row});
+          total++;
+        }
+        continue;
+      }
+      // Unfiltered groups already have a count, so skip their members unless
+      // they overlap the requested page.
+      const {members} = group;
+      const first = Math.max(0, start - total);
+      const end = Math.min(members.length, start + pageSize - total);
+      if (first < end) {
+        const rotation = memberStart(group, seed);
+        for (let index = first; index < end; index++) {
+          page.push({scored, row:members[(rotation + index) % members.length]});
+        }
+      }
+      total += members.length;
+    }
+    return {page, total};
+  };
+  const {page, total} = scan(requestedOffset);
+  const lastOffset = total ? Math.floor((total - 1) / pageSize) * pageSize : 0;
+  const currentOffset = Math.min(requestedOffset, lastOffset);
+  const visible = total && currentOffset !== requestedOffset ? scan(currentOffset).page : page;
+  const annotations = new Map(), {facets} = compiled(taxonomy);
+  return {rows:visible.map(({scored, row}) => annotatedMatch(scored, row, pref, facets, annotations)), total, offset:currentOffset, limit:pageSize};
 }
 
 function questionUtilities({taxonomy, answers, candidates}) {
@@ -323,17 +431,17 @@ export function nextQuestion({taxonomy, answers = [], candidates = []}) {
   return questionUtilities({taxonomy,answers:clean,candidates})[0]?.question || null;
 }
 
-export function shouldFinish({taxonomy, answers = [], candidates = []}) {
+export function shouldFinish({taxonomy, answers = [], candidates = [], selectionSeed = ''}) {
   const {questions} = compiled(taxonomy), clean = validAnswers(taxonomy, answers);
   if (clean.length >= Math.min(MAX_ANSWERS, questions.length)) return true;
   if (clean.length < Math.min(MIN_ANSWERS, questions.length)) return false;
   if (questions.some(q => q.broad && !clean.some(a => a.questionId === q.id))) return false;
-  const ranking = rankVacancies({taxonomy,answers:clean,candidates});
+  const ranking = rankVacancies({taxonomy,answers:clean,candidates,selectionSeed});
   // A neutral/unknown questionnaire is complete, but has no invented best match.
   if (!clean.some(a => a.value >= 4) || !candidates.length) return true;
   const current = ranking.matches.map(row => row.id).join('|');
   if (!current) return clean.length >= MIN_ANSWERS + 4;
-  const previous = [2,4].map(step => rankVacancies({taxonomy,answers:clean.slice(0,-step),candidates}).matches.map(row => row.id).join('|'));
+  const previous = [2,4].map(step => rankVacancies({taxonomy,answers:clean.slice(0,-step),candidates,selectionSeed}).matches.map(row => row.id).join('|'));
   const stable = previous.every(value => value === current);
   const information = questionUtilities({taxonomy,answers:clean,candidates})[0];
   return stable && (clean.length >= MIN_ANSWERS + 4 || !information || information.variance < .025);

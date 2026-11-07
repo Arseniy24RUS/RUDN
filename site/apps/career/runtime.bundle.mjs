@@ -4140,8 +4140,8 @@ var CareerRuntime = (() => {
   }
   function translateText(node) {
     if (ignored(node.parentElement) || !node.nodeValue?.trim()) return;
-    const value = node.nodeValue, record = originals.get(node);
-    const source = record && value === record.rendered ? record.source : value;
+    const value = node.nodeValue, record2 = originals.get(node);
+    const source = record2 && value === record2.rendered ? record2.source : value;
     const rendered = translate(source);
     originals.set(node, { source, rendered });
     if (value !== rendered) node.nodeValue = rendered;
@@ -4181,9 +4181,9 @@ var CareerRuntime = (() => {
     observer = new MutationObserver((records) => {
       observer.disconnect();
       const roots = /* @__PURE__ */ new Set();
-      for (const record of records) {
-        if (record.type === "childList") record.addedNodes.forEach((n) => roots.add(n));
-        else roots.add(record.target);
+      for (const record2 of records) {
+        if (record2.type === "childList") record2.addedNodes.forEach((n) => roots.add(n));
+        else roots.add(record2.target);
       }
       for (const root of roots) {
         if (!root.isConnected) continue;
@@ -4518,6 +4518,24 @@ var CareerRuntime = (() => {
 
   // site/apps/career/assets/employer-vacancies-bank.mjs
   var BANK_COLUMNS = Object.freeze(["id", "title", "scope", "region", "locality", "salaryFrom", "salaryTo", "announcedAt", "expiresAt", "state", "archive", "sourceURL", "education", "professionalExperience", "governmentExperience"]);
+  var abortError = () => new DOMException("Vacancy request cancelled", "AbortError");
+  var record = (v) => v && typeof v === "object" && !Array.isArray(v);
+  var safePath = (p) => typeof p === "string" && /^[a-zA-Z0-9][a-zA-Z0-9_./-]*\.gz$/.test(p) && !p.split("/").some((s) => s === "." || s === ".." || !s);
+  function platformEmployerId(value) {
+    const id = String(value || "").replace(/^(?:ps:|territorial:)/, "");
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,246}$/.test(id)) throw new Error("Invalid employer identifier");
+    return id;
+  }
+  function validateDescriptor(value, id) {
+    if (!record(value) || value.schemaVersion !== 2 || value.authorityId !== id || !Number.isInteger(value.jobCount) || value.jobCount < 0 || !Array.isArray(value.pages)) throw new Error("Invalid employer descriptor");
+    if (value.pages.some((p) => !record(p) || !safePath(p.path) || !Number.isInteger(p.count) || p.count < 1 || p.count > 250 || !Number.isInteger(p.bytes) || p.bytes < 18 || p.bytes > 4 * 1024 * 1024 || !Number.isInteger(p.uncompressedBytes) || p.uncompressedBytes < 1 || p.uncompressedBytes > 8 * 1024 * 1024 || !/^[a-f0-9]{64}$/.test(p.sha256) || !/^[a-f0-9]{64}$/.test(p.uncompressedSHA256))) throw new Error("Invalid employer page");
+    if (value.pages.reduce((n, p) => n + p.count, 0) !== value.jobCount) throw new Error("Employer count differs from pages");
+    return value;
+  }
+  async function digest(bytes) {
+    if (!globalThis.crypto?.subtle) return null;
+    return [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map((b) => b.toString(16).padStart(2, "0")).join("");
+  }
   async function decodeGzip(bytes, { expectedBytes, maxBytes = 8 * 1024 * 1024 } = {}) {
     const input = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
     if (input[0] !== 31 || input[1] !== 139 || input[2] !== 8) throw new Error("Invalid gzip page");
@@ -4552,6 +4570,283 @@ var CareerRuntime = (() => {
     }
     if (output.length > maxBytes || expectedBytes !== void 0 && output.length !== expectedBytes) throw new Error("Vacancy page length mismatch");
     return output;
+  }
+  function unpackVacancyPage(value, descriptor, page) {
+    if (!record(value) || value.schemaVersion !== 2 || value.employerId !== descriptor.employerId || JSON.stringify(value.columns) !== JSON.stringify(BANK_COLUMNS) || !Array.isArray(value.rows) || value.rows.length !== page.count) throw new Error("Invalid vacancy page");
+    return value.rows.map((row) => {
+      if (!Array.isArray(row) || row.length !== BANK_COLUMNS.length || typeof row[0] !== "string" || row[1] !== null && typeof row[1] !== "string" || ![true, false, null].includes(row[10])) throw new Error("Invalid vacancy row");
+      const result = Object.fromEntries(BANK_COLUMNS.map((key, i2) => [key, row[i2]]));
+      if (result.sourceURL !== null) {
+        let url;
+        try {
+          url = new URL(result.sourceURL);
+        } catch {
+          throw new Error("Invalid vacancy source");
+        }
+        if (url.protocol !== "https:" || url.hostname !== "gossluzhba.gov.ru") throw new Error("Invalid vacancy source");
+      }
+      return result;
+    });
+  }
+  function vacancyBankStatus(row, now = /* @__PURE__ */ new Date()) {
+    const state2 = String(row.state || "").toLowerCase();
+    if (row.archive === true || /закрыт|архив|отмен[её]н|заверш[её]н/.test(state2)) return "archived";
+    const deadline = typeof row.expiresAt === "string" && /^\d{4}-\d{2}-\d{2}/.test(row.expiresAt) ? row.expiresAt.slice(0, 10) : null;
+    const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+    if (deadline && deadline < today) return "expired";
+    return row.archive === false ? "source-active" : "unknown";
+  }
+  function createEmployerVacancyBank({ baseURL = "data/vacancies/bank/", fetchImpl = (...args) => fetch(...args), maxEmployers = 8, maxPages = 12, maxConcurrent = 2, timeout = 2e4, decompress: decompress2 = decodeGzip } = {}) {
+    const entries = /* @__PURE__ */ new Map(), pages = /* @__PURE__ */ new Map(), inflight = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set(), queue = [];
+    let active = 0, disposed = false;
+    const invalidState = (input) => ({ authorityId: String(input || ""), descriptor: null, rows: [], pageIndex: 0, targetPage: 0, loading: false, error: "invalid-employer", status: "error" });
+    const notify = (id) => {
+      if (!disposed) for (const listener of listeners) listener(id);
+    };
+    function limited(fn, signal) {
+      return new Promise((resolve, reject) => {
+        const task = { fn, resolve, reject, signal };
+        const cancelled = () => {
+          const i2 = queue.indexOf(task);
+          if (i2 >= 0) {
+            queue.splice(i2, 1);
+            reject(abortError());
+          }
+        };
+        task.cleanup = () => signal.removeEventListener("abort", cancelled);
+        signal.addEventListener("abort", cancelled, { once: true });
+        queue.push(task);
+        pump();
+      });
+    }
+    function pump() {
+      while (active < maxConcurrent && queue.length) {
+        const task = queue.shift();
+        task.cleanup();
+        if (task.signal.aborted) {
+          task.reject(abortError());
+          continue;
+        }
+        active++;
+        Promise.resolve().then(task.fn).then(task.resolve, task.reject).finally(() => {
+          active--;
+          pump();
+        });
+      }
+    }
+    async function request(url, signal, asJSON) {
+      return limited(async () => {
+        const control = new AbortController(), abort = () => control.abort(signal.reason || abortError());
+        signal.addEventListener("abort", abort, { once: true });
+        let timer;
+        const deadline = new Promise((_, reject) => {
+          timer = setTimeout(() => {
+            control.abort();
+            reject(new DOMException("Vacancy loading timed out", "TimeoutError"));
+          }, timeout);
+        });
+        try {
+          return await Promise.race([(async () => {
+            if (signal.aborted) throw abortError();
+            const response = await fetchImpl(url, { cache: "no-store", signal: control.signal });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const value = asJSON ? await response.json() : new Uint8Array(await response.arrayBuffer());
+            if (signal.aborted) throw abortError();
+            return value;
+          })(), deadline]);
+        } finally {
+          clearTimeout(timer);
+          signal.removeEventListener("abort", abort);
+        }
+      }, signal);
+    }
+    function touch(map, key, value) {
+      map.delete(key);
+      map.set(key, value);
+    }
+    function entryFor(input) {
+      const id = platformEmployerId(input);
+      let entry = entries.get(id);
+      if (!entry) {
+        entry = { id, descriptor: null, rows: [], loaded: false, pageIndex: 0, targetPage: 0, loading: false, error: null, generation: 0, controller: null, promise: null };
+        entries.set(id, entry);
+        while (entries.size > maxEmployers) {
+          const first = entries.keys().next().value;
+          entries.get(first).controller?.abort();
+          entries.delete(first);
+        }
+      } else touch(entries, id, entry);
+      return entry;
+    }
+    function snapshot(entry) {
+      return { authorityId: entry.id, descriptor: entry.descriptor, rows: entry.rows, pageIndex: entry.pageIndex, targetPage: entry.targetPage, loading: entry.loading, error: entry.error, status: entry.loading ? "loading" : entry.error ? "error" : entry.descriptor ? "ready" : "idle" };
+    }
+    function sharedPage(descriptor, page, signal) {
+      const key = descriptor.employerId + "|" + page.path;
+      if (pages.has(key)) {
+        const value = pages.get(key);
+        touch(pages, key, value);
+        return Promise.resolve(value);
+      }
+      let job = inflight.get(key);
+      if (job?.control.signal.aborted) {
+        inflight.delete(key);
+        job = null;
+      }
+      if (!job) {
+        const control = new AbortController();
+        job = { control, consumers: /* @__PURE__ */ new Set() };
+        job.promise = (async () => {
+          const compressed = await request(baseURL + page.path, control.signal, false);
+          if (compressed.length !== page.bytes) throw new Error("Vacancy page download length mismatch");
+          const actual = await digest(compressed);
+          if (actual && actual !== page.sha256) throw new Error("Vacancy page checksum mismatch");
+          const raw = await decompress2(compressed, { expectedBytes: page.uncompressedBytes });
+          if (control.signal.aborted) throw abortError();
+          const decoded = await digest(raw);
+          if (decoded && decoded !== page.uncompressedSHA256) throw new Error("Decoded vacancy page checksum mismatch");
+          const rows = unpackVacancyPage(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)), descriptor, page);
+          touch(pages, key, rows);
+          while (pages.size > maxPages) pages.delete(pages.keys().next().value);
+          return rows;
+        })();
+        inflight.set(key, job);
+        job.promise.finally(() => {
+          if (inflight.get(key) === job) inflight.delete(key);
+        }).catch(() => {
+        });
+      }
+      return new Promise((resolve, reject) => {
+        const consumer = {};
+        job.consumers.add(consumer);
+        let settled = false;
+        const cleanup = () => {
+          job.consumers.delete(consumer);
+          signal.removeEventListener("abort", cancel);
+        };
+        const cancel = () => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          if (!job.consumers.size) job.control.abort();
+          reject(abortError());
+        };
+        if (signal.aborted) {
+          cancel();
+          return;
+        }
+        signal.addEventListener("abort", cancel, { once: true });
+        job.promise.then((value) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            resolve(value);
+          }
+        }, (error) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            reject(error);
+          }
+        });
+      });
+    }
+    function loadPage(input, index = 0) {
+      if (disposed) return Promise.resolve(null);
+      let entry;
+      try {
+        entry = entryFor(input);
+      } catch {
+        return Promise.resolve(invalidState(input));
+      }
+      if (entry.loading && entry.targetPage === index) return entry.promise;
+      entry.controller?.abort();
+      const generation = ++entry.generation, controller = new AbortController();
+      entry.controller = controller;
+      entry.targetPage = index;
+      entry.loading = true;
+      entry.error = null;
+      notify(entry.id);
+      entry.promise = (async () => {
+        try {
+          let descriptor = entry.descriptor;
+          if (!descriptor) {
+            const compressed = await request(baseURL + "employers/" + entry.id + ".json.gz", controller.signal, false);
+            if (compressed.length > 256 * 1024) throw new Error("Employer descriptor exceeds size limit");
+            const raw = await decompress2(compressed, { maxBytes: 2 * 1024 * 1024 });
+            descriptor = validateDescriptor(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)), entry.id);
+          }
+          if (controller.signal.aborted || generation !== entry.generation) return snapshot(entry);
+          entry.descriptor = descriptor;
+          if (index < 0 || index >= Math.max(1, descriptor.pages.length)) throw new Error("Invalid vacancy page number");
+          const rows = descriptor.pages.length ? await sharedPage(descriptor, descriptor.pages[index], controller.signal) : [];
+          if (controller.signal.aborted || generation !== entry.generation) return snapshot(entry);
+          entry.rows = rows;
+          entry.loaded = true;
+          entry.pageIndex = index;
+          entry.error = null;
+        } catch (error) {
+          if (generation === entry.generation && error.name !== "AbortError") entry.error = error.name === "TimeoutError" ? "timeout" : "load-failed";
+        } finally {
+          if (generation === entry.generation) {
+            entry.loading = false;
+            entry.controller = null;
+            entry.promise = null;
+            notify(entry.id);
+          }
+        }
+        return snapshot(entry);
+      })();
+      return entry.promise;
+    }
+    return { get: (input) => {
+      try {
+        return snapshot(entryFor(input));
+      } catch {
+        return invalidState(input);
+      }
+    }, loadPage, ensure(input) {
+      let e;
+      try {
+        e = entryFor(input);
+      } catch {
+        return Promise.resolve(invalidState(input));
+      }
+      return e.descriptor && e.loaded && !e.error ? Promise.resolve(snapshot(e)) : loadPage(e.id, e.pageIndex);
+    }, retry: (input) => {
+      let e;
+      try {
+        e = entryFor(input);
+      } catch {
+        return Promise.resolve(invalidState(input));
+      }
+      return loadPage(e.id, e.targetPage);
+    }, cancel(input) {
+      let e;
+      try {
+        e = entries.get(platformEmployerId(input));
+      } catch {
+        return;
+      }
+      if (e) {
+        e.controller?.abort();
+        e.generation++;
+        e.loading = false;
+        e.controller = null;
+        e.promise = null;
+        notify(e.id);
+      }
+    }, subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    }, isBusy: () => [...entries.values()].some((e) => e.loading), cacheInfo: () => ({ employers: entries.size, pages: pages.size, pending: inflight.size, activeRequests: active }), dispose() {
+      disposed = true;
+      for (const e of entries.values()) e.controller?.abort();
+      for (const job of inflight.values()) job.control.abort();
+      listeners.clear();
+      entries.clear();
+      pages.clear();
+    } };
   }
 
   // site/apps/career/assets/adaptive-index-codec.mjs
@@ -4702,6 +4997,11 @@ var CareerRuntime = (() => {
   var E2 = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L2 = (ru, en, zh2) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh2;
   var icon = (id) => `<svg aria-hidden="true"><use href="#i-${E2(id)}"></use></svg>`;
+  var number = (value, digits = 0) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  function date2(value) {
+    if (!value || !Number.isFinite(Date.parse(value))) return "";
+    return new Intl.DateTimeFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { dateStyle: "medium", timeZone: "Europe/Moscow" }).format(new Date(value));
+  }
   function safeURL(value) {
     try {
       const url = new URL(value);
@@ -4712,6 +5012,26 @@ var CareerRuntime = (() => {
   }
   function regionName(region) {
     return getLanguage() === "en" ? region?.name_en || region?.name || "" : getLanguage() === "zh-Hans" ? region?.name_zh || region?.name || "" : region?.name || "";
+  }
+  function groupLabel(id) {
+    return {
+      education: L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", "Education", "\u5B66\u5386"),
+      experience: L2("\u0421\u0442\u0430\u0436 \u0438 \u043E\u043F\u044B\u0442", "Experience", "\u5DE5\u4F5C\u7ECF\u5386"),
+      knowledge: L2("\u0417\u043D\u0430\u043D\u0438\u044F", "Knowledge", "\u77E5\u8BC6"),
+      skills: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u80FD\u529B\u4E0E\u6280\u80FD"),
+      skill: L2("\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", "Skills", "\u80FD\u529B\u4E0E\u6280\u80FD"),
+      eligibility: L2("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0434\u043E\u043F\u0443\u0441\u043A\u0430", "Eligibility", "\u8D44\u683C\u6761\u4EF6"),
+      other: L2("\u0414\u0440\u0443\u0433\u0438\u0435 \u0438 \u0441\u043E\u0441\u0442\u0430\u0432\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Other and combined requirements", "\u5176\u4ED6\u53CA\u7EFC\u5408\u8981\u6C42"),
+      unclassified: L2("\u0411\u0435\u0437 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043D\u043E\u0439 \u0433\u0440\u0443\u043F\u043F\u044B", "Without a subject group", "\u672A\u5206\u7C7B"),
+      "finance-economy": L2("\u0424\u0438\u043D\u0430\u043D\u0441\u044B \u0438 \u044D\u043A\u043E\u043D\u043E\u043C\u0438\u043A\u0430", "Finance and economics", "\u8D22\u653F\u4E0E\u7ECF\u6D4E"),
+      "law-regulation": L2("\u041F\u0440\u0430\u0432\u043E \u0438 \u0440\u0435\u0433\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0435", "Law and regulation", "\u6CD5\u5F8B\u4E0E\u76D1\u7BA1"),
+      communication: L2("\u041A\u043E\u043C\u043C\u0443\u043D\u0438\u043A\u0430\u0446\u0438\u044F", "Communication", "\u6C9F\u901A"),
+      "organization-projects": L2("\u041E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u044F \u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u044B", "Organisation and projects", "\u7EC4\u7EC7\u4E0E\u9879\u76EE"),
+      "data-digital": L2("\u0414\u0430\u043D\u043D\u044B\u0435 \u0438 \u0446\u0438\u0444\u0440\u043E\u0432\u044B\u0435 \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u044B", "Data and digital tools", "\u6570\u636E\u4E0E\u6570\u5B57\u5DE5\u5177"),
+      "documents-records": L2("\u0414\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0434\u0435\u043B\u043E\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0441\u0442\u0432\u043E", "Documents and records", "\u6587\u4EF6\u4E0E\u6587\u4E66\u5DE5\u4F5C"),
+      "sector-knowledge": L2("\u0417\u043D\u0430\u043D\u0438\u0435 \u043F\u0440\u0435\u0434\u043C\u0435\u0442\u043D\u043E\u0439 \u043E\u0431\u043B\u0430\u0441\u0442\u0438", "Subject knowledge", "\u4E13\u4E1A\u9886\u57DF\u77E5\u8BC6"),
+      "analytical-work": L2("\u0410\u043D\u0430\u043B\u0438\u0442\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Analytical work", "\u5206\u6790\u5DE5\u4F5C")
+    }[id] || E2(id);
   }
 
   // site/apps/career/assets/adaptive-model.mjs
@@ -4925,6 +5245,35 @@ var CareerRuntime = (() => {
   function identity(row, signature) {
     return [row.employerId || row.employerName, row.department, row.title, row.regionId, row.location, signature].map(normalized2).join("|");
   }
+  function memberScope(regionIds, responsibilityPreference) {
+    const regions = new Set(regionIds);
+    if (!regions.size && responsibilityPreference === "all") return null;
+    return (row) => (!regions.size || regions.has(row.regionId)) && (responsibilityPreference === "all" || row.responsibilityLevel === responsibilityPreference);
+  }
+  function meetsInterestThreshold(scored) {
+    return scored._positive >= 0.2 && scored._alignment > 0.08 && scored._negative <= scored._positive * 0.9;
+  }
+  function hashText(text4, initial = 2166136261) {
+    let hash = initial;
+    for (let index = 0; index < text4.length; index++) {
+      hash = Math.imul(hash ^ text4.charCodeAt(index), 16777619);
+    }
+    return hash >>> 0;
+  }
+  function seedHash(selectionSeed) {
+    return typeof selectionSeed === "string" && selectionSeed.length ? hashText(selectionSeed) : null;
+  }
+  function memberStart(group, seed) {
+    if (seed === null || group.members.length < 2) return 0;
+    return hashText(group.signature, seed) % group.members.length;
+  }
+  function* orderedMembers(group, seed) {
+    const { members } = group;
+    const start = memberStart(group, seed);
+    for (let index = 0; index < members.length; index++) {
+      yield members[(start + index) % members.length];
+    }
+  }
   function matchingEvidence(group, pref, facets) {
     const matchedFeatures = [], matchedFacets = [];
     for (const family of group.functions) {
@@ -4950,22 +5299,27 @@ var CareerRuntime = (() => {
     matchedFacets.sort((a, b) => b.interest * b.strength - a.interest * a.strength);
     return { matchedFeatures, matchedFacets };
   }
-  function selectMatches(rows, limit, pref, facets) {
+  function annotatedMatch(scored, row, pref, facets, annotations) {
+    if (!annotations.has(scored.group)) {
+      annotations.set(scored.group, matchingEvidence(scored.group, pref, facets));
+    }
+    return { ...row, score: scored.score, ...annotations.get(scored.group) };
+  }
+  function selectMatches(eligible, limit, pref, facets, scope, seed) {
     const selected = [], identities = /* @__PURE__ */ new Set(), taskSignatures = /* @__PURE__ */ new Map();
     const annotations = /* @__PURE__ */ new Map();
-    const eligible = rows.filter((row) => row._positive >= 0.2 && row._alignment > 0.08 && row._negative <= row._positive * 0.9);
     const add = (scored, row) => {
+      if (scope && !scope(row)) return false;
       const key = identity(row, scored.group.signature);
       if (identities.has(key)) return false;
       identities.add(key);
-      if (!annotations.has(scored.group)) annotations.set(scored.group, matchingEvidence(scored.group, pref, facets));
-      selected.push({ ...row, score: scored.score, ...annotations.get(scored.group) });
+      selected.push(annotatedMatch(scored, row, pref, facets, annotations));
       return true;
     };
     for (const scored of eligible) {
       if (scored.score < eligible[0].score - 8) break;
       const signature = Object.keys(scored.features).sort().join("|");
-      for (const row of scored.group.members) {
+      for (const row of orderedMembers(scored.group, seed)) {
         if ((taskSignatures.get(signature) || 0) >= 2) break;
         if (add(scored, row)) taskSignatures.set(signature, (taskSignatures.get(signature) || 0) + 1);
         if (selected.length >= limit) break;
@@ -4974,26 +5328,93 @@ var CareerRuntime = (() => {
     }
     for (const scored of eligible) {
       if (selected.length >= limit) break;
-      for (const row of scored.group.members) {
+      for (const row of orderedMembers(scored.group, seed)) {
         add(scored, row);
         if (selected.length >= limit) break;
       }
     }
-    selected.sort((a, b) => b.score - a.score || String(a.id).localeCompare(String(b.id), "en"));
+    selected.sort((a, b) => b.score - a.score || (seed === null ? String(a.id).localeCompare(String(b.id), "en") : 0));
     return selected;
   }
-  function rankVacancies({ taxonomy, answers = [], candidates = [], limit = 5, regionIds = [], responsibilityPreference = "all" }) {
-    const scoped = !regionIds.length && responsibilityPreference === "all" ? candidates : candidates.filter((row) => (!regionIds.length || regionIds.includes(row.regionId)) && (responsibilityPreference === "all" || row.responsibilityLevel === responsibilityPreference));
-    const { rows, pref } = scoredCandidates(taxonomy, answers, scoped);
-    const matches = pref.positiveAnswers ? selectMatches(rows, Math.max(1, Math.min(10, limit)), pref, compiled(taxonomy).facets) : [];
+  function rankVacancies({ taxonomy, answers = [], candidates = [], limit = 5, regionIds = [], responsibilityPreference = "all", selectionSeed = "" }) {
+    const { rows, pref } = scoredCandidates(taxonomy, answers, candidates);
+    const scope = memberScope(regionIds, responsibilityPreference);
+    const shortlistSize = Number.isFinite(limit) ? clamp(Math.trunc(limit), 1, 10) : 5;
+    const eligible = [];
+    let considered = 0, functionalProfilesConsidered = 0, matchingCount = 0;
+    for (const scored of rows) {
+      const members = scored.group.members;
+      const count = scope ? members.reduce((sum, row) => sum + Number(scope(row)), 0) : members.length;
+      if (!count) continue;
+      considered += count;
+      functionalProfilesConsidered++;
+      if (pref.positiveAnswers && meetsInterestThreshold(scored)) {
+        eligible.push(scored);
+        matchingCount += count;
+      }
+    }
+    const matches = selectMatches(eligible, shortlistSize, pref, compiled(taxonomy).facets, scope, seedHash(selectionSeed));
     return {
       matches,
+      matchingCount,
       profile: pref.profile,
-      considered: rows.reduce((sum, row) => sum + row.group.members.length, 0),
-      functionalProfilesConsidered: rows.length,
+      considered,
+      functionalProfilesConsidered,
       informativeAnswers: pref.informativeAnswers,
       resultStatus: !pref.positiveAnswers ? "no-preference" : matches.length ? "matched" : "no-matches"
     };
+  }
+  function listMatchingVacancies({ taxonomy, answers = [], candidates = [], regionIds = [], responsibilityPreference = "all", query = "", offset = 0, limit = 12, selectionSeed = "" }) {
+    const pageSize = Number.isFinite(limit) ? clamp(Math.trunc(limit), 1, 100) : 12;
+    const position = Number.isFinite(offset) ? clamp(offset, 0, Number.MAX_SAFE_INTEGER) : 0;
+    const requestedOffset = Math.floor(position / pageSize) * pageSize;
+    const { rows, pref } = scoredCandidates(taxonomy, answers, candidates);
+    if (!pref.positiveAnswers) return { rows: [], total: 0, offset: 0, limit: pageSize };
+    const scope = memberScope(regionIds, responsibilityPreference);
+    const term = normalized2(query);
+    const accepts = term ? (row) => (!scope || scope(row)) && normalized2([
+      row.title,
+      row.employerName,
+      row.employerId,
+      row.department,
+      row.location,
+      row.regionId,
+      row.id
+    ].join(" ")).includes(term) : scope;
+    const seed = seedHash(selectionSeed);
+    const scan = (start) => {
+      const page2 = [];
+      let total2 = 0;
+      for (const scored of rows) {
+        if (!meetsInterestThreshold(scored)) continue;
+        const { group } = scored;
+        if (accepts) {
+          for (const row of orderedMembers(group, seed)) {
+            if (!accepts(row)) continue;
+            if (total2 >= start && page2.length < pageSize) page2.push({ scored, row });
+            total2++;
+          }
+          continue;
+        }
+        const { members } = group;
+        const first = Math.max(0, start - total2);
+        const end = Math.min(members.length, start + pageSize - total2);
+        if (first < end) {
+          const rotation = memberStart(group, seed);
+          for (let index = first; index < end; index++) {
+            page2.push({ scored, row: members[(rotation + index) % members.length] });
+          }
+        }
+        total2 += members.length;
+      }
+      return { page: page2, total: total2 };
+    };
+    const { page, total } = scan(requestedOffset);
+    const lastOffset = total ? Math.floor((total - 1) / pageSize) * pageSize : 0;
+    const currentOffset = Math.min(requestedOffset, lastOffset);
+    const visible = total && currentOffset !== requestedOffset ? scan(currentOffset).page : page;
+    const annotations = /* @__PURE__ */ new Map(), { facets } = compiled(taxonomy);
+    return { rows: visible.map(({ scored, row }) => annotatedMatch(scored, row, pref, facets, annotations)), total, offset: currentOffset, limit: pageSize };
   }
   function questionUtilities({ taxonomy, answers, candidates }) {
     const { questions } = compiled(taxonomy), { rows, pref } = scoredCandidates(taxonomy, answers, candidates);
@@ -5036,16 +5457,16 @@ var CareerRuntime = (() => {
     if (core2) return core2;
     return questionUtilities({ taxonomy, answers: clean, candidates })[0]?.question || null;
   }
-  function shouldFinish({ taxonomy, answers = [], candidates = [] }) {
+  function shouldFinish({ taxonomy, answers = [], candidates = [], selectionSeed = "" }) {
     const { questions } = compiled(taxonomy), clean = validAnswers(taxonomy, answers);
     if (clean.length >= Math.min(MAX_ANSWERS, questions.length)) return true;
     if (clean.length < Math.min(MIN_ANSWERS, questions.length)) return false;
     if (questions.some((q) => q.broad && !clean.some((a) => a.questionId === q.id))) return false;
-    const ranking = rankVacancies({ taxonomy, answers: clean, candidates });
+    const ranking = rankVacancies({ taxonomy, answers: clean, candidates, selectionSeed });
     if (!clean.some((a) => a.value >= 4) || !candidates.length) return true;
     const current = ranking.matches.map((row) => row.id).join("|");
     if (!current) return clean.length >= MIN_ANSWERS + 4;
-    const previous = [2, 4].map((step) => rankVacancies({ taxonomy, answers: clean.slice(0, -step), candidates }).matches.map((row) => row.id).join("|"));
+    const previous = [2, 4].map((step) => rankVacancies({ taxonomy, answers: clean.slice(0, -step), candidates, selectionSeed }).matches.map((row) => row.id).join("|"));
     const stable2 = previous.every((value) => value === current);
     const information = questionUtilities({ taxonomy, answers: clean, candidates })[0];
     return stable2 && (clean.length >= MIN_ANSWERS + 4 || !information || information.variance < 0.025);
@@ -5091,12 +5512,1402 @@ var CareerRuntime = (() => {
     };
   }
 
+  // site/apps/career/assets/adaptive-bank-browse.mjs
+  var DIRECTORY = "data/vacancies/employer-directory.json.gz";
+  var MAX_PACKED = 1024 * 1024;
+  var MAX_RAW = 4 * 1024 * 1024;
+  var EMPLOYERS_PER_VIEW = 20;
+  var VACANCIES_PER_VIEW = 10;
+  var EMPLOYER_ID = /^[A-Za-z0-9][A-Za-z0-9_-]{0,246}$/;
+  var HASH = /^[a-f0-9]{64}$/;
+  var validCount = (value) => Number.isSafeInteger(value) && value >= 0;
+  var normalize = (value) => value.normalize("NFKC").toLocaleLowerCase("ru").replaceAll("\u0451", "\u0435").replace(/\s+/g, " ").trim();
+  var sequence = 0;
+  function validateDirectory(value) {
+    if (value?.schemaVersion !== 1 || value.kind !== "public-vacancy-employer-directory" || !Array.isArray(value.employers) || value.employers.length > 15e3 || value.employers.length !== value.employerCount || !validCount(value.jobCount) || !validCount(value.pageCount) || !validCount(value.aliasCount) || !Number.isFinite(Date.parse(value.snapshotAt)) || !HASH.test(value.sourceDatasetSHA256 || "") || !HASH.test(value.employerMapSHA256 || "")) throw new Error("Invalid employer directory");
+    const knownIds = /* @__PURE__ */ new Set();
+    const nameCounts = /* @__PURE__ */ new Map();
+    let jobCount = 0, pageCount = 0, aliasCount = 0;
+    const employers = value.employers.map((row) => {
+      if (!Array.isArray(row) || row.length !== 9) throw new Error("Invalid directory row");
+      const [id, name2, total, archived, notArchived, archiveUnknown, pages, identity2, aliases] = row;
+      if (typeof id !== "string" || !EMPLOYER_ID.test(id) || typeof name2 !== "string" || !name2.trim() || name2.length > 4096 || ![total, archived, notArchived, archiveUnknown, pages].every(validCount) || total === 0 || pages === 0 || total !== archived + notArchived + archiveUnknown || identity2 !== null && (typeof identity2 !== "string" || identity2.length > 128) || !Array.isArray(aliases) || aliases.some((alias) => typeof alias !== "string" || !EMPLOYER_ID.test(alias))) {
+        throw new Error("Invalid directory employer");
+      }
+      for (const key of [id, ...aliases]) {
+        if (knownIds.has(key)) throw new Error("Duplicate directory employer ID");
+        knownIds.add(key);
+      }
+      jobCount += total;
+      pageCount += pages;
+      aliasCount += aliases.length;
+      const nameKey = normalize(name2);
+      nameCounts.set(nameKey, (nameCounts.get(nameKey) || 0) + 1);
+      return { id, name: name2, total, archived, archiveUnknown, pages, identity: identity2, nameKey, search: normalize([name2, id, ...aliases].join(" ")) };
+    });
+    if (jobCount !== value.jobCount || pageCount !== value.pageCount || aliasCount !== value.aliasCount) {
+      throw new Error("Directory totals differ");
+    }
+    return { jobCount, snapshotAt: value.snapshotAt, employers, nameCounts, byId: new Map(employers.map((item) => [item.id, item])) };
+  }
+  function bankStatusLabel(status) {
+    return {
+      "source-active": L2("\u041F\u0440\u0438\u0451\u043C \u043F\u043E \u0434\u0430\u043D\u043D\u044B\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0430", "Accepting as listed by the portal", "\u95E8\u6237\u663E\u793A\u6B63\u5728\u62DB\u52DF"),
+      archived: L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u516C\u544A"),
+      expired: L2("\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u0441\u0440\u043E\u043A \u0438\u0441\u0442\u0451\u043A", "Listed deadline has passed", "\u6240\u5217\u622A\u6B62\u65E5\u671F\u5DF2\u8FC7"),
+      unknown: L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Recruitment status not stated", "\u672A\u6CE8\u660E\u62DB\u8058\u72B6\u6001")
+    }[status];
+  }
+  function announcementCard(row, onReview, pending) {
+    const status = vacancyBankStatus(row);
+    const source = safeURL(row.sourceURL);
+    const location2 = [row.region, row.locality].filter((value) => typeof value === "string" && value.trim()).join(", ");
+    const missing = L2("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Not stated", "\u672A\u6CE8\u660E");
+    const scope = row.scope === "group-or-reserve-context" ? L2("\u0413\u0440\u0443\u043F\u043F\u0430 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 / \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0440\u0432", "Position group / talent reserve", "\u804C\u4F4D\u7EC4\uFF0F\u4EBA\u624D\u50A8\u5907") : row.scope === "unknown" ? L2("\u0422\u0438\u043F \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0443\u0442\u043E\u0447\u043D\u0451\u043D", "Announcement type unspecified", "\u672A\u6CE8\u660E\u516C\u544A\u7C7B\u578B") : "";
+    const review = onReview && row.scope === "individual-role";
+    return `<article class="adaptive-bank-vacancy" data-adaptive-bank-vacancy="${E2(row.id)}">
+    <div class="adaptive-bank-badges"><span data-adaptive-bank-status="${status}">${bankStatusLabel(status)}</span>${scope ? `<span>${scope}</span>` : ""}</div>
+    <h4 lang="ru">${E2(row.title || L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Role title not stated", "\u672A\u6CE8\u660E\u804C\u4F4D\u540D\u79F0"))}</h4>
+    ${location2 ? `<p class="adaptive-bank-location" lang="ru">${E2(location2)}</p>` : ""}
+    <dl><div><dt>${L2("\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Published", "\u53D1\u5E03\u65E5\u671F")}</dt><dd>${E2(date2(row.announcedAt) || missing)}</dd></div>
+    <div><dt>${L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62")}</dt><dd>${E2(date2(row.expiresAt) || missing)}</dd></div></dl>
+    <div class="adaptive-bank-actions">
+      ${review ? `<button class="button button-secondary" type="button" data-adaptive-bank-review="${E2(row.id)}" ${pending ? "disabled" : ""}>${pending?.id === row.id ? L2("\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026", "Loading\u2026", "\u52A0\u8F7D\u4E2D\u2026\u2026") : L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess these requirements", "\u8BC4\u4F30\u8FD9\u4E9B\u8981\u6C42")}</button>` : ""}
+      ${source ? `<a class="adaptive-source" href="${source}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Open announcement", "\u6253\u5F00\u516C\u544A")}${icon("external")}</a>` : ""}
+    </div>
+  </article>`;
+  }
+  function pager(kind, label2, previous, next) {
+    if (!previous && !next) return "";
+    const employers = kind === "employer";
+    const name2 = employers ? L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u0439", "Employer pages", "\u96C7\u4E3B\u5206\u9875") : L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439", "Announcement pages", "\u516C\u544A\u5206\u9875");
+    return `<nav class="adaptive-bank-pager" aria-label="${name2}">
+    <button class="button button-secondary" type="button" data-adaptive-bank-${kind}-prev ${previous ? "" : "disabled"}>${L2("\u041D\u0430\u0437\u0430\u0434", "Previous", "\u4E0A\u4E00\u9875")}</button>
+    <span>${E2(label2)}</span>
+    <button class="button button-secondary" type="button" data-adaptive-bank-${kind}-next ${next ? "" : "disabled"}>${L2("\u0414\u0430\u043B\u0435\u0435", "Next", "\u4E0B\u4E00\u9875")}</button>
+  </nav>`;
+  }
+  function createAdaptiveBankBrowse({ onReview } = {}) {
+    const id = `adaptive-bank-${++sequence}`;
+    const review = typeof onReview === "function" ? onReview : null;
+    const bank = createEmployerVacancyBank({ maxEmployers: 4, maxPages: 8 });
+    let host = null, binding = null, disposed = false, open = false;
+    let directory = null, directoryRequest = null, directoryError = false;
+    let query = "", employerPage = 0, selected = null, vacancyOffset = 0, pendingPage = null;
+    let pendingReview = null, reviewError = false, focusVacancies = false;
+    function content() {
+      return open && host?.isConnected ? host.querySelector("[data-adaptive-bank-content]") : null;
+    }
+    async function loadDirectory() {
+      if (disposed || !open || directory || directoryRequest) return;
+      const request = new AbortController();
+      directoryRequest = request;
+      directoryError = false;
+      renderContent();
+      const timer = setTimeout(() => request.abort(), 2e4);
+      try {
+        const response = await fetch(DIRECTORY, { signal: request.signal });
+        if (!response.ok || Number(response.headers.get("content-length")) > MAX_PACKED) throw new Error("Directory unavailable");
+        const packed = new Uint8Array(await response.arrayBuffer());
+        if (packed.length > MAX_PACKED) throw new Error("Directory exceeds size limit");
+        const raw = await decodeGzip(packed, { maxBytes: MAX_RAW });
+        const loaded = validateDirectory(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)));
+        if (request === directoryRequest && !request.signal.aborted) directory = loaded;
+      } catch {
+        if (request === directoryRequest) directoryError = true;
+      } finally {
+        clearTimeout(timer);
+        if (request === directoryRequest) {
+          if (!directory) directoryError = true;
+          directoryRequest = null;
+          renderContent();
+        }
+      }
+    }
+    function renderEmployers({ focus = false } = {}) {
+      const area = content()?.querySelector("[data-adaptive-bank-employers]");
+      if (!area || !directory) return;
+      const words = normalize(query).split(" ").filter(Boolean);
+      const employers = words.length ? directory.employers.filter((item) => words.every((word) => item.search.includes(word))) : directory.employers;
+      const pageCount = Math.max(1, Math.ceil(employers.length / EMPLOYERS_PER_VIEW));
+      employerPage = Math.max(0, Math.min(employerPage, pageCount - 1));
+      const first = employerPage * EMPLOYERS_PER_VIEW;
+      area.innerHTML = `<p class="adaptive-bank-note" tabindex="-1" role="status" data-adaptive-bank-employer-count>${L2("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u0439 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435: ", "Employers in the list: ", "\u5217\u8868\u4E2D\u7684\u96C7\u4E3B\u6570\uFF1A")}${number(employers.length)}</p>
+      ${employers.length ? `<ul class="adaptive-bank-employers">${employers.slice(first, first + EMPLOYERS_PER_VIEW).map((item) => {
+        const duplicateName = directory.nameCounts.get(item.nameKey) > 1;
+        return `<li><button type="button" class="adaptive-bank-employer" data-adaptive-bank-employer="${E2(item.id)}"><strong lang="ru">${E2(item.name)}</strong>
+          ${duplicateName ? `<span class="adaptive-bank-identifier" lang="en">${E2(item.id)}</span>` : ""}
+          <span>${L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439: ", "Announcements: ", "\u516C\u544A\u6570\uFF1A")}${number(item.total)}</span></button></li>`;
+      }).join("")}</ul>` : `<p class="adaptive-bank-note">${L2("\u041F\u043E \u044D\u0442\u043E\u043C\u0443 \u0437\u0430\u043F\u0440\u043E\u0441\u0443 \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", "No employers match this search.", "\u6CA1\u6709\u5339\u914D\u7684\u96C7\u4E3B\u3002")}</p>`}
+      ${pager("employer", `${number(employerPage + 1)} / ${number(pageCount)}`, employerPage > 0, employerPage + 1 < pageCount)}`;
+      if (focus) area.querySelector("[data-adaptive-bank-employer-count]").focus();
+    }
+    function renderVacancies() {
+      const area = content()?.querySelector("[data-adaptive-bank-announcements]");
+      if (!area || !selected) return;
+      const view = bank.get(selected.id);
+      area.setAttribute("aria-busy", String(view.loading));
+      if (view.loading || view.status === "idle") {
+        area.innerHTML = `<p class="adaptive-bank-note" role="status">${L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F\u2026", "Loading announcements\u2026", "\u6B63\u5728\u52A0\u8F7D\u516C\u544A\u2026\u2026")}</p>`;
+        return;
+      }
+      if (view.error) {
+        area.innerHTML = `<p class="adaptive-bank-note" role="alert">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F.", "Announcements could not be loaded.", "\u516C\u544A\u52A0\u8F7D\u5931\u8D25\u3002")}</p>
+        <button class="button button-secondary" type="button" data-adaptive-bank-vacancy-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button>`;
+        return;
+      }
+      const descriptor = view.descriptor;
+      if (descriptor.employerId !== selected.id || descriptor.jobCount !== selected.total || descriptor.pages.length !== selected.pages) {
+        area.innerHTML = `<p class="adaptive-bank-note" role="alert">${L2("\u0414\u0430\u043D\u043D\u044B\u0435 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438\u0441\u044C. \u041E\u0431\u043D\u043E\u0432\u0438\u0442\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443.", "The employer data changed. Reload this page.", "\u96C7\u4E3B\u6570\u636E\u5DF2\u53D8\u66F4\uFF0C\u8BF7\u5237\u65B0\u9875\u9762\u3002")}</p>`;
+        return;
+      }
+      if (pendingPage?.index === view.pageIndex) {
+        vacancyOffset = pendingPage.offset;
+        pendingPage = null;
+      }
+      const first = descriptor.pages.slice(0, view.pageIndex).reduce((sum, page) => sum + page.count, 0) + vacancyOffset;
+      const cards = view.rows.slice(vacancyOffset, vacancyOffset + VACANCIES_PER_VIEW);
+      const range = `${number(first + 1)}\u2013${number(first + cards.length)} / ${number(selected.total)}`;
+      const previous = vacancyOffset > 0 || view.pageIndex > 0;
+      const next = vacancyOffset + VACANCIES_PER_VIEW < view.rows.length || view.pageIndex + 1 < descriptor.pages.length;
+      area.innerHTML = `<p class="adaptive-bank-note" tabindex="-1" role="status" data-adaptive-bank-vacancy-range>${L2("\u041E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F ", "Announcements ", "\u516C\u544A ")}${range}</p>
+      <div class="adaptive-bank-vacancies">${cards.map((row) => announcementCard(row, review, pendingReview)).join("")}</div>
+      ${reviewError ? `<p class="adaptive-bank-note" role="alert">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0451 \u0440\u0430\u0437.", "The requirements could not be opened. Please try again.", "\u65E0\u6CD5\u6253\u5F00\u8981\u6C42\uFF0C\u8BF7\u91CD\u8BD5\u3002")}</p>` : ""}
+      ${pager("vacancy", range, previous, next)}`;
+      if (focusVacancies) {
+        focusVacancies = false;
+        area.querySelector("[data-adaptive-bank-vacancy-range]").focus();
+      }
+    }
+    function renderContent() {
+      const area = content();
+      if (!area) return;
+      if (!directory) {
+        area.innerHTML = directoryError ? `<p class="adaptive-bank-note" role="alert">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0441\u043F\u0438\u0441\u043E\u043A \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u0439.", "The employer list could not be loaded.", "\u96C7\u4E3B\u5217\u8868\u52A0\u8F7D\u5931\u8D25\u3002")}</p><button class="button button-secondary" type="button" data-adaptive-bank-directory-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0443", "Retry loading", "\u91CD\u65B0\u52A0\u8F7D")}</button>` : `<p class="adaptive-bank-note" role="status">${L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0441\u043F\u0438\u0441\u043E\u043A \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u0439\u2026", "Loading the employer list\u2026", "\u6B63\u5728\u52A0\u8F7D\u96C7\u4E3B\u5217\u8868\u2026\u2026")}</p>`;
+        return;
+      }
+      if (selected) {
+        const unknownIdentity = selected.identity?.startsWith("unresolved-");
+        area.innerHTML = `<div data-adaptive-bank-selected="${E2(selected.id)}">
+        <button class="adaptive-back" type="button" data-adaptive-bank-back>${icon("arrow-left")}${L2("\u041A \u0441\u043F\u0438\u0441\u043A\u0443 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u0435\u0439", "Back to employers", "\u8FD4\u56DE\u96C7\u4E3B\u5217\u8868")}</button>
+        <h3 tabindex="-1" lang="ru">${E2(selected.name)}</h3>
+        ${unknownIdentity ? `<p class="adaptive-bank-note">${L2("\u0420\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043D\u0435 \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D \u043E\u0434\u043D\u043E\u0437\u043D\u0430\u0447\u043D\u043E.", "Employer identity is unresolved.", "\u5C1A\u672A\u786E\u8BA4\u96C7\u4E3B\u8EAB\u4EFD\u3002")}</p>` : ""}
+        <p class="adaptive-bank-note">${L2("\u0412\u0441\u0435\u0433\u043E: ", "Total: ", "\u603B\u8BA1\uFF1A")}${number(selected.total)} \xB7 ${L2("\u0410\u0440\u0445\u0438\u0432\u043D\u044B\u0445 \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443: ", "Archived as published: ", "\u6765\u6E90\u6807\u4E3A\u5386\u53F2\uFF1A")}${number(selected.archived)}
+          ${selected.archiveUnknown ? ` \xB7 ${L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u0430\u0440\u0445\u0438\u0432\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D: ", "Archive status unspecified: ", "\u672A\u6CE8\u660E\u5F52\u6863\u72B6\u6001\uFF1A")}${number(selected.archiveUnknown)}` : ""}</p>
+        <div data-adaptive-bank-announcements></div>
+      </div>`;
+        renderVacancies();
+        return;
+      }
+      area.innerHTML = `<p class="adaptive-bank-note">${L2("\u041A\u043E\u043F\u0438\u044F \u0434\u0430\u043D\u043D\u044B\u0445 \u043E\u0442 ", "Snapshot dated ", "\u6570\u636E\u526F\u672C\u65E5\u671F\uFF1A")}${E2(date2(directory.snapshotAt))} \xB7 ${L2("\u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0439: ", "announcements: ", "\u516C\u544A\u6570\uFF1A")}${number(directory.jobCount)}.</p>
+      <label class="adaptive-bank-search">${L2("\u041D\u0430\u0439\u0442\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F", "Find an employer", "\u67E5\u627E\u96C7\u4E3B")}<input type="search" maxlength="512" data-adaptive-bank-search autocomplete="off" value="${E2(query)}" aria-describedby="${id}-search-hint"></label>
+      <p class="adaptive-bank-note" id="${id}-search-hint">${L2("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430 \u0438\u043B\u0438 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Enter the employer\u2019s source name or identifier.", "\u8BF7\u8F93\u5165\u6765\u6E90\u4E2D\u7684\u96C7\u4E3B\u540D\u79F0\u6216\u6807\u8BC6\u3002")}</p>
+      <div data-adaptive-bank-employers></div>`;
+      renderEmployers();
+    }
+    function toggle() {
+      open = !open;
+      host.querySelector("[data-adaptive-bank-toggle]").setAttribute("aria-expanded", String(open));
+      host.querySelector("[data-adaptive-bank-content]").hidden = !open;
+      if (!open) {
+        cancelLoads();
+        return;
+      }
+      renderContent();
+      if (!directory) void loadDirectory();
+      else if (selected) void bank.ensure(selected.id);
+    }
+    function cancelLoads() {
+      const request = directoryRequest;
+      directoryRequest = null;
+      request?.abort();
+      pendingPage = null;
+      focusVacancies = false;
+      if (selected) bank.cancel(selected.id);
+      pendingReview = null;
+    }
+    function selectEmployer(employer) {
+      const item = directory?.byId.get(employer);
+      if (!item) return;
+      selected = item;
+      vacancyOffset = 0;
+      pendingReview = null;
+      reviewError = false;
+      renderContent();
+      content()?.querySelector("[data-adaptive-bank-selected] h3").focus();
+      void bank.loadPage(item.id, 0);
+    }
+    function turnVacancies(direction) {
+      if (!selected || pendingReview) return;
+      const view = bank.get(selected.id);
+      if (view.loading || view.error || !view.descriptor) return;
+      const offset = vacancyOffset + direction * VACANCIES_PER_VIEW;
+      if (offset >= 0 && offset < view.rows.length) {
+        vacancyOffset = offset;
+        focusVacancies = true;
+        renderVacancies();
+        return;
+      }
+      const index = view.pageIndex + direction;
+      const target = view.descriptor.pages[index];
+      if (!target) return;
+      pendingPage = { index, offset: direction > 0 ? 0 : Math.floor((target.count - 1) / VACANCIES_PER_VIEW) * VACANCIES_PER_VIEW };
+      focusVacancies = true;
+      void bank.loadPage(selected.id, index);
+    }
+    async function openReview(vacancyId) {
+      if (!review || pendingReview || !selected) return;
+      const view = bank.get(selected.id);
+      const row = view.rows.find((item) => item.id === vacancyId);
+      const pageRef = view.descriptor?.pages[view.pageIndex];
+      if (view.loading || view.error || !pageRef || row?.scope !== "individual-role") return;
+      const request = { id: vacancyId };
+      pendingReview = request;
+      reviewError = false;
+      renderVacancies();
+      try {
+        if (await review(row, view.descriptor, pageRef, view.rows) === false) throw new Error("Review unavailable");
+      } catch {
+        if (pendingReview === request) reviewError = true;
+      } finally {
+        if (pendingReview === request) {
+          pendingReview = null;
+          renderVacancies();
+        }
+      }
+    }
+    function click(event) {
+      const button = event.target.closest("button");
+      if (!button || button.disabled || !host?.contains(button)) return;
+      if (button.hasAttribute("data-adaptive-bank-toggle")) {
+        toggle();
+        return;
+      }
+      if (!open) return;
+      if (button.hasAttribute("data-adaptive-bank-directory-retry")) {
+        void loadDirectory();
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-employer")) {
+        selectEmployer(button.dataset.adaptiveBankEmployer);
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-back")) {
+        cancelLoads();
+        selected = null;
+        renderContent();
+        content()?.querySelector("[data-adaptive-bank-search]").focus();
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-review")) {
+        void openReview(button.dataset.adaptiveBankReview);
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-vacancy-retry") && selected) {
+        void bank.retry(selected.id);
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-vacancy-prev")) {
+        turnVacancies(-1);
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-vacancy-next")) {
+        turnVacancies(1);
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-employer-prev")) {
+        employerPage--;
+        renderEmployers({ focus: true });
+        return;
+      }
+      if (button.hasAttribute("data-adaptive-bank-employer-next")) {
+        employerPage++;
+        renderEmployers({ focus: true });
+      }
+    }
+    const unsubscribe = bank.subscribe((employer) => {
+      if (open && selected?.id === employer) renderVacancies();
+    });
+    function mount(container) {
+      if (disposed) return;
+      binding?.abort();
+      host = container || null;
+      if (!host) return;
+      binding = new AbortController();
+      host.innerHTML = `<section class="adaptive-bank" data-adaptive-bank aria-labelledby="${id}-toggle">
+      <h2><button class="adaptive-bank-toggle" id="${id}-toggle" type="button" data-adaptive-bank-toggle aria-controls="${id}-content" aria-expanded="${open}">${L2("\u0412\u0441\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u0413\u043E\u0441\u0441\u043B\u0443\u0436\u0431\u044B", "All civil service announcements", "\u5168\u90E8\u516C\u52A1\u62DB\u8058\u516C\u544A")}</button></h2>
+      <p class="adaptive-bank-intro">${L2("\u041A\u0430\u0442\u0430\u043B\u043E\u0433 \u043F\u043E \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F\u043C \u0432\u043A\u043B\u044E\u0447\u0430\u0435\u0442 \u0430\u0440\u0445\u0438\u0432\u043D\u044B\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F, \u0433\u0440\u0443\u043F\u043F\u044B \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0440\u0432. \u0421\u0440\u043E\u043A\u0438 \u0438 \u0441\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u0443\u043A\u0430\u0437\u0430\u043D\u044B \u043F\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0443.", "Browse by employer, including archived announcements, position groups and talent reserves. Dates and recruitment status follow the source.", "\u53EF\u6309\u96C7\u4E3B\u6D4F\u89C8\u5386\u53F2\u516C\u544A\u3001\u804C\u4F4D\u7EC4\u548C\u4EBA\u624D\u50A8\u5907\u3002\u65E5\u671F\u53CA\u62DB\u8058\u72B6\u6001\u4EE5\u6765\u6E90\u4E3A\u51C6\u3002")}</p>
+      <div id="${id}-content" data-adaptive-bank-content ${open ? "" : "hidden"}></div>
+    </section>`;
+      host.addEventListener("click", click, { signal: binding.signal });
+      host.addEventListener("input", (event) => {
+        if (!event.target.matches("[data-adaptive-bank-search]")) return;
+        query = event.target.value;
+        employerPage = 0;
+        renderEmployers();
+      }, { signal: binding.signal });
+      renderContent();
+    }
+    return {
+      mount,
+      reset() {
+        open = false;
+        cancelLoads();
+        selected = null;
+        query = "";
+        employerPage = 0;
+        vacancyOffset = 0;
+        reviewError = false;
+        focusVacancies = false;
+        if (host?.isConnected) mount(host);
+      },
+      dispose() {
+        disposed = true;
+        open = false;
+        cancelLoads();
+        binding?.abort();
+        unsubscribe();
+        bank.dispose();
+        host = null;
+      }
+    };
+  }
+
+  // site/apps/career/assets/scoring.mjs
+  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
+  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
+  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
+  function clamp2(value, min = 0, max2 = 1) {
+    return Math.max(min, Math.min(max2, value));
+  }
+  function average(values) {
+    if (!values.length) return 0;
+    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
+  }
+  function standardDeviation(values) {
+    if (!values.length) return 0;
+    const mean = average(values);
+    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
+  }
+  function computeRoleProfile(answerMap, questions) {
+    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
+    for (const question of questions) {
+      const raw2 = Number(answerMap[question.id]);
+      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
+        grouped[question.scale].push(raw2);
+      }
+    }
+    const raw = {};
+    const normalized3 = {};
+    for (const id of SCALE_IDS) {
+      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
+      normalized3[id] = (raw[id] - 1) / 4;
+    }
+    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
+  }
+  function profileFromMeans(raw, answered = 27) {
+    const normalized3 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
+    const values = SCALE_IDS.map((id) => Number(raw[id]));
+    const dispersion = standardDeviation(values);
+    const mean = average(values);
+    return {
+      raw,
+      normalized: normalized3,
+      dispersion,
+      flat: dispersion < 0.26,
+      answered,
+      mean,
+      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
+      positiveScales: values.filter((v) => v >= 3.5).length,
+      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
+    };
+  }
+  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
+    const priorityWeights = [1, 0.82, 0.66, 0.5];
+    const lowWeights = [0.08, 0];
+    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
+    priorityIds.slice(0, 4).forEach((id, index) => {
+      if (id in values) values[id] = priorityWeights[index];
+    });
+    lowPriorityIds.slice(0, 2).forEach((id, index) => {
+      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
+    });
+    return values;
+  }
+  function sectorFit(preferences2, authority, focusAreas = {}) {
+    const entries = authority.sectors || [];
+    if (!entries.length) return 0.25;
+    return clamp2(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences2[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
+  }
+  function conditionDetails(userConditions = {}, requirements = {}) {
+    return CONDITION_IDS.map((id) => {
+      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
+      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
+      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
+      const [lo, hi] = interval;
+      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
+      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
+      return { id, willingness, requirement, interval, known: true, fit: clamp2(1 - expectedGap / 4), gap: expectedGap };
+    });
+  }
+  function conditionFit(userConditions = {}, requirements = {}) {
+    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
+  }
+  function roleFit(roleProfile, template) {
+    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
+    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
+    const mean = average(user), tmean = average(target);
+    let dot = 0, norm = 0, tnorm = 0;
+    for (let i2 = 0; i2 < user.length; i2++) {
+      const u = user[i2] - mean, t = target[i2] - tmean;
+      dot += u * t;
+      norm += u * u;
+      tnorm += t * t;
+    }
+    if (tnorm < 1e-12) return 0.5;
+    return clamp2(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
+  }
+  function matchBand(score2) {
+    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
+    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
+  }
+  function importanceFactor(importance) {
+    if (Number(importance) >= 3) return 1;
+    if (Number(importance) === 2) return 0.96;
+    return 0.91;
+  }
+  function canonicalValue(value) {
+    if (Array.isArray(value)) return value.map(canonicalValue);
+    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
+    return value;
+  }
+  function pathSignature(path, template, factor) {
+    return JSON.stringify(canonicalValue({
+      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
+      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
+      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids]) => ids?.length).map(([id, ids]) => [id, [...new Set(ids)].sort()])),
+      conditions: CONDITION_IDS.map((id) => {
+        const value = path.conditions?.[id];
+        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
+      }),
+      factor
+    }));
+  }
+  function aggregatePaths(paths) {
+    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
+    const best = ordered[0];
+    const pathMeanScore = average(ordered.map((path) => path.score));
+    const contributions = {};
+    const pathMeanContributions = {};
+    for (const key of ["role", "sector", "conditions"]) {
+      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
+      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
+    }
+    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
+    const { signature, ...bestPath } = best;
+    return {
+      ...bestPath,
+      rawScore,
+      score: Math.round(rawScore * 10) / 10,
+      band: matchBand(rawScore),
+      bestPathScore: best.score,
+      pathMeanScore,
+      portfolioScore: pathMeanScore,
+      pathCount: ordered.length,
+      aggregation: AGENCY_AGGREGATION,
+      bestPathContributions: best.contributions,
+      pathMeanContributions,
+      contributions
+    };
+  }
+  function scoreAuthority(authority, context, trackMap) {
+    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
+    const cFit = conditionFit(context.conditions, authority.conditions);
+    const paths = /* @__PURE__ */ new Map();
+    for (const link of authority.tracks || []) {
+      const template = trackMap.get(link.id);
+      if (!template) continue;
+      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
+      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
+      const cFit2 = conditionFit(context.conditions, link.conditions || {});
+      const rFit = roleFit(context.roleProfile, template);
+      const factor = importanceFactor(link.importance);
+      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
+      const score2 = 100 * base * factor;
+      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
+      const candidate = {
+        score: score2,
+        signature,
+        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
+        roleFit: rFit,
+        sectorFit: sFit2,
+        conditionFit: cFit2,
+        track: template,
+        importance: link.importance,
+        path: link,
+        pathSectors: path.sectors,
+        pathTopics: path.topics || {},
+        pathConditions: link.conditions || {}
+      };
+      const existing = paths.get(signature);
+      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
+    }
+    if (!paths.size) {
+      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
+      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
+      return {
+        ...authority,
+        score: Math.round(score2 * 10) / 10,
+        rawScore: score2,
+        band: matchBand(score2),
+        roleFit: 0.5,
+        sectorFit: sFit,
+        conditionFit: cFit,
+        track: null,
+        importance: 0,
+        bestPathScore: null,
+        pathMeanScore: null,
+        portfolioScore: null,
+        pathCount: 0,
+        aggregation: AGENCY_AGGREGATION,
+        contributions,
+        bestPathContributions: null,
+        pathMeanContributions: null
+      };
+    }
+    return { ...authority, ...aggregatePaths([...paths.values()]) };
+  }
+  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const roleProfile = computeRoleProfile(answers, questions);
+    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
+  }
+  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
+    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
+    const trackMap = new Map(tracks.map((track) => [track.id, track]));
+    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
+    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
+    return { ranked, roleProfile, sectorPreferences, context };
+  }
+  function selectDiscoveryCandidate(ranked, topCount = 5) {
+    if (ranked.length <= topCount) return null;
+    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
+    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
+      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
+      return right.score - left.score;
+    });
+    return candidates[0] || null;
+  }
+  function buildExplanation(item, roleProfile, scales, sectors) {
+    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
+    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
+    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
+    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
+    return {
+      strengths: strongest,
+      sectors: authoritySectors,
+      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
+      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
+    };
+  }
+  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
+    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
+    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
+    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
+    return {
+      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
+      missingQuestions,
+      priorityCount: prioritySectors.length,
+      lowPriorityCount: lowPrioritySectors.length,
+      missingConditions
+    };
+  }
+
+  // site/apps/career/assets/career-journey-model.mjs
+  var REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills", "eligibility", "other"]);
+  var CORE_REQUIREMENT_CATEGORIES = Object.freeze(["education", "experience", "knowledge", "skills"]);
+  var COMPETENCY_DOMAIN_IDS = Object.freeze([
+    "law-regulation",
+    "documents-records",
+    "data-digital",
+    "finance-economy",
+    "communication",
+    "organization-projects",
+    "sector-knowledge",
+    "analytical-work"
+  ]);
+  var PERSONAL_CATEGORIES = /* @__PURE__ */ new Set(["knowledge", "skills"]);
+  var FORMAL_CATEGORIES = /* @__PURE__ */ new Set(["education", "experience", "eligibility"]);
+  var object2 = (value) => value && typeof value === "object" && !Array.isArray(value);
+  var list = (value) => Array.isArray(value) ? value : [];
+  var sourceText = (value) => typeof value === "string" ? value.replace(/\r\n?/g, "\n").trim() : "";
+  function canonicalRequirementCategory(category) {
+    if (category === "skill") return "skills";
+    if (category === "formal-eligibility" || category === "legal-eligibility") return "eligibility";
+    return REQUIREMENT_CATEGORIES.includes(category) ? category : "other";
+  }
+  function fingerprint(text4) {
+    let left = 2166136261, right = 2654435769;
+    for (let index = 0; index < text4.length; index++) {
+      const code = text4.charCodeAt(index);
+      left = Math.imul(left ^ code, 16777619);
+      right = Math.imul(right ^ code, 2246822507);
+      right ^= right >>> 13;
+    }
+    return (left >>> 0).toString(16).padStart(8, "0") + (right >>> 0).toString(16).padStart(8, "0");
+  }
+  function safeUrl(value) {
+    try {
+      const url = new URL(value);
+      return ["https:", "http:"].includes(url.protocol) && !url.username && !url.password ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+  function requirementStateFromText(text4) {
+    const value = sourceText(text4).replace(/\s+/g, " ").toLowerCase().replace(/[.;]$/, "").trim();
+    if (!value) return "source_not_stated";
+    if (/^(?:не указано|не указан|нет данных|не установлено|source_not_stated|not stated|not specified|未说明|未注明)$/.test(value)) return "source_not_stated";
+    if (/^(?:без предъявления требований к стажу|без требований к стажу|требования к стажу не предъявляются|не предъявляются|не требуется|не требуются|not required|no experience required|无要求)$/.test(value)) return "explicitly_not_required";
+    return "stated";
+  }
+  function requirementInput(vacancy) {
+    if (Array.isArray(vacancy?.requirements)) return vacancy.requirements.filter(object2);
+    const fields = object2(vacancy?.requirements) ? vacancy.requirements : vacancy || {};
+    return REQUIREMENT_CATEGORIES.flatMap((category) => {
+      const field = category === "other" ? fields.otherRequirements ?? fields.other : category === "skills" ? fields.skills ?? fields.skill : fields[category];
+      const entries = Array.isArray(field) ? field : [field];
+      return entries.flatMap((entry) => {
+        if (object2(entry)) return [{ ...entry, category }];
+        if (!sourceText(entry)) return [];
+        return [{
+          category,
+          sourceText: sourceText(entry),
+          requirementState: requirementStateFromText(entry),
+          sourceLocator: `feed.${category}`,
+          sourceKind: "published-feed-field"
+        }];
+      });
+    });
+  }
+  function buildVacancyRequirements(vacancy) {
+    if (!vacancy || typeof vacancy.id !== "string" || !vacancy.id.trim()) throw new Error("journey/vacancy-identity-required");
+    const vacancyId = vacancy.id;
+    const rows = [], signatures = /* @__PURE__ */ new Set(), keySignatures = /* @__PURE__ */ new Map();
+    for (const original of requirementInput(vacancy)) {
+      const category = canonicalRequirementCategory(original.category);
+      const text4 = sourceText(original.sourceText ?? original.text);
+      const state2 = typeof original.requirementState === "string" ? original.requirementState : text4 ? "stated" : "source_not_stated";
+      const requirementState = state2 === "as-published" ? "stated" : state2;
+      if (!text4 && requirementState !== "source_not_stated") continue;
+      const signature = JSON.stringify([
+        vacancyId,
+        category,
+        text4.normalize("NFC").replace(/\s+/g, " "),
+        requirementState,
+        original.scope || null,
+        original.selfAssessmentEligible === false ? false : true
+      ]);
+      if (signatures.has(signature)) continue;
+      signatures.add(signature);
+      let key = `jr-${fingerprint(signature)}`;
+      if (keySignatures.has(key) && keySignatures.get(key) !== signature) key += `-${encodeURIComponent(signature)}`;
+      keySignatures.set(key, signature);
+      const assessable = requirementState === "stated" && original.selfAssessmentEligible !== false && Boolean(text4);
+      const assessmentKind = PERSONAL_CATEGORIES.has(category) ? "competency" : FORMAL_CATEGORIES.has(category) ? "formal" : "other";
+      rows.push({
+        ...original,
+        id: key,
+        key,
+        signature,
+        sourceId: original.id || null,
+        vacancyId,
+        category,
+        sourceCategory: original.sourceCategory || original.category || null,
+        sourceRequirementState: original.sourceRequirementState || state2,
+        text: text4,
+        sourceText: original.sourceText ?? original.text ?? null,
+        sourceLocator: original.sourceLocator ?? null,
+        evidenceSourceUrl: original.evidenceSourceUrl ?? vacancy.source?.url ?? vacancy.url ?? null,
+        sourceUrl: safeUrl(original.evidenceSourceUrl || vacancy.source?.url || vacancy.url),
+        requirementState,
+        selfAssessmentEligible: original.selfAssessmentEligible ?? null,
+        competencyDomainId: typeof original.competencyDomainId === "string" && original.competencyDomainId.trim() ? original.competencyDomainId : null,
+        assessable,
+        assessmentKind,
+        learningEligible: assessable && assessmentKind === "competency"
+      });
+    }
+    const groups = REQUIREMENT_CATEGORIES.map((id) => ({ id, rows: rows.filter((row) => row.category === id) }));
+    const missingCategories = CORE_REQUIREMENT_CATEGORIES.filter((category) => !rows.some((row) => row.category === category && row.requirementState !== "source_not_stated"));
+    return {
+      vacancyId,
+      rows,
+      groups,
+      missingCategories,
+      source: vacancy.source || { url: vacancy.url || null, retrievedAt: vacancy.lastSeenAt || null },
+      archive: vacancy.archive || null,
+      coverage: vacancy.coverage || null,
+      assessableCount: rows.filter((row) => row.assessable).length,
+      contextRows: rows.filter((row) => !row.assessable),
+      sourceCompleteness: vacancy.coverage?.requirements || "not-established",
+      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
+    };
+  }
+  function answerStatus(value, signature) {
+    if (object2(value) && value.signature && value.signature !== signature) return "unassessed";
+    const status = object2(value) ? value.status : value;
+    return status === "met" || status === "gap" ? status : "unassessed";
+  }
+  function countsFor(rows) {
+    const total = rows.length;
+    const met = rows.filter((row) => row.status === "met").length;
+    const gap = rows.filter((row) => row.status === "gap").length;
+    const unassessed = total - met - gap;
+    return {
+      total,
+      met,
+      gap,
+      unassessed,
+      assessed: met + gap,
+      metShare: total ? met / total : null,
+      gapShare: total ? gap / total : null,
+      unassessedShare: total ? unassessed / total : null,
+      coverage: total ? (met + gap) / total : null,
+      targetShare: total ? 1 : null,
+      complete: total > 0 && unassessed === 0
+    };
+  }
+  function summarizeVacancyAssessment(requirements, statuses2 = {}) {
+    const built = Array.isArray(requirements) ? { rows: requirements } : requirements || { rows: [] };
+    const rows = list(built.rows).map((row) => ({
+      ...row,
+      status: row.assessable ? answerStatus(statuses2[row.key || row.id], row.signature) : null
+    }));
+    const assessable = rows.filter((row) => row.assessable);
+    const competencyRows = assessable.filter((row) => row.assessmentKind === "competency");
+    const groups = REQUIREMENT_CATEGORIES.map((id) => {
+      const members = rows.filter((row) => row.category === id);
+      return {
+        id,
+        rows: members,
+        ...countsFor(members.filter((row) => row.assessable)),
+        sourceMissing: members.filter((row) => row.requirementState === "source_not_stated").length,
+        explicitlyNotRequired: members.filter((row) => row.requirementState === "explicitly_not_required").length,
+        contextOnly: members.filter((row) => !row.assessable).length,
+        sourceCoverage: members.length ? "represented-in-record" : "not-extracted"
+      };
+    });
+    const domainIds = [...new Set(competencyRows.map((row) => row.competencyDomainId).filter(Boolean))].sort((left, right) => {
+      const li = COMPETENCY_DOMAIN_IDS.indexOf(left), ri = COMPETENCY_DOMAIN_IDS.indexOf(right);
+      return (li < 0 ? COMPETENCY_DOMAIN_IDS.length : li) - (ri < 0 ? COMPETENCY_DOMAIN_IDS.length : ri) || left.localeCompare(right);
+    });
+    const domains = domainIds.map((id) => {
+      const members = competencyRows.filter((row) => row.competencyDomainId === id);
+      return {
+        id,
+        rows: members,
+        ...countsFor(members),
+        classificationReviewed: members.every((row) => row.classificationProvenance?.reviewStatus === "reviewed")
+      };
+    });
+    const unclassified = competencyRows.filter((row) => !row.competencyDomainId);
+    return {
+      vacancyId: built.vacancyId || rows[0]?.vacancyId || null,
+      rows,
+      groups,
+      domains,
+      ...countsFor(assessable),
+      competencySummary: countsFor(competencyRows),
+      developmentItems: competencyRows.filter((row) => row.status === "gap"),
+      formalRequirements: rows.filter((row) => FORMAL_CATEGORIES.has(row.category)),
+      formalGaps: assessable.filter((row) => FORMAL_CATEGORIES.has(row.category) && row.status === "gap"),
+      otherGaps: assessable.filter((row) => row.assessmentKind === "other" && row.status === "gap"),
+      unassessedItems: assessable.filter((row) => row.status === "unassessed"),
+      sourceContextItems: rows.filter((row) => !row.assessable),
+      missingCategories: built.missingCategories || CORE_REQUIREMENT_CATEGORIES.filter((id) => !rows.some((row) => row.category === id && row.requirementState !== "source_not_stated")),
+      unclassifiedCompetencyRows: unclassified,
+      // Missing domain classifications cannot silently disappear from a full radar.
+      domainRadarAvailable: domains.length >= 3 && unclassified.length === 0 && domains.every((domain) => domain.classificationReviewed),
+      source: built.source || null,
+      archive: built.archive || null,
+      coverageMetadata: built.coverage || null,
+      sourceCompleteness: built.sourceCompleteness || "not-established",
+      eligibilityVerdict: null,
+      abilityScore: null,
+      assessmentMeaning: "student-self-report-not-verification-of-eligibility"
+    };
+  }
+
+  // site/apps/career/assets/career-vacancy-details.mjs
+  var object3 = (value) => value && typeof value === "object" && !Array.isArray(value);
+  var HEX = /^[a-f0-9]{64}$/;
+  var BASE_PAGE = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}\.json\.gz$/;
+  var PART_PAGE = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p[0-9]{4}-[a-f0-9]{16}\.part[0-9]{4}\.json\.gz$/;
+  var abortError2 = () => new DOMException("Vacancy details cancelled", "AbortError");
+  async function digest2(raw) {
+    if (!globalThis.crypto?.subtle) throw new Error("Source verification is unavailable");
+    return [...new Uint8Array(await crypto.subtle.digest("SHA-256", raw))].map((v) => v.toString(16).padStart(2, "0")).join("");
+  }
+  function sameIDs(actual, expected) {
+    return actual.length === expected.length && new Set(actual).size === actual.length && actual.every((id) => expected.includes(id));
+  }
+  function validateDetailsPack(pack, binding, expectedIDs = binding.uuids) {
+    if (!object3(pack) || pack.schemaVersion !== 1 || pack.baseTreeSHA !== binding.baseTreeSHA || pack.basePage !== binding.basePage || pack.basePageSHA256 !== binding.basePageSHA256 || pack.employerId !== binding.employerId) throw new Error("Source detail/base-page identity mismatch");
+    if (Array.isArray(pack.shards)) {
+      if (pack.records !== void 0 && Object.keys(pack.records).length || pack.recordCount !== binding.uuids.length) throw new Error("Invalid detail index");
+      const ids = [], paths = /* @__PURE__ */ new Set();
+      for (const part of pack.shards) {
+        if (!object3(part) || !PART_PAGE.test(part.path) || !part.path.startsWith(binding.basePage.slice(0, -8) + ".part") || paths.has(part.path) || !Array.isArray(part.uuids) || !part.uuids.length || !HEX.test(part.sha256) || !HEX.test(part.uncompressedSHA256) || !Number.isInteger(part.bytes) || part.bytes < 18 || part.bytes > 4 * 1024 * 1024 || !Number.isInteger(part.uncompressedBytes) || part.uncompressedBytes < 1 || part.uncompressedBytes > 8 * 1024 * 1024) throw new Error("Invalid bound source-detail shard");
+        paths.add(part.path);
+        ids.push(...part.uuids);
+      }
+      if (!sameIDs(ids, binding.uuids)) throw new Error("Detail index UUID coverage mismatch");
+    } else if (!object3(pack.records) || !sameIDs(Object.keys(pack.records), expectedIDs)) throw new Error("Source detail UUID coverage mismatch");
+    return pack;
+  }
+  function createVacancyDetailsStore({ getMetadata = () => null, fetchImpl = (...args) => fetch(...args), baseURL = "data/vacancies/details/", maxPages = 4, maxStates = 16, timeout = 2e4 } = {}) {
+    const cache = /* @__PURE__ */ new Map(), pending = /* @__PURE__ */ new Map(), states = /* @__PURE__ */ new Map(), listeners = /* @__PURE__ */ new Set();
+    let disposed = false, active = 0;
+    const waiting = [];
+    async function acquire(signal) {
+      if (signal.aborted) throw abortError2();
+      if (active < 2) {
+        active++;
+        return;
+      }
+      await new Promise((resolve, reject) => {
+        const item = { resolve: () => {
+          signal.removeEventListener("abort", cancel);
+          resolve();
+        } }, cancel = () => {
+          const index = waiting.indexOf(item);
+          if (index >= 0) waiting.splice(index, 1);
+          reject(abortError2());
+        };
+        waiting.push(item);
+        signal.addEventListener("abort", cancel, { once: true });
+      });
+    }
+    function release() {
+      const next = waiting.shift();
+      if (next) next.resolve();
+      else active--;
+    }
+    const notify = (key) => {
+      if (!disposed) for (const fn of listeners) fn(key);
+    };
+    function context(binding) {
+      const meta = getMetadata();
+      if (!meta?.available || !HEX.test(meta.baseTreeSHA) || meta.baseTreeSHA !== meta.detailsBaseTreeSHA || !HEX.test(meta.detailsTreeSHA)) throw new Error("Full source details are not connected");
+      if (!BASE_PAGE.test(binding.basePage) || !HEX.test(binding.basePageSHA256) || !Array.isArray(binding.uuids) || new Set(binding.uuids).size !== binding.uuids.length || !binding.uuids.length || binding.uuids.length > 250 || !binding.employerId) throw new Error("Invalid current vacancy page");
+      return { ...binding, baseTreeSHA: meta.baseTreeSHA, detailsTreeSHA: meta.detailsTreeSHA, sourceHosting: meta.collectionRoot || null };
+    }
+    const pageKey = (b) => JSON.stringify([b.detailsTreeSHA, b.baseTreeSHA, b.basePage, b.basePageSHA256, b.employerId, b.uuids]);
+    const stateKey = (b, id) => pageKey(b) + "|" + id;
+    function touch(key, value) {
+      cache.delete(key);
+      cache.set(key, value);
+      while (cache.size > maxPages) cache.delete(cache.keys().next().value);
+    }
+    function locate(b, id) {
+      const root = cache.get(pageKey(b) + "|" + b.basePage);
+      if (!root) return null;
+      let found = root;
+      if (root.pack.shards) {
+        const part = root.pack.shards.find((p) => p.uuids.includes(id));
+        if (!part) return null;
+        found = cache.get(pageKey(b) + "|" + part.path);
+        if (!found) return null;
+      }
+      const record2 = found.pack.records?.[id];
+      return record2 ? { record: hydrateDetailRecord(found.pack, id), provenance: { baseTreeSHA: b.baseTreeSHA, basePage: b.basePage, basePageSHA256: b.basePageSHA256, employerId: b.employerId, detailsTreeSHA: b.detailsTreeSHA, sourceHosting: b.sourceHosting, detailPage: found.path, gzipSHA256: found.gzipSHA256, uncompressedSHA256: found.uncompressedSHA256, recordJSONPointer: "/records/" + id, sourceDatabaseSHA256: found.pack.sourceDatabaseSHA256 || root.pack.sourceDatabaseSHA256 || null, sourceFields: found.pack.sourceFields || root.pack.sourceFields || null } } : null;
+    }
+    async function readFile(path, b, ref, signal) {
+      const key = pageKey(b) + "|" + path;
+      if (cache.has(key)) {
+        const value = cache.get(key);
+        touch(key, value);
+        return value;
+      }
+      let job = pending.get(key);
+      if (job?.controller.signal.aborted) {
+        pending.delete(key);
+        job = null;
+      }
+      if (!job) {
+        const controller = new AbortController();
+        job = { controller, consumers: /* @__PURE__ */ new Set() };
+        job.promise = (async () => {
+          let timer;
+          const deadline = new Promise((_, reject) => {
+            timer = setTimeout(() => {
+              controller.abort();
+              reject(new DOMException("Source detail timeout", "TimeoutError"));
+            }, timeout);
+          });
+          try {
+            const value = await Promise.race([(async () => {
+              await acquire(controller.signal);
+              let response;
+              try {
+                response = await fetchImpl(baseURL + path, { cache: "no-store", signal: controller.signal });
+              } catch (error) {
+                release();
+                throw error;
+              }
+              if (!response.ok) {
+                release();
+                throw new Error("Source detail HTTP " + response.status);
+              }
+              let raw;
+              try {
+                raw = new Uint8Array(await response.arrayBuffer());
+              } finally {
+                release();
+              }
+              if (raw.length > 4 * 1024 * 1024) throw new Error("Compressed source detail exceeds limit");
+              const compressedSHA = await digest2(raw);
+              if (ref && (raw.length !== ref.bytes || compressedSHA !== ref.sha256)) throw new Error("Source detail shard compressed checksum mismatch");
+              const decoded = await decodeGzip(raw, { expectedBytes: ref?.uncompressedBytes, maxBytes: 8 * 1024 * 1024 });
+              const decodedSHA = await digest2(decoded);
+              if (ref && decodedSHA !== ref.uncompressedSHA256) throw new Error("Source detail shard checksum mismatch");
+              if (controller.signal.aborted) throw abortError2();
+              const pack = validateDetailsPack(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(decoded)), b, ref?.uuids || b.uuids);
+              const result = { pack, path, gzipSHA256: compressedSHA, uncompressedSHA256: decodedSHA };
+              touch(key, result);
+              return result;
+            })(), deadline]);
+            return value;
+          } finally {
+            clearTimeout(timer);
+          }
+        })();
+        pending.set(key, job);
+        job.promise.finally(() => {
+          if (pending.get(key) === job) pending.delete(key);
+        }).catch(() => {
+        });
+      }
+      return new Promise((resolve, reject) => {
+        const consumer = {};
+        job.consumers.add(consumer);
+        let settled = false;
+        const cleanup = () => {
+          job.consumers.delete(consumer);
+          signal.removeEventListener("abort", cancel);
+        };
+        const cancel = () => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          if (!job.consumers.size) job.controller.abort();
+          reject(abortError2());
+        };
+        if (signal.aborted) {
+          cancel();
+          return;
+        }
+        signal.addEventListener("abort", cancel, { once: true });
+        job.promise.then((v) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            resolve(v);
+          }
+        }, (e) => {
+          if (!settled) {
+            settled = true;
+            cleanup();
+            reject(e);
+          }
+        });
+      });
+    }
+    function status(binding, id) {
+      try {
+        const b = context(binding), key = stateKey(b, id), state2 = states.get(key), ready2 = locate(b, id);
+        return { key, status: state2?.loading ? "loading" : state2?.error ? "error" : ready2 ? "ready" : "idle", error: state2?.error || null, ...ready2 };
+      } catch {
+        return { key: null, status: "unavailable", error: "not-connected" };
+      }
+    }
+    function load(binding, id) {
+      if (disposed) return Promise.resolve(null);
+      let b;
+      try {
+        b = context(binding);
+        if (!b.uuids.includes(id)) throw new Error("Vacancy not in current page");
+      } catch {
+        return Promise.resolve({ status: "error", error: "source-mismatch" });
+      }
+      const key = stateKey(b, id), existing = states.get(key);
+      if (existing?.loading) return existing.promise;
+      const ready2 = locate(b, id);
+      if (ready2 && !existing?.error) return Promise.resolve({ key, status: "ready", ...ready2 });
+      existing?.controller?.abort();
+      const state2 = { loading: true, error: null, controller: new AbortController() };
+      states.delete(key);
+      states.set(key, state2);
+      while (states.size > maxStates) {
+        const first = states.keys().next().value;
+        states.get(first).controller.abort();
+        states.delete(first);
+      }
+      notify(key);
+      state2.promise = (async () => {
+        try {
+          const root = await readFile(b.basePage, b, null, state2.controller.signal);
+          if (root.pack.shards) {
+            const part = root.pack.shards.find((p) => p.uuids.includes(id));
+            await readFile(part.path, b, part, state2.controller.signal);
+            touch(pageKey(b) + "|" + b.basePage, root);
+          }
+          if (state2.controller.signal.aborted) throw abortError2();
+          const found = locate(b, id);
+          if (!found) throw new Error("Selected source detail missing");
+          return { key, status: "ready", ...found };
+        } catch (error) {
+          if (error.name !== "AbortError") state2.error = error.name === "TimeoutError" ? "timeout" : "load-failed";
+          return { key, status: "error", error: state2.error || "cancelled" };
+        } finally {
+          state2.loading = false;
+          state2.promise = null;
+          notify(key);
+        }
+      })();
+      return state2.promise;
+    }
+    return { get: status, load, cancelAll() {
+      for (const state2 of states.values()) state2.controller.abort();
+    }, subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    }, cancel(binding, id) {
+      try {
+        const key = stateKey(context(binding), id), state2 = states.get(key);
+        state2?.controller?.abort();
+        if (state2) {
+          state2.loading = false;
+          state2.error = null;
+        }
+        notify(key);
+      } catch {
+      }
+    }, cacheInfo: () => ({ pages: cache.size, pending: pending.size, activeRequests: active, states: states.size }), dispose() {
+      disposed = true;
+      for (const state2 of states.values()) state2.controller.abort();
+      for (const job of pending.values()) job.controller.abort();
+      cache.clear();
+      states.clear();
+      listeners.clear();
+    } };
+  }
+  var DETAIL_CATEGORIES = ["duties", "knowledge", "skills", "knowledgeDescription", "additionalRequirements", "departmentLabels", "otherRequirements"];
+  function hydrateDetailRecord(pack, id) {
+    const input = pack.records?.[id];
+    if (!object3(input)) throw new Error("Missing selected source record");
+    const result = {};
+    for (const category of DETAIL_CATEGORIES) {
+      const tokens = input[category] ?? [];
+      if (!Array.isArray(tokens)) throw new Error("Invalid source text category");
+      result[category] = tokens.map((token) => {
+        if (!object3(token) || typeof token.sourceField !== "string" || typeof token.sourcePointer !== "string" || !token.sourcePointer.startsWith("/")) throw new Error("Invalid source text locator");
+        let text4 = token.text;
+        if (Object.hasOwn(token, "textIndex")) {
+          if (pack.tokenEncoding !== "page-strings-v1" || !Array.isArray(pack.strings) || !Number.isInteger(token.textIndex) || token.textIndex < 0 || token.textIndex >= pack.strings.length) throw new Error("Invalid source string reference");
+          text4 = pack.strings[token.textIndex];
+        }
+        if (typeof text4 !== "string") throw new Error("Invalid source text");
+        const { textIndex, ...rest } = token;
+        return { ...rest, text: text4 };
+      });
+    }
+    return result;
+  }
+  var educationFields = /* @__PURE__ */ new Set(["educationLevelName", "trainingTypes", "trainingTypesCollection", "targetedTrainingEducationLevelName", "academicPerformanceRequirements"]);
+  var experienceFields = /* @__PURE__ */ new Set(["governmentExperienceName", "professionalExperienceName"]);
+  var SOURCE_LABELS = { knowledge: "\u0417\u043D\u0430\u043D\u0438\u044F", skills: "\u0423\u043C\u0435\u043D\u0438\u044F \u0438 \u043D\u0430\u0432\u044B\u043A\u0438", education: "\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435", experience: "\u0421\u0442\u0430\u0436", majors: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438 (\u0430\u043B\u044C\u0442\u0435\u0440\u043D\u0430\u0442\u0438\u0432\u044B)", other: "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", service: "\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0441\u043B\u0443\u0436\u0431\u044B" };
+  function sourceLabelKey(field, category) {
+    return ["trainingTypes", "trainingTypesCollection"].includes(field) ? "majors" : /CivilServicePassingConditions|withoutCompetitionReason/.test(field) ? "service" : category;
+  }
+  function sourceLabel(field, category) {
+    return SOURCE_LABELS[sourceLabelKey(field, category)] || SOURCE_LABELS.other;
+  }
+  function bankVacancySnapshot(row, detail, { institutionId, employerId, employerName, provenance } = {}) {
+    const requirements = [], seen = /* @__PURE__ */ new Map();
+    function add(category, token) {
+      if (!token.text.trim()) return;
+      const paragraphs = token.alternativeGroup ? [token.text] : token.text.split(/\n\s*\n|\n(?=\s*(?:[•●▪–—-]\s|\d+[.)]\s))/).filter((text4) => text4.trim());
+      for (const text4 of paragraphs) {
+        const key = category + "|" + text4;
+        const ref = { sourceField: token.sourceField, sourcePointer: token.sourcePointer, sourceNamespace: token.sourceNamespace };
+        if (seen.has(key)) {
+          seen.get(key).sourceReferences.push(ref);
+          continue;
+        }
+        const item = { category, sourceText: text4, requirementState: requirementStateFromText(text4), selfAssessmentEligible: true, sourceLocator: sourceLabel(token.sourceField, category), sourceHeading: sourceLabel(token.sourceField, category), sourceLabelKey: sourceLabelKey(token.sourceField, category), evidenceSourceUrl: row.sourceURL, sourceKind: "published-vacancy-field", scope: row.scope, sourceReferences: [ref, ...token.sourceProvenance || []] };
+        seen.set(key, item);
+        requirements.push(item);
+      }
+    }
+    for (const [field, category] of [["knowledge", "knowledge"], ["skills", "skills"], ["knowledgeDescription", "knowledge"], ["additionalRequirements", "other"]]) for (const token of detail[field] || []) add(category, token);
+    const other = detail.otherRequirements || [], majors = other.filter((token) => token.sourceField === "trainingTypesCollection" && token.text.trim());
+    if (majors.length) {
+      const first = majors[0], references = majors.flatMap((token) => [{ sourceField: token.sourceField, sourcePointer: token.sourcePointer, sourceNamespace: token.sourceNamespace }, ...token.sourceProvenance || []]);
+      add("education", { ...first, text: [...new Set(majors.map((token) => token.text))].join(" / "), alternativeGroup: true, sourceProvenance: references });
+    }
+    for (const token of other) {
+      if (majors.length && ["trainingTypes", "trainingTypesCollection"].includes(token.sourceField)) continue;
+      add(educationFields.has(token.sourceField) ? "education" : experienceFields.has(token.sourceField) ? "experience" : "other", token);
+    }
+    for (const [field, category] of [["education", "education"], ["professionalExperience", "experience"], ["governmentExperience", "experience"]]) if (typeof row[field] === "string" && row[field].trim()) add(category, { text: row[field], sourceField: field, sourcePointer: "/basePage/" + field, sourceNamespace: "base-public-summary" });
+    return { id: "bank-" + row.id, sourceVacancyId: row.id, sourceCategory: "public-vacancy-bank", bankVacancy: true, institutionId, employerId, employerName, title: row.title, regionId: null, regionName: row.region, url: row.sourceURL, scope: row.scope, archive: row.archive, announcedAt: row.announcedAt, expiresAt: row.expiresAt, state: row.state, currentness: "unknown", requirements, duties: detail.duties, department: detail.departmentLabels.map((t) => t.text).join("\n"), source: { url: row.sourceURL, kind: "published-vacancy-bank", provenance }, sourceDetails: detail };
+  }
+
+  // site/apps/career/assets/adaptive-vacancy-review.mjs
+  var UUID = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
+  var BASE_PAGE2 = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p\d{4}-[a-f0-9]{16}\.json\.gz$/;
+  var DETAIL_PAGE = /^career-vacancy-details\/(pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p(\d{4})-[a-f0-9]{16})(?:\.part\d{4})?\.json\.gz$/;
+  var SHA = /^[a-f0-9]{64}$/;
+  var object4 = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+  function candidatePage(row) {
+    if (row?.sourceType !== "bank" || !UUID.test(row.id || "")) return null;
+    const match = DETAIL_PAGE.exec(row.sourcePath || "");
+    if (!match) return null;
+    try {
+      return { employerId: platformEmployerId(row.employerId), path: match[1] + ".json.gz", index: Number(match[2]) };
+    } catch {
+      return null;
+    }
+  }
+  function bindPage(row, descriptor, page, rows) {
+    if (row?.scope !== "individual-role" || !UUID.test(row.id || "") || !descriptor?.employerId || !BASE_PAGE2.test(page?.path || "") || !SHA.test(page?.sha256 || "") || !descriptor.pages?.some((ref) => ref.path === page.path && ref.sha256 === page.sha256) || !Array.isArray(rows) || rows.length !== page.count || !rows.some((item) => item.id === row.id)) {
+      throw new Error("Unverified vacancy page");
+    }
+    return { basePage: page.path, basePageSHA256: page.sha256, employerId: descriptor.employerId, uuids: rows.map((item) => item.id) };
+  }
+  function loadMarks(vacancy) {
+    const key = storageKey("functional-vacancy-review-v1:" + vacancy.sourceVacancyId);
+    try {
+      const raw = readLocal(key);
+      if (raw !== null) {
+        const saved = JSON.parse(raw);
+        if (saved?.schemaVersion !== 1 || saved.vacancyId !== vacancy.sourceVacancyId || !object4(saved.marks)) throw new Error("Invalid saved review");
+        return { key, marks: saved.marks, invalid: false };
+      }
+    } catch {
+      return { key, marks: {}, invalid: true };
+    }
+    try {
+      const old = JSON.parse(readLocal(storageKey("career-journey-v1")) || "null");
+      const marks = old?.assessments?.[vacancy.id];
+      if (object4(marks)) return { key, marks, invalid: false };
+    } catch {
+    }
+    return { key, marks: {}, invalid: false };
+  }
+  function sourceStatus(row) {
+    const status = vacancyBankStatus(row);
+    if (status === "archived") return L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u62DB\u8058\u516C\u544A");
+    if (status === "expired") return L2("\u0421\u0440\u043E\u043A \u043F\u043E\u0434\u0430\u0447\u0438 \u0438\u0441\u0442\u0451\u043A", "Application deadline passed", "\u7533\u8BF7\u622A\u6B62");
+    return L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u0443\u0442\u043E\u0447\u043D\u044F\u0439\u0442\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435", "Check the source for current status", "\u8BF7\u5728\u539F\u6587\u4E2D\u6838\u5BF9\u5F53\u524D\u72B6\u6001");
+  }
+  function choiceLabel(row, value) {
+    if (row.assessmentKind === "competency") {
+      return value === "met" ? L2("\u0423\u0436\u0435 \u0437\u043D\u0430\u044E \u0438\u043B\u0438 \u0443\u043C\u0435\u044E", "I already know or can do this", "\u6211\u5DF2\u638C\u63E1") : L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C", "Still to learn", "\u8FD8\u9700\u5B66\u4E60");
+    }
+    return value === "met" ? L2("\u0423\u0436\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "I already meet this", "\u6211\u5DF2\u7B26\u5408") : L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E", "I do not yet meet this", "\u6211\u5C1A\u672A\u7B26\u5408");
+  }
+  function contextLabel(row) {
+    return row.requirementState === "explicitly_not_required" ? L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u0443\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442, \u0447\u0442\u043E \u044D\u0442\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0435 \u043D\u0435 \u0442\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044F", "The source states this condition is not required", "\u539F\u6587\u6CE8\u660E\u65E0\u6B64\u8981\u6C42") : L2("\u0421\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u0438\u0437 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F", "Information from the announcement", "\u516C\u544A\u4E2D\u7684\u8BF4\u660E");
+  }
+  function requirementCard(row, disabled) {
+    if (!row.assessable) return `<div class="journey-source-context"><span>${contextLabel(row)}</span>${row.text ? `<p lang="ru">${E2(row.text)}</p>` : ""}</div>`;
+    return `<fieldset class="journey-requirement" data-requirement-row="${E2(row.key)}" data-status="${E2(row.status)}">
+    <legend lang="ru">${E2(row.text)}</legend>
+    <div class="journey-assessment-options">${["met", "gap"].map((value) => `<label class="journey-answer ${value}">
+      <input type="radio" name="review-${E2(row.key)}" data-review-answer="${E2(row.key)}" value="${value}" ${row.status === value ? "checked" : ""} ${disabled ? "disabled" : ""}>
+      <strong>${choiceLabel(row, value)}</strong></label>`).join("")}</div></fieldset>`;
+  }
+  function progressText(summary) {
+    return L2(`\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043E ${summary.assessed} \u0438\u0437 ${summary.total}`, `Assessed ${summary.assessed} of ${summary.total}`, `\u5DF2\u81EA\u8BC4 ${summary.assessed}\uFF0F${summary.total} \u9879`);
+  }
+  function checklist(vacancy, summary, storageInvalid) {
+    return `<p>${L2("\u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435, \u0447\u0442\u043E \u0412\u044B \u0443\u0436\u0435 \u0437\u043D\u0430\u0435\u0442\u0435 \u0438\u043B\u0438 \u0443\u043C\u0435\u0435\u0442\u0435 \u0438 \u043A\u0430\u043A\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0435\u0442\u0435. \u041F\u043B\u0430\u043D \u0440\u0430\u0437\u0434\u0435\u043B\u0438\u0442 \u0437\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F, \u0444\u043E\u0440\u043C\u0430\u043B\u044C\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0438 \u0434\u0440\u0443\u0433\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F.", "Mark what you already know or can do and which conditions you meet. The plan groups knowledge and skills, formal conditions and other requirements.", "\u8BF7\u6807\u8BB0\u5DF2\u638C\u63E1\u7684\u77E5\u8BC6\u548C\u6280\u80FD\u4EE5\u53CA\u5DF2\u7B26\u5408\u7684\u6761\u4EF6\u3002\u8BA1\u5212\u4F1A\u5206\u522B\u5217\u51FA\u77E5\u8BC6\u6280\u80FD\u3001\u6B63\u5F0F\u6761\u4EF6\u548C\u5176\u4ED6\u8981\u6C42\u3002")}</p>
+    ${vacancy.duties.some((item) => item.text.trim()) ? `<details class="adaptive-review-duties"><summary>${L2("\u041E\u0431\u044F\u0437\u0430\u043D\u043D\u043E\u0441\u0442\u0438 \u043F\u043E \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044E", "Duties from the announcement", "\u516C\u544A\u6240\u5217\u804C\u8D23")}</summary>${vacancy.duties.filter((item) => item.text.trim()).map((item) => `<p lang="ru">${E2(item.text)}</p>`).join("")}</details>` : ""}
+    ${summary.missingCategories.length ? `<p class="adaptive-review-note">${L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u043E\u043C \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F \u043F\u043E \u0440\u0430\u0437\u0434\u0435\u043B\u0430\u043C", "The saved source has no information for these sections", "\u5DF2\u4FDD\u5B58\u7684\u539F\u6587\u7F3A\u5C11\u4EE5\u4E0B\u4FE1\u606F")} \xB7 ${summary.missingCategories.map(groupLabel).join(", ")}</p>` : ""}
+    ${summary.total ? `<p data-review-progress role="status">${E2(progressText(summary))}</p><progress data-review-progress-bar value="${summary.assessed}" max="${summary.total}" aria-label="${E2(L2("\u041E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Requirements assessed", "\u5DF2\u81EA\u8BC4\u7684\u8981\u6C42"))}"></progress>` : `<p class="adaptive-review-note">${L2("\u0412 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u043E\u043C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u043D\u0435\u0442 \u043F\u0443\u043D\u043A\u0442\u043E\u0432 \u0434\u043B\u044F \u0441\u0430\u043C\u043E\u043E\u0446\u0435\u043D\u043A\u0438. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u0447\u0442\u043E\u0431\u044B \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F.", "The saved announcement contains no self-assessment items. Open the source to check the requirements.", "\u5DF2\u4FDD\u5B58\u7684\u516C\u544A\u6CA1\u6709\u53EF\u4F9B\u81EA\u8BC4\u7684\u6761\u76EE\u3002\u8BF7\u6253\u5F00\u539F\u6587\u6838\u5BF9\u8981\u6C42\u3002")}</p>`}
+    <p class="adaptive-review-error" data-review-save-error role="alert" ${storageInvalid ? "" : "hidden"}>${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u043B\u0438 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0442\u044C \u043E\u0442\u043C\u0435\u0442\u043A\u0438. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u0441\u043D\u043E\u0432\u0430, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C \u043F\u043E\u043F\u044B\u0442\u043A\u0443.", "Assessment marks could not be saved or read. Reopen the vacancy to try again.", "\u65E0\u6CD5\u4FDD\u5B58\u6216\u8BFB\u53D6\u81EA\u8BC4\u6807\u8BB0\u3002\u8BF7\u91CD\u65B0\u6253\u5F00\u8BE5\u804C\u4F4D\u540E\u518D\u8BD5\u3002")}</p>
+    ${summary.groups.filter((group) => group.rows.length).map((group) => `<section class="adaptive-review-section"><h2>${groupLabel(group.id)}</h2>${group.rows.map((row) => requirementCard(row, storageInvalid)).join("")}</section>`).join("")}
+    ${summary.total ? `<button type="button" class="button button-primary" data-review-plan>${L2("\u041F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "View development plan", "\u67E5\u770B\u53D1\u5C55\u8BA1\u5212")}</button>` : ""}`;
+  }
+  function planGroup(rows, heading, guidance) {
+    if (!rows.length) return "";
+    return `<section class="adaptive-review-section"><h2>${heading}</h2><p>${guidance}</p><ul class="adaptive-review-plan-list">${rows.map((row) => `<li lang="ru">${E2(row.text)}</li>`).join("")}</ul></section>`;
+  }
+  function developmentPlan(summary) {
+    return `<p>${E2(progressText(summary))}</p>
+    ${planGroup(summary.developmentItems, L2("\u0417\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Knowledge and skills to develop", "\u9700\u8981\u63D0\u5347\u7684\u77E5\u8BC6\u4E0E\u6280\u80FD"), L2("\u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043D\u0430\u0437\u0432\u0430\u043D\u043D\u044B\u0435 \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u044B \u0438 \u043F\u043E\u0442\u0440\u0435\u043D\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044C \u043F\u0440\u0438\u043C\u0435\u043D\u044F\u0442\u044C \u0438\u0445 \u0432 \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0437\u0430\u0434\u0430\u0447\u0435.", "Study the named material and practise applying it to a work task.", "\u5B66\u4E60\u6240\u5217\u6750\u6599\uFF0C\u5E76\u7EC3\u4E60\u5728\u5DE5\u4F5C\u4EFB\u52A1\u4E2D\u5E94\u7528\u3002"))}
+    ${planGroup(summary.formalGaps, L2("\u041E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435, \u043E\u043F\u044B\u0442 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0434\u043E\u043F\u0443\u0441\u043A\u0430", "Education, experience and eligibility", "\u5B66\u5386\u3001\u7ECF\u5386\u4E0E\u8D44\u683C\u6761\u4EF6"), L2("\u0421\u0432\u0435\u0440\u044C\u0442\u0435 \u044D\u0442\u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0441 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C \u0438 \u0443\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u0443 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F, \u043A\u0430\u043A\u0438\u0435 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u0438\u043B\u0438 \u043E\u043F\u044B\u0442 \u043D\u0443\u0436\u043D\u044B.", "Check these conditions in the source and ask the employer which documents or experience are required.", "\u8BF7\u5728\u539F\u6587\u4E2D\u6838\u5BF9\u8FD9\u4E9B\u6761\u4EF6\uFF0C\u5E76\u5411\u96C7\u4E3B\u786E\u8BA4\u6240\u9700\u6587\u4EF6\u6216\u7ECF\u5386\u3002"))}
+    ${planGroup(summary.otherGaps, L2("\u0414\u0440\u0443\u0433\u0438\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Other requirements", "\u5176\u4ED6\u8981\u6C42"), L2("\u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u044D\u0442\u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u043F\u043E \u043E\u0440\u0438\u0433\u0438\u043D\u0430\u043B\u0443 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F.", "Review these conditions in the original announcement.", "\u8BF7\u5728\u539F\u59CB\u516C\u544A\u4E2D\u6838\u5BF9\u8FD9\u4E9B\u6761\u4EF6\u3002"))}
+    ${summary.gap ? "" : `<p class="adaptive-review-note">${L2("\u0412 \u043F\u043B\u0430\u043D\u0435 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442 \u043E\u0442\u043C\u0435\u0447\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u043E\u0431\u0435\u043B\u043E\u0432. \u041E\u0442\u043C\u0435\u0442\u043A\u0438 \u043C\u043E\u0436\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0432 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F\u0445.", "No gaps have been marked in the plan. You can revise your assessment in the requirements.", "\u8BA1\u5212\u4E2D\u6682\u65F6\u6CA1\u6709\u6807\u8BB0\u7684\u5DEE\u8DDD\u3002\u53EF\u8FD4\u56DE\u8981\u6C42\u9875\u9762\u4FEE\u6539\u81EA\u8BC4\u3002")}</p>`}
+    ${summary.unassessed ? `<p class="adaptive-review-note">${L2(`\u0411\u0435\u0437 \u043E\u0442\u043C\u0435\u0442\u043A\u0438 \u043E\u0441\u0442\u0430\u043B\u043E\u0441\u044C ${summary.unassessed} \u043F\u0443\u043D\u043A\u0442\u043E\u0432.`, `Unassessed items remaining: ${summary.unassessed}.`, `\u5C1A\u6709 ${summary.unassessed} \u9879\u672A\u81EA\u8BC4\u3002`)}</p>` : ""}
+    <button type="button" class="button button-secondary" data-review-edit>${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u0442\u043A\u0438", "Edit my assessment", "\u4FEE\u6539\u81EA\u8BC4")}</button>`;
+  }
+  function createAdaptiveVacancyReview({ onClose = () => {
+  } } = {}) {
+    const bank = createEmployerVacancyBank({ maxEmployers: 3, maxPages: 4 });
+    const details = createVacancyDetailsStore({ getMetadata: () => __careerHost.vacancyDetailsMetadata?.() });
+    let container = null;
+    let active = null;
+    let disposed = false;
+    function render(focus = false) {
+      if (!container) return;
+      container.hidden = !active;
+      if (!active) {
+        container.replaceChildren();
+        return;
+      }
+      const state2 = active;
+      const source = safeURL(state2.row.sourceURL);
+      const heading = state2.plan ? L2("\u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Your development plan", "\u4F60\u7684\u53D1\u5C55\u8BA1\u5212") : L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Vacancy requirements", "\u804C\u4F4D\u8981\u6C42");
+      const summary = state2.requirements && summarizeVacancyAssessment(state2.requirements, state2.marks);
+      const published = date2(state2.row.announcedAt), deadline = date2(state2.row.expiresAt);
+      container.innerHTML = `<section class="adaptive-review" aria-labelledby="adaptive-review-title">
+      <button type="button" class="adaptive-back" data-review-close>${icon("arrow-left")}${L2("\u041A \u0441\u043F\u0438\u0441\u043A\u0443 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439", "Back to vacancies", "\u8FD4\u56DE\u804C\u4F4D\u5217\u8868")}</button>
+      <header class="adaptive-review-heading"><h1 id="adaptive-review-title" tabindex="-1">${heading}</h1>
+        <h2 lang="ru">${E2(state2.row.title)}</h2><p lang="ru">${E2(state2.employerName)}</p>
+        ${state2.vacancy?.department ? `<p lang="ru">${E2(state2.vacancy.department)}</p>` : ""}
+        ${state2.vacancy ? `<p>${sourceStatus(state2.row)}${published ? " \xB7 " + L2("\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Published", "\u53D1\u5E03\u4E8E") + " " + E2(published) : ""}${deadline ? " \xB7 " + L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u622A\u6B62\u4E8E") + " " + E2(deadline) : ""}</p>` : ""}
+        ${source ? `<a class="adaptive-source" href="${source}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0445\u043E\u0434\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Original announcement", "\u539F\u59CB\u516C\u544A")}${icon("external")}</a>` : ""}
+      </header>
+      ${state2.loading ? `<p role="status">${L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u2026", "Loading source requirements\u2026", "\u6B63\u5728\u52A0\u8F7D\u539F\u59CB\u8981\u6C42\u2026\u2026")}</p>` : state2.error ? `<p class="adaptive-review-error" role="alert">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u044D\u0442\u043E\u0439 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438.", "The requirements for this vacancy could not be loaded.", "\u65E0\u6CD5\u52A0\u8F7D\u6B64\u804C\u4F4D\u7684\u8981\u6C42\u3002")}</p><button type="button" class="button button-secondary" data-review-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button>` : state2.plan ? developmentPlan(summary) : checklist(state2.vacancy, summary, state2.storageInvalid)}
+    </section>`;
+      container.querySelector("[data-review-close]").onclick = () => close();
+      container.querySelector("[data-review-retry]")?.addEventListener("click", () => void load(state2.request));
+      container.querySelector("[data-review-plan]")?.addEventListener("click", () => {
+        state2.plan = true;
+        render(true);
+      });
+      container.querySelector("[data-review-edit]")?.addEventListener("click", () => {
+        state2.plan = false;
+        render(true);
+      });
+      container.querySelectorAll("[data-review-answer]").forEach((input) => input.addEventListener("change", () => saveAnswer(state2, input)));
+      if (focus || state2.focusPending) {
+        state2.focusPending = false;
+        container.querySelector("#adaptive-review-title").focus();
+      }
+    }
+    function saveAnswer(state2, input) {
+      if (active !== state2 || state2.storageInvalid) return;
+      const row = state2.requirements.rows.find((item) => item.key === input.dataset.reviewAnswer);
+      if (!row?.assessable || !["met", "gap"].includes(input.value)) return;
+      const card = input.closest("[data-requirement-row]");
+      const next = { ...state2.marks, [row.key]: { status: input.value, signature: row.signature } };
+      const error = container.querySelector("[data-review-save-error]");
+      try {
+        writeLocal(state2.storageKey, JSON.stringify({ schemaVersion: 1, vacancyId: state2.row.id, marks: next, updatedAt: (/* @__PURE__ */ new Date()).toISOString() }));
+        state2.marks = next;
+        const summary = summarizeVacancyAssessment(state2.requirements, next);
+        card.dataset.status = input.value;
+        container.querySelector("[data-review-progress]").textContent = progressText(summary);
+        container.querySelector("[data-review-progress-bar]").value = summary.assessed;
+        error.hidden = true;
+      } catch {
+        card.querySelectorAll("input").forEach((option) => {
+          option.checked = option.value === card.dataset.status;
+        });
+        error.hidden = false;
+      }
+    }
+    async function load(request) {
+      if (disposed) return false;
+      active?.cancel?.();
+      const state2 = { request, row: request.row, employerName: request.employerName, loading: true, focusPending: true, cancel: request.cancel };
+      active = state2;
+      render();
+      try {
+        const source = await request.resolve();
+        if (active !== state2 || disposed) return false;
+        const { row, descriptor, page, rows } = source;
+        const binding = bindPage(row, descriptor, page, rows);
+        state2.cancel = () => details.cancel(binding, row.id);
+        const loaded = await details.load(binding, row.id);
+        if (active !== state2 || disposed) return false;
+        if (loaded?.status !== "ready") throw new Error("Source requirements unavailable");
+        const vacancy = bankVacancySnapshot(row, loaded.record, { institutionId: descriptor.authorityId, employerId: descriptor.employerId, employerName: descriptor.name, provenance: loaded.provenance });
+        const requirements = buildVacancyRequirements(vacancy);
+        const saved = loadMarks(vacancy);
+        const restored = summarizeVacancyAssessment(requirements, saved.marks);
+        state2.row = row;
+        state2.employerName = descriptor.name;
+        state2.vacancy = vacancy;
+        state2.requirements = requirements;
+        state2.storageKey = saved.key;
+        state2.storageInvalid = saved.invalid;
+        state2.marks = Object.fromEntries(restored.rows.filter((item) => ["met", "gap"].includes(item.status)).map((item) => [item.key, { status: item.status, signature: item.signature }]));
+        return true;
+      } catch {
+        if (active === state2) state2.error = true;
+        return false;
+      } finally {
+        if (active === state2) {
+          state2.loading = false;
+          state2.cancel = null;
+          render(true);
+        }
+      }
+    }
+    function close({ notify = true } = {}) {
+      const previous = active;
+      active = null;
+      previous?.cancel?.();
+      render();
+      if (notify && previous) onClose(previous.row.id);
+    }
+    return {
+      mount(target) {
+        container = target;
+        render();
+      },
+      isOpen: () => Boolean(active),
+      canOpenCandidate: (row) => Boolean(candidatePage(row)),
+      open(row, descriptor, page, rows) {
+        if (row?.scope !== "individual-role" || !UUID.test(row.id || "")) return Promise.resolve(false);
+        return load({ row, employerName: descriptor?.name, resolve: () => ({ row, descriptor, page, rows }) });
+      },
+      openCandidate(candidate) {
+        const location2 = candidatePage(candidate);
+        if (!location2) return Promise.resolve(false);
+        return load({ row: candidate, employerName: candidate.employerName, cancel: () => bank.cancel(location2.employerId), resolve: async () => {
+          const view = await bank.loadPage(location2.employerId, location2.index);
+          const descriptor = view?.descriptor;
+          const page = descriptor?.pages[location2.index];
+          const row = view?.rows.find((item) => item.id === candidate.id);
+          if (view?.status !== "ready" || view.pageIndex !== location2.index || descriptor?.employerId !== candidate.employerId || page?.path !== location2.path || !row || row.sourceURL !== candidate.sourceURL) throw new Error("Vacancy source differs from index");
+          return { row, descriptor, page, rows: view.rows };
+        } });
+      },
+      close,
+      dispose() {
+        disposed = true;
+        close({ notify: false });
+        bank.dispose();
+        details.dispose();
+        container = null;
+      }
+    };
+  }
+
   // site/apps/career/assets/adaptive-flow.mjs
   var SESSION_SCHEMA2 = 1;
   var SESSION_MODEL = FUNCTIONAL_MODEL_VERSION;
   var INDEX_ROOT = "data/adaptive-index/";
   var MIB = 1024 * 1024;
-  var MAX_RAW = { all: 128 * MIB, national: 32 * MIB, region: 16 * MIB, detail: 4 * MIB };
+  var MAX_RAW2 = { all: 128 * MIB, national: 32 * MIB, region: 16 * MIB, detail: 4 * MIB };
   var CAREER_ROUTES = /* @__PURE__ */ new Set(["preferences", "test", "sectors", "conditions", "results"]);
   var RESPONSIBILITY_PREFERENCES = /* @__PURE__ */ new Set(["specialist", "leadership", "all"]);
   var EVIDENCE_CATEGORIES = /* @__PURE__ */ new Set(["duties", "skills", "knowledge"]);
@@ -5104,6 +6915,8 @@ var CareerRuntime = (() => {
   var DETAIL_CONCURRENCY = 2;
   var validRegion = (value) => typeof value === "string" && /^ru-\d{2}$/.test(value);
   var validValue = (value) => Number.isInteger(value) && value >= 0 && value <= 5;
+  var validSelectionSeed = (value) => typeof value === "string" && /^[a-f0-9]{32}$/.test(value);
+  var newSelectionSeed = () => (globalThis.crypto?.randomUUID?.() || Date.now().toString(16) + Math.random().toString(16).slice(2)).replace(/-/g, "").slice(0, 32).padEnd(32, "0");
   var localized = (value) => typeof value === "string" ? value : value?.[getLanguage()] || value?.ru || "";
   var compact = (value) => String(value ?? "").replace(/\s+/g, " ").trim();
   var snippet = (value, maximum = 500) => {
@@ -5114,7 +6927,7 @@ var CareerRuntime = (() => {
   };
   function validDescriptor(value, kind) {
     const pattern = kind === "all" ? /^data\/adaptive-index\/all\.json\.gz$/ : kind === "region" ? /^data\/adaptive-index\/regions\/(?:ru-\d{2}|unknown)\.json\.gz$/ : kind === "national" ? /^data\/adaptive-index\/national\/n\d{4}\.json\.gz$/ : /^data\/adaptive-index\/details\/d\d{4}\.json\.gz$/;
-    return isRecord(value) && pattern.test(value.path || "") && Number.isSafeInteger(value.count) && value.count >= 0 && Number.isInteger(value.bytes) && value.bytes >= 18 && value.bytes <= 32 * MIB && Number.isInteger(value.uncompressedBytes) && value.uncompressedBytes > 0 && value.uncompressedBytes <= MAX_RAW[kind] && /^[a-f0-9]{64}$/.test(value.sha256 || "");
+    return isRecord(value) && pattern.test(value.path || "") && Number.isSafeInteger(value.count) && value.count >= 0 && Number.isInteger(value.bytes) && value.bytes >= 18 && value.bytes <= 32 * MIB && Number.isInteger(value.uncompressedBytes) && value.uncompressedBytes > 0 && value.uncompressedBytes <= MAX_RAW2[kind] && /^[a-f0-9]{64}$/.test(value.sha256 || "");
   }
   function validateManifest(value) {
     return isRecord(value) && value.schemaVersion === ADAPTIVE_INDEX_SCHEMA_VERSION && typeof value.version === "string" && value.version.startsWith(FUNCTIONAL_MODEL_VERSION + "-") && value.version.length <= 128 && typeof value.taxonomyVersion === "string" && value.taxonomyVersion.length > 0 && value.taxonomyVersion.length <= 128 && validDescriptor(value.all, "all") && Array.isArray(value.nationalParts) && value.nationalParts.length <= 1e4 && value.nationalParts.every((item) => validDescriptor(item, "national")) && value.nationalParts.reduce((sum, item) => sum + item.count, 0) === value.all.count && new Set(value.nationalParts.map((item) => item.path)).size === value.nationalParts.length && Array.isArray(value.shards) && value.shards.length <= 90 && value.shards.every((item) => (item.regionId === null || validRegion(item.regionId)) && validDescriptor(item, "region")) && Array.isArray(value.details) && value.details.length <= 1e4 && value.details.every((item) => validDescriptor(item, "detail")) && new Set(value.shards.map((item) => item.regionId)).size === value.shards.length && new Set(value.details.map((item) => item.path)).size === value.details.length;
@@ -5173,7 +6986,7 @@ var CareerRuntime = (() => {
         const hash = [...new Uint8Array(await globalThis.crypto.subtle.digest("SHA-256", bytes))].map((value2) => value2.toString(16).padStart(2, "0")).join("");
         if (hash !== descriptor.sha256) throw new Error("Adaptive index checksum mismatch");
       }
-      const raw = await decodeGzip(bytes, { expectedBytes: descriptor.uncompressedBytes, maxBytes: MAX_RAW[kind] });
+      const raw = await decodeGzip(bytes, { expectedBytes: descriptor.uncompressedBytes, maxBytes: MAX_RAW2[kind] });
       if (controller.signal.aborted) throw new DOMException("Aborted", "AbortError");
       const value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw));
       if (!isRecord(value) || value.schemaVersion !== ADAPTIVE_INDEX_SCHEMA_VERSION || !Array.isArray(value.rows) || value.rows.length !== descriptor.count) throw new Error("Invalid adaptive index payload");
@@ -5204,7 +7017,8 @@ var CareerRuntime = (() => {
       pending: null,
       completedAt: null,
       resultRecordId: null,
-      completion: null
+      completion: null,
+      selectionSeed: newSelectionSeed()
     });
     let session = empty(), hydrationChanged = false, corruptStorage = false;
     function restoreSession(saved) {
@@ -5227,6 +7041,7 @@ var CareerRuntime = (() => {
         ...empty(),
         ...saved,
         ...setup,
+        selectionSeed: validSelectionSeed(saved.selectionSeed) ? saved.selectionSeed : saved.completedAt ? "" : newSelectionSeed(),
         responsibilityDraft: RESPONSIBILITY_PREFERENCES.has(saved.responsibilityDraft) ? saved.responsibilityDraft : null,
         answers: saved.answers.slice(0, MAX_ANSWERS),
         pending: isRecord(saved.pending) && typeof saved.pending.questionId === "string" && validValue(saved.pending.value) ? saved.pending : null
@@ -5258,6 +7073,14 @@ var CareerRuntime = (() => {
     let rankingCache = null, questionCache = null, notifiedRecordId = null;
     const detailCache = /* @__PURE__ */ new Map(), detailPending = /* @__PURE__ */ new Map(), detailErrors = /* @__PURE__ */ new Set();
     let detailGeneration = 0, detailSelection = "", detailQueue = [];
+    let matchBrowseOpen = false, matchOffset = 0, matchQuery = "", expandedMatchId = null;
+    const review = createAdaptiveVacancyReview({ onClose: () => {
+      if (lastRoute === "results") renderResults2();
+    } });
+    const bankBrowse = createAdaptiveBankBrowse({ onReview: (row, descriptor, pageRef, pageRows) => {
+      void review.open(row, descriptor, pageRef, pageRows);
+      renderResults2();
+    } });
     const resultRoot = () => document.querySelector("#results-root");
     const questionRoot = () => document.querySelector("#view-test");
     const preferenceRoot = () => document.querySelector("#journey-preferences-root");
@@ -5339,9 +7162,9 @@ var CareerRuntime = (() => {
       session.indexVersion = manifest.version;
       draftRegions = draftRegions.filter((id) => validIds.has(id));
       const allCoreAnswered = coreIds.every((id) => clean.some((answer) => answer.questionId === id));
-      const record = session.completion;
+      const record2 = session.completion;
       const sameRegions = (value) => Array.isArray(value) && JSON.stringify([...value].sort()) === JSON.stringify([...session.regionIds].sort());
-      const validCompletion = session.setupComplete && clean.length >= Math.min(MIN_ANSWERS, questions.size) && allCoreAnswered && typeof session.completedAt === "string" && Number.isFinite(Date.parse(session.completedAt)) && typeof session.resultRecordId === "string" && /^[\w-]{8,80}$/.test(session.resultRecordId) && isRecord(record) && record.schema === "rudn-career-result" && record.schemaVersion === 3 && record.resultKind === "vacancy-functional" && record.completed === true && record.recordId === session.resultRecordId && record.createdAt === session.completedAt && record.modelVersion === SESSION_MODEL && record.questionnaireVersion === taxonomy.version && record.registryVersion === manifest.version && record.answerCount === clean.length && record.informativeAnswers === clean.filter((answer) => answer.value !== 0 && answer.value !== 3).length && JSON.stringify(record.answeredQuestionIds) === JSON.stringify(clean.map((answer) => answer.questionId)) && JSON.stringify(record.broadQuestionIds) === JSON.stringify(coreIds) && sameRegions(record.regionIds) && record.responsibilityPreference === session.responsibilityPreference && ["matched", "no-preference", "no-matches"].includes(record.resultStatus) && Array.isArray(record.ranking) && record.ranking.length <= 5 && (record.resultStatus === "matched" ? record.ranking.length > 0 : record.ranking.length === 0);
+      const validCompletion = session.setupComplete && clean.length >= Math.min(MIN_ANSWERS, questions.size) && allCoreAnswered && typeof session.completedAt === "string" && Number.isFinite(Date.parse(session.completedAt)) && typeof session.resultRecordId === "string" && /^[\w-]{8,80}$/.test(session.resultRecordId) && isRecord(record2) && record2.schema === "rudn-career-result" && record2.schemaVersion === 3 && record2.resultKind === "vacancy-functional" && record2.completed === true && record2.recordId === session.resultRecordId && record2.createdAt === session.completedAt && record2.modelVersion === SESSION_MODEL && record2.questionnaireVersion === taxonomy.version && record2.registryVersion === manifest.version && record2.answerCount === clean.length && record2.informativeAnswers === clean.filter((answer) => answer.value !== 0 && answer.value !== 3).length && JSON.stringify(record2.answeredQuestionIds) === JSON.stringify(clean.map((answer) => answer.questionId)) && JSON.stringify(record2.broadQuestionIds) === JSON.stringify(coreIds) && sameRegions(record2.regionIds) && record2.responsibilityPreference === session.responsibilityPreference && ["matched", "no-preference", "no-matches"].includes(record2.resultStatus) && Array.isArray(record2.ranking) && record2.ranking.length <= 5 && (record2.resultStatus === "matched" ? record2.ranking.length > 0 : record2.ranking.length === 0);
       if (session.completedAt && !validCompletion) {
         session = invalidateCompletion(session);
         dirty = true;
@@ -5664,7 +7487,7 @@ var CareerRuntime = (() => {
         return;
       }
       const answers = session.answers.slice(), previous = answers.pop();
-      const updated = invalidateCompletion({ ...session, answers, pending: { ...previous } });
+      const updated = invalidateCompletion({ ...session, answers, pending: { ...previous }, selectionSeed: session.selectionSeed || newSelectionSeed() });
       if (!save(updated)) {
         render(lastRoute);
         return;
@@ -5675,15 +7498,15 @@ var CareerRuntime = (() => {
       navigate("test");
     }
     function resultRanking() {
-      const cacheKey = candidateKey + "|" + JSON.stringify(session.answers);
+      const cacheKey = candidateKey + "|" + session.selectionSeed + "|" + JSON.stringify(session.answers);
       if (rankingCache?.key === cacheKey) return rankingCache.value;
-      const value = rankVacancies({ taxonomy, answers: session.answers, candidates, limit: 5 });
+      const value = rankVacancies({ taxonomy, answers: session.answers, candidates, limit: 5, selectionSeed: session.selectionSeed });
       rankingCache = { key: cacheKey, value };
       return value;
     }
     function completedSession(answers) {
-      const ranking = rankVacancies({ taxonomy, answers, candidates, limit: 5 });
-      const record = makeCompletionRecord({
+      const ranking = rankVacancies({ taxonomy, answers, candidates, limit: 5, selectionSeed: session.selectionSeed });
+      const record2 = makeCompletionRecord({
         taxonomy,
         answers,
         regionIds: session.regionIds,
@@ -5691,7 +7514,7 @@ var CareerRuntime = (() => {
         ranking,
         indexVersion: manifest.version
       });
-      return { ...session, answers, pending: null, completedAt: record.createdAt, resultRecordId: record.recordId, completion: record };
+      return { ...session, answers, pending: null, completedAt: record2.createdAt, resultRecordId: record2.recordId, completion: record2 };
     }
     function advanceQuestion() {
       if (transitionBusy || !session.pending || !metadataReady || poolLoading) return;
@@ -5700,7 +7523,7 @@ var CareerRuntime = (() => {
       transitionBusy = true;
       try {
         const answers = [...session.answers, { questionId: question.id, value: session.pending.value }];
-        const finished = shouldFinish({ taxonomy, answers, candidates }) || !questionFor(answers);
+        const finished = shouldFinish({ taxonomy, answers, candidates, selectionSeed: session.selectionSeed }) || !questionFor(answers);
         const updated = finished ? completedSession(answers) : invalidateCompletion({ ...session, answers, pending: null });
         if (!save(updated)) {
           renderQuestion2();
@@ -5804,7 +7627,36 @@ var CareerRuntime = (() => {
       ${location2.text ? `<p class="adaptive-role-location" lang="${E2(location2.lang)}">${E2(location2.text)}</p>` : ""}
       ${evidenceSections(row, detail)}
       ${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source", "\u6765\u6E90")}${icon("external")}</a>` : ""}
+      ${reviewAction(row)}
     </article>`;
+    }
+    function reviewAction(row) {
+      return review.canOpenCandidate(row) ? `<button type="button" class="adaptive-text-button adaptive-review-action" data-adaptive-review-id="${E2(row.id)}">${L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Review requirements", "\u5206\u6790\u804C\u4F4D\u8981\u6C42")}</button>` : "";
+    }
+    function matchBrowseMarkup(ranking, page, expanded) {
+      if (!ranking.matchingCount) return "";
+      const number3 = new Intl.NumberFormat(getLanguage());
+      const pager2 = page?.total ? `<nav class="adaptive-match-pager" aria-label="${L2("\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439", "Matching role pages", "\u5339\u914D\u804C\u4F4D\u5206\u9875")}">
+      <button type="button" class="button button-secondary" data-adaptive-match-page="previous" ${page.offset ? "" : "disabled"}>${L2("\u041D\u0430\u0437\u0430\u0434", "Previous", "\u4E0A\u4E00\u9875")}</button>
+      <span>${number3.format(Math.floor(page.offset / page.limit) + 1)} / ${number3.format(Math.ceil(page.total / page.limit))}</span>
+      <button type="button" class="button button-secondary" data-adaptive-match-page="next" ${page.offset + page.limit < page.total ? "" : "disabled"}>${L2("\u0414\u0430\u043B\u044C\u0448\u0435", "Next", "\u4E0B\u4E00\u9875")}</button></nav>` : "";
+      const card = (row) => {
+        const url = safeURL(row.sourceURL), location2 = cleanDisplayLocation(row), open = expanded?.id === row.id;
+        const detail = open ? detailFor(row) : null;
+        return `<article class="adaptive-match-item" data-adaptive-match-id="${E2(row.id)}">
+        <h3 lang="ru">${E2(row.title)}</h3><p lang="ru">${E2(row.employerName)}</p>
+        ${row.department ? `<p lang="ru">${E2(row.department)}</p>` : ""}${location2.text ? `<p lang="${E2(location2.lang)}">${E2(location2.text)}</p>` : ""}
+        <div class="adaptive-match-actions"><span>${E2(statusLabel(row))}</span><button type="button" class="adaptive-text-button" data-adaptive-match-evidence="${E2(row.id)}" aria-expanded="${open}">${L2("\u0421\u043E\u0432\u043F\u0430\u0432\u0448\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0438", "Matching tasks", "\u5339\u914D\u7684\u5DE5\u4F5C\u4EFB\u52A1")}</button>${reviewAction(row)}${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source", "\u6765\u6E90")}${icon("external")}</a>` : ""}</div>
+        ${open ? detail ? evidenceSections(row, detail) : `<p role="status">${detailErrors.has(detailKey(row.detailPath)) ? L2("\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u043E\u0441\u044C.", "The description could not be loaded.", "\u65E0\u6CD5\u52A0\u8F7D\u804C\u4F4D\u8BF4\u660E\u3002") : L2("\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F\u2026", "Loading the description\u2026", "\u6B63\u5728\u52A0\u8F7D\u804C\u4F4D\u8BF4\u660E\u2026\u2026")}</p>` : ""}
+      </article>`;
+      };
+      return `<details class="adaptive-match-browser" id="adaptive-all-matches" ${matchBrowseOpen ? "open" : ""}>
+      <summary id="adaptive-match-summary">${L2("\u0412\u0441\u0435 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u044F", "All matches", "\u5168\u90E8\u5339\u914D\u804C\u4F4D")} \xB7 ${number3.format(ranking.matchingCount)}</summary>
+      ${page ? `<div class="adaptive-match-body"><p>${L2("\u0412\u0441\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u043E\u0432\u043F\u0430\u043B\u0438 \u0441 \u0412\u0430\u0448\u0438\u043C\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430\u043C\u0438 \u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u043C\u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F\u043C\u0438.", "All roles that match your interests and selected conditions.", "\u7B26\u5408\u4F60\u7684\u5174\u8DA3\u548C\u6240\u9009\u6761\u4EF6\u7684\u6240\u6709\u804C\u4F4D\u3002")}</p>
+        <form id="adaptive-match-search" class="adaptive-match-search"><label for="adaptive-match-query">${L2("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438, \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044E \u0438\u043B\u0438 \u043C\u0435\u0441\u0442\u0443", "Search by role, employer or location", "\u6309\u804C\u4F4D\u3001\u7528\u4EBA\u5355\u4F4D\u6216\u5730\u70B9\u641C\u7D22")}</label><div><input type="search" name="query" id="adaptive-match-query" maxlength="160" value="${E2(matchQuery)}"><button type="submit" class="button button-secondary">${L2("\u041D\u0430\u0439\u0442\u0438", "Search", "\u641C\u7D22")}</button></div></form>
+        <h2 id="adaptive-match-list-title" tabindex="-1" class="adaptive-match-count" aria-live="polite">${page.total ? L2(`\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E ${number3.format(page.offset + 1)}\u2013${number3.format(page.offset + page.rows.length)} \u0438\u0437 ${number3.format(page.total)}`, `Showing ${number3.format(page.offset + 1)}\u2013${number3.format(page.offset + page.rows.length)} of ${number3.format(page.total)}`, `\u663E\u793A\u7B2C ${number3.format(page.offset + 1)}\u2013${number3.format(page.offset + page.rows.length)} \u6761\uFF0C\u5171 ${number3.format(page.total)} \u6761`) : L2("\u041F\u043E \u044D\u0442\u043E\u043C\u0443 \u0437\u0430\u043F\u0440\u043E\u0441\u0443 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u043D\u0435\u0442.", "No matches for this search.", "\u6CA1\u6709\u7B26\u5408\u8BE5\u641C\u7D22\u6761\u4EF6\u7684\u804C\u4F4D\u3002")}</h2>
+        <div class="adaptive-match-list">${page.rows.map(card).join("")}</div>${pager2}</div>` : ""}
+    </details>`;
     }
     function detailKey(path, version = manifest?.version) {
       return version + "|" + path;
@@ -5889,7 +7741,7 @@ var CareerRuntime = (() => {
     function notifyCompletion(ranking) {
       if (!session.completedAt || !session.resultRecordId || saveFailed || corruptStorage) return;
       if (session.resultRecordId === notifiedRecordId) return;
-      const record = makeCompletionRecord({
+      const record2 = makeCompletionRecord({
         taxonomy,
         answers: session.answers,
         regionIds: session.regionIds,
@@ -5899,9 +7751,9 @@ var CareerRuntime = (() => {
         recordId: session.resultRecordId,
         createdAt: session.completedAt
       });
-      if (JSON.stringify(session.completion) !== JSON.stringify(record) && !save({ ...session, completion: record })) return;
-      __careerHost.resultCalculated(record);
-      notifiedRecordId = record.recordId;
+      if (JSON.stringify(session.completion) !== JSON.stringify(record2) && !save({ ...session, completion: record2 })) return;
+      __careerHost.resultCalculated(record2);
+      notifiedRecordId = record2.recordId;
     }
     function renderResults2() {
       const root = resultRoot();
@@ -5910,8 +7762,18 @@ var CareerRuntime = (() => {
         return;
       }
       if (!root || !readyFor(root, true)) return;
+      if (review.isOpen()) {
+        if (detailSelection || detailPending.size || detailQueue.length) resetDetailRequests();
+        root.innerHTML = '<div id="adaptive-vacancy-review"></div>';
+        review.mount(root.querySelector("#adaptive-vacancy-review"));
+        return;
+      }
       const ranking = resultRanking(), matches = ranking.matches || [];
-      loadDetails(matches);
+      const page = matchBrowseOpen && ranking.matchingCount ? listMatchingVacancies({ taxonomy, answers: session.answers, candidates, selectionSeed: session.selectionSeed, query: matchQuery, offset: matchOffset }) : null;
+      if (page) matchOffset = page.offset;
+      const expanded = page?.rows.find((row) => row.id === expandedMatchId);
+      const detailRows = expanded && !matches.some((row) => row.id === expanded.id) ? [...matches, expanded] : matches;
+      loadDetails(detailRows);
       const focused = document.activeElement?.id;
       const noPreference = ranking.resultStatus === "no-preference";
       const missing = matches.some((row) => detailErrors.has(detailKey(row.detailPath)));
@@ -5919,14 +7781,52 @@ var CareerRuntime = (() => {
       <header class="adaptive-results-heading"><h1>${matches.length ? L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Matching roles", "\u9002\u5408\u7684\u804C\u4F4D") : L2("\u0412\u0430\u0448 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Your result", "\u4F60\u7684\u7ED3\u679C")}</h1></header>
       ${matches.length ? `<div class="adaptive-role-list">${matches.map(roleCard).join("")}</div>` : `<p class="adaptive-no-matches">${noPreference ? L2("\u0412\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0438\u043B\u0438 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B. \u041C\u043E\u0436\u043D\u043E \u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C \u0438 \u0443\u0442\u043E\u0447\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B.", "You have not yet identified preferred types of work. You can return to the questions and refine your answers.", "\u4F60\u5C1A\u672A\u786E\u5B9A\u504F\u597D\u7684\u5DE5\u4F5C\u7C7B\u578B\u3002\u53EF\u4EE5\u8FD4\u56DE\u95EE\u9898\uFF0C\u8FDB\u4E00\u6B65\u660E\u786E\u7B54\u6848\u3002") : L2("\u0414\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", "No matching roles were found for the selected conditions.", "\u672A\u627E\u5230\u7B26\u5408\u6240\u9009\u6761\u4EF6\u7684\u804C\u4F4D\u3002")}</p>`}
       ${missing ? `<div class="adaptive-detail-error" role="status"><span>${L2("\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u043E\u0441\u044C.", "Role descriptions could not be loaded.", "\u65E0\u6CD5\u52A0\u8F7D\u804C\u4F4D\u8BF4\u660E\u3002")}</span><button type="button" class="adaptive-text-button" id="adaptive-retry-details">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button></div>` : ""}
+      ${matchBrowseMarkup(ranking, page, expanded)}
+      <div id="adaptive-bank-browser"></div>
       <div id="adaptive-save-feedback">${saveError()}</div>
       <footer class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B", "Edit answers", "\u4FEE\u6539\u7B54\u6848")}</button>${typeof __careerHost.openKnowledge === "function" ? `<button type="button" class="button button-primary" id="adaptive-open-knowledge" ${opening || saveFailed || corruptStorage ? "disabled" : ""}>${L2("\u041A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439", "Continue to the knowledge test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}${icon("arrow-right")}</button>` : ""}</footer>
     </div>`;
       root.querySelector("#adaptive-edit").onclick = backQuestion;
       root.querySelector("#adaptive-retry-details")?.addEventListener("click", () => {
-        loadDetails(matches, true);
+        loadDetails(detailRows, true);
         renderResults2();
       });
+      const browse = root.querySelector("#adaptive-all-matches");
+      browse?.addEventListener("toggle", () => {
+        if (!browse.isConnected || browse.open === matchBrowseOpen) return;
+        matchBrowseOpen = browse.open;
+        if (!matchBrowseOpen) expandedMatchId = null;
+        renderResults2();
+      });
+      const refreshMatchPage = () => {
+        expandedMatchId = null;
+        renderResults2();
+        root.querySelector("#adaptive-match-list-title")?.focus();
+      };
+      root.querySelector("#adaptive-match-search")?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        matchQuery = event.currentTarget.elements.namedItem("query").value.trim().slice(0, 160);
+        matchOffset = 0;
+        refreshMatchPage();
+      });
+      root.querySelectorAll("[data-adaptive-match-page]").forEach((button) => button.addEventListener("click", () => {
+        matchOffset = Math.max(0, matchOffset + (button.dataset.adaptiveMatchPage === "next" ? page.limit : -page.limit));
+        refreshMatchPage();
+      }));
+      root.querySelectorAll("[data-adaptive-match-evidence]").forEach((button) => button.addEventListener("click", () => {
+        const id = button.dataset.adaptiveMatchEvidence;
+        expandedMatchId = expandedMatchId === id ? null : id;
+        renderResults2();
+        [...root.querySelectorAll("[data-adaptive-match-evidence]")].find((item) => item.dataset.adaptiveMatchEvidence === id)?.focus({ preventScroll: true });
+      }));
+      root.querySelectorAll("[data-adaptive-review-id]").forEach((button) => button.addEventListener("click", () => {
+        const row = matches.find((item) => item.id === button.dataset.adaptiveReviewId) || page?.rows.find((item) => item.id === button.dataset.adaptiveReviewId);
+        if (row) {
+          void review.openCandidate(row);
+          renderResults2();
+        }
+      }));
+      bankBrowse.mount(root.querySelector("#adaptive-bank-browser"));
       root.querySelector("#adaptive-open-knowledge")?.addEventListener("click", async () => {
         if (opening || !save()) {
           renderResults2();
@@ -5972,6 +7872,14 @@ var CareerRuntime = (() => {
     }
     function render(route) {
       if (route !== "results" && (detailSelection || detailPending.size || detailQueue.length)) resetDetailRequests();
+      if (route !== "results" && lastRoute === "results") {
+        matchBrowseOpen = false;
+        matchOffset = 0;
+        matchQuery = "";
+        expandedMatchId = null;
+        bankBrowse.reset?.();
+        review.close({ notify: false });
+      }
       lastRoute = route;
       const guarded = guardRoute(route);
       if (metadataReady && guarded !== route) {
@@ -7661,7 +9569,7 @@ var CareerRuntime = (() => {
   var text2 = (values) => L3(...values);
   var englishFacetLabels = { N3: "Low mood", O5: "Intellectual curiosity", A2: "Straightforwardness" };
   var label = (value) => L3(value.name, englishFacetLabels[value.id] || value.en, value.zh);
-  var number = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+  var number2 = (value) => Number(value).toLocaleString(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage(), { minimumFractionDigits: 1, maximumFractionDigits: 2 });
   var facetById = new Map(PERSONALITY_FACETS.map((facet) => [facet.id, facet]));
   var validAnswer = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
   var answerLabels = () => L3(
@@ -7677,7 +9585,7 @@ var CareerRuntime = (() => {
     N: { title: ["\u042D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Emotional sensitivity", "\u60C5\u7EEA\u654F\u611F\u6027"], description: ["\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0447\u0430\u0441\u0442\u043E \u0412\u044B \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442\u0435 \u043D\u0430\u043F\u0440\u044F\u0436\u0435\u043D\u0438\u0435, \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u043D\u0438\u044F \u0438 \u044D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043A\u043E\u043B\u0435\u0431\u0430\u043D\u0438\u044F.", "How often you report tension, worries and emotional fluctuations.", "\u4F60\u611F\u53D7\u5230\u7D27\u5F20\u3001\u62C5\u5FE7\u548C\u60C5\u7EEA\u6CE2\u52A8\u7684\u9891\u7E41\u7A0B\u5EA6\u3002"] }
   };
   function meter(value, name2) {
-    return `<div class="personality-meter" role="meter" aria-label="${E4(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E4(number(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
+    return `<div class="personality-meter" role="meter" aria-label="${E4(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E4(number2(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
   }
   function createPersonality({ navigate, continueCareer }) {
     const storage = __careerHost.personalityStorage;
@@ -7812,21 +9720,21 @@ var CareerRuntime = (() => {
         description: L3("\u041F\u044F\u0442\u044C \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0445 \u0448\u043A\u0430\u043B \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043D\u0430 \u043E\u0434\u043D\u043E\u0439 \u0434\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0435.", "The five main personality scales in one chart.", "\u5728\u4E00\u5F20\u56FE\u4E2D\u67E5\u770B\u4E94\u9879\u4E3B\u8981\u4EBA\u683C\u7279\u5F81\u3002"),
         scale: L3("\u0415\u0434\u0438\u043D\u0430\u044F \u0448\u043A\u0430\u043B\u0430: 1 \u2014 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435, 5 \u2014 \u043D\u0430 \u0432\u043D\u0435\u0448\u043D\u0435\u043C \u043A\u043E\u043D\u0442\u0443\u0440\u0435.", "Shared scale: 1 at the centre, 5 on the outer ring.", "\u7EDF\u4E00\u91CF\u8868\uFF1A\u4E2D\u5FC3\u4E3A1\u5206\uFF0C\u5916\u5708\u4E3A5\u5206\u3002"),
         caption: L3("\u0411\u043E\u043B\u0435\u0435 \u0432\u044B\u0441\u043E\u043A\u0438\u0439 \u0431\u0430\u043B\u043B \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0447\u0435\u0440\u0442\u044B \u0432 \u0412\u0430\u0448\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u0430\u0445. \u0411\u043E\u043B\u044C\u0448\u0430\u044F \u043F\u043B\u043E\u0449\u0430\u0434\u044C \u0434\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u044B \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u043B\u0443\u0447\u0448\u0438\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "A higher score means that a trait is more strongly expressed in your answers. A larger chart area does not mean a better result.", "\u5206\u6570\u8D8A\u9AD8\uFF0C\u8868\u793A\u8BE5\u7279\u5F81\u5728\u4F60\u7684\u56DE\u7B54\u4E2D\u8D8A\u660E\u663E\u3002\u56FE\u5F62\u9762\u79EF\u8F83\u5927\u5E76\u4E0D\u8868\u793A\u7ED3\u679C\u66F4\u597D\u3002"),
-        formatValue: number
+        formatValue: number2
       });
       const roleIntro = suggestions.kind === "balanced" ? L3("\u041D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043E\u0432 \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u044B\u043C \u043E\u0431\u0440\u0430\u0437\u043E\u043C. \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0440\u0430\u0437\u043D\u044B\u0435 \u0440\u043E\u043B\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435, \u043A\u0430\u043A\u0438\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u0430\u044E\u0442 \u0412\u0430\u043C \u0431\u043E\u043B\u044C\u0448\u0435 \u0443\u0434\u043E\u0432\u043B\u0435\u0442\u0432\u043E\u0440\u0435\u043D\u0438\u044F.", "Several ways of contributing to a team are similarly expressed. Try different roles and compare which tasks you find more satisfying.", "\u4F60\u5728\u591A\u79CD\u56E2\u961F\u53C2\u4E0E\u65B9\u5F0F\u4E0A\u8868\u73B0\u76F8\u8FD1\u3002\u53EF\u4EE5\u5C1D\u8BD5\u4E0D\u540C\u89D2\u8272\uFF0C\u6BD4\u8F83\u54EA\u4E9B\u4EFB\u52A1\u66F4\u8BA9\u4F60\u611F\u5230\u6EE1\u610F\u3002") : suggestions.kind === "exploratory" ? L3("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u0451\u043D\u043D\u0430\u044F \u043A\u043E\u043C\u0430\u043D\u0434\u043D\u0430\u044F \u0440\u043E\u043B\u044C. \u0412 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u043C \u0433\u0440\u0443\u043F\u043F\u043E\u0432\u043E\u043C \u0437\u0430\u0434\u0430\u043D\u0438\u0438 \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0443\u044E \u0437\u0430\u0434\u0430\u0447\u0443 \u043F\u043E \u043F\u043B\u0430\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044E, \u0430\u043D\u0430\u043B\u0438\u0437\u0443 \u0438\u043B\u0438 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0435 \u0443\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u043E\u0432 \u0438 \u043E\u0446\u0435\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u0438 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0435\u043D\u0438\u044F.", "Your answers do not point clearly to a particular team role. In your next group task, try a small planning, analysis or support responsibility and reflect on the experience.", "\u4F60\u7684\u56DE\u7B54\u5C1A\u672A\u663E\u793A\u51FA\u660E\u786E\u7684\u56E2\u961F\u89D2\u8272\u503E\u5411\u3002\u4E0B\u6B21\u5C0F\u7EC4\u4EFB\u52A1\u4E2D\uFF0C\u53EF\u4EE5\u5C1D\u8BD5\u4E00\u9879\u8BA1\u5212\u3001\u5206\u6790\u6216\u652F\u6301\u6210\u5458\u7684\u5177\u4F53\u5DE5\u4F5C\uFF0C\u518D\u4F53\u4F1A\u81EA\u5DF1\u7684\u611F\u53D7\u3002") : L3("\u0421\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0412\u0430\u0448\u0438\u0445 \u0447\u0435\u0440\u0442 \u0434\u0430\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u0430\u043D\u0438\u044F \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0435 \u0441\u043F\u043E\u0441\u043E\u0431\u044B \u0443\u0447\u0430\u0441\u0442\u0438\u044F \u0432 \u043E\u0431\u0449\u0435\u0439 \u0440\u0430\u0431\u043E\u0442\u0435.", "Your combination of traits suggests the following contributions to try in shared work.", "\u6839\u636E\u4F60\u7684\u7279\u5F81\u7EC4\u5408\uFF0C\u53EF\u4EE5\u5728\u5171\u540C\u5DE5\u4F5C\u4E2D\u5C1D\u8BD5\u4EE5\u4E0B\u53C2\u4E0E\u65B9\u5F0F\u3002");
       root.innerHTML = `<header class="personality-heading personality-result-heading"><button type="button" id="personality-edit" class="personality-text-button">${L3("\u041A \u043E\u0442\u0432\u0435\u0442\u0430\u043C", "Back to answers", "\u8FD4\u56DE\u7B54\u6848")}</button><h1>${L3("\u0412\u0430\u0448 \u0441\u0442\u0438\u043B\u044C \u0440\u0430\u0431\u043E\u0442\u044B \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435", "Your style of working in a team", "\u4F60\u7684\u56E2\u961F\u5DE5\u4F5C\u98CE\u683C")}</h1><p>${L3("\u0411\u0430\u043B\u043B\u044B \u043E\u0442 1 \u0434\u043E 5 \u043F\u043E\u043A\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u0447\u0435\u0440\u0442 \u0432 \u0412\u0430\u0448\u0438\u0445 \u043E\u0442\u0432\u0435\u0442\u0430\u0445. \u0423 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u0441\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u044F \u0435\u0441\u0442\u044C \u043F\u043E\u043B\u0435\u0437\u043D\u044B\u0435 \u0441\u0442\u043E\u0440\u043E\u043D\u044B \u0438 \u0437\u0430\u0434\u0430\u0447\u0438 \u0434\u043B\u044F \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F.", "Scores from 1 to 5 describe the traits expressed in your answers. Each combination has useful aspects and opportunities for development.", "1\u81F35\u5206\u53CD\u6620\u4F60\u7684\u56DE\u7B54\u4E2D\u5404\u9879\u7279\u5F81\u7684\u8868\u73B0\u7A0B\u5EA6\u3002\u6BCF\u79CD\u7EC4\u5408\u90FD\u6709\u6709\u5229\u4E4B\u5904\u548C\u53EF\u4EE5\u53D1\u5C55\u7684\u65B9\u9762\u3002")}</p></header>
       ${radar}
       <section class="personality-section" aria-labelledby="personality-work-title"><h2 id="personality-work-title">${L3("\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0441\u0442\u044C, \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0438 \u0441\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Responsibility, initiative and collaboration", "\u8D23\u4EFB\u3001\u4E3B\u52A8\u6027\u4E0E\u5408\u4F5C")}</h2><div class="personality-traits">${WORK_TRAITS.map((trait) => {
         const value = profile.facets[trait.facet].mean, title = text2(trait.label);
-        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E4(title)}</span></h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(trait[expressionBand(value)]))}</p></article>`;
+        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E4(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(trait[expressionBand(value)]))}</p></article>`;
       }).join("")}</div></section>
-      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E4(text2(role.label))}</span></h3><p>${E4(text2(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E4(label(facetById.get(id)))}</dt><dd>${number(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E4(text2(role.action))}</p></article>`).join("")}</div>` : ""}</section>
+      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E4(text2(role.label))}</span></h3><p>${E4(text2(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E4(label(facetById.get(id)))}</dt><dd>${number2(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E4(text2(role.action))}</p></article>`).join("")}</div>` : ""}</section>
       <section class="personality-section" aria-labelledby="personality-full-title"><h2 id="personality-full-title">${L3("\u041F\u043E\u043B\u043D\u044B\u0439 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your full personality profile", "\u5B8C\u6574\u7684\u4EBA\u683C\u7279\u5F81")}</h2><div class="personality-domains">${["C", "E", "A", "O", "N"].map((id) => {
         const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy = domainCopy[id], value = profile.domains[id].mean, title = text2(copy.title);
-        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E4(title)}</span></h3><strong>${number(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(copy.description))}</p><dl>${domain.facets.map((facet) => {
+        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E4(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(copy.description))}</p><dl>${domain.facets.map((facet) => {
           const facetLabel = label(facetById.get(facet));
-          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E4(facetLabel)}</dt><dd>${number(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
+          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E4(facetLabel)}</dt><dd>${number2(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
         }).join("")}</dl></article>`;
       }).join("")}</div></section>
       <p class="personality-method">${L3("\u041C\u0435\u0442\u043E\u0434\u0438\u043A\u0430:", "Method:", "\u65B9\u6CD5\uFF1A")} <a href="${PERSONALITY_METHOD.doi}" target="_blank" rel="noopener noreferrer">IPIP-NEO-120</a> (Johnson, 2014)${L3(", \u0440\u0435\u0434\u0430\u043A\u0446\u0438\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0433\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430; \u0440\u043E\u043B\u0438 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u2014 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0448\u043A\u0430\u043B.", "; team roles are an educational interpretation of the scales.", "\uFF0C\u91C7\u7528\u5F00\u653E\u8BD1\u6587\u7684\u4FEE\u8BA2\u7248\u672C\uFF1B\u56E2\u961F\u89D2\u8272\u662F\u5404\u9879\u7279\u5F81\u7684\u6559\u5B66\u6027\u89E3\u8BFB\u3002")}</p>
@@ -7851,257 +9759,6 @@ var CareerRuntime = (() => {
     }
     document.addEventListener("app:language", () => render(currentRoute));
     return { render, isComplete, flush: save, updateBusy: () => saveFailed };
-  }
-
-  // site/apps/career/assets/scoring.mjs
-  var SCALE_IDS = ["N", "K", "A", "M", "C", "E", "D", "T", "I"];
-  var CONDITION_IDS = ["FIELD", "SCHEDULE", "FORMAL", "SECURITY"];
-  var AGENCY_AGGREGATION = Object.freeze({ bestPathWeight: 0.7, portfolioWeight: 0.3 });
-  function clamp2(value, min = 0, max2 = 1) {
-    return Math.max(min, Math.min(max2, value));
-  }
-  function average(values) {
-    if (!values.length) return 0;
-    return values.reduce((sum, value) => sum + Number(value || 0), 0) / values.length;
-  }
-  function standardDeviation(values) {
-    if (!values.length) return 0;
-    const mean = average(values);
-    return Math.sqrt(average(values.map((value) => (value - mean) ** 2)));
-  }
-  function computeRoleProfile(answerMap, questions) {
-    const grouped = Object.fromEntries(SCALE_IDS.map((id) => [id, []]));
-    for (const question of questions) {
-      const raw2 = Number(answerMap[question.id]);
-      if (Number.isFinite(raw2) && raw2 >= 1 && raw2 <= 5) {
-        grouped[question.scale].push(raw2);
-      }
-    }
-    const raw = {};
-    const normalized3 = {};
-    for (const id of SCALE_IDS) {
-      raw[id] = grouped[id].length ? average(grouped[id]) : 3;
-      normalized3[id] = (raw[id] - 1) / 4;
-    }
-    return profileFromMeans(raw, Object.values(grouped).reduce((sum, values) => sum + values.length, 0));
-  }
-  function profileFromMeans(raw, answered = 27) {
-    const normalized3 = Object.fromEntries(SCALE_IDS.map((id) => [id, (Number(raw[id]) - 1) / 4]));
-    const values = SCALE_IDS.map((id) => Number(raw[id]));
-    const dispersion = standardDeviation(values);
-    const mean = average(values);
-    return {
-      raw,
-      normalized: normalized3,
-      dispersion,
-      flat: dispersion < 0.26,
-      answered,
-      mean,
-      lowInterest: Math.max(...values) <= 3 && mean < 2.5,
-      positiveScales: values.filter((v) => v >= 3.5).length,
-      roleSignal: dispersion / Math.sqrt(dispersion ** 2 + 0.65 ** 2)
-    };
-  }
-  function buildSectorPreference(priorityIds = [], lowPriorityIds = [], sectors = []) {
-    const priorityWeights = [1, 0.82, 0.66, 0.5];
-    const lowWeights = [0.08, 0];
-    const values = Object.fromEntries(sectors.map((sector) => [sector.id, 0.25]));
-    priorityIds.slice(0, 4).forEach((id, index) => {
-      if (id in values) values[id] = priorityWeights[index];
-    });
-    lowPriorityIds.slice(0, 2).forEach((id, index) => {
-      if (id in values && !priorityIds.includes(id)) values[id] = lowWeights[index];
-    });
-    return values;
-  }
-  function sectorFit(preferences2, authority, focusAreas = {}) {
-    const entries = authority.sectors || [];
-    if (!entries.length) return 0.25;
-    return clamp2(Math.max(...entries.map((entry) => Number(entry.weight || 0) * Number(preferences2[entry.id] ?? 0.25) * topicAdjustment(entry.id, authority, focusAreas))));
-  }
-  function conditionDetails(userConditions = {}, requirements = {}) {
-    return CONDITION_IDS.map((id) => {
-      const willingness = Number(userConditions[id] ?? 3), requirement = requirements[id] ?? null;
-      const interval = Array.isArray(requirement) ? requirement : Number.isFinite(requirement) ? [requirement, requirement] : null;
-      if (!interval) return { id, willingness, requirement: null, interval: null, known: false, fit: 0.5, gap: null };
-      const [lo, hi] = interval;
-      if (!(lo >= 1 && hi <= 5 && lo <= hi)) throw new Error(`Invalid condition interval ${id}`);
-      const expectedGap = lo === hi ? Math.max(0, lo - willingness) : (Math.max(0, hi - willingness) ** 2 - Math.max(0, lo - willingness) ** 2) / (2 * (hi - lo));
-      return { id, willingness, requirement, interval, known: true, fit: clamp2(1 - expectedGap / 4), gap: expectedGap };
-    });
-  }
-  function conditionFit(userConditions = {}, requirements = {}) {
-    return average(conditionDetails(userConditions, requirements).map((row) => row.fit));
-  }
-  function roleFit(roleProfile, template) {
-    const user = SCALE_IDS.map((id) => Number(roleProfile.raw[id]));
-    const target = SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5));
-    const mean = average(user), tmean = average(target);
-    let dot = 0, norm = 0, tnorm = 0;
-    for (let i2 = 0; i2 < user.length; i2++) {
-      const u = user[i2] - mean, t = target[i2] - tmean;
-      dot += u * t;
-      norm += u * u;
-      tnorm += t * t;
-    }
-    if (tnorm < 1e-12) return 0.5;
-    return clamp2(0.5 + 0.5 * dot / (Math.sqrt(norm + user.length * 0.65 ** 2) * Math.sqrt(tnorm)));
-  }
-  function matchBand(score2) {
-    if (score2 >= 80) return { id: "high", label: "\u0412\u044B\u0441\u043E\u043A\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 70) return { id: "good", label: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    if (score2 >= 60) return { id: "moderate", label: "\u0423\u043C\u0435\u0440\u0435\u043D\u043D\u0430\u044F \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u0431\u043B\u0438\u0437\u043E\u0441\u0442\u044C" };
-    return { id: "exploratory", label: "\u041D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430" };
-  }
-  function importanceFactor(importance) {
-    if (Number(importance) >= 3) return 1;
-    if (Number(importance) === 2) return 0.96;
-    return 0.91;
-  }
-  function canonicalValue(value) {
-    if (Array.isArray(value)) return value.map(canonicalValue);
-    if (value && typeof value === "object") return Object.fromEntries(Object.keys(value).sort().filter((key) => value[key] !== void 0).map((key) => [key, canonicalValue(value[key])]));
-    return value;
-  }
-  function pathSignature(path, template, factor) {
-    return JSON.stringify(canonicalValue({
-      vector: SCALE_IDS.map((id) => Number(template.vector[id] ?? 0.5)),
-      sectors: (path.sectors || []).map((entry) => [entry.id, Number(entry.weight || 0)]).sort((left, right) => left[0].localeCompare(right[0]) || left[1] - right[1]),
-      topics: Object.fromEntries(Object.entries(path.topics || {}).filter(([, ids]) => ids?.length).map(([id, ids]) => [id, [...new Set(ids)].sort()])),
-      conditions: CONDITION_IDS.map((id) => {
-        const value = path.conditions?.[id];
-        return Array.isArray(value) ? value : Number.isFinite(value) ? [value, value] : null;
-      }),
-      factor
-    }));
-  }
-  function aggregatePaths(paths) {
-    const ordered = paths.slice().sort((a, b) => b.score - a.score || a.signature.localeCompare(b.signature));
-    const best = ordered[0];
-    const pathMeanScore = average(ordered.map((path) => path.score));
-    const contributions = {};
-    const pathMeanContributions = {};
-    for (const key of ["role", "sector", "conditions"]) {
-      pathMeanContributions[key] = average(ordered.map((path) => path.contributions[key]));
-      contributions[key] = AGENCY_AGGREGATION.bestPathWeight * best.contributions[key] + AGENCY_AGGREGATION.portfolioWeight * pathMeanContributions[key];
-    }
-    const rawScore = AGENCY_AGGREGATION.bestPathWeight * best.score + AGENCY_AGGREGATION.portfolioWeight * pathMeanScore;
-    const { signature, ...bestPath } = best;
-    return {
-      ...bestPath,
-      rawScore,
-      score: Math.round(rawScore * 10) / 10,
-      band: matchBand(rawScore),
-      bestPathScore: best.score,
-      pathMeanScore,
-      portfolioScore: pathMeanScore,
-      pathCount: ordered.length,
-      aggregation: AGENCY_AGGREGATION,
-      bestPathContributions: best.contributions,
-      pathMeanContributions,
-      contributions
-    };
-  }
-  function scoreAuthority(authority, context, trackMap) {
-    const sFit = sectorFit(context.sectorPreferences, authority, context.focusAreas);
-    const cFit = conditionFit(context.conditions, authority.conditions);
-    const paths = /* @__PURE__ */ new Map();
-    for (const link of authority.tracks || []) {
-      const template = trackMap.get(link.id);
-      if (!template) continue;
-      const path = { ...authority, ...link, sectors: link.sectors || authority.sectors, topics: link.topics || authority.topics };
-      const sFit2 = sectorFit(context.sectorPreferences, path, context.focusAreas);
-      const cFit2 = conditionFit(context.conditions, link.conditions || {});
-      const rFit = roleFit(context.roleProfile, template);
-      const factor = importanceFactor(link.importance);
-      const base = 0.4 * rFit + 0.45 * sFit2 + 0.15 * cFit2;
-      const score2 = 100 * base * factor;
-      const signature = pathSignature({ ...path, conditions: link.conditions || {} }, template, factor);
-      const candidate = {
-        score: score2,
-        signature,
-        contributions: { role: 40 * rFit * factor, sector: 45 * sFit2 * factor, conditions: 15 * cFit2 * factor },
-        roleFit: rFit,
-        sectorFit: sFit2,
-        conditionFit: cFit2,
-        track: template,
-        importance: link.importance,
-        path: link,
-        pathSectors: path.sectors,
-        pathTopics: path.topics || {},
-        pathConditions: link.conditions || {}
-      };
-      const existing = paths.get(signature);
-      if (!existing || String(candidate.track.id).localeCompare(String(existing.track.id)) < 0) paths.set(signature, candidate);
-    }
-    if (!paths.size) {
-      const score2 = 100 * (0.45 * sFit + 0.15 * cFit + 0.2);
-      const contributions = { role: 20, sector: 45 * sFit, conditions: 15 * cFit };
-      return {
-        ...authority,
-        score: Math.round(score2 * 10) / 10,
-        rawScore: score2,
-        band: matchBand(score2),
-        roleFit: 0.5,
-        sectorFit: sFit,
-        conditionFit: cFit,
-        track: null,
-        importance: 0,
-        bestPathScore: null,
-        pathMeanScore: null,
-        portfolioScore: null,
-        pathCount: 0,
-        aggregation: AGENCY_AGGREGATION,
-        contributions,
-        bestPathContributions: null,
-        pathMeanContributions: null
-      };
-    }
-    return { ...authority, ...aggregatePaths([...paths.values()]) };
-  }
-  function rankAuthorities({ authorities, tracks, questions, sectors, answers, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const roleProfile = computeRoleProfile(answers, questions);
-    return rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas });
-  }
-  function rankFromProfile({ authorities, tracks, sectors, roleProfile, prioritySectors, lowPrioritySectors, conditions: conditions2, focusAreas = {} }) {
-    const sectorPreferences = buildSectorPreference(prioritySectors, lowPrioritySectors, sectors);
-    const trackMap = new Map(tracks.map((track) => [track.id, track]));
-    const context = { roleProfile, sectorPreferences, conditions: conditions2, focusAreas };
-    const ranked = authorities.map((authority) => scoreAuthority(authority, context, trackMap)).sort((a, b) => b.rawScore - a.rawScore || a.id.localeCompare(b.id)).map((item, index) => ({ ...item, rank: index + 1 }));
-    return { ranked, roleProfile, sectorPreferences, context };
-  }
-  function selectDiscoveryCandidate(ranked, topCount = 5) {
-    if (ranked.length <= topCount) return null;
-    const fifthScore = ranked[Math.min(topCount - 1, ranked.length - 1)].score;
-    const candidates = ranked.slice(topCount, 20).filter((item) => item.familiarity <= 3 && fifthScore - item.score <= 9 && item.sectorFit >= 0.28).sort((left, right) => {
-      if (left.familiarity !== right.familiarity) return left.familiarity - right.familiarity;
-      return right.score - left.score;
-    });
-    return candidates[0] || null;
-  }
-  function buildExplanation(item, roleProfile, scales, sectors) {
-    const scaleById = new Map(scales.map((scale) => [scale.id, scale]));
-    const sectorById = new Map(sectors.map((sector) => [sector.id, sector]));
-    const strongest = Object.entries(roleProfile.raw).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([id]) => scaleById.get(id)?.short || id);
-    const authoritySectors = (item.pathSectors || item.sectors || []).slice().sort((a, b) => b.weight - a.weight).slice(0, 2).map((entry) => sectorById.get(entry.id)?.title || entry.id);
-    return {
-      strengths: strongest,
-      sectors: authoritySectors,
-      reason: roleProfile.lowInterest ? "\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u044D\u0442\u0438\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D\u044B \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C." : roleProfile.flat ? "\u041F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F \u0432\u0438\u0434\u043E\u0432 \u0440\u0430\u0431\u043E\u0442\u044B \u0431\u043B\u0438\u0437\u043A\u0438. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0442\u0440\u0435\u043A\u0430 \u2013 \u043F\u0440\u0438\u043C\u0435\u0440 \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B, \u0430 \u043D\u0435 \u0443\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0439 \u0432\u044B\u0432\u043E\u0434 \u043E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438." : `${item.track?.title || "\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0440\u0435\u043A"} \u0431\u043B\u0438\u0436\u0435 \u043A \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 \u0412\u0430\u0448\u0438\u0445 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u0439: ${strongest.join(", ").toLowerCase()}.`,
-      sectorReason: authoritySectors.length ? `\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F: ${authoritySectors.join("; ").toLowerCase()}.` : "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u0430\u044F \u043E\u0431\u043B\u0430\u0441\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u0430 \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F."
-    };
-  }
-  function completionStatus({ answers, questions, prioritySectors, lowPrioritySectors, conditions: conditions2 }) {
-    const valid = (value) => Number.isInteger(value) && value >= 1 && value <= 5;
-    const missingQuestions = questions.filter((question) => !valid(answers[question.id])).map((question) => question.id);
-    const missingConditions = CONDITION_IDS.filter((id) => !valid(conditions2[id]));
-    return {
-      complete: missingQuestions.length === 0 && prioritySectors.length === 4 && new Set(prioritySectors).size === 4 && lowPrioritySectors.length === 2 && new Set(lowPrioritySectors).size === 2 && !lowPrioritySectors.some((id) => prioritySectors.includes(id)) && missingConditions.length === 0,
-      missingQuestions,
-      priorityCount: prioritySectors.length,
-      lowPriorityCount: lowPrioritySectors.length,
-      missingConditions
-    };
   }
 
   // site/apps/career/assets/scenarios.mjs
@@ -8270,13 +9927,13 @@ var CareerRuntime = (() => {
     const sectorPreferences = buildSectorPreference(inputs.prioritySectors, inputs.lowPrioritySectors, data2.sectors);
     const context = { roleProfile, sectorPreferences, conditions: inputs.conditions, focusAreas: inputs.focusAreas || {} };
     const map = new Map(data2.tracks.map((t) => [t.id, t]));
-    const ranked = registry.records.map((record) => {
-      const options = record.tracks.map((link) => {
-        const scored = scoreAuthority({ id: record.id, shortName: record.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
+    const ranked = registry.records.map((record2) => {
+      const options = record2.tracks.map((link) => {
+        const scored = scoreAuthority({ id: record2.id, shortName: record2.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
         return { ...scored, link };
       }).sort((a, b) => b.rawScore - a.rawScore || b.sectorFit - a.sectorFit || a.link.id.localeCompare(b.link.id));
-      const overall = scoreAuthority({ id: record.id, shortName: record.name.ru, tracks: record.tracks }, context, map);
-      return { ...record, match: { ...overall, link: overall.path }, options };
+      const overall = scoreAuthority({ id: record2.id, shortName: record2.name.ru, tracks: record2.tracks }, context, map);
+      return { ...record2, match: { ...overall, link: overall.path }, options };
     }).sort((a, b) => b.match.rawScore - a.match.rawScore || b.match.sectorFit - a.match.sectorFit || a.name.ru.localeCompare(b.name.ru, "ru"));
     return { ranked, roleProfile, sectorPreferences };
   }
@@ -8332,7 +9989,7 @@ var CareerRuntime = (() => {
       const selectedItems = comparison.map((id) => items.find((x2) => x2.id === id) || byId(id));
       return `<section class="ps-section ps-comparison" id="ps-comparison"><h2>${L4("\u0414\u0432\u0430 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0440\u044F\u0434\u043E\u043C", "Two directions side by side", "\u4E24\u4E2A\u65B9\u5411\u5E76\u5217")}</h2><div class="ps-compare-grid">${selectedItems.map((a) => `<article><h3>${B(a.name)}</h3><p>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</p><strong>${a.match ? F(a.match.score) + " / 100" : L4("\u041F\u0440\u043E\u0439\u0434\u0438\u0442\u0435 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430", "Complete the test for an index", "\u5B8C\u6210\u6D4B\u8BD5\u540E\u663E\u793A\u6307\u6570")}</strong><p>${a.match ? B(a.match.link.title) : B(a.tracks[0].title)}</p><p>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C \u0441\u043B\u0443\u0436\u0431\u044B \u043F\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C \u043C\u0430\u0442\u0435\u0440\u0438\u0430\u043B\u0430\u043C.", "Check education requirements and the actual service regime in official materials.", "\u6309\u5B98\u65B9\u8D44\u6599\u6838\u5BF9\u5B66\u5386\u8981\u6C42\u548C\u5B9E\u9645\u670D\u52A1\u5236\u5EA6\u3002")}</p>${sourceLink(a.sources.find((s) => s.id === "hr") || a.sources[0])}</article>`).join("")}</div><button class="text-link" id="ps-clear-compare">${L4("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435", "Clear comparison", "\u6E05\u7A7A\u6BD4\u8F83")}</button></section>`;
     }
-    function list() {
+    function list2() {
       const items = filterPublicRecords(result?.ranked || registry.records, { cohort, query });
       return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E5(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E5(registry.registryVersion)}</small></details>`;
     }
@@ -8394,7 +10051,7 @@ var CareerRuntime = (() => {
     function render(route) {
       if (route !== "public-service") return;
       result = rankPublicService(registry, data2, state2);
-      root.innerHTML = header() + (selected && byId(selected) ? detail(byId(selected)) : list());
+      root.innerHTML = header() + (selected && byId(selected) ? detail(byId(selected)) : list2());
       root.querySelector(".ps-dossier-heading h2")?.setAttribute("tabindex", "-1");
       bind();
     }
@@ -8605,18 +10262,18 @@ var CareerRuntime = (() => {
   var D = (x2) => `${x2 > 0 ? "+" : ""}${F2(x2)}`;
   function createDecisionLab({ data: data2, state: state2, routeTo: routeTo2, openAuthority: openAuthority2, saveScenario, toast: toast2 }) {
     const root = document.querySelector("#decision-root");
-    let mode = "explain", selected = "", baseline = null, draft = null, fingerprint = "", sensitivity = null, busy = false, title = "";
+    let mode = "explain", selected = "", baseline = null, draft = null, fingerprint2 = "", sensitivity = null, busy = false, title = "";
     let stale = false, preview = null, result = null, epoch = 0;
     const agency = (id) => data2.authorities.find((a) => a.id === id);
     const sname = (id) => data2.sectors.find((s) => s.id === id)?.title || id;
     function sync() {
       try {
         const fp = inputFingerprint(state2, data2);
-        if (fp !== fingerprint) {
-          stale = Boolean(fingerprint);
+        if (fp !== fingerprint2) {
+          stale = Boolean(fingerprint2);
           baseline = checkedInputs(state2, data2);
           draft = structuredClone(baseline);
-          fingerprint = fp;
+          fingerprint2 = fp;
           sensitivity = null;
           busy = false;
           title = "";
@@ -8765,7 +10422,7 @@ var CareerRuntime = (() => {
           root.querySelector("#dl-title").focus();
           return;
         }
-        if (inputFingerprint(state2, data2) !== fingerprint) {
+        if (inputFingerprint(state2, data2) !== fingerprint2) {
           rerender();
           return;
         }
@@ -8784,9 +10441,9 @@ var CareerRuntime = (() => {
     document.addEventListener("app:language", () => {
       if (!document.querySelector("#view-lab").hidden) render("lab");
     });
-    return { render, open: entry, updateBusy: () => busy, captureForUpdate: () => ({ mode, selected, draft: structuredClone(draft), fingerprint, title }), restoreForUpdate(value) {
+    return { render, open: entry, updateBusy: () => busy, captureForUpdate: () => ({ mode, selected, draft: structuredClone(draft), fingerprint: fingerprint2, title }), restoreForUpdate(value) {
       sync();
-      if (value?.fingerprint !== fingerprint) return false;
+      if (value?.fingerprint !== fingerprint2) return false;
       mode = ["explain", "experiment"].includes(value.mode) ? value.mode : "explain";
       selected = agency(value.selected) ? value.selected : selected;
       draft = value.draft ? checkedInputs(value.draft, data2) : draft;
@@ -8863,7 +10520,7 @@ var CareerRuntime = (() => {
   var TEXT_LIMIT = 1200;
   var textFields = ["why", "question", "next"];
   var plain4 = (x2) => x2 !== null && typeof x2 === "object" && !Array.isArray(x2);
-  var keys = (o, list) => plain4(o) && Object.keys(o).length === list.length && list.every((k) => Object.hasOwn(o, k));
+  var keys = (o, list2) => plain4(o) && Object.keys(o).length === list2.length && list2.every((k) => Object.hasOwn(o, k));
   function blankWorkbook() {
     return { schema: NOTEBOOK_SCHEMA, schemaVersion: 1, selected: null, notes: {}, responses: {}, duration: 90 };
   }
@@ -9146,51 +10803,51 @@ var CareerRuntime = (() => {
   var plainObject = (value) => !!value && typeof value === "object" && !Array.isArray(value);
   var exactKeys = (value, keys3) => plainObject(value) && Object.keys(value).length === keys3.length && keys3.every((key) => Object.hasOwn(value, key));
   var TRACK_IDS = ["POLICY", "LEGAL", "INSPECT", "PROGRAM", "FINANCE", "DIGITAL", "SERVICE", "TERRITORIAL", "INTERNATIONAL"];
-  function validateAnonymousRecord(record, registry = validationRegistry) {
+  function validateAnonymousRecord(record2, registry = validationRegistry) {
     const errors = [];
-    if (!record || typeof record !== "object" || Array.isArray(record)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
-    if (record.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
-    const schemaOK = exactKeys(record, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record.roleProfile.raw, SCALE_IDS2) && exactKeys(record.conditions, CONDITION_IDS3) && Array.isArray(record.ranking) && record.ranking.length >= 5 && record.ranking.length <= 10 && record.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
+    if (!record2 || typeof record2 !== "object" || Array.isArray(record2)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
+    if (record2.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
+    const schemaOK = exactKeys(record2, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record2.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record2.roleProfile.raw, SCALE_IDS2) && exactKeys(record2.conditions, CONDITION_IDS3) && Array.isArray(record2.ranking) && record2.ranking.length >= 5 && record2.ranking.length <= 10 && record2.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
     if (!schemaOK) return { valid: false, errors: ["\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0444\u0430\u0439\u043B\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0437\u0430\u043A\u0440\u044B\u0442\u043E\u0439 \u0441\u0445\u0435\u043C\u0435. \u041F\u043E\u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u0435, \u0432 \u0442\u043E\u043C \u0447\u0438\u0441\u043B\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u043E\u043B\u044F, \u043D\u0435 \u0434\u043E\u043F\u0443\u0441\u043A\u0430\u044E\u0442\u0441\u044F."] };
-    if (!Array.isArray(record.leadingTieIds) || !record.leadingTieIds.length || record.leadingTieIds.length > 69 || new Set(record.leadingTieIds).size !== record.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
-    if (record.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
-    if (record.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
-    if (record.questionnaireVersion !== QUESTIONNAIRE_VERSION || record.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
-    if (!validateFocusAreas(record.focusAreas, record.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
-    if (record.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
-    if (typeof record.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
-    if (typeof record.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record.createdAt) || Number.isNaN(Date.parse(record.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
-    if (!record.roleProfile || typeof record.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
+    if (!Array.isArray(record2.leadingTieIds) || !record2.leadingTieIds.length || record2.leadingTieIds.length > 69 || new Set(record2.leadingTieIds).size !== record2.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
+    if (record2.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
+    if (record2.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
+    if (record2.questionnaireVersion !== QUESTIONNAIRE_VERSION || record2.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
+    if (!validateFocusAreas(record2.focusAreas, record2.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
+    if (record2.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
+    if (typeof record2.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record2.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
+    if (typeof record2.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record2.createdAt) || Number.isNaN(Date.parse(record2.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
+    if (!record2.roleProfile || typeof record2.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
     for (const id of SCALE_IDS2) {
-      const value = record.roleProfile?.raw?.[id];
+      const value = record2.roleProfile?.raw?.[id];
       if (!Number.isFinite(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0448\u043A\u0430\u043B\u044B ${id}.`);
     }
-    const dispersion = record.roleProfile?.dispersion;
+    const dispersion = record2.roleProfile?.dispersion;
     if (!Number.isFinite(dispersion) || dispersion < 0 || dispersion > 2) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0438\u0441\u043F\u0435\u0440\u0441\u0438\u044F \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    if (typeof record.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    const values = SCALE_IDS2.map((id) => record.roleProfile.raw[id]);
+    if (typeof record2.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
+    const values = SCALE_IDS2.map((id) => record2.roleProfile.raw[id]);
     if (values.every((v) => typeof v === "number" && Number.isFinite(v))) {
       const mean = values.reduce((a, b) => a + b, 0) / values.length;
       const sd = Math.sqrt(values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length);
-      if (Math.abs(sd - dispersion) > 1e-6 || record.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
+      if (Math.abs(sd - dispersion) > 1e-6 || record2.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
     }
-    if (!Array.isArray(record.prioritySectors) || record.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    if (!Array.isArray(record.lowPrioritySectors) || record.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    const priority = Array.isArray(record.prioritySectors) ? record.prioritySectors : [];
-    const low = Array.isArray(record.lowPrioritySectors) ? record.lowPrioritySectors : [];
+    if (!Array.isArray(record2.prioritySectors) || record2.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    if (!Array.isArray(record2.lowPrioritySectors) || record2.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    const priority = Array.isArray(record2.prioritySectors) ? record2.prioritySectors : [];
+    const low = Array.isArray(record2.lowPrioritySectors) ? record2.lowPrioritySectors : [];
     if (new Set(priority).size !== priority.length || new Set(low).size !== low.length) errors.push("\u0421\u0444\u0435\u0440\u044B \u0432\u043D\u0443\u0442\u0440\u0438 \u0441\u043F\u0438\u0441\u043A\u0430 \u043D\u0435 \u0434\u043E\u043B\u0436\u043D\u044B \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0442\u044C\u0441\u044F.");
     if (priority.some((id) => !SECTOR_IDS.includes(id)) || low.some((id) => !SECTOR_IDS.includes(id))) errors.push("\u0424\u0430\u0439\u043B \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0443\u044E \u0441\u0444\u0435\u0440\u0443 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438.");
     if (priority.some((id) => low.includes(id))) errors.push("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0438 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u043F\u0435\u0440\u0435\u0441\u0435\u043A\u0430\u044E\u0442\u0441\u044F.");
-    if (!record.conditions || typeof record.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
+    if (!record2.conditions || typeof record2.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
     for (const id of CONDITION_IDS3) {
-      const value = record.conditions?.[id];
+      const value = record2.conditions?.[id];
       if (!Number.isInteger(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F ${id}.`);
     }
-    if (!Array.isArray(record.ranking) || record.ranking.length < 5 || record.ranking.length > 10) {
+    if (!Array.isArray(record2.ranking) || record2.ranking.length < 5 || record2.ranking.length > 10) {
       errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0434\u043E\u043B\u0436\u0435\u043D \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043E\u0442 \u043F\u044F\u0442\u0438 \u0434\u043E \u0434\u0435\u0441\u044F\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.");
     } else {
       const authorityIds = /* @__PURE__ */ new Set();
-      record.ranking.forEach((item, index) => {
+      record2.ranking.forEach((item, index) => {
         if (!item || typeof item !== "object") {
           errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0441\u0442\u0440\u043E\u043A\u0430 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 ${index + 1}.`);
           return;
@@ -9200,7 +10857,7 @@ var CareerRuntime = (() => {
         if (authorityIds.has(item.authorityId)) errors.push("\u041E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0435\u0442\u0441\u044F \u0432 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435.");
         authorityIds.add(item.authorityId);
         if (typeof item.score !== "number" || !Number.isFinite(item.score) || item.score < 0 || item.score > 100) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441 \u0432 \u0441\u0442\u0440\u043E\u043A\u0435 ${index + 1}.`);
-        if (index && item.score > record.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
+        if (index && item.score > record2.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
         if (Array.isArray(registry?.authorities)) {
           const authority = registry.authorities.find((a) => a.id === item.authorityId);
           if (!authority || ["corporation", "fund"].includes(authority.entityType)) errors.push("\u0412 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0432\u043D\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0433\u043E \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430.");
@@ -9216,35 +10873,35 @@ var CareerRuntime = (() => {
         authorities: registry.authorities,
         tracks: registry.tracks,
         sectors: registry.sectors,
-        roleProfile: profileFromMeans(record.roleProfile.raw),
+        roleProfile: profileFromMeans(record2.roleProfile.raw),
         prioritySectors: priority,
         lowPrioritySectors: low,
-        conditions: record.conditions,
-        focusAreas: record.focusAreas
+        conditions: record2.conditions,
+        focusAreas: record2.focusAreas
       }).ranked.filter((item) => !["corporation", "fund"].includes(item.entityType));
       const expectedTies = expected.filter((x2) => Math.abs(x2.rawScore - expected[0].rawScore) < 1e-8).map((x2) => x2.id);
-      if (JSON.stringify(expectedTies) !== JSON.stringify(record.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
-      expected.splice(record.ranking.length);
-      if (expected.length !== record.ranking.length || expected.some((item, i2) => item.id !== record.ranking[i2].authorityId || Math.abs(item.score - record.ranking[i2].score) > 1e-8 || (item.track?.id || null) !== record.ranking[i2].trackId)) {
+      if (JSON.stringify(expectedTies) !== JSON.stringify(record2.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
+      expected.splice(record2.ranking.length);
+      if (expected.length !== record2.ranking.length || expected.some((item, i2) => item.id !== record2.ranking[i2].authorityId || Math.abs(item.score - record2.ranking[i2].score) > 1e-8 || (item.track?.id || null) !== record2.ranking[i2].trackId)) {
         errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u0438 \u0432\u0435\u0440\u0441\u0438\u0438 \u043C\u043E\u0434\u0435\u043B\u0438. \u041F\u0435\u0440\u0435\u0441\u0447\u0451\u0442 \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0438\u043B \u0440\u0430\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.");
       }
     }
     return { valid: errors.length === 0, errors: [...new Set(errors)] };
   }
   function aggregateAnonymousRecords(records = [], registry = validationRegistry) {
-    const validRecords = records.filter((record) => validateAnonymousRecord(record, registry).valid);
+    const validRecords = records.filter((record2) => validateAnonymousRecord(record2, registry).valid);
     const authorityTopOne = /* @__PURE__ */ new Map();
     const authorityTopFive = /* @__PURE__ */ new Map();
     const tracks = /* @__PURE__ */ new Map();
     const sectors = /* @__PURE__ */ new Map();
     const scaleSums = Object.fromEntries(SCALE_IDS2.map((id) => [id, 0]));
     let flatCount = 0;
-    for (const record of validRecords) {
-      if (record.roleProfile.flat) flatCount += 1;
-      for (const id of SCALE_IDS2) scaleSums[id] += Number(record.roleProfile.raw[id] || 0);
-      for (const id of record.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
-      for (const id of record.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record.leadingTieIds.length);
-      for (const item of (record.ranking || []).slice(0, 5)) {
+    for (const record2 of validRecords) {
+      if (record2.roleProfile.flat) flatCount += 1;
+      for (const id of SCALE_IDS2) scaleSums[id] += Number(record2.roleProfile.raw[id] || 0);
+      for (const id of record2.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
+      for (const id of record2.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record2.leadingTieIds.length);
+      for (const item of (record2.ranking || []).slice(0, 5)) {
         authorityTopFive.set(item.authorityId, (authorityTopFive.get(item.authorityId) || 0) + 1);
         if (item.trackId) tracks.set(item.trackId, (tracks.get(item.trackId) || 0) + 1);
       }
@@ -9270,21 +10927,21 @@ var CareerRuntime = (() => {
   function recordsToCsv(records = [], registry = validationRegistry) {
     const header = ["record_id", "created_at", ...SCALE_IDS2.map((id) => `scale_${id}`), "dispersion", "flat", "priority_sectors", "low_priority_sectors", ...CONDITION_IDS3.map((id) => `condition_${id}`), "first_displayed_authority", "top1_score", "top1_track", "equal_leading_authorities"];
     const lines = [header.join(";")];
-    for (const record of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
-      const top = record.ranking[0] || {};
+    for (const record2 of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
+      const top = record2.ranking[0] || {};
       const row = [
-        record.recordId,
-        record.createdAt,
-        ...SCALE_IDS2.map((id) => Number(record.roleProfile.raw[id]).toFixed(2)),
-        Number(record.roleProfile.dispersion || 0).toFixed(3),
-        record.roleProfile.flat ? 1 : 0,
-        record.prioritySectors.join("|"),
-        record.lowPrioritySectors.join("|"),
-        ...CONDITION_IDS3.map((id) => record.conditions[id]),
+        record2.recordId,
+        record2.createdAt,
+        ...SCALE_IDS2.map((id) => Number(record2.roleProfile.raw[id]).toFixed(2)),
+        Number(record2.roleProfile.dispersion || 0).toFixed(3),
+        record2.roleProfile.flat ? 1 : 0,
+        record2.prioritySectors.join("|"),
+        record2.lowPrioritySectors.join("|"),
+        ...CONDITION_IDS3.map((id) => record2.conditions[id]),
         top.authorityId || "",
         top.score ?? "",
         top.trackId || "",
-        record.leadingTieIds.join("|")
+        record2.leadingTieIds.join("|")
       ];
       lines.push(row.map(csvCell).join(";"));
     }
@@ -9334,30 +10991,30 @@ var CareerRuntime = (() => {
     if (!records.length || records.length > GROUP_LIMIT) throw Error("record-limit");
     if (bundle && value.origin === "demo" || records.some((r) => typeof r?.recordId === "string" && r.recordId.startsWith("demo-"))) throw Error("demo-data");
     const seen = /* @__PURE__ */ new Set();
-    for (const record of records) {
-      const validation = validateAnonymousRecord(record, registry);
+    for (const record2 of records) {
+      const validation = validateAnonymousRecord(record2, registry);
       if (!validation.valid) {
         const error = new Error("record-schema");
         error.validationErrors = validation.errors;
         throw error;
       }
-      if (seen.has(record.recordId)) throw Error("duplicate-in-bundle");
-      seen.add(record.recordId);
+      if (seen.has(record2.recordId)) throw Error("duplicate-in-bundle");
+      seen.add(record2.recordId);
     }
     return records;
   }
   function mergeGroupRecords(existing, incoming) {
     const records = [...existing], byId = new Map(existing.map((x2) => [x2.recordId, x2]));
     let added = 0, duplicates = 0;
-    for (const record of incoming) {
-      const prior = byId.get(record.recordId);
+    for (const record2 of incoming) {
+      const prior = byId.get(record2.recordId);
       if (prior) {
-        if (!sameRecord(prior, record)) throw Error("id-conflict");
+        if (!sameRecord(prior, record2)) throw Error("id-conflict");
         duplicates++;
         continue;
       }
-      records.push(record);
-      byId.set(record.recordId, record);
+      records.push(record2);
+      byId.set(record2.recordId, record2);
       added++;
     }
     if (records.length > GROUP_LIMIT) throw Error("record-limit");
@@ -9406,7 +11063,7 @@ var CareerRuntime = (() => {
   var external = (url, label2) => `<a class="text-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${label2}${glyph("external")}</a>`;
   var uid = () => globalThis.crypto?.randomUUID?.() || `scenario-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   var authorityCore = (a) => !["corporation", "fund"].includes(a.entityType);
-  var date2 = (value) => new Intl.DateTimeFormat(numberLocale(), { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
+  var date3 = (value) => new Intl.DateTimeFormat(numberLocale(), { day: "2-digit", month: "short", year: "numeric" }).format(new Date(value));
   function resourceCards(resources2) {
     const labels = { closed: "\u041F\u0440\u0438\u0451\u043C \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D", directory: "\u041A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430", indirect: "\u0410\u0434\u0440\u0435\u0441 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D \u043A\u043E\u0441\u0432\u0435\u043D\u043D\u043E", recheck: "\u041D\u0443\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C", "check-deadline": "\u041F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0441\u0440\u043E\u043A \u043F\u0440\u0438\u0451\u043C\u0430" };
     return resources2.map((r) => {
@@ -9494,7 +11151,7 @@ var CareerRuntime = (() => {
       $("#scenario-storage-warning").hidden = storageAvailable;
       root.innerHTML = scenarios.length ? scenarios.map((item) => {
         const result = resultFor(item), top = result?.ranked.filter(authorityCore).slice(0, 3) || [], checked = selection.includes(item.id);
-        return `<article class="saved-scenario ${checked ? "selected" : ""}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date2(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked ? "checked" : ""} ${result ? "" : "disabled"}><span>\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</span></label></div>
+        return `<article class="saved-scenario ${checked ? "selected" : ""}" data-scenario-card="${item.id}"><div class="saved-scenario-heading"><div><p data-no-i18n>${date3(item.createdAt)}</p><h2 data-no-i18n>${esc(item.title)}</h2></div><label class="scenario-check"><input type="checkbox" data-scenario-pick="${item.id}" ${checked ? "checked" : ""} ${result ? "" : "disabled"}><span>\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C</span></label></div>
       <div class="tag-row">${item.inputs.prioritySectors.map((id) => `<span class="tag">${esc(data2.sectors.find((s) => s.id === id)?.title || id)}</span>`).join("")}</div>
       <div class="scenario-top">${top.map((a, i2) => `<span><b>${i2 + 1}</b>${esc(authorityName(a))}<strong>${a.score.toFixed(1)}</strong></span>`).join("")}</div>
       ${!result ? '<p class="scenario-warning">\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043E\u0442\u0432\u0435\u0442\u044B, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0438.</p>' : ""}
@@ -9565,8 +11222,8 @@ var CareerRuntime = (() => {
         return;
       }
       const comparison = compareScenarioResults(a, b, ra, rb);
-      const list = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x2) => x2.id))];
-      const rows = comparison.rows.filter((x2) => list.includes(x2.id));
+      const list2 = [...new Set([...ra.ranked.filter(authorityCore).slice(0, 5), ...rb.ranked.filter(authorityCore).slice(0, 5)].map((x2) => x2.id))];
+      const rows = comparison.rows.filter((x2) => list2.includes(x2.id));
       root.innerHTML = `<div class="comparison-heading"><h2>\u0414\u0432\u0430 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F \u0440\u044F\u0434\u043E\u043C</h2><p>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432: \u0432\u0442\u043E\u0440\u043E\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439 \u043C\u0438\u043D\u0443\u0441 \u043F\u0435\u0440\u0432\u044B\u0439. \u042D\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F, \u043D\u0435 \u043F\u0440\u043E\u0433\u043D\u043E\u0437 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0443\u0441\u043F\u0435\u0445\u0430.</p></div>
     <div class="scenario-summary"><span><b>${comparison.topOverlap} / 5</b>\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u0422\u041E\u041F-5</span><span><b>${comparison.changedAnswers.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u043E\u0442\u0432\u0435\u0442\u043E\u0432</span><span><b>${comparison.changedConditions.length}</b>\u0418\u0437\u043C\u0435\u043D\u0451\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439</span></div>
     <div class="scenario-table-scroll" tabindex="0" aria-label="\u0422\u0430\u0431\u043B\u0438\u0446\u0430 \u0441\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u044F \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u0432"><table class="scenario-table"><caption>\u041E\u0440\u0433\u0430\u043D\u044B \u0438\u0437 \u0434\u0432\u0443\u0445 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043E\u043A</caption><thead><tr><th>\u041E\u0440\u0433\u0430\u043D</th><th data-no-i18n>${esc(a.title)}</th><th data-no-i18n>${esc(b.title)}</th><th>\u0420\u0430\u0437\u043D\u043E\u0441\u0442\u044C</th></tr></thead><tbody>${rows.map((row) => `<tr><th><button class="text-link" data-dossier="${row.id}">${esc(name2(row.id))}</button></th><td>${row.scoreA.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankA}</small></td><td>${row.scoreB.toFixed(1)}<small>\u041C\u0435\u0441\u0442\u043E: ${row.rankB}</small></td><td class="${row.delta > 0 ? "delta-up" : ""}">${row.delta > 0 ? "+" : ""}${row.delta.toFixed(1)}</td></tr>`).join("")}</tbody></table></div>`;
@@ -9796,7 +11453,7 @@ var CareerRuntime = (() => {
   var $$2 = (selector, root = document) => [...root.querySelectorAll(selector)];
   var icon2 = (id, className = "") => `<svg class="${className}" aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var escapeHtml = (value = "") => String(value).replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[char]);
-  var safeUrl = (value = "") => {
+  var safeUrl2 = (value = "") => {
     try {
       const url = new URL(value, location.href);
       return ["https:", "http:"].includes(url.protocol) ? escapeHtml(url.href) : "#";
@@ -9909,8 +11566,8 @@ var CareerRuntime = (() => {
     }
     let saved = true;
     try {
-      const fingerprint = stateFingerprint();
-      if (fingerprint !== persistedFingerprint) {
+      const fingerprint2 = stateFingerprint();
+      if (fingerprint2 !== persistedFingerprint) {
         writeLocal(STORAGE_KEY, JSON.stringify({
           schema: 4,
           questionnaireVersion: QUESTIONNAIRE_VERSION,
@@ -9919,7 +11576,7 @@ var CareerRuntime = (() => {
           ...state,
           updatedAt: (/* @__PURE__ */ new Date()).toISOString()
         }));
-        persistedFingerprint = fingerprint;
+        persistedFingerprint = fingerprint2;
       }
       if ($2("#storage-warning")) $2("#storage-warning").hidden = true;
     } catch {
@@ -10383,10 +12040,10 @@ var CareerRuntime = (() => {
   }
   function beginSectorDrag(row, mode, event) {
     finishSectorDrag(false, { focus: false, announce: false });
-    const list = row.parentElement, rows = $$2(".sector-order-row", list), index = rows.indexOf(row);
-    sectorDrag = { row, list, rows, mode, key: row.dataset.orderKey, id: row.dataset.sectorId, index, target: index, pointerId: event?.pointerId, touchId: event?.touchId, startY: event?.clientY, clientY: event?.clientY, grabOffset: event ? event.clientY - row.getBoundingClientRect().top : 0, moved: mode === "keyboard" };
+    const list2 = row.parentElement, rows = $$2(".sector-order-row", list2), index = rows.indexOf(row);
+    sectorDrag = { row, list: list2, rows, mode, key: row.dataset.orderKey, id: row.dataset.sectorId, index, target: index, pointerId: event?.pointerId, touchId: event?.touchId, startY: event?.clientY, clientY: event?.clientY, grabOffset: event ? event.clientY - row.getBoundingClientRect().top : 0, moved: mode === "keyboard" };
     row.classList.add("is-dragging");
-    list.classList.add("is-sorting");
+    list2.classList.add("is-sorting");
     announceSectorOrder("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442 \u0432\u044B\u0431\u0440\u0430\u043D \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F.");
     if (mode !== "keyboard") {
       const session = sectorDrag;
@@ -10745,7 +12402,7 @@ var CareerRuntime = (() => {
   function exportAnonymousResult() {
     const result = getResults();
     if (!result) return;
-    const record = createAnonymousRecord({
+    const record2 = createAnonymousRecord({
       recordId: state.resultRecordId || anonymousId(),
       createdAt: state.completedAt || (/* @__PURE__ */ new Date()).toISOString(),
       roleProfile: result.roleProfile,
@@ -10756,7 +12413,7 @@ var CareerRuntime = (() => {
       ranked: result.ranked
     });
     const stamp = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
-    downloadText(`rudn-career-result-${stamp}-${record.recordId.slice(0, 8)}.json`, JSON.stringify(record, null, 2), "application/json;charset=utf-8");
+    downloadText(`rudn-career-result-${stamp}-${record2.recordId.slice(0, 8)}.json`, JSON.stringify(record2, null, 2), "application/json;charset=utf-8");
     toast("\u041E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u0444\u0430\u0439\u043B \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043B\u0435\u043D.");
   }
   function directoryMatches(authority, query, type, sector, track) {
@@ -10840,7 +12497,7 @@ var CareerRuntime = (() => {
   function authorityEntryMarkup(authority) {
     const routes = relevantEntryRoutes(authority, data.entryRoutes);
     return `<div class="entry-verified"><h2>\u041F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438</h2><p>\u0421\u0441\u044B\u043B\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u043D\u0430\u043B\u0438\u0447\u0438\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.</p><div class="resource-grid">${resourceCards(resourcesForAuthority(authority, data.resources))}</div><button class="button button-secondary" type="button" data-open-resources="${authority.id}">\u0412\u0441\u0435 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0435 \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B${icon2("arrow-right")}</button></div><div class="entry-summary"><div class="entry-summary-icon">${icon2("route")}</div><div><span>\u0421\u0438\u0441\u0442\u0435\u043C\u0430 \u0432\u0445\u043E\u0434\u0430</span><strong>${escapeHtml(careerSystemLabel(authority))}</strong><p>\u0410\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0432\u0441\u0435\u0433\u0434\u0430 \u043E\u043F\u0440\u0435\u0434\u0435\u043B\u044F\u0435\u0442 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435 \u0438\u043B\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0430\u0437\u0434\u0435\u043B \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.</p></div></div>
-    <section class="dialog-section"><h2>\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u044B\u0435 \u043C\u0430\u0440\u0448\u0440\u0443\u0442\u044B</h2><div class="entry-route-list">${routes.map((route, index) => `<article class="entry-route-card"><span>${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(route.title)}</h3><p>${escapeHtml(route.description)}</p><ol>${route.steps.slice(0, 4).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol><a href="${safeUrl(route.url)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0441\u0443\u0440\u0441</a></div></article>`).join("")}</div></section>
+    <section class="dialog-section"><h2>\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u044B\u0435 \u043C\u0430\u0440\u0448\u0440\u0443\u0442\u044B</h2><div class="entry-route-list">${routes.map((route, index) => `<article class="entry-route-card"><span>${String(index + 1).padStart(2, "0")}</span><div><h3>${escapeHtml(route.title)}</h3><p>${escapeHtml(route.description)}</p><ol>${route.steps.slice(0, 4).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol><a href="${safeUrl2(route.url)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0441\u0443\u0440\u0441</a></div></article>`).join("")}</div></section>
     <section class="dialog-section"><h2>\u0427\u0442\u043E \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0442\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0443 \u0413\u041C\u0423</h2><div class="principle-grid">${data.careerFramework.qualificationPrinciples.map((item) => `<div>${icon2("check")}<p>${escapeHtml(item)}</p></div>`).join("")}</div></section>`;
   }
   function authoritySourcesMarkup(authority) {
@@ -10849,7 +12506,7 @@ var CareerRuntime = (() => {
       ...data.careerFramework.sources.map((item) => ({ ...item, label: item.title }))
     ];
     return `${authoritySymbolCredit(authority)}${classroom?.sourceForAuthority(authority.id) || ""}<div class="source-governance"><h2>\u0427\u0442\u043E \u044F\u0432\u043B\u044F\u0435\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C, \u0430 \u0447\u0442\u043E \u043C\u043E\u0434\u0435\u043B\u044C\u043D\u044B\u043C</h2><div class="source-governance-grid"><div><strong>\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F</strong><p>\u041D\u0430\u0438\u043C\u0435\u043D\u043E\u0432\u0430\u043D\u0438\u0435, \u0438\u043D\u0441\u0442\u0438\u0442\u0443\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0442\u0438\u043F, \u043F\u043E\u0434\u0447\u0438\u043D\u0451\u043D\u043D\u043E\u0441\u0442\u044C, \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E \u043E\u043F\u0438\u0441\u0430\u043D\u043D\u044B\u0435 \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u044F \u0438 \u0441\u0441\u044B\u043B\u043A\u0438 \u043D\u0430 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u044B\u0435 \u0440\u0435\u0441\u0443\u0440\u0441\u044B.</p></div><div><strong>\u0423\u0447\u0435\u0431\u043D\u0430\u044F \u043C\u043E\u0434\u0435\u043B\u044C</strong><p>\u0412\u0435\u0441\u0430 \u0441\u0444\u0435\u0440, \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0442\u0440\u0435\u043A\u0438, \u0442\u0438\u043F\u043E\u0432\u044B\u0435 \u0441\u0435\u043C\u0435\u0439\u0441\u0442\u0432\u0430 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439, \u043F\u0440\u0438\u043C\u0435\u0440\u044B \u0440\u043E\u043B\u0435\u0439 \u0438 \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u0442\u0440\u0443\u0434\u0430.</p></div></div></div>
-    <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon2("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator ? `<small>${escapeHtml(source.locator)}</small>` : ""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A")}</small></span>${icon2("external")}</a>`).join("")}</div>
+    <div class="source-list">${sourceItems.map((source) => `<a href="${safeUrl2(source.url || authority.governmentUrl)}" target="_blank" rel="noopener noreferrer"><span class="source-icon">${icon2("source")}</span><span><strong>${escapeHtml(source.label)}</strong>${source.locator ? `<small>${escapeHtml(source.locator)}</small>` : ""}<small>${escapeHtml(source.rationaleText?.[getLanguage()] || source.rationale || source.sourceType || "\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A")}</small></span>${icon2("external")}</a>`).join("")}</div>
     <div class="career-model-note warning">${icon2("info")}<p>${escapeHtml(authority.careerModel?.note || data.careerFramework.scopeNote)}</p></div>`;
   }
   function openAuthority(id, initialTab = "overview") {
@@ -11040,7 +12697,7 @@ var CareerRuntime = (() => {
         <section><h3>\u041A\u043E\u043C\u043F\u0435\u0442\u0435\u043D\u0446\u0438\u0438</h3><div class="tag-row">${competencies.map((item) => `<span class="tag">${escapeHtml(item.title)}</span>`).join("")}</div></section>
         <section><h3>\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u044B</h3><div class="compare-meters">${compareConditionMarkup(authority)}</div></section>
         <section><h3>\u0421\u043F\u043E\u0441\u043E\u0431\u044B \u0432\u0445\u043E\u0434\u0430</h3><ol>${routes.map((route) => `<li>${escapeHtml(route.title)}</li>`).join("")}</ol></section>
-        <footer><a href="${safeUrl(authority.governmentUrl)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430</a></footer>
+        <footer><a href="${safeUrl2(authority.governmentUrl)}" target="_blank" rel="noopener noreferrer">${icon2("external")}\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430</a></footer>
       </article>`).join("")}
     </div>`;
     $$2("[data-remove-compare]", root).forEach((button) => button.addEventListener("click", () => toggleCompare(button.dataset.removeCompare)));

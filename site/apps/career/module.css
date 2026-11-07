@@ -2122,8 +2122,28 @@ textarea { font:inherit; }
 .adaptive-role-section h3 { margin: 0 0 8px; color: #345670; font-size: 13px; line-height: 1.6; font-weight: 650; }
 .adaptive-role-section p { margin: 0 0 8px; color: #4b657a; font-size: 14px; line-height: 1.7; }
 .adaptive-role-section p:last-child { margin-bottom: 0; }
+.adaptive-role p, .adaptive-role-status, .adaptive-match-item, .adaptive-match-item h3, .adaptive-match-item p { min-width: 0; overflow-wrap: anywhere; }
 .adaptive-source { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; margin-top: 13px; color: #096ea7; font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .adaptive-source svg { width: 15px; height: 15px; }
+.adaptive-review-action { margin-inline-start: 16px; text-align: left; white-space: normal; overflow-wrap: anywhere; }
+.adaptive-match-browser { margin: 20px 0 0; min-width: 0; border: 1px solid #d9e5ee; border-radius: 14px; background: #fff; }
+.adaptive-match-browser > summary { min-height: 44px; padding: 13px 16px; color: #244f6d; font-weight: 650; cursor: pointer; overflow-wrap: anywhere; }
+.adaptive-match-body { padding: 0 clamp(12px, 3cqi, 22px) 18px; }
+.adaptive-match-body > p { margin: 0 0 16px; color: #4c687f; line-height: 1.6; }
+.adaptive-match-search label { display: block; margin-bottom: 6px; color: #345670; font-size: 14px; }
+.adaptive-match-search > div { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+.adaptive-match-search input { flex: 1 1 165px; min-width: 0; width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid #ccdae5; border-radius: 10px; background: #fff; color: #24465f; font: inherit; }
+.adaptive-match-search .button, .adaptive-match-pager .button { min-height: 44px; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+.adaptive-match-count { margin: 16px 0 10px; color: #49667e; font-size: 14px; font-weight: 600; }
+.adaptive-match-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+.adaptive-match-item { padding: 13px; border: 1px solid #dce6ee; border-radius: 11px; }
+.adaptive-match-item h3 { margin: 0 0 6px; color: #193951; font-size: 16px; line-height: 1.45; }
+.adaptive-match-item p { margin: 3px 0; color: #4c687f; font-size: 14px; line-height: 1.55; }
+.adaptive-match-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 3px 14px; margin-top: 4px; }
+.adaptive-match-actions > span { color: #647b8d; font-size: 12px; }
+.adaptive-match-actions .adaptive-source, .adaptive-match-actions .adaptive-review-action { margin: 0; }
+.adaptive-match-pager { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 8px; margin-top: 14px; }
+.adaptive-match-pager > span { text-align: center; font-size: 12px; color: #49667e; }
 .adaptive-result-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: 28px; padding-top: 22px; border-top: 1px solid #dae5ee; }
 .adaptive-result-controls .button { min-height: 48px; }
 .adaptive-no-matches { max-width: 700px; margin: 0; padding: 28px; border: 1px solid #dce6ee; border-radius: 16px; color: #49677e; background: #fff; font-size: 16px; line-height: 1.8; }
@@ -2151,6 +2171,193 @@ textarea { font:inherit; }
 @media (prefers-reduced-motion: reduce) {
   .adaptive-answer { transition: none; }
   .adaptive-loading-dot { animation: none; }
+}
+
+/* The source catalogue is visually separate from the ranked recommendations. */
+.adaptive-bank {
+  min-width: 0;
+  margin-top: 26px;
+  padding: clamp(16px, 3cqi, 24px);
+  border: 1px solid #d7e4ee;
+  border-radius: 16px;
+  background: #f6fafc;
+  color: #24465f;
+  overflow-wrap: anywhere;
+}
+
+.adaptive-bank h2 { margin: 0; font-size: 20px; line-height: 1.4; }
+.adaptive-bank h3 { margin: 8px 0; font-size: 19px; line-height: 1.45; }
+.adaptive-bank h4 { margin: 9px 0; color: #193951; font-size: 16px; line-height: 1.5; }
+.adaptive-bank [data-adaptive-bank-content][hidden] { display: none; }
+
+.adaptive-bank-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 44px;
+  padding: 5px 0;
+  border: 0;
+  border-radius: 7px;
+  color: #193951;
+  background: transparent;
+  font: inherit;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.adaptive-bank-toggle::after {
+  content: '';
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  margin-inline-end: 4px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.adaptive-bank-toggle[aria-expanded="true"]::after { transform: rotate(225deg); }
+.adaptive-bank-intro, .adaptive-bank-note, .adaptive-bank-location {
+  margin: 6px 0 12px;
+  color: #49677e;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.adaptive-bank [data-adaptive-bank-content] { padding-top: 6px; }
+.adaptive-bank-search { display: grid; gap: 7px; margin: 14px 0 6px; font-weight: 650; }
+.adaptive-bank-search input {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  min-height: 46px;
+  padding: 9px 12px;
+  border: 1px solid #b9ccd9;
+  border-radius: 9px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+}
+
+.adaptive-bank-employers, .adaptive-bank-vacancies {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.adaptive-bank-employers > li { min-width: 0; }
+.adaptive-bank-employer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid #d5e2ec;
+  border-radius: 10px;
+  background: #fff;
+  color: #193951;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: start;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.adaptive-bank-employer:hover { border-color: #8db5ce; background: #f1f8fc; }
+.adaptive-bank-employer span { color: #49677e; font-size: 12px; }
+.adaptive-bank-employer .adaptive-bank-identifier { font-size: 11px; }
+.adaptive-bank-vacancy {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid #d5e2ec;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.adaptive-bank-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.adaptive-bank-badges span {
+  max-width: 100%;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #edf3f7;
+  color: #456478;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.adaptive-bank-badges [data-adaptive-bank-status="source-active"] { background: #e9f4fc; color: #165778; }
+.adaptive-bank-vacancy dl { display: grid; gap: 6px; margin: 12px 0; font-size: 13px; line-height: 1.55; }
+.adaptive-bank-vacancy dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.adaptive-bank-vacancy dd { min-width: 0; margin: 0; font-weight: 600; }
+.adaptive-bank-vacancy dt { min-width: 0; color: #49677e; }
+.adaptive-bank-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.adaptive-bank-actions .adaptive-source { margin-top: 0; }
+.adaptive-bank .button {
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
+}
+
+.adaptive-bank-pager {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.adaptive-bank-pager span { min-width: 0; text-align: center; font-size: 13px; font-variant-numeric: tabular-nums; }
+.adaptive-bank button:focus-visible, .adaptive-bank input:focus-visible, .adaptive-bank a:focus-visible {
+  outline: 3px solid #75b5da;
+  outline-offset: 2px;
+}
+
+@container career (max-width: 380px) {
+  .adaptive-bank { padding: 14px; }
+  .adaptive-bank-pager { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .adaptive-bank-pager span { grid-column: 1 / -1; grid-row: 1; }
+}
+
+/* Source review and the student's plan occupy the same results column. */
+.adaptive-review { width: min(100%, 760px); min-width: 0; margin-inline: auto; overflow-wrap: anywhere; color: #193951; }
+.adaptive-review-heading { margin: 16px 0 22px; }
+.adaptive-review-heading h1 { margin: 0 0 12px; font-size: clamp(23px, 4cqi, 32px); line-height: 1.35; }
+.adaptive-review-heading h2, .adaptive-review-section h2 { margin: 0 0 12px; font-size: clamp(17px, 3cqi, 21px); line-height: 1.4; }
+.adaptive-review-heading p, .adaptive-review > p, .adaptive-review-section > p { margin: 8px 0; line-height: 1.55; }
+.adaptive-review-heading [lang="ru"], .adaptive-review-duties p, .adaptive-review-plan-list li { white-space: pre-wrap; }
+.adaptive-review-section { margin: 24px 0; }
+.adaptive-review-duties { box-sizing: border-box; margin: 18px 0; padding: 0 14px; border: 1px solid #d4e2ec; border-radius: 12px; background: #fff; }
+.adaptive-review-duties summary { min-height: 44px; padding-block: 10px; cursor: pointer; font-weight: 650; line-height: 1.5; }
+.adaptive-review-duties p { margin: 8px 0 14px; line-height: 1.6; }
+.adaptive-review-note, .adaptive-review-error { padding: 12px; border-radius: 9px; background: #eef5fa; }
+.adaptive-review-error { background: #fff2e9; color: #864719; }
+.adaptive-review-error[hidden] { display: none; }
+.adaptive-review progress { width: 100%; height: 9px; accent-color: #147bb6; }
+.adaptive-review .journey-requirement { box-sizing: border-box; min-inline-size: 0; max-inline-size: 100%; }
+.adaptive-review .journey-requirement legend { white-space: pre-wrap; }
+.adaptive-review .journey-assessment-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.adaptive-review .journey-answer { min-width: 0; }
+.adaptive-review .journey-answer input { flex: 0 0 17px; }
+.adaptive-review .journey-answer strong { min-width: 0; overflow-wrap: anywhere; }
+.adaptive-review .journey-answer:focus-within { outline: 2px solid #91c5e6; outline-offset: 2px; }
+.adaptive-review-plan-list { margin: 10px 0 0; padding-inline-start: 24px; }
+.adaptive-review-plan-list li { margin: 0 0 9px; line-height: 1.55; }
+.adaptive-review .button { max-width: 100%; min-height: 44px; white-space: normal; overflow-wrap: anywhere; }
+@container career (max-width: 440px) {
+  .adaptive-review .journey-assessment-options { grid-template-columns: minmax(0, 1fr); }
 }
 
 /* Loaded last inside the module's Shadow Root. Host navigation, identity,
