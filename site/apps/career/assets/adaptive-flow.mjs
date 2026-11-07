@@ -7,13 +7,16 @@ import {E, L, icon, regionName, safeURL} from './journey-visuals.mjs';
 import {FUNCTIONAL_MODEL_VERSION, MIN_ANSWERS, MAX_ANSWERS, buildQuestionBank, prepareCandidatePool, nextQuestion, rankVacancies, listMatchingVacancies, shouldFinish, makeCompletionRecord} from './adaptive-model.mjs';
 import {createAdaptiveBankBrowse} from './adaptive-bank-browse.mjs';
 import {createAdaptiveVacancyReview} from './adaptive-vacancy-review.mjs';
+import {createAdaptiveEmployerCards} from './adaptive-employer-card.mjs';
+import {createRegionPicker} from './region-picker.mjs';
+import {FUNCTIONAL_SESSION_KEY,VACANCY_REVIEW_KEY,seminar5ReviewComplete,seminar5ReviewTarget} from './seminar-progress.mjs';
 
 const SESSION_SCHEMA = 1;
 const SESSION_MODEL = FUNCTIONAL_MODEL_VERSION;
 const INDEX_ROOT = 'data/adaptive-index/';
 const MIB = 1024 * 1024;
 const MAX_RAW = {all:128 * MIB, national:32 * MIB, region:16 * MIB, detail:4 * MIB};
-const CAREER_ROUTES = new Set(['preferences', 'test', 'sectors', 'conditions', 'results']);
+const CAREER_ROUTES = new Set(['preferences', 'test', 'sectors', 'conditions', 'results', 'review']);
 const RESPONSIBILITY_PREFERENCES = new Set(['specialist', 'leadership', 'all']);
 const EVIDENCE_CATEGORIES = new Set(['duties', 'skills', 'knowledge']);
 const DETAIL_CACHE_LIMIT = 8;
@@ -117,11 +120,12 @@ async function loadPacked(descriptor, kind, parentSignal) {
 }
 
 /** The course-facing functional assessment. Personality data is intentionally not accessed. */
-export function createAdaptiveFlow({navigate}) {
-  const key = storageKey('functional-career-v1');
+export function createAdaptiveFlow({navigate, authorities = []}) {
+  const key = storageKey(FUNCTIONAL_SESSION_KEY);
   const empty = () => ({schemaVersion:SESSION_SCHEMA, modelVersion:SESSION_MODEL, questionnaireVersion:null, indexVersion:null,
     regionIds:[], locationConfirmed:false, responsibilityPreference:null, responsibilityDraft:null,
-    setupComplete:false, setupStep:'location', locationDraft:null, answers:[], pending:null, completedAt:null, resultRecordId:null, completion:null, selectionSeed:newSelectionSeed()});
+    setupComplete:false, setupStep:'location', locationDraft:null, answers:[], pending:null, completedAt:null, resultRecordId:null, completion:null,
+    reviewTarget:null, reviewCompletion:null, selectionSeed:newSelectionSeed()});
   let session = empty(), hydrationChanged = false, corruptStorage = false;
   function restoreSession(saved) {
     const migrating = isRecord(saved) && saved.schemaVersion === SESSION_SCHEMA &&
@@ -139,6 +143,7 @@ export function createAdaptiveFlow({navigate}) {
     // Recognized earlier results are not evidence for the new model. Keep only confirmed setup choices.
     if (migrating) return {...empty(), ...setup};
     return {...empty(), ...saved, ...setup,
+      reviewTarget:seminar5ReviewTarget(saved.reviewTarget),
       selectionSeed:validSelectionSeed(saved.selectionSeed) ? saved.selectionSeed : saved.completedAt ? '' : newSelectionSeed(),
       responsibilityDraft:RESPONSIBILITY_PREFERENCES.has(saved.responsibilityDraft) ? saved.responsibilityDraft : null,
       answers:saved.answers.slice(0, MAX_ANSWERS),
@@ -162,6 +167,7 @@ export function createAdaptiveFlow({navigate}) {
   let candidates = [], candidateKey = '', poolLoading = false, poolError = false, poolGeneration = 0, poolController = null, poolPromise = null;
   let lastRoute = 'personality', dirty = false, saveFailed = false, opening = false, transitionBusy = false;
   let regionQuery = '', regionMode = session.regionIds.length ? 'selected' : 'all', draftRegions = [...session.regionIds];
+  let locationPicker = null;
   if (isRecord(session.locationDraft) && ['all', 'selected'].includes(session.locationDraft.mode) && Array.isArray(session.locationDraft.regionIds)) {
     regionMode = session.locationDraft.mode;
     draftRegions = [...new Set(session.locationDraft.regionIds.filter(validRegion))].slice(0, 89);
@@ -170,8 +176,15 @@ export function createAdaptiveFlow({navigate}) {
   const detailCache = new Map(), detailPending = new Map(), detailErrors = new Set();
   let detailGeneration = 0, detailSelection = '', detailQueue = [];
   let matchBrowseOpen = false, matchOffset = 0, matchQuery = '', expandedMatchId = null;
-  const review = createAdaptiveVacancyReview({onClose:() => {if (lastRoute === 'results') renderResults();}});
-  const bankBrowse = createAdaptiveBankBrowse({onReview:(row,descriptor,pageRef,pageRows) => {void review.open(row,descriptor,pageRef,pageRows); renderResults();}});
+  const review = createAdaptiveVacancyReview({
+    onClose:() => navigate('results'),
+    onSelect:target => {if(JSON.stringify(target)!==JSON.stringify(session.reviewTarget))save({...session,reviewTarget:target});},
+    onComplete:proof => save({...session,reviewTarget:proof.target,reviewCompletion:{schemaVersion:1,resultRecordId:session.resultRecordId,...proof}}),
+    isCompleted:target => target?.vacancyId===session.reviewCompletion?.target?.vacancyId && hasReviewCompletion(),
+    onOpenKnowledge:goToKnowledge
+  });
+  const bankBrowse = createAdaptiveBankBrowse({onReview:(row,descriptor,pageRef,pageRows) => {void review.open(row,descriptor,pageRef,pageRows); navigate('review');}});
+  const employerCards = createAdaptiveEmployerCards(authorities);
   const resultRoot = () => document.querySelector('#results-root');
   const questionRoot = () => document.querySelector('#view-test');
   const preferenceRoot = () => document.querySelector('#journey-preferences-root');
@@ -183,6 +196,7 @@ export function createAdaptiveFlow({navigate}) {
     try {
       writeLocal(key, JSON.stringify({...next, updatedAt:new Date().toISOString()}));
       session = next; dirty = false; saveFailed = false;
+      __careerHost.progressChanged?.();
       return true;
     } catch {
       dirty = true; saveFailed = true;
@@ -211,7 +225,26 @@ export function createAdaptiveFlow({navigate}) {
   }
 
   function invalidateCompletion(value) {
-    return {...value, completedAt:null, resultRecordId:null, completion:null};
+    return {...value, completedAt:null, resultRecordId:null, completion:null, reviewTarget:null, reviewCompletion:null};
+  }
+
+  function hasReviewCompletion() {
+    const id=session.reviewCompletion?.target?.vacancyId;
+    if(!id)return false;
+    const markKey=VACANCY_REVIEW_KEY+id;
+    try {return seminar5ReviewComplete(session,{[markKey]:readLocal(storageKey(markKey))});}
+    catch {return false;}
+  }
+
+  async function goToKnowledge() {
+    if(opening||saveFailed||corruptStorage||!hasReviewCompletion())throw new Error('Vacancy review required');
+    if(notifiedRecordId!==session.resultRecordId) {
+      __careerHost.resultCalculated(session.completion);
+      notifiedRecordId=session.resultRecordId;
+    }
+    opening=true;
+    try {await __careerHost.openKnowledge();}
+    finally {opening=false;}
   }
 
   function validateSession() {
@@ -373,11 +406,29 @@ export function createAdaptiveFlow({navigate}) {
     return true;
   }
 
-  function regionList() {
-    const query = regionQuery.trim().toLocaleLowerCase();
-    const visible = territories.filter(region => !query || [region.name, region.name_en, region.name_zh, region.id].some(value => String(value || '').toLocaleLowerCase().includes(query)));
-    return visible.length ? visible.map(region => `<label class="adaptive-region"><input type="checkbox" data-adaptive-region="${E(region.id)}" ${draftRegions.includes(region.id) ? 'checked' : ''}><span>${E(regionName(region))}</span></label>`).join('')
-      : `<p class="adaptive-empty-search">${L('Регион не найден', 'No region found', '未找到地区')}</p>`;
+  function destroyLocationPicker() {
+    if (!locationPicker) return;
+    regionQuery = locationPicker.getQuery().slice(0, 100);
+    locationPicker.destroy();
+    locationPicker = null;
+  }
+
+  function mountLocationPicker(root) {
+    if (locationPicker || regionMode !== 'selected') return;
+    locationPicker = createRegionPicker({
+      root:root.querySelector('#adaptive-region-picker'),
+      regions:territories,
+      selectedIds:draftRegions,
+      initialQuery:regionQuery,
+      mapFirst:true,
+      getLanguage,
+      emptySelectionText:() => L('Выберите хотя бы один регион на карте или в списке.', 'Choose at least one region on the map or in the list.', '请在地图或列表中至少选择一个地区。'),
+      onChange(ids) {
+        draftRegions = ids;
+        root.querySelector('#adaptive-location-next').disabled = !draftRegions.length;
+        saveLocationDraft(root);
+      }
+    });
   }
 
   function saveLocationDraft(root) {
@@ -432,6 +483,7 @@ export function createAdaptiveFlow({navigate}) {
   }
 
   function renderPreferences() {
+    destroyLocationPicker();
     const root = preferenceRoot();
     if (!root || !readyFor(root)) return;
     if (session.setupStep === 'responsibility' && session.locationConfirmed) {renderResponsibility(root); return;}
@@ -442,11 +494,7 @@ export function createAdaptiveFlow({navigate}) {
         <label class="adaptive-location-mode"><input type="radio" name="adaptive-location-mode" value="all" ${regionMode === 'all' ? 'checked' : ''}><span>${L('Без ограничений по региону', 'No region restriction', '不限地区')}</span></label>
         <label class="adaptive-location-mode"><input type="radio" name="adaptive-location-mode" value="selected" ${regionMode === 'selected' ? 'checked' : ''}><span>${L('В выбранных регионах', 'In selected regions', '所选地区')}</span></label>
       </div>
-      <div id="adaptive-region-picker" class="adaptive-region-picker" ${regionMode === 'all' ? 'hidden' : ''}>
-        <label class="adaptive-region-search"><span class="adaptive-sr-only">${L('Найти регион', 'Find a region', '查找地区')}</span><input id="adaptive-region-search" type="search" value="${E(regionQuery)}" placeholder="${E(L('Найти регион', 'Find a region', '查找地区'))}" autocomplete="off"></label>
-        <div id="adaptive-region-list" class="adaptive-region-list">${regionList()}</div>
-        <p id="adaptive-region-count" class="adaptive-region-count" aria-live="polite">${L('Выбрано регионов: ', 'Regions selected: ', '已选地区：')}${draftRegions.length}</p>
-      </div>
+      <div id="adaptive-region-picker" class="adaptive-region-picker" ${regionMode === 'all' ? 'hidden' : ''}></div>
       <div id="adaptive-save-feedback">${saveError()}</div>
       <footer class="adaptive-controls"><button type="button" class="button button-primary" id="adaptive-location-next" ${regionMode === 'selected' && !draftRegions.length ? 'disabled' : ''}>${L('Продолжить', 'Continue', '继续')}${icon('arrow-right')}</button></footer>
     </div>`;
@@ -454,23 +502,11 @@ export function createAdaptiveFlow({navigate}) {
     root.querySelectorAll('input[name="adaptive-location-mode"]').forEach(input => input.addEventListener('change', () => {
       regionMode = input.value;
       root.querySelector('#adaptive-region-picker').hidden = regionMode === 'all';
+      mountLocationPicker(root);
       root.querySelector('#adaptive-location-next').disabled = regionMode === 'selected' && !draftRegions.length;
       saveLocationDraft(root);
-      if (regionMode === 'selected') root.querySelector('#adaptive-region-search').focus();
     }));
-    root.querySelector('#adaptive-region-search').addEventListener('input', event => {
-      regionQuery = event.target.value.slice(0, 100);
-      root.querySelector('#adaptive-region-list').innerHTML = regionList();
-    });
-    root.querySelector('#adaptive-region-list').addEventListener('change', event => {
-      const input = event.target.closest('[data-adaptive-region]');
-      if (!input) return;
-      const id = input.dataset.adaptiveRegion;
-      draftRegions = input.checked ? [...new Set([...draftRegions, id])] : draftRegions.filter(value => value !== id);
-      root.querySelector('#adaptive-region-count').textContent = L('Выбрано регионов: ', 'Regions selected: ', '已选地区：') + draftRegions.length;
-      root.querySelector('#adaptive-location-next').disabled = regionMode === 'selected' && !draftRegions.length;
-      saveLocationDraft(root);
-    });
+    mountLocationPicker(root);
     root.querySelector('#adaptive-location-next').onclick = () => {
       if (regionMode === 'selected' && !draftRegions.length) return;
       const regionIds = regionMode === 'all' ? [] : [...draftRegions].sort();
@@ -501,11 +537,11 @@ export function createAdaptiveFlow({navigate}) {
   }
 
   const answerLabels = () => [
-    {value:1, text:L('Совсем не интересно', 'Not at all interested', '完全不感兴趣')},
-    {value:2, text:L('Скорее не интересно', 'Rather uninterested', '不太感兴趣')},
-    {value:3, text:L('Нейтрально', 'Neutral', '态度中立')},
-    {value:4, text:L('Скорее интересно', 'Rather interested', '比较感兴趣')},
     {value:5, text:L('Очень интересно', 'Very interested', '非常感兴趣')},
+    {value:4, text:L('Скорее интересно', 'Rather interested', '比较感兴趣')},
+    {value:3, text:L('Нейтрально', 'Neutral', '态度中立')},
+    {value:2, text:L('Скорее неинтересно', 'Rather uninterested', '不太感兴趣')},
+    {value:1, text:L('Совсем неинтересно', 'Not at all interested', '完全不感兴趣')},
     {value:0, text:L('Пока не знаю', 'Not sure yet', '暂时不确定')}
   ];
 
@@ -549,7 +585,8 @@ export function createAdaptiveFlow({navigate}) {
     const ranking = rankVacancies({taxonomy, answers, candidates, limit:5, selectionSeed:session.selectionSeed});
     const record = makeCompletionRecord({taxonomy, answers, regionIds:session.regionIds,
       responsibilityPreference:session.responsibilityPreference, ranking, indexVersion:manifest.version});
-    return {...session, answers, pending:null, completedAt:record.createdAt, resultRecordId:record.recordId, completion:record};
+    return {...session, answers, pending:null, completedAt:record.createdAt, resultRecordId:record.recordId, completion:record,
+      reviewTarget:null,reviewCompletion:null};
   }
 
   function advanceQuestion() {
@@ -569,7 +606,16 @@ export function createAdaptiveFlow({navigate}) {
 
   function renderQuestion() {
     const root = questionRoot();
-    if (!root || !readyFor(root, true)) return;
+    if (!root || !readyFor(root, !session.completedAt)) return;
+    if(session.completedAt) {
+      root.innerHTML=`<div class="adaptive-workflow adaptive-question-card"><h1>${L('Профессиональные интересы','Work interests','职业兴趣')}</h1>
+        <p>${L(`Ответы сохранены: ${session.answers.length}.`,`Saved answers: ${session.answers.length}.`,`已保存 ${session.answers.length} 个回答。`)}</p>
+        <div class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit-saved">${L('Изменить ответы','Edit answers','修改回答')}</button>
+        <button type="button" class="button button-primary" id="adaptive-saved-results">${L('К вакансиям','View roles','查看职位')}</button></div></div>`;
+      root.querySelector('#adaptive-edit-saved').onclick=backQuestion;
+      root.querySelector('#adaptive-saved-results').onclick=()=>navigate('results');
+      return;
+    }
     const question = currentQuestion();
     if (!question) {
       if (session.answers.length && save(completedSession(session.answers))) navigate('results');
@@ -582,9 +628,10 @@ export function createAdaptiveFlow({navigate}) {
       <article class="adaptive-question-card">
         <p class="adaptive-prompt">${L('Насколько Вам интересно выполнять такую работу?', 'How interested are you in doing this work?', '你对从事这项工作有多大兴趣？')}</p>
         <h1 id="adaptive-question" data-question-id="${E(question.id)}">${E(localized(question.text))}</h1>
-        <div id="adaptive-answer-options" class="adaptive-answer-options" role="radiogroup" aria-labelledby="adaptive-question">
+        <div id="adaptive-answer-options" class="adaptive-answer-options" role="radiogroup" aria-labelledby="adaptive-question" aria-describedby="adaptive-answer-note">
           ${answerLabels().map((answer, index) => `<button type="button" role="radio" aria-checked="${selected === answer.value}" tabindex="${selected === answer.value || selected === null && index === 0 ? 0 : -1}" data-adaptive-answer="${answer.value}" class="adaptive-answer${selected === answer.value ? ' is-selected' : ''}${answer.value === 0 ? ' adaptive-answer-unknown' : ''}"><span class="adaptive-answer-dot" aria-hidden="true"></span><span>${E(answer.text)}</span></button>`).join('')}
         </div>
+        <small id="adaptive-answer-note">${L('«Нейтрально» — задача не привлекает и не отталкивает. «Пока не знаю» — пока оставьте её без оценки.', 'Choose Neutral if the task neither attracts nor puts you off. Choose Not sure yet to leave your interest in this task undecided.', '如果这项工作对你没有明显的吸引力或排斥感，请选「态度中立」。如果暂时无法判断，请选「暂时不确定」。')}</small>
         <div id="adaptive-save-feedback">${saveError()}</div>
         <footer class="adaptive-controls"><button type="button" class="button button-primary" id="adaptive-next" ${selected === null ? 'disabled' : ''}>${L('Далее', 'Next', '下一题')}${icon('arrow-right')}</button></footer>
       </article>
@@ -593,12 +640,6 @@ export function createAdaptiveFlow({navigate}) {
     root.querySelector('#adaptive-back').onclick = backQuestion;
     root.querySelector('#adaptive-next').onclick = advanceQuestion;
     bindSaveRetry(root);
-  }
-
-  function statusLabel(row) {
-    if (row.archive === true || row.status === 'archived') return L('Архив', 'Archived', '历史招聘');
-    if (row.status === 'profile') return L('Профиль должности', 'Role profile', '职位资料');
-    return L('Приём не подтверждён', 'Recruitment unconfirmed', '招聘状态未确认');
   }
 
   function detailFor(row) {
@@ -657,20 +698,22 @@ export function createAdaptiveFlow({navigate}) {
   function roleCard(row, index) {
     const detail = detailFor(row), location = cleanDisplayLocation(row);
     const url = safeURL(row.sourceURL);
+    const employer = employerCards.markup(row);
     return `<article class="adaptive-role" data-adaptive-vacancy="${E(row.id)}">
-      <div class="adaptive-role-topline"><span class="adaptive-role-rank">${index + 1}</span><span class="adaptive-role-status">${E(statusLabel(row))}</span></div>
-      <h2 lang="ru">${E(row.title)}</h2>
+      ${employer.heading}
       ${row.department ? `<p class="adaptive-role-department" lang="ru">${E(row.department)}</p>` : ''}
-      ${row.employerName ? `<p class="adaptive-role-employer" lang="ru">${E(row.employerName)}</p>` : ''}
+      <h3 class="adaptive-role-title" lang="ru" data-adaptive-role-title>${E(row.title)}</h3>
+      <div class="adaptive-role-topline"><span class="adaptive-role-rank">${index + 1}</span>${employer.offer}</div>
       ${location.text ? `<p class="adaptive-role-location" lang="${E(location.lang)}">${E(location.text)}</p>` : ''}
+      ${employer.brief}
       ${evidenceSections(row, detail)}
-      ${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L('Источник', 'Source', '来源')}${icon('external')}</a>` : ''}
-      ${reviewAction(row)}
+      <div class="adaptive-role-actions">${reviewAction(row)}
+        ${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L('Источник', 'Source', '来源')}${icon('external')}</a>` : ''}</div>
     </article>`;
   }
 
   function reviewAction(row) {
-    return review.canOpenCandidate(row) ? `<button type="button" class="adaptive-text-button adaptive-review-action" data-adaptive-review-id="${E(row.id)}">${L('Разобрать требования', 'Review requirements', '分析职位要求')}</button>` : '';
+    return review.canOpenCandidate(row) ? `<button type="button" class="button button-primary adaptive-review-action" data-adaptive-review-id="${E(row.id)}">${L('Разобрать требования', 'Review requirements', '分析职位要求')}</button>` : '';
   }
 
   function matchBrowseMarkup(ranking, page, expanded) {
@@ -683,10 +726,15 @@ export function createAdaptiveFlow({navigate}) {
     const card = row => {
       const url = safeURL(row.sourceURL), location = cleanDisplayLocation(row), open = expanded?.id === row.id;
       const detail = open ? detailFor(row) : null;
+      const employer = employerCards.markup(row, true);
       return `<article class="adaptive-match-item" data-adaptive-match-id="${E(row.id)}">
-        <h3 lang="ru">${E(row.title)}</h3><p lang="ru">${E(row.employerName)}</p>
-        ${row.department ? `<p lang="ru">${E(row.department)}</p>` : ''}${location.text ? `<p lang="${E(location.lang)}">${E(location.text)}</p>` : ''}
-        <div class="adaptive-match-actions"><span>${E(statusLabel(row))}</span><button type="button" class="adaptive-text-button" data-adaptive-match-evidence="${E(row.id)}" aria-expanded="${open}">${L('Совпавшие функции', 'Matching tasks', '匹配的工作任务')}</button>${reviewAction(row)}${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L('Источник', 'Source', '来源')}${icon('external')}</a>` : ''}</div>
+        ${employer.heading}
+        ${row.department ? `<p class="adaptive-role-department" lang="ru">${E(row.department)}</p>` : ''}
+        <h4 class="adaptive-role-title" lang="ru" data-adaptive-role-title>${E(row.title)}</h4>
+        ${location.text ? `<p lang="${E(location.lang)}">${E(location.text)}</p>` : ''}
+        ${employer.brief}
+        ${employer.offer}
+        <div class="adaptive-match-actions"><button type="button" class="adaptive-text-button" data-adaptive-match-evidence="${E(row.id)}" aria-expanded="${open}">${L('Совпавшие функции', 'Matching tasks', '匹配的工作任务')}</button>${reviewAction(row)}${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L('Источник', 'Source', '来源')}${icon('external')}</a>` : ''}</div>
         ${open ? detail ? evidenceSections(row,detail) : `<p role="status">${detailErrors.has(detailKey(row.detailPath)) ? L('Описание не загрузилось.', 'The description could not be loaded.', '无法加载职位说明。') : L('Загрузка описания…', 'Loading the description…', '正在加载职位说明……')}</p>` : ''}
       </article>`;
     };
@@ -790,12 +838,6 @@ export function createAdaptiveFlow({navigate}) {
     const root = resultRoot();
     if (!session.completedAt) {navigate(resolveResumeRoute()); return;}
     if (!root || !readyFor(root, true)) return;
-    if (review.isOpen()) {
-      if (detailSelection || detailPending.size || detailQueue.length) resetDetailRequests();
-      root.innerHTML = '<div id="adaptive-vacancy-review"></div>';
-      review.mount(root.querySelector('#adaptive-vacancy-review'));
-      return;
-    }
     const ranking = resultRanking(), matches = ranking.matches || [];
     const page = matchBrowseOpen && ranking.matchingCount ? listMatchingVacancies({taxonomy, answers:session.answers, candidates, selectionSeed:session.selectionSeed, query:matchQuery, offset:matchOffset}) : null;
     if (page) matchOffset = page.offset;
@@ -807,14 +849,16 @@ export function createAdaptiveFlow({navigate}) {
     const missing = matches.some(row => detailErrors.has(detailKey(row.detailPath)));
     root.innerHTML = `<div class="adaptive-results">
       <header class="adaptive-results-heading"><h1>${matches.length ? L('Подходящие должности', 'Matching roles', '适合的职位') : L('Ваш результат', 'Your result', '你的结果')}</h1></header>
-      ${matches.length ? `<div class="adaptive-role-list">${matches.map(roleCard).join('')}</div>` : `<p class="adaptive-no-matches">${noPreference ? L('Вы пока не выделили предпочтительные виды работы. Можно вернуться к вопросам и уточнить ответы.', 'You have not yet identified preferred types of work. You can return to the questions and refine your answers.', '你尚未确定偏好的工作类型。可以返回问题，进一步明确答案。') : L('Для выбранных условий подходящих должностей не найдено.', 'No matching roles were found for the selected conditions.', '未找到符合所选条件的职位。')}</p>`}
+      <p class="adaptive-review-instruction">${hasReviewCompletion() ? L('Разбор вакансии завершён. Можно перейти к тесту знаний.','Your vacancy review is complete. You can take the knowledge test.','职位要求自评已完成，可以参加知识测试。') : L('Выберите одну индивидуальную вакансию и разберите её требования, чтобы открыть тест знаний.','Choose one individual vacancy and review its requirements to unlock the knowledge test.','请选择一个具体职位并完成要求自评，以开放知识测试。')}</p>
+      ${matches.length ? `<div class="adaptive-role-list">${matches.map(roleCard).join('')}</div>` : `<p class="adaptive-no-matches">${noPreference ? L('Вы не выделили предпочтительные виды работы. Выберите вакансию из каталога ниже или вернитесь к ответам.', 'You did not identify preferred types of work. Choose a vacancy from the catalogue below or revisit your answers.', '你尚未确定偏好的工作类型。请从下方目录选择职位，或返回修改回答。') : L('Совпадений для выбранных условий нет. Выберите вакансию из каталога ниже.', 'There are no matches for the selected conditions. Choose a vacancy from the catalogue below.', '未找到符合条件的职位。请从下方目录选择职位。')}</p>`}
       ${missing ? `<div class="adaptive-detail-error" role="status"><span>${L('Описание должностей не загрузилось.', 'Role descriptions could not be loaded.', '无法加载职位说明。')}</span><button type="button" class="adaptive-text-button" id="adaptive-retry-details">${L('Повторить', 'Retry', '重试')}</button></div>` : ''}
       ${matchBrowseMarkup(ranking,page,expanded)}
       <div id="adaptive-bank-browser"></div>
       <div id="adaptive-save-feedback">${saveError()}</div>
-      <footer class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit">${L('Изменить ответы', 'Edit answers', '修改答案')}</button>${typeof __careerHost.openKnowledge === 'function' ? `<button type="button" class="button button-primary" id="adaptive-open-knowledge" ${opening || saveFailed || corruptStorage ? 'disabled' : ''}>${L('К тесту знаний', 'Continue to the knowledge test', '进入知识测试')}${icon('arrow-right')}</button>` : ''}</footer>
+      <footer class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit">${L('Изменить ответы', 'Edit answers', '修改答案')}</button>${typeof __careerHost.openKnowledge === 'function' ? `<button type="button" class="button button-primary" id="adaptive-open-knowledge" ${opening || saveFailed || corruptStorage || !hasReviewCompletion() ? 'disabled' : ''}>${L('К тесту знаний', 'Continue to the knowledge test', '进入知识测试')}${icon('arrow-right')}</button>` : ''}</footer>
     </div>`;
     root.querySelector('#adaptive-edit').onclick = backQuestion;
+    void employerCards.enrich(root, [...matches, ...(page?.rows || [])]);
     root.querySelector('#adaptive-retry-details')?.addEventListener('click', () => {loadDetails(detailRows, true); renderResults();});
     const browse = root.querySelector('#adaptive-all-matches');
     browse?.addEventListener('toggle', () => {
@@ -840,20 +884,17 @@ export function createAdaptiveFlow({navigate}) {
     }));
     root.querySelectorAll('[data-adaptive-review-id]').forEach(button => button.addEventListener('click', () => {
       const row = matches.find(item => item.id === button.dataset.adaptiveReviewId) || page?.rows.find(item => item.id === button.dataset.adaptiveReviewId);
-      if (row) {void review.openCandidate(row); renderResults();}
+      if (row) {void review.openCandidate(row); navigate('review');}
     }));
     bankBrowse.mount(root.querySelector('#adaptive-bank-browser'));
     root.querySelector('#adaptive-open-knowledge')?.addEventListener('click', async () => {
-      if (opening || !save()) {renderResults(); return;}
-      notifyCompletion(ranking);
-      if (saveFailed || corruptStorage) {renderResults(); return;}
-      opening = true;
+      if (opening || !hasReviewCompletion() || !save()) {renderResults(); return;}
       const button = root.querySelector('#adaptive-open-knowledge'); button.disabled = true;
-      try {await __careerHost.openKnowledge();}
+      try {await goToKnowledge();}
       catch {
         const feedback = root.querySelector('#adaptive-save-feedback');
         if (feedback && live()) feedback.innerHTML = `<p class="adaptive-save-error" role="alert">${L('Не удалось открыть тест. Повторите переход.', 'The test could not be opened. Please try again.', '无法打开测试，请重试。')}</p>`;
-      } finally {opening = false; if (button.isConnected) button.disabled = false;}
+      } finally {if (button.isConnected) button.disabled = !hasReviewCompletion();}
     });
     bindSaveRetry(root);
     notifyCompletion(ranking);
@@ -866,6 +907,18 @@ export function createAdaptiveFlow({navigate}) {
     if (focused) root.querySelector('#' + focused)?.focus({preventScroll:true});
   }
 
+  function renderReview() {
+    const root=document.querySelector('#adaptive-vacancy-review');
+    if(!root||!readyFor(root))return;
+    root.hidden=false;
+    if(!review.isOpen()&&session.reviewTarget)void review.openReference(session.reviewTarget);
+    if(review.isOpen()){review.mount(root);return;}
+    root.innerHTML=`<section class="adaptive-workflow adaptive-question-card"><h1>${L('Разбор требований','Vacancy review','职位要求自评')}</h1>
+      <p>${L('Сначала выберите индивидуальную вакансию из рекомендаций или каталога.','First choose an individual vacancy from the recommendations or catalogue.','请先从推荐列表或目录选择一个具体职位。')}</p>
+      <button type="button" class="button button-primary" id="adaptive-choose-review">${L('Выбрать вакансию','Choose a vacancy','选择职位')}</button></section>`;
+    root.querySelector('#adaptive-choose-review').onclick=()=>navigate('results');
+  }
+
   function resolveResumeRoute() {
     return !session.setupComplete ? 'preferences' : session.completedAt ? 'results' : 'test';
   }
@@ -874,33 +927,37 @@ export function createAdaptiveFlow({navigate}) {
     if (!CAREER_ROUTES.has(route)) return route;
     if (route === 'preferences') return route;
     if (!session.setupComplete) return 'preferences';
-    if (session.completedAt) return 'results';
+    if (session.completedAt) return ['test','review'].includes(route)?route:'results';
     return 'test';
   }
 
   function render(route) {
+    if (route !== 'preferences') destroyLocationPicker();
     if (route !== 'results' && (detailSelection || detailPending.size || detailQueue.length)) resetDetailRequests();
-    if (route !== 'results' && lastRoute === 'results') {
+    if (route !== 'review' && lastRoute === 'review') review.close({notify:false});
+    if (!['results','review'].includes(route) && ['results','review'].includes(lastRoute)) {
       matchBrowseOpen = false; matchOffset = 0; matchQuery = ''; expandedMatchId = null;
       bankBrowse.reset?.(); review.close({notify:false});
     }
     lastRoute = route;
     const guarded = guardRoute(route);
     if (metadataReady && guarded !== route) {navigate(guarded); return;}
-    document.body.classList.toggle('adaptive-flow-active', ['preferences', 'test', 'results'].includes(route));
+    document.body.classList.toggle('adaptive-flow-active', ['preferences', 'test', 'results','review'].includes(route));
     if (route === 'preferences') renderPreferences();
     else if (route === 'test') renderQuestion();
     else if (route === 'results') renderResults();
+    else if (route === 'review') renderReview();
   }
 
-  document.addEventListener('app:language', () => {if (['preferences', 'test', 'results'].includes(lastRoute)) render(lastRoute);});
+  document.addEventListener('app:language', () => {if (['preferences', 'test', 'results','review'].includes(lastRoute)) render(lastRoute);});
   document.addEventListener('keydown', event => {
-    if (lastRoute !== 'test' || !metadataReady || poolLoading || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (lastRoute !== 'test' || session.completedAt || !metadataReady || poolLoading || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
     const target = event.target;
     if (target.closest?.('input,textarea,select,[contenteditable="true"]')) return;
     const answerButton = target.closest?.('[data-adaptive-answer]');
     if (answerButton && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
-      const values = [1, 2, 3, 4, 5, 0], index = values.indexOf(Number(answerButton.dataset.adaptiveAnswer));
+      const values = answerLabels().map(answer => answer.value);
+      const index = values.indexOf(Number(answerButton.dataset.adaptiveAnswer));
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? values.length - 1
         : (index + (['ArrowLeft', 'ArrowUp'].includes(event.key) ? -1 : 1) + values.length) % values.length;
       event.preventDefault(); chooseAnswer(values[next], {focus:true});
@@ -918,10 +975,11 @@ export function createAdaptiveFlow({navigate}) {
     isReady:() => session.setupComplete,
     flush:() => !dirty && !saveFailed && !corruptStorage || save(),
     updateBusy:() => metadataLoading || poolLoading || detailPending.size > 0 || detailQueue.length > 0 || opening || transitionBusy,
-    captureForUpdate:() => ({schemaVersion:1, regionQuery, regionMode, draftRegions:[...draftRegions],
+    captureForUpdate:() => ({schemaVersion:1, regionQuery:locationPicker?.getQuery().slice(0, 100) ?? regionQuery, regionMode, draftRegions:[...draftRegions],
       setupStep:session.setupStep, responsibilityDraft:session.responsibilityDraft}),
     restoreForUpdate(value) {
       if (!isRecord(value) || value.schemaVersion !== 1) return;
+      destroyLocationPicker();
       regionQuery = typeof value.regionQuery === 'string' ? value.regionQuery.slice(0, 100) : '';
       regionMode = value.regionMode === 'selected' ? 'selected' : 'all';
       draftRegions = [...new Set((Array.isArray(value.draftRegions) ? value.draftRegions : []).filter(validRegion))].slice(0, 89);

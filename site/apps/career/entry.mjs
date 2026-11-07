@@ -4,6 +4,7 @@ import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.10';
 import {durableStore} from '../../assets/js/durable-store.js';
 import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../assets/js/platform-update-state.js';
 import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
+import {seminar5ProgressFromWorkspace} from './assets/seminar-progress.mjs';
 
 const MODULE_BASE = new URL('./', import.meta.url);
 const BANK_PREFIX = 'data/vacancies/bank/';
@@ -74,13 +75,13 @@ async function decodeBankBase64(response,target,signal) {
   return new Response(gzip,{status:response.status,statusText:response.statusText,headers});
 }
 
-const VALID_ROUTES = new Set(['home','personality','personality-results','preferences','test','sectors','conditions','results','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
+const VALID_ROUTES = new Set(['home','personality','personality-results','preferences','test','sectors','conditions','results','review','directory','compare','seminar','methodology','structure','scenarios','opportunities','workshop','lab','public-service','vacancies']);
 const locale = value => String(value || 'ru').startsWith('zh') ? 'zh-Hans' : String(value || 'ru').startsWith('en') ? 'en' : 'ru';
 const activeMounts = new WeakMap();
 
 /** A native, isolated DOM component. Authentication and course navigation belong to the host. */
 export async function mountCareer(container,options={}) {const finish=options.diagnostics?.span?.('module-load');try{const handle=await mountCareerInternal(container,options);finish?.({success:true});return handle;}catch(error){finish?.({success:false,code:error.name==='AbortError'?'cancelled':'load-failed'});options.diagnostics?.error?.(error,{event:'module-error',operation:'load'});throw error;}}
-async function mountCareerInternal(container, {owner = 'guest', context: hostContext = 'course', lang = 'ru', onResult, onOpenKnowledge, initialRoute = 'home', onRouteChange, signal,diagnostics} = {}) {
+async function mountCareerInternal(container, {owner = 'guest', context: hostContext = 'course', lang = 'ru', onResult, onOpenKnowledge, initialRoute = 'home', onRouteChange, onProgress, signal,diagnostics} = {}) {
   if (!(container instanceof HTMLElement)) throw new TypeError('Career module requires an HTMLElement container.');
   activeMounts.get(container)?.destroy();
   const shadow = container.shadowRoot || container.attachShadow({mode:'open'});
@@ -115,10 +116,12 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   const durableOwner=/^(student|teacher):/.test(owner)?owner:'guest:career';
   const progressScope={owner:durableOwner,activitySlug:free?'career-freeplay':'career-workspace',mode:free?'workspace':'diagnostic',attemptId:'workspace-v1'};
   const values=new Map(),observedLegacy=new Map(),pendingSaves=new Set();
+  let personalityComplete=false, progressStage=route;
+  const workspaceState=()=>({values:Object.fromEntries(values),route,...(free?{}:{personalityComplete})});
   try{for(let i=0;i<hostWindow.localStorage.length;i++){const key=hostWindow.localStorage.key(i);if(key?.startsWith(ownerKey)){const value=hostWindow.localStorage.getItem(key);values.set(key.slice(ownerKey.length),value);observedLegacy.set(key,value);}}}catch{}
   const saveCopy={ru:{pending:'Сохранено на устройстве',saved:'Ответы сохранены',unsafe:'Не удалось сохранить ответы. Оставьте вкладку открытой и проверьте соединение.'},en:{pending:'Saved on this device',saved:'Answers saved',unsafe:'Answers could not be saved. Keep this tab open and check your connection.'},'zh-Hans':{pending:'已保存在此设备',saved:'答案已保存',unsafe:'无法保存答案。请保持页面打开并检查网络连接。'}};
   const track=promise=>{pendingSaves.add(promise);promise.finally(()=>pendingSaves.delete(promise)).catch(()=>{});return promise;};
-  const persistWorkspace=()=>{const started=performance.now();return track(backend.checkpoint({...progressScope,contentVersion:'career-workspace-v1',state:{values:Object.fromEntries(values),route}},{queue:durableOwner.startsWith('student:')}).then(saved=>{
+  const persistWorkspace=()=>{const started=performance.now();return track(backend.checkpoint({...progressScope,contentVersion:'career-workspace-v1',state:workspaceState()},{queue:durableOwner.startsWith('student:')}).then(saved=>{
     latestCheckpoint=saved;saveFailure=saved.saveStatus?.durable!==true;diagnostics?.record?.('checkpoint',{operation:'draft-save',success:!saveFailure,code:saveFailure?'storage':'ok',durationMs:performance.now()-started});const label=shadow.querySelector('#session-status');if(label&&!disposed)label.textContent=saveCopy[language][!saved.saveStatus.durable?'unsafe':saved.saveStatus.state==='saved'?'saved':'pending'];return saved;
   }).catch(error=>{saveFailure=true;diagnostics?.error?.(error,{event:'checkpoint',code:'storage',operation:'save',durationMs:performance.now()-started});hostWindow.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner:durableOwner,errorCode:error.code||'storage/unavailable'}}));return null;}));};
 
@@ -149,6 +152,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   signal?.addEventListener('abort',abortFromHost,{once:true});
   if(signal?.aborted){api.destroy();throw new DOMException('Career mount aborted.','AbortError');}
   const restored=await backend.loadDraft(progressScope);
+  personalityComplete=!free&&restored?.state?.personalityComplete===true;
   const legacyTime=Math.max(0,...[...values.values()].map(value=>{try{return Date.parse(JSON.parse(value)?.updatedAt)||0;}catch{return 0;}}));
   if(restored?.state?.values&&restored.updatedAt>=legacyTime){values.clear();for(const [key,value] of Object.entries(restored.state.values))values.set(key,String(value));if(free&&initialRoute==='home'&&VALID_ROUTES.has(restored.state.route))route=restored.state.route;}
   else if(values.size)await persistWorkspace();
@@ -261,11 +265,19 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         if(destroyed||free||typeof onOpenKnowledge!=='function')return;
         await api.flush();
         if(saveFailure)await persistWorkspace();
+        const workspace=await durableStore.loadDraft(progressScope);
+        if(!seminar5ProgressFromWorkspace(workspace?.state).reviewComplete)throw Object.assign(new Error('A saved vacancy review is required.'),{code:'career/review-required'});
         const completion=await durableStore.loadDraft({owner:durableOwner,activitySlug:'career-diagnostic',mode:'diagnostic'});
         if(saveFailure||completion?.saveStatus?.durable!==true||!completion?.state?.record)throw Object.assign(new Error('Career result is not durably saved.'),{code:'storage/local-save-failed'});
         if(!destroyed)await onOpenKnowledge();
       },
       assetURL:value => resourceURL(value,MODULE_BASE).href,
+      progressChanged(update = {}) {
+        if(destroyed||free)return;
+        if(VALID_ROUTES.has(update.stage))progressStage=update.stage;
+        if(typeof update.personalityComplete==='boolean'&&personalityComplete!==update.personalityComplete){personalityComplete=update.personalityComplete;persistWorkspace();}
+        if(typeof onProgress==='function')onProgress(seminar5ProgressFromWorkspace(workspaceState(),progressStage));
+      },
       get destroyed() {return destroyed;},
       storageKey:name => `${ownerKey}${name}`,
       routeChanged(value, {replace=false} = {}) {

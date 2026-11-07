@@ -1,5 +1,5 @@
 import {legalLabSaveMode,legalLabSaveMessageKey} from './legal-lab-save-status.js?v=1.3.10';
-import {CAREER_COPY,careerRoute,readCareerCompletion} from './career-course.js';
+import {CAREER_COPY,bindCareerProgress,careerRoute,readCareerKnowledgeCompletion,readCareerSeminarProgress} from './career-course.js';
 import {seminarModule,seminarTopic,seminarModuleForSlug} from './seminar-modules.js';
 import {GAMES,GAMES_COPY,GAMES_STUDENT_LEAD,gameAccessGate} from './games-catalog.js?v=1.3.10';
 import {CONFIG} from './config.js?v=1.3.10';
@@ -368,7 +368,7 @@ async function renderDashboard(){
   const owner=attemptOwner();
   const [grades,attempts,settlementsDrafts]=profile?await Promise.all([backend.getGrades(),backend.getAttempts(),readSettlementsCourseDrafts(durableStore,owner)]):[{},[],[null,null]];
   const settlementsStatus=settlementsCourseStatus(...settlementsDrafts,grades['seminar-3'],owner);
-  const careerCompletion=await readCareerCompletion({backend,owner,attempts});
+  const careerProgress=await readCareerSeminarProgress({backend,owner});
   if(owner!==attemptOwner())return;
   const classroomBest=bestCourseQuizAttempt(attempts);
   const legalLabBest=bestLegalLabPracticeAttempt(attempts,data.legalLabCatalog?.contentVersion);
@@ -382,7 +382,7 @@ async function renderDashboard(){
     const careerCopy=CAREER_COPY[getLocale()]||CAREER_COPY.ru;
     const activities=seminarModule(topic)==='career'?[
       {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
-      {kind:careerCopy.practiceKind,title:careerCopy.practice,route:seminar.slug,ungraded:true,result:careerCompletion},
+      {kind:careerCopy.practiceKind,title:careerCopy.practice,route:seminar.slug,ungraded:true,result:careerProgress.reviewComplete},
       {kind:careerCopy.knowledgeKind,title:careerCopy.knowledge,route:`${seminar.slug}/knowledge`,result:grades[seminar.slug],max:5,requiresCareer:true}
     ]:seminarModule(topic)==='legal-lab'?[
       {kind:ui('lectureWord'),title:loc(lecture,'title',lecture.title),route:lecture.slug,result:grades[lecture.slug],max:5},
@@ -405,7 +405,7 @@ async function renderDashboard(){
       const testAction=!hasTest?'':testAllowed
         ?`<a class="btn btn-primary btn-small" data-lecture-test="${lecture.slug}" href="#activity/${lecture.slug}/test">${t('test')}</a>`
         :`<button class="btn btn-neutral btn-small" data-lecture-test="${lecture.slug}" type="button" disabled aria-describedby="lecture-test-status-${topic.number}">${t('test')}</button>`;
-      const careerLocked=item.requiresCareer&&!careerCompletion;
+      const careerLocked=item.requiresCareer&&!careerProgress.reviewComplete;
       const itemAction=careerLocked?`<button class="btn btn-neutral btn-small" type="button" data-career-knowledge disabled aria-describedby="career-test-status">${esc(careerCopy.openKnowledge)}</button>`:action(item.route);
       const resultText=item.ungraded?esc(item.result?careerCopy.completed:ui('notPassed')):item.route==='seminar-3'&&!item.result&&settlementsStatus?.kind==='pending'?`${settlementsStatus.points}/${item.max}`:courseResult(item.result,item.max);
       return `<div class="activity-mini ${allowed&&!careerLocked?'':'access-locked'}"${item.requiresCareer?' data-career-assessment="true"':''}><div><span class="kind">${esc(item.kind)}</span><strong>${esc(item.title)}</strong></div><footer><span class="grade">${resultText}${item.route==='seminar-3'&&settlementsStatus?`<small class="muted" style="display:block;font-size:12px;max-width:220px" data-settlements-course-status="${settlementsStatus.kind}">${esc(settlementsCourseMessage(settlementsStatus,getLocale()))}</small>`:''}</span><div class="activity-actions">${itemAction}${testAction}</div></footer>${careerLocked?`<small class="muted lecture-test-status" id="career-test-status">${esc(careerCopy.locked)}</small>`:''}${testStatus?`<small class="muted lecture-test-status" id="lecture-test-status-${topic.number}">${esc(testStatus)}</small>`:''}</div>`;
@@ -765,13 +765,20 @@ function renderSeminar6(topic,{context='course'}={}){
   let disposed=false,handle=null,mountTask=Promise.resolve(),cleanupTask=null,mountStarted=false;
   const controller=new AbortController();
   const token={owner,context,handle:null,lang:getLocale()};currentCareer=token;
-  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1></header><div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div></section>`;
+  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-career-ui="back">${ui('back')}</span></a></div><header class="career-course-heading"><span class="badge" data-career-copy="section">${text('section')}</span><h1 data-career-copy="title">${text('title')}</h1></header>${free?'':'<nav class="career-course-progress" data-career-progress></nav>'}<div id="careerMount" aria-label="${esc(text('title'))}" aria-busy="true"><p role="status">${text('loading')}</p></div></section>`;
   if(free){
     app.querySelector('.page-actions a').href='#games';
     app.querySelector('[data-career-ui="back"]').textContent=gamesText('back');
   }
   const mount=app.querySelector('#careerMount');
+  let progress={stage:'personality'},knowledgeComplete=false;
+  const showProgress=free?()=>{}:bindCareerProgress(app.querySelector('[data-career-progress]'),{activitySlug:topic.seminar.slug,getLocale});
+  const updateProgress=()=>showProgress({...progress,knowledgeComplete});
+  updateProgress();
   const active=()=>!disposed&&owner===attemptOwner()&&mount.isConnected&&isModuleRoute('career',context)&&(free||accessAllowed(topicGate(seminarTopic(data.course,'career').number,accessSnapshot().overrides,backend.globalNow())));
+  if(!free)void readCareerKnowledgeCompletion({backend,owner,activitySlug:topic.seminar.slug}).then(completed=>{
+    if(completed&&active()){knowledgeComplete=true;updateProgress();}
+  }).catch(()=>{});
   const cleanup=()=>cleanupTask||=(async()=>{
     disposed=true;controller.abort();
     // Dynamic imports cannot be aborted. Only an already started mount owns
@@ -788,6 +795,7 @@ function renderSeminar6(topic,{context='course'}={}){
     if(!active())return;
     app.querySelectorAll('[data-career-copy]').forEach(el=>el.textContent=text(el.dataset.careerCopy));
     app.querySelectorAll('[data-career-ui]').forEach(el=>el.textContent=free&&el.dataset.careerUi==='back'?gamesText('back'):ui(el.dataset.careerUi));
+    updateProgress();
     mount.setAttribute('aria-label',text('title'));
     if(handle&&token.lang!==getLocale()){token.lang=getLocale();handle.setLocale(token.lang==='zh'?'zh-Hans':token.lang).catch(error=>{if(active()){scope?.error(error,{operation:'locale'});console.error('Career locale:',error);}});}
   };
@@ -798,6 +806,7 @@ function renderSeminar6(topic,{context='course'}={}){
     token.lang=getLocale();
     mountStarted=true;
     handle=await mountCareer(mount,{diagnostics:scope,owner:free&&owner==='guest'?'guest:career':owner,context,signal:controller.signal,lang:getLocale()==='zh'?'zh-Hans':getLocale(),initialRoute:careerRoute(route().parts[1]),
+      onProgress:value=>{if(active()&&!free){progress=value;updateProgress();}},
       onOpenKnowledge:()=>{if(active()&&!free)location.hash=`activity/${topic.seminar.slug}/knowledge`;},
       onRouteChange:(view,{replace=false}={})=>{
         if(!active())return;
@@ -822,13 +831,15 @@ async function renderCivilServiceSeminar(topic){
   const owner=attemptOwner(),scope=routeDiagnostics;
   const text=key=>CAREER_COPY[getLocale()]?.[key]||CAREER_COPY.ru[key];
   const routeActive=()=>owner===attemptOwner()&&route().name==='activity'&&route().parts[0]===topic.seminar.slug&&route().parts[1]==='knowledge';
-  const completion=await readCareerCompletion({backend,owner});
+  const progress={...await readCareerSeminarProgress({backend,owner}),stage:'knowledge',knowledgeComplete:Boolean(backend.localGrades()[topic.seminar.slug])};
   if(!routeActive())return;
-  if(!completion){
-    app.innerHTML=contentPage(text('knowledge'),'',`<div class="panel access-locked" data-career-prerequisite="required"><h2>${esc(text('locked'))}</h2><p>${esc(text('lockedLead'))}</p><a class="btn btn-primary" href="#activity/${topic.seminar.slug}">${esc(text('startCareer'))}</a></div>`,`<a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a>`);
-    return;
-  }
-  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-civil-back>${ui('back')}</span></a></div><div id="civilServiceMount" aria-busy="true"><p role="status">${t('loading')}</p></div></section>`;
+  const knowledgeBody=progress.reviewComplete
+    ?`<div id="civilServiceMount" aria-busy="true"><p role="status">${t('loading')}</p></div>`
+    :`<div class="panel access-locked" data-career-prerequisite="required"><h2>${esc(text('locked'))}</h2><p>${esc(text('lockedLead'))}</p><a class="btn btn-primary" href="#activity/${topic.seminar.slug}/${progress.careerComplete?'review':progress.preferencesComplete?'test':progress.personalityComplete?'preferences':'personality'}">${esc(text('startCareer'))}</a></div>`;
+  app.innerHTML=`<section class="page career-course-page"><div class="page-actions"><a class="btn btn-neutral btn-small" href="#dashboard">← <span data-civil-back>${ui('back')}</span></a></div><nav class="career-course-progress" data-career-progress></nav>${knowledgeBody}</section>`;
+  const updateProgress=bindCareerProgress(app.querySelector('[data-career-progress]'),{activitySlug:topic.seminar.slug,getLocale});
+  updateProgress(progress);
+  if(!progress.reviewComplete)return;
   const mount=app.querySelector('#civilServiceMount'),controller=new AbortController();
   let handle=null,mountStarted=false,mountTask=Promise.resolve(),cleanupTask=null,language=getLocale();
   const active=()=>!controller.signal.aborted&&mount.isConnected&&routeActive()&&accessAllowed(topicGate(topic.number,accessSnapshot().overrides,backend.globalNow()));
@@ -839,6 +850,7 @@ async function renderCivilServiceSeminar(topic){
   cleanup.refreshLocale=()=>{
     if(!active())return;
     app.querySelector('[data-civil-back]').textContent=ui('back');
+    updateProgress(progress);
     if(handle&&language!==getLocale()){language=getLocale();handle.setLocale(language).catch(error=>scope?.error(error,{operation:'civil-service-locale'}));}
   };
   currentCleanup=cleanup;
@@ -847,7 +859,9 @@ async function renderCivilServiceSeminar(topic){
       const {mountCivilServiceCourse}=await import('./civil-service-course.mjs');
       if(!active())return;
       mountStarted=true;
-      handle=await mountCivilServiceCourse(mount,{owner,activitySlug:topic.seminar.slug,locale:getLocale(),signal:controller.signal,diagnostics:scope});
+      handle=await mountCivilServiceCourse(mount,{owner,activitySlug:topic.seminar.slug,locale:getLocale(),signal:controller.signal,diagnostics:scope,
+        onCompletionChange:completed=>{if(completed&&active()){progress.knowledgeComplete=true;updateProgress(progress);}}
+      });
       if(!active())return;
       mount.setAttribute('aria-busy','false');moduleReady();
     }catch(error){

@@ -26,3 +26,7 @@
 @container career (max-width: 440px) {
   .adaptive-review .journey-assessment-options { grid-template-columns: minmax(0, 1fr); }
 }
+.adaptive-review-instruction { margin:0 0 18px;color:#3e5e79;line-height:1.65;overflow-wrap:anywhere; }
+.adaptive-review-completion { margin-top:22px;padding-top:14px;border-top:1px solid #dae5ee; }
+.adaptive-review-completion p { margin:0 0 10px;line-height:1.55;overflow-wrap:anywhere; }
+.adaptive-review-completion .button { min-height:44px;max-width:100%;white-space:normal;overflow-wrap:anywhere; }

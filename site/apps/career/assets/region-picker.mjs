@@ -47,8 +47,9 @@ function loadMap(url){
  * `selectedIds` is an explicit list; [] must remain a valid federal-only choice.
  * Omitting `selectedIds` selects Moscow. Selection is persisted by the caller.
  * onChange(ids, {source,regionId}) receives a new array of canonical IDs.
+ * mapFirst changes the display and keyboard order together.
  */
-export function createRegionPicker({root,regions=[],selectedIds,onChange=()=>{},getLanguage=currentLanguage,mapURL='data/region-map.json'}={}){
+export function createRegionPicker({root,regions=[],selectedIds,onChange=()=>{},getLanguage=currentLanguage,mapURL='data/region-map.json',mapFirst=false,initialQuery='',emptySelectionText}={}){
   if(!root?.replaceChildren)throw new TypeError('A region picker root element is required.');
   const catalog=regions.filter(region=>region&&region.id!=null&&region.name).map(region=>({...region,id:String(region.id)}));
   if(new Set(catalog.map(region=>region.id)).size!==catalog.length)throw new TypeError('Region identifiers must be unique.');
@@ -56,7 +57,7 @@ export function createRegionPicker({root,regions=[],selectedIds,onChange=()=>{},
   const defaultRegion=catalog.find(isMoscow)||catalog.find(region=>region.defaultSelected);
   let selection=new Set(sanitizeRegionSelection(selectedIds===undefined?(defaultRegion?[defaultRegion.id]:[]):selectedIds,catalog));
   let language=languageCode(getLanguage()),ordered=orderRegions(catalog,language),data=null,destroyed=false,zoom=1;
-  let query='',activeId=defaultRegion?.id||ordered[0]?.id,hoveredId=null,ignoreMapClick=false,ignoreTimer;
+  let query=initialQuery,activeId=defaultRegion?.id||ordered[0]?.id,hoveredId=null,ignoreMapClick=false,ignoreTimer;
   let mapX=0,mapY=0,resizeObserver=null,labelNodes=[];
   const pointers=new Map();let gesture=null,gestureMoved=false;
   const key=`career-regions-${++instanceCounter}`;
@@ -309,7 +310,9 @@ export function createRegionPicker({root,regions=[],selectedIds,onChange=()=>{},
     for(const off of bindings.splice(0))off();
     root.classList.add('career-region-picker');root.setAttribute('data-no-i18n','');
     pointers.clear();gesture=null;resizeObserver?.disconnect();
-    root.innerHTML=`<div class="career-region-picker-heading"><strong data-region-selection-status role="status" aria-live="polite"></strong><span class="career-region-legend"><i aria-hidden="true"></i>${ui().chosenLegend}</span></div><p class="career-region-federal-only" data-region-empty-selection hidden>${ui().none}</p><div class="career-region-grid"><div class="career-region-list-panel"><label class="career-region-search-label" for="${key}-search">${ui().search}</label><input id="${key}-search" class="career-region-search" type="search" autocomplete="off" placeholder="${ui().searchHint}" data-region-search value="${E(query)}"><span class="career-region-sr-only" role="status" data-region-search-status></span><fieldset class="career-region-options"><legend class="career-region-sr-only">${ui().list}</legend>${ordered.map(region=>`<label class="career-region-option" data-region-option="${E(region.id)}"><input type="checkbox" value="${E(region.id)}" data-region-checkbox="${E(region.id)}"><span>${E(regionLabel(region,language))}</span></label>`).join('')}<p class="career-region-no-matches" data-region-no-matches hidden>${ui().noMatches}</p></fieldset></div><div class="career-region-map-panel"><div class="career-region-map-controls" data-region-map-controls hidden><span class="career-region-zoom" aria-label="${ui().zoom}"><span data-region-zoom-value>100%</span></span><button type="button" class="career-region-map-reset" data-region-zoom="reset">${ui().reset}</button></div><p id="${key}-map-help" class="career-region-map-help">${ui().mapHelp}</p><div data-region-map-frame class="career-region-map-frame"><p class="career-region-map-loading" role="status">${ui().loading}</p></div><p class="career-region-map-current" data-region-map-current aria-live="polite"></p></div></div>`;
+    const listMarkup=`<div class="career-region-list-panel"><label class="career-region-search-label" for="${key}-search">${ui().search}</label><input id="${key}-search" class="career-region-search" type="search" autocomplete="off" placeholder="${ui().searchHint}" data-region-search value="${E(query)}"><span class="career-region-sr-only" role="status" data-region-search-status></span><fieldset class="career-region-options"><legend class="career-region-sr-only">${ui().list}</legend>${ordered.map(region=>`<label class="career-region-option" data-region-option="${E(region.id)}"><input type="checkbox" value="${E(region.id)}" data-region-checkbox="${E(region.id)}"><span>${E(regionLabel(region,language))}</span></label>`).join('')}<p class="career-region-no-matches" data-region-no-matches hidden>${ui().noMatches}</p></fieldset></div>`;
+    const mapMarkup=`<div class="career-region-map-panel"><div class="career-region-map-controls" data-region-map-controls hidden><span class="career-region-zoom" aria-label="${ui().zoom}"><span data-region-zoom-value>100%</span></span><button type="button" class="career-region-map-reset" data-region-zoom="reset">${ui().reset}</button></div><p id="${key}-map-help" class="career-region-map-help">${ui().mapHelp}</p><div data-region-map-frame class="career-region-map-frame"><p class="career-region-map-loading" role="status">${ui().loading}</p></div><p class="career-region-map-current" data-region-map-current aria-live="polite"></p></div>`;
+    root.innerHTML=`<div class="career-region-picker-heading"><strong data-region-selection-status role="status" aria-live="polite"></strong><span class="career-region-legend"><i aria-hidden="true"></i>${ui().chosenLegend}</span></div><p class="career-region-federal-only" data-region-empty-selection hidden>${E(emptySelectionText?.() ?? ui().none)}</p><div class="career-region-grid">${mapFirst?mapMarkup+listMarkup:listMarkup+mapMarkup}</div>`;
     listen(root,'change',event=>{const checkbox=event.target.closest?.('[data-region-checkbox]');if(checkbox)toggle(checkbox.dataset.regionCheckbox,'list');});
     listen(root,'input',event=>{if(event.target.matches?.('[data-region-search]')){query=event.target.value;filterList();}});
     listen(root,'click',event=>{
@@ -361,6 +364,7 @@ export function createRegionPicker({root,regions=[],selectedIds,onChange=()=>{},
   return {
     ready,
     getSelection:()=>selected(),
+    getQuery:()=>query,
     setSelection(ids,{emit:shouldEmit=false}={}){if(destroyed)return;selection=new Set(sanitizeRegionSelection(ids,catalog));updateSelection();if(shouldEmit)emit('external');},
     refresh,
     destroy(){if(destroyed)return;destroyed=true;for(const off of bindings.splice(0))off();clearTimeout(ignoreTimer);resizeObserver?.disconnect();pointers.clear();gesture=null;document.removeEventListener('app:language',languageListener);root.replaceChildren();root.classList.remove('career-region-picker');delete root.dataset.regionMapState;delete root.dataset.selectedRegionCount;}

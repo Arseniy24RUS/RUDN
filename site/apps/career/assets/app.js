@@ -332,15 +332,15 @@ function activeRoute() {
 
 function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
   finishSectorDrag(false, {focus:false, announce:false});
-  const valid = ["home", "personality", "personality-results", "preferences", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
+  const valid = ["home", "personality", "personality-results", "preferences", "test", "sectors", "conditions", "results", "review", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
   if(route==='main-content'){document.getElementById('main-content')?.focus();return;}
   if (!valid.includes(route)) route = "home";
   if(SEMINAR_FLOW){
     if(!personality?.isComplete())route='personality';
     else if(route==='home')route='personality-results';
-    else if(!['personality','personality-results','preferences','test','sectors','conditions','results'].includes(route))route=resolveResumeRoute();
+    else if(!['personality','personality-results','preferences','test','sectors','conditions','results','review'].includes(route))route=resolveResumeRoute();
     route=seminarFlow?.guardRoute(route)||route;
-  }else if(['personality','personality-results','preferences'].includes(route))route='home';
+  }else if(['personality','personality-results','preferences','review'].includes(route))route='home';
   if(!SEMINAR_FLOW&&route==='results'&&!completionStatus({...state,questions:data.questions}).complete)route=resolveResumeRoute();
   const unavailableRoutes={workshop:'data/agency-studies.json','public-service':'data/public-service.json',structure:'data/hierarchy.json',opportunities:'data/career-resources.json'};
   if(data.unavailable.includes(unavailableRoutes[route])){
@@ -390,6 +390,7 @@ function routeTo(route, { updateHash = true, replace = false, focus = true } = {
   // first stage can change the visible screen without changing the saved route
   // while the host is still restoring its update checkpoint.
   if (updateHash) __careerHost.routeChanged(route, {replace});
+  if (SEMINAR_FLOW) __careerHost.progressChanged?.({stage:route,personalityComplete:personality?.isComplete()===true});
   window.scrollTo({ top: 0, behavior: "instant" });
   if(focus){const heading=$(`#view-${route} h1`)||$("#main-content");heading.setAttribute("tabindex","-1");heading.focus({preventScroll:true});}
   $(".desktop-nav")?.classList.remove("open");
@@ -1592,7 +1593,7 @@ async function init() {
     data.allInstitutions=[...data.authorities,...data.publicService.records.map(a=>({id:a.id,name:a.name.ru,shortName:a.name.ru,mission:a.mission.ru,entityType:'additional',entityTypeLabel:'Другие ветви и уровни публичной власти',tracks:a.tracks,governmentUrl:a.sources?.[0]?.url||'',localizedName:a.name,source:a}))];
     if(SEMINAR_FLOW){
       personality=createPersonality({navigate:routeTo,continueCareer:()=>routeTo(resolveResumeRoute())});
-      seminarFlow=createAdaptiveFlow({navigate:routeTo,toast});
+      seminarFlow=createAdaptiveFlow({navigate:routeTo,toast,authorities:data.authorities});
     }else{
       classroom=createClassroom({data:{...data,authorities:data.allInstitutions},routeTo,openAuthority,toast,downloadText,getResult:()=>latestResult});
       workspace = createWorkspace({data,state,modelVersion:MODEL_VERSION,

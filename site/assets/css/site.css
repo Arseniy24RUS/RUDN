@@ -245,7 +245,7 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
   .review-answer-row{grid-template-columns:1fr;gap:4px}.review-answer-row dd{font-size:11px}
 }
 
-/* Native seminar 6: the course owns identity, navigation and assessment. */
+/* Seminar 5 keeps one course progress panel above every activity. */
 .career-course-heading{margin:22px 0 12px;max-width:880px;}
 .career-course-heading h1{font-size:clamp(26px,3vw,40px);line-height:1.15;margin:14px 0;}
 .career-course-heading p{line-height:1.7;color:var(--muted,#526579);}
@@ -256,7 +256,68 @@ html:not([data-locale="ru"]) .brand img{width:140px}.modal-brand img{height:52px
 .career-knowledge summary{font-weight:700;cursor:pointer;line-height:1.6;}
 .career-knowledge>.page-actions,.career-knowledge>.form-grid{margin-top:18px;}
 @media(max-width:640px){.career-course-heading{margin-top:18px;}.career-course-heading h1{font-size:26px;}.career-course-heading p{font-size:14px;}}
-@media print{.career-course-heading,.career-course-status,.career-knowledge,.career-course-page>.page-actions{display:none!important;}}
+.career-course-progress {
+  position: sticky;
+  top: var(--top);
+  z-index: 15;
+  margin: 12px 0 18px;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 5px 16px rgb(0 59 112 / 7%);
+}
+.career-course-progress ol {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.career-course-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+  min-height: 44px;
+  padding: 5px 6px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.career-course-step-number {
+  display: grid;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 50%;
+  background: #dcebf5;
+  color: var(--rudn-navy);
+  font-size: 11px;
+}
+.career-course-step[disabled] { color: #526579; cursor: not-allowed; }
+.career-course-step[data-complete="true"] .career-course-step-number { background: #d6f0e5; color: #186448; }
+a.career-course-step:hover { border-color: #a9d7ee; background: #e8f5fb; }
+.career-course-step[aria-current="step"] { border-color: var(--rudn-blue); background: #e8f5fb; }
+html:has(.career-course-progress) { scroll-padding-top: calc(var(--top) + var(--career-progress-height, 120px) + 12px); }
+.career-course-progress + #careerMount { scroll-margin-top: 0; }
+@media (max-width: 1030px) {
+  .career-course-progress ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  html:has(.career-course-progress) { scroll-padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+}
+@media print{.career-course-heading,.career-course-status,.career-course-progress,.career-knowledge,.career-course-page>.page-actions{display:none!important;}}
 
 /* Keep navigation readable and the native toolbar below the fixed course header. */
 .sidebar a,.sidebar-bottom small{color:#fff}

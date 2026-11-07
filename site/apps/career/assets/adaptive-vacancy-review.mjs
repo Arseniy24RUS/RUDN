@@ -3,6 +3,8 @@ import {buildVacancyRequirements, summarizeVacancyAssessment} from './career-jou
 import {createEmployerVacancyBank, platformEmployerId, vacancyBankStatus} from './employer-vacancies-bank.mjs';
 import {date, E, groupLabel, icon, L, safeURL} from './journey-visuals.mjs';
 import {readLocal, storageKey, writeLocal} from './storage.mjs';
+import {seminar5ReviewTarget,VACANCY_REVIEW_KEY} from './seminar-progress.mjs';
+import {vacancySalaryText,vacancyStatusText} from './adaptive-vacancy-pay.mjs';
 
 const UUID = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
 const BASE_PAGE = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p\d{4}-[a-f0-9]{16}\.json\.gz$/;
@@ -30,7 +32,7 @@ function bindPage(row, descriptor, page, rows) {
 }
 
 function loadMarks(vacancy) {
-  const key = storageKey('functional-vacancy-review-v1:' + vacancy.sourceVacancyId);
+  const key = storageKey(VACANCY_REVIEW_KEY + vacancy.sourceVacancyId);
   try {
     const raw = readLocal(key);
     if (raw !== null) {
@@ -48,13 +50,6 @@ function loadMarks(vacancy) {
   return {key, marks:{}, invalid:false};
 }
 
-function sourceStatus(row) {
-  const status = vacancyBankStatus(row);
-  if (status === 'archived') return L('Архивное объявление','Archived announcement','历史招聘公告');
-  if (status === 'expired') return L('Срок подачи истёк','Application deadline passed','申请截止');
-  return L('Статус уточняйте в источнике','Check the source for current status','请在原文中核对当前状态');
-}
-
 function choiceLabel(row, value) {
   if (row.assessmentKind === 'competency') {
     return value === 'met' ? L('Уже знаю или умею','I already know or can do this','我已掌握') : L('Предстоит освоить','Still to learn','还需学习');
@@ -70,7 +65,7 @@ function contextLabel(row) {
 
 function requirementCard(row, disabled) {
   if (!row.assessable) return `<div class="journey-source-context"><span>${contextLabel(row)}</span>${row.text ? `<p lang="ru">${E(row.text)}</p>` : ''}</div>`;
-  return `<fieldset class="journey-requirement" data-requirement-row="${E(row.key)}" data-status="${E(row.status)}">
+  return `<fieldset class="journey-requirement" data-requirement-row="${E(row.key)}" data-review-kind="${E(row.assessmentKind)}" data-status="${E(row.status)}">
     <legend lang="ru">${E(row.text)}</legend>
     <div class="journey-assessment-options">${['met','gap'].map(value => `<label class="journey-answer ${value}">
       <input type="radio" name="review-${E(row.key)}" data-review-answer="${E(row.key)}" value="${value}" ${row.status === value ? 'checked' : ''} ${disabled ? 'disabled' : ''}>
@@ -107,12 +102,34 @@ function developmentPlan(summary) {
 }
 
 /** An independent checklist for one source-verified announcement. */
-export function createAdaptiveVacancyReview({onClose = () => {}} = {}) {
+export function createAdaptiveVacancyReview({onClose = () => {}, onSelect = () => {}, onComplete = () => false,
+  isCompleted = () => false, onOpenKnowledge = () => Promise.resolve()} = {}) {
   const bank = createEmployerVacancyBank({maxEmployers:3,maxPages:4});
   const details = createVacancyDetailsStore({getMetadata:() => __careerHost.vacancyDetailsMetadata?.()});
   let container = null;
   let active = null;
   let disposed = false;
+
+  const completionChoice = summary => summary?.rows.find(row=>row.assessable &&
+    (!summary.competencySummary.total || row.assessmentKind === 'competency') && ['met','gap'].includes(row.status));
+  const persistMarks = (state,marks) => writeLocal(state.storageKey,JSON.stringify({
+    schemaVersion:1,vacancyId:state.row.id,marks,updatedAt:new Date().toISOString()}));
+
+  function completionControls(state,summary) {
+    if(!summary)return '';
+    if(isCompleted(state.reference))return `<footer class="adaptive-review-completion">
+      <p role="status">${L('Разбор завершён. Тест знаний открыт.','Vacancy review completed. The knowledge test is available.','职位要求自评已完成，知识测试已开放。')}</p>
+      <button type="button" class="button button-primary" data-review-knowledge>${L('К тесту знаний','Continue to the knowledge test','进入知识测试')}</button>
+      <p class="adaptive-review-error" data-review-complete-error role="alert" hidden>${L('Не удалось открыть тест. Повторите попытку.','The knowledge test could not be opened. Try again.','无法打开知识测试，请重试。')}</p></footer>`;
+    const help = !summary.total
+      ? L('Выберите другую вакансию, где в источнике указаны требования.','Choose another vacancy with published requirements.','请选择另一条列有要求的招聘公告。')
+      : summary.competencySummary.total
+        ? L('Чтобы завершить разбор, отметьте хотя бы одно знание или умение.','Assess at least one knowledge or skill item to finish the review.','至少自评一项知识或技能后，即可完成。')
+        : L('Знания и умения в объявлении не выделены. Отметьте хотя бы одно опубликованное требование.','The announcement does not list knowledge or skills separately. Assess at least one published requirement.','公告未单列知识或技能，请至少自评一项已公布的要求。');
+    return `<footer class="adaptive-review-completion"><p id="adaptive-review-completion-help">${help}</p>
+      ${summary.total?`<button type="button" class="button button-primary" data-review-complete aria-describedby="adaptive-review-completion-help" ${state.storageInvalid||!completionChoice(summary)?'disabled':''}>${L('Завершить разбор','Finish vacancy review','完成职位要求自评')}</button>`:''}
+      <p class="adaptive-review-error" data-review-complete-error role="alert" hidden>${L('Не удалось сохранить разбор. Повторите попытку.','The review could not be saved. Try again.','无法保存自评，请重试。')}</p></footer>`;
+  }
 
   function render(focus = false) {
     if (!container) return;
@@ -123,20 +140,39 @@ export function createAdaptiveVacancyReview({onClose = () => {}} = {}) {
     const heading = state.plan ? L('Ваш план развития','Your development plan','你的发展计划') : L('Требования вакансии','Vacancy requirements','职位要求');
     const summary = state.requirements && summarizeVacancyAssessment(state.requirements,state.marks);
     const published = date(state.row.announcedAt), deadline = date(state.row.expiresAt);
+    const status=state.vacancy?vacancyBankStatus(state.row):null;
     container.innerHTML = `<section class="adaptive-review" aria-labelledby="adaptive-review-title">
       <button type="button" class="adaptive-back" data-review-close>${icon('arrow-left')}${L('К списку вакансий','Back to vacancies','返回职位列表')}</button>
       <header class="adaptive-review-heading"><h1 id="adaptive-review-title" tabindex="-1">${heading}</h1>
         <h2 lang="ru">${E(state.row.title)}</h2><p lang="ru">${E(state.employerName)}</p>
         ${state.vacancy?.department ? `<p lang="ru">${E(state.vacancy.department)}</p>` : ''}
-        ${state.vacancy ? `<p>${sourceStatus(state.row)}${published ? ' · ' + L('Опубликовано','Published','发布于') + ' ' + E(published) : ''}${deadline ? ' · ' + L('Приём до','Apply by','截止于') + ' ' + E(deadline) : ''}</p>` : ''}
+        ${status ? `<p data-review-vacancy-status="${status}">${vacancyStatusText(status)}${published ? ' · ' + L('Опубликовано','Published','发布于') + ' ' + E(published) : ''}${deadline ? ' · ' + L('Приём до','Apply by','截止于') + ' ' + E(deadline) : ''}</p>` : ''}
+        ${status==='source-active'?`<p data-review-salary><strong>${L('Зарплата','Salary','薪资')}:</strong> ${E(vacancySalaryText(state.row))}</p>`:''}
         ${source ? `<a class="adaptive-source" href="${source}" target="_blank" rel="noopener noreferrer">${L('Исходное объявление','Original announcement','原始公告')}${icon('external')}</a>` : ''}
       </header>
       ${state.loading ? `<p role="status">${L('Загружаем требования из источника…','Loading source requirements…','正在加载原始要求……')}</p>` : state.error ? `<p class="adaptive-review-error" role="alert">${L('Не удалось загрузить требования этой вакансии.','The requirements for this vacancy could not be loaded.','无法加载此职位的要求。')}</p><button type="button" class="button button-secondary" data-review-retry>${L('Повторить','Retry','重试')}</button>` : state.plan ? developmentPlan(summary) : checklist(state.vacancy,summary,state.storageInvalid)}
+      ${!state.loading&&!state.error ? completionControls(state,summary) : ''}
     </section>`;
     container.querySelector('[data-review-close]').onclick = () => close();
     container.querySelector('[data-review-retry]')?.addEventListener('click',() => void load(state.request));
     container.querySelector('[data-review-plan]')?.addEventListener('click',() => {state.plan = true;render(true);});
     container.querySelector('[data-review-edit]')?.addEventListener('click',() => {state.plan = false;render(true);});
+    container.querySelector('[data-review-complete]')?.addEventListener('click',() => {
+      if(active!==state||state.storageInvalid||!state.reference)return;
+      const choice=completionChoice(summarizeVacancyAssessment(state.requirements,state.marks));
+      if(!choice)return;
+      try {
+        persistMarks(state,state.marks);
+        if(!onComplete({target:state.reference,markKey:choice.key,signature:choice.signature,status:choice.status}))throw new Error('Review not saved');
+        state.plan=true;render(true);
+      } catch {container.querySelector('[data-review-complete-error]').hidden=false;}
+    });
+    container.querySelector('[data-review-knowledge]')?.addEventListener('click',async event => {
+      const button=event.currentTarget;button.disabled=true;
+      try {await onOpenKnowledge();}
+      catch {if(button.isConnected)container.querySelector('[data-review-complete-error]').hidden=false;}
+      finally {if(button.isConnected)button.disabled=false;}
+    });
     container.querySelectorAll('[data-review-answer]').forEach(input => input.addEventListener('change',() => saveAnswer(state,input)));
     if (focus || state.focusPending) {
       state.focusPending = false;
@@ -152,12 +188,13 @@ export function createAdaptiveVacancyReview({onClose = () => {}} = {}) {
     const next = {...state.marks, [row.key]:{status:input.value,signature:row.signature}};
     const error = container.querySelector('[data-review-save-error]');
     try {
-      writeLocal(state.storageKey,JSON.stringify({schemaVersion:1,vacancyId:state.row.id,marks:next,updatedAt:new Date().toISOString()}));
+      persistMarks(state,next);
       state.marks = next;
       const summary = summarizeVacancyAssessment(state.requirements,next);
       card.dataset.status = input.value;
       container.querySelector('[data-review-progress]').textContent = progressText(summary);
       container.querySelector('[data-review-progress-bar]').value = summary.assessed;
+      const finish=container.querySelector('[data-review-complete]');if(finish)finish.disabled=!completionChoice(summary);
       error.hidden = true;
     } catch {
       card.querySelectorAll('input').forEach(option => {option.checked = option.value === card.dataset.status;});
@@ -176,6 +213,8 @@ export function createAdaptiveVacancyReview({onClose = () => {}} = {}) {
       if (active !== state || disposed) return false;
       const {row,descriptor,page,rows} = source;
       const binding = bindPage(row,descriptor,page,rows);
+      const reference=seminar5ReviewTarget({vacancyId:row.id,authorityId:descriptor.authorityId,pagePath:page.path,pageSHA256:page.sha256,sourceURL:row.sourceURL});
+      if(!reference)throw new Error('Invalid vacancy review reference');
       state.cancel = () => details.cancel(binding,row.id);
       const loaded = await details.load(binding,row.id);
       if (active !== state || disposed) return false;
@@ -191,6 +230,8 @@ export function createAdaptiveVacancyReview({onClose = () => {}} = {}) {
       state.storageKey = saved.key;
       state.storageInvalid = saved.invalid;
       state.marks = Object.fromEntries(restored.rows.filter(item => ['met','gap'].includes(item.status)).map(item => [item.key,{status:item.status,signature:item.signature}]));
+      state.reference=reference;
+      onSelect(reference);
       return true;
     } catch {
       if (active === state) state.error = true;
@@ -228,6 +269,18 @@ export function createAdaptiveVacancyReview({onClose = () => {}} = {}) {
         const row = view?.rows.find(item => item.id === candidate.id);
         if (view?.status !== 'ready' || view.pageIndex !== location.index || descriptor?.employerId !== candidate.employerId ||
             page?.path !== location.path || !row || row.sourceURL !== candidate.sourceURL) throw new Error('Vacancy source differs from index');
+        return {row,descriptor,page,rows:view.rows};
+      }});
+    },
+    openReference(value) {
+      const reference=seminar5ReviewTarget(value);
+      if(!reference)return Promise.resolve(false);
+      const index=Number(/\/p(\d{4})-/.exec(reference.pagePath)[1]);
+      return load({row:{id:reference.vacancyId,sourceURL:reference.sourceURL},cancel:() => bank.cancel(reference.authorityId),resolve:async () => {
+        const view=await bank.loadPage(reference.authorityId,index),descriptor=view?.descriptor,page=descriptor?.pages[index];
+        const row=view?.rows.find(item=>item.id===reference.vacancyId);
+        if(view?.status!=='ready'||view.pageIndex!==index||page?.path!==reference.pagePath||page.sha256!==reference.pageSHA256||
+          row?.sourceURL!==reference.sourceURL)throw new Error('Saved vacancy source differs');
         return {row,descriptor,page,rows:view.rows};
       }});
     },

@@ -4140,8 +4140,8 @@ var CareerRuntime = (() => {
   }
   function translateText(node) {
     if (ignored(node.parentElement) || !node.nodeValue?.trim()) return;
-    const value = node.nodeValue, record2 = originals.get(node);
-    const source = record2 && value === record2.rendered ? record2.source : value;
+    const value = node.nodeValue, record3 = originals.get(node);
+    const source = record3 && value === record3.rendered ? record3.source : value;
     const rendered = translate(source);
     originals.set(node, { source, rendered });
     if (value !== rendered) node.nodeValue = rendered;
@@ -4181,9 +4181,9 @@ var CareerRuntime = (() => {
     observer = new MutationObserver((records) => {
       observer.disconnect();
       const roots = /* @__PURE__ */ new Set();
-      for (const record2 of records) {
-        if (record2.type === "childList") record2.addedNodes.forEach((n) => roots.add(n));
-        else roots.add(record2.target);
+      for (const record3 of records) {
+        if (record3.type === "childList") record3.addedNodes.forEach((n) => roots.add(n));
+        else roots.add(record3.target);
       }
       for (const root of roots) {
         if (!root.isConnected) continue;
@@ -4703,8 +4703,8 @@ var CareerRuntime = (() => {
           if (actual && actual !== page.sha256) throw new Error("Vacancy page checksum mismatch");
           const raw = await decompress2(compressed, { expectedBytes: page.uncompressedBytes });
           if (control.signal.aborted) throw abortError();
-          const decoded = await digest(raw);
-          if (decoded && decoded !== page.uncompressedSHA256) throw new Error("Decoded vacancy page checksum mismatch");
+          const decoded2 = await digest(raw);
+          if (decoded2 && decoded2 !== page.uncompressedSHA256) throw new Error("Decoded vacancy page checksum mismatch");
           const rows = unpackVacancyPage(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(raw)), descriptor, page);
           touch(pages, key, rows);
           while (pages.size > maxPages) pages.delete(pages.keys().next().value);
@@ -4928,7 +4928,7 @@ var CareerRuntime = (() => {
       }
       checkedURLs.add(value);
     };
-    const decoded = new Array(count);
+    const decoded2 = new Array(count);
     for (let index = 0; index < count; index += 1) {
       const tuple = payload.rows[index];
       if (!Array.isArray(tuple) || tuple.length !== CANDIDATE_COLUMNS.length) fail("invalid row width");
@@ -4968,7 +4968,7 @@ var CareerRuntime = (() => {
       if (!text(sourcePath, 1e4)) fail("missing source locator");
       const detailPath = lookup(strings2, detailPathRef, "detail path");
       if (!detailPathPattern.test(detailPath)) fail("invalid detail path");
-      decoded[index] = {
+      decoded2[index] = {
         id,
         title,
         department,
@@ -4990,7 +4990,7 @@ var CareerRuntime = (() => {
       };
     }
     if (profileCache) for (const [id, features] of additions) profileCache.set(id, features);
-    return decoded;
+    return decoded2;
   }
 
   // site/apps/career/assets/journey-visuals.mjs
@@ -5512,6 +5512,25 @@ var CareerRuntime = (() => {
     };
   }
 
+  // site/apps/career/assets/adaptive-vacancy-pay.mjs
+  function vacancyStatusText(status) {
+    return {
+      "source-active": L2("\u0410\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u0430 \u043F\u043E \u0434\u0430\u043D\u043D\u044B\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0430", "Current according to the portal", "\u95E8\u6237\u663E\u793A\u6B63\u5728\u62DB\u52DF"),
+      archived: L2("\u0410\u0440\u0445\u0438\u0432\u043D\u0430\u044F", "Archived", "\u5386\u53F2\u62DB\u8058"),
+      expired: L2("\u0421\u0440\u043E\u043A \u043F\u043E\u0434\u0430\u0447\u0438 \u0438\u0441\u0442\u0451\u043A", "Application deadline passed", "\u7533\u8BF7\u622A\u6B62"),
+      unknown: L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Recruitment status not stated", "\u672A\u6CE8\u660E\u62DB\u8058\u72B6\u6001")
+    }[status];
+  }
+  function vacancySalaryText(row) {
+    const valid = (value) => typeof value === "number" && Number.isFinite(value) && value > 0;
+    const from = valid(row.salaryFrom) ? row.salaryFrom : null, to = valid(row.salaryTo) ? row.salaryTo : null;
+    const format = (value) => new Intl.NumberFormat(getLanguage()).format(value);
+    if (from !== null && to !== null) return (from === to ? format(from) : `${format(from)} \u2013 ${format(to)}`) + " \u20BD";
+    if (from !== null) return L2(`\u043E\u0442 ${format(from)} \u20BD`, `from ${format(from)} \u20BD`, `\u8D77\u85AA ${format(from)} \u20BD`);
+    if (to !== null) return L2(`\u0434\u043E ${format(to)} \u20BD`, `up to ${format(to)} \u20BD`, `\u6700\u9AD8 ${format(to)} \u20BD`);
+    return L2("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u0430 \u0432 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438", "Not stated in the announcement", "\u516C\u544A\u672A\u6CE8\u660E");
+  }
+
   // site/apps/career/assets/adaptive-bank-browse.mjs
   var DIRECTORY = "data/vacancies/employer-directory.json.gz";
   var MAX_PACKED = 1024 * 1024;
@@ -5550,14 +5569,6 @@ var CareerRuntime = (() => {
     }
     return { jobCount, snapshotAt: value.snapshotAt, employers, nameCounts, byId: new Map(employers.map((item) => [item.id, item])) };
   }
-  function bankStatusLabel(status) {
-    return {
-      "source-active": L2("\u041F\u0440\u0438\u0451\u043C \u043F\u043E \u0434\u0430\u043D\u043D\u044B\u043C \u043F\u043E\u0440\u0442\u0430\u043B\u0430", "Accepting as listed by the portal", "\u95E8\u6237\u663E\u793A\u6B63\u5728\u62DB\u52DF"),
-      archived: L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u516C\u544A"),
-      expired: L2("\u0423\u043A\u0430\u0437\u0430\u043D\u043D\u044B\u0439 \u0441\u0440\u043E\u043A \u0438\u0441\u0442\u0451\u043A", "Listed deadline has passed", "\u6240\u5217\u622A\u6B62\u65E5\u671F\u5DF2\u8FC7"),
-      unknown: L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u043F\u0440\u0438\u0451\u043C\u0430 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Recruitment status not stated", "\u672A\u6CE8\u660E\u62DB\u8058\u72B6\u6001")
-    }[status];
-  }
   function announcementCard(row, onReview, pending) {
     const status = vacancyBankStatus(row);
     const source = safeURL(row.sourceURL);
@@ -5566,13 +5577,14 @@ var CareerRuntime = (() => {
     const scope = row.scope === "group-or-reserve-context" ? L2("\u0413\u0440\u0443\u043F\u043F\u0430 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 / \u043A\u0430\u0434\u0440\u043E\u0432\u044B\u0439 \u0440\u0435\u0437\u0435\u0440\u0432", "Position group / talent reserve", "\u804C\u4F4D\u7EC4\uFF0F\u4EBA\u624D\u50A8\u5907") : row.scope === "unknown" ? L2("\u0422\u0438\u043F \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0443\u0442\u043E\u0447\u043D\u0451\u043D", "Announcement type unspecified", "\u672A\u6CE8\u660E\u516C\u544A\u7C7B\u578B") : "";
     const review = onReview && row.scope === "individual-role";
     return `<article class="adaptive-bank-vacancy" data-adaptive-bank-vacancy="${E2(row.id)}">
-    <div class="adaptive-bank-badges"><span data-adaptive-bank-status="${status}">${bankStatusLabel(status)}</span>${scope ? `<span>${scope}</span>` : ""}</div>
+    <div class="adaptive-bank-badges"><span data-adaptive-bank-status="${status}">${vacancyStatusText(status)}</span>${scope ? `<span>${scope}</span>` : ""}</div>
     <h4 lang="ru">${E2(row.title || L2("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u043E", "Role title not stated", "\u672A\u6CE8\u660E\u804C\u4F4D\u540D\u79F0"))}</h4>
     ${location2 ? `<p class="adaptive-bank-location" lang="ru">${E2(location2)}</p>` : ""}
     <dl><div><dt>${L2("\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Published", "\u53D1\u5E03\u65E5\u671F")}</dt><dd>${E2(date2(row.announcedAt) || missing)}</dd></div>
-    <div><dt>${L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62")}</dt><dd>${E2(date2(row.expiresAt) || missing)}</dd></div></dl>
+    <div><dt>${L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u7533\u8BF7\u622A\u6B62")}</dt><dd>${E2(date2(row.expiresAt) || missing)}</dd></div>
+    ${status === "source-active" ? `<div data-adaptive-bank-salary><dt>${L2("\u0417\u0430\u0440\u043F\u043B\u0430\u0442\u0430", "Salary", "\u85AA\u8D44")}</dt><dd>${E2(vacancySalaryText(row))}</dd></div>` : ""}</dl>
     <div class="adaptive-bank-actions">
-      ${review ? `<button class="button button-secondary" type="button" data-adaptive-bank-review="${E2(row.id)}" ${pending ? "disabled" : ""}>${pending?.id === row.id ? L2("\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026", "Loading\u2026", "\u52A0\u8F7D\u4E2D\u2026\u2026") : L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess these requirements", "\u8BC4\u4F30\u8FD9\u4E9B\u8981\u6C42")}</button>` : ""}
+      ${review ? `<button class="button button-primary" type="button" data-adaptive-bank-review="${E2(row.id)}" ${pending ? "disabled" : ""}>${pending?.id === row.id ? L2("\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430\u2026", "Loading\u2026", "\u52A0\u8F7D\u4E2D\u2026\u2026") : L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Assess these requirements", "\u8BC4\u4F30\u8FD9\u4E9B\u8981\u6C42")}</button>` : ""}
       ${source ? `<a class="adaptive-source" href="${source}" target="_blank" rel="noopener noreferrer">${L2("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Open announcement", "\u6253\u5F00\u516C\u544A")}${icon("external")}</a>` : ""}
     </div>
   </article>`;
@@ -5726,8 +5738,8 @@ var CareerRuntime = (() => {
       if (selected) bank.cancel(selected.id);
       pendingReview = null;
     }
-    function selectEmployer(employer) {
-      const item = directory?.byId.get(employer);
+    function selectEmployer(employer2) {
+      const item = directory?.byId.get(employer2);
       if (!item) return;
       selected = item;
       vacancyOffset = 0;
@@ -5825,8 +5837,8 @@ var CareerRuntime = (() => {
         renderEmployers({ focus: true });
       }
     }
-    const unsubscribe = bank.subscribe((employer) => {
-      if (open && selected?.id === employer) renderVacancies();
+    const unsubscribe = bank.subscribe((employer2) => {
+      if (open && selected?.id === employer2) renderVacancies();
     });
     function mount(container) {
       if (disposed) return;
@@ -6421,8 +6433,8 @@ var CareerRuntime = (() => {
         found = cache.get(pageKey(b) + "|" + part.path);
         if (!found) return null;
       }
-      const record2 = found.pack.records?.[id];
-      return record2 ? { record: hydrateDetailRecord(found.pack, id), provenance: { baseTreeSHA: b.baseTreeSHA, basePage: b.basePage, basePageSHA256: b.basePageSHA256, employerId: b.employerId, detailsTreeSHA: b.detailsTreeSHA, sourceHosting: b.sourceHosting, detailPage: found.path, gzipSHA256: found.gzipSHA256, uncompressedSHA256: found.uncompressedSHA256, recordJSONPointer: "/records/" + id, sourceDatabaseSHA256: found.pack.sourceDatabaseSHA256 || root.pack.sourceDatabaseSHA256 || null, sourceFields: found.pack.sourceFields || root.pack.sourceFields || null } } : null;
+      const record3 = found.pack.records?.[id];
+      return record3 ? { record: hydrateDetailRecord(found.pack, id), provenance: { baseTreeSHA: b.baseTreeSHA, basePage: b.basePage, basePageSHA256: b.basePageSHA256, employerId: b.employerId, detailsTreeSHA: b.detailsTreeSHA, sourceHosting: b.sourceHosting, detailPage: found.path, gzipSHA256: found.gzipSHA256, uncompressedSHA256: found.uncompressedSHA256, recordJSONPointer: "/records/" + id, sourceDatabaseSHA256: found.pack.sourceDatabaseSHA256 || root.pack.sourceDatabaseSHA256 || null, sourceFields: found.pack.sourceFields || root.pack.sourceFields || null } } : null;
     }
     async function readFile(path, b, ref, signal) {
       const key = pageKey(b) + "|" + path;
@@ -6470,11 +6482,11 @@ var CareerRuntime = (() => {
               if (raw.length > 4 * 1024 * 1024) throw new Error("Compressed source detail exceeds limit");
               const compressedSHA = await digest2(raw);
               if (ref && (raw.length !== ref.bytes || compressedSHA !== ref.sha256)) throw new Error("Source detail shard compressed checksum mismatch");
-              const decoded = await decodeGzip(raw, { expectedBytes: ref?.uncompressedBytes, maxBytes: 8 * 1024 * 1024 });
-              const decodedSHA = await digest2(decoded);
+              const decoded2 = await decodeGzip(raw, { expectedBytes: ref?.uncompressedBytes, maxBytes: 8 * 1024 * 1024 });
+              const decodedSHA = await digest2(decoded2);
               if (ref && decodedSHA !== ref.uncompressedSHA256) throw new Error("Source detail shard checksum mismatch");
               if (controller.signal.aborted) throw abortError2();
-              const pack = validateDetailsPack(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(decoded)), b, ref?.uuids || b.uuids);
+              const pack = validateDetailsPack(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(decoded2)), b, ref?.uuids || b.uuids);
               const result = { pack, path, gzipSHA256: compressedSHA, uncompressedSHA256: decodedSHA };
               touch(key, result);
               return result;
@@ -6666,6 +6678,45 @@ var CareerRuntime = (() => {
     return { id: "bank-" + row.id, sourceVacancyId: row.id, sourceCategory: "public-vacancy-bank", bankVacancy: true, institutionId, employerId, employerName, title: row.title, regionId: null, regionName: row.region, url: row.sourceURL, scope: row.scope, archive: row.archive, announcedAt: row.announcedAt, expiresAt: row.expiresAt, state: row.state, currentness: "unknown", requirements, duties: detail.duties, department: detail.departmentLabels.map((t) => t.text).join("\n"), source: { url: row.sourceURL, kind: "published-vacancy-bank", provenance }, sourceDetails: detail };
   }
 
+  // site/apps/career/assets/seminar-progress.mjs
+  var FUNCTIONAL_SESSION_KEY = "functional-career-v1";
+  var VACANCY_REVIEW_KEY = "functional-vacancy-review-v1:";
+  var uuid = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
+  var basePage = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p(\d{4})-[a-f0-9]{16}\.json\.gz$/;
+  var sha256 = /^[a-f0-9]{64}$/;
+  var employer = /^[A-Za-z0-9][A-Za-z0-9_-]{0,246}$/;
+  var record2 = (value) => Boolean(value && typeof value === "object" && !Array.isArray(value));
+  function decoded(value) {
+    if (typeof value !== "string") return null;
+    try {
+      const result = JSON.parse(value);
+      return record2(result) ? result : null;
+    } catch {
+      return null;
+    }
+  }
+  function seminar5ReviewTarget(value) {
+    if (!record2(value) || !uuid.test(value.vacancyId || "") || !employer.test(value.authorityId || "") || !basePage.test(value.pagePath || "") || !sha256.test(value.pageSHA256 || "") || value.sourceURL !== `https://gossluzhba.gov.ru/vacancy/${value.vacancyId}`) return null;
+    return {
+      vacancyId: value.vacancyId,
+      authorityId: value.authorityId,
+      pagePath: value.pagePath,
+      pageSHA256: value.pageSHA256,
+      sourceURL: value.sourceURL
+    };
+  }
+  function seminar5CareerComplete(session) {
+    const completion = session?.completion;
+    return session?.setupComplete === true && typeof session.completedAt === "string" && Number.isFinite(Date.parse(session.completedAt)) && typeof session.resultRecordId === "string" && /^functional-[\w-]{8,80}$/.test(session.resultRecordId) && completion?.schema === "rudn-career-result" && completion.schemaVersion === 3 && completion.resultKind === "vacancy-functional" && completion.completed === true && completion.recordId === session.resultRecordId && completion.createdAt === session.completedAt && Array.isArray(session.answers) && session.answers.length >= 43 && session.answers.length <= 55 && completion.answerCount === session.answers.length;
+  }
+  function seminar5ReviewComplete(session, values) {
+    const proof = session?.reviewCompletion;
+    if (!seminar5CareerComplete(session) || proof?.schemaVersion !== 1 || proof.resultRecordId !== session.resultRecordId || !seminar5ReviewTarget(proof.target) || typeof proof.markKey !== "string" || !proof.markKey || proof.markKey.length > 1e3 || typeof proof.signature !== "string" || !proof.signature || proof.signature.length > 1048576 || !["met", "gap"].includes(proof.status)) return false;
+    const review = decoded(values?.[VACANCY_REVIEW_KEY + proof.target.vacancyId]);
+    const mark = review?.marks?.[proof.markKey];
+    return review?.schemaVersion === 1 && review.vacancyId === proof.target.vacancyId && mark?.signature === proof.signature && ["met", "gap"].includes(mark.status);
+  }
+
   // site/apps/career/assets/adaptive-vacancy-review.mjs
   var UUID = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
   var BASE_PAGE2 = /^pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p\d{4}-[a-f0-9]{16}\.json\.gz$/;
@@ -6689,7 +6740,7 @@ var CareerRuntime = (() => {
     return { basePage: page.path, basePageSHA256: page.sha256, employerId: descriptor.employerId, uuids: rows.map((item) => item.id) };
   }
   function loadMarks(vacancy) {
-    const key = storageKey("functional-vacancy-review-v1:" + vacancy.sourceVacancyId);
+    const key = storageKey(VACANCY_REVIEW_KEY + vacancy.sourceVacancyId);
     try {
       const raw = readLocal(key);
       if (raw !== null) {
@@ -6708,12 +6759,6 @@ var CareerRuntime = (() => {
     }
     return { key, marks: {}, invalid: false };
   }
-  function sourceStatus(row) {
-    const status = vacancyBankStatus(row);
-    if (status === "archived") return L2("\u0410\u0440\u0445\u0438\u0432\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Archived announcement", "\u5386\u53F2\u62DB\u8058\u516C\u544A");
-    if (status === "expired") return L2("\u0421\u0440\u043E\u043A \u043F\u043E\u0434\u0430\u0447\u0438 \u0438\u0441\u0442\u0451\u043A", "Application deadline passed", "\u7533\u8BF7\u622A\u6B62");
-    return L2("\u0421\u0442\u0430\u0442\u0443\u0441 \u0443\u0442\u043E\u0447\u043D\u044F\u0439\u0442\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435", "Check the source for current status", "\u8BF7\u5728\u539F\u6587\u4E2D\u6838\u5BF9\u5F53\u524D\u72B6\u6001");
-  }
   function choiceLabel(row, value) {
     if (row.assessmentKind === "competency") {
       return value === "met" ? L2("\u0423\u0436\u0435 \u0437\u043D\u0430\u044E \u0438\u043B\u0438 \u0443\u043C\u0435\u044E", "I already know or can do this", "\u6211\u5DF2\u638C\u63E1") : L2("\u041F\u0440\u0435\u0434\u0441\u0442\u043E\u0438\u0442 \u043E\u0441\u0432\u043E\u0438\u0442\u044C", "Still to learn", "\u8FD8\u9700\u5B66\u4E60");
@@ -6725,7 +6770,7 @@ var CareerRuntime = (() => {
   }
   function requirementCard(row, disabled) {
     if (!row.assessable) return `<div class="journey-source-context"><span>${contextLabel(row)}</span>${row.text ? `<p lang="ru">${E2(row.text)}</p>` : ""}</div>`;
-    return `<fieldset class="journey-requirement" data-requirement-row="${E2(row.key)}" data-status="${E2(row.status)}">
+    return `<fieldset class="journey-requirement" data-requirement-row="${E2(row.key)}" data-review-kind="${E2(row.assessmentKind)}" data-status="${E2(row.status)}">
     <legend lang="ru">${E2(row.text)}</legend>
     <div class="journey-assessment-options">${["met", "gap"].map((value) => `<label class="journey-answer ${value}">
       <input type="radio" name="review-${E2(row.key)}" data-review-answer="${E2(row.key)}" value="${value}" ${row.status === value ? "checked" : ""} ${disabled ? "disabled" : ""}>
@@ -6756,13 +6801,38 @@ var CareerRuntime = (() => {
     ${summary.unassessed ? `<p class="adaptive-review-note">${L2(`\u0411\u0435\u0437 \u043E\u0442\u043C\u0435\u0442\u043A\u0438 \u043E\u0441\u0442\u0430\u043B\u043E\u0441\u044C ${summary.unassessed} \u043F\u0443\u043D\u043A\u0442\u043E\u0432.`, `Unassessed items remaining: ${summary.unassessed}.`, `\u5C1A\u6709 ${summary.unassessed} \u9879\u672A\u81EA\u8BC4\u3002`)}</p>` : ""}
     <button type="button" class="button button-secondary" data-review-edit>${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u043C\u0435\u0442\u043A\u0438", "Edit my assessment", "\u4FEE\u6539\u81EA\u8BC4")}</button>`;
   }
-  function createAdaptiveVacancyReview({ onClose = () => {
-  } } = {}) {
+  function createAdaptiveVacancyReview({
+    onClose = () => {
+    },
+    onSelect = () => {
+    },
+    onComplete = () => false,
+    isCompleted = () => false,
+    onOpenKnowledge = () => Promise.resolve()
+  } = {}) {
     const bank = createEmployerVacancyBank({ maxEmployers: 3, maxPages: 4 });
     const details = createVacancyDetailsStore({ getMetadata: () => __careerHost.vacancyDetailsMetadata?.() });
     let container = null;
     let active = null;
     let disposed = false;
+    const completionChoice = (summary) => summary?.rows.find((row) => row.assessable && (!summary.competencySummary.total || row.assessmentKind === "competency") && ["met", "gap"].includes(row.status));
+    const persistMarks = (state2, marks) => writeLocal(state2.storageKey, JSON.stringify({
+      schemaVersion: 1,
+      vacancyId: state2.row.id,
+      marks,
+      updatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    }));
+    function completionControls(state2, summary) {
+      if (!summary) return "";
+      if (isCompleted(state2.reference)) return `<footer class="adaptive-review-completion">
+      <p role="status">${L2("\u0420\u0430\u0437\u0431\u043E\u0440 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D. \u0422\u0435\u0441\u0442 \u0437\u043D\u0430\u043D\u0438\u0439 \u043E\u0442\u043A\u0440\u044B\u0442.", "Vacancy review completed. The knowledge test is available.", "\u804C\u4F4D\u8981\u6C42\u81EA\u8BC4\u5DF2\u5B8C\u6210\uFF0C\u77E5\u8BC6\u6D4B\u8BD5\u5DF2\u5F00\u653E\u3002")}</p>
+      <button type="button" class="button button-primary" data-review-knowledge>${L2("\u041A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439", "Continue to the knowledge test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}</button>
+      <p class="adaptive-review-error" data-review-complete-error role="alert" hidden>${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0442\u0435\u0441\u0442. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u043F\u043E\u043F\u044B\u0442\u043A\u0443.", "The knowledge test could not be opened. Try again.", "\u65E0\u6CD5\u6253\u5F00\u77E5\u8BC6\u6D4B\u8BD5\uFF0C\u8BF7\u91CD\u8BD5\u3002")}</p></footer>`;
+      const help = !summary.total ? L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0434\u0440\u0443\u0433\u0443\u044E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E, \u0433\u0434\u0435 \u0432 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0435 \u0443\u043A\u0430\u0437\u0430\u043D\u044B \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F.", "Choose another vacancy with published requirements.", "\u8BF7\u9009\u62E9\u53E6\u4E00\u6761\u5217\u6709\u8981\u6C42\u7684\u62DB\u8058\u516C\u544A\u3002") : summary.competencySummary.total ? L2("\u0427\u0442\u043E\u0431\u044B \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440, \u043E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u0437\u043D\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 \u0443\u043C\u0435\u043D\u0438\u0435.", "Assess at least one knowledge or skill item to finish the review.", "\u81F3\u5C11\u81EA\u8BC4\u4E00\u9879\u77E5\u8BC6\u6216\u6280\u80FD\u540E\uFF0C\u5373\u53EF\u5B8C\u6210\u3002") : L2("\u0417\u043D\u0430\u043D\u0438\u044F \u0438 \u0443\u043C\u0435\u043D\u0438\u044F \u0432 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0438 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0435\u043D\u044B. \u041E\u0442\u043C\u0435\u0442\u044C\u0442\u0435 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u043D\u043E \u043E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043D\u043E\u0435 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0435.", "The announcement does not list knowledge or skills separately. Assess at least one published requirement.", "\u516C\u544A\u672A\u5355\u5217\u77E5\u8BC6\u6216\u6280\u80FD\uFF0C\u8BF7\u81F3\u5C11\u81EA\u8BC4\u4E00\u9879\u5DF2\u516C\u5E03\u7684\u8981\u6C42\u3002");
+      return `<footer class="adaptive-review-completion"><p id="adaptive-review-completion-help">${help}</p>
+      ${summary.total ? `<button type="button" class="button button-primary" data-review-complete aria-describedby="adaptive-review-completion-help" ${state2.storageInvalid || !completionChoice(summary) ? "disabled" : ""}>${L2("\u0417\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440", "Finish vacancy review", "\u5B8C\u6210\u804C\u4F4D\u8981\u6C42\u81EA\u8BC4")}</button>` : ""}
+      <p class="adaptive-review-error" data-review-complete-error role="alert" hidden>${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u043F\u043E\u043F\u044B\u0442\u043A\u0443.", "The review could not be saved. Try again.", "\u65E0\u6CD5\u4FDD\u5B58\u81EA\u8BC4\uFF0C\u8BF7\u91CD\u8BD5\u3002")}</p></footer>`;
+    }
     function render(focus = false) {
       if (!container) return;
       container.hidden = !active;
@@ -6775,15 +6845,18 @@ var CareerRuntime = (() => {
       const heading = state2.plan ? L2("\u0412\u0430\u0448 \u043F\u043B\u0430\u043D \u0440\u0430\u0437\u0432\u0438\u0442\u0438\u044F", "Your development plan", "\u4F60\u7684\u53D1\u5C55\u8BA1\u5212") : L2("\u0422\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438", "Vacancy requirements", "\u804C\u4F4D\u8981\u6C42");
       const summary = state2.requirements && summarizeVacancyAssessment(state2.requirements, state2.marks);
       const published = date2(state2.row.announcedAt), deadline = date2(state2.row.expiresAt);
+      const status = state2.vacancy ? vacancyBankStatus(state2.row) : null;
       container.innerHTML = `<section class="adaptive-review" aria-labelledby="adaptive-review-title">
       <button type="button" class="adaptive-back" data-review-close>${icon("arrow-left")}${L2("\u041A \u0441\u043F\u0438\u0441\u043A\u0443 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439", "Back to vacancies", "\u8FD4\u56DE\u804C\u4F4D\u5217\u8868")}</button>
       <header class="adaptive-review-heading"><h1 id="adaptive-review-title" tabindex="-1">${heading}</h1>
         <h2 lang="ru">${E2(state2.row.title)}</h2><p lang="ru">${E2(state2.employerName)}</p>
         ${state2.vacancy?.department ? `<p lang="ru">${E2(state2.vacancy.department)}</p>` : ""}
-        ${state2.vacancy ? `<p>${sourceStatus(state2.row)}${published ? " \xB7 " + L2("\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Published", "\u53D1\u5E03\u4E8E") + " " + E2(published) : ""}${deadline ? " \xB7 " + L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u622A\u6B62\u4E8E") + " " + E2(deadline) : ""}</p>` : ""}
+        ${status ? `<p data-review-vacancy-status="${status}">${vacancyStatusText(status)}${published ? " \xB7 " + L2("\u041E\u043F\u0443\u0431\u043B\u0438\u043A\u043E\u0432\u0430\u043D\u043E", "Published", "\u53D1\u5E03\u4E8E") + " " + E2(published) : ""}${deadline ? " \xB7 " + L2("\u041F\u0440\u0438\u0451\u043C \u0434\u043E", "Apply by", "\u622A\u6B62\u4E8E") + " " + E2(deadline) : ""}</p>` : ""}
+        ${status === "source-active" ? `<p data-review-salary><strong>${L2("\u0417\u0430\u0440\u043F\u043B\u0430\u0442\u0430", "Salary", "\u85AA\u8D44")}:</strong> ${E2(vacancySalaryText(state2.row))}</p>` : ""}
         ${source ? `<a class="adaptive-source" href="${source}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0445\u043E\u0434\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435", "Original announcement", "\u539F\u59CB\u516C\u544A")}${icon("external")}</a>` : ""}
       </header>
       ${state2.loading ? `<p role="status">${L2("\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u0438\u0437 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430\u2026", "Loading source requirements\u2026", "\u6B63\u5728\u52A0\u8F7D\u539F\u59CB\u8981\u6C42\u2026\u2026")}</p>` : state2.error ? `<p class="adaptive-review-error" role="alert">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u044D\u0442\u043E\u0439 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438.", "The requirements for this vacancy could not be loaded.", "\u65E0\u6CD5\u52A0\u8F7D\u6B64\u804C\u4F4D\u7684\u8981\u6C42\u3002")}</p><button type="button" class="button button-secondary" data-review-retry>${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button>` : state2.plan ? developmentPlan(summary) : checklist(state2.vacancy, summary, state2.storageInvalid)}
+      ${!state2.loading && !state2.error ? completionControls(state2, summary) : ""}
     </section>`;
       container.querySelector("[data-review-close]").onclick = () => close();
       container.querySelector("[data-review-retry]")?.addEventListener("click", () => void load(state2.request));
@@ -6794,6 +6867,30 @@ var CareerRuntime = (() => {
       container.querySelector("[data-review-edit]")?.addEventListener("click", () => {
         state2.plan = false;
         render(true);
+      });
+      container.querySelector("[data-review-complete]")?.addEventListener("click", () => {
+        if (active !== state2 || state2.storageInvalid || !state2.reference) return;
+        const choice = completionChoice(summarizeVacancyAssessment(state2.requirements, state2.marks));
+        if (!choice) return;
+        try {
+          persistMarks(state2, state2.marks);
+          if (!onComplete({ target: state2.reference, markKey: choice.key, signature: choice.signature, status: choice.status })) throw new Error("Review not saved");
+          state2.plan = true;
+          render(true);
+        } catch {
+          container.querySelector("[data-review-complete-error]").hidden = false;
+        }
+      });
+      container.querySelector("[data-review-knowledge]")?.addEventListener("click", async (event) => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        try {
+          await onOpenKnowledge();
+        } catch {
+          if (button.isConnected) container.querySelector("[data-review-complete-error]").hidden = false;
+        } finally {
+          if (button.isConnected) button.disabled = false;
+        }
       });
       container.querySelectorAll("[data-review-answer]").forEach((input) => input.addEventListener("change", () => saveAnswer(state2, input)));
       if (focus || state2.focusPending) {
@@ -6809,12 +6906,14 @@ var CareerRuntime = (() => {
       const next = { ...state2.marks, [row.key]: { status: input.value, signature: row.signature } };
       const error = container.querySelector("[data-review-save-error]");
       try {
-        writeLocal(state2.storageKey, JSON.stringify({ schemaVersion: 1, vacancyId: state2.row.id, marks: next, updatedAt: (/* @__PURE__ */ new Date()).toISOString() }));
+        persistMarks(state2, next);
         state2.marks = next;
         const summary = summarizeVacancyAssessment(state2.requirements, next);
         card.dataset.status = input.value;
         container.querySelector("[data-review-progress]").textContent = progressText(summary);
         container.querySelector("[data-review-progress-bar]").value = summary.assessed;
+        const finish = container.querySelector("[data-review-complete]");
+        if (finish) finish.disabled = !completionChoice(summary);
         error.hidden = true;
       } catch {
         card.querySelectorAll("input").forEach((option) => {
@@ -6834,6 +6933,8 @@ var CareerRuntime = (() => {
         if (active !== state2 || disposed) return false;
         const { row, descriptor, page, rows } = source;
         const binding = bindPage(row, descriptor, page, rows);
+        const reference = seminar5ReviewTarget({ vacancyId: row.id, authorityId: descriptor.authorityId, pagePath: page.path, pageSHA256: page.sha256, sourceURL: row.sourceURL });
+        if (!reference) throw new Error("Invalid vacancy review reference");
         state2.cancel = () => details.cancel(binding, row.id);
         const loaded = await details.load(binding, row.id);
         if (active !== state2 || disposed) return false;
@@ -6849,6 +6950,8 @@ var CareerRuntime = (() => {
         state2.storageKey = saved.key;
         state2.storageInvalid = saved.invalid;
         state2.marks = Object.fromEntries(restored.rows.filter((item) => ["met", "gap"].includes(item.status)).map((item) => [item.key, { status: item.status, signature: item.signature }]));
+        state2.reference = reference;
+        onSelect(reference);
         return true;
       } catch {
         if (active === state2) state2.error = true;
@@ -6891,6 +6994,17 @@ var CareerRuntime = (() => {
           return { row, descriptor, page, rows: view.rows };
         } });
       },
+      openReference(value) {
+        const reference = seminar5ReviewTarget(value);
+        if (!reference) return Promise.resolve(false);
+        const index = Number(/\/p(\d{4})-/.exec(reference.pagePath)[1]);
+        return load({ row: { id: reference.vacancyId, sourceURL: reference.sourceURL }, cancel: () => bank.cancel(reference.authorityId), resolve: async () => {
+          const view = await bank.loadPage(reference.authorityId, index), descriptor = view?.descriptor, page = descriptor?.pages[index];
+          const row = view?.rows.find((item) => item.id === reference.vacancyId);
+          if (view?.status !== "ready" || view.pageIndex !== index || page?.path !== reference.pagePath || page.sha256 !== reference.pageSHA256 || row?.sourceURL !== reference.sourceURL) throw new Error("Saved vacancy source differs");
+          return { row, descriptor, page, rows: view.rows };
+        } });
+      },
       close,
       dispose() {
         disposed = true;
@@ -6902,13 +7016,752 @@ var CareerRuntime = (() => {
     };
   }
 
+  // site/apps/career/assets/adaptive-vacancy-offer.mjs
+  var UUID2 = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i;
+  var DETAIL_PAGE2 = /^career-vacancy-details\/(pages\/[a-f0-9]{2}\/[a-f0-9]{24}\/p(\d{4})-[a-f0-9]{16})(?:\.part\d{4})?\.json\.gz$/;
+  var cacheKey = (row) => [row.id, row.employerId, row.sourcePath, row.sourceURL].join("|");
+  function candidatePage2(row) {
+    if (row.sourceType !== "bank" || row.archive === true || !UUID2.test(row.id || "")) return null;
+    const match = DETAIL_PAGE2.exec(row.sourcePath || "");
+    if (!match) return null;
+    try {
+      return { employerId: platformEmployerId(row.employerId), path: match[1] + ".json.gz", index: Number(match[2]) };
+    } catch {
+      return null;
+    }
+  }
+  function offerContent(candidate, source) {
+    const status = source ? vacancyBankStatus(source) : candidate.archive === true || candidate.status === "archived" ? "archived" : candidate.status === "profile" ? "profile" : "unknown";
+    const label2 = status === "profile" ? L2("\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role profile", "\u804C\u4F4D\u8D44\u6599") : vacancyStatusText(status);
+    const pay = status === "source-active" ? `<span class="adaptive-vacancy-salary" data-adaptive-vacancy-salary><span>${L2("\u0417\u0430\u0440\u043F\u043B\u0430\u0442\u0430:", "Salary:", "\u85AA\u8D44\uFF1A")}</span> <strong>${E2(vacancySalaryText(source))}</strong></span>` : "";
+    return `<span class="adaptive-vacancy-status" data-adaptive-vacancy-status="${status}">${E2(label2)}</span>${pay}`;
+  }
+  function createAdaptiveVacancyOffers() {
+    const bank = createEmployerVacancyBank({ maxEmployers: 8, maxPages: 12, maxConcurrent: 2 });
+    const cache = /* @__PURE__ */ new Map(), active = /* @__PURE__ */ new Map();
+    let target = null, visible = /* @__PURE__ */ new Map(), queued = /* @__PURE__ */ new Map();
+    function markup(row) {
+      return `<div class="adaptive-vacancy-offer" data-adaptive-vacancy-offer="${E2(row.id)}">${offerContent(row, cache.get(cacheKey(row)))}</div>`;
+    }
+    function hasVisibleCards() {
+      return !__careerHost.destroyed && target?.isConnected && !target.closest("[hidden]") && target.querySelector("[data-adaptive-vacancy-offer]");
+    }
+    function refresh() {
+      if (!hasVisibleCards()) return;
+      for (const slot of target.querySelectorAll("[data-adaptive-vacancy-offer]")) {
+        const row = visible.get(slot.dataset.adaptiveVacancyOffer);
+        if (row) slot.innerHTML = offerContent(row, cache.get(cacheKey(row)));
+      }
+    }
+    function remember(row, source) {
+      const key = cacheKey(row);
+      cache.delete(key);
+      cache.set(key, source ? {
+        archive: source.archive,
+        state: source.state,
+        expiresAt: source.expiresAt,
+        salaryFrom: source.salaryFrom,
+        salaryTo: source.salaryTo
+      } : null);
+      while (cache.size > 128) cache.delete(cache.keys().next().value);
+    }
+    async function load(job) {
+      try {
+        const view = await bank.loadPage(job.employerId, job.index);
+        if (job.cancelled || __careerHost.destroyed) return;
+        const matchingPage = view?.status === "ready" && view.pageIndex === job.index && view.descriptor?.authorityId === job.employerId && view.descriptor.pages[job.index]?.path === job.path;
+        const candidates = [...job.rows, ...queued.get(job.key)?.rows || []];
+        queued.delete(job.key);
+        for (const row of candidates) {
+          const source = matchingPage && view.descriptor.employerId === row.employerId ? view.rows.find((item) => item.id === row.id && item.sourceURL === row.sourceURL) : null;
+          remember(row, source);
+        }
+        refresh();
+      } finally {
+        active.delete(job.employerId);
+        pump();
+      }
+    }
+    function pump() {
+      if (!hasVisibleCards()) return;
+      while (active.size < 2) {
+        const job = [...queued.values()].find((item) => !active.has(item.employerId));
+        if (!job) return;
+        queued.delete(job.key);
+        active.set(job.employerId, job);
+        void load(job);
+      }
+    }
+    function enrich(root, rows) {
+      target = root;
+      visible = new Map(rows.map((row) => [row.id, row]));
+      queued = /* @__PURE__ */ new Map();
+      for (const row of visible.values()) {
+        if (cache.has(cacheKey(row))) continue;
+        const page = candidatePage2(row);
+        if (!page) continue;
+        const key = page.employerId + "|" + page.path;
+        if (!queued.has(key)) queued.set(key, { ...page, key, rows: [] });
+        queued.get(key).rows.push(row);
+      }
+      for (const job of active.values()) {
+        if (queued.has(job.key)) continue;
+        job.cancelled = true;
+        bank.cancel(job.employerId);
+      }
+      refresh();
+      pump();
+    }
+    return { markup, enrich };
+  }
+
+  // site/apps/career/assets/adaptive-employer-card.mjs
+  var exactName = (value) => typeof value === "string" ? value.normalize("NFC").trim().replace(/\s+/g, " ").toLocaleLowerCase("ru") : "";
+  var sourceLanguage = (value) => getLanguage() !== "ru" && /[А-Яа-яЁё]/.test(value) ? ' lang="ru"' : "";
+  var regionalPath = (id) => /^ru-\d{2}$/.test(id || "") ? `data/territorial-authorities/${id}.json` : "data/territorial-authorities/national.json";
+  function authorityIndex(authorities) {
+    const ids = /* @__PURE__ */ new Map();
+    const names = /* @__PURE__ */ new Map();
+    for (const authority of authorities) {
+      if (!authority?.id || !authority.name) continue;
+      ids.set(authority.id, authority);
+      const aliases = Array.isArray(authority.matchAliases) ? authority.matchAliases : [];
+      const fullAndShort = authority.shortName ? `${authority.name} (${authority.shortName})` : "";
+      for (const value of [authority.name, authority.shortName, fullAndShort, ...aliases]) {
+        const key = exactName(value);
+        if (!key) continue;
+        if (!names.has(key)) names.set(key, authority);
+        else if (names.get(key)?.id !== authority.id) names.set(key, null);
+      }
+    }
+    return { ids, names };
+  }
+  function publicServiceAuthorities(records) {
+    return records.map((record3) => ({
+      id: record3.id,
+      name: record3.name?.ru,
+      localizedName: record3.name,
+      mission: record3.mission,
+      descriptionSources: record3.sources
+    }));
+  }
+  function briefMarkup(authority) {
+    if (!authority) return "";
+    const mission = typeof authority.mission === "string" ? authority.mission : authority.mission?.[getLanguage()] || authority.mission?.ru;
+    const paragraphs = [...new Set([mission, ...authority.descriptionParagraphs || []].filter((value) => typeof value === "string" && value.trim()))].slice(0, 2);
+    if (!paragraphs.length) return "";
+    const sources = (authority.descriptionSources || []).filter((source) => safeURL(source?.url)).slice(0, 2);
+    return `<details class="adaptive-employer-brief"><summary>${L2("\u041E\u0431 \u043E\u0440\u0433\u0430\u043D\u0435 \u0438 \u0435\u0433\u043E \u0437\u0430\u0434\u0430\u0447\u0430\u0445", "About the employer and its work", "\u673A\u6784\u4E0E\u804C\u8D23")}</summary>
+    <div>${paragraphs.map((paragraph) => {
+      const text4 = translate(paragraph);
+      return `<p${sourceLanguage(text4)}>${E2(text4)}</p>`;
+    }).join("")}${sources.map((source) => `<a href="${safeURL(source.url)}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F", "Description source", "\u63CF\u8FF0\u6765\u6E90")}${icon("external")}</a>`).join("")}</div></details>`;
+  }
+  function createAdaptiveEmployerCards(authorities = []) {
+    const federal = authorityIndex(authorities);
+    const offers = createAdaptiveVacancyOffers();
+    const paths = /* @__PURE__ */ new Map();
+    const supplementary = /* @__PURE__ */ new Map();
+    const publicServicePath = "data/public-service.json";
+    const loading = [Promise.resolve(), Promise.resolve()];
+    let nextLoader = 0;
+    function resolve(row) {
+      const regional = supplementary.get(regionalPath(row.regionId));
+      const publicService2 = supplementary.get(publicServicePath);
+      const indexes = [federal, regional, publicService2].filter(Boolean);
+      for (const index of indexes) {
+        const exact = index.ids.get(row.employerId);
+        if (exact) return exact;
+      }
+      const name2 = exactName(row.employerName);
+      if (indexes.some((index) => index.names.get(name2) === null)) return null;
+      const known = new Map(indexes.map((index) => index.names.get(name2)).filter(Boolean).map((authority) => [authority.id, authority]));
+      return known.size === 1 ? known.values().next().value : null;
+    }
+    function nameMarkup(row, authority, compact2) {
+      const title = authorityName(authority) || row.employerName || L2("\u041E\u0440\u0433\u0430\u043D \u043D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D", "Employer not specified", "\u672A\u6CE8\u660E\u7528\u4EBA\u5355\u4F4D");
+      const tag = compact2 ? "h3" : "h2";
+      return `${authority ? authorityEmblem(authority, "compact") : ""}<${tag} class="adaptive-employer-name"${sourceLanguage(title)}>${E2(title)}</${tag}>`;
+    }
+    function markup(row, compact2 = false) {
+      const authority = resolve(row);
+      return {
+        heading: `<div class="adaptive-employer-heading" data-adaptive-employer-heading="${E2(row.id)}" data-adaptive-employer-compact="${compact2}"${authority ? " data-adaptive-employer-resolved" : ""}>${nameMarkup(row, authority, compact2)}</div>`,
+        brief: `<div data-adaptive-employer-brief-slot="${E2(row.id)}"${authority ? " data-adaptive-employer-resolved" : ""}>${briefMarkup(authority)}</div>`,
+        offer: offers.markup(row)
+      };
+    }
+    function load(path) {
+      if (!paths.has(path)) {
+        const isPublicService = path === publicServicePath;
+        const loader = nextLoader++ % loading.length;
+        const request = loading[loader].then(() => loadJSON(path, {
+          validate: (payload) => Array.isArray(isPublicService ? payload?.records : payload?.authorities)
+        })).then((payload) => {
+          const records = isPublicService ? publicServiceAuthorities(payload.records) : payload.authorities;
+          supplementary.set(path, authorityIndex(records));
+        }).catch(() => {
+        });
+        loading[loader] = request;
+        paths.set(path, request);
+      }
+      return paths.get(path);
+    }
+    async function enrich(root, rows) {
+      offers.enrich(root, rows);
+      const unresolved = new Map(rows.filter((row) => !resolve(row)).map((row) => [row.id, row]));
+      if (!unresolved.size) return;
+      const needed = /* @__PURE__ */ new Set([publicServicePath, ...[...unresolved.values()].map((row) => regionalPath(row.regionId))]);
+      await Promise.all([...needed].map(load));
+      if (__careerHost.destroyed || !root.isConnected) return;
+      for (const heading of root.querySelectorAll("[data-adaptive-employer-heading]:not([data-adaptive-employer-resolved])")) {
+        const row = unresolved.get(heading.dataset.adaptiveEmployerHeading);
+        const authority = row && resolve(row);
+        if (!authority) continue;
+        heading.innerHTML = nameMarkup(row, authority, heading.dataset.adaptiveEmployerCompact === "true");
+        heading.setAttribute("data-adaptive-employer-resolved", "");
+      }
+      for (const slot of root.querySelectorAll("[data-adaptive-employer-brief-slot]:not([data-adaptive-employer-resolved])")) {
+        const row = unresolved.get(slot.dataset.adaptiveEmployerBriefSlot);
+        const authority = row && resolve(row);
+        if (!authority) continue;
+        slot.innerHTML = briefMarkup(authority);
+        slot.setAttribute("data-adaptive-employer-resolved", "");
+      }
+    }
+    return { markup, enrich };
+  }
+
+  // site/apps/career/assets/region-map-geometry.mjs
+  var REGION_MAP_MAX_ZOOM = 40;
+  var clampMapZoom = (value) => Math.max(1, Math.min(REGION_MAP_MAX_ZOOM, value));
+  function zoomMapAt(view, value, point2) {
+    const zoom = clampMapZoom(value), ratio = zoom / view.zoom;
+    return { zoom, x: point2.x - (point2.x - view.x) * ratio, y: point2.y - (point2.y - view.y) * ratio };
+  }
+  function containMapView(view, { width, height, left = 0, top = 0, right = width, bottom = height }) {
+    const zoom = clampMapZoom(view.zoom);
+    const axis = (offset, size, min, max2) => size <= max2 - min ? (min + max2 - size) / 2 : Math.min(min, Math.max(max2 - size, offset));
+    return { zoom, x: axis(view.x, width * zoom, left, right), y: axis(view.y, height * zoom, top, bottom) };
+  }
+
+  // site/apps/career/assets/region-picker.mjs
+  var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var normalize2 = (value) => String(value ?? "").normalize("NFKC").toLowerCase().replace(/ё/g, "\u0435").replace(/[—–−]/g, "-").replace(/\s+/g, " ").trim();
+  var languageCode = (value) => String(value || "ru").startsWith("zh") ? "zh-Hans" : String(value).startsWith("en") ? "en" : "ru";
+  var isMoscow = (region) => String(region.mapId) === "102269" || region.id === "ru-77" || normalize2(region.name) === "\u043C\u043E\u0441\u043A\u0432\u0430";
+  var copy = {
+    ru: { search: "\u041D\u0430\u0439\u0442\u0438 \u0441\u0443\u0431\u044A\u0435\u043A\u0442", searchHint: "\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430", list: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0434\u043B\u044F \u0440\u0430\u0431\u043E\u0442\u044B", map: "\u0412\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u043D\u0430 \u043A\u0430\u0440\u0442\u0435", mapHelp: "\u041A\u043E\u0441\u043D\u0438\u0442\u0435\u0441\u044C \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430 \u0434\u043B\u044F \u0432\u044B\u0431\u043E\u0440\u0430. \u0420\u0430\u0437\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0432\u0430 \u043F\u0430\u043B\u044C\u0446\u0430 \u0434\u043B\u044F \u0443\u0432\u0435\u043B\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0434\u0432\u0438\u0433\u0430\u0439\u0442\u0435 \u043A\u0430\u0440\u0442\u0443 \u043E\u0434\u043D\u0438\u043C \u043F\u0430\u043B\u044C\u0446\u0435\u043C. \u041D\u0430 \u043A\u043E\u043C\u043F\u044C\u044E\u0442\u0435\u0440\u0435 \u2014 \u043A\u043E\u043B\u0451\u0441\u0438\u043A\u043E \u0438 \u043F\u0435\u0440\u0435\u0442\u0430\u0441\u043A\u0438\u0432\u0430\u043D\u0438\u0435. \u0421 \u043A\u043B\u0430\u0432\u0438\u0430\u0442\u0443\u0440\u044B: +/\u2212 \u2014 \u043C\u0430\u0441\u0448\u0442\u0430\u0431, 0 \u2014 \u0432\u0441\u044F \u043A\u0430\u0440\u0442\u0430; \u0441\u0442\u0440\u0435\u043B\u043A\u0438 \u2014 \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u0435, Tab \u2014 \u0432\u044B\u0431\u043E\u0440 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u0430, \u043F\u0440\u043E\u0431\u0435\u043B \u0438\u043B\u0438 Enter \u2014 \u043E\u0442\u043C\u0435\u0442\u0438\u0442\u044C.", selected: "\u0412\u044B\u0431\u0440\u0430\u043D\u043E", notSelected: "\u041D\u0435 \u0432\u044B\u0431\u0440\u0430\u043D\u043E", of: "\u0438\u0437", add: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C", remove: "\u0423\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0432\u044B\u0431\u043E\u0440\u0430", none: "\u0412\u044B\u0431\u0440\u0430\u043D\u044B \u0442\u043E\u043B\u044C\u043A\u043E \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043E\u0440\u0433\u0430\u043D\u0438\u0437\u0430\u0446\u0438\u0438.", noMatches: "\u0421\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432 \u0441 \u0442\u0430\u043A\u0438\u043C \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", loading: "\u0417\u0430\u0433\u0440\u0443\u0436\u0430\u0435\u043C \u043A\u0430\u0440\u0442\u0443\u2026", unavailable: "\u041A\u0430\u0440\u0442\u0430 \u0432\u0440\u0435\u043C\u0435\u043D\u043D\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", zoomIn: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", zoomOut: "\u0423\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C \u043A\u0430\u0440\u0442\u0443", reset: "\u0412\u0441\u044F \u043A\u0430\u0440\u0442\u0430", zoom: "\u041C\u0430\u0441\u0448\u0442\u0430\u0431 \u043A\u0430\u0440\u0442\u044B", hint: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0442\u0435\u0440\u0440\u0438\u0442\u043E\u0440\u0438\u044E \u043D\u0430 \u043A\u0430\u0440\u0442\u0435 \u0438\u043B\u0438 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", searchResults: "\u041D\u0430\u0439\u0434\u0435\u043D\u043E \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u043E\u0432", chosenLegend: "\u0412\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0441\u0443\u0431\u044A\u0435\u043A\u0442\u044B" },
+    en: { search: "Find a region", searchHint: "Region name", list: "Regions to work in", map: "Select regions on the map", mapHelp: "Tap a region to select it. Spread two fingers to zoom and drag with one finger to move. On a computer, use the wheel and drag. Keyboard: +/\u2212 to zoom, 0 for the whole map; arrows to move, Tab to focus a region, Space or Enter to select.", selected: "Selected", notSelected: "Not selected", of: "of", add: "Select", remove: "Deselect", none: "Only federal authorities and organisations are selected.", noMatches: "No regions match this name.", loading: "Loading the map\u2026", unavailable: "The map is temporarily unavailable. Select regions in the list.", zoomIn: "Zoom in", zoomOut: "Zoom out", reset: "Whole map", zoom: "Map zoom", hint: "Select a region on the map or in the list.", searchResults: "Regions found", chosenLegend: "Selected regions" },
+    "zh-Hans": { search: "\u641C\u7D22\u5730\u533A", searchHint: "\u5730\u533A\u540D\u79F0", list: "\u5E0C\u671B\u5DE5\u4F5C\u7684\u5730\u533A", map: "\u5728\u5730\u56FE\u4E0A\u9009\u62E9\u5730\u533A", mapHelp: "\u70B9\u51FB\u5730\u533A\u8FDB\u884C\u9009\u62E9\u3002\u53CC\u6307\u5F20\u5F00\u653E\u5927\uFF0C\u5355\u6307\u62D6\u52A8\u5E73\u79FB\uFF1B\u7535\u8111\u4E0A\u4F7F\u7528\u6EDA\u8F6E\u548C\u62D6\u52A8\u3002\u952E\u76D8\uFF1A+/\u2212\u7F29\u653E\uFF0C0\u663E\u793A\u5168\u56FE\uFF1B\u65B9\u5411\u952E\u79FB\u52A8\uFF0CTab\u805A\u7126\u5730\u533A\uFF0C\u7A7A\u683C\u6216\u56DE\u8F66\u9009\u62E9\u3002", selected: "\u5DF2\u9009\u62E9", notSelected: "\u672A\u9009\u62E9", of: "/", add: "\u9009\u62E9", remove: "\u53D6\u6D88\u9009\u62E9", none: "\u76EE\u524D\u4EC5\u9009\u62E9\u8054\u90A6\u673A\u5173\u548C\u7EC4\u7EC7\u3002", noMatches: "\u672A\u627E\u5230\u7B26\u5408\u8BE5\u540D\u79F0\u7684\u5730\u533A\u3002", loading: "\u6B63\u5728\u52A0\u8F7D\u5730\u56FE\u2026\u2026", unavailable: "\u5730\u56FE\u6682\u4E0D\u53EF\u7528\u3002\u8BF7\u5728\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", zoomIn: "\u653E\u5927\u5730\u56FE", zoomOut: "\u7F29\u5C0F\u5730\u56FE", reset: "\u5B8C\u6574\u5730\u56FE", zoom: "\u5730\u56FE\u7F29\u653E", hint: "\u5728\u5730\u56FE\u6216\u5217\u8868\u4E2D\u9009\u62E9\u5730\u533A\u3002", searchResults: "\u627E\u5230\u7684\u5730\u533A", chosenLegend: "\u5DF2\u9009\u62E9\u5730\u533A" }
+  };
+  var instanceCounter = 0;
+  var mapRequests = /* @__PURE__ */ new Map();
+  function regionLabel(region, language2 = "ru") {
+    const locale = languageCode(language2);
+    return String(locale === "en" ? region.name_en || region.name : locale === "zh-Hans" ? region.name_zh || region.name : region.name || region.name_ru || region.id);
+  }
+  function orderRegions(regions, language2 = "ru") {
+    const locale = languageCode(language2);
+    const collator = new Intl.Collator(locale === "zh-Hans" ? "zh-CN" : locale, { sensitivity: "base", numeric: true });
+    return [...regions].sort((a, b) => Number(isMoscow(b)) - Number(isMoscow(a)) || collator.compare(regionLabel(a, locale), regionLabel(b, locale)) || String(a.id).localeCompare(String(b.id)));
+  }
+  function sanitizeRegionSelection(ids, regions) {
+    const valid = new Set(regions.map((region) => String(region.id)));
+    return [...new Set((Array.isArray(ids) ? ids : []).map(String))].filter((id) => valid.has(id));
+  }
+  function loadMap(url) {
+    if (!mapRequests.has(url)) {
+      const promise = loadJSON(url, { timeout: 1e4, validate: (value) => value?.schema === "rudn-career-region-map" && value.schemaVersion === 1 && value.width > 0 && value.height > 0 && Array.isArray(value.features) && value.features.length === 89 && value.features.every((feature2) => typeof feature2.mapId === "string" && typeof feature2.d === "string" && Array.isArray(feature2.anchor) && feature2.anchor.every(Number.isFinite)) }).catch((error) => {
+        mapRequests.delete(url);
+        throw error;
+      });
+      mapRequests.set(url, promise);
+    }
+    return mapRequests.get(url);
+  }
+  function createRegionPicker({ root, regions = [], selectedIds, onChange = () => {
+  }, getLanguage: getLanguage2 = getLanguage, mapURL = "data/region-map.json", mapFirst = false, initialQuery = "", emptySelectionText } = {}) {
+    if (!root?.replaceChildren) throw new TypeError("A region picker root element is required.");
+    const catalog = regions.filter((region) => region && region.id != null && region.name).map((region) => ({ ...region, id: String(region.id) }));
+    if (new Set(catalog.map((region) => region.id)).size !== catalog.length) throw new TypeError("Region identifiers must be unique.");
+    const byId = new Map(catalog.map((region) => [region.id, region]));
+    const defaultRegion = catalog.find(isMoscow) || catalog.find((region) => region.defaultSelected);
+    let selection = new Set(sanitizeRegionSelection(selectedIds === void 0 ? defaultRegion ? [defaultRegion.id] : [] : selectedIds, catalog));
+    let language2 = languageCode(getLanguage2()), ordered = orderRegions(catalog, language2), data2 = null, destroyed = false, zoom = 1;
+    let query = initialQuery, activeId = defaultRegion?.id || ordered[0]?.id, hoveredId = null, ignoreMapClick = false, ignoreTimer;
+    let mapX = 0, mapY = 0, resizeObserver = null, labelNodes = [];
+    const pointers = /* @__PURE__ */ new Map();
+    let gesture = null, gestureMoved = false;
+    const key = `career-regions-${++instanceCounter}`;
+    const ui = () => copy[language2];
+    const selected = () => orderRegions(catalog, "ru").filter((region) => selection.has(region.id)).map((region) => region.id);
+    const canonicalByMap = new Map(catalog.filter((region) => region.mapId != null).map((region) => [String(region.mapId), region.id]));
+    const canonicalByName = new Map(catalog.map((region) => [normalize2(region.name), region.id]));
+    const mappedFeatures = /* @__PURE__ */ new Map();
+    const bindings = [];
+    const listen = (target, type, listener, options) => {
+      target.addEventListener(type, listener, options);
+      bindings.push(() => target.removeEventListener(type, listener, options));
+    };
+    const label2 = (id) => regionLabel(byId.get(id) || {}, language2);
+    const emit = (source, regionId = null) => onChange(selected(), { source, regionId });
+    const badge = (id) => selection.has(id) ? ui().selected : ui().notSelected;
+    const setText = (element, value) => {
+      if (element.textContent !== value) element.textContent = value;
+    };
+    function updateStatus() {
+      const status = root.querySelector("[data-region-selection-status]");
+      setText(status, `${ui().selected}: ${selection.size} ${ui().of} ${catalog.length}`);
+      root.querySelector("[data-region-empty-selection]").hidden = selection.size > 0;
+      root.dataset.selectedRegionCount = String(selection.size);
+      const describedId = hoveredId || activeId;
+      const hint = root.querySelector("[data-region-map-current]");
+      setText(hint, describedId && byId.has(describedId) ? `${label2(describedId)} \xB7 ${badge(describedId)}` : ui().hint);
+    }
+    function updateSelection() {
+      if (destroyed) return;
+      for (const checkbox of root.querySelectorAll("[data-region-checkbox]")) {
+        const checked = selection.has(checkbox.dataset.regionCheckbox);
+        checkbox.checked = checked;
+        checkbox.closest(".career-region-option").classList.toggle("is-selected", checked);
+      }
+      for (const shape of root.querySelectorAll("[data-region-map-id]")) {
+        const id = shape.dataset.regionMapId, checked = selection.has(id);
+        shape.setAttribute("aria-checked", String(checked));
+        shape.setAttribute("aria-label", label2(id));
+        shape.classList.toggle("is-selected", checked);
+        shape.classList.toggle("is-active", id === activeId);
+        shape.setAttribute("tabindex", id === activeId ? "0" : "-1");
+        const title = shape.querySelector("title");
+        if (title) title.textContent = `${label2(id)} \xB7 ${badge(id)}`;
+      }
+      for (const boundary of root.querySelectorAll("[data-region-boundary]")) boundary.classList.toggle("is-selected", selection.has(boundary.dataset.regionBoundary));
+      updateStatus();
+      updateMapLabels();
+    }
+    function toggle(id, source) {
+      if (!byId.has(id) || destroyed) return;
+      if (selection.has(id)) selection.delete(id);
+      else selection.add(id);
+      if (source === "map") activeId = id;
+      updateSelection();
+      emit(source, id);
+    }
+    function filterList() {
+      const normalized3 = normalize2(query);
+      let count = 0;
+      for (const option of root.querySelectorAll(".career-region-option")) {
+        const record3 = byId.get(option.dataset.regionOption);
+        const searchable = [record3.name, record3.name_en, record3.name_zh, record3.code, record3.id].map(normalize2).join(" ");
+        option.hidden = !!normalized3 && !searchable.includes(normalized3);
+        if (!option.hidden) count++;
+      }
+      root.querySelector("[data-region-no-matches]").hidden = count > 0;
+      const status = root.querySelector("[data-region-search-status]");
+      status.textContent = normalized3 ? `${ui().searchResults}: ${count}` : "";
+    }
+    function metrics() {
+      const svg = root.querySelector(".career-region-map");
+      if (!svg || !data2) return null;
+      const rect = svg.getBoundingClientRect(), width = rect.width || data2.width, height = rect.height || data2.height;
+      const scale = Math.min(width / data2.width, height / data2.height);
+      return { rect, width, height, scale, offsetX: (width - data2.width * scale) / 2, offsetY: (height - data2.height * scale) / 2 };
+    }
+    function svgPoint(event) {
+      const m = metrics();
+      return { x: (event.clientX - m.rect.left - m.offsetX) / m.scale, y: (event.clientY - m.rect.top - m.offsetY) / m.scale };
+    }
+    const textWidth = (value) => [...value].reduce((sum, char) => sum + (/[\p{Script=Han}]/u.test(char) ? 13 : /[MWЖШЩЮФ]/.test(char) ? 10 : /[il1.,' ]/.test(char) ? 4 : 7), 0);
+    function labelLines(value) {
+      const words = language2 === "zh-Hans" ? [...value] : value.split(/\s+/), lines = [];
+      let line = "";
+      for (const word of words) {
+        const next = line + (line && language2 !== "zh-Hans" ? " " : "") + word;
+        if (line && textWidth(next) > 168) {
+          lines.push(line);
+          line = word;
+        } else line = next;
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
+    function updateMapLabels(m = metrics()) {
+      if (!m) return;
+      const pixels = m.scale * zoom, placed = [];
+      const candidates = labelNodes.map((item) => {
+        const bounds = item.feature.bounds, area = (bounds[2] - bounds[0]) * (bounds[3] - bounds[1]);
+        return { ...item, area, priority: (item.feature.city ? 1e9 : 0) + (selection.has(item.id) ? 1e8 : 0) + area };
+      }).sort((a, b) => b.priority - a.priority || a.id.localeCompare(b.id));
+      for (const item of candidates) {
+        const { node, feature: feature2, id, lines } = item;
+        const threshold = feature2.city ? 1.5 : item.area > 1e4 ? 1.2 : item.area > 2500 ? 2 : item.area > 600 ? 3.5 : 6;
+        let visible = zoom >= threshold;
+        const width = Math.max(...lines.map(textWidth)) + 10, height = lines.length * 16 + 4;
+        const x2 = (feature2.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature2.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
+        const options = feature2.city ? [[width / 2 + 14, 0], [0, -height / 2 - 14], [0, height / 2 + 14], [-width / 2 - 14, 0]] : [[0, 0]];
+        let chosen = null;
+        if (visible) for (const [dx, dy] of options) {
+          const box = { left: x2 + dx - width / 2, right: x2 + dx + width / 2, top: y + dy - height / 2, bottom: y + dy + height / 2 };
+          if (box.left < 5 || box.right > m.width - 5 || box.top < 5 || box.bottom > m.height - 5) continue;
+          if (placed.some((other) => box.left < other.right + 5 && box.right > other.left - 5 && box.top < other.bottom + 4 && box.bottom > other.top - 4)) continue;
+          chosen = { dx, dy, box };
+          break;
+        }
+        visible = visible && !!chosen;
+        node.style.display = visible ? "" : "none";
+        node.dataset.labelVisible = String(visible);
+        if (!visible) continue;
+        placed.push(chosen.box);
+        node.setAttribute("font-size", String(13 / pixels));
+        node.setAttribute("stroke-width", String(3 / pixels));
+        node.setAttribute("x", String(feature2.anchor[0] + chosen.dx / pixels));
+        node.setAttribute("y", String(feature2.anchor[1] + (chosen.dy - (lines.length - 1) * 8 + 4) / pixels));
+        [...node.children].forEach((span, index) => {
+          span.setAttribute("x", node.getAttribute("x"));
+          span.setAttribute("dy", index ? String(16 / pixels) : "0");
+        });
+      }
+    }
+    function applyView() {
+      const m = metrics(), viewport = root.querySelector(".career-region-map-viewport"), content = root.querySelector(".career-region-map-content");
+      if (!m || !viewport || !content) return;
+      const view = containMapView({ zoom, x: mapX, y: mapY }, { width: data2.width, height: data2.height, left: -m.offsetX / m.scale, top: -m.offsetY / m.scale, right: (m.width - m.offsetX) / m.scale, bottom: (m.height - m.offsetY) / m.scale });
+      zoom = view.zoom;
+      mapX = view.x;
+      mapY = view.y;
+      content.setAttribute("transform", `translate(${mapX} ${mapY}) scale(${zoom})`);
+      viewport.dataset.mapZoom = String(zoom);
+      viewport.dataset.mapPanX = String(mapX);
+      viewport.dataset.mapPanY = String(mapY);
+      viewport.classList.toggle("is-zoomed", zoom > 1);
+      root.querySelector('[data-region-zoom="reset"]').disabled = zoom <= 1;
+      root.querySelector("[data-region-zoom-value]").textContent = `${Math.round(zoom * 100)}%`;
+      updateMapLabels(m);
+    }
+    function setZoom(value, { point: point2, focusId } = {}) {
+      if (!data2) return;
+      if (focusId && mappedFeatures.has(focusId)) {
+        zoom = Math.min(REGION_MAP_MAX_ZOOM, Math.max(1, value));
+        const anchor = mappedFeatures.get(focusId).anchor;
+        mapX = data2.width / 2 - anchor[0] * zoom;
+        mapY = data2.height / 2 - anchor[1] * zoom;
+      } else {
+        const next = zoomMapAt({ zoom, x: mapX, y: mapY }, value, point2 || { x: data2.width / 2, y: data2.height / 2 });
+        zoom = next.zoom;
+        mapX = next.x;
+        mapY = next.y;
+      }
+      if (zoom === 1) {
+        mapX = 0;
+        mapY = 0;
+      }
+      applyView();
+    }
+    function revealMapRegion(id) {
+      const m = metrics(), feature2 = mappedFeatures.get(id);
+      if (!m || !feature2) return;
+      const x2 = (feature2.anchor[0] * zoom + mapX) * m.scale + m.offsetX, y = (feature2.anchor[1] * zoom + mapY) * m.scale + m.offsetY;
+      if (x2 < 30 || x2 > m.width - 30 || y < 30 || y > m.height - 30) {
+        mapX = data2.width / 2 - feature2.anchor[0] * zoom;
+        mapY = data2.height / 2 - feature2.anchor[1] * zoom;
+        applyView();
+      }
+    }
+    function moveMapFocus(keyName) {
+      const available = ordered.filter((region) => mappedFeatures.has(region.id));
+      if (!available.length) return;
+      let id = activeId;
+      if (keyName === "Home") id = available[0].id;
+      else if (keyName === "End") id = available.at(-1).id;
+      else {
+        const origin = mappedFeatures.get(activeId)?.anchor || mappedFeatures.get(available[0].id).anchor;
+        const direction = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowDown: [0, 1], ArrowUp: [0, -1] }[keyName];
+        let score2 = Infinity;
+        for (const region of available) {
+          if (region.id === activeId) continue;
+          const point2 = mappedFeatures.get(region.id).anchor, dx = point2[0] - origin[0], dy = point2[1] - origin[1];
+          const forward = dx * direction[0] + dy * direction[1], side = Math.abs(dx * direction[1] - dy * direction[0]);
+          if (forward <= 0.01) continue;
+          const distance = Math.hypot(dx, dy) + side * 1.4;
+          if (distance < score2) {
+            score2 = distance;
+            id = region.id;
+          }
+        }
+      }
+      activeId = id;
+      hoveredId = null;
+      updateSelection();
+      const shape = [...root.querySelectorAll("[data-region-map-id]")].find((element) => element.dataset.regionMapId === id);
+      shape?.focus({ preventScroll: true });
+      revealMapRegion(id);
+    }
+    function renderMap() {
+      const frame = root.querySelector("[data-region-map-frame]");
+      if (!data2 || !frame || destroyed) return;
+      mappedFeatures.clear();
+      for (const feature2 of data2.features) {
+        const id = canonicalByMap.get(String(feature2.mapId)) || canonicalByName.get(normalize2(feature2.name));
+        if (id) mappedFeatures.set(id, feature2);
+      }
+      if (!mappedFeatures.has(activeId)) activeId = ordered.find((region) => mappedFeatures.has(region.id))?.id;
+      const featureMarkup = (region) => {
+        const feature2 = mappedFeatures.get(region.id);
+        if (!feature2) return "";
+        const city = feature2.city ? ` data-region-marker` : "";
+        return `<g class="career-region-shape${feature2.city ? " career-region-city" : ""}" data-region-map-id="${E3(region.id)}"${city} role="checkbox" aria-checked="false" aria-label="${E3(label2(region.id))}" tabindex="-1"><title>${E3(label2(region.id))} \xB7 ${badge(region.id)}</title><path class="career-region-fill" data-region-fill="${E3(region.id)}" d="${E3(feature2.d)}"/><path class="career-region-outline" data-region-outline="${E3(region.id)}" d="${E3(feature2.outlineD || feature2.d)}"/>${feature2.city ? `<g transform="translate(${feature2.anchor.join(" ")})"><circle class="career-region-city-hit" r=".01"/><circle class="career-region-city-halo" r=".01"/><circle class="career-region-city-dot" r=".01"/></g>` : ""}</g>`;
+      };
+      const labelMarkup = ordered.filter((region) => mappedFeatures.has(region.id)).map((region) => `<text class="career-region-label" data-region-label="${E3(region.id)}" data-label-visible="false" aria-hidden="true" style="display:none">${labelLines(label2(region.id)).map((line) => `<tspan>${E3(line)}</tspan>`).join("")}</text>`).join("");
+      frame.innerHTML = `<div class="career-region-map-viewport" tabindex="0" role="group" aria-label="${ui().map}" aria-describedby="${key}-map-help"><svg class="career-region-map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${data2.width} ${data2.height}" width="${data2.width}" height="${data2.height}" role="group" aria-label="${ui().map}"><g class="career-region-map-content"><g class="career-region-boundaries" fill-rule="evenodd">${ordered.filter((region) => !mappedFeatures.get(region.id)?.city).map(featureMarkup).join("")}</g><g class="career-region-city-markers" fill-rule="evenodd">${ordered.filter((region) => mappedFeatures.get(region.id)?.city).map(featureMarkup).join("")}</g><g class="career-region-labels" aria-hidden="true">${labelMarkup}</g></g></svg></div>`;
+      root.dataset.regionMapState = "ready";
+      root.querySelector("[data-region-map-controls]").hidden = false;
+      const viewport = frame.querySelector(".career-region-map-viewport");
+      labelNodes = [...frame.querySelectorAll("[data-region-label]")].map((node) => ({ node, id: node.dataset.regionLabel, feature: mappedFeatures.get(node.dataset.regionLabel), lines: labelLines(label2(node.dataset.regionLabel)) }));
+      const suppressClick = () => {
+        ignoreMapClick = true;
+        clearTimeout(ignoreTimer);
+        ignoreTimer = setTimeout(() => {
+          ignoreMapClick = false;
+        }, 350);
+      };
+      const startGesture = () => {
+        const values = [...pointers.values()];
+        if (values.length >= 2) {
+          const a = svgPoint(values[0]), b = svgPoint(values[1]), mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+          gesture = { kind: "pinch", distance: Math.max(0.01, Math.hypot(a.x - b.x, a.y - b.y)), zoom, anchor: { x: (mid.x - mapX) / zoom, y: (mid.y - mapY) / zoom } };
+          gestureMoved = true;
+          suppressClick();
+        } else if (values.length) {
+          gesture = { kind: "pan", point: svgPoint(values[0]), x: mapX, y: mapY };
+        } else gesture = null;
+      };
+      listen(viewport, "pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0 || pointers.has(event.pointerId)) return;
+        if (!pointers.size) {
+          gestureMoved = false;
+          ignoreMapClick = false;
+          clearTimeout(ignoreTimer);
+        }
+        pointers.set(event.pointerId, { pointerId: event.pointerId, clientX: event.clientX, clientY: event.clientY, regionId: event.target.closest?.("[data-region-map-id]")?.dataset.regionMapId });
+        viewport.setPointerCapture?.(event.pointerId);
+        startGesture();
+        event.preventDefault();
+      });
+      listen(viewport, "pointermove", (event) => {
+        const previous = pointers.get(event.pointerId);
+        if (!previous || !gesture) return;
+        pointers.set(event.pointerId, { ...previous, clientX: event.clientX, clientY: event.clientY });
+        const values = [...pointers.values()];
+        if (gesture.kind === "pinch" && values.length >= 2) {
+          const a = svgPoint(values[0]), b = svgPoint(values[1]), mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+          zoom = Math.min(REGION_MAP_MAX_ZOOM, Math.max(1, gesture.zoom * Math.hypot(a.x - b.x, a.y - b.y) / gesture.distance));
+          mapX = mid.x - gesture.anchor.x * zoom;
+          mapY = mid.y - gesture.anchor.y * zoom;
+          gestureMoved = true;
+        } else if (gesture.kind === "pan") {
+          const point2 = svgPoint(event), dx = point2.x - gesture.point.x, dy = point2.y - gesture.point.y;
+          if (!gestureMoved && Math.hypot(dx, dy) * (metrics()?.scale || 1) < 6) return;
+          gestureMoved = true;
+          mapX = gesture.x + dx;
+          mapY = gesture.y + dy;
+        }
+        viewport.classList.add("is-panning");
+        ignoreMapClick = true;
+        applyView();
+        event.preventDefault();
+      });
+      const endPointer = (event, cancelled = false) => {
+        const pointer = pointers.get(event.pointerId);
+        if (!pointer) return;
+        if (!cancelled && pointers.size === 1 && !gestureMoved && pointer.regionId) {
+          hoveredId = pointer.regionId;
+          toggle(pointer.regionId, "map");
+          [...frame.querySelectorAll("[data-region-map-id]")].find((shape) => shape.dataset.regionMapId === pointer.regionId)?.focus({ preventScroll: true });
+        }
+        pointers.delete(event.pointerId);
+        if (viewport.hasPointerCapture?.(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
+        if (cancelled) gestureMoved = true;
+        suppressClick();
+        startGesture();
+        if (!pointers.size) viewport.classList.remove("is-panning");
+      };
+      listen(viewport, "pointerup", (event) => endPointer(event));
+      listen(viewport, "pointercancel", (event) => endPointer(event, true));
+      listen(viewport, "lostpointercapture", (event) => endPointer(event, true));
+      listen(viewport, "wheel", (event) => {
+        const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? viewport.clientHeight : 1);
+        if (!delta) return;
+        event.preventDefault();
+        setZoom(zoom * Math.exp(-Math.max(-1e3, Math.min(1e3, delta)) * 2e-3), { point: svgPoint(event) });
+      }, { passive: false });
+      resizeObserver?.disconnect();
+      if (typeof ResizeObserver !== "undefined") {
+        resizeObserver = new ResizeObserver(() => {
+          if (!destroyed) applyView();
+        });
+        resizeObserver.observe(viewport);
+      }
+      applyView();
+      updateSelection();
+    }
+    function render() {
+      if (destroyed) return;
+      const focused = root.querySelector(":focus"), focusRegion = focused?.dataset?.regionCheckbox, searchFocused = focused?.hasAttribute("data-region-search");
+      const scroll = root.querySelector(".career-region-options")?.scrollTop || 0;
+      for (const off of bindings.splice(0)) off();
+      root.classList.add("career-region-picker");
+      root.setAttribute("data-no-i18n", "");
+      pointers.clear();
+      gesture = null;
+      resizeObserver?.disconnect();
+      const listMarkup = `<div class="career-region-list-panel"><label class="career-region-search-label" for="${key}-search">${ui().search}</label><input id="${key}-search" class="career-region-search" type="search" autocomplete="off" placeholder="${ui().searchHint}" data-region-search value="${E3(query)}"><span class="career-region-sr-only" role="status" data-region-search-status></span><fieldset class="career-region-options"><legend class="career-region-sr-only">${ui().list}</legend>${ordered.map((region) => `<label class="career-region-option" data-region-option="${E3(region.id)}"><input type="checkbox" value="${E3(region.id)}" data-region-checkbox="${E3(region.id)}"><span>${E3(regionLabel(region, language2))}</span></label>`).join("")}<p class="career-region-no-matches" data-region-no-matches hidden>${ui().noMatches}</p></fieldset></div>`;
+      const mapMarkup = `<div class="career-region-map-panel"><div class="career-region-map-controls" data-region-map-controls hidden><span class="career-region-zoom" aria-label="${ui().zoom}"><span data-region-zoom-value>100%</span></span><button type="button" class="career-region-map-reset" data-region-zoom="reset">${ui().reset}</button></div><p id="${key}-map-help" class="career-region-map-help">${ui().mapHelp}</p><div data-region-map-frame class="career-region-map-frame"><p class="career-region-map-loading" role="status">${ui().loading}</p></div><p class="career-region-map-current" data-region-map-current aria-live="polite"></p></div>`;
+      root.innerHTML = `<div class="career-region-picker-heading"><strong data-region-selection-status role="status" aria-live="polite"></strong><span class="career-region-legend"><i aria-hidden="true"></i>${ui().chosenLegend}</span></div><p class="career-region-federal-only" data-region-empty-selection hidden>${E3(emptySelectionText?.() ?? ui().none)}</p><div class="career-region-grid">${mapFirst ? mapMarkup + listMarkup : listMarkup + mapMarkup}</div>`;
+      listen(root, "change", (event) => {
+        const checkbox = event.target.closest?.("[data-region-checkbox]");
+        if (checkbox) toggle(checkbox.dataset.regionCheckbox, "list");
+      });
+      listen(root, "input", (event) => {
+        if (event.target.matches?.("[data-region-search]")) {
+          query = event.target.value;
+          filterList();
+        }
+      });
+      listen(root, "click", (event) => {
+        const zoomButton = event.target.closest?.("[data-region-zoom]");
+        if (zoomButton) {
+          setZoom(1);
+          return;
+        }
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape && (!ignoreMapClick || event.detail === 0)) {
+          const id = shape.dataset.regionMapId;
+          hoveredId = id;
+          toggle(id, "map");
+          shape.focus({ preventScroll: true });
+        }
+      });
+      listen(root, "keydown", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]"), viewport = event.target.closest?.(".career-region-map-viewport");
+        if (!viewport) return;
+        if (shape) activeId = shape.dataset.regionMapId;
+        if (shape && (event.key === " " || event.key === "Enter")) {
+          event.preventDefault();
+          toggle(activeId, "map");
+        } else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+          event.preventDefault();
+          if (shape && !event.shiftKey) moveMapFocus(event.key);
+          else {
+            const step = 60 / (metrics()?.scale || 1);
+            mapX += event.key === "ArrowLeft" ? step : event.key === "ArrowRight" ? -step : 0;
+            mapY += event.key === "ArrowUp" ? step : event.key === "ArrowDown" ? -step : 0;
+            applyView();
+          }
+        } else if (shape && ["Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          moveMapFocus(event.key);
+        } else if (event.key === "+" || event.key === "=") {
+          event.preventDefault();
+          setZoom(zoom * 1.6, shape ? { focusId: activeId } : {});
+        } else if (event.key === "-" || event.key === "\u2212") {
+          event.preventDefault();
+          setZoom(zoom / 1.6, shape ? { focusId: activeId } : {});
+        } else if (event.key === "0") {
+          event.preventDefault();
+          setZoom(1);
+        }
+      });
+      listen(root, "pointerover", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape) {
+          hoveredId = shape.dataset.regionMapId;
+          updateStatus();
+        }
+      });
+      listen(root, "pointerout", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape && !shape.contains(event.relatedTarget)) {
+          hoveredId = null;
+          updateStatus();
+        }
+      });
+      listen(root, "focusin", (event) => {
+        const shape = event.target.closest?.("[data-region-map-id]");
+        if (shape) {
+          activeId = shape.dataset.regionMapId;
+          hoveredId = null;
+          updateSelection();
+        }
+      });
+      filterList();
+      updateSelection();
+      if (data2) renderMap();
+      else if (root.dataset.regionMapState === "unavailable") showMapUnavailable();
+      root.querySelector(".career-region-options").scrollTop = scroll;
+      if (searchFocused) root.querySelector("[data-region-search]").focus({ preventScroll: true });
+      else if (focusRegion) [...root.querySelectorAll("[data-region-checkbox]")].find((checkbox) => checkbox.dataset.regionCheckbox === focusRegion)?.focus({ preventScroll: true });
+    }
+    function showMapUnavailable() {
+      if (destroyed) return;
+      root.dataset.regionMapState = "unavailable";
+      const frame = root.querySelector("[data-region-map-frame]");
+      frame.innerHTML = `<p class="career-region-map-loading" role="status">${ui().unavailable}</p>`;
+    }
+    function refresh() {
+      if (destroyed) return;
+      language2 = languageCode(getLanguage2());
+      ordered = orderRegions(catalog, language2);
+      render();
+    }
+    root.dataset.regionMapState = "loading";
+    render();
+    const languageListener = () => refresh();
+    document.addEventListener("app:language", languageListener);
+    const ready2 = loadMap(mapURL).then((value) => {
+      if (destroyed) return false;
+      data2 = value;
+      renderMap();
+      return true;
+    }).catch(() => {
+      showMapUnavailable();
+      return false;
+    });
+    return {
+      ready: ready2,
+      getSelection: () => selected(),
+      getQuery: () => query,
+      setSelection(ids, { emit: shouldEmit = false } = {}) {
+        if (destroyed) return;
+        selection = new Set(sanitizeRegionSelection(ids, catalog));
+        updateSelection();
+        if (shouldEmit) emit("external");
+      },
+      refresh,
+      destroy() {
+        if (destroyed) return;
+        destroyed = true;
+        for (const off of bindings.splice(0)) off();
+        clearTimeout(ignoreTimer);
+        resizeObserver?.disconnect();
+        pointers.clear();
+        gesture = null;
+        document.removeEventListener("app:language", languageListener);
+        root.replaceChildren();
+        root.classList.remove("career-region-picker");
+        delete root.dataset.regionMapState;
+        delete root.dataset.selectedRegionCount;
+      }
+    };
+  }
+
   // site/apps/career/assets/adaptive-flow.mjs
   var SESSION_SCHEMA2 = 1;
   var SESSION_MODEL = FUNCTIONAL_MODEL_VERSION;
   var INDEX_ROOT = "data/adaptive-index/";
   var MIB = 1024 * 1024;
   var MAX_RAW2 = { all: 128 * MIB, national: 32 * MIB, region: 16 * MIB, detail: 4 * MIB };
-  var CAREER_ROUTES = /* @__PURE__ */ new Set(["preferences", "test", "sectors", "conditions", "results"]);
+  var CAREER_ROUTES = /* @__PURE__ */ new Set(["preferences", "test", "sectors", "conditions", "results", "review"]);
   var RESPONSIBILITY_PREFERENCES = /* @__PURE__ */ new Set(["specialist", "leadership", "all"]);
   var EVIDENCE_CATEGORIES = /* @__PURE__ */ new Set(["duties", "skills", "knowledge"]);
   var DETAIL_CACHE_LIMIT = 8;
@@ -6999,8 +7852,8 @@ var CareerRuntime = (() => {
       parentSignal?.removeEventListener("abort", abort);
     }
   }
-  function createAdaptiveFlow({ navigate }) {
-    const key = storageKey("functional-career-v1");
+  function createAdaptiveFlow({ navigate, authorities = [] }) {
+    const key = storageKey(FUNCTIONAL_SESSION_KEY);
     const empty = () => ({
       schemaVersion: SESSION_SCHEMA2,
       modelVersion: SESSION_MODEL,
@@ -7018,6 +7871,8 @@ var CareerRuntime = (() => {
       completedAt: null,
       resultRecordId: null,
       completion: null,
+      reviewTarget: null,
+      reviewCompletion: null,
       selectionSeed: newSelectionSeed()
     });
     let session = empty(), hydrationChanged = false, corruptStorage = false;
@@ -7041,6 +7896,7 @@ var CareerRuntime = (() => {
         ...empty(),
         ...saved,
         ...setup,
+        reviewTarget: seminar5ReviewTarget(saved.reviewTarget),
         selectionSeed: validSelectionSeed(saved.selectionSeed) ? saved.selectionSeed : saved.completedAt ? "" : newSelectionSeed(),
         responsibilityDraft: RESPONSIBILITY_PREFERENCES.has(saved.responsibilityDraft) ? saved.responsibilityDraft : null,
         answers: saved.answers.slice(0, MAX_ANSWERS),
@@ -7066,6 +7922,7 @@ var CareerRuntime = (() => {
     let candidates = [], candidateKey = "", poolLoading = false, poolError = false, poolGeneration = 0, poolController = null, poolPromise = null;
     let lastRoute = "personality", dirty = false, saveFailed = false, opening = false, transitionBusy = false;
     let regionQuery = "", regionMode = session.regionIds.length ? "selected" : "all", draftRegions = [...session.regionIds];
+    let locationPicker = null;
     if (isRecord(session.locationDraft) && ["all", "selected"].includes(session.locationDraft.mode) && Array.isArray(session.locationDraft.regionIds)) {
       regionMode = session.locationDraft.mode;
       draftRegions = [...new Set(session.locationDraft.regionIds.filter(validRegion))].slice(0, 89);
@@ -7074,13 +7931,20 @@ var CareerRuntime = (() => {
     const detailCache = /* @__PURE__ */ new Map(), detailPending = /* @__PURE__ */ new Map(), detailErrors = /* @__PURE__ */ new Set();
     let detailGeneration = 0, detailSelection = "", detailQueue = [];
     let matchBrowseOpen = false, matchOffset = 0, matchQuery = "", expandedMatchId = null;
-    const review = createAdaptiveVacancyReview({ onClose: () => {
-      if (lastRoute === "results") renderResults2();
-    } });
+    const review = createAdaptiveVacancyReview({
+      onClose: () => navigate("results"),
+      onSelect: (target) => {
+        if (JSON.stringify(target) !== JSON.stringify(session.reviewTarget)) save({ ...session, reviewTarget: target });
+      },
+      onComplete: (proof) => save({ ...session, reviewTarget: proof.target, reviewCompletion: { schemaVersion: 1, resultRecordId: session.resultRecordId, ...proof } }),
+      isCompleted: (target) => target?.vacancyId === session.reviewCompletion?.target?.vacancyId && hasReviewCompletion(),
+      onOpenKnowledge: goToKnowledge
+    });
     const bankBrowse = createAdaptiveBankBrowse({ onReview: (row, descriptor, pageRef, pageRows) => {
       void review.open(row, descriptor, pageRef, pageRows);
-      renderResults2();
+      navigate("review");
     } });
+    const employerCards = createAdaptiveEmployerCards(authorities);
     const resultRoot = () => document.querySelector("#results-root");
     const questionRoot = () => document.querySelector("#view-test");
     const preferenceRoot = () => document.querySelector("#journey-preferences-root");
@@ -7096,6 +7960,7 @@ var CareerRuntime = (() => {
         session = next;
         dirty = false;
         saveFailed = false;
+        __careerHost.progressChanged?.();
         return true;
       } catch {
         dirty = true;
@@ -7122,7 +7987,30 @@ var CareerRuntime = (() => {
       });
     }
     function invalidateCompletion(value) {
-      return { ...value, completedAt: null, resultRecordId: null, completion: null };
+      return { ...value, completedAt: null, resultRecordId: null, completion: null, reviewTarget: null, reviewCompletion: null };
+    }
+    function hasReviewCompletion() {
+      const id = session.reviewCompletion?.target?.vacancyId;
+      if (!id) return false;
+      const markKey = VACANCY_REVIEW_KEY + id;
+      try {
+        return seminar5ReviewComplete(session, { [markKey]: readLocal(storageKey(markKey)) });
+      } catch {
+        return false;
+      }
+    }
+    async function goToKnowledge() {
+      if (opening || saveFailed || corruptStorage || !hasReviewCompletion()) throw new Error("Vacancy review required");
+      if (notifiedRecordId !== session.resultRecordId) {
+        __careerHost.resultCalculated(session.completion);
+        notifiedRecordId = session.resultRecordId;
+      }
+      opening = true;
+      try {
+        await __careerHost.openKnowledge();
+      } finally {
+        opening = false;
+      }
     }
     function validateSession() {
       const validIds = new Set(territories.map((region) => region.id)), seen = /* @__PURE__ */ new Set();
@@ -7162,9 +8050,9 @@ var CareerRuntime = (() => {
       session.indexVersion = manifest.version;
       draftRegions = draftRegions.filter((id) => validIds.has(id));
       const allCoreAnswered = coreIds.every((id) => clean.some((answer) => answer.questionId === id));
-      const record2 = session.completion;
+      const record3 = session.completion;
       const sameRegions = (value) => Array.isArray(value) && JSON.stringify([...value].sort()) === JSON.stringify([...session.regionIds].sort());
-      const validCompletion = session.setupComplete && clean.length >= Math.min(MIN_ANSWERS, questions.size) && allCoreAnswered && typeof session.completedAt === "string" && Number.isFinite(Date.parse(session.completedAt)) && typeof session.resultRecordId === "string" && /^[\w-]{8,80}$/.test(session.resultRecordId) && isRecord(record2) && record2.schema === "rudn-career-result" && record2.schemaVersion === 3 && record2.resultKind === "vacancy-functional" && record2.completed === true && record2.recordId === session.resultRecordId && record2.createdAt === session.completedAt && record2.modelVersion === SESSION_MODEL && record2.questionnaireVersion === taxonomy.version && record2.registryVersion === manifest.version && record2.answerCount === clean.length && record2.informativeAnswers === clean.filter((answer) => answer.value !== 0 && answer.value !== 3).length && JSON.stringify(record2.answeredQuestionIds) === JSON.stringify(clean.map((answer) => answer.questionId)) && JSON.stringify(record2.broadQuestionIds) === JSON.stringify(coreIds) && sameRegions(record2.regionIds) && record2.responsibilityPreference === session.responsibilityPreference && ["matched", "no-preference", "no-matches"].includes(record2.resultStatus) && Array.isArray(record2.ranking) && record2.ranking.length <= 5 && (record2.resultStatus === "matched" ? record2.ranking.length > 0 : record2.ranking.length === 0);
+      const validCompletion = session.setupComplete && clean.length >= Math.min(MIN_ANSWERS, questions.size) && allCoreAnswered && typeof session.completedAt === "string" && Number.isFinite(Date.parse(session.completedAt)) && typeof session.resultRecordId === "string" && /^[\w-]{8,80}$/.test(session.resultRecordId) && isRecord(record3) && record3.schema === "rudn-career-result" && record3.schemaVersion === 3 && record3.resultKind === "vacancy-functional" && record3.completed === true && record3.recordId === session.resultRecordId && record3.createdAt === session.completedAt && record3.modelVersion === SESSION_MODEL && record3.questionnaireVersion === taxonomy.version && record3.registryVersion === manifest.version && record3.answerCount === clean.length && record3.informativeAnswers === clean.filter((answer) => answer.value !== 0 && answer.value !== 3).length && JSON.stringify(record3.answeredQuestionIds) === JSON.stringify(clean.map((answer) => answer.questionId)) && JSON.stringify(record3.broadQuestionIds) === JSON.stringify(coreIds) && sameRegions(record3.regionIds) && record3.responsibilityPreference === session.responsibilityPreference && ["matched", "no-preference", "no-matches"].includes(record3.resultStatus) && Array.isArray(record3.ranking) && record3.ranking.length <= 5 && (record3.resultStatus === "matched" ? record3.ranking.length > 0 : record3.ranking.length === 0);
       if (session.completedAt && !validCompletion) {
         session = invalidateCompletion(session);
         dirty = true;
@@ -7301,10 +8189,28 @@ var CareerRuntime = (() => {
       }
       return true;
     }
-    function regionList() {
-      const query = regionQuery.trim().toLocaleLowerCase();
-      const visible = territories.filter((region) => !query || [region.name, region.name_en, region.name_zh, region.id].some((value) => String(value || "").toLocaleLowerCase().includes(query)));
-      return visible.length ? visible.map((region) => `<label class="adaptive-region"><input type="checkbox" data-adaptive-region="${E2(region.id)}" ${draftRegions.includes(region.id) ? "checked" : ""}><span>${E2(regionName(region))}</span></label>`).join("") : `<p class="adaptive-empty-search">${L2("\u0420\u0435\u0433\u0438\u043E\u043D \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D", "No region found", "\u672A\u627E\u5230\u5730\u533A")}</p>`;
+    function destroyLocationPicker() {
+      if (!locationPicker) return;
+      regionQuery = locationPicker.getQuery().slice(0, 100);
+      locationPicker.destroy();
+      locationPicker = null;
+    }
+    function mountLocationPicker(root) {
+      if (locationPicker || regionMode !== "selected") return;
+      locationPicker = createRegionPicker({
+        root: root.querySelector("#adaptive-region-picker"),
+        regions: territories,
+        selectedIds: draftRegions,
+        initialQuery: regionQuery,
+        mapFirst: true,
+        getLanguage,
+        emptySelectionText: () => L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0445\u043E\u0442\u044F \u0431\u044B \u043E\u0434\u0438\u043D \u0440\u0435\u0433\u0438\u043E\u043D \u043D\u0430 \u043A\u0430\u0440\u0442\u0435 \u0438\u043B\u0438 \u0432 \u0441\u043F\u0438\u0441\u043A\u0435.", "Choose at least one region on the map or in the list.", "\u8BF7\u5728\u5730\u56FE\u6216\u5217\u8868\u4E2D\u81F3\u5C11\u9009\u62E9\u4E00\u4E2A\u5730\u533A\u3002"),
+        onChange(ids) {
+          draftRegions = ids;
+          root.querySelector("#adaptive-location-next").disabled = !draftRegions.length;
+          saveLocationDraft(root);
+        }
+      });
     }
     function saveLocationDraft(root) {
       session.locationDraft = { mode: regionMode, regionIds: [...draftRegions] };
@@ -7374,6 +8280,7 @@ var CareerRuntime = (() => {
       bindSaveRetry(root);
     }
     function renderPreferences() {
+      destroyLocationPicker();
       const root = preferenceRoot();
       if (!root || !readyFor(root)) return;
       if (session.setupStep === "responsibility" && session.locationConfirmed) {
@@ -7387,11 +8294,7 @@ var CareerRuntime = (() => {
         <label class="adaptive-location-mode"><input type="radio" name="adaptive-location-mode" value="all" ${regionMode === "all" ? "checked" : ""}><span>${L2("\u0411\u0435\u0437 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0439 \u043F\u043E \u0440\u0435\u0433\u0438\u043E\u043D\u0443", "No region restriction", "\u4E0D\u9650\u5730\u533A")}</span></label>
         <label class="adaptive-location-mode"><input type="radio" name="adaptive-location-mode" value="selected" ${regionMode === "selected" ? "checked" : ""}><span>${L2("\u0412 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u0445", "In selected regions", "\u6240\u9009\u5730\u533A")}</span></label>
       </div>
-      <div id="adaptive-region-picker" class="adaptive-region-picker" ${regionMode === "all" ? "hidden" : ""}>
-        <label class="adaptive-region-search"><span class="adaptive-sr-only">${L2("\u041D\u0430\u0439\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D", "Find a region", "\u67E5\u627E\u5730\u533A")}</span><input id="adaptive-region-search" type="search" value="${E2(regionQuery)}" placeholder="${E2(L2("\u041D\u0430\u0439\u0442\u0438 \u0440\u0435\u0433\u0438\u043E\u043D", "Find a region", "\u67E5\u627E\u5730\u533A"))}" autocomplete="off"></label>
-        <div id="adaptive-region-list" class="adaptive-region-list">${regionList()}</div>
-        <p id="adaptive-region-count" class="adaptive-region-count" aria-live="polite">${L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432: ", "Regions selected: ", "\u5DF2\u9009\u5730\u533A\uFF1A")}${draftRegions.length}</p>
-      </div>
+      <div id="adaptive-region-picker" class="adaptive-region-picker" ${regionMode === "all" ? "hidden" : ""}></div>
       <div id="adaptive-save-feedback">${saveError()}</div>
       <footer class="adaptive-controls"><button type="button" class="button button-primary" id="adaptive-location-next" ${regionMode === "selected" && !draftRegions.length ? "disabled" : ""}>${L2("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C", "Continue", "\u7EE7\u7EED")}${icon("arrow-right")}</button></footer>
     </div>`;
@@ -7399,23 +8302,11 @@ var CareerRuntime = (() => {
       root.querySelectorAll('input[name="adaptive-location-mode"]').forEach((input) => input.addEventListener("change", () => {
         regionMode = input.value;
         root.querySelector("#adaptive-region-picker").hidden = regionMode === "all";
+        mountLocationPicker(root);
         root.querySelector("#adaptive-location-next").disabled = regionMode === "selected" && !draftRegions.length;
         saveLocationDraft(root);
-        if (regionMode === "selected") root.querySelector("#adaptive-region-search").focus();
       }));
-      root.querySelector("#adaptive-region-search").addEventListener("input", (event) => {
-        regionQuery = event.target.value.slice(0, 100);
-        root.querySelector("#adaptive-region-list").innerHTML = regionList();
-      });
-      root.querySelector("#adaptive-region-list").addEventListener("change", (event) => {
-        const input = event.target.closest("[data-adaptive-region]");
-        if (!input) return;
-        const id = input.dataset.adaptiveRegion;
-        draftRegions = input.checked ? [.../* @__PURE__ */ new Set([...draftRegions, id])] : draftRegions.filter((value) => value !== id);
-        root.querySelector("#adaptive-region-count").textContent = L2("\u0412\u044B\u0431\u0440\u0430\u043D\u043E \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432: ", "Regions selected: ", "\u5DF2\u9009\u5730\u533A\uFF1A") + draftRegions.length;
-        root.querySelector("#adaptive-location-next").disabled = regionMode === "selected" && !draftRegions.length;
-        saveLocationDraft(root);
-      });
+      mountLocationPicker(root);
       root.querySelector("#adaptive-location-next").onclick = () => {
         if (regionMode === "selected" && !draftRegions.length) return;
         const regionIds = regionMode === "all" ? [] : [...draftRegions].sort();
@@ -7454,11 +8345,11 @@ var CareerRuntime = (() => {
       return questionFor(session.answers);
     }
     const answerLabels2 = () => [
-      { value: 1, text: L2("\u0421\u043E\u0432\u0441\u0435\u043C \u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Not at all interested", "\u5B8C\u5168\u4E0D\u611F\u5174\u8DA3") },
-      { value: 2, text: L2("\u0421\u043A\u043E\u0440\u0435\u0435 \u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Rather uninterested", "\u4E0D\u592A\u611F\u5174\u8DA3") },
-      { value: 3, text: L2("\u041D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u043E", "Neutral", "\u6001\u5EA6\u4E2D\u7ACB") },
-      { value: 4, text: L2("\u0421\u043A\u043E\u0440\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Rather interested", "\u6BD4\u8F83\u611F\u5174\u8DA3") },
       { value: 5, text: L2("\u041E\u0447\u0435\u043D\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Very interested", "\u975E\u5E38\u611F\u5174\u8DA3") },
+      { value: 4, text: L2("\u0421\u043A\u043E\u0440\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Rather interested", "\u6BD4\u8F83\u611F\u5174\u8DA3") },
+      { value: 3, text: L2("\u041D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u043E", "Neutral", "\u6001\u5EA6\u4E2D\u7ACB") },
+      { value: 2, text: L2("\u0421\u043A\u043E\u0440\u0435\u0435 \u043D\u0435\u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Rather uninterested", "\u4E0D\u592A\u611F\u5174\u8DA3") },
+      { value: 1, text: L2("\u0421\u043E\u0432\u0441\u0435\u043C \u043D\u0435\u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Not at all interested", "\u5B8C\u5168\u4E0D\u611F\u5174\u8DA3") },
       { value: 0, text: L2("\u041F\u043E\u043A\u0430 \u043D\u0435 \u0437\u043D\u0430\u044E", "Not sure yet", "\u6682\u65F6\u4E0D\u786E\u5B9A") }
     ];
     function chooseAnswer(value, { focus = false } = {}) {
@@ -7498,15 +8389,15 @@ var CareerRuntime = (() => {
       navigate("test");
     }
     function resultRanking() {
-      const cacheKey = candidateKey + "|" + session.selectionSeed + "|" + JSON.stringify(session.answers);
-      if (rankingCache?.key === cacheKey) return rankingCache.value;
+      const cacheKey2 = candidateKey + "|" + session.selectionSeed + "|" + JSON.stringify(session.answers);
+      if (rankingCache?.key === cacheKey2) return rankingCache.value;
       const value = rankVacancies({ taxonomy, answers: session.answers, candidates, limit: 5, selectionSeed: session.selectionSeed });
-      rankingCache = { key: cacheKey, value };
+      rankingCache = { key: cacheKey2, value };
       return value;
     }
     function completedSession(answers) {
       const ranking = rankVacancies({ taxonomy, answers, candidates, limit: 5, selectionSeed: session.selectionSeed });
-      const record2 = makeCompletionRecord({
+      const record3 = makeCompletionRecord({
         taxonomy,
         answers,
         regionIds: session.regionIds,
@@ -7514,7 +8405,16 @@ var CareerRuntime = (() => {
         ranking,
         indexVersion: manifest.version
       });
-      return { ...session, answers, pending: null, completedAt: record2.createdAt, resultRecordId: record2.recordId, completion: record2 };
+      return {
+        ...session,
+        answers,
+        pending: null,
+        completedAt: record3.createdAt,
+        resultRecordId: record3.recordId,
+        completion: record3,
+        reviewTarget: null,
+        reviewCompletion: null
+      };
     }
     function advanceQuestion() {
       if (transitionBusy || !session.pending || !metadataReady || poolLoading) return;
@@ -7537,7 +8437,16 @@ var CareerRuntime = (() => {
     }
     function renderQuestion2() {
       const root = questionRoot();
-      if (!root || !readyFor(root, true)) return;
+      if (!root || !readyFor(root, !session.completedAt)) return;
+      if (session.completedAt) {
+        root.innerHTML = `<div class="adaptive-workflow adaptive-question-card"><h1>${L2("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B", "Work interests", "\u804C\u4E1A\u5174\u8DA3")}</h1>
+        <p>${L2(`\u041E\u0442\u0432\u0435\u0442\u044B \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u044B: ${session.answers.length}.`, `Saved answers: ${session.answers.length}.`, `\u5DF2\u4FDD\u5B58 ${session.answers.length} \u4E2A\u56DE\u7B54\u3002`)}</p>
+        <div class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit-saved">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B", "Edit answers", "\u4FEE\u6539\u56DE\u7B54")}</button>
+        <button type="button" class="button button-primary" id="adaptive-saved-results">${L2("\u041A \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044F\u043C", "View roles", "\u67E5\u770B\u804C\u4F4D")}</button></div></div>`;
+        root.querySelector("#adaptive-edit-saved").onclick = backQuestion;
+        root.querySelector("#adaptive-saved-results").onclick = () => navigate("results");
+        return;
+      }
       const question = currentQuestion();
       if (!question) {
         if (session.answers.length && save(completedSession(session.answers))) navigate("results");
@@ -7553,9 +8462,10 @@ var CareerRuntime = (() => {
       <article class="adaptive-question-card">
         <p class="adaptive-prompt">${L2("\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0412\u0430\u043C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E \u0432\u044B\u043F\u043E\u043B\u043D\u044F\u0442\u044C \u0442\u0430\u043A\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443?", "How interested are you in doing this work?", "\u4F60\u5BF9\u4ECE\u4E8B\u8FD9\u9879\u5DE5\u4F5C\u6709\u591A\u5927\u5174\u8DA3\uFF1F")}</p>
         <h1 id="adaptive-question" data-question-id="${E2(question.id)}">${E2(localized(question.text))}</h1>
-        <div id="adaptive-answer-options" class="adaptive-answer-options" role="radiogroup" aria-labelledby="adaptive-question">
+        <div id="adaptive-answer-options" class="adaptive-answer-options" role="radiogroup" aria-labelledby="adaptive-question" aria-describedby="adaptive-answer-note">
           ${answerLabels2().map((answer, index) => `<button type="button" role="radio" aria-checked="${selected === answer.value}" tabindex="${selected === answer.value || selected === null && index === 0 ? 0 : -1}" data-adaptive-answer="${answer.value}" class="adaptive-answer${selected === answer.value ? " is-selected" : ""}${answer.value === 0 ? " adaptive-answer-unknown" : ""}"><span class="adaptive-answer-dot" aria-hidden="true"></span><span>${E2(answer.text)}</span></button>`).join("")}
         </div>
+        <small id="adaptive-answer-note">${L2("\xAB\u041D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u043E\xBB \u2014 \u0437\u0430\u0434\u0430\u0447\u0430 \u043D\u0435 \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0435\u0442 \u0438 \u043D\u0435 \u043E\u0442\u0442\u0430\u043B\u043A\u0438\u0432\u0430\u0435\u0442. \xAB\u041F\u043E\u043A\u0430 \u043D\u0435 \u0437\u043D\u0430\u044E\xBB \u2014 \u043F\u043E\u043A\u0430 \u043E\u0441\u0442\u0430\u0432\u044C\u0442\u0435 \u0435\u0451 \u0431\u0435\u0437 \u043E\u0446\u0435\u043D\u043A\u0438.", "Choose Neutral if the task neither attracts nor puts you off. Choose Not sure yet to leave your interest in this task undecided.", "\u5982\u679C\u8FD9\u9879\u5DE5\u4F5C\u5BF9\u4F60\u6CA1\u6709\u660E\u663E\u7684\u5438\u5F15\u529B\u6216\u6392\u65A5\u611F\uFF0C\u8BF7\u9009\u300C\u6001\u5EA6\u4E2D\u7ACB\u300D\u3002\u5982\u679C\u6682\u65F6\u65E0\u6CD5\u5224\u65AD\uFF0C\u8BF7\u9009\u300C\u6682\u65F6\u4E0D\u786E\u5B9A\u300D\u3002")}</small>
         <div id="adaptive-save-feedback">${saveError()}</div>
         <footer class="adaptive-controls"><button type="button" class="button button-primary" id="adaptive-next" ${selected === null ? "disabled" : ""}>${L2("\u0414\u0430\u043B\u0435\u0435", "Next", "\u4E0B\u4E00\u9898")}${icon("arrow-right")}</button></footer>
       </article>
@@ -7565,16 +8475,11 @@ var CareerRuntime = (() => {
       root.querySelector("#adaptive-next").onclick = advanceQuestion;
       bindSaveRetry(root);
     }
-    function statusLabel(row) {
-      if (row.archive === true || row.status === "archived") return L2("\u0410\u0440\u0445\u0438\u0432", "Archived", "\u5386\u53F2\u62DB\u8058");
-      if (row.status === "profile") return L2("\u041F\u0440\u043E\u0444\u0438\u043B\u044C \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Role profile", "\u804C\u4F4D\u8D44\u6599");
-      return L2("\u041F\u0440\u0438\u0451\u043C \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D", "Recruitment unconfirmed", "\u62DB\u8058\u72B6\u6001\u672A\u786E\u8BA4");
-    }
     function detailFor(row) {
-      const cacheKey = detailKey(row.detailPath), chunk = detailCache.get(cacheKey);
+      const cacheKey2 = detailKey(row.detailPath), chunk = detailCache.get(cacheKey2);
       if (chunk) {
-        detailCache.delete(cacheKey);
-        detailCache.set(cacheKey, chunk);
+        detailCache.delete(cacheKey2);
+        detailCache.set(cacheKey2, chunk);
       }
       const detail = chunk?.get(row.id);
       return detail && detail.sourceURL === row.sourceURL ? detail : null;
@@ -7619,19 +8524,21 @@ var CareerRuntime = (() => {
     function roleCard(row, index) {
       const detail = detailFor(row), location2 = cleanDisplayLocation(row);
       const url = safeURL(row.sourceURL);
+      const employer2 = employerCards.markup(row);
       return `<article class="adaptive-role" data-adaptive-vacancy="${E2(row.id)}">
-      <div class="adaptive-role-topline"><span class="adaptive-role-rank">${index + 1}</span><span class="adaptive-role-status">${E2(statusLabel(row))}</span></div>
-      <h2 lang="ru">${E2(row.title)}</h2>
+      ${employer2.heading}
       ${row.department ? `<p class="adaptive-role-department" lang="ru">${E2(row.department)}</p>` : ""}
-      ${row.employerName ? `<p class="adaptive-role-employer" lang="ru">${E2(row.employerName)}</p>` : ""}
+      <h3 class="adaptive-role-title" lang="ru" data-adaptive-role-title>${E2(row.title)}</h3>
+      <div class="adaptive-role-topline"><span class="adaptive-role-rank">${index + 1}</span>${employer2.offer}</div>
       ${location2.text ? `<p class="adaptive-role-location" lang="${E2(location2.lang)}">${E2(location2.text)}</p>` : ""}
+      ${employer2.brief}
       ${evidenceSections(row, detail)}
-      ${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source", "\u6765\u6E90")}${icon("external")}</a>` : ""}
-      ${reviewAction(row)}
+      <div class="adaptive-role-actions">${reviewAction(row)}
+        ${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source", "\u6765\u6E90")}${icon("external")}</a>` : ""}</div>
     </article>`;
     }
     function reviewAction(row) {
-      return review.canOpenCandidate(row) ? `<button type="button" class="adaptive-text-button adaptive-review-action" data-adaptive-review-id="${E2(row.id)}">${L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Review requirements", "\u5206\u6790\u804C\u4F4D\u8981\u6C42")}</button>` : "";
+      return review.canOpenCandidate(row) ? `<button type="button" class="button button-primary adaptive-review-action" data-adaptive-review-id="${E2(row.id)}">${L2("\u0420\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F", "Review requirements", "\u5206\u6790\u804C\u4F4D\u8981\u6C42")}</button>` : "";
     }
     function matchBrowseMarkup(ranking, page, expanded) {
       if (!ranking.matchingCount) return "";
@@ -7643,10 +8550,15 @@ var CareerRuntime = (() => {
       const card = (row) => {
         const url = safeURL(row.sourceURL), location2 = cleanDisplayLocation(row), open = expanded?.id === row.id;
         const detail = open ? detailFor(row) : null;
+        const employer2 = employerCards.markup(row, true);
         return `<article class="adaptive-match-item" data-adaptive-match-id="${E2(row.id)}">
-        <h3 lang="ru">${E2(row.title)}</h3><p lang="ru">${E2(row.employerName)}</p>
-        ${row.department ? `<p lang="ru">${E2(row.department)}</p>` : ""}${location2.text ? `<p lang="${E2(location2.lang)}">${E2(location2.text)}</p>` : ""}
-        <div class="adaptive-match-actions"><span>${E2(statusLabel(row))}</span><button type="button" class="adaptive-text-button" data-adaptive-match-evidence="${E2(row.id)}" aria-expanded="${open}">${L2("\u0421\u043E\u0432\u043F\u0430\u0432\u0448\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0438", "Matching tasks", "\u5339\u914D\u7684\u5DE5\u4F5C\u4EFB\u52A1")}</button>${reviewAction(row)}${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source", "\u6765\u6E90")}${icon("external")}</a>` : ""}</div>
+        ${employer2.heading}
+        ${row.department ? `<p class="adaptive-role-department" lang="ru">${E2(row.department)}</p>` : ""}
+        <h4 class="adaptive-role-title" lang="ru" data-adaptive-role-title>${E2(row.title)}</h4>
+        ${location2.text ? `<p lang="${E2(location2.lang)}">${E2(location2.text)}</p>` : ""}
+        ${employer2.brief}
+        ${employer2.offer}
+        <div class="adaptive-match-actions"><button type="button" class="adaptive-text-button" data-adaptive-match-evidence="${E2(row.id)}" aria-expanded="${open}">${L2("\u0421\u043E\u0432\u043F\u0430\u0432\u0448\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0438", "Matching tasks", "\u5339\u914D\u7684\u5DE5\u4F5C\u4EFB\u52A1")}</button>${reviewAction(row)}${url ? `<a class="adaptive-source" href="${url}" target="_blank" rel="noopener noreferrer">${L2("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A", "Source", "\u6765\u6E90")}${icon("external")}</a>` : ""}</div>
         ${open ? detail ? evidenceSections(row, detail) : `<p role="status">${detailErrors.has(detailKey(row.detailPath)) ? L2("\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u043E\u0441\u044C.", "The description could not be loaded.", "\u65E0\u6CD5\u52A0\u8F7D\u804C\u4F4D\u8BF4\u660E\u3002") : L2("\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430 \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F\u2026", "Loading the description\u2026", "\u6B63\u5728\u52A0\u8F7D\u804C\u4F4D\u8BF4\u660E\u2026\u2026")}</p>` : ""}
       </article>`;
       };
@@ -7741,7 +8653,7 @@ var CareerRuntime = (() => {
     function notifyCompletion(ranking) {
       if (!session.completedAt || !session.resultRecordId || saveFailed || corruptStorage) return;
       if (session.resultRecordId === notifiedRecordId) return;
-      const record2 = makeCompletionRecord({
+      const record3 = makeCompletionRecord({
         taxonomy,
         answers: session.answers,
         regionIds: session.regionIds,
@@ -7751,9 +8663,9 @@ var CareerRuntime = (() => {
         recordId: session.resultRecordId,
         createdAt: session.completedAt
       });
-      if (JSON.stringify(session.completion) !== JSON.stringify(record2) && !save({ ...session, completion: record2 })) return;
-      __careerHost.resultCalculated(record2);
-      notifiedRecordId = record2.recordId;
+      if (JSON.stringify(session.completion) !== JSON.stringify(record3) && !save({ ...session, completion: record3 })) return;
+      __careerHost.resultCalculated(record3);
+      notifiedRecordId = record3.recordId;
     }
     function renderResults2() {
       const root = resultRoot();
@@ -7762,12 +8674,6 @@ var CareerRuntime = (() => {
         return;
       }
       if (!root || !readyFor(root, true)) return;
-      if (review.isOpen()) {
-        if (detailSelection || detailPending.size || detailQueue.length) resetDetailRequests();
-        root.innerHTML = '<div id="adaptive-vacancy-review"></div>';
-        review.mount(root.querySelector("#adaptive-vacancy-review"));
-        return;
-      }
       const ranking = resultRanking(), matches = ranking.matches || [];
       const page = matchBrowseOpen && ranking.matchingCount ? listMatchingVacancies({ taxonomy, answers: session.answers, candidates, selectionSeed: session.selectionSeed, query: matchQuery, offset: matchOffset }) : null;
       if (page) matchOffset = page.offset;
@@ -7779,14 +8685,16 @@ var CareerRuntime = (() => {
       const missing = matches.some((row) => detailErrors.has(detailKey(row.detailPath)));
       root.innerHTML = `<div class="adaptive-results">
       <header class="adaptive-results-heading"><h1>${matches.length ? L2("\u041F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438", "Matching roles", "\u9002\u5408\u7684\u804C\u4F4D") : L2("\u0412\u0430\u0448 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Your result", "\u4F60\u7684\u7ED3\u679C")}</h1></header>
-      ${matches.length ? `<div class="adaptive-role-list">${matches.map(roleCard).join("")}</div>` : `<p class="adaptive-no-matches">${noPreference ? L2("\u0412\u044B \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0438\u043B\u0438 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B. \u041C\u043E\u0436\u043D\u043E \u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0432\u043E\u043F\u0440\u043E\u0441\u0430\u043C \u0438 \u0443\u0442\u043E\u0447\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B.", "You have not yet identified preferred types of work. You can return to the questions and refine your answers.", "\u4F60\u5C1A\u672A\u786E\u5B9A\u504F\u597D\u7684\u5DE5\u4F5C\u7C7B\u578B\u3002\u53EF\u4EE5\u8FD4\u56DE\u95EE\u9898\uFF0C\u8FDB\u4E00\u6B65\u660E\u786E\u7B54\u6848\u3002") : L2("\u0414\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E.", "No matching roles were found for the selected conditions.", "\u672A\u627E\u5230\u7B26\u5408\u6240\u9009\u6761\u4EF6\u7684\u804C\u4F4D\u3002")}</p>`}
+      <p class="adaptive-review-instruction">${hasReviewCompletion() ? L2("\u0420\u0430\u0437\u0431\u043E\u0440 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D. \u041C\u043E\u0436\u043D\u043E \u043F\u0435\u0440\u0435\u0439\u0442\u0438 \u043A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439.", "Your vacancy review is complete. You can take the knowledge test.", "\u804C\u4F4D\u8981\u6C42\u81EA\u8BC4\u5DF2\u5B8C\u6210\uFF0C\u53EF\u4EE5\u53C2\u52A0\u77E5\u8BC6\u6D4B\u8BD5\u3002") : L2("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u0438\u043D\u0434\u0438\u0432\u0438\u0434\u0443\u0430\u043B\u044C\u043D\u0443\u044E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u0438 \u0440\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435 \u0435\u0451 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0442\u0435\u0441\u0442 \u0437\u043D\u0430\u043D\u0438\u0439.", "Choose one individual vacancy and review its requirements to unlock the knowledge test.", "\u8BF7\u9009\u62E9\u4E00\u4E2A\u5177\u4F53\u804C\u4F4D\u5E76\u5B8C\u6210\u8981\u6C42\u81EA\u8BC4\uFF0C\u4EE5\u5F00\u653E\u77E5\u8BC6\u6D4B\u8BD5\u3002")}</p>
+      ${matches.length ? `<div class="adaptive-role-list">${matches.map(roleCard).join("")}</div>` : `<p class="adaptive-no-matches">${noPreference ? L2("\u0412\u044B \u043D\u0435 \u0432\u044B\u0434\u0435\u043B\u0438\u043B\u0438 \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u0438\u0437 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430 \u043D\u0438\u0436\u0435 \u0438\u043B\u0438 \u0432\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u043E\u0442\u0432\u0435\u0442\u0430\u043C.", "You did not identify preferred types of work. Choose a vacancy from the catalogue below or revisit your answers.", "\u4F60\u5C1A\u672A\u786E\u5B9A\u504F\u597D\u7684\u5DE5\u4F5C\u7C7B\u578B\u3002\u8BF7\u4ECE\u4E0B\u65B9\u76EE\u5F55\u9009\u62E9\u804C\u4F4D\uFF0C\u6216\u8FD4\u56DE\u4FEE\u6539\u56DE\u7B54\u3002") : L2("\u0421\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439 \u0434\u043B\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0445 \u0443\u0441\u043B\u043E\u0432\u0438\u0439 \u043D\u0435\u0442. \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u0438\u0437 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430 \u043D\u0438\u0436\u0435.", "There are no matches for the selected conditions. Choose a vacancy from the catalogue below.", "\u672A\u627E\u5230\u7B26\u5408\u6761\u4EF6\u7684\u804C\u4F4D\u3002\u8BF7\u4ECE\u4E0B\u65B9\u76EE\u5F55\u9009\u62E9\u804C\u4F4D\u3002")}</p>`}
       ${missing ? `<div class="adaptive-detail-error" role="status"><span>${L2("\u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439 \u043D\u0435 \u0437\u0430\u0433\u0440\u0443\u0437\u0438\u043B\u043E\u0441\u044C.", "Role descriptions could not be loaded.", "\u65E0\u6CD5\u52A0\u8F7D\u804C\u4F4D\u8BF4\u660E\u3002")}</span><button type="button" class="adaptive-text-button" id="adaptive-retry-details">${L2("\u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u044C", "Retry", "\u91CD\u8BD5")}</button></div>` : ""}
       ${matchBrowseMarkup(ranking, page, expanded)}
       <div id="adaptive-bank-browser"></div>
       <div id="adaptive-save-feedback">${saveError()}</div>
-      <footer class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B", "Edit answers", "\u4FEE\u6539\u7B54\u6848")}</button>${typeof __careerHost.openKnowledge === "function" ? `<button type="button" class="button button-primary" id="adaptive-open-knowledge" ${opening || saveFailed || corruptStorage ? "disabled" : ""}>${L2("\u041A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439", "Continue to the knowledge test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}${icon("arrow-right")}</button>` : ""}</footer>
+      <footer class="adaptive-result-controls"><button type="button" class="button button-secondary" id="adaptive-edit">${L2("\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B", "Edit answers", "\u4FEE\u6539\u7B54\u6848")}</button>${typeof __careerHost.openKnowledge === "function" ? `<button type="button" class="button button-primary" id="adaptive-open-knowledge" ${opening || saveFailed || corruptStorage || !hasReviewCompletion() ? "disabled" : ""}>${L2("\u041A \u0442\u0435\u0441\u0442\u0443 \u0437\u043D\u0430\u043D\u0438\u0439", "Continue to the knowledge test", "\u8FDB\u5165\u77E5\u8BC6\u6D4B\u8BD5")}${icon("arrow-right")}</button>` : ""}</footer>
     </div>`;
       root.querySelector("#adaptive-edit").onclick = backQuestion;
+      void employerCards.enrich(root, [...matches, ...page?.rows || []]);
       root.querySelector("#adaptive-retry-details")?.addEventListener("click", () => {
         loadDetails(detailRows, true);
         renderResults2();
@@ -7823,31 +8731,24 @@ var CareerRuntime = (() => {
         const row = matches.find((item) => item.id === button.dataset.adaptiveReviewId) || page?.rows.find((item) => item.id === button.dataset.adaptiveReviewId);
         if (row) {
           void review.openCandidate(row);
-          renderResults2();
+          navigate("review");
         }
       }));
       bankBrowse.mount(root.querySelector("#adaptive-bank-browser"));
       root.querySelector("#adaptive-open-knowledge")?.addEventListener("click", async () => {
-        if (opening || !save()) {
+        if (opening || !hasReviewCompletion() || !save()) {
           renderResults2();
           return;
         }
-        notifyCompletion(ranking);
-        if (saveFailed || corruptStorage) {
-          renderResults2();
-          return;
-        }
-        opening = true;
         const button = root.querySelector("#adaptive-open-knowledge");
         button.disabled = true;
         try {
-          await __careerHost.openKnowledge();
+          await goToKnowledge();
         } catch {
           const feedback = root.querySelector("#adaptive-save-feedback");
           if (feedback && live()) feedback.innerHTML = `<p class="adaptive-save-error" role="alert">${L2("\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0442\u0435\u0441\u0442. \u041F\u043E\u0432\u0442\u043E\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0435\u0445\u043E\u0434.", "The test could not be opened. Please try again.", "\u65E0\u6CD5\u6253\u5F00\u6D4B\u8BD5\uFF0C\u8BF7\u91CD\u8BD5\u3002")}</p>`;
         } finally {
-          opening = false;
-          if (button.isConnected) button.disabled = false;
+          if (button.isConnected) button.disabled = !hasReviewCompletion();
         }
       });
       bindSaveRetry(root);
@@ -7860,6 +8761,20 @@ var CareerRuntime = (() => {
       }
       if (focused) root.querySelector("#" + focused)?.focus({ preventScroll: true });
     }
+    function renderReview2() {
+      const root = document.querySelector("#adaptive-vacancy-review");
+      if (!root || !readyFor(root)) return;
+      root.hidden = false;
+      if (!review.isOpen() && session.reviewTarget) void review.openReference(session.reviewTarget);
+      if (review.isOpen()) {
+        review.mount(root);
+        return;
+      }
+      root.innerHTML = `<section class="adaptive-workflow adaptive-question-card"><h1>${L2("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u0439", "Vacancy review", "\u804C\u4F4D\u8981\u6C42\u81EA\u8BC4")}</h1>
+      <p>${L2("\u0421\u043D\u0430\u0447\u0430\u043B\u0430 \u0432\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u043D\u0434\u0438\u0432\u0438\u0434\u0443\u0430\u043B\u044C\u043D\u0443\u044E \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E \u0438\u0437 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0439 \u0438\u043B\u0438 \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0430.", "First choose an individual vacancy from the recommendations or catalogue.", "\u8BF7\u5148\u4ECE\u63A8\u8350\u5217\u8868\u6216\u76EE\u5F55\u9009\u62E9\u4E00\u4E2A\u5177\u4F53\u804C\u4F4D\u3002")}</p>
+      <button type="button" class="button button-primary" id="adaptive-choose-review">${L2("\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u044E", "Choose a vacancy", "\u9009\u62E9\u804C\u4F4D")}</button></section>`;
+      root.querySelector("#adaptive-choose-review").onclick = () => navigate("results");
+    }
     function resolveResumeRoute2() {
       return !session.setupComplete ? "preferences" : session.completedAt ? "results" : "test";
     }
@@ -7867,12 +8782,14 @@ var CareerRuntime = (() => {
       if (!CAREER_ROUTES.has(route)) return route;
       if (route === "preferences") return route;
       if (!session.setupComplete) return "preferences";
-      if (session.completedAt) return "results";
+      if (session.completedAt) return ["test", "review"].includes(route) ? route : "results";
       return "test";
     }
     function render(route) {
+      if (route !== "preferences") destroyLocationPicker();
       if (route !== "results" && (detailSelection || detailPending.size || detailQueue.length)) resetDetailRequests();
-      if (route !== "results" && lastRoute === "results") {
+      if (route !== "review" && lastRoute === "review") review.close({ notify: false });
+      if (!["results", "review"].includes(route) && ["results", "review"].includes(lastRoute)) {
         matchBrowseOpen = false;
         matchOffset = 0;
         matchQuery = "";
@@ -7886,21 +8803,23 @@ var CareerRuntime = (() => {
         navigate(guarded);
         return;
       }
-      document.body.classList.toggle("adaptive-flow-active", ["preferences", "test", "results"].includes(route));
+      document.body.classList.toggle("adaptive-flow-active", ["preferences", "test", "results", "review"].includes(route));
       if (route === "preferences") renderPreferences();
       else if (route === "test") renderQuestion2();
       else if (route === "results") renderResults2();
+      else if (route === "review") renderReview2();
     }
     document.addEventListener("app:language", () => {
-      if (["preferences", "test", "results"].includes(lastRoute)) render(lastRoute);
+      if (["preferences", "test", "results", "review"].includes(lastRoute)) render(lastRoute);
     });
     document.addEventListener("keydown", (event) => {
-      if (lastRoute !== "test" || !metadataReady || poolLoading || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (lastRoute !== "test" || session.completedAt || !metadataReady || poolLoading || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
       const target = event.target;
       if (target.closest?.('input,textarea,select,[contenteditable="true"]')) return;
       const answerButton = target.closest?.("[data-adaptive-answer]");
       if (answerButton && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
-        const values = [1, 2, 3, 4, 5, 0], index = values.indexOf(Number(answerButton.dataset.adaptiveAnswer));
+        const values = answerLabels2().map((answer) => answer.value);
+        const index = values.indexOf(Number(answerButton.dataset.adaptiveAnswer));
         const next = event.key === "Home" ? 0 : event.key === "End" ? values.length - 1 : (index + (["ArrowLeft", "ArrowUp"].includes(event.key) ? -1 : 1) + values.length) % values.length;
         event.preventDefault();
         chooseAnswer(values[next], { focus: true });
@@ -7923,7 +8842,7 @@ var CareerRuntime = (() => {
       updateBusy: () => metadataLoading || poolLoading || detailPending.size > 0 || detailQueue.length > 0 || opening || transitionBusy,
       captureForUpdate: () => ({
         schemaVersion: 1,
-        regionQuery,
+        regionQuery: locationPicker?.getQuery().slice(0, 100) ?? regionQuery,
         regionMode,
         draftRegions: [...draftRegions],
         setupStep: session.setupStep,
@@ -7931,6 +8850,7 @@ var CareerRuntime = (() => {
       }),
       restoreForUpdate(value) {
         if (!isRecord(value) || value.schemaVersion !== 1) return;
+        destroyLocationPicker();
         regionQuery = typeof value.regionQuery === "string" ? value.regionQuery.slice(0, 100) : "";
         regionMode = value.regionMode === "selected" ? "selected" : "all";
         draftRegions = [...new Set((Array.isArray(value.draftRegions) ? value.draftRegions : []).filter(validRegion))].slice(0, 89);
@@ -9501,7 +10421,7 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/personality-visuals.mjs
-  var E3 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var E4 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   var drawings = {
     check: '<path d="M8 4h8m-7-1h6v4H9zM7 5H5v16h14V5h-2M8 13l3 3 5-6"/>',
     people: '<circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2m1-15a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/>',
@@ -9546,25 +10466,25 @@ var CareerRuntime = (() => {
     const ticks = [1, 2, 3, 4, 5].map((value) => `<text class="personality-radar-tick" x="170" y="${(center.y - (value - 1) / 4 * radius + 5).toFixed(3)}">${value}</text>`).join("");
     const keyPositions = [{ x: 50, y: 5 }, { x: 92, y: 34 }, { x: 77, y: 88 }, { x: 23, y: 88 }, { x: 8, y: 34 }];
     return `<section class="personality-overview" aria-labelledby="personality-overview-title">
-    <div class="personality-overview-heading"><h2 id="personality-overview-title">${E3(title)}</h2><p>${E3(description)}</p></div>
+    <div class="personality-overview-heading"><h2 id="personality-overview-title">${E4(title)}</h2><p>${E4(description)}</p></div>
     <figure class="personality-overview-figure">
       <div class="personality-radar-plot">
         <svg class="personality-radar" viewBox="0 0 320 290" role="img" aria-labelledby="personality-radar-title personality-radar-desc" focusable="false">
-          <title id="personality-radar-title">${E3(title)}</title><desc id="personality-radar-desc">${E3(scale + " " + values)}</desc>
+          <title id="personality-radar-title">${E4(title)}</title><desc id="personality-radar-desc">${E4(scale + " " + values)}</desc>
           <g aria-hidden="true">${rings}${axes}<polygon class="personality-radar-shape" points="${vertices.map(pair).join(" ")}"/>${vertices.map(({ id, value, x: x2, y }) => `<circle class="personality-radar-point" data-personality-radar-domain="${id}" data-radar-value="${value}" cx="${x2.toFixed(3)}" cy="${y.toFixed(3)}" r="4"/>`).join("")}${ticks}</g>
         </svg>
         ${vertices.map(({ id }, index) => `<span class="personality-radar-key" aria-hidden="true" style="left:${keyPositions[index].x}%;top:${keyPositions[index].y}%">${id}</span>`).join("")}
       </div>
-      <figcaption class="personality-radar-summary"><dl class="personality-radar-values">${vertices.map(({ id, value }) => `<div><dt><span class="personality-domain-key" aria-hidden="true">${id}</span><span>${E3(labels[id])}</span></dt><dd>${E3(formatValue(value))}<small> / 5</small></dd></div>`).join("")}</dl><p class="personality-radar-scale">${E3(scale)}</p></figcaption>
+      <figcaption class="personality-radar-summary"><dl class="personality-radar-values">${vertices.map(({ id, value }) => `<div><dt><span class="personality-domain-key" aria-hidden="true">${id}</span><span>${E4(labels[id])}</span></dt><dd>${E4(formatValue(value))}<small> / 5</small></dd></div>`).join("")}</dl><p class="personality-radar-scale">${E4(scale)}</p></figcaption>
     </figure>
-    <p class="personality-overview-note">${E3(caption)}</p>
+    <p class="personality-overview-note">${E4(caption)}</p>
   </section>`;
   }
 
   // site/apps/career/assets/personality.mjs
   var PAGE_SIZE = 10;
   var PAGE_COUNT = PERSONALITY_ITEMS.length / PAGE_SIZE;
-  var E4 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
+  var E5 = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
   var L3 = (ru, en, zh2) => getLanguage() === "ru" ? ru : getLanguage() === "en" ? en : zh2;
   var text2 = (values) => L3(...values);
   var englishFacetLabels = { N3: "Low mood", O5: "Intellectual curiosity", A2: "Straightforwardness" };
@@ -9585,7 +10505,7 @@ var CareerRuntime = (() => {
     N: { title: ["\u042D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Emotional sensitivity", "\u60C5\u7EEA\u654F\u611F\u6027"], description: ["\u041D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u0447\u0430\u0441\u0442\u043E \u0412\u044B \u043E\u0442\u043C\u0435\u0447\u0430\u0435\u0442\u0435 \u043D\u0430\u043F\u0440\u044F\u0436\u0435\u043D\u0438\u0435, \u043F\u0435\u0440\u0435\u0436\u0438\u0432\u0430\u043D\u0438\u044F \u0438 \u044D\u043C\u043E\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043A\u043E\u043B\u0435\u0431\u0430\u043D\u0438\u044F.", "How often you report tension, worries and emotional fluctuations.", "\u4F60\u611F\u53D7\u5230\u7D27\u5F20\u3001\u62C5\u5FE7\u548C\u60C5\u7EEA\u6CE2\u52A8\u7684\u9891\u7E41\u7A0B\u5EA6\u3002"] }
   };
   function meter(value, name2) {
-    return `<div class="personality-meter" role="meter" aria-label="${E4(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E4(number2(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
+    return `<div class="personality-meter" role="meter" aria-label="${E5(name2)}" aria-valuemin="1" aria-valuemax="5" aria-valuenow="${value}" aria-valuetext="${E5(number2(value) + " " + L3("\u0438\u0437 5", "out of 5", "\u5206\uFF0C\u6EE1\u52065\u5206"))}"><span style="width:${(value - 1) * 25}%"></span></div>`;
   }
   function createPersonality({ navigate, continueCareer }) {
     const storage = __careerHost.personalityStorage;
@@ -9649,8 +10569,8 @@ var CareerRuntime = (() => {
       root.lang = getLanguage();
       root.innerHTML = `<header class="personality-heading"><h1 id="personality-title" tabindex="-1">${L3("\u041B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Personality profile", "\u4EBA\u683C\u7279\u5F81")}</h1><p>${L3("\u041E\u0446\u0435\u043D\u0438\u0442\u0435, \u043D\u0430\u0441\u043A\u043E\u043B\u044C\u043A\u043E \u043A\u0430\u0436\u0434\u043E\u0435 \u0443\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u0435\u0442 \u0412\u0430\u0441 \u0432 \u043E\u0431\u044B\u0447\u043D\u043E\u0439 \u0436\u0438\u0437\u043D\u0438. \u041E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u0443\u0439\u0442\u0435\u0441\u044C \u043D\u0430 \u0441\u0432\u043E\u0451 \u043F\u0440\u0438\u0432\u044B\u0447\u043D\u043E\u0435 \u043F\u043E\u0432\u0435\u0434\u0435\u043D\u0438\u0435.", "Rate how accurately each statement describes you in everyday life. Think about your usual behaviour.", "\u8BF7\u5224\u65AD\u6BCF\u4E2A\u9648\u8FF0\u5728\u591A\u5927\u7A0B\u5EA6\u4E0A\u7B26\u5408\u65E5\u5E38\u751F\u6D3B\u4E2D\u7684\u4F60\uFF0C\u5E76\u4EE5\u5E73\u65F6\u7684\u884C\u4E3A\u4E3A\u4F9D\u636E\u3002")}</p></header>
       <div class="personality-progress"><div><span id="personality-counter" aria-live="polite"></span><span>${L3(`\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 ${state2.page + 1} \u0438\u0437 ${PAGE_COUNT}`, `Page ${state2.page + 1} of ${PAGE_COUNT}`, `\u7B2C${state2.page + 1}\u9875\uFF0C\u5171${PAGE_COUNT}\u9875`)}</span></div><progress max="120" value="${answeredCount()}" aria-label="${L3("\u041F\u0440\u043E\u0433\u0440\u0435\u0441\u0441 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u0442\u0435\u0441\u0442\u0430", "Personality test progress", "\u4EBA\u683C\u6D4B\u8BD5\u8FDB\u5EA6")}"></progress></div>
-      <div class="personality-scale" aria-hidden="true">${labels.map((caption, index) => `<div><b>${index + 1}</b><span>${E4(caption)}</span></div>`).join("")}</div>
-      <form id="personality-form"><div class="personality-items">${currentItems().map((item) => `<fieldset class="personality-item${validAnswer(state2.answers[item.id]) ? " is-answered" : ""}"><legend><span>${item.order}.</span> ${E4(getLanguage() === "ru" ? item.text : getLanguage() === "en" ? item.en : item.zh)}</legend><div class="personality-options">${labels.map((caption, index) => `<label class="personality-choice" title="${E4(caption)}"><input type="radio" name="${item.id}" data-personality-item="${item.id}" value="${index + 1}" ${state2.answers[item.id] === index + 1 ? "checked" : ""} required><span class="personality-choice-number" aria-hidden="true">${index + 1}</span><span class="personality-sr-only">${E4(caption)}</span></label>`).join("")}</div><p class="personality-selected" aria-live="polite">${validAnswer(state2.answers[item.id]) ? E4(labels[state2.answers[item.id] - 1]) : "&nbsp;"}</p></fieldset>`).join("")}</div>
+      <div class="personality-scale" aria-hidden="true">${labels.map((caption, index) => `<div><b>${index + 1}</b><span>${E5(caption)}</span></div>`).join("")}</div>
+      <form id="personality-form"><div class="personality-items">${currentItems().map((item) => `<fieldset class="personality-item${validAnswer(state2.answers[item.id]) ? " is-answered" : ""}"><legend><span>${item.order}.</span> ${E5(getLanguage() === "ru" ? item.text : getLanguage() === "en" ? item.en : item.zh)}</legend><div class="personality-options">${labels.map((caption, index) => `<label class="personality-choice" title="${E5(caption)}"><input type="radio" name="${item.id}" data-personality-item="${item.id}" value="${index + 1}" ${state2.answers[item.id] === index + 1 ? "checked" : ""} required><span class="personality-choice-number" aria-hidden="true">${index + 1}</span><span class="personality-sr-only">${E5(caption)}</span></label>`).join("")}</div><p class="personality-selected" aria-live="polite">${validAnswer(state2.answers[item.id]) ? E5(labels[state2.answers[item.id] - 1]) : "&nbsp;"}</p></fieldset>`).join("")}</div>
       <p class="personality-save-status" role="status" hidden></p><div class="personality-actions"><button type="button" id="personality-back" class="button button-secondary" ${state2.page === 0 ? "hidden" : ""}>${L3("\u041D\u0430\u0437\u0430\u0434", "Back", "\u4E0A\u4E00\u6B65")}</button><button type="submit" id="personality-next" class="button button-primary" disabled>${state2.page === PAGE_COUNT - 1 ? L3("\u041C\u043E\u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B", "My results", "\u6211\u7684\u7ED3\u679C") : L3("\u0414\u0430\u043B\u0435\u0435", "Next", "\u4E0B\u4E00\u6B65")}</button></div></form>`;
       root.querySelector("#personality-form").addEventListener("change", (event) => {
         const input = event.target.closest("input[data-personality-item]");
@@ -9715,7 +10635,7 @@ var CareerRuntime = (() => {
       const root = document.querySelector("#personality-results-root"), suggestions = suggestTeamRoles(profile);
       root.lang = getLanguage();
       const radar = renderPersonalityRadar(profile.domains, {
-        labels: Object.fromEntries(Object.entries(domainCopy).map(([id, copy]) => [id, text2(copy.title)])),
+        labels: Object.fromEntries(Object.entries(domainCopy).map(([id, copy2]) => [id, text2(copy2.title)])),
         title: L3("\u0421\u043E\u0447\u0435\u0442\u0430\u043D\u0438\u0435 \u0412\u0430\u0448\u0438\u0445 \u0447\u0435\u0440\u0442", "Your traits at a glance", "\u4F60\u7684\u7279\u5F81\u7EC4\u5408"),
         description: L3("\u041F\u044F\u0442\u044C \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0445 \u0448\u043A\u0430\u043B \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043D\u0430 \u043E\u0434\u043D\u043E\u0439 \u0434\u0438\u0430\u0433\u0440\u0430\u043C\u043C\u0435.", "The five main personality scales in one chart.", "\u5728\u4E00\u5F20\u56FE\u4E2D\u67E5\u770B\u4E94\u9879\u4E3B\u8981\u4EBA\u683C\u7279\u5F81\u3002"),
         scale: L3("\u0415\u0434\u0438\u043D\u0430\u044F \u0448\u043A\u0430\u043B\u0430: 1 \u2014 \u0432 \u0446\u0435\u043D\u0442\u0440\u0435, 5 \u2014 \u043D\u0430 \u0432\u043D\u0435\u0448\u043D\u0435\u043C \u043A\u043E\u043D\u0442\u0443\u0440\u0435.", "Shared scale: 1 at the centre, 5 on the outer ring.", "\u7EDF\u4E00\u91CF\u8868\uFF1A\u4E2D\u5FC3\u4E3A1\u5206\uFF0C\u5916\u5708\u4E3A5\u5206\u3002"),
@@ -9727,14 +10647,14 @@ var CareerRuntime = (() => {
       ${radar}
       <section class="personality-section" aria-labelledby="personality-work-title"><h2 id="personality-work-title">${L3("\u041E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0441\u0442\u044C, \u0438\u043D\u0438\u0446\u0438\u0430\u0442\u0438\u0432\u0430 \u0438 \u0441\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430", "Responsibility, initiative and collaboration", "\u8D23\u4EFB\u3001\u4E3B\u52A8\u6027\u4E0E\u5408\u4F5C")}</h2><div class="personality-traits">${WORK_TRAITS.map((trait) => {
         const value = profile.facets[trait.facet].mean, title = text2(trait.label);
-        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E4(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(trait[expressionBand(value)]))}</p></article>`;
+        return `<article class="personality-trait" data-personality-facet="${trait.facet}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(trait.facet)}<span>${E5(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E5(text2(trait[expressionBand(value)]))}</p></article>`;
       }).join("")}</div></section>
-      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E4(text2(role.label))}</span></h3><p>${E4(text2(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E4(label(facetById.get(id)))}</dt><dd>${number2(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E4(text2(role.action))}</p></article>`).join("")}</div>` : ""}</section>
+      <section class="personality-section" aria-labelledby="personality-roles-title"><h2 id="personality-roles-title">${L3("\u0420\u043E\u043B\u0438, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u0441\u0442\u043E\u0438\u0442 \u043F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C", "Roles worth trying", "\u503C\u5F97\u5C1D\u8BD5\u7684\u56E2\u961F\u89D2\u8272")}</h2><p class="personality-section-lead">${roleIntro}</p>${suggestions.roles.length ? `<div class="personality-roles">${suggestions.roles.map((role) => `<article class="personality-role" data-personality-role="${role.id}"><h3>${personalityIcon(role.id)}<span>${E5(text2(role.label))}</span></h3><p>${E5(text2(role.description))}</p><dl>${role.facets.map((id) => `<div><dt>${E5(label(facetById.get(id)))}</dt><dd>${number2(profile.facets[id].mean)} / 5</dd></div>`).join("")}</dl><p class="personality-role-action"><strong>${L3("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435:", "Try:", "\u53EF\u4EE5\u5C1D\u8BD5\uFF1A")}</strong> ${E5(text2(role.action))}</p></article>`).join("")}</div>` : ""}</section>
       <section class="personality-section" aria-labelledby="personality-full-title"><h2 id="personality-full-title">${L3("\u041F\u043E\u043B\u043D\u044B\u0439 \u043B\u0438\u0447\u043D\u043E\u0441\u0442\u043D\u044B\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C", "Your full personality profile", "\u5B8C\u6574\u7684\u4EBA\u683C\u7279\u5F81")}</h2><div class="personality-domains">${["C", "E", "A", "O", "N"].map((id) => {
-        const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy = domainCopy[id], value = profile.domains[id].mean, title = text2(copy.title);
-        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E4(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E4(text2(copy.description))}</p><dl>${domain.facets.map((facet) => {
+        const domain = PERSONALITY_DOMAINS.find((item) => item.id === id), copy2 = domainCopy[id], value = profile.domains[id].mean, title = text2(copy2.title);
+        return `<article class="personality-domain" data-personality-domain="${id}" data-personality-score="${value}"><div class="personality-score-heading"><h3>${personalityIcon(id)}<span>${E5(title)}</span></h3><strong>${number2(value)}<small> / 5</small></strong></div>${meter(value, title)}<p>${E5(text2(copy2.description))}</p><dl>${domain.facets.map((facet) => {
           const facetLabel = label(facetById.get(facet));
-          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E4(facetLabel)}</dt><dd>${number2(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
+          return `<div data-personality-detail-facet="${facet}" data-personality-score="${profile.facets[facet].mean}"><dt>${E5(facetLabel)}</dt><dd>${number2(profile.facets[facet].mean)}<small> / 5</small></dd></div>`;
         }).join("")}</dl></article>`;
       }).join("")}</div></section>
       <p class="personality-method">${L3("\u041C\u0435\u0442\u043E\u0434\u0438\u043A\u0430:", "Method:", "\u65B9\u6CD5\uFF1A")} <a href="${PERSONALITY_METHOD.doi}" target="_blank" rel="noopener noreferrer">IPIP-NEO-120</a> (Johnson, 2014)${L3(", \u0440\u0435\u0434\u0430\u043A\u0446\u0438\u044F \u043E\u0442\u043A\u0440\u044B\u0442\u043E\u0433\u043E \u043F\u0435\u0440\u0435\u0432\u043E\u0434\u0430; \u0440\u043E\u043B\u0438 \u0432 \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u2014 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0438\u043D\u0442\u0435\u0440\u043F\u0440\u0435\u0442\u0430\u0446\u0438\u044F \u0448\u043A\u0430\u043B.", "; team roles are an educational interpretation of the scales.", "\uFF0C\u91C7\u7528\u5F00\u653E\u8BD1\u6587\u7684\u4FEE\u8BA2\u7248\u672C\uFF1B\u56E2\u961F\u89D2\u8272\u662F\u5404\u9879\u7279\u5F81\u7684\u6559\u5B66\u6027\u89E3\u8BFB\u3002")}</p>
@@ -9927,13 +10847,13 @@ var CareerRuntime = (() => {
     const sectorPreferences = buildSectorPreference(inputs.prioritySectors, inputs.lowPrioritySectors, data2.sectors);
     const context = { roleProfile, sectorPreferences, conditions: inputs.conditions, focusAreas: inputs.focusAreas || {} };
     const map = new Map(data2.tracks.map((t) => [t.id, t]));
-    const ranked = registry.records.map((record2) => {
-      const options = record2.tracks.map((link) => {
-        const scored = scoreAuthority({ id: record2.id, shortName: record2.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
+    const ranked = registry.records.map((record3) => {
+      const options = record3.tracks.map((link) => {
+        const scored = scoreAuthority({ id: record3.id, shortName: record3.name.ru, sectors: link.sectors, conditions: link.conditions, tracks: [link] }, context, map);
         return { ...scored, link };
       }).sort((a, b) => b.rawScore - a.rawScore || b.sectorFit - a.sectorFit || a.link.id.localeCompare(b.link.id));
-      const overall = scoreAuthority({ id: record2.id, shortName: record2.name.ru, tracks: record2.tracks }, context, map);
-      return { ...record2, match: { ...overall, link: overall.path }, options };
+      const overall = scoreAuthority({ id: record3.id, shortName: record3.name.ru, tracks: record3.tracks }, context, map);
+      return { ...record3, match: { ...overall, link: overall.path }, options };
     }).sort((a, b) => b.match.rawScore - a.match.rawScore || b.match.sectorFit - a.match.sectorFit || a.name.ru.localeCompare(b.name.ru, "ru"));
     return { ranked, roleProfile, sectorPreferences };
   }
@@ -9946,9 +10866,9 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/public-service.mjs
-  var E5 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E6 = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L4 = (r, e, z) => getLanguage() === "ru" ? r : getLanguage() === "en" ? e : z;
-  var B = (v) => E5(v?.[getLanguage()] || v?.ru || "");
+  var B = (v) => E6(v?.[getLanguage()] || v?.ru || "");
   var I2 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F = (n) => new Intl.NumberFormat(numberLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
   var cohortLabels = () => ({ all: L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411"), "federal-legislative": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u043F\u0430\u043B\u0430\u0442 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0430", "Federal parliamentary staff", "\u8054\u90A6\u8BAE\u4F1A\u673A\u5173"), "federal-judicial": L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442\u044B \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0445 \u0441\u0443\u0434\u043E\u0432", "Federal court staff", "\u8054\u90A6\u6CD5\u9662\u673A\u5173"), regional: L4("\u0420\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Regional government", "\u5730\u533A\u5C42\u7EA7"), municipal: L4("\u041C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Local self-government", "\u5730\u65B9\u81EA\u6CBB") });
@@ -9960,7 +10880,7 @@ var CareerRuntime = (() => {
     root.setAttribute("data-no-i18n", "");
     let cohort = "all", query = "", selected = null, comparison = [], result = null;
     const byId = (id) => registry.records.find((a) => a.id === id);
-    const sourceLink = (s) => `<a class="ps-source" href="${E5(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I2("external")}</a>`;
+    const sourceLink = (s) => `<a class="ps-source" href="${E6(s.url)}" target="_blank" rel="noopener noreferrer"><span>${B(s.title)}</span>${I2("external")}</a>`;
     function scopeNotice() {
       return `<div class="ps-scope">${I2("info")}<p>${L4("\u0412\u043E\u0441\u0435\u043C\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0435\u043D\u043D\u044B\u0445 \u043F\u0440\u0438\u043C\u0435\u0440\u043E\u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u044F\u044E\u0442 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439 \u0444\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0439\u0442\u0438\u043D\u0433. \u042D\u0442\u043E \u043D\u0435 \u043F\u043E\u043B\u043D\u044B\u0439 \u0440\u0435\u0435\u0441\u0442\u0440 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0440\u0435\u0433\u0438\u043E\u043D\u043E\u0432 \u0438 \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u0438\u0442\u0435\u0442\u043E\u0432 \u0438 \u043D\u0435 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0445 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439.", "Eight verified examples complement the main federal ranking. This is not a complete regional or municipal register, or a list of live vacancies.", "\u516B\u4E2A\u7ECF\u6838\u5B9E\u793A\u4F8B\u8865\u5145\u4E3B\u8981\u8054\u90A6\u6392\u540D\u3002\u8FD9\u4E0D\u662F\u5168\u90E8\u5730\u533A\u3001\u5E02\u653F\u673A\u5173\u540D\u5F55\uFF0C\u4E5F\u4E0D\u662F\u5B9E\u65F6\u62DB\u8058\u5217\u8868\u3002")}</p></div>`;
     }
@@ -9968,21 +10888,21 @@ var CareerRuntime = (() => {
       return `<header class="ps-header"><div><h1>${L4("\u041F\u0443\u0431\u043B\u0438\u0447\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430: \u0434\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438", "Public service: other branches and levels", "\u516C\u804C\u53D1\u5C55\uFF1A\u5176\u4ED6\u6743\u529B\u5206\u652F\u4E0E\u5C42\u7EA7")}</h1><p>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0438\u0435 \u043F\u0430\u0440\u043B\u0430\u043C\u0435\u043D\u0442\u0441\u043A\u0438\u0435 \u0438 \u0441\u0443\u0434\u0435\u0431\u043D\u044B\u0435 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u044B, \u0440\u0435\u0433\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u043C\u0435\u0441\u0442\u043D\u043E\u0435 \u0441\u0430\u043C\u043E\u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435.", "Russian parliamentary and court staff, regional authorities and local self-government.", "\u4FC4\u7F57\u65AF\u8BAE\u4F1A\u4E0E\u6CD5\u9662\u673A\u5173\u3001\u5730\u533A\u673A\u5173\u53CA\u5730\u65B9\u81EA\u6CBB\u3002")}</p></div><button type="button" class="button button-secondary" data-ps-route="results">${L4("\u0424\u0435\u0434\u0435\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Federal result", "\u8054\u90A6\u7ED3\u679C")}${I2("arrow-right")}</button></header>`;
     }
     function eligibility() {
-      return `<details class="ps-eligibility"><summary>${I2("shield")}${L4("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E5(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L4("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I2("external")}</a><a href="${E5(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L4("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I2("external")}</a></div></details>`;
+      return `<details class="ps-eligibility"><summary>${I2("shield")}${L4("\u0427\u0442\u043E \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u043F\u0435\u0440\u0435\u0434 \u0432\u044B\u0431\u043E\u0440\u043E\u043C \u043A\u0430\u0440\u044C\u0435\u0440\u044B", "Before considering a career", "\u8003\u8651\u4EFB\u804C\u524D\u987B\u6838\u5BF9")}</summary><p>${borderNote()}</p><p>${L4("\u0410\u043F\u043F\u0430\u0440\u0430\u0442 \u2013 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0435 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0435\u043D\u0438\u0435 \u043E\u0440\u0433\u0430\u043D\u0430. \u0417\u0434\u0435\u0441\u044C \u043D\u0435 \u043F\u0440\u0435\u0434\u043B\u0430\u0433\u0430\u044E\u0442\u0441\u044F \u043C\u0430\u043D\u0434\u0430\u0442\u044B \u0434\u0435\u043F\u0443\u0442\u0430\u0442\u043E\u0432, \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0438 \u0441\u0435\u043D\u0430\u0442\u043E\u0440\u043E\u0432, \u0441\u0443\u0434\u0435\u0439 \u0438\u043B\u0438 \u043C\u044D\u0440\u043E\u0432. \u0414\u0438\u043F\u043B\u043E\u043C \u0413\u041C\u0423 \u043D\u0435 \u043F\u0440\u0438\u0440\u0430\u0432\u043D\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u043A \u044E\u0440\u0438\u0434\u0438\u0447\u0435\u0441\u043A\u043E\u043C\u0443 \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u044E. \u041C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0433\u0440\u0430\u0436\u0434\u0430\u043D\u0441\u043A\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Staff support an institution professionally. This does not recommend elected seats, senators, judges or mayors. A public administration degree is not treated as a law degree. Municipal service differs from state civil service.", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\u63D0\u4F9B\u4E13\u4E1A\u4FDD\u969C\u3002\u672C\u5E73\u53F0\u4E0D\u63A8\u8350\u8BAE\u5458\u5E2D\u4F4D\u3001\u53C2\u8BAE\u5458\u3001\u6CD5\u5B98\u6216\u5E02\u957F\u804C\u4F4D\u3002\u516C\u5171\u7BA1\u7406\u5B66\u5386\u4E0D\u7B49\u4E8E\u6CD5\u5B66\u5B66\u5386\uFF1B\u5E02\u653F\u670D\u52A1\u4E0D\u540C\u4E8E\u56FD\u5BB6\u516C\u52A1\u5458\u5236\u5EA6\u3002")}</p><div class="ps-links"><a href="${E6(registry.eligibilitySources[0])}" target="_blank" rel="noopener noreferrer">${L4("\u041C\u0438\u043D\u044E\u0441\u0442: \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Ministry of Justice: civil service", "\u53F8\u6CD5\u90E8\uFF1A\u516C\u52A1\u5458\u5236\u5EA6")}${I2("external")}</a><a href="${E6(registry.eligibilitySources[1])}" target="_blank" rel="noopener noreferrer">${L4("\u041D\u043E\u0432\u043E\u0441\u0438\u0431\u0438\u0440\u0441\u043A: \u043C\u0443\u043D\u0438\u0446\u0438\u043F\u0430\u043B\u044C\u043D\u0430\u044F \u0441\u043B\u0443\u0436\u0431\u0430", "Novosibirsk: municipal service", "\u65B0\u897F\u4F2F\u5229\u4E9A\uFF1A\u5E02\u653F\u670D\u52A1")}${I2("external")}</a></div></details>`;
     }
     function card(a, index) {
-      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I2(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E5(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L4("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L4("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L4("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L4("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I2("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E5(L4("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I2(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
+      return `<article class="ps-card"><div class="ps-card-top"><span>${cohortLabels()[a.cohort]}</span>${a.match ? `<strong>${F(a.match.score)} <small>/ 100</small></strong>` : I2(a.branch.includes("judicial") ? "source" : "landmark")}</div>${authorityEmblem(a)}<h2><button class="ps-title-button" type="button" data-ps-open="${a.id}">${B(a.name)}</button></h2>${getLanguage() !== "ru" ? `<p class="ps-official-name" lang="ru">${E6(a.name.ru)}</p>` : ""}<p class="ps-place">${B(a.location)} \xB7 ${a.unitType === "apparatus" ? L4("\u0430\u043F\u043F\u0430\u0440\u0430\u0442, \u043D\u0435 \u0432\u044B\u0431\u043E\u0440\u043D\u0430\u044F \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u044C", "staff, not an elected office", "\u673A\u5173\u5DE5\u4F5C\u4EBA\u5458\uFF0C\u975E\u6C11\u9009\u804C\u4F4D") : L4("\u043E\u0440\u0433\u0430\u043D", "authority", "\u673A\u5173")}</p><p>${B(a.mission)}</p>${a.match ? `<div class="ps-match"><small>${L4("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0435 \u0443\u0447\u0435\u0431\u043D\u043E\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Closest modelled work direction", "\u6700\u63A5\u8FD1\u7684\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411")}</small><b>${B(a.match.link.title)}</b><span>${L4("\u041F\u043E\u0437\u0438\u0446\u0438\u044F \u0432 \u044D\u0442\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0435", "Position within this selection", "\u6B64\u6837\u672C\u4E2D\u7684\u4F4D\u7F6E")} ${index + 1}</span></div>` : ""}<div class="ps-card-actions"><button type="button" class="button button-primary" data-ps-open="${a.id}">${L4("\u0418\u0437\u0443\u0447\u0438\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "Explore direction", "\u4E86\u89E3\u65B9\u5411")}${I2("arrow-right")}</button><button type="button" class="button button-secondary ps-compare" aria-pressed="${comparison.includes(a.id)}" data-ps-compare="${a.id}" aria-label="${E6(L4("\u0421\u0440\u0430\u0432\u043D\u0438\u0442\u044C: ", "Compare: ", "\u6BD4\u8F83\uFF1A"))}${B(a.name)}">${I2(comparison.includes(a.id) ? "check" : "compare")}</button></div></article>`;
     }
     function modelDetails(a) {
       return `<section class="ps-section"><h2>${L4("\u0427\u0442\u043E \u043C\u043E\u0436\u043D\u043E \u0434\u0435\u043B\u0430\u0442\u044C \u0432 \u044D\u0442\u043E\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0438", "Work to explore", "\u53EF\u63A2\u7D22\u7684\u5DE5\u4F5C")}</h2><p class="small-note">${L4("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043D\u0438\u0436\u0435 \u043E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0442 \u0443\u0447\u0435\u0431\u043D\u044B\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0434\u0435\u044F\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u0438, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0451\u043D\u043D\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438. \u0427\u0438\u0441\u043B\u043E\u0432\u044B\u0435 \u0432\u0435\u0441\u0430 \u043D\u0435 \u044F\u0432\u043B\u044F\u044E\u0442\u0441\u044F \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u043C\u0438 \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u043E\u0440\u0433\u0430\u043D\u0430.", "The following labels are modelled work directions, not confirmed vacancies. Weights are not official institutional ratings.", "\u4E0B\u5217\u540D\u79F0\u662F\u6559\u5B66\u5DE5\u4F5C\u65B9\u5411\uFF0C\u4E0D\u662F\u5DF2\u786E\u8BA4\u7684\u5728\u62DB\u804C\u4F4D\u3002\u6570\u503C\u6743\u91CD\u4E0D\u662F\u5B98\u65B9\u673A\u6784\u8BC4\u5206\u3002")}</p>${a.tracks.map((t) => {
         const opt = a.options?.find((x2) => x2.link.id === t.id);
-        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I2("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E5(translate(data2.sectors.find((x2) => x2.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E5(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
+        return `<details class="ps-track" ${a.match?.link.id === t.id ? "open" : ""}><summary><span>${B(t.title)}</span>${opt ? `<b>${F(opt.score)}</b>` : I2("chevron")}</summary><p>${B(t.rationale)}</p><div class="ps-tags">${t.sectors.map((s) => `<span>${E6(translate(data2.sectors.find((x2) => x2.id === s.id).title))} \xB7 ${F(s.weight)}</span>`).join("")}</div><dl class="ps-conditions">${Object.entries(t.conditions).map(([k, v]) => `<div><dt>${E6(translate(data2.conditions.find((c) => c.id === k).title))}</dt><dd>${v} / 5</dd></div>`).join("")}</dl><p class="small-note">${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0437\u0430\u0434\u0430\u043D\u044B \u0434\u043B\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F, \u0430 \u043D\u0435 \u0434\u043B\u044F \u043E\u0440\u0433\u0430\u043D\u0430 \u0432 \u0446\u0435\u043B\u043E\u043C. \u042D\u0442\u043E \u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u044B \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F, \u043A\u043E\u0442\u043E\u0440\u044B\u0435 \u043D\u0430\u0434\u043E \u0441\u0432\u0435\u0440\u044F\u0442\u044C \u0441 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0439.", "Conditions are specified per direction, not for the whole institution. These teaching assumptions need checking against actual work.", "\u6761\u4EF6\u6309\u5DE5\u4F5C\u65B9\u5411\u8BBE\u5B9A\uFF0C\u800C\u975E\u6574\u4E2A\u673A\u5173\uFF1B\u662F\u9700\u4E0E\u5B9E\u9645\u5DE5\u4F5C\u6838\u5BF9\u7684\u6559\u5B66\u5047\u8BBE\u3002")}</p></details>`;
       }).join("")}</section>`;
     }
     function detail(a) {
       const match = result?.ranked.find((x2) => x2.id === a.id);
       a = match || a;
-      return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E5(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E5(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
+      return `<button type="button" class="text-link" id="ps-back">${I2("arrow-left")}${L4("\u0412\u0441\u0435 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "All directions", "\u5168\u90E8\u65B9\u5411")}</button><div class="ps-detail-grid"><article><div class="ps-dossier-heading">${authorityEmblem(a)}<span>${cohortLabels()[a.cohort]} \xB7 ${B(a.location)}</span><h2>${B(a.name)}</h2>${getLanguage() !== "ru" ? `<p lang="ru" class="ps-official-name">${E6(a.name.ru)}</p>` : ""}<p>${B(a.mission)}</p>${authoritySymbolCredit(a)}</div>${a.match ? `<div class="ps-explanation"><strong>${F(a.match.score)} / 100</strong><div><b>${B(a.match.link.title)}</b><p>${L4("\u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0435\u0431\u043D\u043E\u0433\u043E \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0438\u044F \u0432 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0439 \u0432\u044B\u0431\u043E\u0440\u043A\u0435; \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "Educational fit index in the additional sample; not an aptitude percentage.", "\u8865\u5145\u6837\u672C\u4E2D\u7684\u6559\u5B66\u5339\u914D\u6307\u6570\uFF0C\u4E0D\u662F\u9002\u4EFB\u767E\u5206\u6BD4\u3002")}</p><span>${L4("\u0420\u043E\u043B\u044C", "Role", "\u89D2\u8272")} ${F(a.match.roleFit * 100)} \xB7 ${L4("\u0421\u0444\u0435\u0440\u0430", "Area", "\u9886\u57DF")} ${F(a.match.sectorFit * 100)} \xB7 ${L4("\u0423\u0441\u043B\u043E\u0432\u0438\u044F", "Conditions", "\u6761\u4EF6")} ${F(a.match.conditionFit * 100)}</span></div></div>` : ""}${modelDetails(a)}<button type="button" class="button button-secondary" data-vacancy-open="${a.id}">${L4("\u0412\u0430\u043A\u0430\u043D\u0441\u0438\u0438 \u0438 \u043A\u043E\u043D\u043A\u0443\u0440\u0441\u044B", "Vacancies and competitions", "\u804C\u4F4D\u4E0E\u62DB\u5F55")}</button><button type="button" class="button button-primary" data-ps-notebook="${a.id}">${L4("\u041C\u043E\u0439 \u043B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "My career-choice worksheet", "\u6211\u7684\u804C\u4E1A\u9009\u62E9\u8BB0\u5F55")}</button><section class="ps-section ps-exercise"><h2>${L4("\u041F\u0435\u0440\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0448\u0430\u0433", "Your first independent step", "\u7B2C\u4E00\u9879\u81EA\u4E3B\u884C\u52A8")}</h2><p>${B(a.exercise)}</p></section></article><aside><section class="ps-source-card"><h3>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0440\u0435\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438", "Reality check", "\u771F\u5B9E\u6027\u6838\u67E5")}</h3><dl><div><dt>${L4("\u0421\u0442\u0440\u0430\u043D\u0430", "Country", "\u56FD\u5BB6")}</dt><dd>${L4("\u0420\u043E\u0441\u0441\u0438\u0439\u0441\u043A\u0430\u044F \u0424\u0435\u0434\u0435\u0440\u0430\u0446\u0438\u044F", "Russian Federation", "\u4FC4\u7F57\u65AF\u8054\u90A6")}</dd></div><div><dt>${L4("\u041E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438", "Career object", "\u63A8\u8350\u5BF9\u8C61")}</dt><dd>${a.unitType === "apparatus" ? L4("\u0420\u0430\u0431\u043E\u0442\u0430 \u0432 \u0430\u043F\u043F\u0430\u0440\u0430\u0442\u0435", "Staff work", "\u673A\u5173\u4FDD\u969C\u5DE5\u4F5C") : L4("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430 \u0432 \u043E\u0440\u0433\u0430\u043D\u0435", "Professional work in the authority", "\u673A\u5173\u4E13\u4E1A\u5DE5\u4F5C")}</dd></div></dl>${a.verifiedUnits.length ? `<h4>${L4("\u041F\u0440\u0438\u043C\u0435\u0440\u044B \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0445 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u0439", "Examples of official units", "\u6B63\u5F0F\u90E8\u95E8\u540D\u79F0\u793A\u4F8B")}</h4>${a.verifiedUnits.map((u) => `<p class="ps-unit" lang="ru">${E6(u)}</p>`).join("")}<small>${L4("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0435 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u0438\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C. \u042D\u0442\u043E \u043D\u0435 \u043F\u0435\u0440\u0435\u0447\u0435\u043D\u044C \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0445 \u0434\u043E\u043B\u0436\u043D\u043E\u0441\u0442\u0435\u0439.", "Official Russian wording is retained. This is not a list of available positions.", "\u4FDD\u7559\u6B63\u5F0F\u4FC4\u6587\u540D\u79F0\uFF1B\u4E0D\u662F\u7A7A\u7F3A\u804C\u4F4D\u6E05\u5355\u3002")}</small>` : `<p>${L4("\u0428\u0442\u0430\u0442\u043D\u044B\u0435 \u043F\u043E\u0434\u0440\u0430\u0437\u0434\u0435\u043B\u0435\u043D\u0438\u044F \u043D\u0435 \u0440\u0435\u043A\u043E\u043D\u0441\u0442\u0440\u0443\u0438\u0440\u0443\u044E\u0442\u0441\u044F \u043F\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044E. \u0418\u0437\u0443\u0447\u0438\u0442\u0435 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0443\u044E \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0443.", "Staffing units are not reconstructed by assumption. Consult the official structure.", "\u4E0D\u6839\u636E\u63A8\u6D4B\u91CD\u5EFA\u7F16\u5236\u90E8\u95E8\uFF0C\u8BF7\u67E5\u9605\u5B98\u65B9\u7ED3\u6784\u3002")}</p>`}${a.sources.map((s) => `${sourceLink(s)}<small>${L4("\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0430", "Source check", "\u6765\u6E90\u6838\u5BF9")}: ${s.checkedAt} \xB7 ${s.access === "full-page" ? L4("\u0442\u0435\u043A\u0441\u0442 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B", "page text", "\u7F51\u9875\u6B63\u6587") : L4("\u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442; \u043F\u0440\u044F\u043C\u043E\u0439 \u0434\u043E\u0441\u0442\u0443\u043F \u043D\u0435\u0441\u0442\u0430\u0431\u0438\u043B\u0435\u043D", "official indexed text; direct access unstable", "\u5B98\u65B9\u7D22\u5F15\u6587\u672C\uFF1B\u76F4\u63A5\u8BBF\u95EE\u4E0D\u7A33\u5B9A")}</small>`).join("")}<p>${L4("\u041D\u0430\u043B\u0438\u0447\u0438\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u0435\u0442 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A, \u043D\u043E \u043D\u0435 \u043E\u0442\u043A\u0440\u044B\u0442\u044B\u0439 \u043D\u0430\u0431\u043E\u0440. \u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u0438 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u0431\u0430\u043B\u043B\u044B.", "The page confirms a source, not an open intake. Sources do not validate authored scores.", "\u9875\u9762\u5B58\u5728\u4EC5\u786E\u8BA4\u6765\u6E90\uFF0C\u4E0D\u8BC1\u660E\u6B63\u5728\u62DB\u52DF\uFF0C\u4E5F\u4E0D\u8BC1\u660E\u4F5C\u8005\u8BBE\u5B9A\u7684\u5206\u6570\u3002")}</p></section><section class="ps-source-card"><h3>${L4("\u041A\u0430\u043A \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0432\u0445\u043E\u0434", "Check entry requirements", "\u6838\u5BF9\u5165\u804C\u8981\u6C42")}</h3><p>${L4("\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u043E\u0431\u044A\u044F\u0432\u043B\u0435\u043D\u0438\u0435, \u0441\u0442\u0430\u0442\u0443\u0441 \u0441\u043B\u0443\u0436\u0431\u044B, \u043E\u0431\u0440\u0430\u0437\u043E\u0432\u0430\u043D\u0438\u0435 \u0438 \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0438, \u0441\u0442\u0430\u0436, \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u044F, \u0441\u0440\u043E\u043A\u0438 \u0438 \u0441\u043F\u043E\u0441\u043E\u0431 \u043E\u0442\u0431\u043E\u0440\u0430. \u0423\u0442\u043E\u0447\u043D\u0438\u0442\u0435 \u043D\u0435\u044F\u0441\u043D\u043E\u0435 \u0443 \u043A\u0430\u0434\u0440\u043E\u0432\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u044B.", "Find a specific announcement and check service status, degree and subject, experience, restrictions, deadlines and selection procedure. Ask HR about uncertainties.", "\u67E5\u627E\u5177\u4F53\u516C\u544A\uFF0C\u6838\u5BF9\u670D\u52A1\u7C7B\u522B\u3001\u5B66\u5386\u4E13\u4E1A\u3001\u7ECF\u5386\u3001\u9650\u5236\u3001\u671F\u9650\u548C\u9009\u62D4\u65B9\u5F0F\u3002\u4E0D\u660E\u786E\u4E4B\u5904\u8BF7\u54A8\u8BE2\u4EBA\u4E8B\u90E8\u95E8\u3002")}</p>${a.sources.some((s) => s.id === "hr") ? sourceLink(a.sources.find((s) => s.id === "hr")) : `<p class="small-note">${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0434\u0440\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u0435\u0449\u0451 \u043D\u0435 \u0432\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043E\u0432\u0430\u043D\u0430. \u041D\u0430\u0447\u043D\u0438\u0442\u0435 \u0441 \u0443\u043A\u0430\u0437\u0430\u043D\u043D\u043E\u0433\u043E \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0430\u0439\u0442\u0430.", "A separate HR page has not yet been verified. Start with the official site listed here.", "\u5C1A\u672A\u6838\u5B9E\u72EC\u7ACB\u4EBA\u4E8B\u9875\u9762\uFF0C\u8BF7\u4ECE\u6240\u5217\u5B98\u7F51\u5F00\u59CB\u67E5\u8BE2\u3002")}</p>`}</section></aside></div>${eligibility()}`;
     }
     function comparisonView(items) {
       if (comparison.length !== 2) return "";
@@ -9991,7 +10911,7 @@ var CareerRuntime = (() => {
     }
     function list2() {
       const items = filterPublicRecords(result?.ranked || registry.records, { cohort, query });
-      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E5(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E5(registry.registryVersion)}</small></details>`;
+      return `${scopeNotice()}<div class="ps-toolbar"><nav aria-label="${L4("\u0412\u0435\u0442\u0432\u044C \u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C", "Branch and level", "\u5206\u652F\u4E0E\u5C42\u7EA7")}">${Object.entries(cohortLabels()).map(([id, label2]) => `<button type="button" data-ps-cohort="${id}" aria-pressed="${cohort === id}" class="${cohort === id ? "selected" : ""}">${label2}</button>`).join("")}</nav><label class="ps-search">${I2("search")}<input id="ps-search" type="search" maxlength="120" value="${E6(query)}" placeholder="${L4("\u041E\u0440\u0433\u0430\u043D, \u0433\u043E\u0440\u043E\u0434 \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u0430", "Institution, city or work", "\u673A\u5173\u3001\u57CE\u5E02\u6216\u5DE5\u4F5C")}" aria-label="${L4("\u041F\u043E\u0438\u0441\u043A \u043F\u043E \u0442\u0440\u0451\u043C \u044F\u0437\u044B\u043A\u0430\u043C", "Search in three languages", "\u4E09\u8BED\u641C\u7D22")}"></label></div><div class="ps-status" role="status"><span>${L4("\u041D\u0430\u0439\u0434\u0435\u043D\u043E", "Found", "\u627E\u5230")}: ${items.length} / ${registry.records.length}</span><span>${result ? L4("\u041F\u043E \u0412\u0430\u0448\u0438\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \xB7 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0432\u044B\u0431\u043E\u0440\u043A\u0430", "Based on your answers \xB7 separate sample", "\u4F9D\u636E\u4F60\u7684\u56DE\u7B54 \xB7 \u72EC\u7ACB\u6837\u672C") : L4("\u0420\u0435\u0436\u0438\u043C \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \xB7 \u0438\u043D\u0434\u0435\u043A\u0441\u043E\u0432 \u043F\u043E\u043A\u0430 \u043D\u0435\u0442", "Explore mode \xB7 no index yet", "\u6D4F\u89C8\u6A21\u5F0F \xB7 \u6682\u65E0\u6307\u6570")}</span></div>${result?.roleProfile.lowInterest ? `<p class="ps-scope">${L4("\u041F\u043E\u043B\u043E\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043F\u043E\u043A\u0430 \u043D\u0435 \u0432\u044B\u0440\u0430\u0436\u0435\u043D. \u041F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u0441\u043B\u0443\u0436\u0438\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0443, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044E \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u0438.", "Positive interest is not expressed yet. This selection supports exploration, not a claim of vocational inclination.", "\u5C1A\u672A\u8868\u73B0\u51FA\u79EF\u6781\u5174\u8DA3\u3002\u672C\u9009\u96C6\u7528\u4E8E\u4E86\u89E3\u804C\u4E1A\uFF0C\u800C\u975E\u8BC1\u660E\u804C\u4E1A\u503E\u5411\u3002")}</p>` : ""}${result?.roleProfile.flat ? `<p class="ps-scope">${L4("\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u043F\u0440\u043E\u0444\u0438\u043B\u044C: \u0432\u043B\u0438\u044F\u043D\u0438\u0435 \u0444\u043E\u0440\u043C\u044B \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432 \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0431\u043B\u0438\u0436\u0430\u0439\u0448\u0435\u0433\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u044F\u0432\u043B\u0435\u043D\u043D\u0443\u044E \u0441\u043A\u043B\u043E\u043D\u043D\u043E\u0441\u0442\u044C.", "Broad profile: the influence of interest-profile shape is reduced. A closest-track label is not evidence of a distinct preference.", "\u5BBD\u6CDB\u753B\u50CF\uFF1A\u5174\u8DA3\u5206\u5E03\u5F62\u6001\u7684\u5F71\u54CD\u5DF2\u51CF\u5F31\uFF1B\u6700\u63A5\u8FD1\u65B9\u5411\u4E0D\u8868\u793A\u5DF2\u8BC6\u522B\u51FA\u7684\u504F\u597D\u3002")}</p>` : ""}${!result ? `<p class="ps-start"><button type="button" class="text-link" data-ps-route="test">${L4("\u041F\u0440\u043E\u0439\u0442\u0438 \u0442\u0435\u0441\u0442 \u0434\u043B\u044F \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u044F", "Take the test for a personal comparison", "\u5B8C\u6210\u6D4B\u8BD5\u4EE5\u8FDB\u884C\u4E2A\u4EBA\u5339\u914D")}${I2("arrow-right")}</button></p>` : ""}<div class="ps-grid">${items.map(card).join("") || `<p>${L4("\u041D\u0435\u0442 \u0441\u043E\u0432\u043F\u0430\u0434\u0435\u043D\u0438\u0439. \u0418\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043F\u043E\u0438\u0441\u043A \u0438\u043B\u0438 \u0443\u0440\u043E\u0432\u0435\u043D\u044C.", "No matches. Change the search or category.", "\u65E0\u5339\u914D\u9879\uFF0C\u8BF7\u4FEE\u6539\u641C\u7D22\u6216\u7C7B\u522B\u3002")}</p>`}</div>${comparisonView(result?.ranked || registry.records)}<div class="ps-footer-actions"><button type="button" id="ps-export" class="button button-secondary">${I2("download")}${L4("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u044D\u0442\u0443 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0443", "Save this selection", "\u4FDD\u5B58\u6B64\u9009\u96C6")}</button><small>${L4("\u041E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 JSON \u0441\u043E \u0441\u0441\u044B\u043B\u043A\u0430\u043C\u0438 \u0438 \u0438\u043D\u0434\u0435\u043A\u0441\u0430\u043C\u0438. \u041D\u0435 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B.", "A separate JSON with sources and indices, not a replacement for the class-result file.", "\u72EC\u7ACBJSON\u542B\u6765\u6E90\u548C\u6307\u6570\uFF0C\u4E0D\u80FD\u66FF\u4EE3\u73ED\u7EA7\u7ED3\u679C\u6587\u4EF6\u3002")}</small></div>${eligibility()}<details class="ps-eligibility"><summary>${L4("\u041A\u0430\u043A \u0443\u0441\u0442\u0440\u043E\u0435\u043D\u043E \u0441\u043E\u043F\u043E\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "How matching works", "\u5982\u4F55\u8FDB\u884C\u5339\u914D")}</summary><p>${L4("27 \u0432\u043E\u043F\u0440\u043E\u0441\u043E\u0432 \u043E\u043F\u0438\u0441\u044B\u0432\u0430\u044E\u0442 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B. \u041E\u0446\u0435\u043D\u043A\u0430 \u043A\u0430\u0436\u0434\u043E\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0443\u0447\u0438\u0442\u044B\u0432\u0430\u0435\u0442 \u0440\u043E\u043B\u044C, \u0441\u0444\u0435\u0440\u0443 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F (40/45/15) \u0438 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u043D\u043E\u0441\u0442\u044C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F (1,00/0,96/0,91). \u0418\u043D\u0434\u0435\u043A\u0441 \u0443\u0447\u0440\u0435\u0436\u0434\u0435\u043D\u0438\u044F: 70% \u043B\u0443\u0447\u0448\u0435\u0433\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 30% \u0441\u0440\u0435\u0434\u043D\u0435\u0433\u043E \u043F\u043E \u0432\u0441\u0435\u043C \u0443\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u044B\u043C \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F\u043C. \u0421\u0440\u0430\u0432\u043D\u0435\u043D\u0438\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0443\u0435\u0442 \u0432\u043D\u0443\u0442\u0440\u0438 \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0438.", "The 27 questions describe interest in types of work. Each direction combines role, area and conditions (40/45/15) and a representation factor (1.00/0.96/0.91). The institution index combines 70% of the best direction with 30% of the average across all distinct directions. Comparisons apply within this selection.", "27\u9053\u9898\u63CF\u8FF0\u5BF9\u4E0D\u540C\u5DE5\u4F5C\u7C7B\u578B\u7684\u5174\u8DA3\u3002\u6BCF\u4E2A\u65B9\u5411\u7EFC\u5408\u89D2\u8272\u3001\u9886\u57DF\u53CA\u6761\u4EF6\uFF0840/45/15\uFF09\uFF0C\u5E76\u5E94\u7528\u4EE3\u8868\u6027\u7CFB\u6570\uFF081.00/0.96/0.91\uFF09\u3002\u673A\u6784\u6307\u6570\u7531\u6700\u5339\u914D\u65B9\u5411\u5F97\u5206\u768470%\u4E0E\u6240\u6709\u4E0D\u540C\u65B9\u5411\u5E73\u5747\u5F97\u5206\u768430%\u7EC4\u6210\u3002\u6BD4\u8F83\u9650\u4E8E\u672C\u9009\u96C6\u3002")}</p><p>${L4("\u041F\u0440\u043E\u0444\u0438\u043B\u0438, \u0432\u0435\u0441\u0430 \u0438 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u2013 \u0430\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438\u044F. \u041D\u0435\u0431\u043E\u043B\u044C\u0448\u0438\u0435 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u0438\u043D\u0434\u0435\u043A\u0441\u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0430\u044E\u0442 \u0440\u0430\u0437\u043B\u0438\u0447\u0438\u044F \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438. \u0417\u0434\u0435\u0441\u044C \u043D\u0435\u0442 \u0432\u044B\u0432\u043E\u0434\u0430 \xAB\u043B\u0443\u0447\u0448\u0435 \u0432\u0441\u0435\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0420\u043E\u0441\u0441\u0438\u0438\xBB.", "Profiles, weights and conditions are authored assumptions. Small index differences are not evidence of aptitude differences. This does not identify the best match among all Russian institutions.", "\u753B\u50CF\u3001\u6743\u91CD\u548C\u6761\u4EF6\u4E3A\u4F5C\u8005\u5047\u8BBE\u3002\u5C0F\u5206\u5DEE\u4E0D\u8BC1\u660E\u9002\u4EFB\u6027\u5DEE\u5F02\uFF0C\u4E5F\u4E0D\u8868\u793A\u5728\u4FC4\u7F57\u65AF\u5168\u90E8\u673A\u5173\u4E2D\u6700\u5339\u914D\u3002")}</p><small>${E6(registry.registryVersion)}</small></details>`;
     }
     function bind() {
       root.querySelectorAll("[data-ps-notebook]").forEach((b) => b.onclick = () => openNotebook?.(b.dataset.psNotebook));
@@ -10254,9 +11174,9 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/decision-lab.mjs
-  var E6 = (x2) => String(x2 ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E7 = (x2) => String(x2 ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L5 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
-  var T = (x2) => E6(translate(x2));
+  var T = (x2) => E7(translate(x2));
   var I3 = (id) => `<svg aria-hidden="true"><use href="#i-${id}"></use></svg>`;
   var F2 = (x2) => new Intl.NumberFormat(getLanguage() === "zh-Hans" ? "zh-CN" : getLanguage() === "en" ? "en-GB" : "ru-RU", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(x2);
   var D = (x2) => `${x2 > 0 ? "+" : ""}${F2(x2)}`;
@@ -10297,8 +11217,8 @@ var CareerRuntime = (() => {
       const x2 = explainAuthority(selected, baseline, data2, result);
       const labels = [L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B", "Work interests"), L5("\u0421\u0444\u0435\u0440\u044B \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438", "Policy areas"), L5("\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430", "Working conditions")];
       const max2 = [40, 45, 15];
-      const near = x2.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E6(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
-      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x2.authority, "compact")}<h2>${E6(authorityName(x2.authority))}</h2></div><span>${x2.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x2.rank} / ${x2.categorySize}</span></div><div class="dl-index"><strong>${F2(x2.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
+      const near = x2.neighbours.map((a) => `<button type="button" data-lab-agency="${a.id}"><span>${E7(authorityName(a))}</span><b>${F2(a.score)}</b></button>`).join("");
+      return `<div class="dl-grid"><article class="dl-main"><header class="dl-score-head"><div><p>${L5("\u0420\u0430\u0437\u0431\u043E\u0440 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430", "Your current result, explained")}</p><div class="result-symbol-heading">${authorityEmblem(x2.authority, "compact")}<h2>${E7(authorityName(x2.authority))}</h2></div><span>${x2.adjacent ? L5("\u0421\u043C\u0435\u0436\u043D\u044B\u0439 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0441\u0435\u043A\u0442\u043E\u0440\u0430", "Other public-sector employer") : L5("\u041E\u0440\u0433\u0430\u043D \u0432\u043B\u0430\u0441\u0442\u0438", "Government body")} \xB7 ${L5("\u043C\u0435\u0441\u0442\u043E", "rank")} ${x2.rank} / ${x2.categorySize}</span></div><div class="dl-index"><strong>${F2(x2.item.score)}</strong><span>${L5("\u0438\u0437 100 \xB7 \u043D\u0435 \u043F\u0440\u043E\u0446\u0435\u043D\u0442", "out of 100 \xB7 not a percentage")}</span></div></header>
     <p class="dl-track">${L5("\u0411\u043B\u0438\u0436\u0430\u0439\u0448\u0438\u0439 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0439 \u0442\u0440\u0435\u043A", "Closest career track")}: <strong>${T(x2.item.track?.title)}</strong></p>
     ${x2.roleProfile.flat ? `<div class="dl-notice">${L5("\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442\u044B \u043E\u0446\u0435\u043D\u0435\u043D\u044B \u0441\u0445\u043E\u0434\u043D\u043E. \u0412\u043B\u0438\u044F\u043D\u0438\u0435 \u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u043F\u043B\u0430\u0432\u043D\u043E \u043E\u0441\u043B\u0430\u0431\u043B\u0435\u043D\u043E. \u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0442\u0440\u0435\u043A\u0430 \u043D\u0435 \u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442 \u0432\u044B\u0440\u0430\u0436\u0435\u043D\u043D\u043E\u0433\u043E \u043F\u0440\u0435\u0434\u043F\u043E\u0447\u0442\u0435\u043D\u0438\u044F.", "Work interests are similar across scales. The relative profile has a smoothly reduced influence. A track listed first is not evidence of a strong preference.")}</div>` : ""}
     ${x2.lowInterest ? `<div class="dl-notice">${L5("\u0418\u043D\u0442\u0435\u0440\u0435\u0441 \u043A\u043E \u0432\u0441\u0435\u043C \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u043D\u0435\u0432\u044B\u0441\u043E\u043A. \u041D\u0430\u0437\u0432\u0430\u043D\u0438\u044F \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0437\u0434\u0435\u0441\u044C \u0441\u043B\u0443\u0436\u0430\u0442 \u043F\u043E\u0432\u043E\u0434\u043E\u043C \u0434\u043B\u044F \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430, \u0430 \u043D\u0435 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u0435\u043C \u043C\u043E\u0442\u0438\u0432\u0430\u0446\u0438\u0438 \u043A \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u0441\u043B\u0443\u0436\u0431\u0435.", "Interest in all work areas is low. Agency names are starting points for exploration, not evidence of motivation for public service.")}</div>` : ""}
@@ -10324,7 +11244,7 @@ var CareerRuntime = (() => {
     function topList(items, comparison = false) {
       return `<ol class="dl-top-list">${items.slice(0, 5).map((a) => {
         const delta = preview.rows.find((r) => r.id === a.id);
-        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E6(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L5("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L5("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L5("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L5("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
+        return `<li><span class="dl-position">${a.rank}</span><div><strong>${E7(authorityName(a))}</strong><small>${T(a.track?.title)}</small>${comparison ? `<span class="dl-delta">${L5("\u0418\u043D\u0434\u0435\u043A\u0441", "Index")} ${D(delta.scoreDelta)} \xB7 ${delta.rankDelta === 0 ? L5("\u043C\u0435\u0441\u0442\u043E \u043F\u0440\u0435\u0436\u043D\u0435\u0435", "same rank") : delta.rankDelta > 0 ? L5("\u0432\u044B\u0448\u0435 \u043D\u0430 ", "up ") + delta.rankDelta : L5("\u043D\u0438\u0436\u0435 \u043D\u0430 ", "down ") + Math.abs(delta.rankDelta)}</span>` : ""}</div><b>${F2(a.score)}</b></li>`;
       }).join("")}</ol>`;
     }
     function experiment() {
@@ -10334,7 +11254,7 @@ var CareerRuntime = (() => {
     <div class="dl-experiment-grid"><aside class="dl-controls"><h2>${L5("\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u043C?", "What shall we change?")}</h2><label for="dl-sector">${L5("\u041F\u0435\u0440\u0432\u043E\u0435 \u043C\u0435\u0441\u0442\u043E \u0441\u0440\u0435\u0434\u0438 \u0441\u0444\u0435\u0440", "First-priority policy area")}</label><select id="dl-sector">${data2.sectors.map((s) => `<option value="${s.id}" ${draft.prioritySectors[0] === s.id ? "selected" : ""} ${draft.lowPrioritySectors.includes(s.id) ? "disabled" : ""}>${T(s.title)}${draft.lowPrioritySectors.includes(s.id) ? " \xB7 " + L5("\u0432 \u043D\u0430\u0438\u043C\u0435\u043D\u0435\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0445", "among least interesting") : ""}</option>`).join("")}</select><p class="dl-help">${L5("\u0421\u0444\u0435\u0440\u0430 \u0438\u0437 \u043F\u0435\u0440\u0432\u043E\u0439 \u0447\u0435\u0442\u0432\u0451\u0440\u043A\u0438 \u043C\u0435\u043D\u044F\u0435\u0442\u0441\u044F \u043C\u0435\u0441\u0442\u0430\u043C\u0438 \u0441 \u043F\u0435\u0440\u0432\u043E\u0439. \u041D\u043E\u0432\u0430\u044F \u0441\u0444\u0435\u0440\u0430 \u0437\u0430\u043C\u0435\u043D\u044F\u0435\u0442 \u043F\u0435\u0440\u0432\u0443\u044E; \u043F\u0440\u0435\u0436\u043D\u044F\u044F \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u043D\u0435\u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439. \u041E\u0442\u0432\u0435\u0440\u0433\u043D\u0443\u0442\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u044B.", "An area already in your top four swaps places with the first. A new area replaces the first; the former first becomes unselected. Least-interest areas cannot be promoted here.")}</p>
     <h3>${L5("\u0413\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C \u043A \u0443\u0441\u043B\u043E\u0432\u0438\u044F\u043C \u0440\u0430\u0431\u043E\u0442\u044B", "Willingness to accept working conditions")}</h3>${data2.conditions.map((c) => `<label class="dl-condition" for="dl-${c.id}"><span>${T(c.title)}</span><select id="dl-${c.id}" data-dl-condition="${c.id}">${[1, 2, 3, 4, 5].map((v) => `<option value="${v}" ${draft.conditions[c.id] === v ? "selected" : ""}>${v} / 5</option>`).join("")}</select></label>`).join("")}
     <p class="dl-help">${L5("1 \u2013 \u043D\u0438\u0437\u043A\u0430\u044F \u0433\u043E\u0442\u043E\u0432\u043D\u043E\u0441\u0442\u044C; 5 \u2013 \u0432\u044B\u0441\u043E\u043A\u0430\u044F. \u041E\u0446\u0435\u043D\u043A\u0438 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u0430 \u043A \u0432\u0438\u0434\u0430\u043C \u0440\u0430\u0431\u043E\u0442\u044B \u0437\u0434\u0435\u0441\u044C \u043D\u0435 \u043C\u0435\u043D\u044F\u044E\u0442\u0441\u044F.", "1 means low willingness; 5 means high willingness. Work-interest answers are not changed here.")}</p><button type="button" id="dl-reset" class="button button-secondary" ${changed ? "" : "disabled"}>${I3("reset")}${L5("\u0412\u0435\u0440\u043D\u0443\u0442\u044C \u0438\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Reset to original")}</button>
-    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E6(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I3("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
+    <form id="dl-save-form" class="dl-save"><label for="dl-title">${L5("\u041D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u043D\u043E\u0432\u043E\u0433\u043E \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u044F", "New scenario name")}</label><input id="dl-title" maxlength="60" value="${E7(title)}" placeholder="${L5("\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440: \u0431\u043E\u043B\u044C\u0448\u0435 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0439 \u0440\u0430\u0431\u043E\u0442\u044B", "For example: more field work")}"><button type="submit" class="button button-primary" ${changed ? "" : "disabled"}>${I3("file")}${L5("\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u043A\u0430\u043A \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439", "Save as a scenario")}</button></form></aside>
     <div class="dl-preview"><div class="dl-preview-summary" role="status"><h2>${L5("\u0414\u0432\u0435 \u0432\u0435\u0440\u0441\u0438\u0438 \u0440\u044F\u0434\u043E\u043C", "Two versions side by side")}</h2><p>${L5("\u041E\u0431\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432 \u0432 \u043F\u0435\u0440\u0432\u044B\u0445 \u043F\u044F\u0442\u0451\u0440\u043A\u0430\u0445", "Agencies shared by the top fives")}: <b>${preview.overlap} / 5</b> \xB7 ${L5("\u0438\u0437\u043C\u0435\u043D\u0435\u043D\u043E \u0443\u0441\u043B\u043E\u0432\u0438\u0439", "conditions changed")}: <b>${preview.changes.conditions.length}</b></p></div>
     <div class="dl-pair"><article><h3>${L5("\u0418\u0441\u0445\u043E\u0434\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "Original result")}</h3><div class="dl-priorities">${baseline.prioritySectors.map((id, i2) => `<span>${i2 + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.left)}</article><article class="dl-modified"><h3>${L5("\u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442\u0430\u043B\u044C\u043D\u044B\u0439 \u0432\u0430\u0440\u0438\u0430\u043D\u0442", "Experimental variant")}</h3><div class="dl-priorities">${draft.prioritySectors.map((id, i2) => `<span>${i2 + 1}. ${T(sname(id))}</span>`).join("")}</div>${topList(preview.right, true)}</article></div>
     <p class="dl-help">${L5("\u041F\u043E\u043A\u0430\u0437\u0430\u043D\u043E \u0441\u043B\u0435\u0434\u0441\u0442\u0432\u0438\u0435 \u0432\u0432\u0435\u0434\u0451\u043D\u043D\u044B\u0445 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u0439 \u0432 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438. \u042D\u0442\u043E \u043D\u0435 \u0441\u043E\u0432\u0435\u0442 \u043F\u043E\u0434\u0431\u0438\u0440\u0430\u0442\u044C \u043E\u0442\u0432\u0435\u0442\u044B \u043F\u043E\u0434 \u0436\u0435\u043B\u0430\u0435\u043C\u043E\u0435 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E. \u0427\u0442\u043E\u0431\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u044B \u043F\u043E \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443, \u0432\u0435\u0440\u043D\u0438\u0442\u0435\u0441\u044C \u043A \u0430\u043D\u043A\u0435\u0442\u0435 \u0438\u043B\u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u0435 \u043D\u043E\u0432\u044B\u0439 \u0441\u0430\u043C\u043E\u0441\u0442\u043E\u044F\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0439.", "These are the model\u2019s consequences of your changes, not an invitation to tailor answers to a target agency. To reconsider your actual interests, return to the questionnaire or save a separate scenario.")}</p></div></div>`;
@@ -10349,7 +11269,7 @@ var CareerRuntime = (() => {
       root.innerHTML = `<div data-no-i18n><header class="section-heading"><div><h1>${L5("\u041B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044F \u0432\u044B\u0431\u043E\u0440\u0430", "Choice laboratory")}</h1><p>${L5("\u0420\u0430\u0437\u0431\u0435\u0440\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044E \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u043D\u0435 \u043F\u0435\u0440\u0435\u043F\u0438\u0441\u044B\u0432\u0430\u044F \u0441\u0432\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Understand a recommendation and explore variants without changing your result.")}</p></div><button type="button" class="button button-secondary" id="dl-back">${I3("arrow-left")}${L5("\u041C\u043E\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442", "My result")}</button></header>
     ${stale ? `<p class="dl-notice">${L5("\u041E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438\u0437\u043C\u0435\u043D\u0438\u043B\u0438\u0441\u044C. \u042D\u043A\u0441\u043F\u0435\u0440\u0438\u043C\u0435\u043D\u0442 \u043D\u0430\u0447\u0430\u0442 \u0437\u0430\u043D\u043E\u0432\u043E \u043E\u0442 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.", "Your main answers changed. The experiment has been reset to the current result.")}</p>` : ""}
     <div class="dl-tabs" role="tablist" aria-label="${L5("\u0420\u0430\u0437\u0434\u0435\u043B \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u0438", "Laboratory section")}">${[["explain", "\u041F\u043E\u0447\u0435\u043C\u0443 \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D?", "Why this agency?"], ["experiment", "\u0427\u0442\u043E \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0441\u044F, \u0435\u0441\u043B\u0438\u2026", "What changes if\u2026"]].map(([id, ru, en]) => `<button type="button" role="tab" id="dl-tab-${id}" aria-controls="dl-content" aria-selected="${mode === id}" tabindex="${mode === id ? 0 : -1}" data-dl-mode="${id}">${L5(ru, en)}</button>`).join("")}</div>
-    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E6(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L5("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
+    ${mode === "explain" ? `<div class="dl-select"><label for="dl-authority">${L5("\u041E\u0440\u0433\u0430\u043D \u0434\u043B\u044F \u0440\u0430\u0437\u0431\u043E\u0440\u0430", "Agency to explain")}</label><select id="dl-authority">${data2.authorities.map((a) => `<option value="${a.id}" ${selected === a.id ? "selected" : ""}>${E7(authorityName(a))}${["fund", "corporation"].includes(a.entityType) ? " \xB7 " + L5("\u043F\u0443\u0431\u043B\u0438\u0447\u043D\u044B\u0439 \u0441\u0435\u043A\u0442\u043E\u0440", "public sector") : ""}</option>`).join("")}</select></div>` : ""}
     <div id="dl-content" role="tabpanel" aria-labelledby="dl-tab-${mode}">${mode === "explain" ? explain() : experiment()}</div></div>`;
       bind();
     }
@@ -10557,7 +11477,7 @@ var CareerRuntime = (() => {
   }
 
   // site/apps/career/assets/classroom.mjs
-  var E7 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  var E8 = (value = "") => String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
   var L6 = (ru, en) => getLanguage() === "en" ? en : translate(ru);
   var B2 = (v) => v?.[getLanguage()] || translate(v?.ru || "");
   var name = authorityName;
@@ -10599,19 +11519,19 @@ var CareerRuntime = (() => {
       routeTo2("workshop");
     }
     function source(c) {
-      return `<div class="ws-source"><b>${L6("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E7(B2(c.fact))}</p><a href="${E7(c.source.url)}" target="_blank" rel="noopener noreferrer">${E7(B2(c.source.title))}${ico("external")}</a><small>${L6("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
+      return `<div class="ws-source"><b>${L6("\u0427\u0442\u043E \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u043E \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A\u043E\u043C", "What the source supports")}</b><p>${E8(B2(c.fact))}</p><a href="${E8(c.source.url)}" target="_blank" rel="noopener noreferrer">${E8(B2(c.source.title))}${ico("external")}</a><small>${L6("\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0441\u0432\u0435\u0440\u0435\u043D\u043E", "Content reviewed")}: 05.09.2026 \xB7 ${L6("\u0418\u0441\u0442\u043E\u0447\u043D\u0438\u043A \u043D\u0430 \u0440\u0443\u0441\u0441\u043A\u043E\u043C \u044F\u0437\u044B\u043A\u0435", "Russian-language source")}</small></div>`;
     }
     function card(c) {
       const a = agency(c.authorityId);
-      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E7(name(a))}</small><h2>${E7(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
+      return `<button type="button" class="ws-case-card" data-case="${c.id}"><span class="ws-case-icon">${ico(c.trackId === "DIGITAL" ? "test" : c.trackId === "LEGAL" ? "source" : "landmark")}</span><small>${E8(name(a))}</small><h2>${E8(B2(c.title))}</h2><span class="ws-case-link">${book.responses[c.id] ? L6("\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0440\u0430\u0437\u0431\u043E\u0440\u0443", "Revisit the discussion") : L6("\u041F\u043E\u043F\u0440\u043E\u0431\u043E\u0432\u0430\u0442\u044C \u0437\u0430\u0434\u0430\u0447\u0443", "Try this task")}${ico("arrow-right")}</span></button>`;
     }
     function materials(c) {
-      return c.materials ? `<section class="ws-materials"><h3>${E7(B2(c.materials.title))}</h3><p>${E7(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E7(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i2) => i2 ? `<td>${E7(B2(v))}</td>` : `<th>${E7(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
+      return c.materials ? `<section class="ws-materials"><h3>${E8(B2(c.materials.title))}</h3><p>${E8(B2(c.materials.note))}</p><div class="dl-table-wrap" tabindex="0"><table><thead><tr>${c.materials.headers.map((h) => `<th>${E8(B2(h))}</th>`).join("")}</tr></thead><tbody>${c.materials.rows.map((row) => `<tr>${row.map((v, i2) => i2 ? `<td>${E8(B2(v))}</td>` : `<th>${E8(B2(v))}</th>`).join("")}</tr>`).join("")}</tbody></table></div></section>` : "";
     }
     function renderCases() {
-      if (!activeCase) return `<p class="ws-intro">${E7(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
+      if (!activeCase) return `<p class="ws-intro">${E8(B2(data2.agencyStudies.disclaimer))}</p><div class="ws-library">${cases.map(card).join("")}</div><p class="small-note">${L6("\u0414\u0432\u0435\u043D\u0430\u0434\u0446\u0430\u0442\u044C \u0440\u0430\u0437\u0431\u043E\u0440\u043E\u0432 \u2013 \u0443\u0447\u0435\u0431\u043D\u0430\u044F \u0431\u0438\u0431\u043B\u0438\u043E\u0442\u0435\u043A\u0430, \u0430 \u043D\u0435 \u043D\u043E\u0432\u0430\u044F \u043F\u043E\u0434\u0431\u043E\u0440\u043A\u0430 \u043F\u043E\u0434\u0445\u043E\u0434\u044F\u0449\u0438\u0445 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.", "These twelve cases form a teaching library, not a new career ranking.")}</p>`;
       const c = cases.find((c2) => c2.id === activeCase), selected = book.responses[c.id], choice = c.choices.find((x2) => x2.id === selected), a = agency(c.authorityId);
-      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E7(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E7(B2(c.title))}</h2><p class="ws-situation">${E7(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x2, i2) => `<button class="ws-option${selected === x2.id ? " chosen" : ""}" type="button" data-choice="${x2.id}" aria-pressed="${selected === x2.id}"><span>${i2 + 1}</span><p>${E7(B2(x2.text))}</p>${selected === x2.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E7(B2(choice.feedback))}</p><p>${E7(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E7(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
+      return `<div class="ws-case-layout"><aside class="ws-case-sidebar"><button class="text-link" type="button" id="case-back">${ico("arrow-left")}${L6("\u0412\u0441\u0435 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u0440\u043E\u0431\u044B", "All professional tasks")}</button><h2>${E8(name(a))}</h2><p>${L6("\u041C\u043E\u0434\u0435\u043B\u044C \u0440\u0430\u0431\u043E\u0447\u0435\u0439 \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u0438. \u041D\u0435 \u044D\u043A\u0437\u0430\u043C\u0435\u043D \u0438 \u043D\u0435 \u043E\u0446\u0435\u043D\u043A\u0430 \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u043E\u0439 \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438.", "A model work situation, not an exam or an assessment of professional suitability.")}</p><button class="button button-secondary" type="button" data-dossier="${a.id}">${L6("\u041A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0435 \u0434\u043E\u0441\u044C\u0435", "Career dossier")}${ico("external")}</button>${source(c)}</aside><article class="ws-decision"><span class="ws-step">${L6("\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u0430\u044F \u043F\u0440\u043E\u0431\u0430", "Professional task")}</span><h2>${E8(B2(c.title))}</h2><p class="ws-situation">${E8(B2(c.situation))}</p>${materials(c)}<h3>${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "Choose the first step")}</h3><div class="ws-options">${c.choices.map((x2, i2) => `<button class="ws-option${selected === x2.id ? " chosen" : ""}" type="button" data-choice="${x2.id}" aria-pressed="${selected === x2.id}"><span>${i2 + 1}</span><p>${E8(B2(x2.text))}</p>${selected === x2.id ? ico("check") : ""}</button>`).join("")}</div>${choice ? `<section class="ws-feedback" role="status" tabindex="-1" id="case-feedback"><h3>${choice.recommended ? L6("\u041E\u0431\u043E\u0441\u043D\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043F\u0435\u0440\u0432\u044B\u0439 \u0448\u0430\u0433", "A well-grounded first step") : L6("\u0427\u0442\u043E \u0432\u0430\u0436\u043D\u043E \u0443\u0447\u0435\u0441\u0442\u044C", "What to consider")}</h3><p>${E8(B2(choice.feedback))}</p><p>${E8(B2(c.insight))}</p><div class="ws-task"><b>${L6("\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0437\u0430 3\u20135 \u043C\u0438\u043D\u0443\u0442", "Try this in 3\u20135 minutes")}</b><p>${E8(B2(c.task))}</p></div><button type="button" class="button button-primary" id="case-to-note">${L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440", "Reflect on my career choice")}${ico("arrow-right")}</button></section>` : `<p class="small-note">${L6("\u041B\u044E\u0431\u043E\u0439 \u043E\u0442\u0432\u0435\u0442 \u043E\u0442\u043A\u0440\u044B\u0432\u0430\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0440\u0430\u0437\u0431\u043E\u0440. \u041F\u0440\u043E\u0444\u043E\u0440\u0438\u0435\u043D\u0442\u0430\u0446\u0438\u043E\u043D\u043D\u044B\u0435 \u0431\u0430\u043B\u043B\u044B \u043D\u0435 \u0438\u0437\u043C\u0435\u043D\u044F\u0442\u0441\u044F.", "Every answer opens an explanation. Your career scores will not change.")}</p>`}</article></div>`;
     }
     function renderNotes() {
       if (!book.selected) {
@@ -10620,10 +11540,10 @@ var CareerRuntime = (() => {
       }
       const a = agency(book.selected), n = a ? book.notes[a.id] || blankNote() : blankNote();
       const fields = [["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u043C\u043D\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E \u044D\u0442\u043E \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435?", "Why does this direction interest me?", "\u0421\u0432\u044F\u0436\u0438\u0442\u0435 \u0438\u043D\u0442\u0435\u0440\u0435\u0441 \u0441 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0439 \u0437\u0430\u0434\u0430\u0447\u0435\u0439, \u0430 \u043D\u0435 \u0441 \u043F\u0440\u0435\u0441\u0442\u0438\u0436\u0435\u043C \u043E\u0440\u0433\u0430\u043D\u0430.", "Connect your interest to a specific task rather than the agency\u2019s prestige."], ["question", "\u0427\u0442\u043E \u043C\u043D\u0435 \u0435\u0449\u0451 \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C?", "What do I still need to find out?", "\u041D\u0430\u043F\u0440\u0438\u043C\u0435\u0440, \u0442\u0440\u0435\u0431\u043E\u0432\u0430\u043D\u0438\u044F \u043A \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043A\u0435, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440 \u0440\u0430\u0431\u043E\u0442\u044B \u0438\u043B\u0438 \u0433\u0440\u0430\u043D\u0438\u0446\u044B \u043F\u043E\u043B\u043D\u043E\u043C\u043E\u0447\u0438\u0439.", "For example, education requirements, work activities or limits of responsibility."], ["next", "\u041A\u0430\u043A\u043E\u0439 \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433 \u044F \u0441\u0434\u0435\u043B\u0430\u044E?", "What will I do next?", "\u0423\u043A\u0430\u0436\u0438\u0442\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435 \u0438 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442: \u043D\u0430\u0439\u0442\u0438 \u043A\u0430\u0434\u0440\u043E\u0432\u0443\u044E \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0443, \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u044C \u0434\u0432\u0430 \u043E\u0440\u0433\u0430\u043D\u0430, \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u0438\u0442\u044C \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0440\u0430\u0431\u043E\u0442\u0443.", "State an action and its output: find an official careers page, compare two agencies, prepare a student project."]];
-      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x2) => `<option value="${x2.id}"${a?.id === x2.id ? " selected" : ""}>${E7(name(x2))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E7(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E7(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
+      return `<div class="ws-notebook-layout"><section class="ws-notebook"><label class="ws-select-label" for="workbook-authority">${L6("\u041E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0434\u043B\u044F \u0438\u0437\u0443\u0447\u0435\u043D\u0438\u044F", "Authority or public-sector employer to explore")}</label><select id="workbook-authority"><option value="">${L6("\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u0438\u0437 \u0441\u043F\u0440\u0430\u0432\u043E\u0447\u043D\u0438\u043A\u0430", "Choose from the directory")}</option>${data2.authorities.map((x2) => `<option value="${x2.id}"${a?.id === x2.id ? " selected" : ""}>${E8(name(x2))}</option>`).join("")}</select>${a ? `<div class="ws-agency-line"><span>${E8(translate(a.entityTypeLabel))}</span><button class="text-link" type="button" data-dossier="${a.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0434\u043E\u0441\u044C\u0435", "Open dossier")}${ico("external")}</button></div><label class="ws-select-label" for="workbook-known">${L6("\u0414\u043E \u0437\u0430\u043D\u044F\u0442\u0438\u044F \u044F \u0437\u043D\u0430\u043B(\u0430), \u0447\u0435\u043C \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0441\u044F \u044D\u0442\u043E\u0442 \u043E\u0440\u0433\u0430\u043D", "Before class, I knew what this agency does")}</label><select id="workbook-known"><option value="unknown"${n.known === "unknown" ? " selected" : ""}>${L6("\u041F\u043E\u043A\u0430 \u043D\u0435 \u043C\u043E\u0433\u0443 \u043E\u0446\u0435\u043D\u0438\u0442\u044C", "Not sure")}</option><option value="no"${n.known === "no" ? " selected" : ""}>${L6("\u041D\u0435\u0442, \u044D\u0442\u043E \u043D\u043E\u0432\u043E\u0435 \u0434\u043B\u044F \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435", "No, this is new to me")}</option><option value="yes"${n.known === "yes" ? " selected" : ""}>${L6("\u0414\u0430, \u0431\u044B\u043B(\u0430) \u0437\u043D\u0430\u043A\u043E\u043C(\u0430)", "Yes, I was familiar with it")}</option></select>${fields.map(([id, ru, en, hru, hen]) => `<label class="ws-field" for="note-${id}"><strong>${L6(ru, en)}</strong><span>${L6(hru, hen)}</span><textarea data-no-i18n id="note-${id}" data-note="${id}" rows="3" maxlength="${TEXT_LIMIT}" placeholder="${L6("\u0412\u0430\u0448 \u0442\u0435\u043A\u0441\u0442\u2026", "Your notes\u2026")}">${E8(n[id])}</textarea><small id="count-${id}">${n[id].length} / ${TEXT_LIMIT}</small></label>`).join("")}` : `<p class="ws-empty">${L6("\u041C\u043E\u0436\u043D\u043E \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u043B\u044E\u0431\u043E\u0439 \u043E\u0431\u044A\u0435\u043A\u0442 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u043E\u0433\u043E \u0440\u0435\u0435\u0441\u0442\u0440\u0430. \u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0442\u0435\u0441\u0442\u0430 \u043D\u0435 \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u0435\u043D.", "Choose any institution in the available directory. You do not need to complete the test first.")}</p>`}</section><aside class="ws-notebook-side"><h2>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h2><p>${L6("\u0417\u0430\u0444\u0438\u043A\u0441\u0438\u0440\u0443\u0439\u0442\u0435 \u0432\u044B\u0432\u043E\u0434 \u043F\u043E\u0441\u043B\u0435 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0432\u0435\u0434\u043E\u043C\u0441\u0442\u0432\u043E\u043C. \u042D\u0442\u043E \u0412\u0430\u0448\u0430 \u0440\u0435\u0444\u043B\u0435\u043A\u0441\u0438\u044F, \u0430 \u043D\u0435 \u0430\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438 \u043D\u0430\u043F\u0438\u0441\u0430\u043D\u043D\u0430\u044F \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F.", "Record your conclusion after exploring an agency. This is your own reflection, not an automatically written recommendation.")}</p><div class="ws-note-progress"><b id="note-progress">${noteProgress(n)} / 3</b><span>${L6("\u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "sections completed")}</span></div><p class="small-note">${L6("\u0418\u043C\u0435\u043D\u0430, \u043D\u043E\u043C\u0435\u0440\u0430 \u0441\u0442\u0443\u0434\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0445 \u0431\u0438\u043B\u0435\u0442\u043E\u0432 \u0438 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u044B \u043D\u0435 \u043D\u0443\u0436\u043D\u044B. \u0421\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442 \u043C\u043E\u0436\u0435\u0442 \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u0441\u0432\u0435\u0434\u0435\u043D\u0438\u044F: \u043F\u0440\u043E\u0432\u0435\u0440\u044C\u0442\u0435 \u0435\u0433\u043E \u043F\u0435\u0440\u0435\u0434 \u043F\u0435\u0440\u0435\u0434\u0430\u0447\u0435\u0439 \u0444\u0430\u0439\u043B\u0430.", "Names, student IDs and contact details are not needed. Free text can still contain personal information: review it before sharing.")}</p><button type="button" id="workbook-print" class="button button-primary"${!a ? " disabled" : ""}>${ico("print")}${L6("\u041F\u0435\u0447\u0430\u0442\u044C \u043B\u0438\u0441\u0442\u0430", "Print worksheet")}</button><button type="button" id="workbook-export" class="button button-secondary">${ico("download")}${L6("\u0421\u043A\u0430\u0447\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438 JSON", "Export all notes as JSON")}</button><label class="button button-secondary file-button">${ico("upload")}${L6("\u0412\u043E\u0441\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u044C JSON", "Restore JSON")}<input id="workbook-import" type="file" accept=".json,application/json"></label><button type="button" class="button button-ghost" id="workbook-clear">${ico("trash")}${L6("\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043F\u0438\u0441\u0438", "Clear all notes")}</button><p class="small-note">${L6("\u042D\u0442\u043E\u0442 \u0444\u0430\u0439\u043B \u043D\u0435 \u043F\u0440\u0435\u0434\u043D\u0430\u0437\u043D\u0430\u0447\u0435\u043D \u0434\u043B\u044F \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u0447\u0435\u0441\u043A\u043E\u0439 \u043F\u0430\u043D\u0435\u043B\u0438 \u0433\u0440\u0443\u043F\u043F\u044B. \u0414\u043B\u044F \u043D\u0435\u0451 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430.", "This file is not for the class statistics dashboard. Use the separate test-result export for that.")}</p></aside></div>`;
     }
     function renderPlan() {
-      return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E7(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
+      return `<div class="ws-plan-heading"><p>${L6("\u0413\u043E\u0442\u043E\u0432\u0430\u044F \u0441\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0437\u0430\u043D\u044F\u0442\u0438\u044F: \u043E\u0442 \u0437\u043D\u0430\u043A\u043E\u043C\u0441\u0442\u0432\u0430 \u0441 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u043E\u043C \u0434\u043E \u043B\u0438\u0447\u043D\u043E\u0433\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u044F. \u0412\u0440\u0435\u043C\u044F \u043C\u043E\u0436\u043D\u043E \u0440\u0430\u0441\u043F\u0440\u0435\u0434\u0435\u043B\u0438\u0442\u044C \u0438\u043D\u0430\u0447\u0435; \u044D\u0442\u043E \u043D\u0435 \u043E\u0433\u0440\u0430\u043D\u0438\u0447\u0435\u043D\u0438\u0435 \u043F\u043B\u0430\u0442\u0444\u043E\u0440\u043C\u044B.", "A ready-to-use lesson structure: from initial results to an individual decision. The timing is a suggestion, not a platform limit.")}</p><div class="ws-duration" role="group" aria-label="${L6("\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C", "Duration")}">${[45, 90].map((n) => `<button type="button" data-duration="${n}" aria-pressed="${book.duration === n}">${n} ${L6("\u043C\u0438\u043D\u0443\u0442", "minutes")}</button>`).join("")}</div></div><ol class="ws-plan">${lessonPlan(book.duration).map((s) => `<li><span>${s.start}\u2013${s.end} ${L6("\u043C\u0438\u043D", "min")}</span><div><h2>${E8(B2(s.title))}</h2><p>${planDescription(s.id)}</p></div><button class="button button-secondary" type="button" data-plan="${s.id}">${L6("\u041E\u0442\u043A\u0440\u044B\u0442\u044C", "Open")}${ico("arrow-right")}</button></li>`).join("")}</ol><div class="ws-plan-note">${L6("\u041D\u0435 \u043E\u0446\u0435\u043D\u0438\u0432\u0430\u0439\u0442\u0435 \xAB\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E\u0441\u0442\u044C\xBB \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432. \u041E\u0431\u0441\u0443\u0436\u0434\u0430\u0439\u0442\u0435 \u0430\u0440\u0433\u0443\u043C\u0435\u043D\u0442\u0430\u0446\u0438\u044E, \u043F\u043E\u043D\u0438\u043C\u0430\u043D\u0438\u0435 \u0444\u0443\u043D\u043A\u0446\u0438\u0439 \u043E\u0440\u0433\u0430\u043D\u0430 \u0438 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u043E \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0433\u043E \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0433\u043E \u0448\u0430\u0433\u0430. \u041F\u0435\u0440\u0435\u0434 \u0441\u0431\u043E\u0440\u043E\u043C \u0444\u0430\u0439\u043B\u043E\u0432 \u043F\u043E\u043F\u0440\u043E\u0441\u0438\u0442\u0435 \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u043E\u0432 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043E\u0434\u0438\u043D \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u044B\u0439 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.", "Do not grade professional interests as right or wrong. Discuss reasoning, understanding of the agency and the next step. Ask students to export one current result before collecting files.")}</div>`;
     }
     function planDescription(id) {
       return { intro: L6("\u041F\u043E\u044F\u0441\u043D\u0438\u0442\u0435 \u0446\u0435\u043B\u044C: \u0443\u0437\u043D\u0430\u0442\u044C \u043E\u0440\u0433\u0430\u043D\u044B \u0438 \u0440\u0430\u0441\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u044B\u0435 \u0432\u0430\u0440\u0438\u0430\u043D\u0442\u044B, \u0430 \u043D\u0435 \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u044F\u0445.", "Explain the aim: discover agencies and career possibilities, not receive an assessment of ability."), test: L6("\u0421\u0442\u0443\u0434\u0435\u043D\u0442\u044B \u043F\u0440\u043E\u0445\u043E\u0434\u044F\u0442 \u0442\u0440\u0438 \u0431\u043B\u043E\u043A\u0430 \u0442\u0435\u0441\u0442\u0430; \u043A\u0430\u0436\u0434\u044B\u0439 \u0441\u043E\u0445\u0440\u0430\u043D\u044F\u0435\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u0434\u043B\u044F \u0441\u0435\u0431\u044F.", "Students complete the three test blocks and save their own result."), explore: L6("\u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u043B\u0430\u0431\u043E\u0440\u0430\u0442\u043E\u0440\u0438\u044E \u0432\u044B\u0431\u043E\u0440\u0430. \u041E\u0431\u044A\u044F\u0441\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0432\u043A\u043B\u0430\u0434\u0430 \u0432 \u0438\u043D\u0434\u0435\u043A\u0441, \u0438\u0437\u043C\u0435\u043D\u0438\u0442\u0435 \u043E\u0434\u043D\u0443 \u0441\u0444\u0435\u0440\u0443 \u0432 \u043A\u043E\u043F\u0438\u0438 \u0438 \u0441\u0440\u0430\u0432\u043D\u0438\u0442\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u0438. \u0417\u0430\u0442\u0435\u043C \u043D\u0430\u0439\u0434\u0438\u0442\u0435 \u043E\u0440\u0433\u0430\u043D \u0432 \u0441\u0438\u0441\u0442\u0435\u043C\u0435 \u0432\u043B\u0430\u0441\u0442\u0438.", "Open the choice laboratory. Explain the three index contributions, change one policy area in a copy and compare recommendations. Then locate the agency in the government structure."), case: L6("\u041A\u0430\u0436\u0434\u044B\u0439 \u0432\u044B\u0431\u0438\u0440\u0430\u0435\u0442 \u043E\u0434\u043D\u0443 \u0443\u0447\u0435\u0431\u043D\u0443\u044E \u0441\u0438\u0442\u0443\u0430\u0446\u0438\u044E. \u041F\u043E\u0441\u043B\u0435 \u043E\u0442\u0432\u0435\u0442\u0430 \u043F\u0440\u043E\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u043E\u0431\u044A\u044F\u0441\u043D\u0435\u043D\u0438\u0435 \u0438 \u043E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u044B\u0439 \u0438\u0441\u0442\u043E\u0447\u043D\u0438\u043A.", "Choose one case. After responding, read the explanation and official source."), discussion: L6("\u041E\u0431\u0441\u0443\u0434\u0438\u0442\u0435, \u0447\u0442\u043E \u043F\u0440\u0438\u0432\u043B\u0435\u043A\u0430\u0435\u0442 \u0432 \u0437\u0430\u0434\u0430\u0447\u0435 \u0438 \u0447\u0442\u043E \u0442\u0440\u0435\u0431\u0443\u0435\u0442 \u0434\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0433\u043E \u0432\u044B\u044F\u0441\u043D\u0435\u043D\u0438\u044F. \u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0442\u0440\u0438 \u0440\u0430\u0437\u0434\u0435\u043B\u0430 \u043B\u0438\u0441\u0442\u0430.", "Discuss what attracts you to the task and what needs investigation. Complete the three worksheet sections."), finish: L6("\u0421\u0444\u043E\u0440\u043C\u0443\u043B\u0438\u0440\u0443\u0439\u0442\u0435 \u043A\u043E\u043D\u043A\u0440\u0435\u0442\u043D\u043E\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435. \u0414\u043B\u044F \u043E\u0431\u0437\u043E\u0440\u0430 \u0433\u0440\u0443\u043F\u043F\u044B \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0442\u043E\u043B\u044C\u043A\u043E \u043E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u044D\u043A\u0441\u043F\u043E\u0440\u0442 \u0442\u0435\u0441\u0442\u0430, \u0430 \u043D\u0435 \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u0435 \u0437\u0430\u043F\u0438\u0441\u0438.", "Name one concrete action. For the class overview, use the anonymous test export, not free-text notes.") }[id];
@@ -10743,7 +11663,7 @@ var CareerRuntime = (() => {
         target.id = "workbook-print-root";
         document.body.append(target);
       }
-      target.innerHTML = `<h1>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E7(name(a))}</h2><p>${L6("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L6(ru, en)}</h3><p class="ws-print-text">${E7(n[id]) || L6("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L6("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E7(a.governmentUrl)}</p>`;
+      target.innerHTML = `<h1>${L6("\u041B\u0438\u0441\u0442 \u043A\u0430\u0440\u044C\u0435\u0440\u043D\u043E\u0433\u043E \u0432\u044B\u0431\u043E\u0440\u0430", "Career-choice worksheet")}</h1><h2>${E8(name(a))}</h2><p>${L6("\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u0441\u0442\u0443\u0434\u0435\u043D\u0442\u0430. \u041D\u0435 \u0437\u0430\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043E \u043F\u0440\u0438\u0433\u043E\u0434\u043D\u043E\u0441\u0442\u0438 \u0438 \u043D\u0435 \u0440\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0430\u0446\u0438\u044F \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044F.", "Student reflection. Not a suitability assessment or an employer recommendation.")}</p>${[["why", "\u041F\u043E\u0447\u0435\u043C\u0443 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u043E", "Why I am interested"], ["question", "\u0427\u0442\u043E \u043D\u0443\u0436\u043D\u043E \u0432\u044B\u044F\u0441\u043D\u0438\u0442\u044C", "What to find out"], ["next", "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0438\u0439 \u0448\u0430\u0433", "Next step"]].map(([id, ru, en]) => `<h3>${L6(ru, en)}</h3><p class="ws-print-text">${E8(n[id]) || L6("\u041D\u0435 \u0437\u0430\u043F\u043E\u043B\u043D\u0435\u043D\u043E", "Not completed")}</p>`).join("")}<p>${L6("\u041E\u0444\u0438\u0446\u0438\u0430\u043B\u044C\u043D\u0430\u044F \u043A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u043E\u0440\u0433\u0430\u043D\u0430", "Official agency profile")}: ${E8(a.governmentUrl)}</p>`;
       document.body.classList.add("print-workbook");
       window.print();
     }
@@ -10803,51 +11723,51 @@ var CareerRuntime = (() => {
   var plainObject = (value) => !!value && typeof value === "object" && !Array.isArray(value);
   var exactKeys = (value, keys3) => plainObject(value) && Object.keys(value).length === keys3.length && keys3.every((key) => Object.hasOwn(value, key));
   var TRACK_IDS = ["POLICY", "LEGAL", "INSPECT", "PROGRAM", "FINANCE", "DIGITAL", "SERVICE", "TERRITORIAL", "INTERNATIONAL"];
-  function validateAnonymousRecord(record2, registry = validationRegistry) {
+  function validateAnonymousRecord(record3, registry = validationRegistry) {
     const errors = [];
-    if (!record2 || typeof record2 !== "object" || Array.isArray(record2)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
-    if (record2.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
-    const schemaOK = exactKeys(record2, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record2.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record2.roleProfile.raw, SCALE_IDS2) && exactKeys(record2.conditions, CONDITION_IDS3) && Array.isArray(record2.ranking) && record2.ranking.length >= 5 && record2.ranking.length <= 10 && record2.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
+    if (!record3 || typeof record3 !== "object" || Array.isArray(record3)) return { valid: false, errors: ["\u0424\u0430\u0439\u043B \u043D\u0435 \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043E\u0431\u044A\u0435\u043A\u0442 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430."] };
+    if (record3.schemaVersion === 1) return { valid: false, errors: ["\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u043F\u0440\u043E\u0432\u0435\u0440\u0438\u0442\u044C \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442. \u041E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0451\u043D\u043D\u044B\u0435 \u043E\u0442\u0432\u0435\u0442\u044B \u0438 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0439\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043F\u0435\u0440\u0435\u0434 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u0438\u0435\u043C \u0432 \u0433\u0440\u0443\u043F\u043F\u0443."] };
+    const schemaOK = exactKeys(record3, ["schema", "schemaVersion", "modelVersion", "questionnaireVersion", "registryVersion", "focusAreas", "leadingTieIds", "recordId", "createdAt", "roleProfile", "prioritySectors", "lowPrioritySectors", "conditions", "ranking"]) && exactKeys(record3.roleProfile, ["raw", "dispersion", "flat"]) && exactKeys(record3.roleProfile.raw, SCALE_IDS2) && exactKeys(record3.conditions, CONDITION_IDS3) && Array.isArray(record3.ranking) && record3.ranking.length >= 5 && record3.ranking.length <= 10 && record3.ranking.every((item) => exactKeys(item, ["rank", "authorityId", "score", "trackId"]));
     if (!schemaOK) return { valid: false, errors: ["\u0421\u0442\u0440\u0443\u043A\u0442\u0443\u0440\u0430 \u0444\u0430\u0439\u043B\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0437\u0430\u043A\u0440\u044B\u0442\u043E\u0439 \u0441\u0445\u0435\u043C\u0435. \u041F\u043E\u0441\u0442\u043E\u0440\u043E\u043D\u043D\u0438\u0435, \u0432 \u0442\u043E\u043C \u0447\u0438\u0441\u043B\u0435 \u043F\u0435\u0440\u0441\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0435 \u043F\u043E\u043B\u044F, \u043D\u0435 \u0434\u043E\u043F\u0443\u0441\u043A\u0430\u044E\u0442\u0441\u044F."] };
-    if (!Array.isArray(record2.leadingTieIds) || !record2.leadingTieIds.length || record2.leadingTieIds.length > 69 || new Set(record2.leadingTieIds).size !== record2.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
-    if (record2.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
-    if (record2.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
-    if (record2.questionnaireVersion !== QUESTIONNAIRE_VERSION || record2.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
-    if (!validateFocusAreas(record2.focusAreas, record2.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
-    if (record2.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
-    if (typeof record2.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record2.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
-    if (typeof record2.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record2.createdAt) || Number.isNaN(Date.parse(record2.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
-    if (!record2.roleProfile || typeof record2.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
+    if (!Array.isArray(record3.leadingTieIds) || !record3.leadingTieIds.length || record3.leadingTieIds.length > 69 || new Set(record3.leadingTieIds).size !== record3.leadingTieIds.length) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430\u044F \u0433\u0440\u0443\u043F\u043F\u0430 \u0440\u0430\u0432\u043D\u044B\u0445 \u043B\u0438\u0434\u0435\u0440\u043E\u0432.");
+    if (record3.schema !== RECORD_SCHEMA) errors.push("\u041D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0430\u044F \u0441\u0445\u0435\u043C\u0430 \u0444\u0430\u0439\u043B\u0430.");
+    if (record3.schemaVersion !== RECORD_SCHEMA_VERSION) errors.push("\u041D\u0435\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u043C\u0430\u044F \u0432\u0435\u0440\u0441\u0438\u044F \u0441\u0445\u0435\u043C\u044B.");
+    if (record3.questionnaireVersion !== QUESTIONNAIRE_VERSION || record3.registryVersion !== REGISTRY_VERSION) errors.push("\u0412\u0435\u0440\u0441\u0438\u044F \u0430\u043D\u043A\u0435\u0442\u044B \u0438\u043B\u0438 \u0440\u0435\u0435\u0441\u0442\u0440\u0430 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0435\u0439 \u043C\u043E\u0434\u0435\u043B\u0438.");
+    if (!validateFocusAreas(record3.focusAreas, record3.prioritySectors)) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B \u043E\u0442\u0440\u0430\u0441\u043B\u0435\u0432\u044B\u0435 \u0443\u0442\u043E\u0447\u043D\u0435\u043D\u0438\u044F.");
+    if (record3.modelVersion !== MODEL_VERSION) errors.push("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u0442\u0435\u043A\u0443\u0449\u0438\u043C \u043F\u0440\u0430\u0432\u0438\u043B\u0430\u043C \u0440\u0430\u0441\u0447\u0451\u0442\u0430.");
+    if (typeof record3.recordId !== "string" || !/^[\w-]{8,80}$/u.test(record3.recordId)) errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0430\u043D\u043E\u043D\u0438\u043C\u043D\u044B\u0439 \u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440.");
+    if (typeof record3.createdAt !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(record3.createdAt) || Number.isNaN(Date.parse(record3.createdAt))) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0430\u0442\u0430 \u0444\u043E\u0440\u043C\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430.");
+    if (!record3.roleProfile || typeof record3.roleProfile.raw !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u043E\u0444\u0438\u043B\u044C \u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0435\u0441\u043E\u0432.");
     for (const id of SCALE_IDS2) {
-      const value = record2.roleProfile?.raw?.[id];
+      const value = record3.roleProfile?.raw?.[id];
       if (!Number.isFinite(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0448\u043A\u0430\u043B\u044B ${id}.`);
     }
-    const dispersion = record2.roleProfile?.dispersion;
+    const dispersion = record3.roleProfile?.dispersion;
     if (!Number.isFinite(dispersion) || dispersion < 0 || dispersion > 2) errors.push("\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0434\u0438\u0441\u043F\u0435\u0440\u0441\u0438\u044F \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    if (typeof record2.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
-    const values = SCALE_IDS2.map((id) => record2.roleProfile.raw[id]);
+    if (typeof record3.roleProfile?.flat !== "boolean") errors.push("\u041D\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F.");
+    const values = SCALE_IDS2.map((id) => record3.roleProfile.raw[id]);
     if (values.every((v) => typeof v === "number" && Number.isFinite(v))) {
       const mean = values.reduce((a, b) => a + b, 0) / values.length;
       const sd = Math.sqrt(values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length);
-      if (Math.abs(sd - dispersion) > 1e-6 || record2.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
+      if (Math.abs(sd - dispersion) > 1e-6 || record3.roleProfile.flat !== sd < 0.26) errors.push("\u041F\u0440\u0438\u0437\u043D\u0430\u043A \u0448\u0438\u0440\u043E\u043A\u043E\u0433\u043E \u043F\u0440\u043E\u0444\u0438\u043B\u044F \u0438\u043B\u0438 \u0440\u0430\u0437\u0431\u0440\u043E\u0441 \u043D\u0435 \u0441\u043E\u0433\u043B\u0430\u0441\u043E\u0432\u0430\u043D \u0441\u043E \u0448\u043A\u0430\u043B\u0430\u043C\u0438.");
     }
-    if (!Array.isArray(record2.prioritySectors) || record2.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    if (!Array.isArray(record2.lowPrioritySectors) || record2.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
-    const priority = Array.isArray(record2.prioritySectors) ? record2.prioritySectors : [];
-    const low = Array.isArray(record2.lowPrioritySectors) ? record2.lowPrioritySectors : [];
+    if (!Array.isArray(record3.prioritySectors) || record3.prioritySectors.length !== 4) errors.push("\u041D\u0443\u0436\u043D\u043E \u0447\u0435\u0442\u044B\u0440\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    if (!Array.isArray(record3.lowPrioritySectors) || record3.lowPrioritySectors.length !== 2) errors.push("\u041D\u0443\u0436\u043D\u043E \u0434\u0432\u0435 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B.");
+    const priority = Array.isArray(record3.prioritySectors) ? record3.prioritySectors : [];
+    const low = Array.isArray(record3.lowPrioritySectors) ? record3.lowPrioritySectors : [];
     if (new Set(priority).size !== priority.length || new Set(low).size !== low.length) errors.push("\u0421\u0444\u0435\u0440\u044B \u0432\u043D\u0443\u0442\u0440\u0438 \u0441\u043F\u0438\u0441\u043A\u0430 \u043D\u0435 \u0434\u043E\u043B\u0436\u043D\u044B \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0442\u044C\u0441\u044F.");
     if (priority.some((id) => !SECTOR_IDS.includes(id)) || low.some((id) => !SECTOR_IDS.includes(id))) errors.push("\u0424\u0430\u0439\u043B \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u0442 \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u0443\u044E \u0441\u0444\u0435\u0440\u0443 \u0433\u043E\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043D\u043D\u043E\u0439 \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438.");
     if (priority.some((id) => low.includes(id))) errors.push("\u041F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0438 \u043C\u0435\u043D\u0435\u0435 \u043F\u0440\u0438\u043E\u0440\u0438\u0442\u0435\u0442\u043D\u044B\u0435 \u0441\u0444\u0435\u0440\u044B \u043F\u0435\u0440\u0435\u0441\u0435\u043A\u0430\u044E\u0442\u0441\u044F.");
-    if (!record2.conditions || typeof record2.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
+    if (!record3.conditions || typeof record3.conditions !== "object") errors.push("\u041E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u044E\u0442 \u0443\u0441\u043B\u043E\u0432\u0438\u044F \u0442\u0440\u0443\u0434\u0430.");
     for (const id of CONDITION_IDS3) {
-      const value = record2.conditions?.[id];
+      const value = record3.conditions?.[id];
       if (!Number.isInteger(value) || value < 1 || value > 5) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u043E\u0435 \u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435 \u0443\u0441\u043B\u043E\u0432\u0438\u044F ${id}.`);
     }
-    if (!Array.isArray(record2.ranking) || record2.ranking.length < 5 || record2.ranking.length > 10) {
+    if (!Array.isArray(record3.ranking) || record3.ranking.length < 5 || record3.ranking.length > 10) {
       errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u0434\u043E\u043B\u0436\u0435\u043D \u0441\u043E\u0434\u0435\u0440\u0436\u0430\u0442\u044C \u043E\u0442 \u043F\u044F\u0442\u0438 \u0434\u043E \u0434\u0435\u0441\u044F\u0442\u0438 \u043E\u0440\u0433\u0430\u043D\u043E\u0432.");
     } else {
       const authorityIds = /* @__PURE__ */ new Set();
-      record2.ranking.forEach((item, index) => {
+      record3.ranking.forEach((item, index) => {
         if (!item || typeof item !== "object") {
           errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u0430 \u0441\u0442\u0440\u043E\u043A\u0430 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 ${index + 1}.`);
           return;
@@ -10857,7 +11777,7 @@ var CareerRuntime = (() => {
         if (authorityIds.has(item.authorityId)) errors.push("\u041E\u0434\u0438\u043D \u043E\u0440\u0433\u0430\u043D \u043F\u043E\u0432\u0442\u043E\u0440\u044F\u0435\u0442\u0441\u044F \u0432 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435.");
         authorityIds.add(item.authorityId);
         if (typeof item.score !== "number" || !Number.isFinite(item.score) || item.score < 0 || item.score > 100) errors.push(`\u041D\u0435\u043A\u043E\u0440\u0440\u0435\u043A\u0442\u043D\u044B\u0439 \u0438\u043D\u0434\u0435\u043A\u0441 \u0432 \u0441\u0442\u0440\u043E\u043A\u0435 ${index + 1}.`);
-        if (index && item.score > record2.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
+        if (index && item.score > record3.ranking[index - 1].score) errors.push("\u0418\u043D\u0434\u0435\u043A\u0441\u044B \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 \u0440\u0430\u0441\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u044B \u043D\u0435 \u043F\u043E \u0443\u0431\u044B\u0432\u0430\u043D\u0438\u044E.");
         if (Array.isArray(registry?.authorities)) {
           const authority = registry.authorities.find((a) => a.id === item.authorityId);
           if (!authority || ["corporation", "fund"].includes(authority.entityType)) errors.push("\u0412 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0435 \u0443\u043A\u0430\u0437\u0430\u043D \u043D\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043D\u044B\u0439 \u043E\u0440\u0433\u0430\u043D \u0438\u043B\u0438 \u0440\u0430\u0431\u043E\u0442\u043E\u0434\u0430\u0442\u0435\u043B\u044C \u0432\u043D\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0433\u043E \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430.");
@@ -10873,35 +11793,35 @@ var CareerRuntime = (() => {
         authorities: registry.authorities,
         tracks: registry.tracks,
         sectors: registry.sectors,
-        roleProfile: profileFromMeans(record2.roleProfile.raw),
+        roleProfile: profileFromMeans(record3.roleProfile.raw),
         prioritySectors: priority,
         lowPrioritySectors: low,
-        conditions: record2.conditions,
-        focusAreas: record2.focusAreas
+        conditions: record3.conditions,
+        focusAreas: record3.focusAreas
       }).ranked.filter((item) => !["corporation", "fund"].includes(item.entityType));
       const expectedTies = expected.filter((x2) => Math.abs(x2.rawScore - expected[0].rawScore) < 1e-8).map((x2) => x2.id);
-      if (JSON.stringify(expectedTies) !== JSON.stringify(record2.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
-      expected.splice(record2.ranking.length);
-      if (expected.length !== record2.ranking.length || expected.some((item, i2) => item.id !== record2.ranking[i2].authorityId || Math.abs(item.score - record2.ranking[i2].score) > 1e-8 || (item.track?.id || null) !== record2.ranking[i2].trackId)) {
+      if (JSON.stringify(expectedTies) !== JSON.stringify(record3.leadingTieIds)) errors.push("\u0413\u0440\u0443\u043F\u043F\u0430 \u043B\u0438\u0434\u0435\u0440\u043E\u0432 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0443.");
+      expected.splice(record3.ranking.length);
+      if (expected.length !== record3.ranking.length || expected.some((item, i2) => item.id !== record3.ranking[i2].authorityId || Math.abs(item.score - record3.ranking[i2].score) > 1e-8 || (item.track?.id || null) !== record3.ranking[i2].trackId)) {
         errors.push("\u0420\u0435\u0439\u0442\u0438\u043D\u0433 \u043D\u0435 \u0441\u043E\u043E\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u0442 \u043F\u0440\u0438\u043B\u043E\u0436\u0435\u043D\u043D\u044B\u043C \u043E\u0442\u0432\u0435\u0442\u0430\u043C \u0438 \u0432\u0435\u0440\u0441\u0438\u0438 \u043C\u043E\u0434\u0435\u043B\u0438. \u041F\u0435\u0440\u0435\u0441\u0447\u0451\u0442 \u043E\u0431\u043D\u0430\u0440\u0443\u0436\u0438\u043B \u0440\u0430\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.");
       }
     }
     return { valid: errors.length === 0, errors: [...new Set(errors)] };
   }
   function aggregateAnonymousRecords(records = [], registry = validationRegistry) {
-    const validRecords = records.filter((record2) => validateAnonymousRecord(record2, registry).valid);
+    const validRecords = records.filter((record3) => validateAnonymousRecord(record3, registry).valid);
     const authorityTopOne = /* @__PURE__ */ new Map();
     const authorityTopFive = /* @__PURE__ */ new Map();
     const tracks = /* @__PURE__ */ new Map();
     const sectors = /* @__PURE__ */ new Map();
     const scaleSums = Object.fromEntries(SCALE_IDS2.map((id) => [id, 0]));
     let flatCount = 0;
-    for (const record2 of validRecords) {
-      if (record2.roleProfile.flat) flatCount += 1;
-      for (const id of SCALE_IDS2) scaleSums[id] += Number(record2.roleProfile.raw[id] || 0);
-      for (const id of record2.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
-      for (const id of record2.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record2.leadingTieIds.length);
-      for (const item of (record2.ranking || []).slice(0, 5)) {
+    for (const record3 of validRecords) {
+      if (record3.roleProfile.flat) flatCount += 1;
+      for (const id of SCALE_IDS2) scaleSums[id] += Number(record3.roleProfile.raw[id] || 0);
+      for (const id of record3.prioritySectors || []) sectors.set(id, (sectors.get(id) || 0) + 1);
+      for (const id of record3.leadingTieIds) authorityTopOne.set(id, (authorityTopOne.get(id) || 0) + 1 / record3.leadingTieIds.length);
+      for (const item of (record3.ranking || []).slice(0, 5)) {
         authorityTopFive.set(item.authorityId, (authorityTopFive.get(item.authorityId) || 0) + 1);
         if (item.trackId) tracks.set(item.trackId, (tracks.get(item.trackId) || 0) + 1);
       }
@@ -10927,21 +11847,21 @@ var CareerRuntime = (() => {
   function recordsToCsv(records = [], registry = validationRegistry) {
     const header = ["record_id", "created_at", ...SCALE_IDS2.map((id) => `scale_${id}`), "dispersion", "flat", "priority_sectors", "low_priority_sectors", ...CONDITION_IDS3.map((id) => `condition_${id}`), "first_displayed_authority", "top1_score", "top1_track", "equal_leading_authorities"];
     const lines = [header.join(";")];
-    for (const record2 of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
-      const top = record2.ranking[0] || {};
+    for (const record3 of records.filter((item) => validateAnonymousRecord(item, registry).valid)) {
+      const top = record3.ranking[0] || {};
       const row = [
-        record2.recordId,
-        record2.createdAt,
-        ...SCALE_IDS2.map((id) => Number(record2.roleProfile.raw[id]).toFixed(2)),
-        Number(record2.roleProfile.dispersion || 0).toFixed(3),
-        record2.roleProfile.flat ? 1 : 0,
-        record2.prioritySectors.join("|"),
-        record2.lowPrioritySectors.join("|"),
-        ...CONDITION_IDS3.map((id) => record2.conditions[id]),
+        record3.recordId,
+        record3.createdAt,
+        ...SCALE_IDS2.map((id) => Number(record3.roleProfile.raw[id]).toFixed(2)),
+        Number(record3.roleProfile.dispersion || 0).toFixed(3),
+        record3.roleProfile.flat ? 1 : 0,
+        record3.prioritySectors.join("|"),
+        record3.lowPrioritySectors.join("|"),
+        ...CONDITION_IDS3.map((id) => record3.conditions[id]),
         top.authorityId || "",
         top.score ?? "",
         top.trackId || "",
-        record2.leadingTieIds.join("|")
+        record3.leadingTieIds.join("|")
       ];
       lines.push(row.map(csvCell).join(";"));
     }
@@ -10991,30 +11911,30 @@ var CareerRuntime = (() => {
     if (!records.length || records.length > GROUP_LIMIT) throw Error("record-limit");
     if (bundle && value.origin === "demo" || records.some((r) => typeof r?.recordId === "string" && r.recordId.startsWith("demo-"))) throw Error("demo-data");
     const seen = /* @__PURE__ */ new Set();
-    for (const record2 of records) {
-      const validation = validateAnonymousRecord(record2, registry);
+    for (const record3 of records) {
+      const validation = validateAnonymousRecord(record3, registry);
       if (!validation.valid) {
         const error = new Error("record-schema");
         error.validationErrors = validation.errors;
         throw error;
       }
-      if (seen.has(record2.recordId)) throw Error("duplicate-in-bundle");
-      seen.add(record2.recordId);
+      if (seen.has(record3.recordId)) throw Error("duplicate-in-bundle");
+      seen.add(record3.recordId);
     }
     return records;
   }
   function mergeGroupRecords(existing, incoming) {
     const records = [...existing], byId = new Map(existing.map((x2) => [x2.recordId, x2]));
     let added = 0, duplicates = 0;
-    for (const record2 of incoming) {
-      const prior = byId.get(record2.recordId);
+    for (const record3 of incoming) {
+      const prior = byId.get(record3.recordId);
       if (prior) {
-        if (!sameRecord(prior, record2)) throw Error("id-conflict");
+        if (!sameRecord(prior, record3)) throw Error("id-conflict");
         duplicates++;
         continue;
       }
-      records.push(record2);
-      byId.set(record2.recordId, record2);
+      records.push(record3);
+      byId.set(record3.recordId, record3);
       added++;
     }
     if (records.length > GROUP_LIMIT) throw Error("record-limit");
@@ -11723,7 +12643,7 @@ var CareerRuntime = (() => {
   }
   function routeTo(route, { updateHash = true, replace = false, focus = true } = {}) {
     finishSectorDrag(false, { focus: false, announce: false });
-    const valid = ["home", "personality", "personality-results", "preferences", "test", "sectors", "conditions", "results", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
+    const valid = ["home", "personality", "personality-results", "preferences", "test", "sectors", "conditions", "results", "review", "directory", "compare", "seminar", "methodology", "structure", "scenarios", "opportunities", "workshop", "lab", "public-service", "vacancies"];
     if (route === "main-content") {
       document.getElementById("main-content")?.focus();
       return;
@@ -11732,9 +12652,9 @@ var CareerRuntime = (() => {
     if (SEMINAR_FLOW) {
       if (!personality?.isComplete()) route = "personality";
       else if (route === "home") route = "personality-results";
-      else if (!["personality", "personality-results", "preferences", "test", "sectors", "conditions", "results"].includes(route)) route = resolveResumeRoute();
+      else if (!["personality", "personality-results", "preferences", "test", "sectors", "conditions", "results", "review"].includes(route)) route = resolveResumeRoute();
       route = seminarFlow?.guardRoute(route) || route;
-    } else if (["personality", "personality-results", "preferences"].includes(route)) route = "home";
+    } else if (["personality", "personality-results", "preferences", "review"].includes(route)) route = "home";
     if (!SEMINAR_FLOW && route === "results" && !completionStatus({ ...state, questions: data.questions }).complete) route = resolveResumeRoute();
     const unavailableRoutes = { workshop: "data/agency-studies.json", "public-service": "data/public-service.json", structure: "data/hierarchy.json", opportunities: "data/career-resources.json" };
     if (data.unavailable.includes(unavailableRoutes[route])) {
@@ -11779,6 +12699,7 @@ var CareerRuntime = (() => {
     state.lastRoute = route;
     saveState();
     if (updateHash) __careerHost.routeChanged(route, { replace });
+    if (SEMINAR_FLOW) __careerHost.progressChanged?.({ stage: route, personalityComplete: personality?.isComplete() === true });
     window.scrollTo({ top: 0, behavior: "instant" });
     if (focus) {
       const heading = $2(`#view-${route} h1`) || $2("#main-content");
@@ -12402,7 +13323,7 @@ var CareerRuntime = (() => {
   function exportAnonymousResult() {
     const result = getResults();
     if (!result) return;
-    const record2 = createAnonymousRecord({
+    const record3 = createAnonymousRecord({
       recordId: state.resultRecordId || anonymousId(),
       createdAt: state.completedAt || (/* @__PURE__ */ new Date()).toISOString(),
       roleProfile: result.roleProfile,
@@ -12413,7 +13334,7 @@ var CareerRuntime = (() => {
       ranked: result.ranked
     });
     const stamp = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
-    downloadText(`rudn-career-result-${stamp}-${record2.recordId.slice(0, 8)}.json`, JSON.stringify(record2, null, 2), "application/json;charset=utf-8");
+    downloadText(`rudn-career-result-${stamp}-${record3.recordId.slice(0, 8)}.json`, JSON.stringify(record3, null, 2), "application/json;charset=utf-8");
     toast("\u041E\u0431\u0435\u0437\u043B\u0438\u0447\u0435\u043D\u043D\u044B\u0439 \u0444\u0430\u0439\u043B \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0430 \u043F\u043E\u0434\u0433\u043E\u0442\u043E\u0432\u043B\u0435\u043D.");
   }
   function directoryMatches(authority, query, type, sector, track) {
@@ -13077,7 +13998,7 @@ var CareerRuntime = (() => {
       data.allInstitutions = [...data.authorities, ...data.publicService.records.map((a) => ({ id: a.id, name: a.name.ru, shortName: a.name.ru, mission: a.mission.ru, entityType: "additional", entityTypeLabel: "\u0414\u0440\u0443\u0433\u0438\u0435 \u0432\u0435\u0442\u0432\u0438 \u0438 \u0443\u0440\u043E\u0432\u043D\u0438 \u043F\u0443\u0431\u043B\u0438\u0447\u043D\u043E\u0439 \u0432\u043B\u0430\u0441\u0442\u0438", tracks: a.tracks, governmentUrl: a.sources?.[0]?.url || "", localizedName: a.name, source: a }))];
       if (SEMINAR_FLOW) {
         personality = createPersonality({ navigate: routeTo, continueCareer: () => routeTo(resolveResumeRoute()) });
-        seminarFlow = createAdaptiveFlow({ navigate: routeTo, toast });
+        seminarFlow = createAdaptiveFlow({ navigate: routeTo, toast, authorities: data.authorities });
       } else {
         classroom = createClassroom({ data: { ...data, authorities: data.allInstitutions }, routeTo, openAuthority, toast, downloadText, getResult: () => latestResult });
         workspace = createWorkspace({

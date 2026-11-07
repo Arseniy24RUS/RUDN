@@ -5,8 +5,8 @@ import {resourceURL} from './release-resources.js';
 import {finishAttempt,getAttemptQuestions,validateBank,canonicalJSONString} from './civil-service-model.mjs';
 import {mountCivilServiceTest} from './civil-service-test.mjs';
 import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from './platform-update-state.js';
+import {CIVIL_SERVICE_KNOWLEDGE_MODE as MODE} from './career-course.js';
 
-const MODE='civil-service-knowledge-v1';
 const contextCopy={
   ru:{guest:'Гостевой режим: результат сохраняется на устройстве без оценки в журнале. Для учебной оценки войдите в свой профиль перед началом.',teacher:'Предпросмотр преподавателя: попытки не изменяют журнал.',student:'В журнале сохранится лучший результат — до 5 баллов.'},
   en:{guest:'Guest mode: the result stays on this device without a course grade. Sign in to your profile before starting an assessed attempt.',teacher:'Teacher preview: attempts do not change the gradebook.',student:'The gradebook retains your best score, up to 5 points.'},
@@ -20,7 +20,7 @@ const assessmentFingerprint=attempt=>{if(!attempt)return null;const {currentInde
 /** Course adapter. The user explicitly authorized automatic 0–5 points in the
  * existing platform gradebook. Local immutable completion precedes its queue.
  */
-export async function mountCivilServiceCourse(container,{owner=attemptOwner(),activitySlug,locale='ru',signal,diagnostics,bank:providedBank}={}){
+export async function mountCivilServiceCourse(container,{owner=attemptOwner(),activitySlug,locale='ru',signal,diagnostics,bank:providedBank,onCompletionChange}={}){
   if(!activitySlug||!(container instanceof HTMLElement))throw new TypeError('Course host and activity required.');
   const durableOwner=owner==='guest'?'guest:civil-service':owner;
   const student=owner.startsWith('student:')&&!backend.isAdmin(),teacher=owner.startsWith('teacher:');
@@ -66,9 +66,11 @@ export async function mountCivilServiceCourse(container,{owner=attemptOwner(),ac
       checkOwner();
       if(student){const receipt=await backend.saveAttempt(retained);if(receipt?.saveStatus?.durable===false)throw storageError();}
       diagnostics?.record?.('result-save',{operation:'civil-service-submit',success:true});
+      onCompletionChange?.(true);
       return {saved:true,recordGrade:student};
     }
   });
+  onCompletionChange?.(restored?.state?.resultAttempt?.type==='civil-service-knowledge');
   const flush=async()=>{const attempt=await handle?.flush();await durableStore.flush();return attempt;};
   // An active paper must not be interrupted by a release switch. Updates wait
   // until the student submits; the knowledge test has no time limit.

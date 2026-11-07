@@ -1,5 +1,6 @@
 import {createEmployerVacancyBank, decodeGzip, vacancyBankStatus} from './employer-vacancies-bank.mjs';
 import {E, L, date, icon, number, safeURL} from './journey-visuals.mjs';
+import {vacancySalaryText,vacancyStatusText} from './adaptive-vacancy-pay.mjs';
 
 const DIRECTORY = 'data/vacancies/employer-directory.json.gz';
 const MAX_PACKED = 1024 * 1024;
@@ -49,15 +50,6 @@ function validateDirectory(value) {
   return {jobCount, snapshotAt:value.snapshotAt, employers, nameCounts, byId:new Map(employers.map(item => [item.id, item]))};
 }
 
-function bankStatusLabel(status) {
-  return {
-    'source-active': L('Приём по данным портала', 'Accepting as listed by the portal', '门户显示正在招募'),
-    archived: L('Архивное объявление', 'Archived announcement', '历史公告'),
-    expired: L('Указанный срок истёк', 'Listed deadline has passed', '所列截止日期已过'),
-    unknown: L('Статус приёма не указан', 'Recruitment status not stated', '未注明招聘状态'),
-  }[status];
-}
-
 function announcementCard(row, onReview, pending) {
   const status = vacancyBankStatus(row);
   const source = safeURL(row.sourceURL);
@@ -68,13 +60,14 @@ function announcementCard(row, onReview, pending) {
     : row.scope === 'unknown' ? L('Тип объявления не уточнён', 'Announcement type unspecified', '未注明公告类型') : '';
   const review = onReview && row.scope === 'individual-role';
   return `<article class="adaptive-bank-vacancy" data-adaptive-bank-vacancy="${E(row.id)}">
-    <div class="adaptive-bank-badges"><span data-adaptive-bank-status="${status}">${bankStatusLabel(status)}</span>${scope ? `<span>${scope}</span>` : ''}</div>
+    <div class="adaptive-bank-badges"><span data-adaptive-bank-status="${status}">${vacancyStatusText(status)}</span>${scope ? `<span>${scope}</span>` : ''}</div>
     <h4 lang="ru">${E(row.title || L('Название должности не указано', 'Role title not stated', '未注明职位名称'))}</h4>
     ${location ? `<p class="adaptive-bank-location" lang="ru">${E(location)}</p>` : ''}
     <dl><div><dt>${L('Опубликовано', 'Published', '发布日期')}</dt><dd>${E(date(row.announcedAt) || missing)}</dd></div>
-    <div><dt>${L('Приём до', 'Apply by', '申请截止')}</dt><dd>${E(date(row.expiresAt) || missing)}</dd></div></dl>
+    <div><dt>${L('Приём до', 'Apply by', '申请截止')}</dt><dd>${E(date(row.expiresAt) || missing)}</dd></div>
+    ${status==='source-active'?`<div data-adaptive-bank-salary><dt>${L('Зарплата','Salary','薪资')}</dt><dd>${E(vacancySalaryText(row))}</dd></div>`:''}</dl>
     <div class="adaptive-bank-actions">
-      ${review ? `<button class="button button-secondary" type="button" data-adaptive-bank-review="${E(row.id)}" ${pending ? 'disabled' : ''}>${pending?.id === row.id ? L('Загрузка…', 'Loading…', '加载中……') : L('Разобрать требования', 'Assess these requirements', '评估这些要求')}</button>` : ''}
+      ${review ? `<button class="button button-primary" type="button" data-adaptive-bank-review="${E(row.id)}" ${pending ? 'disabled' : ''}>${pending?.id === row.id ? L('Загрузка…', 'Loading…', '加载中……') : L('Разобрать требования', 'Assess these requirements', '评估这些要求')}</button>` : ''}
       ${source ? `<a class="adaptive-source" href="${source}" target="_blank" rel="noopener noreferrer">${L('Открыть объявление', 'Open announcement', '打开公告')}${icon('external')}</a>` : ''}
     </div>
   </article>`;
