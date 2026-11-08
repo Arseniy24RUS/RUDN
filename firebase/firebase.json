@@ -1,9 +1,0 @@
-{
-  "functions": [{"source":"functions","codebase":"network-gateway","ignore":["node_modules",".git","*.log","*.test.mjs"]}],
-  "database": {
-    "rules": "database.rules.json"
-  },
-  "storage": {
-    "rules": "storage.rules"
-  }
-}
