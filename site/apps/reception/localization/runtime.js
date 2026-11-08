@@ -1,4 +1,5 @@
 import {UI_COPY, UI_TEMPLATES} from './ui.js';
+import {gameCopy} from './game-copy.js';
 import {createReceptionCatalogLoader} from './catalog-loader.js';
 import {unapprovedCyrillic} from './validation.js';
 export {createReceptionCatalogLoader} from './catalog-loader.js';
@@ -12,8 +13,9 @@ const attributes = ['title', 'aria-label', 'placeholder', 'alt'];
 const normalize = value => String(value ?? '').replace(/\u00a0/g, ' ').trim();
 
 /** Display only: no IDs, attributes used as answers, control values, or objects are mutated. */
-export function createReceptionTranslator({locale = 'ru', catalog = {}, literals = {}, onMissing = () => {}} = {}) {
+export function createReceptionTranslator({locale = 'ru', catalog = {}, literals = {}, cleanCopy = false, onMissing = () => {}} = {}) {
   const language = normalizeReceptionLocale(locale);
+  const displayCopy = text => cleanCopy ? gameCopy(text, language) : text;
   const languageIndex = language === 'zh' ? 2 : 1;
   const dictionary = new Map([...UI_COPY, ...UI_TEMPLATES].map(row => [normalize(row[0]), row[languageIndex]]));
   for (const [source, translated] of Object.entries(catalog)) dictionary.set(normalize(source), translated);
@@ -47,7 +49,7 @@ export function createReceptionTranslator({locale = 'ru', catalog = {}, literals
 
   function translate(value, {reportMissing = true, depth=0} = {}) {
     const original = String(value ?? '');
-    if (language === 'ru' || !cyrillic.test(original)) return original;
+    if (language === 'ru' || !cyrillic.test(original)) return displayCopy(original);
     const source = normalize(original);
     let translated = dictionary.get(source);
     const allowed=[...(literals[source]||[])];
@@ -75,13 +77,13 @@ export function createReceptionTranslator({locale = 'ru', catalog = {}, literals
     });
     if (reportMissing && unapprovedCyrillic(source,translated,{literals:allowed})) report(source);
     const leading = original.match(/^\s*/)?.[0] || '', trailing = original.match(/\s*$/)?.[0] || '';
-    return leading + translated + trailing;
+    return leading + displayCopy(translated) + trailing;
   }
 
   function apply(root) {
     if (!root) return;
     root.lang = language === 'zh' ? 'zh-Hans' : language;
-    if (language === 'ru') return;
+    if (language === 'ru' && !cleanCopy) return;
     const document = root.ownerDocument;
     // An <option> without a value attribute derives its value from its label.
     // Preserve that canonical value before changing only the displayed label.

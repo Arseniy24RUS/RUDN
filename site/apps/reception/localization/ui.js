@@ -1,5 +1,23 @@
 // Authored interface copy only. Never apply these translations to student input.
 export const UI_COPY = [
+  ['Читать документ','Read document','阅读文件'],
+  ['Открыть сайт','Open website','打开网站'],
+  ["Не удалось сохранить работу. Разрешите хранение данных сайта и повторите сохранение.", "Your work could not be saved. Allow this site to store data and try saving again.", "无法保存作业。请允许此网站存储数据，然后重试保存。"],
+  ["Смена изменена в другой вкладке. Загрузите сохранённое состояние для продолжения.", "The shift has changed in another tab. Load the saved state to continue.", "本次值班已在另一标签页更改。请加载保存的状态以继续。"],
+  ["Первая смена", "First shift", "首次值班"],
+  ["Факты – 15, норма и проверка источника – 20, компетенция – 15, календарь – 20, действия и контроль – 20, права заявителя – 10. Итог переводится в 0–5 баллов. Существенные нарушения прав или безопасности ограничивают итог тремя баллами. Из 20 пунктов работы с источниками 8 относятся к реквизитам и применению закона, 12 — к связи «фрагмент, сведение, вывод». Скорость и число кликов не оцениваются.", "Facts – 15, legal rule and source verification – 20, competence – 15, calendar – 20, actions and follow-up – 20, applicant rights – 10. The result is converted to 0–5 points. Serious violations of rights or safety cap the result at three points. Of the 20 source-work points, 8 concern legal references and application, and 12 concern the connection between passage, information and conclusion. Speed and click counts are not assessed.", "事实 – 15，法律规范及来源核查 – 20，职权 – 15，日历 – 20，行动与跟进 – 20，申请人权利 – 10。总分换算为 0–5 分。严重侵犯权利或安全的行为将最终得分上限设为三分。来源工作共 20 分，其中 8 分用于法律依据及适用，12 分用于“片段、信息、结论”之间的联系。不评价速度或点击次数。"],
+  ["Состав смены закреплён и восстанавливается после перезагрузки. По возможности выдаются другие недавно не пройденные экземпляры; при небольшом банке повторы возможны.", "Your assigned cases are saved and restored after reloading. Where possible, you receive cases you have not recently completed; a small case bank may include repeats.", "分配的案件已保存，刷新后会恢复。在可能的情况下，会分配近期未完成的案件；案件库较小时可能出现重复。"],
+  [". Учитывайте дату и обстоятельства дела.", ". Consider the date and circumstances of the case.", "。请注意案件日期及具体情况。"],
+  ["Фрагмент ещё не прикреплён. Заполните карточку по выбранному фрагменту.", "No passage attached yet. Complete the record using your selected passage.", "尚未附上片段。请根据所选片段填写记录。"],
+  ["Для обоснования решения укажите фрагмент, извлечённое сведение и вывод.", "Support your decision with a passage, the information extracted and your conclusion.", "请用片段、提取的信息及结论来论证决定。"],
+  ["Результат сохранён. Можно начать новую смену.", "Result saved. You can start a new shift.", "结果已保存。可以开始新的值班。"],
+  ["Не удалось загрузить сохранённую смену. Повторите загрузку.", "The saved shift could not be loaded. Try loading it again.", "无法加载已保存的值班。请重新加载。"],
+  ["Календарь закрепляется при создании смены. В источниках можно прочитать полные тексты и сопоставить их с материалами дела.", "The calendar is fixed when the shift starts. In Sources, you can read full texts and compare them with the case materials.", "日历在值班创建时固定。在“资料来源”中，可以阅读完整文本并与案件材料对照。"],
+  ["Ответы сохраняются автоматически. При следующем входе можно продолжить смену с того же места.", "Your answers are saved automatically. You can continue where you left off the next time you open the shift.", "答案会自动保存。下次打开时，可以从上次进度继续。"],
+  ["Сохранение", "Saving", "保存"],
+  ["Проверьте подключение и повторите загрузку.", "Check your connection and try loading again.", "请检查网络连接，然后重新加载。"],
+  ["Проект сообщения по делу «", "Draft message for the case “", "案件回复草稿“"],
+
   ['Пока не удалось открыть смену','The shift could not be opened yet','暂时无法打开本次值班'],
   ['Сохранённые ответы не удалены. Для новой смены нужны материалы и календарь соответствующего года.','Your saved answers have not been deleted. A new shift requires its materials and the calendar for the relevant year.','已保存的答案未被删除。新值班需要相关材料和对应年份的日历。'],
   ['Материалы назначенного дела пока недоступны. Проверьте соединение и повторите загрузку; вариант и ответы сохранены.','The assigned case materials are currently unavailable. Check your connection and retry; your variant and answers are preserved.','已分配案件的材料暂时不可用。请检查网络后重新加载；您的题目版本和答案均已保留。'],

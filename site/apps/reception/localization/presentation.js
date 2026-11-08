@@ -35,13 +35,12 @@ export function localizedMonthLabel(month,locale='ru') {
 /** Match the existing reply structure. Unknown stored option text remains literal. */
 export function localizedReplyParts(c,p,translator) {
   const t=text=>translator.translate(text),label=text=>({text:t(text),userContent:false}),literal=text=>({text:String(text),userContent:true});
-  const lines=[[label('Учебный проект сообщения по делу «'),label(c.title),{text:translator.locale==='en'?'”.':translator.locale==='zh'?'”。':'».',userContent:false}]];
+  const lines=[[label('Проект сообщения по делу «'),label(c.title),{text:translator.locale==='en'?'”.':translator.locale==='zh'?'”。':'».',userContent:false}]];
   for(const [field,options,prefix] of [['procedure',c.procedures,'Выбран порядок: '],['route',c.routes,'Выбран маршрут: ']])if(p[field]) {
     const option=options.find(row=>row.id===p[field]),chosen=option?label(option.text):literal(p[field]);lines.push([label(prefix),chosen,...(/[.!?。！？]$/.test(chosen.text.trim())?[]:[label('.')])]);
   }
   if(parseDateOnly(p.calendar.answer))lines.push([label('Указанная вами крайняя дата: '),literal(formatDateOnly(p.calendar.answer)),label('.')]);
   const chosen=new Set(p.actions);if(chosen.size)lines.push([label('В проект включено: '),...c.actions.filter(action=>chosen.has(action.id)).flatMap((action,index)=>[...(index?[label('; ')]:[]),label(action.title)]),label('.')]);
-  lines.push([label('Проект воспроизводит ваш выбор и не исправляет его автоматически. Реальная отправка не производится.')]);
   return lines;
 }
 /** Only known user-authored display slots are protected, not fictional case text. */
@@ -70,9 +69,9 @@ function restoreFocus(root,saved) {
  * must mark other custom user-content slots with data-rx-user-content beforehand.
  */
 export function createReceptionPresentation({root,getState,getOwner,renderCanonical,flush=async()=>{},profileIsUserContent=()=>false,
-  getOptionalViews=()=>({}),loader=createReceptionCatalogLoader(),load=loadReceptionTranslator,onStatus=()=>{},onMissing=()=>{}}={}) {
+  cleanCopy=false,getOptionalViews=()=>({}),loader=createReceptionCatalogLoader(),load=loadReceptionTranslator,onStatus=()=>{},onMissing=()=>{}}={}) {
   if(!root||typeof getState!=='function'||typeof getOwner!=='function'||typeof renderCanonical!=='function')throw Error('Reception presentation requires canonical state/render boundaries.');
-  let translator=createReceptionTranslator({locale:'ru',onMissing}),request=0,disposed=false,controller=null;
+  let translator=createReceptionTranslator({locale:'ru',cleanCopy,onMissing}),request=0,disposed=false,controller=null;
   const identity=()=>{const state=getState();return JSON.stringify([getOwner(),state?.id,state?.contentVersion,state?.assignment?.manifest?.map(row=>row.templateId)]);};
   function afterRender() {if(disposed)return;markReceptionUserContent(root,{state:getState(),profileIsUserContent:profileIsUserContent()});translator.apply(root);}
   async function setLocale(value) {
@@ -82,7 +81,7 @@ export function createReceptionPresentation({root,getState,getOwner,renderCanoni
     onStatus({state:'loading',locale});
     try {
       await flush();if(disposed||revision!==request||identity()!==capturedIdentity)return {applied:false,reason:'stale'};
-      const state=getState(),next=await load(locale,{loader,templateIds:state.assignment.manifest.map(row=>row.templateId),contentVersion:state.contentVersion,signal,...getOptionalViews(),onMissing});
+      const state=getState(),next=await load(locale,{loader,cleanCopy,templateIds:state.assignment.manifest.map(row=>row.templateId),contentVersion:state.contentVersion,signal,...getOptionalViews(),onMissing});
       if(disposed||revision!==request||signal.aborted||identity()!==capturedIdentity)return {applied:false,reason:'stale'};
       await flush();if(disposed||revision!==request||identity()!==capturedIdentity)return {applied:false,reason:'stale'};
       const focus=captureFocus(root),scroll={x:root.ownerDocument.defaultView.scrollX,y:root.ownerDocument.defaultView.scrollY};

@@ -2,6 +2,12 @@ import {resourceURL} from '../../../assets/js/release-resources.js';
 import {READER_CATALOG_SHA,READER_CONTENT_VERSION} from './reader-registry.mjs';
 import {unpackStructure,unpackDescriptor} from './reader-codec.mjs';
 
+export async function readerResponseBytes(response,path){
+  if(!String(path).split(/[?#]/)[0].endsWith('.gz'))return response.arrayBuffer();
+  const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
+  return new Response(stream).arrayBuffer();
+}
+
 const abort=()=>new DOMException('Aborted','AbortError');
 const checkSignal=signal=>{if(signal?.aborted)throw abort();};
 function requireThat(value,message){if(!value)throw new Error('Reader data: '+message);}
@@ -73,7 +79,7 @@ export class BlockCache {
 
 /** Exactly one active search index, held only inside a dedicated worker. */
 export class ReaderSearch {
-  constructor(base,{signal,WorkerClass=globalThis.Worker,fetch:fetcher=globalThis.fetch?.bind(globalThis),timeoutMs=10000}={}){this.base=base;this.signal=signal;this.WorkerClass=WorkerClass;this.fetcher=fetcher;this.timeoutMs=timeoutMs;this.worker=null;this.key=null;this.sequence=0;this.pending=new Map();this.ready=false;signal?.addEventListener('abort',()=>this.destroy(),{once:true});}
+  constructor(base,{signal,WorkerClass=globalThis.Worker,fetch:fetcher=globalThis.fetch?.bind(globalThis),timeoutMs=10000,readJSON}={}){this.readJSON=readJSON;this.base=base;this.signal=signal;this.WorkerClass=WorkerClass;this.fetcher=fetcher;this.timeoutMs=timeoutMs;this.worker=null;this.key=null;this.sequence=0;this.pending=new Map();this.ready=false;signal?.addEventListener('abort',()=>this.destroy(),{once:true});}
   activate(manifest){
     const key=manifest.docId+'/'+manifest.locale;if(this.key===key&&this.worker)return;
     this.destroy();if(this.signal?.aborted)throw abort();requireThat(this.WorkerClass,'Web Worker unavailable');
@@ -94,13 +100,25 @@ export class ReaderSearch {
     // buffer. Worker integrity, decoding and schema checks share this one init
     // budget; a query has its own budget from its call, including pending init.
     this.initialization=boundedReaderOperation(async(signal,check)=>{
-      worker.postMessage({type:'load',key,sha256:manifest.search.sha256,docId:manifest.docId,locale:manifest.locale,contentVersion:manifest.contentVersion});
-      const response=await this.fetcher(resourceURL(manifest.search.file,this.base),{credentials:'same-origin',cache:'no-cache',signal});
-      check();if(!response.ok)throw new Error('Document search index load failed');
-      const bytes=await response.arrayBuffer();check();
-      if(this.worker!==worker)throw abort();worker.postMessage({type:'index',bytes},[bytes]);
+      const fromBlocks=manifest.search.encoding==='blocks-v1';
+      worker.postMessage({type:'load',key,sha256:manifest.search.sha256,docId:manifest.docId,locale:manifest.locale,contentVersion:manifest.contentVersion,blocks:fromBlocks?manifest.blocks:undefined});
+      const read=async pin=>{
+        if(fromBlocks&&this.readJSON){const value=await this.readJSON(pin.file,pin.sha256,{signal});check();return new TextEncoder().encode(JSON.stringify(value)+'\n').buffer;}
+        const response=await this.fetcher(resourceURL(pin.file,this.base),{credentials:'same-origin',cache:'no-cache',signal});
+        check();if(!response.ok)throw new Error('Document search index load failed');
+        const bytes=await readerResponseBytes(response,pin.file);check();return bytes;
+      };
+      let bytes;
+      if(fromBlocks){
+        bytes=[];
+        for(let start=0;start<manifest.blocks.length;start+=4){
+          const batch=await Promise.all(manifest.blocks.slice(start,start+4).map(read));
+          bytes.push(...batch);check();
+        }
+      }else bytes=await read(manifest.search);
+      if(this.worker!==worker)throw abort();worker.postMessage({type:'index',bytes},fromBlocks?bytes:[bytes]);
       await ready;check();
-    },{signals:[this.signal,controller.signal],timeoutMs:this.timeoutMs});
+    },{signals:[this.signal,controller.signal],timeoutMs:manifest.search.encoding==='blocks-v1'?Math.max(this.timeoutMs,30000):this.timeoutMs});
     this.initialization.catch(error=>this.fail(worker,error));
   }
   fail(worker,error){
@@ -119,7 +137,7 @@ export class ReaderSearch {
       this.pending.set(request,{resolve,reject,cleanup,cancel:()=>controller.abort()});activeSignal.addEventListener('abort',cancel,{once:true});
       try{worker.postMessage({type:'search',request,query:String(query),page:Math.max(0,Math.floor(page)),pageSize:Math.min(100,Math.max(1,Math.floor(pageSize)))});}
       catch(error){this.pending.delete(request);cleanup();reject(error);}
-    }),{signals:[signal,this.signal,controller.signal],timeoutMs:this.timeoutMs}).catch(error=>{if(error?.code==='reader/timeout')this.fail(worker,error);throw error;});
+    }),{signals:[signal,this.signal,controller.signal],timeoutMs:manifest.search.encoding==='blocks-v1'?Math.max(this.timeoutMs,30000):this.timeoutMs}).catch(error=>{if(error?.code==='reader/timeout')this.fail(worker,error);throw error;});
   }
   cancel(){for(const call of [...this.pending.values()])call.cancel();}
   destroy(){if(this.worker)this.fail(this.worker,abort());else{this.loadingController?.abort();this.loadingController=null;this.releaseLoading?.();this.releaseLoading=null;this.initialization=null;}}
@@ -127,8 +145,8 @@ export class ReaderSearch {
 }
 
 export class ReaderData {
-  constructor(corpus){this.corpus=corpus;this.registry=null;this.initializing=null;this.descriptors=new Map();this.manifestPending=new Map();this.blockPending=new Map();this.blocks=new BlockCache();this.blockQueue=new BlockQueue();this.search=new ReaderSearch(corpus.base,{signal:corpus.signal});this.epoch=0;this.controller=new AbortController();this.requestedKey=null;}
-  async initialize(){this.corpus.assertActive();if(this.registry)return this;if(this.initializing)return this.initializing;const work=(async()=>{const value=await this.corpus.json('data/reader/catalog.json',READER_CATALOG_SHA);this.corpus.assertActive();requireThat(value?.schema===1&&value.contentVersion===READER_CONTENT_VERSION&&value.contentVersion===this.corpus.catalog.contentVersion,'registry version mismatch');requireThat(value.documents.length===this.corpus.catalog.documents.length,'registry coverage');for(const meta of this.corpus.catalog.documents){const entry=value.documents.find(d=>d.id===meta.id);requireThat(entry&&entry.sourceSha256===meta.sha256&&entry.sourceFileSha256===meta.fileSha256&&entry.unitCount===meta.unitCount,'source pins');}this.registry=value;return this;})();this.initializing=work;try{return await work;}finally{this.initializing=null;}}
+  constructor(corpus,{path='data/reader/catalog.json',sha256=READER_CATALOG_SHA,contentVersion=READER_CONTENT_VERSION}={}){this.catalogPath=path;this.catalogSha256=sha256;this.contentVersion=contentVersion;this.corpus=corpus;this.registry=null;this.initializing=null;this.descriptors=new Map();this.manifestPending=new Map();this.blockPending=new Map();this.blocks=new BlockCache();this.blockQueue=new BlockQueue();this.search=new ReaderSearch(corpus.base,{signal:corpus.signal,readJSON:(...args)=>corpus.json(...args)});this.epoch=0;this.controller=new AbortController();this.requestedKey=null;}
+  async initialize(){this.corpus.assertActive();if(this.registry)return this;if(this.initializing)return this.initializing;const work=(async()=>{const value=await this.corpus.json(this.catalogPath,this.catalogSha256);this.corpus.assertActive();requireThat(value?.schema===1&&value.contentVersion===this.contentVersion&&value.contentVersion===this.corpus.catalog.contentVersion,'registry version mismatch');requireThat(value.documents.length===this.corpus.catalog.documents.length,'registry coverage');for(const meta of this.corpus.catalog.documents){const entry=value.documents.find(d=>d.id===meta.id);requireThat(entry&&entry.sourceSha256===meta.sha256&&entry.sourceFileSha256===meta.fileSha256&&entry.unitCount===meta.unitCount,'source pins');}this.registry=value;return this;})();this.initializing=work;try{return await work;}finally{this.initializing=null;}}
   async entry(id){await this.initialize();const entry=this.registry.documents.find(d=>d.id===id);requireThat(entry,'unknown document');return entry;}
   async structure(id){const entry=await this.entry(id);this.corpus.assertActive();const packed=await this.corpus.json(entry.structure.file,entry.structure.sha256);this.corpus.assertActive();const doc=unpackStructure(packed);requireThat(doc?.id===id&&doc.structural===true&&doc.version===this.corpus.catalog.contentVersion&&doc.sha256===entry.sourceSha256&&doc.units.length===entry.unitCount,'structural source mismatch');const ids=new Set(doc.units.map(u=>u.id));requireThat(ids.size===doc.units.length&&doc.units.every(u=>Object.keys(u).sort().join(',')==='id,sectionId'),'structural units');for(const section of doc.sections)requireThat(section.unitIds.every(id=>ids.has(id)),'structural TOC');return doc;}
   peekDocument(id,locale='ru'){return this.descriptors.get(id+'/'+locale)||null;}

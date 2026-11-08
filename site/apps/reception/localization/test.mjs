@@ -5,7 +5,7 @@ import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const playwright = require(process.env.PLAYWRIGHT_PATH || 'playwright');
-const files = Object.fromEntries(await Promise.all(['runtime.js', 'ui.js', 'catalog-loader.js', 'validation.js'].map(async name => [`/${name}`, await readFile(new URL(name, import.meta.url))])));
+const files = Object.fromEntries(await Promise.all(['runtime.js', 'game-copy.js', 'ui.js', 'catalog-loader.js', 'validation.js'].map(async name => [`/${name}`, await readFile(new URL(name, import.meta.url))])));
 files['/assets/js/release-resources.js'] = await readFile(new URL('../../../assets/js/release-resources.js', import.meta.url));
 const server = createServer((request, response) => {
   response.setHeader('Cache-Control', 'no-store');
@@ -24,6 +24,32 @@ try {
         const {createReceptionTranslator, loadReceptionTranslator} = await import('/runtime.js');
         const check = (value, message) => { if (!value) throw Error(message); };
         const root = document.querySelector('#fixture');
+        const legacyCopy = 'Все люди, документы и события этого дела вымышлены. Учебная стажировка в подразделении учредителя МФЦ. Срок — 30 дней.';
+        const cleanCopy = {
+          ru:'Стажировка в подразделении учредителя МФЦ. Срок — 30 дней.',
+          en:'A placement in a unit of the MFC founder. The deadline is 30 days.',
+          zh:'这是在MFC设立机构下属部门进行的实习。期限为30天。'
+        };
+        const legacyTranslations = {
+          en:'All people, documents, and events in this case are fictional. A fictional training placement in a unit of the MFC founder. The deadline is 30 days.',
+          zh:'本案所有人物、文件和事件均为虚构。这是在MFC设立机构下属部门进行的虚构教学实习。期限为30天。'
+        };
+        for (const locale of ['ru','en','zh']) {
+          const canonical = createReceptionTranslator({locale,catalog:{[legacyCopy]:legacyTranslations[locale]}});
+          check(canonical.translate(legacyCopy) === (locale === 'ru' ? legacyCopy : legacyTranslations[locale]), 'Default translation changed canonical authored copy');
+          const editor = createReceptionTranslator({locale,cleanCopy:true,catalog:{[legacyCopy]:legacyTranslations[locale]}});
+          check(editor.translate(legacyCopy) === cleanCopy[locale], 'Legacy scenario disclaimer survived or a case deadline changed');
+          root.innerHTML = '<p></p><input><p data-rx-user-content></p>';
+          root.querySelector('p').textContent = legacyCopy;
+          root.querySelector('input').value = legacyCopy;
+          root.querySelector('[data-rx-user-content]').textContent = legacyCopy;
+          editor.apply(root);
+          check(root.querySelector('p').textContent === cleanCopy[locale], 'Authored display was not cleaned');
+          check(root.querySelector('input').value === legacyCopy, 'Student answer changed during copy cleanup');
+          check(root.querySelector('[data-rx-user-content]').textContent === legacyCopy, 'Student-authored display changed during copy cleanup');
+        }
+        check(createReceptionTranslator({locale:'ru',cleanCopy:true}).translate('Подготовить вымышленные документы от имени управы.') === 'Подготовить вымышленные документы от имени управы.', 'Incorrect fabrication option lost its meaning');
+        check(createReceptionTranslator({locale:'ru',cleanCopy:true}).translate('Слушатель учебного центра') === 'Слушатель учебного центра', 'Actual training-centre subject changed');
         const state = {id: 'unchanged-attempt', seed: 'unchanged-order', active: 3, cases: {'case-3': {fact: 'a', text: 'Приёмная'}}, startedAt: 1, completed: false};
         const before = JSON.stringify(state);
         const source = '<h1>Приёмная</h1><p data-case>Получено {{received}}, зарегистрировано {{registered}}.</p><p data-counter>Выбрано 1 из 2</p><p data-user-name data-rx-user-content>Приёмная</p><input name="answer" value="Приёмная" placeholder="Найдите правовое основание"><textarea>Приёмная</textarea><select><option value="original-id">Документы</option><option>Источники</option></select><button data-action="Документы" aria-label="Документы">Документы</button>';

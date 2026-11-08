@@ -535,7 +535,7 @@ async function renderSeminar(topic,view){
   if(module==='maps') return renderPuzzleRoute(true);
   if(module==='settlements') return renderSeminar3(topic);
   if(module==='legal-lab') return renderSeminar4(topic,view);
-  if(module==='reception') return renderSeminar5(topic);
+  if(module==='reception') return renderReception(topic);
   if(module==='career') return view==='knowledge'?renderCivilServiceSeminar(topic):renderSeminar6(topic);
   if(module==='governor') return renderSeminar7(topic);
   if(module==='final') return renderSeminar8(topic);
@@ -698,19 +698,21 @@ function isModuleRoute(module,context='course'){
 function renderGamesRoute(module){
   if(module==='settlements'){renderSettlements('free');return;}
   if(module==='reception'||module==='career'){
-    navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
     const topic=seminarTopic(data.course,module);
-    if(module==='reception')renderSeminar5(topic,{context:'free'});
-    else renderSeminar6(topic,{context:'free'});
+    if(module==='reception')renderReception(topic,{context:'free'});
+    else{
+      navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
+      renderSeminar6(topic,{context:'free'});
+    }
     return;
   }
   const games=GAMES.filter(game=>gameAccessGate(game.id,backend,data.course)?.open!==false);
   const lead=backend.getProfile()&&!backend.isAdmin()?GAMES_STUDENT_LEAD[getLocale()]||GAMES_STUDENT_LEAD.ru:gamesText('lead');
   app.innerHTML=contentPage(gamesText('title'),lead,`<div class="games-grid">${games.map(game=>`<article class="panel game-card" data-game="${game.id}"><span class="game-icon" aria-hidden="true">${game.icon}</span><div><h2>${esc(loc(game,'title'))}</h2><p class="muted">${esc(loc(game,'description'))}</p></div><a class="btn btn-primary" href="${esc(game.href.startsWith('#')?game.href:resourceURL(game.href,new URL('../../',import.meta.url)).href)}" aria-label="${esc(`${gamesText('play')}: ${loc(game,'title')}`)}">${gamesText('play')}</a></article>`).join('')}</div><p class="muted games-guest-note">${esc(gamesText('guest'))}</p>`);
 }
-function renderSeminar5(topic,{context='course'}={}){
+function renderReception(topic,{context='course'}={}){
   const free=context==='free';
-  /* RUDN_RECEPTION_1_0_1 */
+  navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'reception'});
   if(!document.getElementById('receptionPlatformStyle')){
     const link=document.createElement('link');link.id='receptionPlatformStyle';link.rel='stylesheet';
     link.href=new URL('../../apps/reception/platform.css?v=1.0.1',import.meta.url).href;
@@ -740,7 +742,7 @@ function renderSeminar5(topic,{context='course'}={}){
       if(!active())return;
       mountStarted=true;
       mountedCleanup=await mountReception(mount,{
-        backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,editorTools:free?false:undefined,
+        backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
         assessmentAllowed:()=>{if(free)return false;const access=accessSnapshot();return topicGate(topic.number,access.overrides,access.now).open;},
         onExit:()=>{location.hash=free?'games':'dashboard'}

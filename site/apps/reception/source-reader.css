@@ -1,0 +1,53 @@
+.rx-source-dialog {
+  box-sizing:border-box;
+  width:min(1120px,calc(100vw - 32px));
+  height:calc(100dvh - 32px);
+  max-width:none;
+  max-height:none;
+  padding:0;
+  border:1px solid #cedae2;
+  border-radius:14px;
+  background:#f5f8fa;
+  color:#183246;
+  overflow:hidden;
+}
+.rx-source-dialog::backdrop {background:#17324699;}
+.rx-source-dialog[open] {display:flex;flex-direction:column;}
+.rx-source-dialog-bar {display:flex;align-items:center;gap:12px;flex-shrink:0;padding:10px 16px;border-bottom:1px solid #d5dfe5;background:#fff;}
+.rx-source-dialog-bar button {min-height:44px;padding:9px 15px;border:1px solid #c6d4dc;border-radius:7px;background:#fff;color:#174d70;font:600 14px/1.4 system-ui;cursor:pointer;}
+.rx-source-dialog-bar p {margin:0;font-size:14px;}
+.rx-source-dialog [hidden] {display:none!important;}
+.rx-source-reader-content {min-height:0;flex:1;display:flex;}
+.rx-source-dialog .ll-reader {display:flex;flex-direction:column;flex:1;min-width:0;min-height:0;border:0;border-radius:0;}
+.rx-source-dialog .ll-reader-header {padding:14px 22px;flex-shrink:0;max-height:24%;overflow:auto;}
+.rx-source-dialog .ll-reader-header h2 {font-size:18px;line-height:1.45;margin:4px 0;}
+.rx-source-dialog .ll-document-language {display:none;}
+.rx-source-dialog .ll-reader-dock {position:static;flex-shrink:0;}
+.rx-source-dialog .ll-selection-tray {position:static;padding:5px 12px;max-height:none;}
+.rx-source-dialog .ll-reader-surface {display:flex;flex-direction:column;flex:1;min-height:0;}
+.rx-source-dialog .ll-reader-grid {display:flex;align-items:stretch;flex:1;min-height:0;overflow:hidden;}
+.rx-source-dialog .ll-paper {flex:1;width:0;height:auto;max-height:none;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding:16px 24px 50px;}
+.rx-source-dialog .ll-toc {display:none;position:static;width:280px;max-width:45%;height:100%;max-height:none;overflow:auto;overscroll-behavior:contain;}
+.rx-source-dialog .toc-open .ll-toc {display:block;}
+.rx-source-dialog .ll-reader-search-panel {flex-shrink:0;max-height:50%;overflow:auto;overscroll-behavior:contain;}
+.rx-source-dialog .ll-search-results {max-height:200px;overflow:auto;}
+.rx-source-dialog .ll-paragraph {cursor:text;}
+.rx-source-dialog .ll-paragraph-text {font-size:16px;line-height:1.7;user-select:text;}
+.rx-source-dialog .ll-reader-section {content-visibility:visible;}
+.rx-source-dialog .ll-reader-icon {min-width:44px;min-height:44px;}
+@media(max-width:620px) {
+  .rx-source-dialog {width:100vw;height:100dvh;margin:0;border:0;border-radius:0;}
+  .rx-source-dialog-bar {padding:8px 10px;padding-top:max(8px,env(safe-area-inset-top));gap:8px;}
+  .rx-source-dialog .ll-reader-header {padding:10px 14px;max-height:23%;}
+  .rx-source-dialog .ll-reader-header h2 {font-size:15px;}
+  .rx-source-dialog .ll-eyebrow,.rx-source-dialog .ll-revision {font-size:12px;}
+  .rx-source-dialog .ll-paper {padding:12px 8px calc(25px + env(safe-area-inset-bottom));}
+  .rx-source-dialog .toc-open .ll-toc {width:100%;max-width:none;}
+  .rx-source-dialog .toc-open .ll-paper {display:none;}
+  .rx-source-dialog .ll-searchbar {padding:8px;}
+}
+@media(max-height:440px) {
+  .rx-source-dialog .ll-reader-header {max-height:19%;padding:6px 14px;}
+  .rx-source-dialog .ll-reader-header h2 {font-size:14px;}
+  .rx-source-dialog .ll-eyebrow,.rx-source-dialog .ll-revision {display:none;}
+}

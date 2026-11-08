@@ -1,15 +1,15 @@
 import {resourceURL} from '../../../assets/js/release-resources.js';
 import {searchUnits,contentHash} from './core.mjs';
-import {ReaderData,boundedReaderOperation} from './reader-data.mjs';
+import {ReaderData,boundedReaderOperation,readerResponseBytes} from './reader-data.mjs';
 export class Corpus {
-  constructor(base,{signal}={}){this.base=base;this.signal=signal;this.destroyed=false;this.cache=new Map();this.inflight=new Map();this.readerData=new ReaderData(this);signal?.addEventListener('abort',()=>this.destroy(),{once:true});}
+  constructor(base,{signal,readerCatalog}={}){this.base=base;this.signal=signal;this.destroyed=false;this.cache=new Map();this.inflight=new Map();this.readerData=new ReaderData(this,readerCatalog);signal?.addEventListener('abort',()=>this.destroy(),{once:true});}
   assertActive(){if(this.destroyed||this.signal?.aborted)throw new DOMException('Aborted','AbortError');}
   async json(path,expectedSha=null,{signal=this.signal,timeoutMs=10000}={}){
     return boundedReaderOperation(async(activeSignal,check)=>{
       const r=await fetch(resourceURL(path,this.base),{signal:activeSignal,credentials:'same-origin',cache:'no-cache'});
       check();
       if(!r.ok)throw new Error(`Не удалось загрузить ${path}: HTTP ${r.status}`);
-      const bytes=await r.arrayBuffer();
+      const bytes=await readerResponseBytes(r,path);
       check();
       if(expectedSha){
         const digest=await crypto.subtle.digest('SHA-256',bytes);

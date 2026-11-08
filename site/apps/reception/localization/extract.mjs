@@ -2,6 +2,7 @@
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {stringSegments} from './source-strings.mjs';
+import {UI_COPY, UI_TEMPLATES} from './ui.js';
 const base = new URL('../', import.meta.url);
 const entries = new Map();
 const russian = /[А-Яа-яЁё]/;
@@ -42,11 +43,22 @@ for (const name of ['app', 'icons', 'confirm', 'boot', 'standalone', 'source-mon
 }
 // Keep prior IDs used by assigned translation batches and old display snapshots.
 // Removed UI copy is marked, not silently deleted while translators are working.
+let previousEntries=[];
 try {
   const prior=JSON.parse(await readFile(new URL('source/inventory.json',import.meta.url),'utf8'));
-  for(const entry of prior.entries||[])if(!entries.has(entry.id))entries.set(entry.id,{...entry,retired:true,...(/return 'mfc-head'/.test(entry.ru)?{nonDisplay:true,reason:'Old lexer read quotation marks inside a regular expression as string delimiters.'}:{})});
+  previousEntries=prior.entries||[];
+  for(const entry of previousEntries)if(!entries.has(entry.id))entries.set(entry.id,{...entry,retired:true,...(/return 'mfc-head'/.test(entry.ru)?{nonDisplay:true,reason:'Old lexer read quotation marks inside a regular expression as string delimiters.'}:{})});
 } catch(error) {if(error.code!=='ENOENT')throw error;}
-const values = [...entries.values()].sort((a, b) => a.contexts[0].localeCompare(b.contexts[0], 'en') || a.id.localeCompare(b.id));
+// Historical order is part of sourceVersion. Moving a UI line must not
+// republish every case pack. New UI_COPY entries are already complete,
+// validated compiler inputs and belong to the common pack only.
+const previousOrder=new Map(previousEntries.map((entry,index)=>[entry.id,index]));
+const explicitUI=new Set([...UI_COPY,...UI_TEMPLATES].map(row=>row[0].trim()));
+const values=[...entries.values()].filter(entry=>previousOrder.has(entry.id)||!explicitUI.has(entry.ru)).sort((a,b)=>{
+  const oldA=previousOrder.get(a.id),oldB=previousOrder.get(b.id);
+  if(oldA!==undefined||oldB!==undefined)return (oldA??Infinity)-(oldB??Infinity);
+  return a.contexts[0].localeCompare(b.contexts[0],'en')||a.id.localeCompare(b.id);
+});
 await mkdir(new URL('source/', import.meta.url), {recursive: true});
 await writeFile(new URL('source/inventory.json', import.meta.url), JSON.stringify({version: 1, count: values.length, characters: values.reduce((n, item) => n + item.ru.length, 0), entries: values}, null, 2) + '\n');
 const groups = new Map();

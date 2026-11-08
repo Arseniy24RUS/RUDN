@@ -47,6 +47,38 @@ try{
  for(const kind of (arg('--kind','')?[arg('--kind','')]:['quiz','form','modules'])){
   current='A';const ctx=await context();page=await ctx.newPage();page.setDefaultTimeout(60000);page.on('pageerror',error=>report.errors.push({kind,message:error.message}));page.on('requestfailed',request=>report.failedRequests.push({url:request.url(),type:request.resourceType(),failure:request.failure()}));page.on('response',response=>{if(response.status()>=400)report.httpErrors.push({url:response.url(),status:response.status()})});
   await page.goto(origin+'/RUDN/#dashboard');await ready();await page.waitForFunction(()=>document.querySelector('#app')?.innerText.length>300);
+  if(kind==='reception-reader'){
+   for(const [hash,selector] of [
+    ['activity/seminar-4','#legalLabMount[aria-busy="false"]'],
+    ['activity/seminar-5','#receptionMount[aria-busy="false"] .rx-global-status']
+   ]){
+    await route(hash,selector);
+    await page.screenshot({path:resolve(out,hash.replaceAll('/','-')+'.png')});
+    report.checks.push({kind:'module-route',route:hash,status:'pass'});
+   }
+   await page.locator('[data-action="start"]').click();
+   await page.locator('[data-action="tab"][data-tab="research"]').click();
+   await page.locator('.rx-source-library summary').click();
+   const source=page.locator('.rx-source-library [data-source-reader][href*="cons_doc_LAW_59999/"]').first();
+   await source.click();
+   const reader=page.locator('dialog.rx-source-dialog[open]');
+   await reader.locator('.ll-paper [data-unit]').first().waitFor();
+   await reader.locator('[data-action="toggle-reader-search"]').click();
+   const query=reader.locator('[data-input="reader-query"]');
+   await query.fill('личный приём');
+   await query.press('Enter');
+   const result=reader.locator('[data-action="jump-unit"]').first();
+   await result.waitFor();
+   const passage=await result.getAttribute('data-id');
+   await result.click();
+   await reader.locator('.ll-paper [data-unit="'+passage+'"]').waitFor();
+   await page.screenshot({path:resolve(out,'reception-document.png')});
+   await reader.locator('[data-source-reader-close]').click();
+   await reader.waitFor({state:'detached'});
+   assert.equal(await source.evaluate(el=>el===document.activeElement),true);
+   report.checks.push({kind:'shared-document-reader',status:'pass',document:'59-ФЗ',search:true,returnToCase:true});
+   await ctx.close();continue;
+  }
   if(kind==='modules'){
    const routes=[['activity/seminar-1-classroom','#quizMount .quiz-shell'],['activity/seminar-4','#legalLabMount[aria-busy="false"]'],['games/career','#careerMount[aria-busy="false"]'],['games/reception','#receptionMount[aria-busy="false"]'],['games/settlements','#settlementsMount[aria-busy="false"]'],['puzzle','#geoPuzzleApp[data-play-allowed="true"]'],['activity/seminar-7','a[href*="governor"]'],['games','.games-grid'],['profile','#app'],['materials','.material-grid >> nth=0']];
    for(const [hash,selector]of routes){await route(hash,selector);if(hash==='games'){const href=await page.locator('[data-game="governor"] a').getAttribute('href');const build=await page.evaluate(()=>__RUDN_RELEASE__.buildId);assert.equal(href,origin+'/RUDN/_releases/'+build+'/apps/governor/index.html?context=free');report.checks.push({kind:'governor-runtime-link',route:hash,status:'pass',href})}await page.screenshot({path:resolve(out,hash.replaceAll('/','-')+'.png')});report.checks.push({kind:'module-route',route:hash,status:'pass'})}

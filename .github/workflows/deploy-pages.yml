@@ -62,25 +62,26 @@ jobs:
           compression-level: 0
 
   platform-checks:
-    if: ${{ !contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !contains(github.event.head_commit.message, '[reception-legal-reader]') }}
     uses: ./.github/workflows/platform-checks.yml
 
   legal-lab:
-    if: ${{ !contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !contains(github.event.head_commit.message, '[reception-legal-reader]') }}
     uses: ./.github/workflows/legal-lab-checks.yml
 
   puzzle-checks:
-    if: ${{ !(contains(github.event.head_commit.message, '[career-seminar-express]') || contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')) }}
+    if: ${{ !(contains(github.event.head_commit.message, '[career-seminar-express]') || contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]')) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
 
   deploy:
     needs: [preserve-legacy-baseline, puzzle-checks, legal-lab, platform-checks]
-    if: ${{ (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && contains(github.event.head_commit.message, '[career-verified-publish]') && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))))) }}
+    if: ${{ (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && contains(github.event.head_commit.message, '[reception-legal-reader]') && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && contains(github.event.head_commit.message, '[career-verified-publish]') && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))))) }}
     env:
       CAREER_VERIFIED_PUBLISH: ${{ contains(github.event.head_commit.message, '[career-verified-publish]') }}
-      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
+      RECEPTION_LEGAL_READER: ${{ contains(github.event.head_commit.message, '[reception-legal-reader]') }}
+      FOCUSED_HOTFIX: ${{ contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
       SETTLEMENTS_NETWORK: ${{ contains(github.event.head_commit.message, '[settlements-network]') }}
       SETTLEMENTS_ROAD_ROUTES: ${{ contains(github.event.head_commit.message, '[settlements-road-routes]') }}
       SETTLEMENTS_RUNTIME_CACHE: ${{ contains(github.event.head_commit.message, '[settlements-runtime-cache]') }}
@@ -221,6 +222,20 @@ jobs:
             paths = {'assets/js/settlements/v24/engine.mjs', 'assets/js/settlements/v24/game.mjs', 'assets/js/settlements/v24/i18n.mjs'}
             allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-route-limits.mjs', 'scripts/test-settlements-route-limits-browser.py', 'scripts/test-settlements-road-routes.mjs', 'scripts/test-settlements-boundaries.mjs'} | {runtime + path for path in paths}
           changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
+          if os.environ['RECEPTION_LEGAL_READER'] == 'true':
+            changed = set(subprocess.check_output(
+              ['git', 'diff', '--no-renames', '--name-only', 'HEAD^', 'HEAD'], text=True
+            ).splitlines())
+            allowed = {
+              '.github/workflows/deploy-pages.yml',
+              'scripts/build_reception_reader.mjs',
+              'scripts/platform-main-staging.mjs',
+              'site/apps/legal-lab/lib/corpus.mjs',
+              'site/assets/js/main.js',
+              'site/service-worker.js',
+            } | {path for path in changed if path.startswith((
+              'site/apps/reception/', 'site/apps/legal-lab/lib/reader-', 'scripts/test_reception_',
+            ))}
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
             import re, json, hashlib
@@ -446,6 +461,7 @@ jobs:
           node --test tests/career-loader.test.mjs
           node --test --test-name-pattern='every global stylesheet|failure to retrieve any global stylesheet' scripts/test_governor_service_worker.mjs
       - name: Check career vacancy snapshot contract offline
+        if: env.RECEPTION_LEGAL_READER != 'true'
         run: |
           node --test tests/career-vacancy-sync.test.mjs
           node scripts/sync-career-vacancies.mjs --check
@@ -454,13 +470,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
+      - name: Preserve the published vacancy snapshot during the focused release
+        if: env.RECEPTION_LEGAL_READER == 'true'
+        run: node scripts/verify-career-express-release.mjs --seed-vacancies --baseline "${{ runner.temp }}/platform-baseline"
       - name: Refresh public federal vacancy snapshot
         if: github.event_name != 'pull_request' && (env.FOCUSED_HOTFIX != 'true' || env.CAREER_VERIFIED_PUBLISH == 'true')
         run: |
           node scripts/sync-career-vacancies.mjs --refresh --baseline "${{ runner.temp }}/platform-baseline"
           node scripts/sync-career-vacancies.mjs --check
       - name: Update published reception calendars
-        if: env.CAREER_VERIFIED_PUBLISH != 'true'
+        if: env.CAREER_VERIFIED_PUBLISH != 'true' && env.RECEPTION_LEGAL_READER != 'true'
         run: node scripts/update-reception-calendars.mjs
       - name: Validate static bundle
         if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true' || env.FIREBASE_TRANSPORT_ONLY == 'true'
@@ -591,7 +610,7 @@ jobs:
         if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: npx --yes firebase-tools@15.30.1 emulators:exec --project demo-rudn --config firebase.puzzle.json --only auth,database "node --test scripts/test-settlements-emulator.mjs"
       - name: Verify Firebase gateway request transport and project boundaries
-        if: env.CAREER_VERIFIED_PUBLISH != 'true'
+        if: env.CAREER_VERIFIED_PUBLISH != 'true' && env.RECEPTION_LEGAL_READER != 'true'
         run: |
           node scripts/test-firebase-gateway.mjs
           node --test firebase/functions/gateway.test.mjs
@@ -721,13 +740,18 @@ jobs:
         uses: actions/configure-pages@v5
       - name: Build and verify exact runtime and immutable resources
         run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
+      - name: Verify the shared Legal Lab reader
+        if: env.RECEPTION_LEGAL_READER == 'true'
+        run: node --test tests/legal-lab-reader-data.test.mjs tests/legal-lab-reader-tools.test.mjs
       - name: Verify actual immutable main and module routes
         if: env.CAREER_VERIFIED_PUBLISH != 'true'
         run: |
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium
           export PLAYWRIGHT_MODULE_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
-          node scripts/platform-main-staging.mjs --a "${{ runner.temp }}/platform-staging" --b "${{ runner.temp }}/platform-staging" --kind modules --browser chromium --output "${{ runner.temp }}/platform-main-staging"
+          kind=modules
+          if [ "$RECEPTION_LEGAL_READER" = 'true' ]; then kind=reception-reader; fi
+          node scripts/platform-main-staging.mjs --a "${{ runner.temp }}/platform-staging" --b "${{ runner.temp }}/platform-staging" --kind "$kind" --browser chromium --output "${{ runner.temp }}/platform-main-staging"
       - name: Retain immutable main smoke evidence
         if: always()
         uses: actions/upload-artifact@v4
