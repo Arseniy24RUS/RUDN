@@ -1,112 +1,158 @@
-const CHARACTER_SELECTOR = '.rx-gfx-stage .rx-character, .rx-hero-person';
+import {resourceURL} from '../../../assets/js/release-resources.js';
 
-/** Ambient presentation only. Animation time never enters a saved shift. */
+const RECEPTION_SCENE = '.rx-scene:not(.rx-compact-scene) .rx-gfx-stage[data-scene-actor]';
+const IDLE_ACTOR = /^(?:C(?:0[1-9]|1[0-9]|2[0-4])|S0[34])$/;
+const READY = 'data-idle-motion-ready';
+
+/** One optional portrait loop. Its playback position is never written to a shift. */
 export function createCharacterMotion(root, {signal} = {}) {
   const document = root.ownerDocument;
   const view = document.defaultView;
-  if (signal?.aborted || !view || typeof root.animate !== 'function') {
-    return {refresh() {}, destroy() {}};
-  }
+  if (signal?.aborted || !view) return {refresh() {}, destroy() {}};
 
-  const reducedMotion = view.matchMedia('(prefers-reduced-motion: reduce)');
-  const characters = new Map();
-  const phases = new Map();
+  const video = document.createElement('video');
+  if (!video.canPlayType('video/webm; codecs="vp9"')) return {refresh() {}, destroy() {}};
+  video.className = 'rx-character rx-character-video';
+  video.muted = video.defaultMuted = video.playsInline = video.loop = true;
+  video.preload = 'none';
+  video.setAttribute('aria-hidden', 'true');
+
+  const reduce = view.matchMedia('(prefers-reduced-motion: reduce)');
+  const failedActors = new Set();
+  let stage = null;
+  let actor = '';
+  let visible = false;
+  let ready = false;
+  let supportsAlpha;
+  let frame;
   let destroyed = false;
 
-  function updatePlayback(character) {
-    const playing = !document.hidden && character.visible;
-    for (const animation of character.animations) {
-      if (playing) animation.play();
-      else animation.pause();
+  function usePortrait() {
+    ready = false;
+    stage?.removeAttribute(READY);
+  }
+
+  function clearSource() {
+    video.pause();
+    if (frame !== undefined) video.cancelVideoFrameCallback(frame);
+    frame = undefined;
+    usePortrait();
+    if (video.hasAttribute('src')) {
+      video.removeAttribute('src');
+      video.load();
+    }
+  }
+
+  function presentFrame() {
+    frame = undefined;
+    if (!stage || video.paused || !video.videoWidth) return;
+    if (supportsAlpha === undefined) {
+      // A browser can decode VP9 and still discard its alpha channel.
+      const sample = document.createElement('canvas');
+      sample.width = sample.height = 1;
+      const context = sample.getContext('2d', {willReadFrequently: true});
+      try {
+        context?.drawImage(video, 0, 0, 1, 1, 0, 0, 1, 1);
+        supportsAlpha = (context?.getImageData(0, 0, 1, 1).data[3] ?? 255) < 32;
+      } catch {
+        supportsAlpha = false;
+      }
+    }
+    if (!supportsAlpha) {
+      clearSource();
+      video.remove();
+      return;
+    }
+    ready = true;
+    stage.setAttribute(READY, '');
+  }
+
+  function onPlaying() {
+    if (ready || frame !== undefined) return;
+    if (video.requestVideoFrameCallback) frame = video.requestVideoFrameCallback(presentFrame);
+    else presentFrame();
+  }
+
+  function onError() {
+    if (actor) failedActors.add(actor);
+    clearSource();
+  }
+
+  function updatePlayback() {
+    if (!stage || !visible || document.hidden || supportsAlpha === false || failedActors.has(actor)) {
+      video.pause();
+      return;
+    }
+    if (!video.hasAttribute('src')) {
+      video.src = resourceURL(`../assets/gfx1/motion/${actor}.webm`, import.meta.url).href;
+    }
+    if (video.paused) {
+      const requestedActor = actor;
+      video.play().catch(error => {
+        if (error.name !== 'AbortError' && actor === requestedActor) usePortrait();
+      });
     }
   }
 
   const observer = typeof view.IntersectionObserver === 'function'
     ? new view.IntersectionObserver(entries => {
       for (const entry of entries) {
-        const character = characters.get(entry.target);
-        if (!character) continue;
-        character.visible = entry.isIntersecting;
-        updatePlayback(character);
+        if (entry.target !== stage) continue;
+        visible = entry.isIntersecting;
+        updatePlayback();
       }
     })
     : null;
 
-  function release(element, character) {
-    phases.set(character.key, character.animations.map(animation => animation.currentTime || 0));
-    for (const animation of character.animations) animation.cancel();
-    element.style.transformOrigin = character.originalOrigin;
-    observer?.unobserve(element);
-    characters.delete(element);
-  }
-
-  function animateCharacter(element) {
-    const stage = element.closest('[data-scene-actor]');
-    const actor = stage?.dataset.sceneActor || 'C01';
-    const key = stage ? actor : 'welcome';
-    const rhythm = Number(actor.slice(1)) || 1;
-    const restrained = element.closest('.rx-compact-scene') || ['C09', 'C21'].includes(actor);
-    const originalOrigin = element.style.transformOrigin;
-    element.style.transformOrigin = '50% 100%';
-
-    // Independent transform properties preserve the existing scene placement.
-    const breath = element.animate([
-      {scale: '1 1', offset: 0},
-      {scale: restrained ? '1.002 1.006' : '1.004 1.012', offset: 0.42},
-      {scale: '1 1', offset: 1}
-    ], {duration: 4100 + (rhythm % 5) * 170, iterations: Infinity, easing: 'ease-in-out'});
-    breath.id = 'reception-breath';
-
-    const sway = element.animate([
-      {rotate: '0deg', translate: '0 0', offset: 0},
-      {rotate: restrained ? '0.07deg' : '0.28deg', translate: '0 0', offset: 0.26},
-      {rotate: restrained ? '-0.06deg' : '-0.22deg', translate: restrained ? '0 0' : '-0.7px 0', offset: 0.64},
-      {rotate: '0deg', translate: '0 0', offset: 1}
-    ], {duration: 11200 + (rhythm % 4) * 370, iterations: Infinity, easing: 'ease-in-out'});
-    sway.id = 'reception-weight-shift';
-
-    const animations = [breath, sway];
-    const previousPhases = phases.get(key);
-    for (const [index, animation] of animations.entries()) {
-      animation.pause();
-      animation.currentTime = previousPhases?.[index] ?? (rhythm % 7) * 300;
-    }
-    const bounds = element.getBoundingClientRect();
-    const visible = bounds.width > 0 && bounds.height > 0 && bounds.bottom > 0 && bounds.top < view.innerHeight;
-    const character = {key, animations, originalOrigin, visible};
-    characters.set(element, character);
-    observer?.observe(element);
-    updatePlayback(character);
-  }
-
   function refresh() {
     if (destroyed) return;
-    for (const [element, character] of characters) {
-      if (reducedMotion.matches || !root.contains(element)) release(element, character);
+    const candidate = reduce.matches || supportsAlpha === false ? null : root.querySelector(RECEPTION_SCENE);
+    const next = IDLE_ACTOR.test(candidate?.dataset.sceneActor || '') ? candidate : null;
+    if (next === stage) return;
+    if (stage) {
+      observer?.unobserve(stage);
+      stage.removeAttribute(READY);
     }
-    if (reducedMotion.matches) return;
-    for (const element of root.querySelectorAll(CHARACTER_SELECTOR)) {
-      if (!characters.has(element)) animateCharacter(element);
+    stage = next;
+    if (!stage) {
+      if (reduce.matches) clearSource();
+      else video.pause();
+      video.remove();
+      return;
     }
-  }
 
-  function onVisibilityChange() {
-    for (const character of characters.values()) updatePlayback(character);
+    const nextActor = stage.dataset.sceneActor;
+    if (nextActor !== actor) {
+      clearSource();
+      actor = nextActor;
+    }
+    stage.querySelector('picture').after(video);
+    if (ready) stage.setAttribute(READY, '');
+
+    const bounds = stage.getBoundingClientRect();
+    visible = !observer || (bounds.width > 0 && bounds.height > 0 && bounds.bottom > 0 && bounds.top < view.innerHeight);
+    observer?.observe(stage);
+    updatePlayback();
   }
 
   function destroy() {
     if (destroyed) return;
     destroyed = true;
     observer?.disconnect();
-    document.removeEventListener('visibilitychange', onVisibilityChange);
-    reducedMotion.removeEventListener('change', refresh);
+    document.removeEventListener('visibilitychange', updatePlayback);
+    reduce.removeEventListener('change', refresh);
     signal?.removeEventListener('abort', destroy);
-    for (const [element, character] of characters) release(element, character);
-    phases.clear();
+    video.removeEventListener('playing', onPlaying);
+    video.removeEventListener('error', onError);
+    clearSource();
+    video.remove();
+    stage = null;
   }
 
-  document.addEventListener('visibilitychange', onVisibilityChange);
-  reducedMotion.addEventListener('change', refresh);
+  document.addEventListener('visibilitychange', updatePlayback);
+  reduce.addEventListener('change', refresh);
   signal?.addEventListener('abort', destroy, {once: true});
+  video.addEventListener('playing', onPlaying);
+  video.addEventListener('error', onError);
   return {refresh, destroy};
 }
