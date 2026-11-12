@@ -738,7 +738,7 @@ function renderReception(topic,{context='course'}={}){
   currentCleanup=cleanup;
   mountTask=(async()=>{
     try{
-      const {mountReception}=await import('../../apps/reception/js/app.js?v=1.0.1');
+      const {mountReception}=await import('../../apps/reception/ai/entry.js?v=3.0.0');
       if(!active())return;
       mountStarted=true;
       mountedCleanup=await mountReception(mount,{
