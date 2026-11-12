@@ -35,6 +35,19 @@
 .rx-source-dialog .ll-paragraph-text {font-size:16px;line-height:1.7;user-select:text;}
 .rx-source-dialog .ll-reader-section {content-visibility:visible;}
 .rx-source-dialog .ll-reader-icon {min-width:44px;min-height:44px;}
+.rx-source-reference-tray {flex-shrink:0;display:flex;align-items:center;gap:14px;padding:12px 18px;border-top:1px solid #c9dce9;background:#f0f7fc;box-shadow:0 -3px 16px #18324608;}
+.rx-source-reference-copy {flex:1;min-width:0;overflow-wrap:anywhere;}
+.rx-source-reference-copy [data-source-reference-hint] {margin:0;color:#4b6e88;font-size:12px;line-height:1.5;}
+.rx-source-reference-copy strong {display:block;font-size:13px;line-height:1.5;color:#214e6d;margin-top:4px;max-height:40px;overflow:auto;}
+.rx-source-reference-copy [data-source-reference-preview] {margin:3px 0 0;font-size:11px;line-height:1.5;color:#617d92;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;}
+.rx-source-reference-copy strong:empty,.rx-source-reference-copy p:empty {display:none;}
+.rx-source-reference-actions {display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.rx-source-reference-actions button {font:600 13px/1.4 system-ui;min-height:44px;padding:9px 14px;max-width:100%;border:1px solid #c3d9e7;border-radius:10px;background:#fff;color:#3e6b87;cursor:pointer;touch-action:manipulation;}
+.rx-source-reference-actions [data-source-reference-use] {background:#0879bb;border-color:#0879bb;color:#fff;}
+.rx-source-reference-actions button:disabled {opacity:.45;cursor:not-allowed;}
+.rx-source-dialog:has([data-source-reference-tray]) .ll-paragraph {cursor:pointer;}
+.rx-source-dialog:has([data-source-reference-tray]) .ll-paragraph.selected {background:#e5f2fb;box-shadow:inset 3px 0 #0879bb;}
+.rx-source-dialog:has([data-source-reference-tray]) .ll-paragraph.selected .ll-check {color:#0879bb;}
 @media(max-width:620px) {
   .rx-source-dialog {width:100vw;height:100dvh;margin:0;border:0;border-radius:0;}
   .rx-source-dialog-bar {padding:8px 10px;padding-top:max(8px,env(safe-area-inset-top));gap:8px;}
@@ -45,9 +58,108 @@
   .rx-source-dialog .toc-open .ll-toc {width:100%;max-width:none;}
   .rx-source-dialog .toc-open .ll-paper {display:none;}
   .rx-source-dialog .ll-searchbar {padding:8px;}
+  .rx-source-reference-tray {padding:10px 12px max(10px,env(safe-area-inset-bottom));flex-direction:column;align-items:stretch;gap:8px;}
+  .rx-source-reference-copy [data-source-reference-preview] {-webkit-line-clamp:1;}
+  .rx-source-reference-copy strong {font-size:12px;max-height:34px;}
+  .rx-source-reference-actions {justify-content:flex-end;}
+  .rx-source-reference-actions button {flex:1;font-size:12px;}
+  .rx-source-reference-actions [data-source-reference-use] {flex:1.3;}
 }
 @media(max-height:440px) {
   .rx-source-dialog .ll-reader-header {max-height:19%;padding:6px 14px;}
   .rx-source-dialog .ll-reader-header h2 {font-size:14px;}
   .rx-source-dialog .ll-eyebrow,.rx-source-dialog .ll-revision {display:none;}
+}
+
+/* Embedded cabinet reader: the application's header and five tabs stay usable. */
+.reception-ai-root [data-source-reader-host]:empty{display:none}
+.reception-ai-root[data-source-reader-open=true] .rxa-documents-library{display:none!important}
+.reception-ai-root[data-source-reader-open=true] .rxa-page-content{display:flex;flex-direction:column;overflow:hidden!important}
+.reception-ai-root[data-source-reader-open=true] .rxa-documents-page{display:flex;flex-direction:column;min-height:0;flex:1;padding-bottom:0!important;overflow:hidden}
+.reception-ai-root[data-source-reader-open=true] .rxa-documents-page>.rxa-desk{display:flex;flex-direction:column;min-height:0;flex:1;border:0;border-radius:0;background:transparent;overflow:hidden}
+/* The virtualized text needs a bounded scroll surface on desktop as well.
+   Mobile already receives its exact visible height from the cabinet root. */
+@media(min-width:821px){
+ .reception-ai-root[data-source-reader-open=true]{height:clamp(720px,calc(var(--rxa-visible-height,100dvh) - 120px),1100px);min-height:0;overflow:hidden}
+ .reception-ai-root[data-source-reader-open=true] .rxa-page-content{padding-bottom:0}
+}
+.reception-ai-root [data-source-reader-host].rx-source-reader-open{display:flex;flex-direction:column;flex:1;min-height:0;min-width:0}
+.reception-ai-root .rx-source-dialog.rx-source-embedded{position:relative;inset:auto;display:flex;flex-direction:column;width:100%;height:auto;min-width:0;min-height:0;max-width:none;max-height:none;flex:1;margin:0;border:0;border-radius:0;background:#f7f9fc;color:#142d46;padding:0;font:inherit;overflow:hidden;contain:none;container-type:normal;box-shadow:none}
+.rx-source-embedded .rx-source-dialog-bar{display:flex;flex-wrap:nowrap;gap:6px;padding:4px 0;background:transparent;border:0;min-height:44px}
+.rx-source-embedded .rx-source-dialog-bar button{font:inherit;font-size:12px;font-weight:500;min-height:44px;border:0;border-radius:8px;background:transparent;color:#426383;padding:5px 0;display:inline-flex;align-items:center;gap:7px}
+.rx-source-embedded .rx-source-dialog-bar button svg{width:20px;height:20px;flex-shrink:0}
+.rx-source-embedded .rx-source-dialog-bar p{font-size:12px;line-height:1.4;color:#526c89}
+.rx-source-embedded .rx-source-dialog-bar p:empty{display:none}
+.rx-source-embedded .rx-source-dialog-bar .ll-reader-tools{margin-left:auto;display:flex;gap:3px}
+.rx-source-embedded .rx-source-dialog-bar .ll-reader-tools button{min-width:44px;justify-content:center;padding:8px}
+.rx-source-embedded .ll-reader-tools [data-action=toggle-reader-search]{display:none}
+.rx-source-embedded .rx-source-reader-content{min-height:0;flex:1;display:flex;flex-direction:column;overflow:hidden}
+.rx-source-embedded .ll-reader{background:transparent;min-height:0;flex:1;overflow:hidden}
+.rx-source-embedded .ll-reader-header{padding:13px 0 12px;display:flex;align-items:flex-start;gap:11px;max-height:25%;border-bottom:1px solid #d4dfea;background:transparent;overflow:auto;flex-shrink:0}
+.rx-source-embedded .ll-reader-header>[data-document-text]{min-width:0;flex:1}
+.rx-source-embedded [data-cabinet-document-icon]{display:inline-flex;padding-top:4px;flex-shrink:0;color:#3d5d7d}
+.rx-source-embedded [data-cabinet-document-icon] svg{width:26px;height:26px}
+.rx-source-embedded .ll-reader-header h2{color:#142d46;margin:0 0 4px;font-family:inherit;font-size:16px;font-weight:700;line-height:1.45}
+.rx-source-embedded .ll-eyebrow{font:inherit;color:#526c89;font-size:12px;letter-spacing:0;text-transform:none;display:block}
+.rx-source-embedded .ll-revision{font:inherit;color:#61768c;font-size:11px;display:block;margin-top:4px}
+.rx-source-embedded .ll-reader-dock{display:none}
+.rx-source-embedded .ll-reader-search-panel{max-height:30%;flex-shrink:0;border:0;background:transparent;margin:0 0 4px;overflow:auto}
+.rx-source-embedded .ll-searchbar{display:flex;flex-wrap:nowrap;gap:4px;padding:0 0 0 12px;border:1px solid #becde0;border-radius:10px;background:transparent;min-height:44px;margin:0}
+.rx-source-embedded .ll-searchbar>input{border:0!important;border-radius:0;background:transparent;flex:1;min-width:0;width:100%;padding:10px 0;color:#142d46;font-family:inherit;font-size:16px;font-weight:400;line-height:1.4;box-shadow:none}
+.rx-source-embedded .ll-searchbar>input::placeholder{color:#718198;opacity:1}
+.rx-source-embedded .ll-searchbar>button{min-width:42px;min-height:44px;border:0;background:transparent!important;color:#3c5e7e!important;border-radius:8px;padding:10px;font-size:14px}
+.rx-source-embedded .ll-searchbar>button svg{width:20px;height:20px}
+.rx-source-embedded .ll-searchbar>button[data-action=clear-search]{min-width:36px;width:36px;padding:10px 7px}
+.rx-source-embedded .ll-search-results{padding:10px 0;max-height:180px;border:0;background:transparent;font:inherit;font-size:12px}
+.rx-source-embedded .ll-search-results button{border:1px solid #d7e1eb;border-radius:8px;padding:9px 10px;background:#fff}
+.rx-source-embedded .ll-search-results button b,.rx-source-embedded .ll-search-results button span{font-size:12px;line-height:1.55}
+.rx-source-embedded .ll-reader-surface{background:transparent;padding:0;min-height:0;flex:1;display:flex;flex-direction:column;overflow:hidden}
+.rx-source-embedded .ll-reader-grid{display:flex!important;min-height:0;flex:1;align-items:stretch;overflow:hidden;gap:0}
+.rx-source-embedded .ll-reader-grid>.ll-paper{border:0;border-radius:0;height:auto;min-height:0;max-height:none;flex:1;width:0;padding:14px 1px 28px;background:transparent;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-gutter:auto;overscroll-behavior:contain;touch-action:pan-y}
+.rx-source-embedded .ll-reader-grid>.ll-toc{border:0;border-radius:0;max-height:none;height:auto;width:260px;max-width:45%;overflow:auto;overscroll-behavior:contain;background:#f0f5fb}
+.rx-source-embedded .ll-toc button{font-family:inherit;font-size:13px;line-height:1.5;min-height:44px;padding:10px}
+.rx-source-embedded .ll-reader-section{margin:0 0 13px;content-visibility:visible}
+.rx-source-embedded .ll-reader-section>h3,.rx-source-embedded .ll-paper>h3{font-family:inherit;font-size:19px;font-weight:700;line-height:1.45;margin:14px 0 11px;color:#142d46}
+.rx-source-embedded.legal-lab .ll-paragraph{padding:5px 3px;margin:0;border:0;border-radius:4px;background:transparent;outline:none;box-shadow:none;scroll-margin-top:12px}
+.rx-source-embedded.legal-lab .ll-paragraph:hover{background:#edf5fc;border:0}
+.rx-source-embedded .ll-paragraph-text{font-family:inherit;font-size:16px;line-height:1.75;font-weight:400;color:#142d46;white-space:pre-line;overflow-wrap:anywhere}
+.rx-source-embedded .ll-paragraph-heading .ll-paragraph-text{font-size:18px;font-weight:700;line-height:1.5}
+.rx-source-embedded .ll-unit-context{font-family:inherit;font-size:12px;color:#526c89}
+.rx-source-embedded .ll-paragraph-locator{display:none}
+.rx-source-embedded .ll-check{display:none}
+.rx-source-embedded.legal-lab .ll-paragraph.selected{background:#dcecfc;border:0;border-radius:4px;box-shadow:inset 2px 0 #0079c1}
+.rx-source-embedded .ll-paper ::selection{background:#c4e1ff;color:#142d46}
+.rx-source-embedded .ll-paragraph:focus-visible{outline:2px solid #0079c1!important;outline-offset:1px}
+.rx-source-embedded .rx-source-reference-tray{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 12px;align-items:center;padding:10px 0 14px;border:0;border-radius:0;background:transparent;box-shadow:none;flex-shrink:0}
+.rx-source-embedded .rx-source-reference-copy{grid-column:1;grid-row:1;min-width:0;padding:9px 10px;background:#e7f3ff;border-radius:8px 0 0 8px}
+.rx-source-embedded .rx-source-reference-copy [data-source-reference-hint]{font-family:inherit;font-size:13px;line-height:1.5;color:#3d5c7a;margin:0}
+.rx-source-embedded .rx-source-reference-copy strong,.rx-source-embedded .rx-source-reference-copy [data-source-reference-preview]{display:none}
+.rx-source-embedded .rx-source-reference-actions{display:contents}
+.rx-source-embedded .rx-source-reference-actions [data-source-reference-clear]{grid-column:2;grid-row:1;min-height:44px;background:#e7f3ff;border:0;border-radius:0 8px 8px 0;color:#0079c1;font-family:inherit;font-size:13px;padding:8px 12px;margin-left:-12px}
+.rx-source-embedded .rx-source-reference-actions [data-source-reference-use]{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:48px;border-radius:10px;background:#0079c1;border-color:#0079c1;font-family:inherit;font-size:15px;font-weight:650;line-height:1.4;padding:12px 14px}
+.rx-source-embedded .rx-source-reference-actions [data-source-reference-use] svg{width:24px;height:24px;flex-shrink:0}
+.rx-source-embedded .rx-source-reference-note{grid-column:1/-1;font-family:inherit;color:#61728c;font-size:11px;line-height:1.5;display:block}
+.rx-source-embedded [data-source-reference-tray][data-selected=false]{gap:0;padding:8px 0 12px}
+.rx-source-embedded [data-source-reference-tray][data-selected=false] .rx-source-reference-copy{grid-column:1/-1;background:transparent;padding:0}
+.rx-source-embedded [data-source-reference-tray][data-selected=false] [data-source-reference-use],.rx-source-embedded [data-source-reference-tray][data-selected=false] .rx-source-reference-note{display:none}
+@media(max-width:620px){
+ .reception-ai-root .rx-source-dialog.rx-source-embedded{width:100%;height:auto;margin:0;padding:0;border:0}
+ .rx-source-embedded .ll-reader-grid.toc-open .ll-toc{display:block;width:100%;max-width:none}
+ .rx-source-embedded .ll-reader-grid.toc-open .ll-paper{display:none}
+ .rx-source-embedded .ll-reader-header{padding:12px 0;max-height:24%}
+ .rx-source-embedded .rx-source-reference-tray{padding:10px 0 12px}
+}
+@media(max-width:360px){
+ .rx-source-embedded .ll-reader-header h2{font-size:15px}
+ .rx-source-embedded .ll-paragraph-text{font-size:16px;line-height:1.65}
+ .rx-source-embedded .rx-source-reference-copy [data-source-reference-hint]{font-size:12px}
+ .rx-source-embedded .rx-source-reference-actions [data-source-reference-use]{font-size:14px}
+}
+@media(max-height:620px){
+ .rx-source-embedded .ll-reader-header{max-height:19%;padding:6px 0}
+ .rx-source-embedded .ll-reader-header h2{font-size:14px;line-height:1.4}
+ .rx-source-embedded .ll-revision{display:none}
+ .rx-source-embedded .rx-source-reference-note{display:none}
+ .rx-source-embedded .rx-source-reference-tray{gap:6px;padding:7px 0}
+ .rx-source-embedded .rx-source-reference-actions [data-source-reference-use]{min-height:44px;padding:9px 12px}
 }

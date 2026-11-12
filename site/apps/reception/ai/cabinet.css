@@ -1,0 +1,418 @@
+/*
+ * Reception cabinet — the five approved mobile concepts, implemented as UI.
+ * Keep this sheet last: it changes presentation, not the workspace contracts.
+ * The original character controller, viewport handling and assessment controls
+ * remain in their owning modules. Calendar and source reader own their styles.
+ */
+@font-face {
+  font-family: 'Reception Inter';
+  src: url('../assets/ui/InterVariable.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+.reception-ai-root.rxa-cabinet {
+  --rxa-blue: #0079c1;
+  --rxa-ink: #142d46;
+  --rxa-muted: #526c89;
+  --rxa-border: #d5e1ec;
+  --rxa-pale: #e6f3ff;
+  --rxa-surface: #f7f9fc;
+  --rxa-nav-height: 70px;
+  color: var(--rxa-ink);
+  background: var(--rxa-surface);
+  font-family: 'Reception Inter', 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  font-optical-sizing: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  border-color: var(--rxa-border);
+  border-radius: 16px;
+}
+.reception-ai-root.rxa-cabinet h1,
+.reception-ai-root.rxa-cabinet h2,
+.reception-ai-root.rxa-cabinet h3 { color: var(--rxa-ink); }
+.reception-ai-root.rxa-cabinet h1 { font-weight: 750; letter-spacing: -.035em; }
+.reception-ai-root.rxa-cabinet h2 { font-weight: 700; letter-spacing: -.025em; }
+.reception-ai-root.rxa-cabinet a { color: var(--rxa-blue); }
+.reception-ai-root.rxa-cabinet .rxa-icon { display: inline-block; width: 22px; height: 22px; stroke-width: 1.75; }
+.reception-ai-root.rxa-cabinet .rxa-btn { min-height: 46px; border-radius: 11px; padding: 11px 16px; font-size: 14px; font-weight: 600; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-btn.primary { background: var(--rxa-blue); border-color: var(--rxa-blue); color: #fff; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-btn.primary:hover { background: #006ba9; border-color: #006ba9; }
+.reception-ai-root.rxa-cabinet .rxa-btn.quiet { color: var(--rxa-blue); }
+.reception-ai-root.rxa-cabinet button:disabled { opacity: .52; }
+.reception-ai-root.rxa-cabinet :focus-visible { outline: 3px solid #008ddc; outline-offset: 3px; }
+
+/* One calm masthead; locale is available in the compact settings disclosure. */
+.reception-ai-root.rxa-cabinet .rxa-top { position: relative; min-height: 76px; padding: 14px 26px; gap: 16px; background: var(--rxa-surface); border-bottom: 1px solid var(--rxa-border); z-index: 8; }
+.reception-ai-root.rxa-cabinet .rxa-brand { gap: 15px; flex: 1; min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-brand-mark { width: 43px; height: 36px; flex: 0 0 43px; color: #3a5a77; padding-right: 12px; border-right: 1px solid #c9d7e4; }
+.reception-ai-root.rxa-cabinet .rxa-brand-mark .rxa-icon { width: 30px; height: 30px; stroke-width: 1.5; }
+.reception-ai-root.rxa-cabinet .rxa-brand-copy { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-brand-copy strong { font-size: 20px; line-height: 1.25; font-weight: 720; letter-spacing: -.035em; overflow-wrap: normal; }
+.reception-ai-root.rxa-cabinet .rxa-brand-copy > span { color: #526c89; font-size: 13px; line-height: 1.35; }
+.reception-ai-root.rxa-cabinet .rxa-top-actions { gap: 6px; flex-shrink: 0; }
+.reception-ai-root.rxa-cabinet .rxa-back,
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings > summary { display: grid; place-items: center; width: 44px; height: 44px; min-width: 44px; padding: 10px; border: 0; border-radius: 10px; color: #3a5a77; background: transparent; cursor: pointer; list-style: none; }
+.reception-ai-root.rxa-cabinet .rxa-back .rxa-icon { width: 25px; height: 25px; }
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings { position: relative; }
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings > summary::-webkit-details-marker { display: none; }
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings > summary:hover,
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings[open] > summary,
+.reception-ai-root.rxa-cabinet .rxa-back:hover { background: #eaf1f8; }
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings > :not(summary) { position: absolute; top: calc(100% + 8px); right: 0; min-width: 150px; padding: 14px; border: 1px solid var(--rxa-border); border-radius: 12px; background: #fff; color: var(--rxa-muted); box-shadow: 0 6px 25px #142d4614; font-size: 12px; }
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings .rxa-locale { display: block; margin-top: 7px; width: 100%; min-width: 90px; min-height: 44px; color: var(--rxa-ink); }
+
+/* Shared page titles and five persistent destinations. */
+.reception-ai-root.rxa-cabinet .rxa-page-content { background: var(--rxa-surface); }
+.reception-ai-root.rxa-cabinet .rxa-page-heading { margin: 0 0 25px; min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-page-heading h1 { font-size: 32px; line-height: 1.15; margin: 0; }
+.reception-ai-root.rxa-cabinet .rxa-case-status { margin-top: 8px; color: var(--rxa-muted); font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+.reception-ai-root.rxa-cabinet .rxa-mobile-nav { border-color: var(--rxa-border); background: var(--rxa-surface); box-shadow: none; backdrop-filter: none; }
+.reception-ai-root.rxa-cabinet .rxa-mobile-nav button { color: #496681; border-radius: 12px; font-weight: 500; transition: color .16s ease, background-color .16s ease; }
+.reception-ai-root.rxa-cabinet .rxa-mobile-nav button[aria-current=page] { background: #e3f2ff; color: #006fb4; font-weight: 650; }
+.reception-ai-root.rxa-cabinet .rxa-mobile-nav .rxa-icon { stroke-width: 1.7; }
+.reception-ai-root.rxa-cabinet .rxa-unread { background: #de3546; color: #fff; font-weight: 650; min-width: 23px; height: 23px; font-size: 13px; }
+.reception-ai-root.rxa-cabinet .rxa-nav-icon .rxa-unread { border-color: var(--rxa-surface); min-width: 20px; height: 20px; font-size: 10px; }
+
+/* Reception: original room and animated visitor, followed by the next action. */
+.reception-ai-root.rxa-cabinet .rxa-foyer { padding: 28px 26px 30px; }
+.reception-ai-root.rxa-cabinet .rxa-foyer-grid { grid-template-columns: minmax(0,1.08fr) minmax(0,1fr); gap: 28px; align-items: center; }
+.reception-ai-root.rxa-cabinet .rxa-foyer-scene { border: 0; border-radius: 14px; }
+.reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-stage { height: 420px; min-height: 420px; }
+.reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-stage::before { background: none; }
+.reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-poster,
+.reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-video { width: 315px; height: 430px; top: 12px; filter: drop-shadow(0 5px 9px #19344018); }
+.reception-ai-root.rxa-cabinet .rxa-active-reception { padding: 6px 0; border: 0; border-radius: 0; background: transparent; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception .rxa-visitor-name { position: static; padding: 0; margin: 0; border: 0; background: transparent; font-size: 28px; font-weight: 720; line-height: 1.22; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.reception-ai-root.rxa-cabinet .rxa-visitor-description { margin-top: 6px; font-size: 15px; color: var(--rxa-muted); line-height: 1.5; }
+.reception-ai-root.rxa-cabinet .rxa-presence { font-size: 13px; line-height: 1.4; color: var(--rxa-muted); gap: 8px; }
+.reception-ai-root.rxa-cabinet .rxa-presence > span { background: #21b971; height: 8px; width: 8px; flex-shrink: 0; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception .rxa-presence { margin-top: 10px !important; font-size: 15px; color: #23425f; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception .rxa-presence > span { background: #0079c1; width: 10px; height: 10px; }
+.reception-ai-root.rxa-cabinet .rxa-presence.typing > span { background: #0079c1; }
+.reception-ai-root.rxa-cabinet .rxa-presence.paused > span { background: #ad8b5d; }
+.reception-ai-root.rxa-cabinet .rxa-new-message { padding: 17px 0; margin: 24px 0 19px; gap: 15px; border: 0; border-block: 1px solid var(--rxa-border); border-radius: 0; background: transparent; color: var(--rxa-ink); }
+.reception-ai-root.rxa-cabinet .rxa-new-message > .rxa-icon { color: #496681; width: 28px; height: 28px; }
+.reception-ai-root.rxa-cabinet .rxa-new-message p { font-size: 15px; line-height: 1.5; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions { flex-direction: column; gap: 10px; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions > .rxa-btn { width: 100%; min-height: 48px; font-size: 16px; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions > .primary { position: relative; padding-inline: 42px; font-weight: 650; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions > .primary > .rxa-icon { position: absolute; right: 16px; width: 25px; height: 25px; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions > .quiet { justify-content: flex-start; padding-inline: 2px; gap: 13px; font-weight: 500; }
+.reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions > .quiet .rxa-icon { color: #496681; width: 25px; height: 25px; }
+.reception-ai-root.rxa-cabinet .rxa-persist-hint { color: #61788c; font-size: 11px; }
+.reception-ai-root.rxa-cabinet .rxa-help,
+.reception-ai-root.rxa-cabinet .rxa-exercise-picker,
+.reception-ai-root.rxa-cabinet .rxa-case-brief { margin-top: 18px; border: 0; border-top: 1px solid var(--rxa-border); border-radius: 0; background: transparent; overflow: visible; }
+.reception-ai-root.rxa-cabinet .rxa-help > summary,
+.reception-ai-root.rxa-cabinet .rxa-exercise-picker > summary,
+.reception-ai-root.rxa-cabinet .rxa-case-brief > summary { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 14px 0; cursor: pointer; list-style: none; font-size: 14px; font-weight: 600; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief > summary::-webkit-details-marker { display: none; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief > summary > span { flex: 1; min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief > div { padding-bottom: 18px; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief h3 { font-size: 16px; margin-bottom: 9px; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief-body > strong { display: block; margin: 12px 0 7px; font-size: 14px; font-weight: 650; line-height: 1.6; overflow-wrap: anywhere; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief p { font-size: 14px; line-height: 1.75; color: var(--rxa-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief .rxa-persist-hint { font-size: 11px; line-height: 1.6; }
+.reception-ai-root.rxa-cabinet .rxa-case-brief[open] > summary > .rxa-icon:last-child,
+.reception-ai-root.rxa-cabinet .rxa-help[open] > summary > .rxa-icon:last-child,
+.reception-ai-root.rxa-cabinet .rxa-exercise-picker[open] > summary > .rxa-icon:last-child { transform: rotate(90deg); }
+.reception-ai-root.rxa-cabinet .rxa-help > div { padding: 0 0 18px; }
+.reception-ai-root.rxa-cabinet .rxa-task { border: 0; border-radius: 10px; background: #eaf2f8; }
+.reception-ai-root.rxa-cabinet .rxa-case-meta { margin: 10px 0; }
+.reception-ai-root.rxa-cabinet .rxa-case-meta > span { border: 0; background: #eaf1f7; }
+
+/* Setup remains a complete visible screen with case and difficulty controls. */
+.reception-ai-root.rxa-cabinet .rxa-foyer-landing .rxa-foyer-grid { align-items: start; }
+.reception-ai-root.rxa-cabinet .rxa-welcome { margin-bottom: 26px; }
+.reception-ai-root.rxa-cabinet .rxa-welcome h1 { font-size: 32px; font-weight: 740; }
+.reception-ai-root.rxa-cabinet .rxa-welcome p { color: var(--rxa-muted); }
+.reception-ai-root.rxa-cabinet .rxa-setup { padding: 24px; background: #fff; border-color: var(--rxa-border); border-radius: 14px; }
+.reception-ai-root.rxa-cabinet .rxa-section-heading h2 { font-size: 23px; }
+.reception-ai-root.rxa-cabinet .rxa-mode-choice { border-color: #d6e1eb; border-radius: 12px; }
+.reception-ai-root.rxa-cabinet .rxa-mode-choice.selected { background: #eef7ff; border-color: #8fbddd; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-mode-choice small { color: #526c89; }
+.reception-ai-root.rxa-cabinet .rxa-exercise-picker > .rxa-setup { background: transparent; border-top: 0; padding: 8px 0 20px; }
+
+/* Messenger: a single pale canvas, compact identity, and independent composer. */
+.reception-ai-root.rxa-cabinet .rxa-chat-page { padding: 22px 26px; max-width: 970px; }
+.reception-ai-root.rxa-cabinet .rxa-conversation { border: 1px solid var(--rxa-border); border-radius: 14px; background: #e6f1fc; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-person { position: relative; justify-content: space-between; gap: 10px; background: var(--rxa-surface); padding: 16px 20px; min-height: 86px; border-bottom-color: var(--rxa-border); z-index: 2; }
+.reception-ai-root.rxa-cabinet .rxa-person-info { flex: 1; min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-person-heading { gap: 14px; }
+.reception-ai-root.rxa-cabinet .rxa-person h2 { font-size: 21px; line-height: 1.25; font-weight: 710; }
+.reception-ai-root.rxa-cabinet .rxa-avatar { width: 54px; height: 54px; border: 0; background: #dce7ef; }
+.reception-ai-root.rxa-cabinet .rxa-person .rxa-presence { margin-top: 5px !important; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu { position: relative; flex-shrink: 0; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu > summary { display: grid; place-items: center; width: 44px; height: 44px; min-width: 44px; padding: 10px; border-radius: 10px; color: #496681; cursor: pointer; list-style: none; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu > summary::-webkit-details-marker { display: none; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu[open] > summary { background: #e6eef6; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu-panel { position: absolute; top: calc(100% + 8px); right: 0; z-index: 10; width: 300px; max-width: calc(100vw - 40px); max-height: min(400px,max(80px,calc(var(--rxa-visible-height,100dvh) - 180px))); overflow-y: auto; overscroll-behavior: contain; padding: 18px; border: 1px solid var(--rxa-border); border-radius: 13px; background: #fff; box-shadow: 0 8px 28px #142d461a; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu-panel strong { display: block; font-size: 14px; line-height: 1.5; margin-bottom: 9px; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu-panel p { font-size: 13px; line-height: 1.7; color: var(--rxa-muted); white-space: pre-wrap; overflow-wrap: anywhere; }
+.reception-ai-root.rxa-cabinet .rxa-chat-menu-panel .rxa-btn { margin-top: 14px; width: 100%; }
+.reception-ai-root.rxa-cabinet .rxa-messages { padding: 20px; gap: 15px; background: #e6f1fc; background-image: none; }
+.reception-ai-root.rxa-cabinet .rxa-chat-date { align-self: stretch; justify-content: center; font-size: 12px; color: #526c89; gap: 13px; margin: 0 0 10px; }
+.reception-ai-root.rxa-cabinet .rxa-chat-date::before,
+.reception-ai-root.rxa-cabinet .rxa-chat-date::after { flex: 1; width: auto; max-width: 180px; background: #b8cddd; }
+.reception-ai-root.rxa-cabinet .rxa-message { font-size: 16px; line-height: 1.5; max-width: 83%; }
+.reception-ai-root.rxa-cabinet .rxa-bubble { background: #fff; color: #142d46; padding: 12px 14px 7px; border: 0; border-radius: 18px 18px 18px 5px; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-bubble p { line-height: 1.5; }
+.reception-ai-root.rxa-cabinet .rxa-message.user .rxa-bubble { background: #0079c1; color: #fff; border: 0; border-radius: 18px 18px 5px 18px; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-message-meta { font-size: 11px; min-height: 18px; color: #59758f; margin-top: 5px; gap: 6px; }
+.reception-ai-root.rxa-cabinet .rxa-message.user .rxa-message-meta { color: #e0f1ff; }
+.reception-ai-root.rxa-cabinet .rxa-delivery .rxa-icon { width: 16px; height: 16px; }
+.reception-ai-root.rxa-cabinet .rxa-typing { min-height: 36px; padding: 12px 16px; border-radius: 18px 18px 18px 5px; background: #fff; color: #59758f; }
+.reception-ai-root.rxa-cabinet .rxa-dots { gap: 5px; }
+.reception-ai-root.rxa-cabinet .rxa-dots i { width: 6px; height: 6px; background: #7996b0; }
+.reception-ai-root.rxa-cabinet .rxa-compose { border-top: 1px solid #c8d9e7; background: var(--rxa-surface); padding: 12px 14px; }
+.reception-ai-root.rxa-cabinet .rxa-composer-box { display: flex; gap: 8px; align-items: flex-end; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-composer-box:focus-within { border: 0; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-compose textarea { flex: 1; min-width: 0; min-height: 44px; max-height: 132px; border: 1px solid #c9d7e6; border-radius: 23px; background: #eef3f9; padding: 10px 15px; line-height: 1.45; font-size: 16px; }
+.reception-ai-root.rxa-cabinet .rxa-compose textarea:focus { border-color: #469bcf; box-shadow: 0 0 0 2px #0079c114; }
+.reception-ai-root.rxa-cabinet .rxa-compose textarea::placeholder { color: #627b95; opacity: 1; }
+.reception-ai-root.rxa-cabinet .rxa-compose-materials { width: 44px; height: 44px; min-width: 44px; padding: 8px; color: #496681; border-radius: 10px; }
+.reception-ai-root.rxa-cabinet .rxa-compose-materials .rxa-icon { width: 27px; height: 27px; }
+.reception-ai-root.rxa-cabinet .rxa-send { width: 44px; height: 44px; min-width: 44px; min-height: 44px; margin: 0; background: var(--rxa-blue); }
+.reception-ai-root.rxa-cabinet .rxa-send .rxa-icon { width: 27px; height: 27px; stroke-width: 2; transform: none; }
+.reception-ai-root.rxa-cabinet .rxa-compose-actions { margin: 7px 52px 0; }
+.reception-ai-root.rxa-cabinet .rxa-attachment { border-color: #d3e1ed; border-radius: 13px; background: #fff; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-attachment strong { font-size: 13px; }
+
+/* Documents keep the library, reading and citation tools in their own host. */
+.reception-ai-root.rxa-cabinet .rxa-documents-page,
+.reception-ai-root.rxa-cabinet .rxa-calendar-page,
+.reception-ai-root.rxa-cabinet .rxa-decision-page { padding: 28px 26px 32px; }
+.reception-ai-root.rxa-cabinet .rxa-desk { border: 0; border-radius: 0; overflow: visible; background: transparent; }
+.reception-ai-root.rxa-cabinet .rxa-desk .rxa-panel,
+.reception-ai-root.rxa-cabinet .rxa-calendar-page > .rxa-panel,
+.reception-ai-root.rxa-cabinet .rxa-decision-page > .rxa-panel { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.reception-ai-root.rxa-cabinet .rxa-desk .rxa-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 0 0 18px; padding: 4px; border: 1px solid #d6e2ee; border-radius: 12px; background: #edf2f8; }
+.reception-ai-root.rxa-cabinet .rxa-tab { min-height: 44px; padding: 10px 8px; border: 0; border-radius: 8px; background: transparent; color: #526c89; font-size: 14px; font-weight: 600; line-height: 1.35; gap: 8px; }
+.reception-ai-root.rxa-cabinet .rxa-tab[aria-selected=true] { background: var(--rxa-blue); color: #fff; box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-tab > .rxa-icon { width: 19px; height: 19px; }
+.reception-ai-root.rxa-cabinet .rxa-panel-intro { font-size: 13px; color: #526c89; margin: 9px 0 19px !important; }
+.reception-ai-root.rxa-cabinet .rxa-document-list { margin: 0 0 22px; gap: 0; }
+.reception-ai-root.rxa-cabinet .rxa-document-button { padding: 15px 4px; gap: 12px; background: transparent; border-color: var(--rxa-border); border-radius: 0; }
+.reception-ai-root.rxa-cabinet .rxa-document-button[aria-pressed=true] { padding-inline: 12px; border-radius: 10px; background: #e7f2fc; }
+.reception-ai-root.rxa-cabinet .rxa-document-button > .rxa-icon { width: 27px; height: 27px; color: #496681; }
+.reception-ai-root.rxa-cabinet .rxa-document-button strong { font-size: 15px; line-height: 1.45; }
+.reception-ai-root.rxa-cabinet .rxa-document-button small { font-size: 12px; color: #62788c; margin-top: 5px; }
+.reception-ai-root.rxa-cabinet .rxa-document { border: 0; border-top: 1px solid var(--rxa-border); border-radius: 0; padding: 20px 0; background: transparent; }
+.reception-ai-root.rxa-cabinet .rxa-document h3 { font-size: 22px; font-weight: 700; }
+.reception-ai-root.rxa-cabinet .rxa-document-body { font-size: 15px; line-height: 1.8; color: #29445d; }
+.reception-ai-root.rxa-cabinet .rxa-doctype { font-size: 11px; color: #5e7891; }
+.reception-ai-root.rxa-cabinet .rxa-empty { padding: 17px 14px; border: 1px solid var(--rxa-border); background: #eef3f8; color: #526c89; }
+.reception-ai-root.rxa-cabinet .rxa-source { border-color: var(--rxa-border); padding-block: 18px; }
+.reception-ai-root.rxa-cabinet .rxa-source h3 { font-size: 15px; }
+
+/* Decision: disclosure rows retain every case-specific assessment control. */
+.reception-ai-root.rxa-cabinet .rxa-draft-status { display: flex; align-items: center; gap: 8px; margin: -13px 0 22px; font-size: 13px; color: #526c89; line-height: 1.5; }
+.reception-ai-root.rxa-cabinet .rxa-draft-status .rxa-icon { width: 21px; height: 21px; }
+.reception-ai-root.rxa-cabinet .rxa-draft-status [data-save-note] { font-size: inherit; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline { border-top: 1px solid var(--rxa-border); margin-top: 6px; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block { border: 0; border-bottom: 1px solid var(--rxa-border); border-radius: 0; margin: 0; background: transparent; overflow: visible; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary { min-height: 72px; padding: 15px 0; gap: 14px; font-size: 17px; line-height: 1.4; font-weight: 650; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary > .rxa-icon:first-child { color: #496681; width: 27px; height: 27px; flex-shrink: 0; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary > .rxa-outline-label { min-width: 0; flex: 1; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary strong { display: block; font-size: 17px; font-weight: 700; line-height: 1.35; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary small { display: block; font-size: 13px; font-weight: 400; color: #526c89; margin-top: 4px; line-height: 1.5; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary > .rxa-fold-arrow { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 23px; width: 23px; color: #496681; transition: transform .16s ease; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary > .rxa-fold-arrow .rxa-icon { width: 23px; height: 23px; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block[open] > summary { background: transparent; border-bottom: 0; }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block[open] > summary > .rxa-fold-arrow { transform: rotate(90deg); }
+.reception-ai-root.rxa-cabinet .rxa-decision-outline .rxa-assessment-content { padding: 0 0 22px; }
+.reception-ai-root.rxa-cabinet .rxa-icon-button { display: inline-grid; place-items: center; width: 44px; height: 44px; min-width: 44px; min-height: 44px; padding: 10px; border: 0; border-radius: 9px; background: transparent; color: #496681; }
+.reception-ai-root.rxa-cabinet .rxa-icon-button:hover { color: var(--rxa-blue); background: #e7f2fc; }
+.reception-ai-root.rxa-cabinet .rxa-law-section { margin: 18px 0 0; padding: 0 0 17px; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 12px; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-section-heading h2 { margin: 0; font-size: 22px; line-height: 1.3; }
+.reception-ai-root.rxa-cabinet .rxa-law-record { display: flex; align-items: center; gap: 13px; margin: 3px 0 16px; min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-law-record > .rxa-icon { width: 28px; height: 28px; color: #496681; }
+.reception-ai-root.rxa-cabinet .rxa-law-record > div { min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-law-record strong { display: block; font-size: 16px; line-height: 1.5; font-weight: 700; overflow-wrap: anywhere; }
+.reception-ai-root.rxa-cabinet .rxa-law-record time { display: block; font-size: 13px; color: var(--rxa-muted); margin-top: 2px; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-assessment-block { border: 0; border-top: 1px solid var(--rxa-border); border-radius: 0; margin: 14px 0 0; background: transparent; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-assessment-block > summary { padding: 12px 0; background: transparent; border: 0; gap: 10px; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-assessment-block > summary > .rxa-outline-label { flex: 1; min-width: 0; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-assessment-block > summary strong { display: block; font-size: 14px; font-weight: 600; line-height: 1.5; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-assessment-block > summary small { display: block; font-size: 12px; font-weight: 400; line-height: 1.5; color: var(--rxa-muted); }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-assessment-block > summary > .rxa-fold-arrow { display: inline-flex; flex: 0 0 23px; width: 23px; }
+.reception-ai-root.rxa-cabinet .rxa-law-section > .rxa-assessment-block[open] > summary > .rxa-fold-arrow { transform: rotate(90deg); }
+.reception-ai-root.rxa-cabinet .rxa-law-section .rxa-assessment-content { padding: 7px 0 5px; }
+.reception-ai-root.rxa-cabinet .rxa-references { margin: 10px 0 22px; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.reception-ai-root.rxa-cabinet .rxa-references > h3 { font-size: 17px; }
+.reception-ai-root.rxa-cabinet .rxa-references > .rxa-btn { margin-top: 12px; }
+.reception-ai-root.rxa-cabinet .rxa-selected-fragment { margin: 14px 0; border-left-color: #0079c1; padding: 12px 14px; background: #e6f3ff; font-size: 14px; line-height: 1.65; font-style: italic; }
+.reception-ai-root.rxa-cabinet .rxa-fieldset { border-color: var(--rxa-border); }
+.reception-ai-root.rxa-cabinet .rxa-fieldset legend { font-weight: 650; }
+.reception-ai-root.rxa-cabinet .rxa-field { font-size: 13px; font-weight: 600; }
+.reception-ai-root.rxa-cabinet .rxa-field input,
+.reception-ai-root.rxa-cabinet .rxa-field select,
+.reception-ai-root.rxa-cabinet .rxa-field textarea { border-color: #bdcfe0; background: #fbfcfe; color: var(--rxa-ink); font-size: 15px; }
+.reception-ai-root.rxa-cabinet .rxa-field textarea { line-height: 1.65; padding: 13px 14px; }
+.reception-ai-root.rxa-cabinet .rxa-field small { font-size: 12px; line-height: 1.6; color: #62788c; }
+.reception-ai-root.rxa-cabinet .rxa-choice { background: #fff; border-color: #d5e1ec; border-radius: 10px; }
+.reception-ai-root.rxa-cabinet .rxa-choice:has(input:checked) { border-color: #73b1d7; background: #eaf5ff; }
+.reception-ai-root.rxa-cabinet .rxa-deadline-summary { margin: 0; padding: 17px 0; border: 0; border-block: 1px solid var(--rxa-border); border-radius: 0; background: transparent; gap: 8px 12px; }
+.reception-ai-root.rxa-cabinet .rxa-deadline-summary > div { gap: 13px; }
+.reception-ai-root.rxa-cabinet .rxa-deadline-summary > div > .rxa-icon { width: 27px; height: 27px; color: #496681; }
+.reception-ai-root.rxa-cabinet .rxa-deadline-summary h3 { font-size: 13px; font-weight: 400; color: #526c89; }
+.reception-ai-root.rxa-cabinet .rxa-deadline-summary time { font-size: 16px; font-weight: 700; color: var(--rxa-ink); }
+.reception-ai-root.rxa-cabinet .rxa-deadline-summary > .rxa-btn { min-height: 44px; width: auto; padding: 8px 0; font-size: 13px; gap: 6px; font-weight: 600; }
+.reception-ai-root.rxa-cabinet [data-decision-form] > .rxa-fieldset:last-of-type { margin-top: 20px; padding-top: 0; border: 0; }
+.reception-ai-root.rxa-cabinet [data-decision-form] > .rxa-fieldset:last-of-type > legend { padding: 0 0 14px; font-size: 22px; line-height: 1.3; font-weight: 720; letter-spacing: -.025em; }
+.reception-ai-root.rxa-cabinet textarea[data-decision=reasoning] { min-height: 128px; font-size: 16px; background: transparent; border-radius: 8px; }
+.reception-ai-root.rxa-cabinet .rxa-decision-footer { margin-top: 18px; padding-top: 0; border: 0; gap: 12px; }
+.reception-ai-root.rxa-cabinet .rxa-decision-footer > .primary { width: 100%; min-height: 48px; font-size: 16px; gap: 11px; }
+.reception-ai-root.rxa-cabinet .rxa-decision-footer .rxa-save-note { font-size: 12px; color: #526c89; }
+.reception-ai-root.rxa-cabinet .rxa-decision-footer > small { font-size: 12px; color: #526c89; line-height: 1.6; }
+.reception-ai-root.rxa-cabinet .rxa-confirm { background: #eaf5ff; border-color: #b6d6eb; padding: 18px; }
+.reception-ai-root.rxa-cabinet .rxa-confirm h3 { font-size: 18px; }
+.reception-ai-root.rxa-cabinet .rxa-review,
+.reception-ai-root.rxa-cabinet .rxa-complete { background: transparent; }
+.reception-ai-root.rxa-cabinet .rxa-complete-head { border-color: var(--rxa-border); box-shadow: none; }
+.reception-ai-root.rxa-cabinet .rxa-notice { background: #edf7f2; border-color: #cbe2d7; }
+
+@media (max-width: 820px) {
+  .reception-ai-root.rxa-cabinet { border-radius: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-top { min-height: 64px; padding: calc(9px + env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) 9px max(16px,env(safe-area-inset-left)); gap: 4px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand { gap: 12px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-mark { width: 39px; height: 34px; flex-basis: 39px; padding-right: 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-mark .rxa-icon { width: 29px; height: 29px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-copy strong { font-size: 17px; letter-spacing: -.035em; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-copy > span { font-size: 12px; }
+  .reception-ai-root.rxa-cabinet .rxa-top-actions { gap: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-page-heading { margin: 0 0 20px; }
+  .reception-ai-root.rxa-cabinet .rxa-page-heading h1 { font-size: 29px; line-height: 1.17; }
+  .reception-ai-root.rxa-cabinet .rxa-case-status { font-size: 15px; margin-top: 7px; }
+  .reception-ai-root.rxa-cabinet .rxa-mobile-nav,
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-mobile-nav { display: grid; gap: 3px; min-height: 70px; padding: 6px max(8px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left)); border-top: 1px solid var(--rxa-border); background: var(--rxa-surface); box-shadow: none; }
+  .reception-ai-root.rxa-cabinet .rxa-mobile-nav button { min-height: 57px; gap: 4px; padding: 5px 0; font-size: 10px; line-height: 1.35; border-radius: 12px; min-width: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-mobile-nav .rxa-icon { width: 23px; height: 23px; }
+  .reception-ai-root.rxa-cabinet .rxa-nav-icon { width: 25px; height: 25px; }
+  .reception-ai-root.rxa-cabinet .rxa-nav-icon .rxa-unread { left: 16px; top: -5px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer { padding: 0 0 24px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-page-heading { margin: 0; padding: 18px 18px 19px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-grid { grid-template-columns: minmax(0,1fr); gap: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-scene { border: 0; border-radius: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-stage { height: clamp(256px,80vw,360px); min-height: 0; background-position: center; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-poster,
+  .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-video { width: clamp(230px,69vw,310px); height: clamp(315px,92vw,420px); top: 5px; }
+  .reception-ai-root.rxa-cabinet .rxa-active-reception { padding: 15px 18px 5px; border: 0; border-radius: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-active-reception .rxa-visitor-name { font-size: 26px; line-height: 1.2; }
+  .reception-ai-root.rxa-cabinet .rxa-visitor-description { font-size: 15px; margin-top: 6px; }
+  .reception-ai-root.rxa-cabinet .rxa-active-reception .rxa-presence { margin-top: 9px !important; font-size: 14px; }
+  .reception-ai-root.rxa-cabinet .rxa-new-message { margin: 22px 0 19px; padding: 15px 0; gap: 14px; }
+  .reception-ai-root.rxa-cabinet .rxa-new-message p { font-size: 14px; }
+  .reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions > .rxa-btn { flex: auto; min-width: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-active-reception > .rxa-actions > .quiet { min-height: 48px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-help,
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-exercise-picker,
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-case-brief { margin-inline: 18px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing { padding: 20px 18px 26px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing .rxa-welcome h1 { font-size: 29px; line-height: 1.2; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing .rxa-foyer-grid { gap: 20px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing .rxa-foyer-scene { border-radius: 12px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing .rxa-foyer-scene .rxa-citizen-stage { height: 200px; min-height: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing .rxa-citizen-poster,
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing .rxa-citizen-video { width: 190px; height: 260px; top: 5px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer-landing > .rxa-help { margin-inline: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-setup { padding: 19px 16px; border-radius: 13px; }
+  .reception-ai-root.rxa-cabinet .rxa-training-controls { grid-template-columns: minmax(0,1fr); gap: 14px; }
+  .reception-ai-root.rxa-cabinet .rxa-mode-choice { min-height: 80px; padding: 13px 11px; }
+  .reception-ai-root.rxa-cabinet .rxa-chat-page { padding: 0; max-width: none; }
+  .reception-ai-root.rxa-cabinet .rxa-conversation,
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-conversation { height: auto; min-height: 0; max-height: none; border: 0; border-radius: 0; box-shadow: none; }
+  .reception-ai-root.rxa-cabinet .rxa-person { padding: 14px 17px; min-height: 84px; }
+  .reception-ai-root.rxa-cabinet .rxa-person h2 { font-size: 19px; }
+  .reception-ai-root.rxa-cabinet .rxa-person-heading { gap: 13px; }
+  .reception-ai-root.rxa-cabinet .rxa-avatar { width: 53px; height: 53px; }
+  .reception-ai-root.rxa-cabinet .rxa-person .rxa-presence { font-size: 13px; }
+  .reception-ai-root.rxa-cabinet .rxa-messages { min-height: 0; padding: 18px 16px; gap: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-message { max-width: 88%; font-size: 16px; line-height: 1.5; }
+  .reception-ai-root.rxa-cabinet .rxa-bubble { padding: 12px 13px 6px; }
+  .reception-ai-root.rxa-cabinet .rxa-chat-date { font-size: 12px; margin-bottom: 8px; }
+  .reception-ai-root.rxa-cabinet .rxa-chat-date::before,
+  .reception-ai-root.rxa-cabinet .rxa-chat-date::after { max-width: none; }
+  .reception-ai-root.rxa-cabinet .rxa-compose { padding: 11px 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-compose textarea { padding: 10px 14px; }
+  .reception-ai-root.rxa-cabinet .rxa-compose-actions { display: none; }
+  .reception-ai-root.rxa-cabinet .rxa-attachment { max-width: 97%; }
+  .reception-ai-root.rxa-cabinet .rxa-documents-page,
+  .reception-ai-root.rxa-cabinet .rxa-calendar-page,
+  .reception-ai-root.rxa-cabinet .rxa-decision-page { padding: 19px 18px 25px; }
+  .reception-ai-root.rxa-cabinet .rxa-desk .rxa-panel,
+  .reception-ai-root.rxa-cabinet .rxa-calendar-page > .rxa-panel,
+  .reception-ai-root.rxa-cabinet .rxa-decision-page > .rxa-panel { padding: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-desk .rxa-tabs { margin: 0 0 17px; }
+  .reception-ai-root.rxa-cabinet .rxa-tab { font-size: 13px; gap: 6px; padding: 10px 6px; }
+  .reception-ai-root.rxa-cabinet .rxa-tab > .rxa-icon { display: none; }
+  .reception-ai-root.rxa-cabinet .rxa-draft-status { margin: -11px 0 20px; font-size: 12px; }
+  .reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary { min-height: 70px; padding-block: 14px; gap: 13px; }
+  .reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary strong { font-size: 16px; }
+  .reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary small { font-size: 13px; }
+  .reception-ai-root.rxa-cabinet .rxa-deadline-summary { padding: 16px 0; gap: 6px 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-deadline-summary > div { gap: 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-deadline-summary > .rxa-btn { width: auto; font-size: 12px; padding-inline: 0; }
+  .reception-ai-root.rxa-cabinet .rxa-deadline-summary time { font-size: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-fields,
+  .reception-ai-root.rxa-cabinet .rxa-assessment-content .rxa-fields { grid-template-columns: minmax(0,1fr); }
+  .reception-ai-root.rxa-cabinet .rxa-references > .rxa-btn { width: auto; }
+  .reception-ai-root.rxa-cabinet .rxa-action-order li > div { flex-direction: column; }
+  .reception-ai-root.rxa-cabinet .rxa-decision-footer > .primary { font-size: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-alert,
+  .reception-ai-root.rxa-cabinet .rxa-notice { margin-inline: 16px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-top { padding-top: max(5px,env(safe-area-inset-top)); padding-bottom: 5px; min-height: 54px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-person { min-height: 58px; padding-block: 7px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-avatar { width: 39px; height: 39px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-person h2 { font-size: 16px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-person .rxa-presence { font-size: 11px; margin-top: 2px !important; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-compose { padding-block: 7px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-mobile-nav { padding-top: 3px; padding-bottom: calc(3px + env(safe-area-inset-bottom)); min-height: 56px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-mobile-nav button { min-height: 48px; gap: 1px; }
+}
+
+@media (max-width: 360px) {
+  .reception-ai-root.rxa-cabinet .rxa-top { padding-left: max(10px,env(safe-area-inset-left)); padding-right: max(6px,env(safe-area-inset-right)); }
+  .reception-ai-root.rxa-cabinet .rxa-brand { gap: 9px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-mark { width: 34px; flex-basis: 34px; padding-right: 7px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-mark .rxa-icon { width: 27px; height: 27px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-copy strong { font-size: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-copy > span { font-size: 11px; }
+  .reception-ai-root.rxa-cabinet .rxa-mobile-nav { padding-inline: 5px; gap: 2px; }
+  .reception-ai-root.rxa-cabinet .rxa-mobile-nav button { font-size: 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-page-heading { padding-inline: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-active-reception { padding-inline: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-active-reception .rxa-visitor-name { font-size: 24px; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-help,
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-exercise-picker,
+  .reception-ai-root.rxa-cabinet .rxa-foyer > .rxa-case-brief { margin-inline: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-new-message { gap: 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-new-message p { font-size: 13px; }
+  .reception-ai-root.rxa-cabinet .rxa-documents-page,
+  .reception-ai-root.rxa-cabinet .rxa-calendar-page,
+  .reception-ai-root.rxa-cabinet .rxa-decision-page { padding-inline: 14px; }
+  .reception-ai-root.rxa-cabinet .rxa-tab { font-size: 12px; padding-inline: 4px; }
+  .reception-ai-root.rxa-cabinet .rxa-person { padding-inline: 13px; }
+  .reception-ai-root.rxa-cabinet .rxa-person h2 { font-size: 17px; }
+  .reception-ai-root.rxa-cabinet .rxa-avatar { width: 47px; height: 47px; }
+  .reception-ai-root.rxa-cabinet .rxa-person-heading { gap: 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-messages { padding-inline: 12px; }
+  .reception-ai-root.rxa-cabinet .rxa-message { max-width: 92%; }
+  .reception-ai-root.rxa-cabinet .rxa-compose { padding-inline: 6px; }
+  .reception-ai-root.rxa-cabinet .rxa-composer-box { gap: 4px; }
+  .reception-ai-root.rxa-cabinet .rxa-compose textarea { padding-inline: 11px; }
+  .reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary { gap: 10px; }
+  .reception-ai-root.rxa-cabinet .rxa-decision-outline > .rxa-assessment-block > summary strong { font-size: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-deadline-summary > .rxa-btn { width: 100%; justify-content: flex-start; padding-left: 37px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reception-ai-root.rxa-cabinet *,
+  .reception-ai-root.rxa-cabinet *::before,
+  .reception-ai-root.rxa-cabinet *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

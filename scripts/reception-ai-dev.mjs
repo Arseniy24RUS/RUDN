@@ -80,7 +80,7 @@ const server=http.createServer(async(req,res)=>{
     if(url.pathname==='/api/reception'){
       if(req.method!=='POST'){json(res,405,{ok:false,error:{code:'method'}});return;}
       if(!String(req.headers['content-type']||'').startsWith('application/json')){json(res,415,{ok:false,error:{code:'content-type'}});return;}
-      const input=await body(req);if(input.op==='start')input.studentKey=identity.studentKey;
+      const input=await body(req);if(['start','catalog','recover'].includes(input.op))input.studentKey=identity.studentKey;
       const result=await service.handle(input,identity);json(res,200,result);return;
     }
     if(req.method!=='GET'&&req.method!=='HEAD'){res.writeHead(405);res.end();return;}

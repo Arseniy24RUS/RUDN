@@ -1,0 +1,202 @@
+/* Paper and calendar tools share the reception's restrained blue palette. */
+.rxw-calendar{--rxw-ink:#173650;--rxw-blue:#0879bb;--rxw-line:#d7e6ef;--rxw-muted:#61788e;min-width:0;color:var(--rxw-ink);padding:18px 0 0}
+.rxw-calendar *,.rxw-reference *{box-sizing:border-box}
+.rxw-calendar button,.rxw-calendar input,.rxw-calendar select{font:inherit}
+.rxw-calendar button{touch-action:manipulation;cursor:pointer}
+.rxw-calendar button:disabled{opacity:.45;cursor:not-allowed}
+.rxw-calendar :focus-visible,.rxw-reference :focus-visible{outline:3px solid #0879bb;outline-offset:2px}
+.rxw-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.rxw-calendar-heading{display:flex;align-items:flex-start;gap:11px;margin-bottom:17px}
+.rxw-calendar-symbol{flex-shrink:0;display:grid;place-items:center;width:40px;height:44px;color:#0879bb;background:#eaf5fc;border:1px solid #d4e9f6;border-radius:11px}
+.rxw-calendar-symbol svg{width:23px;height:23px}
+.rxw-calendar-heading h3{font-size:17px!important;margin:0 0 5px!important;line-height:1.35}
+.rxw-calendar-heading p{font-size:12px;line-height:1.6;color:var(--rxw-muted);margin:0!important}
+.rxw-calendar-events{display:grid;gap:7px;margin:0 0 14px}
+.rxw-calendar-events button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-width:0;min-height:47px;text-align:left;padding:9px 11px;background:#f6fafd;border:1px solid var(--rxw-line);border-radius:9px;color:var(--rxw-ink);font-size:12px;line-height:1.5}
+.rxw-calendar-events button>span{min-width:0;overflow-wrap:anywhere}
+.rxw-calendar-events button strong{white-space:nowrap;font-size:12px;font-variant-numeric:tabular-nums;color:#366580}
+.rxw-calendar-events button[aria-pressed=true]{background:#eaf5fc;border-color:#7cb8d8;box-shadow:inset 3px 0 #0879bb}
+.rxw-calendar-anchor{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 10px;align-items:center;margin:15px 0;font-size:12px;font-weight:650}
+.rxw-calendar-anchor input{min-width:0;width:100%;max-width:100%;min-height:44px;padding:8px;border:1px solid #c7dce8;border-radius:9px;background:#fff;color:var(--rxw-ink);font-size:16px}
+.rxw-calendar-anchor small{grid-column:1/-1;color:var(--rxw-muted);font-weight:400;font-size:11px;line-height:1.5}
+.rxw-calendar-sheet{padding:10px;background:#fff;border:1px solid #d0e1eb;border-radius:16px;box-shadow:0 5px 22px #244b6b08;overflow:hidden}
+.rxw-calendar-month{display:flex;align-items:center;justify-content:space-between;gap:3px;padding-bottom:10px}
+.rxw-calendar-month>button{display:grid;place-items:center;background:#f4f8fc;border:1px solid #e0eaf1;border-radius:11px;color:#426780;min-width:38px;min-height:44px;width:38px;padding:5px;flex-shrink:0}
+.rxw-calendar-month svg{width:20px;height:20px}
+.rxw-calendar-month>div{display:flex;align-items:center;justify-content:center;gap:0;min-width:0;flex:1}
+.rxw-calendar-month label{min-width:0;max-width:60%}
+.rxw-calendar-month select{width:100%;max-width:100%;min-width:0;min-height:44px;padding:7px 2px;background:transparent;color:#173650;border:0;font-size:15px;font-weight:650;text-transform:capitalize;cursor:pointer}
+.rxw-calendar-week,.rxw-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}
+.rxw-calendar-week{margin:2px 0 8px;font-size:10px;color:#70869b}
+.rxw-calendar-week span:nth-last-child(-n+2){color:#ac6672}
+.reception-ai-root .rxw-calendar-day,.rxw-calendar-day{position:relative;min-height:44px;min-width:0;width:100%;border:1px solid transparent;border-radius:10px;background:#fff;color:#233e55;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;line-height:1;padding:0;isolation:isolate;font-variant-numeric:tabular-nums;transition:background .13s,border-color .13s}
+.rxw-calendar-day.rest{background:#fbf0f2;color:#9d4b5d}
+.rxw-calendar-day.working-transfer{border-color:#89b5cd;background:#edf6fb;color:#266380}
+.rxw-calendar-day.shortened::after{content:'';position:absolute;left:11px;right:11px;bottom:7px;border-bottom:2px solid #d8a54c;z-index:-1}
+.rxw-calendar-day.in-range{background:#eaf3fa}
+.rxw-calendar-day.in-range.rest{background:#f3eaf0}
+.rxw-calendar-day.anchor{box-shadow:inset 0 0 0 1.5px #679dbc;border-color:#679dbc}
+.rxw-calendar-day small{position:absolute;font-size:8px;font-weight:650;right:3px;top:4px;line-height:1;color:#85652b}
+.rxw-calendar-day i{position:absolute;width:4px;height:4px;border-radius:50%;bottom:4px;left:calc(50% - 2px);background:#0879bb}
+.rxw-calendar-day[aria-pressed=true]{color:white;background:#0879bb;border-color:#0879bb;box-shadow:0 3px 7px #0879bb24}
+.rxw-calendar-day[aria-pressed=true] small,.rxw-calendar-day[aria-pressed=true] i{color:#fff}
+.rxw-calendar-day[aria-pressed=true] i{background:#fff}
+.rxw-calendar-day[aria-pressed=true].shortened::after{border-color:#eecb86}
+.rxw-calendar-day:hover:not(:disabled):not([aria-pressed=true]){border-color:#8dbad3;background:#eef7fc}
+.rxw-calendar-legend{display:flex;flex-wrap:wrap;gap:8px 13px;padding:13px 1px;font-size:10px;line-height:1.5;color:var(--rxw-muted)}
+.rxw-calendar-legend>span{display:inline-flex;align-items:center;gap:5px}
+.rxw-calendar-legend>span::before{content:'';width:9px;height:9px;flex-shrink:0;border-radius:3px;background:#fbf0f2;border:1px solid #e4c7cf}
+.rxw-calendar-legend>.working-transfer::before{border-color:#89b5cd;background:#edf6fb}
+.rxw-calendar-legend>.shortened::before{border-color:#d8a54c;background:#fff5dd}
+.rxw-calendar-legend>.anchor::before{border:1.5px solid #679dbc;background:white}
+.rxw-calendar-selection{display:flex;flex-direction:column;gap:3px;padding:13px 14px;background:#edf6fc;border-radius:11px;margin:3px 0 11px;border:1px solid #d6e9f5}
+.rxw-calendar-selection>span{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#5c809b}
+.rxw-calendar-selection strong{font-size:18px;line-height:1.4;font-weight:650;color:#234f6d}
+.rxw-calendar-selection small{font-size:11px;line-height:1.5;color:#607e95}
+.rxw-calendar-tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px 0}
+.rxw-calendar-tools button{min-height:44px;min-width:0;border-radius:9px;border:1px solid #d4e3ed;background:#fff;color:#315a76;padding:8px 5px;font-size:12px;line-height:1.4}
+.rxw-calendar-tools button:first-child{background:#f2f8fc}
+.rxw-calendar-tools button[aria-pressed=true]{border-color:#7eb4d3;color:#0070b1;background:#eaf5fc}
+.rxw-calendar-include{display:flex;gap:9px;align-items:flex-start;font-size:12px;line-height:1.6;padding:9px 0;color:#526c81;cursor:pointer;min-height:44px}
+.rxw-calendar-include input{width:18px;height:18px;accent-color:#0879bb;flex-shrink:0;margin:1px 0 0}
+.rxw-calendar-count{padding:10px 0 13px;display:flex;flex-direction:column;gap:5px;color:#627b90;font-size:11px;line-height:1.5}
+.rxw-calendar-count>strong{color:#214f6d;font-size:23px;line-height:1.4;font-variant-numeric:tabular-nums}
+.rxw-calendar-count>strong small{font-size:11px;font-weight:500;color:#4e708a}
+.rxw-calendar-count>strong>b{font-size:13px;font-weight:400;color:#92a9ba}
+.rxw-calendar-footer{display:flex;flex-wrap:wrap;align-items:stretch;gap:7px}
+.rxw-calendar-footer button{min-height:44px;min-width:0;font-size:12px;font-weight:650;line-height:1.4;border:1px solid #d3e4ef;border-radius:10px;padding:10px 12px;flex:1}
+.rxw-calendar-clear{color:#57758a;background:#fff}
+.rxw-calendar-use{background:#0879bb;color:#fff;border-color:#0879bb!important;flex:1.5!important}
+.rxw-calendar-status{font-size:12px;color:#9d5720;padding:0;line-height:1.6;margin:10px 0!important}
+.rxw-calendar-status:empty{display:none}
+.rxw-calendar-scope{font-size:10px;line-height:1.7;color:#637e92;margin:13px 0 0!important}
+.rxw-calendar-provenance{font-size:10px;color:#607c91;line-height:1.7;margin-top:5px}
+.rxw-calendar-provenance summary{cursor:pointer;min-height:38px;display:flex;align-items:center;gap:5px;text-decoration:underline;text-underline-offset:3px}
+.rxw-calendar-provenance summary::before{content:'+';font-size:15px;text-decoration:none}
+.rxw-calendar-provenance[open] summary::before{content:'−'}
+.rxw-calendar-provenance p{margin:0!important}
+.rxw-calendar-provenance a{display:inline-flex;align-items:center;min-height:38px;margin-right:14px;color:#3d7291;overflow-wrap:anywhere}
+.rxw-reference{border:1px solid #cee1ed;border-radius:12px;margin:13px 0;padding:14px;background:#f4f9fd;overflow-wrap:anywhere;min-width:0}
+.rxw-reference header{display:flex;align-items:flex-start;gap:8px}
+.rxw-reference header>div{flex:1;min-width:0}
+.rxw-reference header small{font-size:10px;color:#577b96;text-transform:uppercase;letter-spacing:.5px}
+.rxw-reference h4{margin:5px 0;font-size:13px;line-height:1.6;color:#244d69;font-weight:650}
+.rxw-reference header p{font-size:11px;line-height:1.6;color:#607c93;margin:0!important}
+.rxw-reference header>button{width:44px;height:44px;min-width:44px;border:1px solid #d5e4ef;border-radius:9px;background:#fff;color:#547992;font-size:23px}
+.rxw-reference blockquote{margin:13px 0;padding:0 0 0 11px;border-left:3px solid #87b8d4;font-size:12px;line-height:1.8;color:#3e6079;white-space:pre-wrap;max-height:300px;overflow:auto;overscroll-behavior:contain}
+.rxw-reference-note,.rxw-source-unavailable{font-size:11px;color:#6b8194}
+.rxw-reference>a{margin-top:2px}
+@media(max-width:380px){.rxw-calendar-sheet{padding:7px}.rxw-calendar-week,.rxw-calendar-grid{gap:2px}.rxw-calendar-month label{max-width:60%}.rxw-calendar-month select{font-size:14px!important}.rxw-calendar-month>button{min-width:33px!important;width:33px}.rxw-calendar-anchor{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}.rxw-calendar-tools button{font-size:11px}.rxw-calendar-footer button{padding:9px 7px;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.rxw-calendar-day{transition:none}}
+
+/* Cabinet v6: the calendar is a full working page, with secondary tools folded. */
+.rxw-calendar-details{margin:4px 0 0;border-block:1px solid #d6e1eb}
+.rxw-calendar-details>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px;padding:12px 2px;cursor:pointer;list-style:none}
+.rxw-calendar-details>summary::-webkit-details-marker{display:none}
+.rxw-calendar-details>summary>span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.rxw-calendar-details>summary strong{font-size:14px;font-weight:650;line-height:1.4}
+.rxw-calendar-details>summary small{font-size:12px;color:var(--rxw-muted);line-height:1.5}
+.rxw-calendar-details>summary svg{width:22px;height:22px;flex-shrink:0;color:var(--rxw-blue);transition:transform .16s ease}
+.rxw-calendar-details[open]>summary svg{transform:rotate(90deg)}
+.rxw-calendar-details-content{padding:0 0 15px}
+.rxw-calendar-clear{min-height:44px;border:1px solid var(--rxw-line);border-radius:10px;padding:9px 12px;font:inherit}
+.rxw-calendar-footer svg{width:21px;height:21px;flex-shrink:0}
+.rxw-calendar-footer .rxw-calendar-use{display:flex;justify-content:center;align-items:center;gap:14px}
+.rxw-calendar-empty{min-height:44px;background:#fff}
+.rxw-calendar-day.outside-month{color:#97a3b4}
+.rxw-calendar-main-legend>.selected::before{border-radius:50%;background:var(--rxw-blue);border-color:var(--rxw-blue)}
+.rxw-calendar-main-legend>.case-date::before{height:0;background:none;border:0;border-bottom:2px solid var(--rxw-blue);border-radius:0}
+.reception-ai-root.rxa-cabinet .rxw-calendar{--rxw-ink:#142d46;--rxw-blue:#0079c1;--rxw-line:#d4dfea;--rxw-muted:#526c89;padding:0;font:inherit}
+.reception-ai-root.rxa-cabinet .rxw-calendar-heading{display:none}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events{position:relative;gap:0;margin:0 0 20px;padding:0 0 0 17px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events::before{content:'';position:absolute;top:22px;bottom:22px;left:5px;width:1px;background:#0079c1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events button{position:relative;min-height:44px;background:transparent;border:0;border-radius:0;padding:7px 0;gap:12px;color:var(--rxw-ink);font-size:15px;font-weight:400;line-height:1.45;box-shadow:none}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events button::before{content:'';position:absolute;left:-16px;top:17px;width:9px;height:9px;background:#0079c1;border:2px solid #f7f9fc;border-radius:50%;box-sizing:content-box}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events button strong{font-size:14px;font-weight:500;color:var(--rxw-ink)}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events button[aria-pressed=true]{color:#0079c1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events button[aria-pressed=true]::before{background:#f7f9fc;border-color:#0079c1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-events button:disabled{opacity:1;color:var(--rxw-ink)}
+.reception-ai-root.rxa-cabinet .rxw-calendar-sheet{padding:0;border:0;border-top:1px solid var(--rxw-line);border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+.reception-ai-root.rxa-cabinet .rxw-calendar-month{min-height:60px;padding:4px 0;gap:6px;border-bottom:1px solid var(--rxw-line)}
+.reception-ai-root.rxa-cabinet .rxw-calendar-month>button{width:44px;min-width:44px;min-height:44px;padding:8px;background:transparent;border:0;border-radius:9px;color:#0079c1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-month svg{width:25px;height:25px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-month>div{gap:2px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-month label{max-width:none}
+.reception-ai-root.rxa-cabinet .rxw-calendar-month select{font-size:20px!important;font-weight:700;min-height:44px;color:var(--rxw-ink);appearance:none;padding:7px 2px;border-radius:4px;text-align:center;text-align-last:center}
+.reception-ai-root.rxa-cabinet .rxw-calendar-month select:focus-visible{outline-offset:0}
+.reception-ai-root.rxa-cabinet .rxw-calendar-week{margin:0;padding:10px 0;font-size:12px;font-weight:650;line-height:1.4;text-transform:uppercase;color:#526c89;gap:0}
+.reception-ai-root.rxa-cabinet .rxw-calendar-week span:nth-last-child(-n+2){color:#526c89}
+.reception-ai-root.rxa-cabinet .rxw-calendar-grid{gap:0;border-top:1px solid var(--rxw-line);border-left:1px solid var(--rxw-line)}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day,.reception-ai-root.rxa-cabinet .rxw-calendar-empty{min-width:0;min-height:44px;height:44px;border:0;border-right:1px solid var(--rxw-line);border-bottom:1px solid var(--rxw-line);border-radius:0;background:#fff;box-shadow:none;color:var(--rxw-ink);font-weight:500;font-size:17px;position:relative}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day>span{position:relative;display:grid;place-items:center;min-width:33px;width:33px;height:33px;border:2px solid transparent;border-radius:10px;z-index:1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day.rest{background:#fff1f3;color:#b6343a}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day.in-range{background:#f4f8fc}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day.in-range.rest{background:#fff1f3}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day.outside-month{color:#98a5b6;background:#fbfcfe}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day.anchor>span{border-color:#0079c1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day.case-date>span::after{content:'';position:absolute;bottom:1px;left:7px;right:7px;height:2px;background:#0079c1;border-radius:2px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day[aria-pressed=true]{background:#fff;color:var(--rxw-ink)}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day[aria-pressed=true]>span{background:#0079c1;color:#fff;border-color:#0079c1;border-radius:50%}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day[aria-pressed=true].case-date>span::after{background:#fff}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day.shortened::after{left:auto;right:3px;bottom:3px;width:7px;border-color:#ad8029}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day small{font-size:7px;right:2px;top:2px;z-index:2}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day i{bottom:2px;z-index:2}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day[aria-pressed=true] i{background:#0079c1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day:disabled{opacity:1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day:not(:disabled):hover{background:#e9f4fc}
+.reception-ai-root.rxa-cabinet .rxw-calendar-day:focus-visible{outline-offset:-3px;z-index:3}
+.reception-ai-root.rxa-cabinet .rxw-calendar-main-legend{justify-content:space-between;gap:7px;padding:13px 1px 16px;color:#3d5878;font-size:11px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-main-legend>span{gap:7px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-main-legend>span::before{width:14px;height:14px;border-radius:5px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-main-legend>.anchor::before{border:1.5px solid #0079c1;background:transparent}
+.reception-ai-root.rxa-cabinet .rxw-calendar-main-legend>.case-date::before{height:0;border:0;border-bottom:2px solid #0079c1;border-radius:0;background:transparent}
+.reception-ai-root.rxa-cabinet .rxw-calendar-main-legend>.selected::before{border-radius:50%;background:#0079c1;border-color:#0079c1}
+.reception-ai-root.rxa-cabinet .rxw-calendar-details>summary{padding:13px 0;min-height:62px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-details>summary strong{font-size:15px;font-weight:600}
+.reception-ai-root.rxa-cabinet .rxw-calendar-details>summary small{font-size:12px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-selection{border:0;border-radius:0;background:transparent;padding:17px 0 12px;margin:0;gap:4px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-selection>span{font-size:13px;letter-spacing:0;text-transform:none;color:#526c89}
+.reception-ai-root.rxa-cabinet .rxw-calendar-selection>strong{font-size:23px;font-weight:750;color:#142d46;line-height:1.3}
+.reception-ai-root.rxa-cabinet .rxw-calendar-selection>small{font-size:12px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-footer{margin:3px 0 14px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-footer .rxw-calendar-use{border-radius:10px;min-height:48px;background:#0079c1;border-color:#0079c1!important;font-size:15px;padding:12px 14px;line-height:1.4;justify-content:space-between;font-weight:650}
+.reception-ai-root.rxa-cabinet .rxw-calendar-footer .rxw-calendar-use:disabled{opacity:.5}
+.reception-ai-root.rxa-cabinet .rxw-calendar-anchor{font-size:13px}
+.reception-ai-root.rxa-cabinet .rxw-calendar-tools button{font-size:13px;background:transparent;border:1px solid #cfdaE6;color:#24496a}
+.reception-ai-root.rxa-cabinet .rxw-calendar-include{font-size:13px}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block{border:0;border-bottom:1px solid var(--rxw-line);border-radius:0;background:transparent;margin:0;overflow:visible}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary{min-height:64px;padding:13px 0;gap:11px;background:transparent;border:0}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary>.rxa-icon{flex-shrink:0;width:23px;height:23px;color:#496681}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary>.rxa-outline-label{flex:1;min-width:0}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary strong{display:block;font-size:15px;font-weight:600;line-height:1.4}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary small{display:block;font-size:12px;font-weight:400;line-height:1.5;color:#526c89;margin-top:4px}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary>.rxa-fold-arrow{display:flex;flex:0 0 22px;color:#0079c1;transition:transform .16s ease}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block[open]>summary>.rxa-fold-arrow{transform:rotate(90deg)}
+.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>.rxa-assessment-content{padding:0 0 16px}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task,.reception-ai-root.rxa-cabinet .rxa-calendar-manual{border:0;border-top:1px solid #d4dfea;border-radius:0;margin:0;background:transparent;padding:0;min-width:0;overflow-wrap:anywhere}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task>summary,.reception-ai-root.rxa-cabinet .rxa-calendar-manual>summary{display:flex;align-items:center;gap:11px;min-height:56px;padding:12px 0;list-style:none;cursor:pointer;font-size:14px;font-weight:500;line-height:1.5;color:#3d5878;touch-action:manipulation}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task>summary::-webkit-details-marker,.reception-ai-root.rxa-cabinet .rxa-calendar-manual>summary::-webkit-details-marker{display:none}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task>summary>span,.reception-ai-root.rxa-cabinet .rxa-calendar-manual>summary>span{flex:1;min-width:0}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task>summary svg,.reception-ai-root.rxa-cabinet .rxa-calendar-manual>summary svg{flex-shrink:0;width:21px;height:21px}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task>summary svg:last-child,.reception-ai-root.rxa-cabinet .rxa-calendar-manual>summary svg:last-child{transition:transform .16s ease;color:#0079c1}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task[open]>summary svg:last-child,.reception-ai-root.rxa-cabinet .rxa-calendar-manual[open]>summary svg:last-child{transform:rotate(90deg)}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task>div{padding:0 0 17px}
+.reception-ai-root.rxa-cabinet .rxa-calendar-task .rxa-calendar-case-date{padding:7px 0 11px;border:0;margin:0 0 6px}
+.reception-ai-root.rxa-cabinet .rxa-calendar-manual>.rxa-fieldset{margin:0 0 16px}
+.reception-ai-root.rxa-cabinet .rxa-calendar-manual input[type=date]{min-width:0;width:100%;font-size:16px;min-height:44px}
+.reception-ai-root.rxa-cabinet .rxa-calendar-footer{margin-top:0;padding-top:17px;border-color:#d4dfea}
+.reception-ai-root.rxa-cabinet .rxw-reference{padding:0;border:0;border-radius:0;background:transparent;margin:16px 0}
+.reception-ai-root.rxa-cabinet .rxw-reference h4{font-size:15px;line-height:1.5;color:#142d46}
+.reception-ai-root.rxa-cabinet .rxw-reference header small{display:none}
+.reception-ai-root.rxa-cabinet .rxw-reference header p{font-size:12px;color:#526c89}
+.reception-ai-root.rxa-cabinet .rxw-reference header>button{border:0;background:transparent;color:#526c89}
+.reception-ai-root.rxa-cabinet .rxw-reference blockquote{border-left:3px solid #0079c1;background:#e6f3ff;padding:12px 14px;border-radius:0 8px 8px 0;color:#142d46;font-size:14px;font-style:italic;line-height:1.65;margin:12px 0}
+@media(max-width:360px){
+ .reception-ai-root.rxa-cabinet .rxw-calendar-month select{font-size:18px!important}
+ .reception-ai-root.rxa-cabinet .rxw-calendar-events button{font-size:13px}
+ .reception-ai-root.rxa-cabinet .rxw-calendar-events button strong{font-size:12px}
+ .reception-ai-root.rxa-cabinet .rxw-calendar-main-legend{font-size:10px;gap:4px}
+ .reception-ai-root.rxa-cabinet .rxw-calendar-main-legend>span{gap:4px}
+ .reception-ai-root.rxa-cabinet .rxw-calendar-selection>strong{font-size:21px}
+}
+@media(prefers-reduced-motion:reduce){.rxw-calendar-details>summary svg,.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary>.rxa-fold-arrow,.reception-ai-root.rxa-cabinet .rxa-calendar-task>summary svg:last-child,.reception-ai-root.rxa-cabinet .rxa-calendar-manual>summary svg:last-child{transition:none}}

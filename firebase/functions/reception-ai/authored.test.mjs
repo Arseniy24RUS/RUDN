@@ -5,6 +5,7 @@ import {createReceptionService} from './service.mjs';
 import {createMemoryStore} from './store.mjs';
 import {selectShiftCases} from './selection.mjs';
 import {referenceNumber,referenceUnit} from './legal-reference.mjs';
+import {CONTENT_MANIFEST} from '../../../site/apps/reception/content/manifest.js';
 
 const T=text=>({ru:text,en:'EN '+text,zh:'中文 '+text});
 const O=(id,label=id)=>({id,label:T(label)});
@@ -95,6 +96,24 @@ test('catalogs over32 select8 distinct families and reach every scenario/date pa
   }
   assert.equal(reached.size,356);
   assert.deepEqual(selectShiftCases(cases,'same-seed'),selectShiftCases([...cases].reverse(),'same-seed'));
+});
+
+test('the full-bank independent shift restores difficulty, required families and all three calendar term classes',()=>{
+  const cases=CONTENT_MANIFEST.templates.map(({id,familyId})=>({id,familyId,datePackId:'a'})), assignments=new Set();
+  const levels=new Map(CONTENT_MANIFEST.templates.map(c=>[c.id,c.level]));
+  const calendarTerms=new Map(CONTENT_MANIFEST.templates.map(c=>[c.id,c.calendar.unit==='workingDays'?'workingDays':`${c.calendar.unit}:${c.calendar.duration}`]));
+  for(let i=0;i<24;i++){
+    const selected=selectShiftCases(cases,'balanced-'+i,{balanced:true}),families=selected.map(c=>c.familyId);
+    assert.deepEqual(selected.map(c=>levels.get(c.id)),[1,1,2,2,2,2,3,3]);
+    assert.equal(new Set(families).size,8);assert.ok(families.includes('budget'));assert.ok(families.includes('mfc-complaint'));
+    const terms=new Set(selected.map(c=>calendarTerms.get(c.id)));
+    for(const term of ['calendarDays:7','calendarDays:30','workingDays'])assert.ok(terms.has(term),`${term} missing for seed ${i}`);
+    assert.deepEqual(selected,selectShiftCases([...cases].reverse(),'balanced-'+i,{balanced:true}));
+    assignments.add(selected.map(c=>c.id).join(','));
+  }
+  assert.ok(assignments.size>1);
+  const custom=Array.from({length:8},(_,i)=>({id:'custom-'+i,familyId:'custom-'+i}));
+  assert.deepEqual(selectShiftCases(custom,'legacy',{balanced:true}),selectShiftCases(custom,'legacy'));
 });
 
 test('immutable catalog loading coalesces concurrent requests and retries a rejected load',async()=>{

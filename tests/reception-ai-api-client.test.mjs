@@ -41,3 +41,36 @@ test('the follow-up phase is a valid server view and its submission keeps the re
   assert.equal(result.status,'followup');assert.equal(result.followup.options[0].id,'verify');
   assert.deepEqual(calls,[{op:'followup',sessionId:view.id,requestId:'followup-key',choiceId:'verify'}]);
 });
+
+test('catalog reads public assignment metadata without expecting a session view',async()=>{
+  const calls=[],row={id:'river-observation',title:'Ситуация',familyId:'river',level:1,estimatedMinutes:8};
+  const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',getIdToken:async()=> 'token',
+    fetch:async(_url,options)=>{calls.push(options);return new Response(JSON.stringify({ok:true,cases:[{...row,extra:'discard'}]}),{status:200});}});
+  assert.deepEqual(await client.catalog({studentKey:'12345678',locale:'ru'}),[row]);
+  assert.deepEqual(JSON.parse(calls[0].body),{studentKey:'12345678',locale:'ru',op:'catalog'});
+  assert.equal(calls[0].headers.Authorization,'Bearer token');
+  assert.equal(calls[0].cache,'no-store');
+});
+
+test('recover accepts an explicit empty result and retains ordinary resume validation',async()=>{
+  const bodies=[];
+  const client=createReceptionAPI({endpoint:'/api/reception',baseURL:'http://127.0.0.1:8787/',demo:true,
+    fetch:async(_url,options)=>{bodies.push(JSON.parse(options.body));return new Response(JSON.stringify({ok:true,view:null}),{status:200});}});
+  assert.equal(await client.recover({studentKey:'12345678',mode:'training'}),null);
+  assert.deepEqual(bodies[0],{studentKey:'12345678',mode:'training',op:'recover'});
+  await assert.rejects(client.request({op:'resume',sessionId:'missing'}),error=>error.code==='invalid-response');
+  const bad=createReceptionAPI({endpoint:'/api/reception',baseURL:'http://127.0.0.1:8787/',demo:true,
+    fetch:async()=>new Response(JSON.stringify({ok:true}),{status:200})});
+  await assert.rejects(bad.recover({mode:'training'}),error=>error.code==='invalid-response');
+});
+
+test('catalog rejects malformed difficulty and training sends the chosen case unchanged',async()=>{
+  const bodies=[];let packet={ok:true,cases:[{id:'river',title:'Case',familyId:'river',level:4,estimatedMinutes:8}]};
+  const client=createReceptionAPI({endpoint:'/api/reception',baseURL:'http://127.0.0.1:8787/',demo:true,
+    fetch:async(_url,options)=>{bodies.push(JSON.parse(options.body));return new Response(JSON.stringify(packet),{status:200});}});
+  await assert.rejects(client.catalog(),error=>error.code==='invalid-response');
+  packet={ok:true,view};
+  const body={op:'start',mode:'training',studentKey:'12345678',requestId:'chosen-case',caseId:'river-observation',level:1,locale:'ru'};
+  assert.deepEqual(await client.request(body),view);assert.deepEqual(bodies.at(-1),body);
+  assert.deepEqual(await client.recover({mode:'training'}),view);
+});

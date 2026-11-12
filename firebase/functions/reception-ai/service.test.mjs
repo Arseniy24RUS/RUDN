@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {createReceptionService} from './service.mjs';
-import {createMemoryStore, createFirebaseStore} from './store.mjs';
+import {createMemoryStore, createFirebaseStore, legacySessionIds, LEGACY_RECOVERY_LIMITS} from './store.mjs';
 import {validateCase, actorCase, evaluateDecision, normalizeArticle, normalizeLawNumber, hash} from './schema.mjs';
 import {createOpenAIProvider, buildActorInstructions, validateActorTurn} from './provider.mjs';
 import {loadPrivateCatalogue, createFirebaseAssessmentGate, createFirebaseResultWriter} from './firebase.mjs';
 import {academicContext, topicGate} from '../../../site/assets/js/access.js';
 import {seminarTopic} from '../../../site/assets/js/seminar-modules.js';
+import {CONTENT_MANIFEST} from '../../../site/apps/reception/content/manifest.js';
 
 const T = value => ({ru: value, en: 'EN ' + value, zh: '中文 ' + value});
 function fixture(id = 'fixture-1') {
@@ -31,6 +32,131 @@ function harness(options = {}) {
   return {store, service, calls: () => calls, start: async (more = {}) => (await service.handle({op: 'start', mode: 'training', locale: 'ru', requestId: 'start-1', ...more}, identity)).view};
 }
 const err = code => error => error.code === code;
+
+test('catalog restores public difficulty and duration for all 178 authored cases without answer keys', async () => {
+  const cases = CONTENT_MANIFEST.templates.map(row => ({...fixture(row.id), familyId: row.familyId}));
+  const h = harness({cases}), catalog = await h.service.handle({op: 'catalog', locale: 'en'}, identity);
+  assert.equal(catalog.cases.length, 178);
+  for (const row of catalog.cases) {
+    const authored = CONTENT_MANIFEST.templates.find(c => c.id === row.id);
+    assert.deepEqual(Object.keys(row).sort(), ['estimatedMinutes', 'familyId', 'id', 'level', 'title']);
+    assert.equal(row.familyId, authored.familyId); assert.equal(row.level, authored.level);
+    assert.equal(row.estimatedMinutes, authored.estimatedMinutes); assert.match(row.title, /^EN/);
+  }
+  assert.doesNotMatch(JSON.stringify(catalog), /rubric|deadline|knownFactIds|requiredFactIds|calendarDays|workingDays|Дата получения/);
+  const custom = await harness().service.handle({op: 'catalog', locale: 'ru'}, identity);
+  assert.equal(custom.cases[0].level, null); assert.equal(custom.cases[0].estimatedMinutes, null);
+});
+
+test('training chooses an authored case or level; invalid choices consume no daily start quota', async () => {
+  const rows = [1, 2, 3].map(level => CONTENT_MANIFEST.templates.find(c => c.level === level));
+  const h = harness({cases: rows.map(row => ({...fixture(row.id), familyId: row.familyId}))});
+  for (const level of [1, 2, 3]) {
+    const first = await h.start({level, requestId: `level-${level}`});
+    assert.equal(first.case.level, level); assert.equal(first.caseCount, 1);
+    assert.equal(first.case.id, rows[level - 1].id);
+    assert.deepEqual(await h.start({level, requestId: `level-${level}`}), first);
+    await assert.rejects(h.start({level: level === 3 ? 1 : level + 1, requestId: `level-${level}`}), err('request_conflict'));
+  }
+  const exact = await h.start({caseId: rows[1].id, level: 2, requestId: 'exact-case'});
+  assert.equal(exact.case.id, rows[1].id);
+  for (const level of [0, 4, '2', null]) await assert.rejects(h.start({level, requestId: `invalid-${String(level)}`}), err('invalid_level'));
+  await assert.rejects(h.start({caseId: rows[0].id, level: 3, requestId: 'wrong-level'}), err('invalid_case'));
+  await assert.rejects(h.start({caseId: 'missing-case', requestId: 'missing'}), err('invalid_case'));
+  const starts = await h.store.get('starts');
+  assert.equal(Object.keys(Object.values(Object.values(starts)[0])[0].ids).length, 4);
+});
+
+test('manual difficulty and case choices cannot change an independent eight-family assignment', async () => {
+  const h = harness({cases: Array.from({length: 8}, (_, i) => ({...fixture(`family-${i}`), familyId: `family-${i}`}))});
+  await assert.rejects(h.start({mode: 'independent', level: 1}), err('invalid_level'));
+  await assert.rejects(h.start({mode: 'independent', caseId: 'family-1'}), err('invalid_case'));
+  const v = await h.start({mode: 'independent'}), saved = await h.store.get(`sessions/${v.id}`);
+  assert.equal(v.caseCount, 8); assert.equal(new Set(saved.caseData.map(c => c.familyId)).size, 8);
+  assert.equal(v.feedback, null);
+});
+
+test('recovery is owner/mode scoped, keeps the full conversation and finds the latest unfinished shift', async () => {
+  let now = Date.parse('2026-11-11T10:00:00Z');
+  const h = harness({clock: () => now, cases: Array.from({length: 8}, (_, i) => fixture(`fixture-${i}`))});
+  assert.equal((await h.service.handle({op: 'recover', mode: 'training'}, identity)).view, null);
+  let training = await h.start(); now += 1000;
+  training = (await h.service.handle({op: 'message', sessionId: training.id, requestId: 'ask', expectedRevision: training.revision, text: 'Документы?'}, identity)).view;
+  training = (await h.service.handle({op: 'document', sessionId: training.id, documentId: 'd1', requestId: 'read'}, identity)).view;
+  now += 1000; const independent = await h.start({mode: 'independent', requestId: 'independent'});
+  const restarted = harness({store: h.store});
+  assert.deepEqual((await restarted.service.handle({op: 'recover', mode: 'training'}, identity)).view, training);
+  assert.deepEqual((await restarted.service.handle({op: 'recover', mode: 'independent'}, identity)).view, independent);
+  assert.equal((await restarted.service.handle({op: 'recover', mode: 'training'}, {uid: 'other', studentKey: '87654321'})).view, null);
+  await assert.rejects(restarted.service.handle({op: 'recover', mode: 'training', studentKey: '87654321'}, identity), err('forbidden'));
+  await assert.rejects(restarted.service.handle({op: 'recover', mode: 'unknown'}, identity), err('invalid_mode'));
+  assert.equal(restarted.calls(), 0, 'Recovery must not call the provider');
+  now += 1000; const latest = await h.start({requestId: 'new-training'});
+  assert.equal((await h.service.handle({op: 'recover', mode: 'training'}, identity)).view.id, latest.id);
+  await h.service.handle({op: 'decide', sessionId: latest.id, requestId: 'finish-decision', decision: {...goodDecision, basisDocumentIds: []}}, identity);
+  const complete = (await h.service.handle({op: 'next', sessionId: latest.id, requestId: 'finish'}, identity)).view;
+  assert.equal(complete.status, 'complete');
+  assert.equal((await h.service.handle({op: 'recover', mode: 'training'}, identity)).view.id, training.id);
+  assert.equal((await h.service.handle({op: 'resume', sessionId: complete.id}, identity)).view.status, 'complete');
+});
+
+test('legacy recovery migrates only this owner’s start IDs and preserves a submitted decision', async () => {
+  const base = createMemoryStore(), reads = [];
+  const store = {...base, async get(path) { reads.push(path); return base.get(path); }};
+  const h = harness({store}); let v = await h.start();
+  v = (await h.service.handle({op: 'message', sessionId: v.id, requestId: 'ask', expectedRevision: v.revision, text: 'Квитанция?'}, identity)).view;
+  v = (await h.service.handle({op: 'document', sessionId: v.id, documentId: 'd1', requestId: 'read'}, identity)).view;
+  v = (await h.service.handle({op: 'decide', sessionId: v.id, requestId: 'decide', decision: goodDecision}, identity)).view;
+  const foreign = (await h.service.handle({op: 'start', mode: 'training', locale: 'ru', requestId: 'foreign'}, {uid: 'other', studentKey: '87654321'})).view;
+  await base.transaction('sessionIndex', () => null); reads.length = 0;
+  const restarted = harness({store}), recovered = await restarted.service.handle({op: 'recover', mode: 'training'}, identity);
+  assert.deepEqual(recovered.view, v); assert.equal(v.status, 'review');
+  assert.equal(recovered.view.decision.reasoning, goodDecision.reasoning);
+  assert.equal(reads.includes(`sessions/${foreign.id}`), false, 'Foreign private payloads are not read');
+  assert.equal(reads.includes('sessions'), false, 'All private sessions are never scanned');
+  assert.equal(await base.get(`sessionIndex/${hash('student:' + identity.studentKey)}/legacyMigrated`), true);
+  assert.doesNotMatch(JSON.stringify(recovered.view), /requiredFactIds|knownFactIds|rubric/);
+});
+
+test('a delayed start response cannot resurrect a shift completed in another tab', async () => {
+  const base = createMemoryStore(); let release, held = false;
+  const store = {...base, async transaction(path, update) {
+    if (path.includes('/entries/') && !held) { held = true; await new Promise(resolve => { release = resolve; }); }
+    return base.transaction(path, update);
+  }};
+  const h = harness({store}), pending = h.start();
+  for (let i = 0; i < 40 && !release; i++) await new Promise(resolve => setImmediate(resolve));
+  assert.ok(release);
+  const id = hash(`student:${identity.studentKey}:start-1`).slice(0, 40);
+  await h.service.handle({op: 'decide', sessionId: id, requestId: 'decision', decision: {...goodDecision, basisDocumentIds: []}}, identity);
+  await h.service.handle({op: 'next', sessionId: id, requestId: 'next'}, identity);
+  release(); await pending;
+  assert.equal((await h.service.handle({op: 'recover', mode: 'training'}, identity)).view, null);
+  const index = await base.get(`sessionIndex/${hash('student:' + identity.studentKey)}/entries/${id}`);
+  assert.equal(index.status, 'complete'); assert.equal(index.revision, 3);
+});
+
+test('oversized legacy indexes stop before reading case payloads and do not prevent a fresh start', async () => {
+  const ownerKey = hash('student:' + identity.studentKey), ids = {};
+  for (let i = 0; i <= LEGACY_RECOVERY_LIMITS.sessions; i++) ids[hash('old-' + i).slice(0, 40)] = true;
+  const ledger = {'2026-11-11': {[ownerKey]: {ids}}};
+  assert.throws(() => legacySessionIds(ledger, ownerKey), err('recovery_index_required'));
+  const h = harness(); await h.store.transaction('starts', () => ledger);
+  await assert.rejects(h.service.handle({op: 'recover', mode: 'training'}, identity), err('recovery_index_required'));
+  // The migration error concerns recovery only. It cannot permanently lock the foyer.
+  const fresh = harness({store: h.store, clock: () => Date.parse('2026-11-12T10:00:00Z')});
+  const v = await fresh.start({requestId: 'fresh'});
+  assert.equal((await fresh.service.handle({op: 'recover', mode: 'training'}, identity)).view.id, v.id);
+});
+
+test('Firebase legacy recovery bounds the quota query without requesting the sessions root', async () => {
+  const ownerKey = hash('student:' + identity.studentKey), id = hash('legacy').slice(0, 40), calls = [];
+  const query = {orderByKey() { calls.push('orderByKey'); return this; }, limitToLast(n) { calls.push(n); return this; },
+    async get() { return {val: () => ({'2026-11-11': {[ownerKey]: {ids: {[id]: true}}, foreign: {ids: {other: true}}}})}; }};
+  const store = createFirebaseStore({ref(path) { calls.push(path); return query; }});
+  assert.deepEqual(await store.getLegacySessionIds(ownerKey), [id]);
+  assert.deepEqual(calls, ['rudn-platform/v1/receptionAI/starts', 'orderByKey', LEGACY_RECOVERY_LIMITS.days + 1]);
+});
 
 test('case schema validates references, rejects invalid/contradictory private content', () => {
   assert.equal(validateCase(fixture()).id, 'fixture-1');

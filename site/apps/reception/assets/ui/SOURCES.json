@@ -1,0 +1,49 @@
+{
+  "tabler": {
+    "version": "3.51.0",
+    "package": "@tabler/icons",
+    "source": "https://registry.npmjs.org/@tabler/icons/-/icons-3.51.0.tgz",
+    "repository": "https://github.com/tabler/tabler-icons",
+    "license": "MIT",
+    "licenseFile": "Tabler-LICENSE.txt",
+    "icons": {
+      "reception": "building-bank",
+      "talk": "message",
+      "docs": "files",
+      "sources": "book-2",
+      "calendar": "calendar-week",
+      "decision": "clipboard-check",
+      "back": "arrow-left",
+      "send": "arrow-right",
+      "arrow": "arrow-right",
+      "check": "check",
+      "checks": "checks",
+      "info": "info-circle",
+      "out": "arrow-up-right",
+      "lock": "lock",
+      "up": "chevron-up",
+      "down": "chevron-down",
+      "exit": "logout",
+      "menu": "dots",
+      "paperclip": "paperclip",
+      "edit": "pencil",
+      "search": "search",
+      "close": "x",
+      "cloud": "cloud-check",
+      "chevron": "chevron-right",
+      "actions": "list-check"
+    },
+    "modifications": "SVG paths unchanged. Whitespace normalized; rxa-icon, aria-hidden and focusable attributes added."
+  },
+  "inter": {
+    "version": "4.1 release (font 4.001)",
+    "source": "https://raw.githubusercontent.com/rsms/inter/v4.1/docs/font-files/InterVariable.woff2",
+    "repository": "https://github.com/rsms/inter/tree/v4.1",
+    "license": "SIL Open Font License 1.1",
+    "licenseFile": "Inter-LICENSE.txt",
+    "file": "InterVariable.woff2",
+    "modifications": "None; original variable WOFF2 font with Cyrillic coverage.",
+    "sha256": "693b77d4f32ee9b8bfc995589b5fad5e99adf2832738661f5402f9978429a8e3",
+    "fontVersion": "Version 4.001;git-9221beed3"
+  }
+}

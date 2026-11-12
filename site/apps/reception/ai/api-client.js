@@ -21,7 +21,9 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
     if (demo && (!loopback || url.origin !== new URL(baseURL).origin)) throw new ReceptionAPIError('local-demo-only');
     return url.href;
   };
-  return {
+  const api = {
+    catalog(parameters = {}, options = {}) { return api.request({...parameters, op: 'catalog'}, options); },
+    recover(parameters = {}, options = {}) { return api.request({...parameters, op: 'recover'}, options); },
     async request(body, {signal} = {}) {
       const url = resolveEndpoint();
       if (lifetime?.aborted || signal?.aborted) throw new ReceptionAPIError('cancelled');
@@ -53,7 +55,18 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
               ? packet.error.code : response.status === 429 ? 'rate-limited' : response.status === 401 ? 'auth-required' : 'server-error';
             throw new ReceptionAPIError(code, response.status);
           }
+          if (body.op === 'catalog') {
+            if (!Array.isArray(packet.cases) || packet.cases.length > 512 || packet.cases.some(row => !row
+              || typeof row.id !== 'string' || !/^[a-z0-9_-]{1,120}$/i.test(row.id)
+              || typeof row.title !== 'string' || typeof row.familyId !== 'string'
+              || (row.level !== null && ![1, 2, 3].includes(row.level))
+              || (row.estimatedMinutes !== null && (!Number.isFinite(row.estimatedMinutes) || row.estimatedMinutes <= 0)))) {
+              throw new ReceptionAPIError('invalid-response');
+            }
+            return packet.cases.map(({id, title, familyId, level, estimatedMinutes}) => ({id, title, familyId, level, estimatedMinutes}));
+          }
           const view = packet.view;
+          if (body.op === 'recover' && view === null) return null;
           if (!view || typeof view.id !== 'string' || !Number.isInteger(view.revision)
             || !['active', 'followup', 'review', 'complete'].includes(view.status) || !Array.isArray(view.messages)) {
             throw new ReceptionAPIError('invalid-response');
@@ -72,4 +85,5 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
       throw new ReceptionAPIError('auth-required', 401);
     },
   };
+  return api;
 }

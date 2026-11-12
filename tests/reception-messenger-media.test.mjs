@@ -20,7 +20,7 @@ test('all eight actors reuse the existing conflict-free cast, posters, avatars a
 test('external media, directory traversal and prototype names never become an asset URL',()=>{
   for(const unsafe of ['https://untrusted.invalid/x','javascript:alert(1)','assets/../../secret','assets/gfx1/avatars/C99.webp','__proto__','constructor']){
     const media=characterMedia('__proto__',unsafe);assert.equal(media.actorId,'C03');
-    for(const key of ['motion','poster','avatar'])assert.ok(media[key].includes('/apps/reception/assets/gfx1/'));
+    for(const key of ['motion','motionFallback','poster','avatar'])assert.ok(media[key].includes('/apps/reception/assets/gfx1/'));
   }
   assert.equal(characterMedia('new-case','assets/gfx1/avatars/C14.webp').actorId,'C14');
   assert.equal(characterMedia('new-case','assets/gfx1/characters/C08/C08__C-N__w512.webp').actorId,'C08');
@@ -35,35 +35,43 @@ test('all authored visual passports support their existing citizen or staff anim
     for(const actor of passport.candidates){
       const media=characterMedia(caseId,`assets/gfx1/avatars/${actor}.webp`);assert.equal(media.actorId,actor);
       if(checked.has(actor))continue;checked.add(actor);
-      for(const kind of ['poster','avatar','motion'])assert.ok((await readFile(fileURLToPath(media[kind]))).length>1000);
+      for(const kind of ['poster','avatar','motion','motionFallback'])assert.ok((await readFile(fileURLToPath(media[kind]))).length>1000);
+      const fallback=await readFile(fileURLToPath(media.motionFallback));
+      assert.equal(fallback.subarray(0,4).toString(),'RIFF');assert.equal(fallback.subarray(8,12).toString(),'WEBP');
+      assert.ok(fallback.includes(Buffer.from('ANIM'))&&fallback.includes(Buffer.from('ANMF')),'WebP contains an animation, not a single frame');
     }
   }
   assert.ok(checked.has('S03')&&checked.has('S04'));
 });
 
-function fixture({reduced=false,supported=true,alpha=0,observer=true}={}){
+function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=true,offscreen=false,hidden=false}={}){
   class Element extends EventTarget{
     constructor(){super();this.attributes=new Map();this.children=[];this.dataset={};}
     setAttribute(key,value){this.attributes.set(key,String(value));}
     removeAttribute(key){this.attributes.delete(key);}
     hasAttribute(key){return this.attributes.has(key);}
     getAttribute(key){return this.attributes.get(key)??null;}
-    append(child){child.remove();this.children.push(child);child.parent=this;}
-    remove(){if(this.parent){this.parent.children=this.parent.children.filter(child=>child!==this);this.parent=null;}}
-    getBoundingClientRect(){return {width:110,height:132,top:50,bottom:182};}
+    append(child){child.remove();this.children.push(child);child.parent=child.parentNode=this;}
+    remove(){if(this.parent){this.parent.children=this.parent.children.filter(child=>child!==this);this.parent=this.parentNode=null;}}
+    getBoundingClientRect(){return {width:110,height:132,top:offscreen?1000:50,bottom:offscreen?1132:182};}
   }
   class Video extends Element{
     constructor(){super();this.paused=true;this.currentTime=0;this.videoWidth=512;this.playCalls=0;this.pauseCalls=0;this.loadCalls=0;this.srcWrites=0;}
     canPlayType(){return supported?'probably':'';}
     set src(value){this.srcWrites++;this.setAttribute('src',value);}
     get src(){return this.getAttribute('src');}
-    play(){this.paused=false;this.playCalls++;return Promise.resolve();}
+    play(){this.playCalls++;if(!autoplay)return Promise.reject(Object.assign(new Error('Autoplay blocked'),{name:'NotAllowedError'}));this.paused=false;return Promise.resolve();}
     pause(){this.paused=true;this.pauseCalls++;}
     load(){this.loadCalls++;this.currentTime=0;}
   }
+  class Image extends Element{
+    constructor(){super();this.srcWrites=0;this.naturalWidth=360;}
+    set src(value){this.srcWrites++;this.setAttribute('src',value);}
+    get src(){return this.getAttribute('src');}
+  }
   const document=new EventTarget(),reduce=new EventTarget();reduce.matches=reduced;
-  document.hidden=false;let video,io;
-  document.createElement=kind=>kind==='video'?(video=new Video()):{getContext:()=>({drawImage(){},getImageData:()=>({data:[0,0,0,alpha]})})};
+  document.hidden=hidden;let video,image,io;
+  document.createElement=kind=>kind==='video'?(video=new Video()):kind==='img'?(image=new Image()):{getContext:()=>({drawImage(){},getImageData:()=>({data:[0,0,0,alpha]})})};
   document.defaultView={innerHeight:900,matchMedia:()=>reduce,...(observer?{IntersectionObserver:class{
     constructor(callback){this.callback=callback;this.disconnected=false;io=this;}
     observe(target){this.target=target;}unobserve(){}disconnect(){this.disconnected=true;}
@@ -71,7 +79,7 @@ function fixture({reduced=false,supported=true,alpha=0,observer=true}={}){
   }}:{})};
   const stage=id=>{const node=new Element();node.dataset.rxaActor=id;return node;};
   const root={ownerDocument:document,stage:stage('C05'),querySelector(){return this.stage;}};
-  return {root,document,reduce,stage,get video(){return video;},get observer(){return io;}};
+  return {root,document,reduce,stage,get video(){return video;},get image(){return image;},get observer(){return io;}};
 }
 
 test('rerender retains the video and playhead; hiding, leaving view and destroying pause it',()=>{
@@ -96,10 +104,44 @@ test('reduced motion never fetches a loop; changing actor uses the new existing 
   media.destroy();
 });
 
-test('unsupported alpha, playback errors and unsafe actor IDs retain the static portrait',()=>{
+test('unsupported alpha and playback errors select the animated fallback; unsafe IDs never load either format',()=>{
   const opaque=fixture({alpha:255}),media=createMessengerMedia(opaque.root);media.refresh();opaque.video.dispatchEvent(new Event('playing'));
-  assert.equal(opaque.root.stage.hasAttribute('data-rxa-motion-ready'),false);assert.equal(opaque.video.hasAttribute('src'),false);assert.equal(opaque.video.parent,null);media.destroy();
-  const failed=fixture(),other=createMessengerMedia(failed.root);other.refresh();failed.video.dispatchEvent(new Event('error'));other.refresh();assert.equal(failed.video.hasAttribute('src'),false);other.destroy();
-  const unsafe=fixture();unsafe.root.stage=unsafe.stage('../../secret');const guard=createMessengerMedia(unsafe.root);guard.refresh();assert.equal(unsafe.video.hasAttribute('src'),false);guard.destroy();
-  const absent=fixture({supported:false});const noVideo=createMessengerMedia(absent.root);noVideo.refresh();assert.equal(absent.video.hasAttribute('src'),false);noVideo.destroy();
+  assert.equal(opaque.root.stage.hasAttribute('data-rxa-motion-ready'),false);assert.equal(opaque.video.hasAttribute('src'),false);assert.equal(opaque.video.parent,null);
+  assert.ok(opaque.image.src.endsWith('/C05.webp'));opaque.image.dispatchEvent(new Event('load'));assert.equal(opaque.root.stage.hasAttribute('data-rxa-motion-ready'),true);media.destroy();
+  const failed=fixture(),other=createMessengerMedia(failed.root);other.refresh();failed.video.dispatchEvent(new Event('error'));other.refresh();assert.equal(failed.video.hasAttribute('src'),false);assert.ok(failed.image.src.endsWith('/C05.webp'));other.destroy();
+  const unsafe=fixture();unsafe.root.stage=unsafe.stage('../../secret');const guard=createMessengerMedia(unsafe.root);guard.refresh();assert.equal(unsafe.video.hasAttribute('src'),false);assert.equal(unsafe.image.hasAttribute('src'),false);guard.destroy();
+});
+
+test('fallback image is retained on rerender and loads only in the visible reception',()=>{
+  const f=fixture({supported:false,offscreen:true}),media=createMessengerMedia(f.root);media.refresh();
+  assert.equal(f.video.hasAttribute('src'),false);assert.equal(f.image.hasAttribute('src'),false);
+  f.observer.visible(true);assert.ok(f.image.src.endsWith('/C05.webp'));
+  f.image.dispatchEvent(new Event('load'));assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),true);
+  const image=f.image,writes=image.srcWrites;
+  // A regular rerender keeps the same source and decoded animation node.
+  f.root.stage=f.stage('C05');f.root.stage.getBoundingClientRect=()=>({width:110,height:132,top:50,bottom:182});media.refresh();
+  assert.equal(f.root.stage.children[0],image);assert.equal(image.srcWrites,writes);
+  assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),true);
+  f.observer.visible(false);assert.equal(image.hasAttribute('src'),false);assert.equal(image.parent,null);
+  f.observer.visible(true);assert.equal(image.srcWrites,writes+1);
+  f.document.hidden=true;f.document.dispatchEvent(new Event('visibilitychange'));assert.equal(image.hasAttribute('src'),false);
+  f.document.hidden=false;f.document.dispatchEvent(new Event('visibilitychange'));assert.ok(image.hasAttribute('src'));
+  f.root.stage=null;media.refresh();assert.equal(image.hasAttribute('src'),false);assert.equal(image.parent,null);
+  media.destroy();assert.equal(f.observer.disconnected,true);
+});
+
+test('blocked autoplay uses the WebP fallback and reduced motion releases it',async()=>{
+  const f=fixture({autoplay:false}),media=createMessengerMedia(f.root);media.refresh();await Promise.resolve();
+  assert.equal(f.video.hasAttribute('src'),false);assert.ok(f.image.src.endsWith('/C05.webp'));
+  f.reduce.matches=true;f.reduce.dispatchEvent(new Event('change'));assert.equal(f.image.hasAttribute('src'),false);assert.equal(f.image.parent,null);
+  f.reduce.matches=false;f.reduce.dispatchEvent(new Event('change'));assert.ok(f.image.hasAttribute('src'));
+  f.image.dispatchEvent(new Event('error'));media.refresh();assert.equal(f.image.hasAttribute('src'),false);assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),false);
+  media.destroy();f.image.dispatchEvent(new Event('load'));assert.equal(f.image.parent,null);
+});
+
+test('a reduced-motion or initially hidden page does not request an animated image',()=>{
+  for(const settings of [{reduced:true},{hidden:true}]){
+    const f=fixture({supported:false,...settings}),media=createMessengerMedia(f.root);media.refresh();
+    assert.equal(f.image.hasAttribute('src'),false);assert.equal(f.video.hasAttribute('src'),false);media.destroy();
+  }
 });

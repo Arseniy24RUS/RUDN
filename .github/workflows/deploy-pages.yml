@@ -233,6 +233,9 @@ jobs:
               '.github/workflows/platform-checks.yml', '.gitignore', 'docs/RECEPTION_AI_BROWSER_QA.md',
               'firebase/database.rules.json', 'firebase/functions/index.mjs', 'site/assets/js/backend.js',
               'tests/reception-ai-api-client.test.mjs', 'tests/reception-messenger-media.test.mjs',
+              'tests/reception-workbench.test.mjs', 'tests/reception-session-storage.test.mjs',
+              'tests/reception-ai-qa-cases.test.mjs', 'tests/reception-learning-review.test.mjs',
+              'scripts/test-reception-workbench-dom.mjs',
               'scripts/platform-main-staging.mjs',
               'site/apps/legal-lab/lib/corpus.mjs',
               'site/assets/js/main.js',
@@ -747,7 +750,32 @@ jobs:
         run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
       - name: Verify Reception chat contracts
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
-        run: node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs
+        run: |
+          node scripts/reception-ai-catalog-metadata.mjs --check
+          node scripts/reception-ai-learning-review.mjs --check
+          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs
+      - name: Verify Reception document and calendar workflow
+        if: contains(github.event.head_commit.message, '[reception-ai-release]')
+        run: |
+          npm install --prefix "${{ runner.temp }}/reception-dom-tools" --no-audit --no-fund --ignore-scripts jsdom@26.1.0
+          node scripts/test-reception-workbench-dom.mjs --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js"
+      - name: Verify Reception mobile workspace in Chromium and WebKit
+        if: contains(github.event.head_commit.message, '[reception-ai-release]')
+        run: |
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium webkit
+          export RECEPTION_PLAYWRIGHT_MODULE="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          node scripts/reception-ai-qa-cases.mjs --out "${{ runner.temp }}/reception-synthetic-cases"
+          node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/chromium"
+          node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/webkit"
+      - name: Retain Reception mobile workspace evidence
+        if: always() && contains(github.event.head_commit.message, '[reception-ai-release]')
+        uses: actions/upload-artifact@v4
+        with:
+          name: reception-workspace-qa
+          path: ${{ runner.temp }}/reception-workspace-qa
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Verify the shared Legal Lab reader
         if: env.RECEPTION_LEGAL_READER == 'true' && !contains(github.event.head_commit.message, '[reception-ai-release]')
         run: node --test tests/legal-lab-reader-data.test.mjs tests/legal-lab-reader-tools.test.mjs

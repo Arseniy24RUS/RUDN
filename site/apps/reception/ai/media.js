@@ -29,19 +29,22 @@ export function characterMedia(caseId, portrait) {
     poster: url(`assets/gfx1/characters/${actorId}/${actorId}__${state}__w512.webp`),
     avatar: url(`assets/gfx1/avatars/${actorId}.webp`),
     motion: url(`assets/gfx1/motion/${actorId}.webm`),
+    motionFallback: url(`assets/gfx1/motion/${actorId}.webp`),
   });
 }
 
-/** One retained video node survives messenger rerenders without changing its source.
- * The image is always the initial and error fallback. Unsupported VP9 alpha,
- * reduced motion, a hidden tab or an offscreen character stop playback.
+/** Retained media nodes survive rerenders without restarting their sources.
+ * Animated WebP, converted from the same authored loop, covers browsers without
+ * transparent VP9 or video autoplay. An image animation has no pause API: leaving
+ * the visible reception clears its src, restores the poster and releases the loop;
+ * returning begins the loop again. Reduced motion never fetches either format.
  */
 export function createMessengerMedia(root, {signal} = {}) {
   const document = root.ownerDocument, view = document?.defaultView;
   const empty = {refresh() {}, destroy() {}};
   if (!view || signal?.aborted) return empty;
   const video = document.createElement('video');
-  if (!video.canPlayType?.('video/webm; codecs="vp9"')) return empty;
+  const supportsVideo = Boolean(video.canPlayType?.('video/webm; codecs="vp9"'));
   video.className = 'rxa-citizen-video';
   video.setAttribute('data-rxa-motion', '');
   video.setAttribute('aria-hidden', 'true');
@@ -52,9 +55,17 @@ export function createMessengerMedia(root, {signal} = {}) {
   video.setAttribute('autoplay', '');
   video.muted = video.defaultMuted = video.loop = video.playsInline = video.autoplay = true;
   video.preload = 'none';
+  const motionImage = document.createElement('img');
+  // Reuse the actor layer's size/opacity rules. This is the existing animation,
+  // not a second portrait or a background decorative image.
+  motionImage.className = 'rxa-citizen-video rxa-citizen-motion-image';
+  motionImage.setAttribute('data-rxa-motion-image', '');
+  motionImage.setAttribute('aria-hidden', 'true');
+  motionImage.alt = '';
+  motionImage.decoding = 'async';
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
-  const failed = new Set();
-  let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false;
+  const failedVideo = new Set(), failedImage = new Set();
+  let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false, imageReady = false;
 
   function portrait() { ready = false; stage?.removeAttribute('data-rxa-motion-ready'); }
   function pause() { video.pause(); }
@@ -63,6 +74,30 @@ export function createMessengerMedia(root, {signal} = {}) {
     if (frame !== undefined) video.cancelVideoFrameCallback?.(frame);
     frame = undefined; portrait();
     if (video.hasAttribute('src')) { video.removeAttribute('src'); video.load(); }
+  }
+  function clearImage() {
+    imageReady = false;
+    if (motionImage.hasAttribute('src')) motionImage.removeAttribute('src');
+    motionImage.remove();
+  }
+  const shouldPlay = () => !destroyed && stage && visible && !document.hidden && !reduce.matches;
+  const useImage = () => !supportsVideo || supportsAlpha === false || failedVideo.has(actor);
+  function imagePlayback() {
+    if (!shouldPlay() || failedImage.has(actor)) { clearImage(); portrait(); return; }
+    pause(); video.remove();
+    if (motionImage.parentNode !== stage) stage.append(motionImage);
+    if (!motionImage.hasAttribute('src')) {
+      imageReady = false; portrait();
+      motionImage.src = url(`assets/gfx1/motion/${actor}.webp`);
+    } else if (imageReady) stage.setAttribute('data-rxa-motion-ready', '');
+  }
+  function imageLoaded() {
+    if (!shouldPlay() || !useImage() || !motionImage.hasAttribute('src')) return;
+    if (motionImage.naturalWidth > 0) { imageReady = true; stage.setAttribute('data-rxa-motion-ready', ''); }
+  }
+  function imageError() {
+    if (actor) failedImage.add(actor);
+    clearImage(); portrait();
   }
   function presentFrame() {
     frame = undefined;
@@ -76,7 +111,7 @@ export function createMessengerMedia(root, {signal} = {}) {
         supportsAlpha = (context?.getImageData(0, 0, 1, 1).data[3] ?? 255) < 32;
       } catch { supportsAlpha = false; }
     }
-    if (!supportsAlpha) { clearSource(); video.remove(); return; }
+    if (!supportsAlpha) { clearSource(); video.remove(); imagePlayback(); return; }
     ready = true; stage.setAttribute('data-rxa-motion-ready', '');
   }
   function playing() {
@@ -84,15 +119,23 @@ export function createMessengerMedia(root, {signal} = {}) {
     if (video.requestVideoFrameCallback) frame = video.requestVideoFrameCallback(presentFrame);
     else presentFrame();
   }
-  function error() { if (actor) failed.add(actor); clearSource(); }
+  function error() { if (actor) failedVideo.add(actor); clearSource(); video.remove(); imagePlayback(); }
   function playback() {
-    if (destroyed || !stage || !visible || document.hidden || reduce.matches || supportsAlpha === false || failed.has(actor)) { pause(); return; }
+    if (!shouldPlay()) {
+      pause();
+      if (motionImage.hasAttribute('src')) { clearImage(); portrait(); }
+      return;
+    }
+    if (useImage()) { imagePlayback(); return; }
+    if (video.parentNode !== stage) stage.append(video);
     if (!video.hasAttribute('src')) video.src = url(`assets/gfx1/motion/${actor}.webm`);
     if (video.paused) {
       const requestedActor = actor;
       const attempt = video.play();
       attempt?.catch(problem => {
-        if (!destroyed && problem?.name !== 'AbortError' && actor === requestedActor) portrait();
+        if (!destroyed && problem?.name !== 'AbortError' && actor === requestedActor) {
+          failedVideo.add(actor); clearSource(); video.remove(); imagePlayback();
+        }
       });
     }
   }
@@ -102,22 +145,21 @@ export function createMessengerMedia(root, {signal} = {}) {
 
   function refresh() {
     if (destroyed) return;
-    const candidate = reduce.matches || supportsAlpha === false ? null : root.querySelector('[data-rxa-actor]');
+    const candidate = reduce.matches ? null : root.querySelector('[data-rxa-actor]');
     const next = ACTOR.test(candidate?.dataset.rxaActor || '') ? candidate : null;
     if (next === stage) { playback(); return; }
     if (stage) { observer?.unobserve(stage); stage.removeAttribute('data-rxa-motion-ready'); }
     stage = next;
     if (!stage) {
       if (reduce.matches) clearSource(); else pause();
-      video.remove(); return;
+      clearImage(); video.remove(); return;
     }
     if (stage.dataset.rxaActor !== actor) {
-      clearSource(); actor = stage.dataset.rxaActor;
+      clearSource(); clearImage(); actor = stage.dataset.rxaActor;
       const state = actor.startsWith('S') ? 'S-N' : 'C-N';
       video.poster = url(`assets/gfx1/characters/${actor}/${actor}__${state}__w512.webp`);
     }
-    stage.append(video);
-    if (ready) stage.setAttribute('data-rxa-motion-ready', '');
+    if ((ready && !useImage()) || (imageReady && useImage())) stage.setAttribute('data-rxa-motion-ready', '');
     const bounds = stage.getBoundingClientRect();
     visible = !observer || bounds.width > 0 && bounds.height > 0 && bounds.bottom > 0 && bounds.top < view.innerHeight;
     observer?.observe(stage); playback();
@@ -129,11 +171,13 @@ export function createMessengerMedia(root, {signal} = {}) {
     reduce.removeEventListener?.('change', refresh);
     signal?.removeEventListener('abort', destroy);
     video.removeEventListener('playing', playing); video.removeEventListener('error', error);
-    clearSource(); video.remove(); stage = null;
+    motionImage.removeEventListener('load', imageLoaded); motionImage.removeEventListener('error', imageError);
+    clearSource(); clearImage(); video.remove(); stage = null;
   }
   document.addEventListener('visibilitychange', playback);
   reduce.addEventListener?.('change', refresh);
   signal?.addEventListener('abort', destroy, {once:true});
   video.addEventListener('playing', playing); video.addEventListener('error', error);
+  motionImage.addEventListener('load', imageLoaded); motionImage.addEventListener('error', imageError);
   return {refresh, destroy};
 }

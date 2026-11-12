@@ -1,5 +1,7 @@
 import {resourceURL} from '../../../assets/js/release-resources.js';
 import {esc} from './icons.js';
+import {icon as cabinetIcon} from '../ai/cabinet-icons.js';
+import {createSourceReference,sourceReferenceFromSelection} from './source-reference.js';
 
 let Corpus,readerView,attachReader,refreshReaderToc,refreshReaderSearch,setReaderQuery,translateDOM,readerImports;
 function loadReader(){
@@ -29,6 +31,7 @@ const ALIASES=[
   ['zpp.rospotrebnadzor.ru/adjudications/federal/243619','reception-law305'],
   ['base.garant.ru/12112084/','reception-law19109'],
   ['base.garant.ru/378789/','reception-moscow42'],
+  ['moskva-pravo.ru/zakon/2002/07/12/n-42/','reception-moscow42'],
   ['archives.gov.ru/documents/rules/office-work-rules-gos.shtml','reception-archive71'],
   ['archives.gov.ru/docs/rules/office-work-rules-gos.htm','reception-archive71'],
   ['sudact.ru/law/prikaz-rosarkhiva-ot-22052019-n-71-ob/','reception-archive71'],
@@ -44,6 +47,7 @@ export function sourceDocumentForURL(value){
     if(law==='84602')return 'reception-info8';
     if(law==='28165')return 'reception-tax2';
     if(law==='342093')return 'reception-archive71';
+    if(law==='71492')return 'reception-flight82';
     if(LOCAL_LAWS.has(law))return 'reception-law'+law;
   }
   return ALIASES.find(([prefix])=>(host+url.pathname).startsWith(prefix))?.[1]||null;
@@ -64,66 +68,149 @@ function loadStyles(){
 }
 
 /** Mounts the seminar-4 reader without importing its assignments or grading. */
-export function createSourceReader(host,{signal,locale=()=>document.documentElement.lang}={}){
+export function createSourceReader(host,{signal,locale=()=>document.documentElement.lang,onSelect,canSelect=()=>true,presentation='dialog',getContainer,beforeOpen}={}){
   const lifetime=new AbortController();
   const positions={},readerState={};
-  let dialog=null,app=null,current=null,session=null,opener=null,generation=0,closed=false;
+  const embedded=presentation==='embedded';
+  let mountedContainer=null;
+  let dialog=null,app=null,current=null,session=null,opener=null,generation=0,closed=false,selectedReference=null,sourceURL='',saving=false;
   const language=()=>typeof locale==='function'?locale():locale;
-  const labels=()=>({en:{close:'Back to case',loading:'Opening document…',failed:'Could not open the document. Try again.',retry:'Try again'},zh:{close:'返回案件',loading:'正在打开文件…',failed:'无法打开文件，请重试。',retry:'重试'}}[language()]||{close:'Вернуться к делу',loading:'Открываем документ…',failed:'Не удалось открыть документ. Повторите загрузку.',retry:'Повторить'});
+  const labels=()=>({en:{close:'Back to case',loading:'Opening document…',failed:'Could not open the document. Try again.',retry:'Try again',document:'Document',selectHint:'Tap a paragraph or select text to use it as a legal basis.',selected:'Selected passage',use:'Use in decision',clear:'Clear selection',saving:'Saving…',selectFailed:'Could not save the passage. Try again.'},zh:{close:'返回案件',loading:'正在打开文件…',failed:'无法打开文件，请重试。',retry:'重试',document:'文件',selectHint:'点击段落或选择文本，将其作为法律依据。',selected:'所选片段',use:'填入决定',clear:'清除选择',saving:'正在保存…',selectFailed:'无法保存片段，请重试。'}}[language()]||{close:'Вернуться к делу',loading:'Открываем документ…',failed:'Не удалось открыть документ. Повторите загрузку.',retry:'Повторить',document:'Документ',selectHint:'Нажмите на абзац или выделите текст, чтобы использовать его как правовое основание.',selected:'Выбранный фрагмент',use:'В решение',clear:'Снять выделение',saving:'Сохраняем…',selectFailed:'Не удалось сохранить фрагмент. Повторите попытку.'});
+  const baseLabels=labels;
+  const cabinetLabels=()=>{const text=baseLabels();return embedded?{...text,...({en:{close:'All documents',selected:'Passage selected',use:'Add to decision',clear:'Clear',savedHint:'The passage and citation will be saved in your draft.'},zh:{close:'全部文件',selected:'已选择片段',use:'填入决定',clear:'取消',savedHint:'片段及出处将保存在草稿中。'}}[language()]||{close:'Все документы',selected:'Фрагмент выделен',use:'Добавить в решение',clear:'Снять',savedHint:'Цитата и реквизиты сохранятся в черновике.'})}:text;};
+  const selectionEnabled=()=>typeof onSelect==='function'&&(typeof canSelect==='function'?canSelect():canSelect)!==false;
   function close(){
     generation++;
     if(app?.readerController&&current)positions[current.id]=app.readerController.capture();
     app?.readerController?.destroy();app?.corpus?.destroy();session?.abort();
-    app=null;current=null;session=null;
-    dialog?.close();dialog?.remove();dialog=null;
+    app=null;current=null;session=null;selectedReference=null;saving=false;
+    dialog?.close?.();dialog?.remove();dialog=null;
+    mountedContainer?.classList.remove('rx-source-reader-open');mountedContainer=null;
+    if(embedded)delete host.dataset.sourceReaderOpen;
     if(opener?.isConnected)opener.focus({preventScroll:true});
+  }
+  // The application may replace its own panel while a network request finishes.
+  // Keep the real reader DOM/controller and reattach them to the new page host.
+  function refresh(){
+    if(!embedded||!dialog||closed)return !embedded;
+    const target=typeof getContainer==='function'?getContainer():getContainer||host;
+    if(!target?.isConnected||!host.contains(target))return false;
+    if(mountedContainer!==target)mountedContainer?.classList.remove('rx-source-reader-open');
+    mountedContainer=target;target.classList.add('rx-source-reader-open');host.dataset.sourceReaderOpen='true';
+    if(dialog.parentNode!==target)target.append(dialog);
+    return true;
+  }
+  function decorateEmbeddedReader(){
+    if(!embedded||!app)return;
+    const reader=app.root.querySelector('.ll-reader');if(!reader)return;
+    const surface=reader.querySelector('.ll-reader-surface'),searchPanel=reader.querySelector('[data-reader-search-panel]');
+    if(searchPanel&&searchPanel.parentNode===surface)reader.prepend(searchPanel);
+    const input=reader.querySelector('[data-input="reader-query"]');
+    if(input)input.placeholder=({en:'Find in document',zh:'在文件中查找'}[language()]||'Найти в документе');
+    // The native reader still owns search, structure, pagination and its virtual
+    // text window. Only the cabinet's presentation moves these controls.
+    const tools=reader.querySelector('.ll-reader-tools'),bar=dialog.querySelector('.rx-source-dialog-bar');
+    if(tools&&bar&&!bar.querySelector('.ll-reader-tools'))bar.append(tools);
+    const toc=bar?.querySelector('[data-action="toggle-toc"]');if(toc){const title=({en:'Contents',zh:'目录'}[language()]||'Оглавление');toc.innerHTML=cabinetIcon('sources');toc.setAttribute('title',title);toc.setAttribute('aria-label',title);}
+    const find=reader.querySelector('.ll-searchbar button[type="submit"]');if(find)find.innerHTML=cabinetIcon('search');
+    const clear=reader.querySelector('[data-action="clear-search"]');if(clear){clear.innerHTML=cabinetIcon('close');clear.setAttribute('aria-label',({en:'Clear search',zh:'清除搜索'}[language()]||'Очистить поиск'));}
+    const header=reader.querySelector('.ll-reader-header');if(header&&!header.querySelector('[data-cabinet-document-icon]'))header.insertAdjacentHTML('afterbegin',`<span data-cabinet-document-icon>${cabinetIcon('docs')}</span>`);
   }
   function fail(error){
     if(error?.name==='AbortError'||!dialog)return;
-    dialog.querySelector('[data-source-reader-status]').textContent=labels().failed;
+    dialog.querySelector('[data-source-reader-status]').textContent=cabinetLabels().failed;
     const retry=dialog.querySelector('[data-source-reader-retry]');retry.hidden=false;
   }
   function translate(){if(app)translateDOM(app.root,language());}
+  function unitForElement(element){
+    const id=element.dataset.unit,unit=app?.corpus.peekUnit(current.id,'ru',id)||{},descriptor=app?.readerSpec?.descriptor;
+    return {...unit,id,label:unit.label||descriptor?.labels?.[id]||unit.locator||element.querySelector('.ll-paragraph-locator')?.textContent||'',text:unit.text||element.querySelector('.ll-paragraph-text')?.textContent||''};
+  }
+  function renderSelection(){
+    if(!dialog)return;
+    const tray=dialog.querySelector('[data-source-reference-tray]');if(!tray)return;
+    tray.hidden=!selectionEnabled();
+    const text=cabinetLabels(),selected=Boolean(selectedReference);
+    tray.querySelector('[data-source-reference-hint]').textContent=selected?text.selected:text.selectHint;
+    tray.dataset.selected=String(selected);
+    tray.querySelector('[data-source-reference-title]').textContent=selectedReference?.locator||'';
+    tray.querySelector('[data-source-reference-preview]').textContent=selectedReference?.text.slice(0,160)||'';
+    const use=tray.querySelector('[data-source-reference-use]');use.disabled=!selected||saving;use.innerHTML=(embedded?cabinetIcon('decision'):'')+`<span>${esc(saving?text.saving:text.use)}</span>`;
+    tray.querySelector('[data-source-reference-clear]').hidden=!selected;
+    if(app?.readerSpec){app.readerSpec.selected=selectedReference?.unitIds||[];app.readerController?.update(app.readerSpec);}
+  }
+  function captureSelection(){
+    if(!selectionEnabled()||!app||!current||saving)return false;
+    const selection=dialog.ownerDocument.defaultView.getSelection();
+    const reference=sourceReferenceFromSelection(selection,app.root.querySelector('.ll-paper'),current,unitForElement,sourceURL);
+    if(!reference)return false;
+    selectedReference=reference;renderSelection();return true;
+  }
+  async function useSelection(){
+    if(!selectedReference||saving||!selectionEnabled())return;
+    const ticket=generation,reference=structuredClone(selectedReference);
+    saving=true;renderSelection();
+    try{
+      const result=await onSelect(reference);
+      if(ticket!==generation)return;
+      if(result!==false)close();else{saving=false;renderSelection();}
+    }catch{
+      if(ticket!==generation)return;
+      saving=false;renderSelection();dialog.querySelector('[data-source-reference-hint]').textContent=cabinetLabels().selectFailed;
+    }
+  }
   async function search(page=0){
     const owner=app,doc=current;if(!owner?.readerController||!doc)return;
     const query=owner.root.querySelector('[data-input="reader-query"]')?.value||'';
     setReaderQuery(owner,doc,query);
     const pending=owner.readerController.search(query,page);
-    refreshReaderSearch(owner,doc);translate();
-    try{await pending;if(app!==owner)return;refreshReaderSearch(owner,doc);translate();}
+    refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();
+    try{await pending;if(app!==owner)return;refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();}
     catch(error){if(app===owner)fail(error);}
   }
   async function action(event){
     const target=event.target.closest('[data-action]');if(!target||!app||!current)return;
     const owner=app,doc=current,rs=readerState[doc.id];
     try{
-      if(target.dataset.action==='toggle-toc'){
+      if(target.dataset.unit&&selectionEnabled()){
+        const nativeSelection=dialog.ownerDocument.defaultView.getSelection();
+        if(!nativeSelection?.isCollapsed&&(target.contains(nativeSelection?.anchorNode)||target.contains(nativeSelection?.focusNode))&&captureSelection())return;
+        nativeSelection?.removeAllRanges();
+        const unit=unitForElement(target),reference=createSourceReference(doc,{units:[unit],url:sourceURL});
+        selectedReference=reference?.id===selectedReference?.id?null:reference;renderSelection();
+      }else if(target.dataset.action==='toggle-toc'){
         rs.tocOpen=!rs.tocOpen;owner.root.querySelector('.ll-reader-grid').classList.toggle('toc-open',rs.tocOpen);
         target.setAttribute('aria-expanded',String(rs.tocOpen));refreshReaderToc(owner,doc);
       }else if(target.dataset.action==='toggle-reader-search'||target.dataset.action==='clear-search'){
-        rs.searchOpen=target.dataset.action==='toggle-reader-search'?!rs.searchOpen:false;
-        if(!rs.searchOpen){owner.readerController.cancelSearch();setReaderQuery(owner,doc,'');}
-        refreshReaderSearch(owner,doc);translate();
+        rs.searchOpen=embedded||target.dataset.action==='toggle-reader-search'&&!rs.searchOpen;
+        if(!rs.searchOpen||target.dataset.action==='clear-search'){owner.readerController.cancelSearch();setReaderQuery(owner,doc,'');}
+        refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();
         if(rs.searchOpen)owner.root.querySelector('[data-input="reader-query"]')?.focus();
       }else if(target.dataset.action==='section'){
         const section=owner.readerSpec.descriptor.sections.find(item=>item.id===target.dataset.id);
         if(section){rs.tocOpen=false;owner.root.querySelector('.ll-reader-grid').classList.remove('toc-open');refreshReaderToc(owner,doc);await owner.readerController.navigate(section.unitIds[0]);}
       }else if(target.dataset.action==='jump-unit'){
-        rs.searchOpen=false;refreshReaderSearch(owner,doc);await owner.readerController.navigate(target.dataset.id);
+        rs.searchOpen=embedded;refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();await owner.readerController.navigate(target.dataset.id);
       }else if(target.dataset.action==='search-page')await search(Number(target.dataset.page));
     }catch(error){if(app===owner)fail(error);}
   }
   async function open(url,trigger=document.activeElement){
     const id=sourceDocumentForURL(url);if(!id||closed)return false;
-    close();opener=trigger;const ticket=++generation;
+    close();
+    if(embedded){await beforeOpen?.();if(closed)return false;}
+    opener=trigger;sourceURL=url;const ticket=++generation;
     const aborter=session=new AbortController();
-    dialog=document.createElement('dialog');dialog.className='legal-lab rx-source-dialog';dialog.setAttribute('aria-label','Документ');
-    const text=labels();
-    dialog.innerHTML=`<div class="rx-source-dialog-bar"><button type="button" data-source-reader-close>${esc(text.close)}</button><p role="status" data-source-reader-status>${esc(text.loading)}</p><button type="button" data-source-reader-retry hidden>${esc(text.retry)}</button></div><div class="rx-source-reader-content"></div>`;
-    document.body.append(dialog);dialog.showModal();
+    dialog=document.createElement(embedded?'section':'dialog');dialog.className='legal-lab rx-source-dialog'+(embedded?' rx-source-embedded':'');dialog.setAttribute('aria-label',cabinetLabels().document);
+    if(embedded){dialog.setAttribute('role','region');dialog.setAttribute('open','');}
+    const text=cabinetLabels();
+    dialog.innerHTML=`<div class="rx-source-dialog-bar"><button type="button" data-source-reader-close>${embedded?cabinetIcon('back'):''}<span>${esc(text.close)}</span></button><p role="status" data-source-reader-status>${esc(text.loading)}</p><button type="button" data-source-reader-retry hidden>${esc(text.retry)}</button></div><div class="rx-source-reader-content"></div>${typeof onSelect==='function'?`<footer class="rx-source-reference-tray" data-source-reference-tray ${selectionEnabled()?'':'hidden'}><div class="rx-source-reference-copy"><p role="status" data-source-reference-hint>${esc(text.selectHint)}</p><strong data-source-reference-title></strong><p data-source-reference-preview></p></div><div class="rx-source-reference-actions"><button type="button" data-source-reference-clear hidden>${esc(text.clear)}</button><button type="button" data-source-reference-use disabled>${esc(text.use)}</button></div>${embedded?`<small class="rx-source-reference-note">${esc(text.savedHint)}</small>`:''}</footer>`:''}`;
+    if(embedded){if(!refresh()){dialog.remove();dialog=null;session?.abort();session=null;return false;}}
+    else{document.body.append(dialog);dialog.showModal();}
     dialog.addEventListener('cancel',event=>{event.preventDefault();close();},{signal:aborter.signal});
     dialog.querySelector('[data-source-reader-close]').addEventListener('click',close,{signal:aborter.signal});
     dialog.querySelector('[data-source-reader-retry]').addEventListener('click',()=>void open(url,opener),{signal:aborter.signal});
+    dialog.querySelector('[data-source-reference-use]')?.addEventListener('click',()=>void useSelection(),{signal:aborter.signal});
+    dialog.querySelector('[data-source-reference-clear]')?.addEventListener('click',()=>{selectedReference=null;dialog.ownerDocument.defaultView.getSelection()?.removeAllRanges();renderSelection();},{signal:aborter.signal});
     try{
       const shared=Object.values(EXISTING).includes(id);
       await Promise.all([loadReader(),loadStyles()]);
@@ -149,13 +236,20 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       }
       const doc=await corpus.load(id);await corpus.readerDocument(id,'ru');
       if(ticket!==generation||closed){corpus.destroy();return false;}
-      readerState[id]||={original:true,tocOpen:false,searchOpen:false};
+      readerState[id]||={original:true,tocOpen:false,searchOpen:embedded};
       current=doc;app={root:dialog.querySelector('.rx-source-reader-content'),corpus,locale:'ru',state:{reader:readerState},unitIndexes:new WeakMap(),isLocked:()=>false,applyPresence:()=>{},fail};
       app.root.innerHTML=readerView(app,doc,[],{context:'reception',readonly:true});
+      if(embedded)decorateEmbeddedReader();
       translate();await attachReader(app,positions[id]);
       if(ticket!==generation)return false;
       dialog.querySelector('[data-source-reader-status]').textContent='';
-      app.root.addEventListener('click',action,{signal:aborter.signal});
+      dialog.addEventListener('click',action,{signal:aborter.signal});
+      if(typeof onSelect==='function'){
+        dialog.ownerDocument.addEventListener('selectionchange',captureSelection,{signal:aborter.signal});
+        app.root.addEventListener('pointerup',captureSelection,{signal:aborter.signal});
+        app.root.addEventListener('keyup',captureSelection,{signal:aborter.signal});
+        renderSelection();
+      }
       app.root.addEventListener('submit',event=>{if(event.target.matches('[data-search-form="reader"]')){event.preventDefault();void search();}},{signal:aborter.signal});
       dialog.querySelector('[data-source-reader-close]').focus({preventScroll:true});
       return true;
@@ -168,5 +262,5 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
   },{signal:lifetime.signal});
   function destroy(){closed=true;close();lifetime.abort();signal?.removeEventListener('abort',destroy);}
   signal?.addEventListener('abort',destroy,{once:true});if(signal?.aborted)destroy();
-  return {open,close,destroy,supports:url=>Boolean(sourceDocumentForURL(url))};
+  return {open,close,destroy,refresh,isOpen:()=>Boolean(dialog),supports:url=>Boolean(sourceDocumentForURL(url))};
 }
