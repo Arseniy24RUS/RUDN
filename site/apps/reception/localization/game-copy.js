@@ -59,6 +59,7 @@ export function gameCopy(value, locale = 'ru') {
   for (const pattern of removedSentences[locale] || []) text = text.replace(pattern, '');
   if (locale === 'ru') {
     text = text
+      .replace(/^(?:Участник вымышленной (?:учебной )?(?:истории|ситуации)|Персонаж вымышленного (?:учебного )?дела)$/g, 'Заявитель')
       .replace(/Игрок —/g, 'Вы —')
       .replace(/вымышленному адресу/g, 'несуществующему адресу')
       .replace(/вымышленного экстренного вызова/g, 'необоснованного экстренного вызова')
@@ -86,7 +87,9 @@ export function gameCopy(value, locale = 'ru') {
       .replace(/Это не настоящий административный регламент\.\s*/g, '');
   } else if (locale === 'en') {
     text = text
-      .replace(/Participant in a fictional training story/g, 'Participant')
+      .replace(/^(?:Participant in a fictional (?:training )?(?:story|situation)|Character in a fictional (?:training )?case)$/g, 'Applicant')
+      .replace(/^Fictional training-case document$/g, 'Document')
+      .replace(/^Fictional (?=(?:copy of the publication|sensitive attachment)$)/g, '')
       .replace(/fictional address/g, 'nonexistent address')
       .replace(/fictional emergency call/g, 'unnecessary emergency call')
       .replace(/fictional result of measurements/g, 'invented result of measurements')
@@ -103,6 +106,9 @@ export function gameCopy(value, locale = 'ru') {
       .replace(/Simulate (?:an urgent|the urgent) (?:message|referral|notification)/g, 'Send an urgent message');
   } else if (locale === 'zh') {
     text = text
+      .replace(/^(?:虚构教学故事的参与者|虚构教学案例人物|虚构教学情境参与者)$/g, '申请人')
+      .replace(/虚构的(?= [AB] (?:楼|庭院))/g, '')
+      .replace(/材料均属虚构，并非关于真实地点的报告。\s*/g, '')
       .replace(/玩家是/g, '您是')
       .replace(/虚构地址/g, '不存在的地址')
       .replace(/虚构的“/g, '“')
