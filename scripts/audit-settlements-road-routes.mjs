@@ -78,7 +78,7 @@ function legalAlternative(world,policy,plan,access) {
 }
 const records=[];
 for (const metadata of manifest.regions.filter(row=>!region||row.id===region)) {
-  const world=appendFederalCities(new World(await read(new URL(metadata.path,data)),JSON.parse(gunzipSync(await readFile(new URL(`transport/${metadata.id}.json.gz`,data))))));
+  const world=appendFederalCities(new World(JSON.parse(gunzipSync(await readFile(new URL(metadata.compressedPath,data)))),JSON.parse(gunzipSync(await readFile(new URL(`transport/${metadata.id}.json.gz`,data))))));
   const policy=await loadDistanceTransportPolicy(world),access=sourceAccess(world,policy);
   for (const difficulty of ['easy','normal','hard'].filter(value=>!difficultyFilter||value===difficultyFilter)) {
     const plan=await loadSocialPlan(world,{difficulty}),routes=structuredClone(plan.initialRoutes),invalid=[];

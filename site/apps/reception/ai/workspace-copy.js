@@ -2,6 +2,7 @@ import {COPY} from './copy.js';
 
 const additions = {
   ru: {
+    retiredSession:'Платформа обновлена. Начните новый приём; результаты завершённых смен сохранены.',
     chat:'Чат', calendar:'Календарь', reception:'Приёмная', back:'Выйти из приёмной', hero:'Ваш рабочий день',
     welcome:'Муниципальная приёмная', welcomeHint:'За каждым обращением — человек. Выслушайте, разберитесь в документах и примите обоснованное решение.',
     chooseFormat:'Формат работы', training:'Обучение', independent:'Самостоятельная смена',
@@ -38,6 +39,7 @@ const additions = {
     enterHint:'Enter — отправить · Shift+Enter — новая строка', notesSaved:'Рабочие записи сохраняются автоматически',
   },
   en: {
+    retiredSession:'The platform has been updated. Start a new reception; completed shift results are preserved.',
     chat:'Chat', calendar:'Calendar', reception:'Reception', back:'Leave reception', hero:'Your working day',
     welcome:'Public reception office', welcomeHint:'Every appeal comes from a person. Listen, examine the documents and make a reasoned decision.',
     chooseFormat:'Work format', training:'Training', independent:'Independent shift',
@@ -71,6 +73,7 @@ const additions = {
     enterHint:'Enter to send · Shift+Enter for a new line', notesSaved:'Your working notes are saved automatically',
   },
   zh: {
+    retiredSession:'平台已更新。请开始新的接待；已完成班次的成绩已保留。',
     chat:'聊天', calendar:'日历', reception:'接待室', back:'离开接待室', hero:'您的工作日', welcome:'公共接待室',
     welcomeHint:'每一份诉求背后都有一个人。先倾听，再查阅材料，最后作出有依据的决定。',
     chooseFormat:'工作形式', training:'学习训练', independent:'独立值班', trainingHint:'选择一个案例或随机练习，完成后查看详细分析。',

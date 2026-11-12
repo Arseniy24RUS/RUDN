@@ -5,6 +5,8 @@ scripts/test-settlements-replay.mjs text eol=lf
 scripts/summarize-settlements-replay.mjs text eol=lf
 # Resource digests must identify the same bytes on Windows and on Pages.
 site/apps/legal-lab/** text=auto eol=lf
+# Reception's document registry hashes the exact UTF-8 bytes on every platform.
+site/apps/reception/content/** text=auto eol=lf
 
 # Independent review evidence is hashed verbatim, including its original line endings.
 docs/quality/legal-document-translations/** -text whitespace=cr-at-eol

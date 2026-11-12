@@ -10,8 +10,8 @@ const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance:
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
   maxConcurrent: 8, maxDailyTurnsPerStudent: 240, maxDailyStartsPerStudent: 20, leaseMs: 45000, providerTimeoutMs: 30000};
 const allowed = {
-  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level'], resume: ['op', 'sessionId'],
-  recover: ['op', 'studentKey', 'mode'],
+  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId'], resume: ['op', 'sessionId', 'buildId'],
+  recover: ['op', 'studentKey', 'mode', 'buildId'],
   message: ['op', 'sessionId', 'text', 'requestId', 'expectedRevision'], document: ['op', 'sessionId', 'documentId', 'requestId'],
   decide: ['op', 'sessionId', 'decision', 'requestId'], followup:['op','sessionId','requestId','choiceId'], next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey']
 };
@@ -72,7 +72,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       cases: s.results.map((r, i) => ({caseId: s.caseData[i].id, title: localized(s.caseData[i].public.title, s.locale), score: r.score,
         feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null}))} : null;
     return {id: s.id, revision: s.revision, mode: s.mode, locale: s.locale, caseIndex: s.caseIndex, caseCount: s.caseData.length,
-      startedAt: s.startedAt, updatedAt: s.updatedAt,
+      startedAt: s.startedAt, updatedAt: s.updatedAt, ...(s.buildId ? {buildId:s.buildId} : {}),
       status: s.status, case: {id: c.id, ...publicMetadata(c), ...p}, messages: state.messages,
       documents: c.documents.filter(d => state.releasedDocumentIds.includes(d.id)).map(d => localized({id: d.id, title: d.title, type: d.type, text: d.text,
         ...(d.image?{image:d.image}:{}),...(d.url?{url:d.url}:{}),...(d.sensitive!==undefined?{sensitive:d.sensitive}:{})}, s.locale)),
@@ -91,7 +91,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   }
   function sessionEntry(session) {
     return {id: session.id, mode: session.mode, status: session.status, revision: session.revision,
-      startedAt: session.startedAt, updatedAt: session.updatedAt};
+      startedAt: session.startedAt, updatedAt: session.updatedAt, ...(session.buildId ? {buildId:session.buildId} : {})};
   }
   const response = async s => { await remember(s); return {ok: true, view: view(s)}; };
   async function migrateLegacyIndex(identity) {
@@ -129,14 +129,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     async function indexed() {
       const index = await store.get(`${path}/entries`);
       const candidates = Object.values(index || {}).filter(entry => entry.mode === body.mode && entry.status !== 'complete'
-        && /^[a-f0-9]{40}$/.test(entry.id))
+        && (!body.buildId || entry.buildId === body.buildId) && /^[a-f0-9]{40}$/.test(entry.id))
         .sort((a, b) => b.updatedAt - a.updatedAt || b.startedAt - a.startedAt || b.id.localeCompare(a.id));
       for (let i = 0; i < candidates.length; i++) {
         if (i >= LEGACY_RECOVERY_LIMITS.sessions) fail('recovery_index_required', 409);
         const entry = candidates[i], s = normalizeSession(await store.get(`sessions/${entry.id}`));
         if (!s) { await store.transaction(`${path}/entries/${entry.id}`, () => null); continue; }
         own(s, identity);
-        if (s.mode !== body.mode || s.status === 'complete') { await remember(s); continue; }
+        if (s.mode !== body.mode || s.status === 'complete' || body.buildId && s.buildId !== body.buildId) { await remember(s); continue; }
         return response(s);
       }
       return null;
@@ -180,7 +180,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     });
     if (!grant.committed) fail('daily_limit', 429);
     const session = {schema: 1, id, owner, studentKey: identity.studentKey || null, uid: identity.uid, teacher: Boolean(identity.teacher),
-      mode, locale: language, startedAt: timestamp, updatedAt: timestamp, revision: 1, status: 'active', caseIndex: 0,
+      mode, locale: language, ...(body.buildId ? {buildId:body.buildId} : {}), startedAt: timestamp, updatedAt: timestamp, revision: 1, status: 'active', caseIndex: 0,
       caseData: selected, caseStates: selected.map(c => initialState(c, language, timestamp)), results: [], requests: {},
       startSignature: signature, lease: null, result: null, journalSaved: false};
     const created = await store.transaction(`sessions/${id}`, old => old || session);
@@ -313,9 +313,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   }
   async function handle(body, identity) {
     checkIdentity(identity); if (!body || !Object.hasOwn(allowed, body.op)) fail('invalid_operation'); fields(body, allowed[body.op]);
+    if (body.buildId !== undefined && (typeof body.buildId !== 'string' || !/^[a-f0-9]{32}$/.test(body.buildId))) fail('invalid_build');
     if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
     if (body.op === 'start') return start(body, identity);
-    if (body.op === 'resume') return response(await deliverResult(await get(body.sessionId, identity)));
+    if (body.op === 'resume') {
+      const session=await get(body.sessionId, identity);
+      if(body.buildId && session.buildId!==body.buildId && session.status!=='complete') fail('outdated_session',409);
+      return response(await deliverResult(session));
+    }
     if (body.op === 'recover') return recover(body, identity);
     if (body.op === 'message') return message(body, identity);
     if (body.op === 'locale') {

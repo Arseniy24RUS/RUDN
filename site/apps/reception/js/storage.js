@@ -1,6 +1,7 @@
 import {restoreShift,academicPeriod} from './engine.js';
 import {hydrateSavedShift} from './content-library.js';
 import {durableStore} from '../../../assets/js/durable-store.js';
+import {canResumeGameDraft,markGameDraft,notifyRetiredGameDraft} from '../../../assets/js/game-release-policy.js';
 
 /** Every legacy key, archive and lock uses the same context boundary. */
 export function receptionStorageContext(context='course',storage){
@@ -23,7 +24,7 @@ export function createReceptionStorage({owner,period=academicPeriod(),backend,co
  return {
   async read(mode){
    const existing=raw(mode);let parsed=null;try{parsed=JSON.parse(existing);}catch{/* Legacy reader preserves corrupt text. */}
-   await hydrateSavedShift(parsed);
+   if(canResumeGameDraft(parsed,{completed:parsed?.completed===true}))await hydrateSavedShift(parsed);
    const legacy=readDraftResult(owner,mode,period,store);observed.set(mode,existing);
    const draft=await (backend?.loadDraft?.(scope(mode))||durableStore.loadDraft(scope(mode)));
    await hydrateSavedShift(draft?.state);
@@ -39,7 +40,7 @@ export function createReceptionStorage({owner,period=academicPeriod(),backend,co
   async write(state,{replace=false}={}){
    const currentRaw=raw(state.mode);
    if(!replace&&observed.has(state.mode)&&currentRaw!==observed.get(state.mode))return {ok:false,conflict:true};
-   const next={...state,revision:Number(state.revision||0)+1,savedAt:new Date().toISOString()};
+   const next=markGameDraft({...state,revision:Number(state.revision||0)+1,savedAt:new Date().toISOString()});
    const input={...scope(state.mode),attemptId:state.id,state:next,contentVersion:'reception-v16',baseRevision:revisions.get(state.id),phase:state.completed?'completed':'answering'};
    try{
     const saved=await (backend?.checkpoint?.(input,{queue:owner.startsWith('student:')})||durableStore.checkpoint(input,{queue:false}));
@@ -59,14 +60,16 @@ export function createReceptionStorage({owner,period=academicPeriod(),backend,co
 export function storeKey(owner,mode,period=academicPeriod()){return `rudn.reception.v16:${encodeURIComponent(owner)}:${period}:${mode}`;}
 export function readDraftResult(owner,mode,period=academicPeriod(),storage){
  let text=null;
- try{const store=storage||globalThis.localStorage;text=store.getItem(storeKey(owner,mode,period));if(!text)return {state:null,status:'empty'};const raw=JSON.parse(text),state=restoreShift(raw,owner,mode,period);return {state,status:state?'ready':'incompatible',raw:state?null:raw};}catch(error){return {state:null,status:'unavailable',rawText:text,error:String(error)};}
+ try{const store=storage||globalThis.localStorage;text=store.getItem(storeKey(owner,mode,period));if(!text)return {state:null,status:'empty'};const raw=JSON.parse(text);
+  if(!canResumeGameDraft(raw,{completed:raw?.completed===true})){notifyRetiredGameDraft('reception');return {state:null,status:'empty'};}
+  const state=restoreShift(raw,owner,mode,period);return {state,status:state?'ready':'incompatible',raw:state?null:raw};}catch(error){return {state:null,status:'unavailable',rawText:text,error:String(error)};}
 }
 export function readDraft(owner,mode,period=academicPeriod(),storage){return readDraftResult(owner,mode,period,storage).state;}
 export function writeDraft(state,storage,{replace=false}={}){
  try{const store=storage||globalThis.localStorage,key=storeKey(state.owner,state.mode,state.period),current=replace?null:JSON.parse(store.getItem(key)||'null');
-  if(current&&!replace&&(current.id!==state.id||Number(current.revision||0)!==Number(state.revision||0)))return {ok:false,conflict:true};
+  if(current&&!replace&&canResumeGameDraft(current,{completed:current.completed===true})&&(current.id!==state.id||Number(current.revision||0)!==Number(state.revision||0)))return {ok:false,conflict:true};
   const revision=Number(state.revision||0)+1,savedAt=new Date().toISOString();
-  store.setItem(key,JSON.stringify({...state,revision,savedAt}));state.revision=revision;state.savedAt=savedAt;return {ok:true};
+  const next=markGameDraft({...state,revision,savedAt});store.setItem(key,JSON.stringify(next));Object.assign(state,next);return {ok:true};
  }catch(error){return {ok:false,conflict:false,error:String(error)};}
 }
 export function archiveDraft(state,storage){try{const store=storage||globalThis.localStorage;store.setItem(`rudn.reception.archive.v16:${encodeURIComponent(state.owner)}:${state.id}`,JSON.stringify(state));return true;}catch{return false;}}

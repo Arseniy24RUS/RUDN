@@ -2,13 +2,14 @@ import {updateSnapshotStore} from './platform-update-state.js';
 import * as releaseAPI from './release-bootstrap.js';
 import {hasFailedRelease,recordFailedRelease} from './platform-update-failures.js';
 import {captureCheckpointContracts,acceptsCheckpointContracts} from './platform-update-contracts.js';
+import {isGameUpdateAdapter} from './game-release-policy.js';
 
 export const UPDATE_PENDING_KEY='rudn.update.pending.v1';
 const RELEASE_RETRY_INTERVAL=300000;
 const preparationKey=(target,module)=>JSON.stringify([target.buildId,target.manifestSha256,target.manifestURL,target.entryURL,module]);
 const uid=()=>globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 const fail=code=>Object.assign(new Error(code),{code});
-const safeStorage=name=>{try{return globalThis[name]}catch{return null}};
+const safeStorage=name=>{try{const storage=globalThis[name];return typeof storage?.getItem==='function'?storage:null}catch{return null}};
 const COPY={ru:['Обновляем платформу…','Работа сохранена. Не удалось восстановить её автоматически.','Вернуться к сохранённой работе'],en:['Updating the platform…','Your work is saved. Automatic restoration failed.','Return to saved work'],zh:['正在更新平台…','作业已保存，自动恢复失败。','返回已保存的作业']};
 function compatibleContracts(current,target,list){
   return acceptsCheckpointContracts(captureCheckpointContracts(current,list.map(adapter=>({module:adapter.module||'platform'}))),target);
@@ -94,11 +95,12 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       show();envelopeToken=uid();
       const checkpointContracts=captureCheckpointContracts(current.contracts,results);
       if(!checkpointContracts)throw fail('update/incompatible-contract');
-      const envelope={schema:1,token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,route,language:doc?.documentElement?.lang||'ru',adapters:results,checkpointContracts,previous:target.previous||null,createdAt:now()};
+      const retention=target.retention==='current-only'?target.retention:null;
+      const envelope={schema:1,token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,route,language:doc?.documentElement?.lang||'ru',adapters:results,checkpointContracts,previous:retention?null:target.previous||null,createdAt:now()};
       const envelopeWrite=store.put(envelope).then(async saved=>{if(controller.signal.aborted){await store.remove(envelope.token);throw fail('update/deadline')}return saved});
       const saved=await Promise.race([envelopeWrite,deadline]);
       if(!saved?.durable||controller.signal.aborted||!stable(owner,route,list)||now()>deadlineAt)throw fail('update/envelope-not-ready');
-      writePending({token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,phase:'switching',attempts:1,startedAt:now(),route,checkpointContracts,previous:target.previous||null});
+      writePending({token:envelopeToken,owner,sourceBuild:current.buildId,targetBuild:target.buildId,phase:'switching',attempts:1,startedAt:now(),route,checkpointContracts,previous:envelope.previous,...(retention?{retention}:{})});
       clearTimeout(preparationTimer);
       for(const adapter of list)adapter.commitPreparation?.();
       record('update-state',{stage:'switch',operation:moduleName(),success:true});
@@ -125,7 +127,8 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     if(disposed||marker.owner!==getOwner())return {status:'defer',code:'context-changed'};
     const oldRoute=getRoute();
     record('update-state',{stage:'restore',code,success:false});
-    const previous=envelope?.previous||marker.previous;
+    const currentOnly=context()?.retention==='current-only'||marker.retention==='current-only';
+    const previous=currentOnly?null:envelope?.previous||marker.previous;
     if(marker.phase!=='rollback'&&previous?.buildId&&previous.buildId!==context()?.buildId){
       const controller=new AbortController();rollbackController=controller;let timeout;
       try{
@@ -143,18 +146,24 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       finally{clearTimeout(timeout);if(rollbackController===controller)rollbackController=null}
     }
     if(disposed||marker.owner!==getOwner()||oldRoute!==getRoute())return {status:'defer',code:'context-changed'};
-    writePending({...marker,phase:'blocked',code});show(true);
-    return {status:'blocked',code};
+    const blockedCode=currentOnly?'update/current-unavailable':code;
+    writePending({...marker,phase:'blocked',code:blockedCode});show(true);
+    return {status:'blocked',code:blockedCode};
   }
   async function runRestore(){
     const marker=pending();if(!marker)return {status:'none'};
     if(disposed)return {status:'defer',code:'disposed'};
     const current=context();if(!current?.buildId)return {status:'defer',code:'unversioned'};
     if(marker.owner!==getOwner())return {status:'defer',code:'owner-not-ready'};
-    if(marker.phase==='blocked'){show(true);return {status:'blocked',code:marker.code}};
     // The process can close after the durable marker but before navigation.
     // Restore the source document first, then retry a fresh verified switch.
     const interruptedSwitch=!switched&&marker.phase==='switching'&&marker.sourceBuild===current.buildId&&marker.targetBuild!==current.buildId;
+    if(current.retention==='current-only'&&marker.targetBuild!==current.buildId&&!interruptedSwitch){
+      // The online entry may supersede a transition aimed at an expired build.
+      // Keep its snapshots and all durable stores, but release the obsolete marker.
+      clearPending(marker.token);release.markReleaseRestored?.();hide();return {status:'retired'};
+    }
+    if(marker.phase==='blocked'){show(true);return {status:'blocked',code:marker.code}};
     if(marker.targetBuild!==current.buildId&&!interruptedSwitch)return {status:'defer',code:'different-build'};
     const initialOwner=getOwner(),initialRoute=getRoute();
     const controller=new AbortController();restoration?.abort();restoration=controller;
@@ -174,6 +183,7 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     try{
       timeout=setTimeout(()=>controller.abort(),10000);
       for(let i=0;i<list.length;i++){
+        if(current.retention==='current-only'&&envelope.sourceBuild!==current.buildId&&isGameUpdateAdapter(envelope.adapters[i].module))continue;
         const result=await Promise.race([list[i].resumeAfterUpdate({resumeToken:envelope.adapters[i].resumeToken,signal:controller.signal}),new Promise((_,reject)=>controller.signal.addEventListener('abort',()=>reject(fail('update/restore-timeout')),{once:true}))]);
         if(!stable(envelope.owner,envelope.route,list)||controller.signal.aborted)return {status:'defer',code:'context-changed'};
         if(result?.status!=='restored')return rollback(marker,envelope,result?.code||'update/restore-incomplete');

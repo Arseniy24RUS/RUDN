@@ -10,7 +10,9 @@ let playwright;
 try { playwright = require(process.env.PLAYWRIGHT_PATH || 'playwright'); }
 catch { throw new Error('Playwright is required. Use an existing installation via PLAYWRIGHT_PATH.'); }
 const source = await readFile(new URL('../site/assets/js/durable-store.js', import.meta.url));
-const supportSources = Object.fromEntries(await Promise.all(['checkpoint-sync.js', 'firebase-rest.js', 'student-identity.js'].map(async name => [`/${name}`, await readFile(new URL(`../site/assets/js/${name}`, import.meta.url))])));
+const supportPaths = ['checkpoint-sync.js','firebase-rest.js','student-identity.js','game-release-policy.js','release-resources.js'];
+const supportSources = Object.fromEntries(await Promise.all(supportPaths.map(async name => [`/${name}`, await readFile(new URL(`../site/assets/js/${name}`, import.meta.url))])));
+supportSources['/apps/career/assets/seminar-progress.mjs'] = await readFile(new URL('../site/apps/career/assets/seminar-progress.mjs', import.meta.url));
 const server = createServer((request, response) => {
   response.setHeader('Cache-Control', 'no-store');
   if (request.url === '/durable-store.js') { response.setHeader('Content-Type', 'text/javascript'); response.end(source); }
@@ -364,6 +366,36 @@ try {
           equal((await recovered.listPending({owner: f.s.owner})).length, 0, 'confirmed terminal result remains acknowledged');
           assert((await recovered.listConflicts({owner: f.s.owner})).some(c => c.reason === 'fallback-attempt-mismatch'), 'contradictory result retained as conflict');
           recovered.close();
+        });
+
+        await test('current-only deployment retires stale games while preserving completed results, their delivery, and forms', async () => {
+          const s = {...scope('current-release'), activitySlug: 'seminar-2', mode: 'seminar'};
+          const form = {...s, activitySlug: 'seminar-5', mode: 'form'};
+          const completed = {...s, attemptId: 'finished-puzzle'};
+          const next = {...s, attemptId: 'latest-puzzle'};
+          const buildA = 'a'.repeat(32), buildB = 'b'.repeat(32);
+          let store = make('current-release');
+          try {
+            globalThis.__RUDN_RELEASE__ = {retention: 'current-only', buildId: buildA};
+            await store.checkpoint({...s, state: {placed: 12}});
+            await store.checkpoint({...form, state: {text: 'Form draft'}});
+            await store.complete({...completed, state: {finished: true}, attempt: {id: completed.attemptId, score: 5}});
+            store.close();
+            globalThis.__RUDN_RELEASE__ = {retention: 'current-only', buildId: buildB};
+            store = make('current-release');
+            equal(await store.loadDraft(s), null, 'old unfinished puzzle no longer resumes');
+            equal((await store.loadDraft(completed)).phase, 'completed', 'completed puzzle can be read');
+            equal(await store.listAttempts({owner: s.owner}), [{id: completed.attemptId, score: 5}], 'completed score intact');
+            assert((await store.listPending({owner: s.owner})).some(op => op.type === 'attempt' && op.attemptId === completed.attemptId), 'completion delivery still queued');
+            equal((await store.loadDraft(form)).state.text, 'Form draft', 'non-game form retained');
+            await store.checkpoint({...next, state: {placed: 1}});
+            store.close();
+            store = make('current-release');
+            const resumed = await store.loadDraft(next);
+            equal(resumed.releaseBuildId, buildB, 'current checkpoint marked with build');
+            equal(resumed.state.placed, 1, 'current checkpoint resumes after reopen');
+            assert((await store.exportBackup({owner: s.owner})).drafts.some(draft => draft.attemptId === s.attemptId), 'retired draft still available in backup');
+          } finally { store.close(); delete globalThis.__RUDN_RELEASE__; }
         });
 
         return results;

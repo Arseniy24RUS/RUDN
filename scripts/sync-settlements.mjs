@@ -3,6 +3,7 @@ import {readFile,writeFile,readdir,mkdir,copyFile,stat} from 'node:fs/promises';
 import {resolve,relative,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
 const repo=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const target=join(repo,'site/apps/settlements/runtime');
 const manifestPath=join(repo,'site/apps/settlements/source-manifest.json');
@@ -10,12 +11,23 @@ const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const args=process.argv.slice(2),check=args.includes('--check');
 if(check){
   const manifest=JSON.parse(await readFile(manifestPath,'utf8'));
+  if(hash(JSON.stringify(manifest.files))!==manifest.sourceHash)throw Error('Settlements source manifest digest mismatch');
   for(const entry of manifest.files){if(hash(await readFile(join(target,entry.path)))!==entry.sha256)throw Error(`Settlements runtime mismatch: ${entry.path}`);}
   for(const entry of manifest.protectedFiles){if(hash(await readFile(join(target,entry.path)))!==entry.sha256)throw Error(`Protected data mismatch: ${entry.path}`);}
-  console.log(JSON.stringify({status:'pass',files:manifest.files.length,protectedFiles:manifest.protectedFiles.length,sourceHash:manifest.sourceHash}));
+  for(const entry of manifest.packedSources || []){
+    const expanded = gunzipSync(await readFile(join(target, entry.packedPath)));
+    if(expanded.length !== entry.expandedBytes || hash(expanded) !== entry.expandedSha256)throw Error(`Packed source mismatch: ${entry.path}`);
+  }
+  console.log(JSON.stringify({status:'pass',files:manifest.files.length,protectedFiles:manifest.protectedFiles.length,packedSources:manifest.packedSources?.length || 0,sourceHash:manifest.sourceHash}));
 }else{
   const argument=args[args.indexOf('--source')+1];
   if(!args.includes('--source')||!argument)throw Error('Usage: node scripts/sync-settlements.mjs --source <production-kit> | --check');
+  // The historical kit contains raw duplicates and loaders from before the gzip migration.
+  const existing = await readFile(manifestPath, 'utf8').catch(error => {
+    if(error.code !== 'ENOENT') throw error;
+    return '{}';
+  });
+  if (JSON.parse(existing).packedSources?.length) throw Error('The initial production kit cannot replace the migrated Settlements runtime');
   const source=resolve(argument),site=join(source,'game/site');
   const roots=['assets/js/settlements/v2','assets/js/settlements/v24','assets/img/settlements','assets/geodata','data/settlements','assets/css/settlements-v24.css'];
   const files=[];

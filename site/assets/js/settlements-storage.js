@@ -1,6 +1,7 @@
 import {durableStore} from './durable-store.js';
 import {createPuzzleWriter} from './puzzle-storage.js';
 import {makeSettlementsLeaderboard,selectSettlementsLeaders,settlementsPoints,validateSettlementsResult} from './settlements-leaderboard.js';
+import {canResumeGameDraft,gameWorkspaceId} from './game-release-policy.js';
 
 const copy=value=>structuredClone(value);
 const failure=code=>Object.assign(new Error(code),{code});
@@ -80,7 +81,7 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
     const all=await store.listConflicts({owner});
     assertActive();
     conflictsByScope.session=all.filter(item=>item.draftId===draft?.id&&!item.resolvedAt);
-    conflictsByScope.tutorial=all.filter(item=>item.draftId===tutorial?.id&&!item.resolvedAt);
+    conflictsByScope.tutorial=tutorial&&canResumeGameDraft(tutorial)?all.filter(item=>item.draftId===tutorial.id&&!item.resolvedAt):[];
     tutorialCompleted=Boolean(tutorialCompleted || tutorial?.state.completed || all.some(item=>
       item.draftId===tutorial?.id && (item.current?.state?.completed || item.incoming?.state?.completed)));
     conflicted=Boolean(conflictsByScope.session.length||conflictsByScope.tutorial.length);
@@ -197,14 +198,19 @@ export function createSettlementsPersistence({backend,owner,mode='assessment',on
   async function loadTutorial(){
     tutorial=await loadScope(tutorialScope);
     await detectConflicts();emit();
+    if(tutorial&&!canResumeGameDraft(tutorial)){
+      // A finished tutorial stays unlocked, even if its old replay is retired.
+      return {completed:tutorialCompleted,...(tutorial.state.completedAt?{completedAt:tutorial.state.completedAt}:{})};
+    }
     return tutorial?{...decodeState(tutorial.state),completed:tutorialCompleted}:null;
   }
   function saveTutorial(state){return write('tutorial',async()=>{
     await detectConflicts();
     requireWriter();
-    const previous=await store.loadDraft(tutorialScope);
-    const next={...copy(state),completed:Boolean(state.completed||tutorialCompleted||previous?.state.completed)};
-    tutorial=await checkpoint('tutorial',{...tutorialScope,attemptId:previous?.attemptId||'tutorial-v1',state:next,baseRevision:previous?.revision,contentVersion:'settlements-1'},{queue:student});
+    const saved=await store.loadDraft(tutorialScope);
+    const previous=saved&&canResumeGameDraft(saved)?saved:null;
+    const next={...copy(state),completed:Boolean(state.completed||tutorialCompleted||saved?.state.completed)};
+    tutorial=await checkpoint('tutorial',{...tutorialScope,attemptId:previous?.attemptId||gameWorkspaceId('tutorial-v1'),state:next,baseRevision:previous?.revision,contentVersion:'settlements-1'},{queue:student});
     assertActive();tutorialCompleted=next.completed;return copy(tutorial.state);
   }).then(result=>{void flush().catch(()=>{});return result})}
 

@@ -1,4 +1,5 @@
 /** Regional-goal regressions. Canonical source rows and historical replay remain intact. */
+import {readSettlementsJson} from './settlements-json.mjs';
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFile} from 'node:fs/promises';
@@ -22,7 +23,7 @@ import {resultMetrics} from '../site/apps/settlements/entry.mjs';
 import {settlementsPoints} from '../site/assets/js/settlements-leaderboard.js';
 
 const base=new URL('../site/apps/settlements/runtime/data/settlements/v1/',import.meta.url);
-const json=async path=>JSON.parse(await readFile(new URL(path,base),'utf8'));
+const json = path => readSettlementsJson(new URL(path, base));
 const digest=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const rect=(west,south,east,north)=>[[west,south],[east,south],[east,north],[west,north],[west,south]];
 const polygon=(...rings)=>({type:'Polygon',coordinates:rings});
@@ -41,7 +42,7 @@ function publishedEngine(){
   return previousPromise;
 }
 async function regionalWorld(id){
-  const world=new World(await json(`regions/${id}.json`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,base)))));
+  const world=new World(await json(`regions/${id}.json.gz`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,base)))));
   await loadDistanceTransportPolicy(world);
   return {world,boundary:await json(`boundaries/${id}.geojson`)};
 }

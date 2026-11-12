@@ -680,6 +680,7 @@ self.addEventListener('message',event=>{
 // Exact releases use immutable physical paths. Cache hits and misses always
 // resolve through the same manifest, including dedicated workers and old tabs.
 const platformManifests=new Map(),platformVerified=new Set();
+let lastPublishedNavigationTarget=null;
 const platformCache=id=>`${CACHE_PREFIX}release-${id}`;
 const platformURL=value=>{const url=new URL(value,SCOPE);if(url.origin!==SCOPE.origin||!url.pathname.startsWith(SCOPE.pathname))throw new Error('release/url-outside-scope');url.search='';url.hash='';return url;};
 async function platformHash(bytes){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');}
@@ -722,6 +723,19 @@ async function platformFind(id){
   const response=await fetchWithDeadline(new Request(new URL(`_releases/${id}/release.json`,SCOPE),{cache:'reload'}));
   if(response.ok){const target=await response.json();if(target.buildId===id)return platformManifest(target);}throw new Error('release/unknown-build');
 }
+async function platformNavigationTarget(){
+  if(PLATFORM_RELEASE.retention!=='current-only')return PLATFORM_RELEASE.current;
+  try{
+    const response=await fetchWithDeadline(new Request(new URL('release.json',SCOPE),{cache:'no-store'}),1800);
+    if(response.ok){
+      const pointer=await response.json();
+      if(pointer.schema===1&&pointer.retention==='current-only'&&!pointer.previous){
+        lastPublishedNavigationTarget=platformTarget(pointer.current);
+      }
+    }
+  }catch{}
+  return lastPublishedNavigationTarget||PLATFORM_RELEASE.current;
+}
 async function platformPrepare(target,module,extras=[]){
   const manifest=await platformManifest(target),queue=[...new Set([...manifest.packs.shell,...(manifest.packs[module]||[]),...extras])];
   if(queue.some(name=>!manifest.resources[name]))throw new Error('release/unknown-resource');
@@ -754,15 +768,23 @@ async function platformServe(event){
       return new Response(JSON.stringify(PLATFORM_RELEASE),{headers:{'content-type':'application/json'}});
     }
     const physical=/^_releases\/([a-f0-9]{32})\/(.*)$/.exec(logical);
+    const navigationTarget=navigation?await platformNavigationTarget():null;
     if(physical){
-      const manifest=await platformFind(physical[1]);
+      if(navigationTarget&&PLATFORM_RELEASE.retention==='current-only'&&physical[1]!==navigationTarget.buildId){
+        const manifest=await platformManifest(navigationTarget);
+        const entry=manifest.publicEntries?.includes(physical[2])?manifest.resources[physical[2]]:null;
+        const target=platformURL(entry?.kind==='runtime'?entry.url:navigationTarget.entryURL);
+        target.search=new URL(event.request.url).search;
+        return Response.redirect(target.href,302);
+      }
+      const manifest=navigationTarget?.buildId===physical[1]?await platformManifest(navigationTarget):await platformFind(physical[1]);
       if(physical[2]==='release.json')return new Response(JSON.stringify(manifest.target),{headers:{'content-type':'application/json'}});
       if(physical[2]==='manifest.json')return platformChecked(manifest.target.manifestURL,manifest.target.manifestSha256,platformCache(manifest.buildId));
       const item=manifest.byURL.get(url.href);if(!item)throw new Error('release/unknown-resource');
       if(navigation)await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(url,item.sha256,platformCache(manifest.buildId));
     }
     const bound=await clientRelease(event.clientId),build=/release-([a-f0-9]{32})$/.exec(bound||'')?.[1];
-    if(navigation){const manifest=await platformManifest(PLATFORM_RELEASE.current),name=logical.endsWith('/')?logical+'index.html':logical||'index.html',item=manifest.resources[name];if(item?.kind==='runtime'){await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(item.url,item.sha256,platformCache(manifest.buildId));}}
+    if(navigation){const manifest=await platformManifest(navigationTarget),name=logical.endsWith('/')?logical+'index.html':logical||'index.html',item=manifest.resources[name];if(item?.kind==='runtime'){await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(item.url,item.sha256,platformCache(manifest.buildId));}}
     if(build){const manifest=await platformFind(build),item=manifest.resources[logical]||manifest.byURL.get(url.href);if(item)return platformChecked(item.url,item.sha256,platformCache(build));if(!logical.startsWith('_objects/'))throw new Error('release/unknown-resource');}
     // Shared objects can be loaded by a worker with no window client ID. Their
     // pathname itself carries the complete SHA-256 of the canonical bytes.

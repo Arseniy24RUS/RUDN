@@ -2,7 +2,7 @@
 from pathlib import Path
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
-import argparse, hashlib, json, sys, threading, time, traceback, urllib.request
+import argparse, gzip, hashlib, json, sys, threading, time, traceback, urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'artifacts/settlements-cloud-browser'
@@ -59,7 +59,7 @@ def find(page,name,settlement_id=None):
 
 def region_rows(region):
     runtime=ROOT/'site/apps/settlements/runtime'
-    rows=json.loads((runtime/f'data/settlements/v1/regions/{region}.json').read_text('utf-8'))['settlements']
+    rows=json.loads(gzip.decompress((runtime/f'data/settlements/v1/regions/{region}.json.gz').read_bytes()))['settlements']
     federal=(runtime/'assets/js/settlements/v24/federal-cities.mjs').read_text('utf-8')
     extra=json.loads(federal.split('export const FEDERAL_CITIES = freeze(')[1].split(');',1)[0])
     return rows+extra.get(region,{}).get('rows',[])
@@ -86,8 +86,8 @@ def run_party(base,ticket,assessment=False):
     OUT=OUT/time.strftime(('assessment' if assessment else 'party')+'-%Y%m%d-%H%M%S');OUT.mkdir(parents=True,exist_ok=True)
     from playwright.sync_api import sync_playwright
     region='nenetskiy_avtonomnyy_okrug'
-    planpath=ROOT/f'site/apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/{region}-easy.mjs'
-    plan=json.loads(planpath.read_text('utf-8').split('export default ')[1].rstrip(';\n'))
+    planpath=ROOT/f'site/apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/{region}-easy.json.gz'
+    plan=json.loads(gzip.decompress(planpath.read_bytes()))
     rows=region_rows(region);by_id={r['id']:r for r in rows}
     report={'evaluationType':'informed-reference-sequence-ui','base':base,'ticket':ticket,'buildHashStart':build_hash(),'planSha256':hashlib.sha256(planpath.read_bytes()).hexdigest(),'checks':[],'pageErrors':[],'consoleErrors':[],'steps':[]}
     entry='#activity/seminar-3' if assessment else '#games/settlements'
@@ -122,8 +122,8 @@ def run_party(base,ticket,assessment=False):
             value=wait_turns(page,ticket,0,slug);attempt=value['state']['attemptId'];report['attemptId']=attempt
             if assessment:
                 region=value['state']['regionId']
-                planpath=ROOT/f'site/apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/{region}-easy.mjs'
-                plan=json.loads(planpath.read_text('utf-8').split('export default ')[1].rstrip(';\n'))
+                planpath=ROOT/f'site/apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/{region}-easy.json.gz'
+                plan=json.loads(gzip.decompress(planpath.read_bytes()))
                 rows=region_rows(region);by_id={r['id']:r for r in rows};report['planSha256']=hashlib.sha256(planpath.read_bytes()).hexdigest()
             report['regionId']=region
             check('new party cloud checkpoint',{'attemptId':attempt,'regionId':value['state']['regionId'],'difficulty':value['state']['difficulty'],'mode':'assessment' if assessment else 'free'})

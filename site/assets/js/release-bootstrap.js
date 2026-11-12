@@ -7,6 +7,7 @@ const RESUME_KEY='rudn.release.transition.v1';
 const receipts=new Map();
 const manifestBytes=new Map();
 let bootTimer=null,bootSettled=false;
+let currentOnlyBoot=false;
 function stopBootWatchdog(){bootSettled=true;clearTimeout(bootTimer);bootTimer=null;}
 export function markReleaseRestored(){stopBootWatchdog();}
 function pendingTransition(){try{const session=JSON.parse(sessionStorage.getItem('rudn.update.pending.v1')||'null');if(session)return session;const token=new URL(location.href).searchParams.get('rudnResume');if(token&&/^[a-zA-Z0-9_-]{1,128}$/.test(token))return JSON.parse(localStorage.getItem('rudn.update.pending.v1:'+token)||'null');}catch{}return null;}
@@ -21,6 +22,10 @@ async function bootFailed(code){
   if(globalThis.dispatchEvent?.(event)===false)return;
   const pending=pendingTransition();
   if(!pending||pending.targetBuild!==document.documentElement.dataset.releaseBuild)return;
+  if(currentOnlyBoot||pending.retention==='current-only'){
+    try{writeTransition({...pending,phase:'blocked',bootFailure:code,code:'update/current-unavailable'});}catch{}
+    showBootFailure();return;
+  }
   if(pending.phase==='blocked'){showBootFailure();return;}
   if(pending.phase==='rollback'||pending.rollbackAttempted){Object.assign(pending,{phase:'blocked',bootFailure:code,code:'update/rollback-unavailable'});try{writeTransition(pending);}catch{}showBootFailure();return;}
   if(!pending.previous){showBootFailure();return;}
@@ -63,6 +68,7 @@ async function readManifest(target,{signal}={}){
   validateTarget(target);const {bytes}=await verified(target.manifestURL,target.manifestSha256,{signal});
   const manifest=JSON.parse(new TextDecoder().decode(bytes));
   if(manifest.schema!==SCHEMA||manifest.buildId!==target.buildId||!manifest.resources||!manifest.packs?.shell)throw failure('release/invalid-manifest');
+  if(target.retention==='current-only'&&manifest.retention!=='current-only')throw failure('release/invalid-retention');
   validateContracts(manifest.contracts);if(!manifest.resources['data/platform-contracts.json'])throw failure('release/contracts-missing');
   const exactRoot=new URL(`_releases/${target.buildId}/`,siteRoot);if(inside(manifest.runtimeRoot).href!==exactRoot.href)throw failure('release/invalid-runtime-root');
   for(const [path,item] of Object.entries(manifest.resources)){
@@ -75,7 +81,8 @@ export async function checkRelease({signal}={}){
   const response=await fetch(new URL('release.json',siteRoot),{cache:'no-store',credentials:'same-origin',signal});
   if(!response.ok)throw failure('release/pointer-unavailable');const pointer=await response.json();abort(signal);
   if(pointer.schema!==SCHEMA)throw failure('release/invalid-pointer');validateTarget(pointer.current);if(pointer.previous)validateTarget(pointer.previous);
-  return {...pointer.current,previous:pointer.previous||null};
+  if(pointer.retention==='current-only'&&pointer.previous)throw failure('release/invalid-retention');
+  return {...pointer.current,previous:pointer.previous||null,...(pointer.retention==='current-only'?{retention:pointer.retention}:{})};
 }
 export async function prepareRelease(target,{module,resources=[],signal}={}){
   const context=await readManifest(target,{signal});
@@ -107,7 +114,28 @@ export function activatePreparedRelease(target,{resumeToken}={}){
   const alternative=receipt.context.resources[logical];
   const url=inside(alternative?.kind==='runtime'&&logical.endsWith('.html')?alternative.url:target.entryURL);url.search=location.search;url.hash=location.hash;if(resumeToken){if(!/^[a-zA-Z0-9_-]{1,128}$/.test(resumeToken))throw failure('release/invalid-resume-token');url.searchParams.set('rudnResume',resumeToken);}location.replace(url.href);
 }
-export const rollbackRelease=activatePreparedRelease;
+export function rollbackRelease(target,options){
+  if(currentOnlyBoot||getReleaseContext()?.retention==='current-only')throw failure('release/rollback-unavailable');
+  return activatePreparedRelease(target,options);
+}
+async function latestPublishedRelease(expected){
+  const signal=AbortSignal.timeout(5000);
+  let target;
+  try{target=await checkRelease({signal});}catch{return null;}
+  if(target.retention!=='current-only')return null;
+  currentOnlyBoot=true;
+  if(expected===target.buildId)return target;
+  // Verify the latest manifest before replacing an old exact route. Preserve
+  // search and hash so the learner returns to the same screen in the new app.
+  const context=await readManifest(target,{signal});
+  const here=new URL(location.href),oldRoot=new URL(`_releases/${expected}/`,siteRoot).pathname;
+  const logical=here.pathname.startsWith(oldRoot)?here.pathname.slice(oldRoot.length):'index.html';
+  const entry=context.publicEntries?.includes(logical)?context.resources[logical]:null;
+  const url=inside(entry?.kind==='runtime'?entry.url:target.entryURL);
+  url.search=here.search;url.hash=here.hash;
+  location.replace(url.href);
+  return false;
+}
 function mark(code,stage){globalThis.__RUDN_DIAGNOSTICS_BOOTSTRAP__?.record('bootstrap-error',{code,stage});}
 async function executePlan(context){
   const planNode=document.getElementById('platform-entry-scripts');
@@ -129,17 +157,26 @@ export async function bootRelease(){
     // Source checkout/test fixtures are not a staged release and retain their URL contract.
     await import(new URL('assets/js/main.js?v=1.3.10',siteRoot).href);return;
   }
+  const published=await latestPublishedRelease(expected);
+  if(published===false)return;
   const pending=pendingTransition();
   // An entry that already hung cannot render its own recovery UI after reload.
-  if(pending?.targetBuild===expected&&pending.phase==='blocked'&&pending.bootFailure&&pending.rollbackAttempted){stopBootWatchdog();showBootFailure();return;}
+  if(!currentOnlyBoot&&pending?.targetBuild===expected&&pending.phase==='blocked'&&pending.bootFailure&&pending.rollbackAttempted){stopBootWatchdog();showBootFailure();return;}
+  if(currentOnlyBoot&&pending?.targetBuild===expected&&pending.phase==='blocked'&&pending.bootFailure){
+    Object.assign(pending,{phase:'switching',bootFailure:null,code:null});
+    try{writeTransition(pending);}catch{}
+  }
   if(pending&&pending.targetBuild===expected&&pending.phase!=='blocked')bootTimer=setTimeout(()=>void bootFailed('restore-timeout'),45000);
   globalThis.addEventListener?.('rudn:update-restored',markReleaseRestored,{once:true});
   globalThis.addEventListener?.('rudn:update-recovery-dismissed',stopBootWatchdog,{once:true});
-  let target;
-  const descriptor=await fetch(new URL(`_releases/${expected}/release.json`,siteRoot),{cache:'reload',credentials:'same-origin'});
-  if(descriptor.ok)target=await descriptor.json();
+  let target=published;
+  if(!target){
+    const descriptor=await fetch(new URL(`_releases/${expected}/release.json`,siteRoot),{cache:'reload',credentials:'same-origin'});
+    if(descriptor.ok)target=await descriptor.json();
+  }
   if(!target||target.buildId!==expected)throw failure('release/requested-build-unavailable');
   const context=setReleaseContext(await readManifest(target));
+  currentOnlyBoot=context.retention==='current-only';
   try{sessionStorage.setItem('rudn.release.last-ready.v1',JSON.stringify(target));}catch{}
   const workers=navigator.serviceWorker;
   const announce=()=>workers?.controller?.postMessage({type:'BIND_BUILD',buildId:context.buildId,manifestURL:context.manifestURL,manifestSha256:context.manifestSha256});

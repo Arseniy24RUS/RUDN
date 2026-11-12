@@ -4,6 +4,7 @@ import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.10';
 import {durableStore} from '../../assets/js/durable-store.js';
 import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../assets/js/platform-update-state.js';
 import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
+import {compatibleCareerMirror,currentGameReleaseBuild,gameWorkspaceId,notifyRetiredGameDraft} from '../../assets/js/game-release-policy.js';
 import {seminar5ProgressFromWorkspace} from './assets/seminar-progress.mjs';
 
 const MODULE_BASE = new URL('./', import.meta.url);
@@ -86,7 +87,10 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   activeMounts.get(container)?.destroy();
   const shadow = container.shadowRoot || container.attachShadow({mode:'open'});
   const free=hostContext==='free';
-  const ownerKey = `rudn-career:${free?'free:':''}embedded:${encodeURIComponent(MODULE_BASE.pathname)}:${encodeURIComponent(String(owner || 'guest'))}:`;
+  const legacyOwnerKey = `rudn-career:${free?'free:':''}embedded:${encodeURIComponent(MODULE_BASE.pathname)}:${encodeURIComponent(String(owner || 'guest'))}:`;
+  const releaseBuild = currentGameReleaseBuild();
+  const versionMirror = releaseBuild && !MODULE_BASE.pathname.endsWith(`/_releases/${releaseBuild}/apps/career/`);
+  const ownerKey = versionMirror ? `${legacyOwnerKey}release-${releaseBuild}:` : legacyOwnerKey;
   let current = null, disposed = false, language = locale(lang), route = VALID_ROUTES.has(initialRoute) ? initialRoute : 'home', generation = 0,updatePaused=false,updateAdapter=null,latestCheckpoint=null,saveFailure=false;
   const hostWindow = container.ownerDocument.defaultView;
   const hostDocument = container.ownerDocument;
@@ -114,11 +118,31 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   const controller = new AbortController();
   const abortFromHost = () => api.destroy();
   const durableOwner=/^(student|teacher):/.test(owner)?owner:'guest:career';
-  const progressScope={owner:durableOwner,activitySlug:free?'career-freeplay':'career-workspace',mode:free?'workspace':'diagnostic',attemptId:'workspace-v1'};
+  const progressScope={owner:durableOwner,activitySlug:free?'career-freeplay':'career-workspace',mode:free?'workspace':'diagnostic',attemptId:gameWorkspaceId('workspace-v1')};
+  const readWorkspace=async()=>await backend.loadDraft(progressScope)||
+    (currentGameReleaseBuild()?await backend.loadDraft({...progressScope,attemptId:undefined}):null);
   const values=new Map(),observedLegacy=new Map(),pendingSaves=new Set();
   let personalityComplete=false, progressStage=route;
   const workspaceState=()=>({values:Object.fromEntries(values),route,...(free?{}:{personalityComplete})});
-  try{for(let i=0;i<hostWindow.localStorage.length;i++){const key=hostWindow.localStorage.key(i);if(key?.startsWith(ownerKey)){const value=hostWindow.localStorage.getItem(key);values.set(key.slice(ownerKey.length),value);observedLegacy.set(key,value);}}}catch{}
+  const oldMirror = new Map();
+  try {
+    for(let i=0;i<hostWindow.localStorage.length;i++){
+      const key=hostWindow.localStorage.key(i);
+      if(key?.startsWith(ownerKey)){
+        const value=hostWindow.localStorage.getItem(key);
+        values.set(key.slice(ownerKey.length),value);
+        observedLegacy.set(key,value);
+      } else if(versionMirror&&key?.startsWith(legacyOwnerKey)){
+        const name=key.slice(legacyOwnerKey.length);
+        if(!name.startsWith('release-'))oldMirror.set(name,hostWindow.localStorage.getItem(key));
+      }
+    }
+  } catch {}
+  if(oldMirror.size){
+    const compatible=Object.entries(compatibleCareerMirror(Object.fromEntries(oldMirror)));
+    for(const [key,value] of compatible)if(!values.has(key))values.set(key,value);
+    if(compatible.length<oldMirror.size)notifyRetiredGameDraft(progressScope.activitySlug);
+  }
   const saveCopy={ru:{pending:'Сохранено на устройстве',saved:'Ответы сохранены',unsafe:'Не удалось сохранить ответы. Оставьте вкладку открытой и проверьте соединение.'},en:{pending:'Saved on this device',saved:'Answers saved',unsafe:'Answers could not be saved. Keep this tab open and check your connection.'},'zh-Hans':{pending:'已保存在此设备',saved:'答案已保存',unsafe:'无法保存答案。请保持页面打开并检查网络连接。'}};
   const track=promise=>{pendingSaves.add(promise);promise.finally(()=>pendingSaves.delete(promise)).catch(()=>{});return promise;};
   const persistWorkspace=()=>{const started=performance.now();return track(backend.checkpoint({...progressScope,contentVersion:'career-workspace-v1',state:workspaceState()},{queue:durableOwner.startsWith('student:')}).then(saved=>{
@@ -151,7 +175,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   activeMounts.set(container, api);
   signal?.addEventListener('abort',abortFromHost,{once:true});
   if(signal?.aborted){api.destroy();throw new DOMException('Career mount aborted.','AbortError');}
-  const restored=await backend.loadDraft(progressScope);
+  const restored=await readWorkspace();
   personalityComplete=!free&&restored?.state?.personalityComplete===true;
   const legacyTime=Math.max(0,...[...values.values()].map(value=>{try{return Date.parse(JSON.parse(value)?.updatedAt)||0;}catch{return 0;}}));
   if(restored?.state?.values&&restored.updatedAt>=legacyTime){values.clear();for(const [key,value] of Object.entries(restored.state.values))values.set(key,String(value));if(free&&initialRoute==='home'&&VALID_ROUTES.has(restored.state.route))route=restored.state.route;}
@@ -265,7 +289,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         if(destroyed||free||typeof onOpenKnowledge!=='function')return;
         await api.flush();
         if(saveFailure)await persistWorkspace();
-        const workspace=await durableStore.loadDraft(progressScope);
+        const workspace=await readWorkspace();
         if(!seminar5ProgressFromWorkspace(workspace?.state).reviewComplete)throw Object.assign(new Error('A saved vacancy review is required.'),{code:'career/review-required'});
         const completion=await durableStore.loadDraft({owner:durableOwner,activitySlug:'career-diagnostic',mode:'diagnostic'});
         if(saveFailure||completion?.saveStatus?.durable!==true||!completion?.state?.record)throw Object.assign(new Error('Career result is not durably saved.'),{code:'storage/local-save-failed'});
@@ -317,10 +341,10 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
 
   try {await start();} catch(error) {diagnostics?.error?.(error,{event:'module-error',code:'load-failed',operation:'load'});api.destroy();throw error;}
   updateAdapter=createUpdateAdapter({module:'career',root:container,signal,diagnostics,
-    getIdentity:()=>({owner:attemptOwner()==='guest'?'guest:career':attemptOwner(),attemptId:'workspace-v1'}),
+    getIdentity:()=>({owner:attemptOwner()==='guest'?'guest:career':attemptOwner(),attemptId:progressScope.attemptId}),
     isBusy:()=>disposed||!current||(attemptOwner()==='guest'?'guest:career':attemptOwner())!==durableOwner||!!shadow.querySelector('dialog[open]')||current.runtime.updateBusy?.(),pause:value=>{updatePaused=value;current?.runtime.pauseForUpdate?.(value);},
     capture:()=>({context:hostContext,route,view:captureUpdateView(container),runtime:current.runtime.captureForUpdate()}),
-    checkpoint:async()=>{if(!current.runtime.flushForUpdate())throw Error('update/unsafe');await Promise.allSettled([...pendingSaves]);const saved=await persistWorkspace();if(saveFailure||!saved?.saveStatus?.durable)throw Error('update/unsafe');return {durable:true,revision:saved.revision,checkpointRef:{attemptId:'workspace-v1',revision:saved.revision}};},
+    checkpoint:async()=>{if(!current.runtime.flushForUpdate())throw Error('update/unsafe');await Promise.allSettled([...pendingSaves]);const saved=await persistWorkspace();if(saveFailure||!saved?.saveStatus?.durable)throw Error('update/unsafe');return {durable:true,revision:saved.revision,checkpointRef:{attemptId:progressScope.attemptId,revision:saved.revision}};},
     restore:async({state},{signal}={})=>{if(disposed||!current||state.context!==hostContext||!VALID_ROUTES.has(state.route))return {status:'blocked',code:'incompatible'};route=state.route;await current.runtime.restoreForUpdate(state.runtime);await restoreUpdateView(container,state.view,{signal});return {status:'restored',code:'ok'};}
   });
   diagnostics?.record?.('module-ready',{success:true});

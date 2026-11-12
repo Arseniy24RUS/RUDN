@@ -1,0 +1,140 @@
+name: Publish current-only platform storage cleanup
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: contains(github.event.head_commit.message, '[storage-cleanup]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    outputs:
+      build_id: ${{ steps.release_archive.outputs.build_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build pinned browser dependencies
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm run build:career
+      - name: Keep the published calendar and vacancy data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
+          node scripts/verify-career-express-release.mjs --seed-vacancies --baseline "${{ runner.temp }}/platform-baseline"
+      - name: Verify current-only publication integrity
+        run: node --test scripts/test-platform-release.mjs scripts/test-platform-release-worker.mjs tests/career-vacancy-lazy-release.test.mjs
+      - name: Verify lossless Settlements payloads and decompression fallback
+        run: |
+          node scripts/build-settlements-gzip.mjs --check
+          node scripts/sync-settlements.mjs --check
+          node --test scripts/test-settlements-network.mjs scripts/test-settlements-storage-cleanup.mjs scripts/test-settlements-contract.mjs
+      - name: Verify retirement of unfinished games preserves completed results
+        run: node --test tests/platform-current-release.test.mjs tests/governor-current-release.test.mjs tests/platform-update-coordinator.test.mjs tests/platform-update-state.test.mjs tests/platform-update-failures.test.mjs tests/platform-update-preparation-retry.test.mjs
+      - name: Verify Reception sessions and original character media
+        run: node --test firebase/functions/reception-ai/*.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs
+      - name: Build and verify the complete current publication
+        run: node scripts/build-platform-release.mjs --site site --baseline "${{ runner.temp }}/platform-baseline" --out "${{ runner.temp }}/platform-staging" --verify
+      - name: Prepare scoped browser checks
+        run: |
+          python -m pip install playwright==1.61.0
+          python -m playwright install --with-deps chromium webkit
+      - name: Verify Reception workspace and restored animations
+        run: |
+          export RECEPTION_PLAYWRIGHT_MODULE="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          node scripts/reception-ai-qa-cases.mjs --out "${{ runner.temp }}/reception-synthetic-cases"
+          node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser chromium --out "${{ runner.temp }}/storage-cleanup-qa/reception-chromium"
+          node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser webkit --out "${{ runner.temp }}/storage-cleanup-qa/reception-webkit"
+      - name: Verify current-only navigation and failed-boot recovery on mobile
+        env:
+          RELEASE_BROWSERS: chromium,webkit
+        run: |
+          export PLAYWRIGHT_PATH="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
+          QA_OUT="${{ runner.temp }}/storage-cleanup-qa/release-protocol" node scripts/test-platform-release-browser.mjs
+          QA_OUT="${{ runner.temp }}/storage-cleanup-qa/boot-recovery" node scripts/test-platform-boot-rollback.mjs
+      - name: Retain focused browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: storage-cleanup-qa
+          path: ${{ runner.temp }}/storage-cleanup-qa
+          if-no-files-found: ignore
+          retention-days: 7
+      - uses: actions/configure-pages@v5
+      - name: Archive the verified publication
+        id: release_archive
+        run: node scripts/archive-platform-release.mjs --site "${{ runner.temp }}/platform-staging" --out "${{ runner.temp }}/platform-release-archive"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platform-release-${{ steps.release_archive.outputs.build_id }}
+          path: ${{ runner.temp }}/platform-release-archive
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages-${{ steps.release_archive.outputs.build_id }}
+          path: ${{ runner.temp }}/platform-staging
+
+  publish-pages:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
+        with:
+          artifact_name: github-pages-${{ needs.deploy.outputs.build_id }}
+
+  retain-successful-release:
+    needs: [deploy, publish-pages]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: platform-release-${{ needs.deploy.outputs.build_id }}
+          path: release-archive
+      - name: Preserve the verified archive for operator recovery
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BUILD_ID: ${{ needs.deploy.outputs.build_id }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          cd release-archive
+          sha256sum --check "platform-release-${BUILD_ID}.tar.gz.sha256"
+          tag="platform-release-${BUILD_ID}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            mkdir existing
+            gh release download "$tag" --pattern receipt.json --dir existing
+            node -e 'const fs=require("fs");const old=JSON.parse(fs.readFileSync("existing/receipt.json"));if(old.buildId!==process.env.BUILD_ID||old.status!=="pass")process.exit(1);'
+          else
+            gh release create "$tag" "${tag}.tar.gz" "${tag}.tar.gz.sha256" receipt.json --target "$TARGET_SHA" --title "Platform ${BUILD_ID}" --notes "Verified current-only GitHub Pages publication. Historical archives are for operator recovery, not selectable gameplay versions."
+          fi

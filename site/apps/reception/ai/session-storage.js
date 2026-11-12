@@ -1,10 +1,17 @@
 /** Drafts belong to a student and service, not to the route used to enter the game. */
-export function createReceptionStorage({store, owner, endpoint = '', legacyKey, version}) {
+export function createReceptionStorage({store, owner, endpoint = '', legacyKey, version, buildId = ''}) {
   const prefix = `rudn.reception.workspace.v2:${encodeURIComponent(owner)}:${encodeURIComponent(endpoint)}`;
-  const valid = value => value?.version === version && value.owner === owner;
+  let retired=false;
+  const compatible = value => !buildId || value.status === 'complete' || value.releaseBuildId === buildId;
+  const valid = value => {
+    if(value?.version !== version || value.owner !== owner)return false;
+    if(!compatible(value)){retired=true;return false;}
+    return true;
+  };
   const read = key => { try { const value = JSON.parse(store?.getItem(key) || 'null'); return valid(value) ? value : null; } catch { return null; } };
-  const recent = () => { try { const value = JSON.parse(store?.getItem(`${prefix}:recent`) || '[]'); return Array.isArray(value) ? value.filter(item => typeof item?.id === 'string').slice(0,12) : []; } catch { return []; } };
+  const recent = () => { try { const value = JSON.parse(store?.getItem(`${prefix}:recent`) || '[]'); return Array.isArray(value) ? value.filter(item => typeof item?.id === 'string' && compatible(item)).slice(0,12) : []; } catch { return []; } };
   return {
+    hasRetiredDraft: () => retired,
     readInitial() {
       const current=read(`${prefix}:current`)||read(legacyKey);
       if(current)return current;
@@ -26,9 +33,9 @@ export function createReceptionStorage({store, owner, endpoint = '', legacyKey, 
     readSession(id) { return typeof id === 'string' ? read(`${prefix}:session:${encodeURIComponent(id)}`) : null; },
     recent,
     save(value) {
-      if (!store || !valid(value)) return false;
+      if (!store || value?.version !== version || value.owner !== owner) return false;
       try {
-        const saved = {...value, savedAt:Date.now()};
+        const saved = {...value, ...(buildId?{releaseBuildId:buildId}:{}), savedAt:Date.now()};
         store.setItem(`${prefix}:current`, JSON.stringify(saved));
         store.setItem(legacyKey, JSON.stringify(saved));
         if (saved.sessionId) {
@@ -36,7 +43,7 @@ export function createReceptionStorage({store, owner, endpoint = '', legacyKey, 
           // for retry, but never attach it to the old session's resumable draft.
           const sessionDraft=saved.pending?.op==='start'?{...saved,pending:null,pendingAt:null}:saved;
           store.setItem(`${prefix}:session:${encodeURIComponent(saved.sessionId)}`, JSON.stringify(sessionDraft));
-          const row = {id:saved.sessionId, title:saved.caseTitle || '', mode:saved.mode, status:saved.status, savedAt:saved.savedAt};
+          const row = {id:saved.sessionId, title:saved.caseTitle || '', mode:saved.mode, status:saved.status, savedAt:saved.savedAt, ...(buildId?{releaseBuildId:buildId}:{})};
           store.setItem(`${prefix}:recent`, JSON.stringify([row,...recent().filter(item => item.id !== row.id)].slice(0,12)));
         }
         return true;

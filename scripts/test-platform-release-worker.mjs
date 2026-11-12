@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
-import {parse} from 'acorn';
 const workerSource=await fs.readFile(new URL('../site/service-worker.js',import.meta.url),'utf8');
 const scope='https://test.invalid/RUDN/',hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 function release(id,code){const entry=`/RUDN/_releases/${id}/index.html`,main=`/RUDN/_releases/${id}/assets/js/main.js`;const files=new Map([[entry,`<html>${code}</html>`],[main,code]]);const resources={'index.html':{url:entry,sha256:hash(files.get(entry)),bytes:files.get(entry).length,kind:'runtime'},'assets/js/main.js':{url:main,sha256:hash(code),bytes:code.length,kind:'runtime'}};const manifest=JSON.stringify({schema:1,buildId:id,runtimeRoot:`/RUDN/_releases/${id}/`,resources,packs:{shell:Object.keys(resources)}}),target={buildId:id,manifestURL:`/RUDN/_releases/${id}/manifest.json`,manifestSha256:hash(manifest),entryURL:entry};files.set(target.manifestURL,manifest);files.set(`/RUDN/_releases/${id}/release.json`,JSON.stringify(target));return {target,files};}
@@ -22,19 +21,14 @@ test('cold evicted HTML navigation passes through the real host 404 while integr
   files.set(b.target.entryURL,'corrupt');await assert.rejects(h.request(b.target.entryURL,{mode:'navigate',resultingClientId:'corrupt'}),/release\/integrity/);
 });
 
-test('legacy installation includes the complete static shared startup graph before offline startup',async()=>{
-  const context=vm.createContext({URL,Map,Set,self:{registration:{scope},addEventListener(){}}});vm.runInContext(workerSource,context);
-  const core=Array.from(vm.runInContext('CORE_SHELL',context));
-  for(const logical of ['release-resources.js','release-bootstrap.js','release-recovery.js','platform-update-state.js','platform-update-coordinator.js','diagnostics-bootstrap.js'])assert.ok(core.includes('./assets/js/'+logical),`Missing shared startup dependency: ${logical}`);
-  assert.ok(core.includes('./data/platform-contracts.json'));
-  const site=new URL('../site/',import.meta.url),cached=new Set(core.map(name=>name.replace(/^\.\//,'').split(/[?#]/)[0])),seen=new Set(),queue=['assets/js/main.js','assets/js/puzzle-bootstrap.js','assets/js/diagnostics-bootstrap.js','assets/js/release-bootstrap.js'];
-  while(queue.length){
-    const name=queue.shift();if(seen.has(name))continue;seen.add(name);assert.ok(cached.has(name),`Static startup dependency absent from install: ${name}`);
-    const url=new URL(name,site),source=await fs.readFile(url,'utf8'),ast=parse(source,{ecmaVersion:'latest',sourceType:'module'});
-    for(const item of ast.body){if(!/^(?:ImportDeclaration|ExportNamedDeclaration|ExportAllDeclaration)$/.test(item.type)||!item.source?.value?.startsWith('.'))continue;const child=new URL(item.source.value,url);child.search='';child.hash='';assert.ok(child.href.startsWith(site.href));queue.push(decodeURIComponent(child.pathname.slice(site.pathname.length)));}
-  }
-  assert.ok(seen.size>30,'The assertion must traverse the actual shell rather than an empty fixture');
+test('current-only installation caches the verified manifest shell without fetching legacy root scripts',async()=>{
+  const current=release('c'.repeat(32),'current'),pointer={schema:1,retention:'current-only',current:current.target,previous:null},files=new Map(current.files);
+  files.set('/RUDN/release.json',JSON.stringify(pointer));const h=harness(pointer,files);await h.emit('install');
+  assert.ok(h.requests.includes(current.target.manifestURL));assert.ok(h.requests.includes(current.target.entryURL));assert.ok(h.requests.includes(`/RUDN/_releases/${current.target.buildId}/assets/js/main.js`));
+  assert.ok(!h.requests.includes('/RUDN/assets/js/main.js'));assert.ok(!h.requests.some(name=>name.includes('/_releases/')&&!name.includes(current.target.buildId)));
+  h.offline=true;assert.equal(await (await h.request(current.target.entryURL,{mode:'navigate',resultingClientId:'new'})).text(),'<html>current</html>');
 });
+
 test('exact SW stages verified shell, keeps two tab bindings and serves offline immutable paths',async()=>{
   const a=release('a'.repeat(32),'old'),b=release('b'.repeat(32),'new'),files=new Map([...a.files,...b.files]);files.set('/RUDN/release.json',JSON.stringify({schema:1,current:b.target,previous:a.target}));
   const h=harness({schema:1,current:b.target,previous:a.target},files),messages=[];const first={id:'first',url:scope,postMessage:m=>messages.push(m)},second={id:'second',url:scope,postMessage:m=>messages.push(m)};h.clients.push(first,second);
@@ -49,4 +43,15 @@ test('old worker can prepare newly deployed immutable release; wrong bytes never
   const a=release('a'.repeat(32),'old'),b=release('b'.repeat(32),'new'),files=new Map([...a.files,...b.files]);const h=harness({schema:1,current:a.target,previous:null},files);
   await h.emit('install');assert.equal(await (await h.request(b.target.manifestURL)).json().then(x=>x.buildId),b.target.buildId);
   const corruptFiles=new Map(b.files);corruptFiles.set(`/RUDN/_releases/${b.target.buildId}/assets/js/main.js`,'corrupt');const corrupt=harness({schema:1,current:b.target,previous:null},corruptFiles);await assert.rejects(corrupt.emit('install'),/release\/integrity/);
+});
+
+test('current-only navigation leaves cached retired HTML and opens the published build',async()=>{
+  const a=release('a'.repeat(32),'old'),b=release('b'.repeat(32),'new'),pointer={schema:1,retention:'current-only',current:b.target,previous:null};
+  const files=new Map([...a.files,...b.files]);files.set('/RUDN/release.json',JSON.stringify(pointer));
+  const old=harness({schema:1,retention:'current-only',current:a.target,previous:null},files);await old.emit('install');
+  const start=old.requests.length,response=await old.request(a.target.entryURL+'?language=zh',{mode:'navigate',resultingClientId:'new-session'});
+  assert.equal(response.status,302);assert.equal(response.headers.get('location'),scope.replace(/\/$/,'')+b.target.entryURL.slice('/RUDN'.length)+'?language=zh');
+  assert.ok(!old.requests.slice(start).some(name=>name.includes('/_releases/'+a.target.buildId+'/')));
+  assert.equal(await (await old.request(b.target.entryURL,{mode:'navigate',resultingClientId:'new-session'})).text(),'<html>new</html>');
+  old.offline=true;assert.equal(await (await old.request(b.target.entryURL,{mode:'navigate',resultingClientId:'offline-session'})).text(),'<html>new</html>');
 });

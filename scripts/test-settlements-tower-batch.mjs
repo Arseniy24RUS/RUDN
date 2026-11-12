@@ -1,4 +1,5 @@
 /** Atomic tower purchases: real replay compatibility and synthetic edge cases. */
+import {readSettlementsJson} from './settlements-json.mjs';
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFile} from 'node:fs/promises';
@@ -17,7 +18,7 @@ import {loadSocialPlan} from '../site/apps/settlements/runtime/assets/js/settlem
 import {INITIAL_TOWER_POLICY_VERSION,spacedInitialTowerSeeds} from '../site/apps/settlements/runtime/assets/js/settlements/v24/initial-tower-spacing.mjs';
 
 const data=new URL('../site/apps/settlements/runtime/data/settlements/v1/',import.meta.url);
-const json=async path=>JSON.parse(await readFile(new URL(path,data),'utf8'));
+const json = path => readSettlementsJson(new URL(path, data));
 const fingerprint=`sha256:${'0'.repeat(64)}`;
 const batch=positions=>({type:'tower-batch',positions});
 const position=row=>({lat:row.lat,lon:row.lon});
@@ -35,7 +36,7 @@ function publishedEngine(){
   return previousPromise;
 }
 async function regionalWorld(id){
-  const world=new World(await json(`regions/${id}.json`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,data)))));
+  const world=new World(await json(`regions/${id}.json.gz`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,data)))));
   await loadDistanceTransportPolicy(world);
   return {world,boundary:await json(`boundaries/${id}.geojson`)};
 }

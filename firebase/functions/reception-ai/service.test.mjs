@@ -33,6 +33,27 @@ function harness(options = {}) {
 }
 const err = code => error => error.code === code;
 
+test('release-scoped recovery restarts obsolete work while completed scores remain retrievable', async () => {
+  const h=harness(),oldBuild='a'.repeat(32),newBuild='b'.repeat(32);
+  const legacy=await h.start({requestId:'legacy'});
+  const old=await h.start({requestId:'old-build',buildId:oldBuild});
+  for(const session of [legacy,old])await assert.rejects(h.service.handle({op:'resume',sessionId:session.id,buildId:newBuild},identity),err('outdated_session'));
+  assert.equal((await h.service.handle({op:'recover',mode:'training',buildId:newBuild},identity)).view,null);
+  const current=await h.start({requestId:'current-build',buildId:newBuild});
+  assert.equal(current.buildId,newBuild);
+  assert.equal((await h.service.handle({op:'recover',mode:'training',buildId:newBuild},identity)).view.id,current.id);
+  assert.equal((await h.service.handle({op:'resume',sessionId:current.id,buildId:newBuild},identity)).view.id,current.id);
+  await h.service.handle({op:'decide',sessionId:old.id,requestId:'decision',decision:{...goodDecision,basisDocumentIds:[]}},identity);
+  const completed=(await h.service.handle({op:'next',sessionId:old.id,requestId:'complete'},identity)).view;
+  assert.equal(completed.status,'complete');
+  const stored=await h.store.get(`sessions/${old.id}`);
+  const shown=(await h.service.handle({op:'resume',sessionId:old.id,buildId:newBuild},identity)).view;
+  assert.deepEqual(shown.result,completed.result);
+  assert.deepEqual(await h.store.get(`sessions/${old.id}`),stored,'Reading an old completed result must preserve its stored record');
+  assert.equal(h.calls(),0);
+  await assert.rejects(h.start({requestId:'invalid-build',buildId:'latest'}),err('invalid_build'));
+});
+
 test('catalog restores public difficulty and duration for all 178 authored cases without answer keys', async () => {
   const cases = CONTENT_MANIFEST.templates.map(row => ({...fixture(row.id), familyId: row.familyId}));
   const h = harness({cases}), catalog = await h.service.handle({op: 'catalog', locale: 'en'}, identity);

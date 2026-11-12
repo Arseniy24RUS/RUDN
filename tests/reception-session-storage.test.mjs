@@ -7,6 +7,30 @@ function memory(){const entries=new Map();return {get length(){return entries.si
 const adapter=(store,owner='student-one',context='course',endpoint='/api/reception')=>createReceptionStorage({store,owner,endpoint,version:VERSION,legacyKey:`legacy:${owner}:${context}:${endpoint}`});
 const draft=(overrides={})=>({version:VERSION,owner:'student-one',sessionId:'shift-one',caseId:'same-case',caseTitle:'Учебное дело',mode:'training',status:'active',draftMessage:'Уточню дату.',decisionDraft:{law:{number:'59-ФЗ',article:'12'},deadline:'2026-05-15',reasoning:'Черновик решения'},calendarState:{anchorDate:'2026-04-15',selectedDate:'2026-05-15',marks:['2026-05-15']},selectedReferences:[{id:'law59-article12',text:'Выбранная норма'}],readMessageIds:['opening'],...overrides});
 
+test('current-only releases restart old unfinished shifts and preserve completed history',()=>{
+  const store=memory(),withBuild=buildId=>createReceptionStorage({store,owner:'student-one',endpoint:'/api/reception',version:VERSION,legacyKey:'legacy:student-one:course:/api/reception',buildId});
+  const old=withBuild('a'.repeat(32));
+  old.save(draft({sessionId:'finished',status:'complete'}));
+  old.save(draft({sessionId:'unfinished',pending:{op:'message',requestId:'old-request'}}));
+  const next=withBuild('b'.repeat(32));
+  assert.equal(next.readInitial(),null);assert.equal(next.hasRetiredDraft(),true);
+  assert.equal(next.readSession('unfinished'),null);
+  assert.equal(next.readSession('finished').status,'complete');
+  assert.deepEqual(next.recent().map(row=>row.id),['finished']);
+  next.save(draft({sessionId:'current'}));
+  assert.equal(withBuild('b'.repeat(32)).readInitial().sessionId,'current');
+  assert.equal(withBuild('b'.repeat(32)).readSession('finished').status,'complete');
+});
+
+test('the first current-only release ignores untagged unfinished drafts without erasing completed records',()=>{
+  const store=memory(),legacy=adapter(store);
+  legacy.save(draft({sessionId:'finished',status:'complete'}));legacy.save(draft());
+  const before=store.getItem('rudn.reception.workspace.v2:student-one:%2Fapi%2Freception:session:finished');
+  const current=createReceptionStorage({store,owner:'student-one',endpoint:'/api/reception',version:VERSION,legacyKey:'legacy:student-one:course:/api/reception',buildId:'c'.repeat(32)});
+  assert.equal(current.readInitial(),null);assert.equal(current.readSession('finished').status,'complete');
+  assert.equal(store.getItem('rudn.reception.workspace.v2:student-one:%2Fapi%2Freception:session:finished'),before);
+});
+
 test('one student resumes the same workspace draft through course and free routes',()=>{
   const store=memory(),course=adapter(store),free=adapter(store,'student-one','free');
   assert.equal(course.save(draft()),true);

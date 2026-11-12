@@ -76,6 +76,11 @@ try{
   browser=await playwright[engine].launch({headless:!process.argv.includes('--headed'),...(executable?{executablePath:executable}:{})});
   report.actualBrowser=true;
   const context=await browser.newContext({viewport:{width:390,height:844},locale:'ru-RU',serviceWorkers:'block'});
+  await context.addInitScript(()=>{
+    if(location.origin==='null')return;
+    const buildId=sessionStorage.getItem('qa.reception.release')||'a'.repeat(32);
+    globalThis.__RUDN_RELEASE__={buildId,retention:'current-only',siteRoot:location.origin+'/',runtimeRoot:location.origin+'/',resources:{}};
+  });
   page=await context.newPage();page.setDefaultTimeout(12000);
   page.on('pageerror',error=>report.errors.push(error.message));
   await page.route('**/*',route=>{const u=new URL(route.request().url());return u.origin===origin?route.continue():route.abort('blockedbyclient');});
@@ -235,7 +240,7 @@ try{
     const context=canvas.getContext('2d');context.drawImage(image,0,0,1,1,0,0,1,1);
     return {header:text(0,4),format:text(8,4),frames,loop,duration,width:image.naturalWidth,bytes:bytes.length,cornerAlpha:context.getImageData(0,0,1,1).data[3]};
   });
-  assert.equal(fallback.header,'RIFF');assert.equal(fallback.format,'WEBP');assert.ok(fallback.frames>1);assert.equal(fallback.loop,0);
+  assert.equal(fallback.header,'RIFF');assert.equal(fallback.format,'WEBP');assert.equal(fallback.frames,120);assert.equal(fallback.width,320);assert.equal(fallback.loop,0);
   assert.ok(fallback.duration>=9500&&fallback.duration<=10500,'The fallback preserves the original loop duration');
   assert.ok(fallback.cornerAlpha<32,'The decoded WebP preserves the transparent background');
   check('Unsupported VP9 loads the transparent animated WebP asset',{...fallback,framePlaybackObserved:false});
@@ -244,6 +249,17 @@ try{
   await navigate('reception');await page.emulateMedia({reducedMotion:'reduce'});
   await page.waitForFunction(()=>!document.querySelector('[data-rxa-motion-image][src]'));
   check('Leaving reception and reduced motion release the image animation');
+  stage='retired-unfinished-session';
+  await page.evaluate(()=>sessionStorage.setItem('qa.reception.release','b'.repeat(32)));
+  await page.reload({waitUntil:'networkidle'});await idle();
+  await page.locator('[data-action="start"]').waitFor();
+  assert.equal(await page.locator('.rxa-mobile-nav [data-page="chat"]').isDisabled(),true);
+  assert.equal(await page.locator('[data-action="resume-session"]').count(),0);
+  assert.ok((await page.locator('#receptionAI').innerText()).includes('результаты завершённых смен сохранены'));
+  const fresh=await apiResponse('start',()=>page.locator('[data-action="start"]').click());
+  assert.notEqual(fresh.id,sessionId);assert.equal(fresh.buildId,'b'.repeat(32));
+  check('A new release retires the old unfinished local and server session and starts a fresh game');
+  await screenshot('10-phone-current-release.png');
   assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.status='failed';report.failure={stage,message:error.message};if(page)try{await screenshot('failure.png');}catch{}}
 finally{

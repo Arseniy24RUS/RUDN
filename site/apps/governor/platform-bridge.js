@@ -9,9 +9,11 @@ import {academicContext,topicGate,formatAccessDate} from '../../assets/js/access
 import {gameAccessGate} from '../../assets/js/games-catalog.js?v=1.3.10';
 import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.10';
 import {durableStore} from '../../assets/js/durable-store.js';
+import {canResumeGameDraft,markGameDraft} from '../../assets/js/game-release-policy.js';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
 
 const G=window.GovernorGame;
+G.Saves.setReleasePolicy({canResume:canResumeGameDraft,mark:markGameDraft});
 const courseResponse=await fetch(resourceURL('../../data/course.json',import.meta.url));
 if(!courseResponse.ok)throw new Error('Course catalogue unavailable');
 const course=await courseResponse.json();
@@ -182,7 +184,7 @@ async function tryStart(){
   let localCampaign=stored(G.Saves.Key);
   if(restored?.state?.campaign&&restored.state.run&&G.Engine.restoreState(restored.state.campaign)&&(!localCampaign||restored.updatedAt>=(Date.parse(localCampaign.savedAt)||0))){
     for(const [key,value] of Object.entries(restored.state.storage||{})){remember(key);storageValues.set(key,value);}
-    remember(G.Saves.Key);storageValues.set(G.Saves.Key,JSON.stringify({format:'rudn-autosave',revision:Math.max(1,Number(localCampaign?.revision)||1),savedAt:new Date(restored.updatedAt).toISOString(),state:restored.state.campaign}));
+    remember(G.Saves.Key);storageValues.set(G.Saves.Key,JSON.stringify(markGameDraft({format:'rudn-autosave',revision:Math.max(1,Number(localCampaign?.revision)||1),savedAt:new Date(restored.updatedAt).toISOString(),state:restored.state.campaign})));
     run=structuredClone(restored.state.run);remember('platform-run');storageValues.set('platform-run',JSON.stringify(run));latestSaveStatus=restored.saveStatus;
   }else if(localCampaign?.state){ensureRun(localCampaign.state);}
   const profile=backend.getProfile();

@@ -57,7 +57,7 @@ const policyFile=new URL('assets/js/settlements/v24/initial-tower-spacing.mjs',r
 const engineFile=new URL('assets/js/settlements/v24/engine.mjs',runtime),engineShaAtStart=sha(await readFile(engineFile));
 await mkdir(new URL('certificates/',output),{recursive:true});
 for(const metadata of manifest.regions){
-  const packBytes=await readFile(new URL(metadata.path,data));
+  const packBytes=gunzipSync(await readFile(new URL(metadata.compressedPath,data)));
   const pack=JSON.parse(packBytes),rows=[...pack.settlements,...(FEDERAL_CITIES[metadata.id]?.rows||[])].filter(valid);
   const ranked=rows.toSorted((a,b)=>b.population-a.population||cmp(a.id,b.id)),byId=new Map(rows.map(row=>[row.id,row])),index=cellIndex(radius);
   const boundaryBytes=await readFile(new URL(`boundaries/${metadata.id}.geojson`,data));

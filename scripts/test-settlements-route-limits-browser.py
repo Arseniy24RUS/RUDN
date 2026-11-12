@@ -11,7 +11,7 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from threading import Thread
 from datetime import datetime, timezone
 from urllib.parse import urlparse, urljoin
-import argparse, hashlib, json, platform, re, subprocess, time, traceback
+import argparse, gzip, hashlib, json, platform, re, subprocess, time, traceback
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -139,7 +139,7 @@ def run_case(browser,kind):
         assert p.title()=='Native Settlements route limits QA';baseline=state(p);checkpoint=count(p)
         if kind=='intro':
             assert inspect(p)['tutorial']['locked'];tap(p,'[data-act="guide-position"]');tap(p,'[data-act="confirm"]');flush(p)
-            source=json.loads((RUNTIME/'data/settlements/v1/regions/chelyabinskaya_oblast.json').read_text('utf-8'));rows={r['id']:r for r in source['settlements']}
+            source=json.loads(gzip.decompress((RUNTIME/'data/settlements/v1/regions/chelyabinskaya_oblast.json.gz').read_bytes()));rows={r['id']:r for r in source['settlements']}
             inst=inspect(p)['tutorial'];tool(p,'medical');choose(p,rows[inst['settlementId']]);tap(p,'[data-act="confirm"]');flush(p)
             inst=inspect(p)['tutorial'];tool(p,'connect');choose(p,rows[inst['from']]);choose(p,rows[inst['to']]);q=inspect(p)['preview'];assert q['ok'] and not q['action'].get('stopIds'),q
             row['preview']=shot(p,'tutorial-two-stop-preview');before=count(p);tap(p,'[data-act="confirm"]');flush(p);s=state(p)

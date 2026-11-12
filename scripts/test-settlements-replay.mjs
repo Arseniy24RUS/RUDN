@@ -1,6 +1,7 @@
 /** Actual reference replay, copied assertions from the production-kit frozen runner.
  * No generator, balance edits, browser emulation or student data. Node >=20.
  */
+import {readSettlementsJson} from './settlements-json.mjs';
 import fs from 'node:fs/promises';
 import {createReadStream,writeFileSync} from 'node:fs';
 import path from 'node:path';
@@ -29,7 +30,7 @@ const SOURCE_MANIFEST=path.join(SITE,'apps/settlements/source-manifest.json');
 const sha=value=>createHash('sha256').update(value).digest('hex');
 const compare=(a,b)=>a<b?-1:a>b?1:0;
 const slash=value=>value.split(path.sep).join('/');
-const read=async file=>JSON.parse((await fs.readFile(file,'utf8')).replace(/^\uFEFF/,''));
+const read = readSettlementsJson;
 const execute=promisify(execFile);
 const git=async(...args)=>(await execute('git',args,{cwd:REPO,encoding:'utf8',windowsHide:true})).stdout.trim();
 export function contained(base,relative){
@@ -66,7 +67,7 @@ export async function captureCandidateIdentity(catalog){
 }
 const write=async(file,value)=>{await fs.mkdir(path.dirname(file),{recursive:true});await fs.writeFile(file,JSON.stringify(value,null,2)+'\n');};
 const emit=value=>console.log(JSON.stringify({...value,at:new Date().toISOString()}));
-const core=['v2/engine.mjs',...['engine','scenarios','social-policy','social-plans','social-plan-fetch','social-network','network-routing','telecom-policy','telecom-plans','transport-policy-v1','transport-policy-v1.generated','transport-policy-v2','transport-policy-v2.generated','transport-policy-fetch','federal-cities','federal-transport','platform-rules','initial-tower-spacing'].map(name=>`v24/${name}.mjs`)].map(p=>`assets/js/settlements/${p}`);
+const core=['v2/engine.mjs','v2/gzip-json.mjs','v2/gzip-fallback.mjs',...['engine','scenarios','social-policy','social-plans','social-plan-fetch','social-network','network-routing','telecom-policy','telecom-plans','transport-policy-v1','transport-policy-v1.generated','transport-policy-v2','transport-policy-v2.generated','transport-policy-fetch','federal-cities','federal-transport','platform-rules','initial-tower-spacing'].map(name=>`v24/${name}.mjs`)].map(p=>`assets/js/settlements/${p}`);
 core.push('assets/js/settlements/v24/social-plans-regions/index.mjs');
 async function sourceHashes(catalog,paths){const result={};for(const p of paths)result[p]=await hashFile(catalog.runtimeFile(p));return result;}
 
@@ -304,8 +305,8 @@ export function replayCurrentReference(world,scenario,plan,initialState,{onActio
 
 export async function regionRun(id,catalog,output,jobRunId){
   const dir=path.join(output,'regions',id),metadata=catalog.manifest.regions.find(r=>r.id===id);
-  const packPath=`data/settlements/v1/${metadata.path}`,networkPath=`data/settlements/v1/transport/${id}.json.gz`,boundaryPath=`data/settlements/v1/boundaries/${id}.geojson`;
-  const sourcePaths=[...core,packPath,networkPath,boundaryPath,...DIFFICULTIES.map(d=>`assets/js/settlements/v24/social-plans-regions/${id}-${d}.mjs`),`assets/js/settlements/v24/transport-policy-v2-regions/${id}.mjs`,...(FEDERAL_CITIES[id]?[`assets/geodata/federal-cities/${FEDERAL_CITIES[id].boundaryFile}`]:[])];
+  const packPath=`data/settlements/v1/${metadata.compressedPath}`,networkPath=`data/settlements/v1/transport/${id}.json.gz`,boundaryPath=`data/settlements/v1/boundaries/${id}.geojson`;
+  const sourcePaths=[...core,packPath,networkPath,boundaryPath,...DIFFICULTIES.map(d=>`assets/js/settlements/v24/social-plans-regions/${id}-${d}.json.gz`),`assets/js/settlements/v24/transport-policy-v2-regions/${id}.mjs`,...(FEDERAL_CITIES[id]?[`assets/geodata/federal-cities/${FEDERAL_CITIES[id].boundaryFile}`]:[])];
   const before=await sourceHashes(catalog,sourcePaths),runId=randomUUID(),start=performance.now();
   await write(path.join(dir,'started.json'),{runId,jobRunId,pid:process.pid,startedAt:new Date().toISOString(),sourceHashes:before,synthetic:true,humanDurationMeasured:false});
   const pack=await read(catalog.runtimeFile(packPath)),network=JSON.parse(zlib.gunzipSync(await fs.readFile(catalog.runtimeFile(networkPath))));

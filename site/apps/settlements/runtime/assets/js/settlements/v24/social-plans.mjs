@@ -25,8 +25,8 @@ export async function loadSocialPlan(world,{retry=false,difficulty='normal',sign
   if(cache.has(difficulty))return cache.get(difficulty);if(tasks.has(difficulty))return tasks.get(difficulty);
   const id=world.region.id,key=`${id}/${difficulty}`;if(!Object.hasOwn(SOCIAL_PLAN_INDEX,key))throw new Error('Для региона ещё не подготовлена новая социальная сеть');
   const attempt=attempts.get(key)||0;
-  const task=(async()=>{const url=new URL(`./social-plans-regions/${id}-${difficulty}.mjs${retry&&attempt?`?retry=${attempt}`:''}`,import.meta.url);
-    const plan=url.protocol==='file:'?(await import(url.href)).default:await fetchSocialPlan(url,{signal});
+  const task=(async()=>{const url=new URL(`./social-plans-regions/${id}-${difficulty}.json.gz${retry&&attempt?`?retry=${attempt}`:''}`,import.meta.url);
+    const plan=await fetchSocialPlan(url,{signal});
     const accepted=validateSocialPlan(world,plan,{difficulty});cache.set(difficulty,accepted);return accepted;})();
   tasks.set(difficulty,task);try{return await task;}catch(error){attempts.set(key,attempt+1);throw error;}finally{tasks.delete(difficulty);}
 }

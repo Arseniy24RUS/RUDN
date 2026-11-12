@@ -1,4 +1,5 @@
 import {FirebaseRestError} from './firebase-rest.js';
+import {canResumeStoredGameDraft,notifyRetiredGameDraft} from './game-release-policy.js';
 
 const fault=code=>new FirebaseRestError(code);
 const copy=value=>structuredClone(value);
@@ -356,15 +357,16 @@ export function createCheckpointSync({
     const envelopes=(scope.attemptId?[value]:Object.values(value||{}))
       .filter(item=>item?.studentKey===session.studentKey&&item.activitySlug===scope.activitySlug&&item.mode===(scope.mode||'default'))
       .sort((a,b)=>Number(b.updatedAt)-Number(a.updatedAt));
-    const latest=envelopes[0];
-    if(!latest)return null;
+    const latest=envelopes.find(item=>item.current&&canResumeStoredGameDraft(item.current));
+    if(!latest){if(envelopes.length)notifyRetiredGameDraft(scope.activitySlug);return null;}
     if(typeof store.importRemoteDraft!=='function')throw fault('storage/restore-handler-unavailable');
     const restored=await store.importRemoteDraft({...latest.current,remoteRevision:latest.revision});
     assertActive(session);
+    if(!restored||!canResumeStoredGameDraft(restored))return null;
     // A GET started before resolution may arrive afterward. importRemoteDraft
     // keeps the newer draft; the same stale response must not revive its alerts.
     if(Number.isFinite(restored?.remoteRevision)&&Number.isFinite(latest.revision)&&restored.remoteRevision>latest.revision)return restored;
-    for(const incoming of Object.values(latest.conflicts||{})){
+    for(const incoming of Object.values(latest.conflicts||{}).filter(canResumeStoredGameDraft)){
       await store.recordRemoteConflict({owner:session.owner,draftId:latest.current.id,
         current:restored||latest.current,incoming,remoteRevision:latest.revision,reason:'remote-conflict'});
       assertActive(session);

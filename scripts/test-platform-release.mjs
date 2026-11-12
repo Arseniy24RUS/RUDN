@@ -5,7 +5,7 @@ import {readdirSync,statSync} from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {buildRelease,verifyRelease,isRuntime} from './build-platform-release.mjs';
+import {buildRelease,verifyRelease,isRuntime,isPublishedResource} from './build-platform-release.mjs';
 import {seedBaselineCalendar,unpackLegacyBaseline,downloadLegacyArchive,LEGACY_BASELINE} from './download-release-baseline.mjs';
 import {preserveLegacyBaseline} from './preserve-legacy-baseline.mjs';
 async function write(root,name,text){await fs.mkdir(path.dirname(path.join(root,name)),{recursive:true});await fs.writeFile(path.join(root,name),text);}
@@ -88,15 +88,17 @@ async function fixture(t){const root=await fs.mkdtemp(path.join(os.tmpdir(),'rud
   files['404.html']='<html><body>Legacy missing page</body></html>';
   for(const [name,text] of Object.entries(files)){await write(site,name,text);await write(baseline,name,text);}return {root,site,baseline};
 }
-test('exact runtime, frozen baseline, changed resource dedup and previous retention',async t=>{
+test('current-only publication retires historical runtime and replaced resources while preserving public aliases',async t=>{
   const f=await fixture(t),out=path.join(f.root,'first');await write(f.site,'data/course.json','{"v":2}');
   await write(f.site,'apps/demo/module.html','<html><body><script type="module">import "./script.js";</script></body></html>');
   await write(f.site,'apps/demo/fragment.html','<div id="surface">fragment</div>');
   const first=await buildRelease({...f,out}),pointer=JSON.parse(await fs.readFile(path.join(out,'release.json'))),manifest=JSON.parse(await fs.readFile(path.join(out,`_releases/${first.buildId}/manifest.json`)));
-  assert.equal(first.status,'pass');assert.equal(pointer.previous,null);assert.equal(await fs.readFile(path.join(out,'data/course.json'),'utf8'),'{"v":1}');
+  assert.equal(first.status,'pass');assert.equal(pointer.previous,null);assert.equal(pointer.retention,'current-only');assert.equal(manifest.retention,'current-only');
+  await assert.rejects(fs.access(path.join(out,'data/course.json')),{code:'ENOENT'});
+  assert.equal(await fs.readFile(path.join(f.baseline,'data/course.json'),'utf8'),'{"v":1}','The archived input is never mutated');
   assert.equal(manifest.contracts.modules['legal-lab'],1);assert.equal(manifest.contracts.adapterSnapshot,1);
   const registry=JSON.parse(await fs.readFile(path.join(out,'platform-baseline.json')));
-  assert.equal(registry.schema,2);assert.ok(registry.legacyEntryHTML['apps/demo/index.html']);assert.ok(!registry.files['apps/demo/index.html']);assert.ok(registry.files['apps/demo/fragment.html']);
+  assert.equal(registry.schema,3);assert.equal(registry.retention,'current-only');assert.ok(registry.legacyEntryHTML['apps/demo/index.html']);assert.ok(!registry.files['apps/demo/index.html']);assert.ok(!registry.files['apps/demo/fragment.html']);assert.ok(!registry.files['assets/js/main.js']);
   assert.match(await fs.readFile(path.join(out,'apps/demo/index.html'),'utf8'),/data-release-alias="apps\/demo\/index.html"/);
   assert.match(await fs.readFile(path.join(out,'404.html'),'utf8'),/data-release-missing/);
   assert.match(await fs.readFile(path.join(out,'index.html'),'utf8'),/data-platform-recovery/);
@@ -109,15 +111,49 @@ test('exact runtime, frozen baseline, changed resource dedup and previous retent
   assert.equal(manifest.resources['apps/demo/module.html.inline-0.mjs'].kind,'runtime');assert.equal(await fs.readFile(path.join(out,`_releases/${first.buildId}/apps/demo/module.html.inline-0.mjs`),'utf8'),'import "./script.js";');
   assert.equal(await fs.readFile(path.join(out,`_releases/${first.buildId}/apps/demo/fragment.html`),'utf8'),'<div id="surface">fragment</div>');
   assert.equal(isRuntime('apps/settlements/runtime/assets/js/settlements/v24/social-plans-regions/1-easy.mjs'),false);
-  await write(f.site,'assets/js/dep.js','export const dep=2;');await write(f.site,'data/course.json','{"v":3}');const second=await buildRelease({site:f.site,baseline:out,out:path.join(f.root,'second')});assert.notEqual(first.buildId,second.buildId);assert.equal(second.previous,first.buildId);
-  const oldMain=await fs.readFile(path.join(second.out,`_releases/${first.buildId}/assets/js/dep.js`),'utf8');assert.equal(oldMain,'export const dep=1;');
-  await write(f.site,'assets/js/dep.js','export const dep=3;');await write(f.site,'data/course.json','{"v":4}');const third=await buildRelease({site:f.site,baseline:second.out,out:path.join(f.root,'third')});assert.equal(third.previous,second.buildId);
+  await write(f.site,'assets/js/dep.js','export const dep=2;');await write(f.site,'data/course.json','{"v":3}');const second=await buildRelease({site:f.site,baseline:out,out:path.join(f.root,'second')});assert.notEqual(first.buildId,second.buildId);assert.equal(second.previous,null);
+  await assert.rejects(fs.access(path.join(second.out,`_releases/${first.buildId}`)),{code:'ENOENT'});
+  await write(f.site,'assets/js/dep.js','export const dep=3;');await write(f.site,'data/course.json','{"v":4}');const third=await buildRelease({site:f.site,baseline:second.out,out:path.join(f.root,'third')});assert.equal(third.previous,null);
   await assert.rejects(fs.access(path.join(third.out,`_releases/${first.buildId}`)),{code:'ENOENT'});
   await assert.rejects(fs.access(path.join(third.out,manifest.resources['data/course.json'].url.slice('/RUDN/'.length))),{code:'ENOENT'});
-  const retained=JSON.parse(await fs.readFile(path.join(third.out,`_releases/${second.buildId}/manifest.json`),'utf8'));assert.equal(await fs.readFile(path.join(third.out,retained.resources['data/course.json'].url.slice('/RUDN/'.length)),'utf8'),'{"v":3}');
-  assert.equal(await fs.readFile(path.join(third.out,'data/course.json'),'utf8'),'{"v":1}');
+  await assert.rejects(fs.access(path.join(third.out,`_releases/${second.buildId}`)),{code:'ENOENT'});
+  const current=JSON.parse(await fs.readFile(path.join(third.out,`_releases/${third.buildId}/manifest.json`),'utf8'));assert.equal(await fs.readFile(path.join(third.out,current.resources['data/course.json'].url.slice('/RUDN/'.length)),'utf8'),'{"v":4}');
+  await assert.rejects(fs.access(path.join(third.out,'data/course.json')),{code:'ENOENT'});
   const alias=await fs.readFile(path.join(third.out,'apps/demo/index.html'),'utf8');await write(third.out,'apps/demo/index.html','old HTML');await assert.rejects(verifyRelease(third.out),/release\/alias-integrity/);await write(third.out,'apps/demo/index.html',alias);
   await write(third.out,`_releases/${third.buildId}/assets/js/dep.js`,'corrupt');await assert.rejects(verifyRelease(third.out),/release\/integrity/);
+});
+
+test('schema-2 baseline migration drops removed files and root runtime without changing surviving bytes',async t=>{
+  const f=await fixture(t);
+  await write(f.baseline,'data/retired.json','{"old":true}');
+  const files={},legacyEntryHTML={};
+  async function collect(dir,prefix=''){for(const entry of await fs.readdir(dir,{withFileTypes:true})){const name=prefix+entry.name;if(entry.isDirectory())await collect(path.join(dir,entry.name),name+'/');else{const bytes=await fs.readFile(path.join(dir,entry.name)),item={sha256:crypto.createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length};if(name.endsWith('.html')&&/<html\b/i.test(bytes.toString()))legacyEntryHTML[name]=item;else if(name!=='service-worker.js')files[name]=item;}}}
+  await collect(f.baseline);const oldId=crypto.createHash('sha256').update(JSON.stringify({files,legacyEntryHTML})+'\n').digest('hex');
+  await write(f.baseline,'platform-baseline.json',JSON.stringify({schema:2,baselineId:oldId,sitePath:'/RUDN/',files,legacyEntryHTML}));
+  const built=await buildRelease({...f,out:path.join(f.root,'migrated')}),registry=JSON.parse(await fs.readFile(path.join(built.out,'platform-baseline.json')));
+  assert.notEqual(registry.baselineId,oldId);assert.equal(registry.schema,3);assert.equal(built.previous,null);
+  assert.equal(await fs.readFile(path.join(built.out,'assets/img/a.png'),'utf8'),'old-png');
+  for(const name of ['data/retired.json','assets/js/main.js','apps/demo/fragment.html'])await assert.rejects(fs.access(path.join(built.out,name)),{code:'ENOENT'});
+  assert.ok(!registry.files['data/retired.json']);assert.match(await fs.readFile(path.join(built.out,'apps/demo/index.html'),'utf8'),/data-release-alias="apps\/demo\/index.html"/);
+  assert.equal(await fs.readFile(path.join(f.baseline,'data/retired.json'),'utf8'),'{"old":true}');
+});
+
+test('publication excludes reviewed authoring inputs but refuses to exclude an imported runtime dependency',async t=>{
+  const f=await fixture(t),data='apps/reception/localization/source/batches/000.json',script='apps/reception/localization/compile.mjs';
+  for(const root of [f.site,f.baseline]){await write(root,data,'{"authoring":true}');await write(root,script,'export const compile=1;');}
+  assert.equal(isPublishedResource(data),false);assert.equal(isPublishedResource('apps/reception/localization/catalog-loader.js'),true);
+  const built=await buildRelease({...f,out:path.join(f.root,'excluded')}),manifest=JSON.parse(await fs.readFile(path.join(built.out,`_releases/${built.buildId}/manifest.json`)));
+  for(const name of [data,script]){assert.ok(!manifest.resources[name]);await assert.rejects(fs.access(path.join(built.out,name)),{code:'ENOENT'});assert.ok(await fs.readFile(path.join(f.site,name)));}
+  await write(f.site,'assets/js/main.js',"import '../../apps/reception/localization/compile.mjs';");
+  await assert.rejects(buildRelease({...f,out:path.join(f.root,'bad-exclusion')}),/release\/unpinned-static-import/);
+});
+
+test('current-only verifier rejects old files, rollback targets and altered retained media',async t=>{
+  const f=await fixture(t),built=await buildRelease({...f,out:path.join(f.root,'current')});
+  await write(built.out,'_releases/'+ 'f'.repeat(32)+'/old.js','old');await assert.rejects(verifyRelease(built.out),/release\/unreferenced-file/);
+  await fs.unlink(path.join(built.out,'_releases/'+ 'f'.repeat(32)+'/old.js'));
+  const pointer=JSON.parse(await fs.readFile(path.join(built.out,'release.json')));pointer.previous=pointer.current;await write(built.out,'release.json',JSON.stringify(pointer));await assert.rejects(verifyRelease(built.out),/release\/retention-policy/);
+  await write(built.out,'assets/img/a.png','corrupt');await assert.rejects(buildRelease({site:f.site,baseline:built.out,out:path.join(f.root,'corrupt-source')}),/release\/frozen-baseline-mismatch/);
 });
 test('build ID follows transformed bytes deterministically; budget and unsafe output fail closed',async t=>{
   const f=await fixture(t);const a=await buildRelease({...f,out:path.join(f.root,'a')}),b=await buildRelease({...f,out:path.join(f.root,'b')});assert.equal(a.buildId,b.buildId);
@@ -149,6 +185,6 @@ test('missing or malformed save contracts cannot produce a ready release',async 
 test('verifier rejects conflicting immutable references and a changed baseline registry',async t=>{
   const f=await fixture(t),built=await buildRelease({...f,out:path.join(f.root,'references')});
   const pointerPath=path.join(built.out,'release.json'),pointer=JSON.parse(await fs.readFile(pointerPath,'utf8')),manifestPath=path.join(built.out,`_releases/${built.buildId}/manifest.json`),manifest=JSON.parse(await fs.readFile(manifestPath,'utf8'));
-  manifest.resources['assets/img/a.png'].sha256='0'.repeat(64);const bytes=JSON.stringify(manifest);await fs.writeFile(manifestPath,bytes);pointer.current.manifestSha256=crypto.createHash('sha256').update(bytes).digest('hex');await fs.writeFile(pointerPath,JSON.stringify(pointer));await assert.rejects(verifyRelease(built.out),/release\/conflicting-reference/);
+  manifest.resources['assets/img/a.png'].sha256='0'.repeat(64);const bytes=JSON.stringify(manifest);await fs.writeFile(manifestPath,bytes);pointer.current.manifestSha256=crypto.createHash('sha256').update(bytes).digest('hex');await fs.writeFile(pointerPath,JSON.stringify(pointer));await write(built.out,`_releases/${built.buildId}/release.json`,JSON.stringify(pointer.current));await assert.rejects(verifyRelease(built.out),/release\/conflicting-reference/);
   const registryPath=path.join(built.out,'platform-baseline.json'),registry=JSON.parse(await fs.readFile(registryPath,'utf8'));registry.files['assets/img/a.png'].bytes++;await fs.writeFile(registryPath,JSON.stringify(registry));await assert.rejects(verifyRelease(built.out),/release\/baseline-identity/);
 });

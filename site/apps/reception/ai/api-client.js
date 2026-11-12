@@ -9,7 +9,7 @@ export const newRequestId = () => globalThis.crypto?.randomUUID?.()
   || `rxai-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
 export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: fetcher = globalThis.fetch,
-  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href} = {}) {
+  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = ''} = {}) {
   const resolveEndpoint = () => {
     if (!endpoint) throw new ReceptionAPIError('not-configured');
     let url;
@@ -25,6 +25,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
     catalog(parameters = {}, options = {}) { return api.request({...parameters, op: 'catalog'}, options); },
     recover(parameters = {}, options = {}) { return api.request({...parameters, op: 'recover'}, options); },
     async request(body, {signal} = {}) {
+      if(buildId && ['start','recover','resume'].includes(body.op)) body={...body,buildId};
       const url = resolveEndpoint();
       if (lifetime?.aborted || signal?.aborted) throw new ReceptionAPIError('cancelled');
       for (let attempt = 0; attempt < 2; attempt++) {

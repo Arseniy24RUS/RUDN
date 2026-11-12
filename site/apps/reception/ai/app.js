@@ -8,7 +8,7 @@ import {learningReviewView, workRecordView} from './learning-review.js';
 import {characterMedia, createMessengerMedia} from './media.js';
 import {createSourceReader} from '../js/source-reader.js';
 import {createUpdateAdapter, captureUpdateView, restoreUpdateView} from '../../../assets/js/platform-update-state.js';
-import {resourceURL} from '../../../assets/js/release-resources.js';
+import {resourceURL, getReleaseContext} from '../../../assets/js/release-resources.js';
 
 const VERSION = 'reception-ai-ui-v1';
 const presentationOwners = new WeakMap();
@@ -78,8 +78,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const media = createMessengerMedia(root, {signal:lifetime.signal});
   let store;
   try { store = options.storage || globalThis.localStorage; } catch { storageOkay = false; }
-  const drafts=createReceptionStorage({store,owner,endpoint:config.endpoint||'',legacyKey:storageKey,version:VERSION});
+  const release=getReleaseContext(),buildId=release?.retention==='current-only'?release.buildId:'';
+  const drafts=createReceptionStorage({store,owner,endpoint:config.endpoint||'',legacyKey:storageKey,version:VERSION,buildId});
   let initial=drafts.readInitial();
+  if(drafts.hasRetiredDraft())notice=t('retiredSession');
   function restoreSaved(saved) {
     if(!saved)return;
     savedSessionId=typeof saved.sessionId==='string'?saved.sessionId:'';
@@ -106,7 +108,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   restoreSaved(initial);
   const getToken = options.getIdToken || (backend?.getReceptionIdToken ? arg => backend.getReceptionIdToken(arg) : null);
   const api = createReceptionAPI({endpoint:config.endpoint, getIdToken:getToken, demo:config.demo === true,
-    fetch:options.fetch || globalThis.fetch, signal:lifetime.signal, timeoutMs:config.timeoutMs || 60000});
+    fetch:options.fetch || globalThis.fetch, signal:lifetime.signal, timeoutMs:config.timeoutMs || 60000,buildId});
   const reader = createSourceReader(root, {signal:lifetime.signal, locale:() => locale,
     presentation:'embedded', getContainer:()=>root.querySelector('[data-source-reader-host]'),
     beforeOpen:()=>{if(page!=='documents'||tab!=='sources'){tab='sources';goPage('documents');}},
@@ -177,7 +179,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     try{
       const modes=chosen?[chosen]:['training','independent'];
       const results=await Promise.allSettled(modes.map(mode=>api.recover({studentKey:backend?.getProfile?.()?.studentKey||options.studentKey,mode})));
-      const candidates=results.filter(result=>result.status==='fulfilled'&&result.value).map(result=>result.value);
+      const candidates=results.filter(result=>result.status==='fulfilled'&&result.value).map(result=>result.value)
+        .filter(candidate=>!buildId||candidate.buildId===buildId);
       const timestamp=value=>Number(value)||Date.parse(value)||0;
       const recovered=candidates.sort((a,b)=>timestamp(b.updatedAt||b.startedAt)-timestamp(a.updatedAt||a.startedAt))[0]||null;
       if(!recovered&&results.some(result=>result.status==='rejected'))throw results.find(result=>result.status==='rejected').reason;
@@ -190,6 +193,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
 
   function errorText(problem) {
     const code = String(problem?.code || '').toLowerCase().replaceAll('_','-');
+    if(code==='outdated-session')return t('retiredSession');
     if (/not-configured|unsafe-endpoint|pilot-incomplete/.test(code)) return t('config');
     if (/local-demo/.test(code)) return t('localOnly');
     if (/auth|token|identity|forbidden|permission|profile-required/.test(code)) return t('auth');
@@ -471,11 +475,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       try {
         const next = await api.request(body);
         if (disposed || ownerNow() !== owner) return;
+        if(buildId && next.status!=='complete' && next.buildId!==buildId)throw new ReceptionAPIError('outdated-session',409);
         acceptView(next,body);initial=null; if (mutation) pending = null; if(body.op==='resume'||body.op==='start')needsResume=false;
       } catch (problem) {
         if (disposed || problem.code === 'cancelled') return;
         error = problem; const code = String(problem.code||'').replaceAll('_','-');
-        if(body.op==='resume'&&/not-found|expired/.test(code)&&!view){initial=null;pending=null;savedCaseId='';drafts.clearCurrent();}
+        if(body.op==='resume'&&/not-found|expired|outdated-session/.test(code)&&!view){initial=null;pending=null;savedCaseId='';drafts.clearCurrent();}
         // A definitive rejection is safe to amend; an uncertain transport failure keeps its idempotency key.
         if(/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|revision|conflict|stale|busy/.test(code))needsResume=true;
         if (mutation && (/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|busy|revision|conflict|stale|budget|limit|quota|auth|token|forbidden|not-found|not-configured|unsafe-endpoint|local-demo|profile-required|invalid-|closed|completed|locked|validation|not-active|not-reviewed|pilot-incomplete/.test(code)

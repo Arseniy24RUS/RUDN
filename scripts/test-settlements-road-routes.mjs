@@ -1,4 +1,5 @@
 /** Synthetic engine regression cases. No source-data changes or network calls. */
+import {readSettlementsJson} from './settlements-json.mjs';
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readFile} from 'node:fs/promises';
@@ -232,8 +233,8 @@ test('real published easy/normal/hard completed and active saves exactly match t
     hard:{actions:133,full:'43a6f55f54e75368a46b2b889c6e9d5b4ac436436e39a0a0679fbb4e12963cf5',prefix:'6f0c6976bf749d72710afaab76d68551fb3eff0cdde8e6921f17db4f1ab56db2'},
   };
   const base=new URL('../site/apps/settlements/runtime/data/settlements/v1/',import.meta.url),id='nenetskiy_avtonomnyy_okrug';
-  const json=async relative=>JSON.parse(await readFile(new URL(relative,base),'utf8'));
-  const world=new World(await json(`regions/${id}.json`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,base)))));
+  const json = relative => readSettlementsJson(new URL(relative, base));
+  const world=new World(await json(`regions/${id}.json.gz`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,base)))));
   await loadDistanceTransportPolicy(world);const boundary=await json(`boundaries/${id}.geojson`);
   const digest=state=>createHash('sha256').update(JSON.stringify(state)).digest('hex');
   for (const [difficulty,hashes] of Object.entries(expected)) {
@@ -250,8 +251,8 @@ test('real published easy/normal/hard completed and active saves exactly match t
 
 test('published six-step tutorial retains its two-point locked route, budget and exact replay',async()=>{
   const base=new URL('../site/apps/settlements/runtime/data/settlements/v1/',import.meta.url),id='chelyabinskaya_oblast';
-  const json=async relative=>JSON.parse(await readFile(new URL(relative,base),'utf8'));
-  const world=new World(await json(`regions/${id}.json`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,base)))));
+  const json = relative => readSettlementsJson(new URL(relative, base));
+  const world=new World(await json(`regions/${id}.json.gz`),JSON.parse(gunzipSync(await readFile(new URL(`transport/${id}.json.gz`,base)))));
   await loadDistanceTransportPolicy(world);const scenario=createIntroScenario(world,await json(`boundaries/${id}.geojson`),{version:5});
   let state=createState(world,scenario),previous;
   for (const [i,action] of scenario.referenceActions.entries()) {

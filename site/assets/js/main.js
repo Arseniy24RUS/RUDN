@@ -192,6 +192,12 @@ function formatDate(value){
 }
 function formatDuration(ms){const total=Math.max(0,Math.round(number(ms)/1000));const m=Math.floor(total/60);const s=total%60;return `${m}:${String(s).padStart(2,'0')}`}
 initNotifications();
+window.addEventListener('rudn:game-draft-retired',()=>{
+  const message={ru:'Незавершённая игра относилась к прошлой версии. Начните новую игру. Завершённые результаты сохранены.',
+    en:'The unfinished game used an older version. Start a new game. Completed results are saved.',
+    zh:'未完成的游戏属于旧版本。请开始新游戏，已完成的结果仍然保留。'};
+  toast(message[getLocale()]||message.ru);
+});
 
 let data={course:null,questions:[],variants:[],exam:[],media:{},symbols:{},legalLabCatalog:null};
 let currentCleanup=null;
@@ -1357,6 +1363,7 @@ function connectPageRelease(){
   };
   workers.addEventListener('controllerchange',announce);
   workers.addEventListener('message',event=>{
+    if(event.source===workers.controller&&event.data?.type==='RELEASE_AVAILABLE')void updateCoordinator.check('worker-change');
     if(event.source===workers.controller&&['RELEASE_RESOURCE_UNAVAILABLE','RELEASE_RESOURCE_ERROR','RELEASE_READY'].includes(event.data?.type)){
       diagnostics.record('resource-error',{code:'release-resource-unavailable',stage:'service-worker'});void updateCoordinator.check('resource-error');
     }

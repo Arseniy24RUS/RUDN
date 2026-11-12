@@ -7,6 +7,9 @@
  const Key='rudn-governor-stage9-state',Backup=Key+'-backup';
  const E=()=>root.GovernorGame?.Engine||(typeof require==='function'?require('./engine.js'):null);
  const I=()=>root.GovernorGame?.Integrity||(typeof require==='function'?require('./state-integrity.js'):null);
+ let releasePolicy={canResume:()=>true,mark:value=>value};
+ const terminal=state=>state?.completed===true||state?.budgetReview?.status==='supervised';
+ function setReleasePolicy(policy){if(typeof policy?.canResume!=='function'||typeof policy?.mark!=='function')throw error('invalid-release-policy');releasePolicy=policy;}
  function error(code){const e=new Error(code);e.code=code;return e;}
  // Pure SHA-256 fallback for file/embedded contexts without WebCrypto.
  // It has exactly the same digest as WebCrypto; it is not an authentication key.
@@ -34,7 +37,7 @@
  async function pack(state){
   if(!E().validateState(state))throw error('invalid-state');
   const payload=JSON.stringify(state);
-  const result={format:FORMAT,schema:SCHEMA,model:state.version,createdAt:new Date().toISOString(),checksum:await hash(payload),payload};
+  const result=releasePolicy.mark({format:FORMAT,schema:SCHEMA,model:state.version,createdAt:new Date().toISOString(),checksum:await hash(payload),payload});
   return JSON.stringify(result,null,2);
  }
  async function unpack(text){
@@ -45,6 +48,7 @@
   if(box.checksum!==await hash(box.payload))throw error('checksum-mismatch');
   let parsed;try{parsed=JSON.parse(box.payload);I().safeTree(parsed);}catch(_){throw error('invalid-state');}
   if(parsed.version!==box.model)throw error('incompatible-model');
+  if(!releasePolicy.canResume(box,{completed:terminal(parsed)}))throw error('retired-build');
   const state=E().restoreState(parsed);if(!state)throw error('invalid-state');
   return state;
  }
@@ -54,6 +58,7 @@
    let raw;try{raw=this.storage.getItem(key);if(key===Key)this.token=raw;}catch(_){return{status:'unavailable',state:null};}
    if(!raw)return{status:'empty',state:null};
    try{const b=JSON.parse(raw);if(b.format!=='rudn-autosave'||!Number.isSafeInteger(b.revision)||b.revision<1)throw error('invalid');
+    if(!releasePolicy.canResume(b,{completed:terminal(b.state)}))return{status:'empty',state:null,retired:true};
     const state=E().restoreState(b.state);return state?{status:'ok',state,revision:b.revision}:{status:'corrupt',state:null};
    }catch(_){return{status:'corrupt',state:null};}
   }
@@ -65,10 +70,10 @@
    if(this.token!==undefined&&raw!==this.token)throw error('other-tab');
    let previous=null;try{previous=raw?JSON.parse(raw):null;}catch(_){}
    const stateText=JSON.stringify(state);
-   if(previous&&JSON.stringify(previous.state)===stateText){this.token=raw;return true;}
+   if(previous&&JSON.stringify(previous.state)===stateText&&releasePolicy.mark({...previous}).releaseBuildId===previous.releaseBuildId){this.token=raw;return true;}
    const revision=Number.isSafeInteger(previous?.revision)?previous.revision+1:1;
    if(raw&&previous?.state&&E().validateState(previous.state))this.storage.setItem(Backup,raw);
-   const next=JSON.stringify({format:'rudn-autosave',revision,savedAt:new Date().toISOString(),state});
+   const next=JSON.stringify(releasePolicy.mark({format:'rudn-autosave',revision,savedAt:new Date().toISOString(),state}));
    this.storage.setItem(Key,next);this.token=next;return true;
   }
   clear(){
@@ -77,7 +82,7 @@
    this.storage.removeItem(Key);this.token=null;
   }
  }
- const api={FORMAT,SCHEMA,MAX_BYTES,Key,Backup,Store,pack,unpack,hash,sha256};
+ const api={FORMAT,SCHEMA,MAX_BYTES,Key,Backup,Store,pack,unpack,hash,sha256,setReleasePolicy};
  root.GovernorGame=root.GovernorGame||{};root.GovernorGame.Saves=api;
  if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

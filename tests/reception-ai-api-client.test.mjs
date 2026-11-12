@@ -5,6 +5,15 @@ import {createReceptionAPI} from '../site/apps/reception/ai/api-client.js';
 const view={id:'test-session',revision:1,status:'active',messages:[]};
 const accepted=()=>new Response(JSON.stringify({ok:true,view}),{status:200,headers:{'Content-Type':'application/json'}});
 
+test('the Firebase client scopes start and recovery to this release without changing chat requests',async()=>{
+  const calls=[],buildId='a'.repeat(32);
+  const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',buildId,getIdToken:async()=> 'token',
+    fetch:async(_url,options)=>{calls.push(JSON.parse(options.body));return accepted();}});
+  for(const op of ['start','recover','resume','message'])await client.request({op,requestId:'stable'});
+  assert.deepEqual(calls.map(body=>body.buildId),[buildId,buildId,buildId,undefined]);
+  assert.ok(calls.every(body=>body.requestId==='stable'));
+});
+
 test('an expired identity token refreshes once without changing the billable request id',async()=>{
   const calls=[],tokens=[];
   const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',

@@ -1,4 +1,5 @@
 import {seminar5ProgressFromWorkspace} from '../../apps/career/assets/seminar-progress.mjs';
+import {currentGameReleaseBuild,gameWorkspaceId} from './game-release-policy.js';
 
 /** Course-shell copy. Career indices are deliberately independent of course grades. */
 export const CAREER_COPY={
@@ -91,8 +92,9 @@ export function bindCareerProgress(nav,{activitySlug,getLocale}){
 export async function readCareerSeminarProgress({backend,owner}={}){
   const durableOwner=owner==='guest'?'guest:career':owner;
   if(!/^(?:student:[^\s]+|teacher:[^\s]+|guest:career)$/.test(durableOwner||''))return seminar5ProgressFromWorkspace(null);
-  const scope={owner:durableOwner,activitySlug:'career-workspace',mode:'diagnostic',attemptId:'workspace-v1'};
-  const draft=await backend.loadDraft(scope);
+  const scope={owner:durableOwner,activitySlug:'career-workspace',mode:'diagnostic'};
+  const draft=await backend.loadDraft({...scope,attemptId:gameWorkspaceId('workspace-v1')})||
+    (currentGameReleaseBuild()?await backend.loadDraft(scope):null);
   const matches=draft&&Object.entries(scope).every(([key,value])=>draft[key]===value);
   return seminar5ProgressFromWorkspace(matches?draft.state:null);
 }

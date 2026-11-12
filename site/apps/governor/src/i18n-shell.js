@@ -38,7 +38,8 @@
    const element=doc.querySelector(selector);if(element)element.textContent=pick(map.get(key),lang);
   }
   for(const image of doc.querySelectorAll('.platform-brand img,.start-logo,.topbar-logo')){
-   image.src=new URL(lang==='ru'?'../../assets/img/rudn-logo.png':'../../assets/img/rudn-logo-en.png',doc.baseURI).href;
+   const logical=lang==='ru'?'assets/img/rudn-logo.png':'assets/img/rudn-logo-en.png';
+   image.src=new URL(root.__RUDN_RELEASE__?.resources?.[logical]?.url||'../../'+logical,doc.baseURI).href;
    image.alt=lang==='ru'?'РУДН':'RUDN University';
   }
  }

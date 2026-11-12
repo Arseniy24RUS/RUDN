@@ -8,6 +8,7 @@
  * are revision-conditional, so a slow response cannot acknowledge a subsequent edit.
  */
 import {mergedRecordId, rekeyStudentValue} from './student-identity.js';
+import {canResumeStoredGameDraft,isGameDraft,markGameDraft,notifyRetiredGameDraft} from './game-release-policy.js';
 const DATABASE = 'rudn-durable-v1';
 const VERSION = 1;
 const TABLES = ['drafts', 'outbox', 'attempts', 'attachments', 'conflicts', 'meta'];
@@ -375,6 +376,7 @@ export function createDurableStore(options = {}) {
         id, scope: scopeKey(input), owner: input.owner,
         studentKey: input.owner.startsWith('student:') ? input.owner.slice(8) : null,
         activitySlug: input.activitySlug, mode: input.mode, attemptId: input.attemptId,
+        ...(input.releaseBuildId ? {releaseBuildId:input.releaseBuildId} : {}),
         contentVersion: String(input.contentVersion || previous?.contentVersion || '1'),
         revision, remoteRevision: input.remoteRevision ?? previous?.remoteRevision ?? null,
         state: {...input.state, ...(phase === 'completed' ? {phase: 'completed'} : {})}, phase,
@@ -429,7 +431,7 @@ export function createDurableStore(options = {}) {
   }
 
   function persist(raw, kind, settings = {}) {
-    const input = normalize(raw);
+    const input = normalize(isGameDraft(raw) ? markGameDraft(raw) : raw);
     const initialization = ready();
     const intent = {id: uuid(), kind, input, options: settings, createdAt: now()};
     const journalKey = `${JOURNAL}${intent.id}`;
@@ -438,9 +440,13 @@ export function createDurableStore(options = {}) {
     return exclusive(draftKey(input), async () => { await initialization; return commit(input, kind, settings, intent, journalKey); });
   }
 
-  async function findDraft(scope) {
-    if (scope.attemptId) return transaction(['drafts'], false, tx => tx.get('drafts', draftKey(scope)));
-    return transaction(['drafts'], false, async tx => (await tx.all('drafts')).filter(draft => draft.scope === scopeKey(scope) && (!scope.attemptId || draft.attemptId === scope.attemptId)).sort((a, b) => b.updatedAt - a.updatedAt || b.revision - a.revision)[0]);
+  async function findDraft(scope, {retireGames=false, notify=false}={}) {
+    const candidates = await transaction(['drafts'], false, async tx => scope.attemptId
+      ? [await tx.get('drafts', draftKey(scope))].filter(Boolean)
+      : (await tx.all('drafts')).filter(draft => draft.scope === scopeKey(scope)).sort((a,b) => b.updatedAt-a.updatedAt || b.revision-a.revision));
+    const draft = retireGames ? candidates.find(canResumeStoredGameDraft) : candidates[0];
+    if (!draft && notify && candidates.length) notifyRetiredGameDraft(scope.activitySlug);
+    return draft;
   }
 
   async function statusFor(draft, overrides = {}) {
@@ -555,6 +561,7 @@ export function createDurableStore(options = {}) {
   }
 
   async function importRemoteDraft(remote) {
+    if (!canResumeStoredGameDraft(remote)) return null;
     const input = normalize(remote);
     await ready();
     const id = draftKey(input);
@@ -596,6 +603,7 @@ export function createDurableStore(options = {}) {
 
   /** Apply an explicitly selected whole branch; retain both branches as resolved evidence. */
   async function resolveRemoteConflict(remote) {
+    if (!canResumeStoredGameDraft(remote)) throw Object.assign(new Error('Game draft retired'),{code:'storage/game-draft-retired'});
     const input = normalize(remote);
     await ready();
     const id = draftKey(input);
@@ -648,6 +656,7 @@ export function createDurableStore(options = {}) {
     for (const [key, state] of readEntries(storage, LEGACY_DRAFT + owner + ':')) {
       if (state?.owner !== owner || !state.activitySlug || !state.id) continue;
       const scope = {owner, activitySlug: state.activitySlug, mode: state.buildOptions?.mode || 'default', attemptId: state.id};
+      if (!canResumeStoredGameDraft({...scope,state,releaseBuildId:state.releaseBuildId})) continue;
       if (await findDraft(scope)) continue;
       await persist({...scope, state, contentVersion: 'legacy-v1', createdAt: state.startedAt || state.started}, 'checkpoint', {queue: false});
       const verified = await findDraft(scope);
@@ -776,12 +785,16 @@ export function createDurableStore(options = {}) {
     complete: (input, settings) => persist(input, 'complete', settings),
     async loadDraft(scope) {
       await ready();
-      let draft = await findDraft(scope);
+      let draft = await findDraft(scope,{retireGames:true,notify:true});
       if (!draft && scope.legacyKeys?.length) {
         for (const key of scope.legacyKeys) {
           let legacy;
           try { legacy = JSON.parse(storage?.getItem(key)); } catch { continue; }
           if (!legacy || (legacy.owner && legacy.owner !== scope.owner)) continue;
+          if (!canResumeStoredGameDraft({...scope,state:legacy,releaseBuildId:legacy.releaseBuildId})) {
+            notifyRetiredGameDraft(scope.activitySlug);
+            continue;
+          }
           const attemptId = scope.attemptId || legacy.id;
           if (!attemptId) continue;
           draft = await persist({...scope, attemptId, state: legacy, contentVersion: 'legacy-v1'}, 'checkpoint', {queue: false});
@@ -790,7 +803,7 @@ export function createDurableStore(options = {}) {
       }
       return draft ? {...draft, saveStatus: await statusFor(draft)} : null;
     },
-    async getSaveStatus(scope) { await ready(); return statusFor(await findDraft(scope)); },
+    async getSaveStatus(scope) { await ready(); return statusFor(await findDraft(scope,{retireGames:true})); },
     async listPending({owner, limit = 50, now: timestamp = now(), includeDeferred = false} = {}) {
       await ready();
       return transaction(['outbox'], false, async tx => (await tx.all('outbox'))

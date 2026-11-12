@@ -4,6 +4,7 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {createHash,randomUUID} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import assert from 'node:assert/strict';
+import {gunzipSync} from 'node:zlib';
 import {World} from '../site/apps/settlements/runtime/assets/js/settlements/v2/engine.mjs';
 import {FEDERAL_CITIES,appendFederalCities,combineFederalBoundary} from '../site/apps/settlements/runtime/assets/js/settlements/v24/federal-cities.mjs';
 import {pointInBoundary} from '../site/apps/settlements/runtime/assets/js/settlements/v24/engine.mjs';
@@ -14,7 +15,7 @@ const verifyRuntime=process.argv.includes('--verify-runtime');
 const scopeModule=verifyRuntime?await import('../site/apps/settlements/runtime/assets/js/settlements/v24/region-playability.mjs'):null;
 const output=new URL(argument('--output')||`artifacts/boundaries-20261010/${verifyRuntime?'audit-runtime':'audit'}.json`,root);
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex'),radians=Math.PI/180,earthKm=6371.0088;
-const files={},readJSON=async relative=>{const bytes=await readFile(new URL(relative,runtime));files[relative]=sha(bytes);return JSON.parse(bytes);};
+const files={},readJSON=async relative=>{const bytes=await readFile(new URL(relative,runtime));files[relative]=sha(bytes);return JSON.parse(relative.endsWith('.gz') ? gunzipSync(bytes) : bytes);};
 const polygons=geometry=>{
   if(geometry.type==='FeatureCollection')return geometry.features.flatMap(polygons);
   if(geometry.type==='Feature')return polygons(geometry.geometry);
@@ -65,7 +66,7 @@ if(verifyRuntime)identityPaths.push('assets/js/settlements/v24/region-playabilit
 const sourceAtStart=Object.fromEntries(await Promise.all(identityPaths.map(async path=>[path,sha(await readFile(new URL(path,runtime)))])));
 const startedAt=new Date().toISOString(),runId=randomUUID(),manifest=await readJSON('data/settlements/v1/manifest.json'),records=[];
 for(const metadata of manifest.regions){
-  const pack=await readJSON(`data/settlements/v1/${metadata.path}`),network=await readJSON(`data/settlements/v1/transport/${metadata.id}.json`);
+  const pack=await readJSON(`data/settlements/v1/${metadata.compressedPath}`),network=await readJSON(`data/settlements/v1/transport/${metadata.id}.json.gz`);
   const world=appendFederalCities(new World(pack,network)),base=await readJSON(`data/settlements/v1/boundaries/${metadata.id}.geojson`);
   const city=FEDERAL_CITIES[metadata.id],cityBoundary=city?await readJSON(`assets/geodata/federal-cities/${city.boundaryFile}`):null;
   const boundary=combineFederalBoundary(base,cityBoundary),rawPolygons=polygons(boundary),compiled=rawPolygons.map(polygon=>polygon.map(compileRing));
