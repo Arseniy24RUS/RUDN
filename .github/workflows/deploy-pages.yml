@@ -22,7 +22,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ contains(github.event.head_commit.message, '[career-seminar-express]') && format('career-express-skip-{0}', github.run_id) || github.event_name == 'pull_request' && github.event.pull_request.number || (inputs.verification_only == true && github.ref) || 'production' }}
+  group: pages-${{ contains(github.event.head_commit.message, '[reception-ai-release]') && format('reception-ai-{0}', github.run_id) || contains(github.event.head_commit.message, '[career-seminar-express]') && format('career-express-skip-{0}', github.run_id) || github.event_name == 'pull_request' && github.event.pull_request.number || (inputs.verification_only == true && github.ref) || 'production' }}
   cancel-in-progress: true
 
 jobs:
