@@ -174,6 +174,12 @@ export function evaluateDecision(c, state, decision) {
 // This allowlist is deliberately separate from the canonical private dossier.
 // A future rubric field cannot silently flow into an actor request.
 export function actorCase(c, language) {
-  return localized({id: c.id, date: c.public.date, citizen: c.public.citizen, opening: c.public.opening,
-    actor: c.actor, facts: c.facts, documents: c.documents}, language);
+  // The authored calendar worksheet is visible from the start and supplies
+  // dates for the learner's exercise. Its generic event labels cannot identify
+  // a particular letter or response in the character's account.
+  const documents = c.rubric.authored
+    ? c.documents.filter(document => document.id !== 'dates' || !document.initial || document.factIds.length > 0)
+    : c.documents;
+  return localized({id: c.id, citizen: c.public.citizen, opening: c.public.opening,
+    actor: c.actor, facts: c.facts, documents}, language);
 }

@@ -137,7 +137,11 @@ const labels = {
 export function evaluateAuthoredDecision(c,state,decision) {
   const r = c.rubric.authored, a = decision.assessment, selected = decision.actionIds;
   const factGood = r.factIds.includes(a.factId);
-  const evidenceGood = r.evidenceSets.some(set => set.length === decision.basisDocumentIds.length && set.every(id => decision.basisDocumentIds.includes(id) && state.openedDocumentIds.includes(id))) && (!r.evidencePaired || factGood);
+  const evidenceSet = r.evidenceSets.find(set => set.length === decision.basisDocumentIds.length && set.every(id => decision.basisDocumentIds.includes(id)));
+  let evidenceIssue = null;
+  if (!evidenceSet) evidenceIssue = 'selection';
+  else if (evidenceSet.some(id => !state.openedDocumentIds.includes(id))) evidenceIssue = 'unopened';
+  else if (r.evidencePaired && !factGood) evidenceIssue = 'fact';
   const checks = {number:referenceNumber(decision.law.number,r.knowledge) === r.knowledge.number,
     date:parseDateOnly(a.actDate) === r.knowledge.actDate, article:r.knowledge.articles.includes(referenceUnit(decision.law.article,r.knowledge)), application:a.applicationId === r.knowledge.correct};
   const proof = r.research, answer = a.research;
@@ -151,7 +155,7 @@ export function evaluateAuthoredDecision(c,state,decision) {
   const criticalIds = r.criticalRules.filter(rule => !rule.knownQuestion || state.knownFactIds.includes(rule.knownQuestion)).filter(rule => rule.kind === 'selected' ? selected.includes(rule.id) : !selected.includes(rule.id)).map(rule => rule.id);
   const followupGood = Boolean(state.followupChoiceId && state.followupChoiceId === c.followup.correct);
   const scores = {
-    facts:[(factGood ? 10 : 0)+(evidenceGood ? 5 : 0),15],
+    facts:[(factGood ? 10 : 0)+(evidenceIssue ? 0 : 5),15],
     research:[Object.values(checks).filter(Boolean).length*2+(binding ? 4+(extracted ? 4 : 0)+(finding ? 4 : 0) : 0),20],
     routing:[(c.rubric.procedureIds.includes(decision.procedureId) ? 7 : 0)+(c.rubric.routeIds.includes(decision.routeId) ? 8 : 0),15],
     calendar:[(a.calendar.anchor === r.calendar.anchor ? 2 : 0)+(a.calendar.rule === r.calendar.rule ? 2 : 0)+(a.calendar.start === r.calendar.start ? 2 : 0)+(r.calendar.acceptedShifts.includes(a.calendar.shift) ? 2 : 0)+(parseDateOnly(decision.deadline) === c.rubric.deadline ? 12 : 0),20],
@@ -160,6 +164,6 @@ export function evaluateAuthoredDecision(c,state,decision) {
   };
   const score = Object.values(scores).reduce((sum,row) => sum+row[0],0);
   return {score,criteria:Object.entries(scores).map(([id,[earned,max]]) => ({id,earned,max,label:labels[id]})),explanation:c.rubric.explanation,
-    missingFacts:[],cap:null,authored:true,criticalIds,actionPlanId:plan.id,followupCorrect:followupGood,
+    missingFacts:[],cap:null,authored:true,evidenceIssue,criticalIds,actionPlanId:plan.id,followupCorrect:followupGood,
     followupExplanation:c.followup.explanation,followupMessage:followupGood ? c.followup.success : c.followup.failure};
 }

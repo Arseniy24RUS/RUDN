@@ -184,6 +184,8 @@ try{
     assert.equal(lastView.status,'followup');assert.equal(lastView.decision.routeId,'');assert.equal(lastView.decision.law.number,'');assert.equal(lastView.decision.deadline,'');assert.equal(lastView.decision.assessment.factId,'');
     choose('[data-followup-choice]');root.querySelector('[data-followup-form]').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));await settle();
     assert.equal(lastView.status,'review');assert.ok(lastView.feedback.score<100);
+    assert.equal(lastView.feedback.evidenceIssue,'selection');
+    assert.match(root.textContent,/Баллы за документы сняты/);
     await click('[data-action="next"]');assert.equal(lastView.status,'complete');
     completed.push('partial full-bank decisions preserve unanswered fields and reach server grading after explicit confirmation');
   }

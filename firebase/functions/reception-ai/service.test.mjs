@@ -194,17 +194,23 @@ test('eight independent cases hide feedback until finish and retry pending journ
   assert.equal(v.result.journalStatus, 'saved'); assert.equal(writes, 2);
   await h.service.handle({op: 'resume', sessionId: v.id}, identity); assert.equal(writes, 2);
 });
-test('Responses request fixes Luna, none, store:false; transport and malformed replies stay sanitized', async () => {
-  let sent, calls = 0;
+test('Responses uses Luna and keeps both dialogue and factual verification ephemeral', async () => {
+  const sent = [];
   const provider = createOpenAIProvider({apiKey: 'fake-test-key', fetchImpl: async (url, init) => {
-    assert.equal(url, 'https://api.openai.com/v1/responses'); const payload = JSON.parse(init.body); calls++; if (!sent) sent = payload;
+    assert.equal(url, 'https://api.openai.com/v1/responses'); const payload = JSON.parse(init.body); sent.push(payload);
     const output = payload.text.format.name === 'citizen_reply_check' ? {valid: true} : {reply: 'Здравствуйте.', revealedFactIds: [], releasedDocumentIds: []};
     return {ok: true, json: async () => ({status: 'completed', output: [{type: 'message', content: [{type: 'output_text', text: JSON.stringify(output)}]}], usage: {input_tokens: 100, output_tokens: 30}})};
   }});
   const turn = await provider.generate({actorCase: actorCase(fixture(), 'ru'), messages: [], text: 'Здравствуйте', locale: 'ru'});
-  assert.equal(calls, 2); assert.deepEqual(turn.usage, {inputTokens: 200, outputTokens: 60}); assert.equal(turn.verified, true);
-  assert.equal(turn.reply, 'Здравствуйте.'); assert.equal(sent.model, 'gpt-6-luna'); assert.deepEqual(sent.reasoning, {effort: 'none'}); assert.equal(sent.store, false); assert.equal(sent.text.format.strict, true);
-  assert.doesNotMatch(sent.instructions, /procedureIds|2026-11-18/);
+  assert.equal(sent.length, 2); assert.deepEqual(turn.usage, {inputTokens: 200, outputTokens: 60}); assert.equal(turn.verified, true);
+  assert.equal(turn.reply, 'Здравствуйте.');
+  assert.deepEqual(sent.map(payload => payload.reasoning.effort), ['none', 'none']);
+  for (const payload of sent) {
+    assert.equal(payload.model, 'gpt-6-luna');
+    assert.equal(payload.store, false);
+    assert.equal(payload.text.format.strict, true);
+    assert.doesNotMatch(payload.instructions, /procedureIds|2026-11-18/);
+  }
   const failing = createOpenAIProvider({apiKey: 'fake', fetchImpl: async () => ({ok: false, status: 401})});
   await assert.rejects(failing.generate({actorCase: actorCase(fixture(), 'ru'), messages: [], text: 'Здравствуйте', locale: 'ru'}), err('provider_unavailable'));
 });

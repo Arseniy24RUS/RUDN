@@ -199,7 +199,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex]; let reservation, usage;
     try {
       if (provider.ready === false) fail('not_configured', 503);
-      const dossier = actorCase(c, s.locale); dossier.releasedDocumentIds = state.releasedDocumentIds;
+      const dossier = actorCase(c, s.locale);
+      dossier.releasedDocumentIds = dossier.documents.filter(document => state.releasedDocumentIds.includes(document.id)).map(document => document.id);
       const estimate = estimateReservation({actorCase: dossier, messages: state.messages, text, locale: s.locale,
         maxOutputTokens: Math.max(limits.maxOutputTokens, provider.maxOutputTokens || 0), maxCalls: provider.maxCalls || 1});
       if (estimate.perCallInputTokens > limits.maxInputAllowance) fail('context_limit', 413);

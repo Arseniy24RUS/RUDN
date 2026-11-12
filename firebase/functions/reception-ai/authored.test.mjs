@@ -25,7 +25,10 @@ const error=code=>e=>e.code===code;
 
 test('full-bank schema validates variants, references, plans and public/private separation',()=>{
   const c=fixture();assert.equal(validateCase(c).id,c.id);
-  const actor=actorCase(c,'en');for(const key of ['assessment','provenance','rubric','dateVariants','followup'])assert.equal(actor[key],undefined);
+  const worksheet={...c.documents[0],id:'dates',initial:true,factIds:[]};
+  const actor=actorCase({...c,documents:[...c.documents,worksheet]},'en');
+  assert.equal(actor.documents.some(document=>document.id==='dates'),false);
+  assert.equal(actor.date,undefined);for(const key of ['assessment','provenance','rubric','dateVariants','followup'])assert.equal(actor[key],undefined);
   assert.equal(actor.facts[0].prompt,'EN Вопрос');
   const alternate=fixture();alternate.datePackId='b';c.dateVariants=[alternate];assert.equal(validateCase(c).dateVariants.length,1);
   for(const change of [x=>x.rubric.authored.research.bindings[0].fragmentId='unknown',x=>x.rubric.authored.order.push(['a2','a1']),x=>x.public.assessment.fact.correct=['f-good'],x=>x.dateVariants[0].datePackId='a',x=>x.dateVariants[0].dateVariants=[fixture()]]){
@@ -36,9 +39,16 @@ test('full-bank schema validates variants, references, plans and public/private 
 test('authored scoring preserves exact evidence, route-specific plans, ordering and follow-up points',()=>{
   const c=validateCase(fixture()),state=fullState();assert.equal(evaluateDecision(c,state,good()).score,100);
   const alternate=good();alternate.routeId='r2';alternate.actionIds=['a1','a3'];assert.equal(evaluateDecision(c,state,alternate).score,100);
-  const allDocs=good();allDocs.basisDocumentIds.push('d3');assert.equal(evaluateDecision(c,state,allDocs).score,95);
+  const allDocs=good();allDocs.basisDocumentIds.push('d3');
+  const extraEvidence=evaluateDecision(c,state,allDocs);
+  assert.equal(extraEvidence.score,95);
+  assert.equal(extraEvidence.evidenceIssue,'selection');
+  assert.equal(evaluateDecision(c,{...state,openedDocumentIds:[]},good()).evidenceIssue,'unopened');
   const wrongOrder=good();wrongOrder.actionIds.reverse();assert.equal(evaluateDecision(c,state,wrongOrder).score,98);
-  const wrongFact=good();wrongFact.assessment.factId='f-bad';assert.equal(evaluateDecision(c,state,wrongFact).score,85);
+  const wrongFact=good();wrongFact.assessment.factId='f-bad';
+  const unrelatedEvidence=evaluateDecision(c,state,wrongFact);
+  assert.equal(unrelatedEvidence.score,85);
+  assert.equal(unrelatedEvidence.evidenceIssue,'fact');
   c.rubric.authored.evidencePaired=false;assert.equal(evaluateDecision(c,state,wrongFact).score,90);
   assert.equal(evaluateDecision(c,{...state,followupChoiceId:'close'},good()).score,96);
   const omitted=good();omitted.actionIds=['a2'];assert.ok(evaluateDecision(c,state,omitted).criticalIds.includes('a1'));
