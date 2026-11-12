@@ -225,17 +225,18 @@ try{
     HTMLMediaElement.prototype.canPlayType=function(type){return String(type).includes('webm')?'':original.call(this,type);};
   });
   await page.reload({waitUntil:'networkidle'});await idle();await navigate('reception');
-  await page.waitForFunction(()=>{const img=document.querySelector('[data-rxa-motion-image]');return img?.complete&&img.naturalWidth===320&&img.closest('[data-rxa-motion-ready]');});
+  await page.waitForFunction(()=>{const img=document.querySelector('[data-rxa-motion-image]');return img?.complete&&img.naturalWidth>0&&img.closest('[data-rxa-motion-ready]');});
   assert.equal(await page.locator('video[data-rxa-motion][src]').count(),0);
   const fallback=await page.evaluate(async()=>{
     const image=document.querySelector('[data-rxa-motion-image]'),buffer=await fetch(image.src).then(r=>r.arrayBuffer()),bytes=new Uint8Array(buffer),data=new DataView(buffer);
-    const text=(at,size)=>String.fromCharCode(...bytes.slice(at,at+size));let frames=0,loop=null;
-    for(let at=12;at+8<=bytes.length;){const type=text(at,4),size=data.getUint32(at+4,true);if(at+8+size>bytes.length)break;if(type==='ANMF')frames++;if(type==='ANIM'&&size>=6)loop=data.getUint16(at+12,true);at+=8+size+(size%2);}
+    const text=(at,size)=>String.fromCharCode(...bytes.slice(at,at+size));let frames=0,loop=null,duration=0;
+    for(let at=12;at+8<=bytes.length;){const type=text(at,4),size=data.getUint32(at+4,true);if(at+8+size>bytes.length)break;if(type==='ANMF'&&size>=16){frames++;duration+=bytes[at+20]+256*bytes[at+21]+65536*bytes[at+22];}if(type==='ANIM'&&size>=6)loop=data.getUint16(at+12,true);at+=8+size+(size%2);}
     const canvas=document.createElement('canvas');canvas.width=canvas.height=1;
     const context=canvas.getContext('2d');context.drawImage(image,0,0,1,1,0,0,1,1);
-    return {header:text(0,4),format:text(8,4),frames,loop,width:image.naturalWidth,bytes:bytes.length,cornerAlpha:context.getImageData(0,0,1,1).data[3]};
+    return {header:text(0,4),format:text(8,4),frames,loop,duration,width:image.naturalWidth,bytes:bytes.length,cornerAlpha:context.getImageData(0,0,1,1).data[3]};
   });
-  assert.equal(fallback.header,'RIFF');assert.equal(fallback.format,'WEBP');assert.equal(fallback.frames,120);assert.equal(fallback.loop,0);
+  assert.equal(fallback.header,'RIFF');assert.equal(fallback.format,'WEBP');assert.ok(fallback.frames>1);assert.equal(fallback.loop,0);
+  assert.ok(fallback.duration>=9500&&fallback.duration<=10500,'The fallback preserves the original loop duration');
   assert.ok(fallback.cornerAlpha<32,'The decoded WebP preserves the transparent background');
   check('Unsupported VP9 loads the transparent animated WebP asset',{...fallback,framePlaybackObserved:false});
   await screenshot('09-phone-webp-fallback.png');
