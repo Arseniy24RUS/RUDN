@@ -220,6 +220,15 @@ class Backend{
     if(!active())throw serviceError('diagnostics/identity-changed');
     return result;
   }
+  async getReceptionIdToken({forceRefresh=false}={}){
+    // The browser authenticates to our reception service; the OpenAI credential
+    // is held by that service and is never sent to the browser.
+    if(!this.user)throw serviceError('reception/auth-required');
+    const user=this.user,generation=this.generation;
+    const token=await user.getIdToken(Boolean(forceRefresh));
+    if(this.user?.uid!==user.uid||this.generation!==generation)throw serviceError('reception/identity-changed');
+    return token;
+  }
   async signOut(){
     this.checkpointSync?.stop();
     this.restAvailableAt=0;
