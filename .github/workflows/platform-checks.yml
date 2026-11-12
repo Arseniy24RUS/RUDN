@@ -34,6 +34,10 @@ jobs:
           node-version: '24'
       - run: npm ci --ignore-scripts
       - run: npm ci --ignore-scripts --prefix firebase/functions
+      - name: Verify the Reception chat and scoring contracts
+        run: >-
+          node --test firebase/functions/reception-ai/*.test.mjs
+          tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs
       - name: Verify identity, archives, checkpoints, rollback and immutable releases
         run: >-
           node --test tests/diagnostics-v2.test.mjs tests/diagnostics-cloud-policy.test.mjs
@@ -42,10 +46,6 @@ jobs:
           tests/platform-diagnostics-pagination.test.mjs
           scripts/diagnostics-v2-service.test.mjs scripts/diagnostics-v2-cli-adapter.test.mjs scripts/test-platform-release.mjs
           scripts/test-platform-release-worker.mjs scripts/test_governor_service_worker.mjs scripts/test_sw_client_bindings.mjs scripts/test_sw_durable_prepare.mjs
-      - name: Verify the Reception chat and scoring contracts
-        run: >-
-          node --test firebase/functions/reception-ai/*.test.mjs
-          tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs
       - name: Verify the personality scoring key and team-role interpretation
         run: |
           node scripts/test_personality_model.mjs
