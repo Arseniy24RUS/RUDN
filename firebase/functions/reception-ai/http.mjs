@@ -1,14 +1,14 @@
 import {initializeApp, getApps} from 'firebase-admin/app';
 import {getAuth} from 'firebase-admin/auth';
 import {getDatabase} from 'firebase-admin/database';
-import {defineSecret} from 'firebase-functions/params';
 import {createReceptionService} from './service.mjs';
 import {createFirebaseStore} from './store.mjs';
 import {createOpenAIProvider} from './provider.mjs';
 import {PRIVATE_ROOT, loadPrivateCatalogue, createFirebaseAssessmentGate, createFirebaseResultWriter} from './firebase.mjs';
 import {ReceptionError, hash} from './schema.mjs';
 
-export const receptionOpenAIKey = defineSecret('RUDN_RECEPTION_OPENAI_KEY');
+export const RECEPTION_OPENAI_SECRET = 'RUDN_RECEPTION_OPENAI_KEY';
+const getOpenAIKey = () => process.env[RECEPTION_OPENAI_SECRET]?.trim();
 let runtime, cachedService, cachedVersion;
 function getRuntime() {
   if (runtime) return runtime;
@@ -48,12 +48,12 @@ export async function receptionHandler(req, res) {
     const env = getRuntime(); let decoded;
     try { decoded = await env.auth.verifyIdToken(bearer); } catch { throw new ReceptionError('auth', 401); }
     const settings = (await env.db.ref(`${PRIVATE_ROOT}/config`).get()).val();
-    if (settings?.enabled !== true || !receptionOpenAIKey.value()) throw new ReceptionError('not_configured', 503);
+    if (settings?.enabled !== true || !getOpenAIKey()) throw new ReceptionError('not_configured', 503);
     const identity = await resolveIdentity(req.body || {}, decoded, env);
     const version = `${settings.activeCatalogVersion}:${hash(settings.limits || {})}`;
     if (!cachedService || cachedVersion !== version) {
       cachedService = createReceptionService({store: env.store, cases: () => loadPrivateCatalogue(env.db, settings.activeCatalogVersion),
-        provider: createOpenAIProvider({apiKey: () => receptionOpenAIKey.value()}), config: settings.limits || {},
+        provider: createOpenAIProvider({apiKey: getOpenAIKey}), config: settings.limits || {},
         canStartAssessment: createFirebaseAssessmentGate(env.db), saveResult: createFirebaseResultWriter(env.db)});
       cachedVersion = version;
     }
