@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+.secret.local
 firebase-debug.log
 .firebaserc
 node_modules/
@@ -16,6 +17,8 @@ site/apps/career/data/vacancies/bank/
 
 # Local backups, never publish
 .reception-backup-*/
+.reception-ai-local/
+.reception-ai-private/
 
 # Generated functional index is served from its immutable hosting commit.
 site/apps/career/data/adaptive-index/**/*.gz

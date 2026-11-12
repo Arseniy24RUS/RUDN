@@ -4,6 +4,9 @@ import {pipeline} from 'node:stream/promises';
 import {handle} from './gateway.mjs';
 import {onValueWritten} from 'firebase-functions/v2/database';
 import {diagnosticsHandler,diagnosticsRuntime} from './diagnostics-http.mjs';
+import {receptionHandler,RECEPTION_OPENAI_SECRET} from './reception-ai/http.mjs';
+
+export const receptionApi=onRequest({region:'europe-west1',memory:'512MiB',cpu:1,concurrency:16,minInstances:0,maxInstances:2,timeoutSeconds:60,invoker:'public',cors:false,secrets:[RECEPTION_OPENAI_SECRET]},receptionHandler);
 
 export const diagnosticsApi=onRequest({region:'europe-west1',memory:'256MiB',cpu:1,concurrency:40,minInstances:0,maxInstances:2,timeoutSeconds:60,invoker:'public',cors:false},diagnosticsHandler);
 export const diagnosticsDownload=onRequest({region:'europe-west1',memory:'256MiB',cpu:1,concurrency:10,minInstances:0,maxInstances:2,timeoutSeconds:3600,invoker:'public',cors:false},async(req,res)=>{if(req.method!=='GET'){res.status(405).json({ok:false,error:{code:'method'}});return;}return diagnosticsHandler(req,res);});

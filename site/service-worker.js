@@ -4,7 +4,7 @@ const SCOPE=new URL(self.registration.scope);
 const PLATFORM_RELEASE=null;
 // CacheStorage is shared by every application on this origin. Own only this scope.
 const CACHE_PREFIX=`rudn-gmu-pages:${encodeURIComponent(SCOPE.href)}:`;
-const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-bounded-reader-1-diagnostics-2-career-seminar-2-reception-1`;
+const CACHE=`${CACHE_PREFIX}v1.3.10-legal-lab-bounded-reader-1-diagnostics-2-career-seminar-2-reception-2`;
 // Geography and regional plans are requested only by an explicitly opened game.
 const SETTLEMENTS_SHELL=['./apps/settlements/entry.mjs','./apps/settlements/copy.mjs','./apps/settlements/module.css','./apps/settlements/runtime/assets/js/settlements/v2/network.mjs','./assets/js/settlements-storage.js','./assets/js/settlements-copy.js','./assets/js/settlements-leaderboard.js'];
 const LEGAL_LAB_SHELL=['./apps/legal-lab/entry.mjs','./apps/legal-lab/platform.mjs','./apps/legal-lab/style.css','./apps/legal-lab/precache-manifest.json','./apps/legal-lab/lib/core.mjs','./apps/legal-lab/lib/corpus.mjs','./apps/legal-lab/lib/reader-codec.mjs','./apps/legal-lab/lib/reader-controller.mjs','./apps/legal-lab/lib/reader-data.mjs','./apps/legal-lab/lib/reader-registry.mjs','./apps/legal-lab/lib/reader-search-worker.mjs','./apps/legal-lab/lib/reader-view.mjs','./apps/legal-lab/lib/live.mjs','./apps/legal-lab/lib/storage.mjs','./assets/js/legal-lab-storage.js'];
@@ -52,6 +52,14 @@ const SHELL=[
   './apps/settlements/copy.mjs',
   './apps/reception/index.html',
   './apps/reception/js/app.js',
+  './apps/reception/ai/entry.js',
+  './apps/reception/ai/entry.js?v=3.0.0',
+  './apps/reception/ai/config.js',
+  './apps/reception/ai/app.js',
+  './apps/reception/ai/copy.js',
+  './apps/reception/ai/api-client.js',
+  './apps/reception/ai/media.js',
+  './apps/reception/ai/style.css',
   './apps/reception/js/assignment.js',
   './apps/reception/js/boot.js',
   './apps/reception/js/case-time.js',

@@ -34,6 +34,10 @@ jobs:
           node-version: '24'
       - run: npm ci --ignore-scripts
       - run: npm ci --ignore-scripts --prefix firebase/functions
+      - name: Verify the Reception chat and scoring contracts
+        run: >-
+          node --test firebase/functions/reception-ai/*.test.mjs
+          tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs
       - name: Verify identity, archives, checkpoints, rollback and immutable releases
         run: >-
           node --test tests/diagnostics-v2.test.mjs tests/diagnostics-cloud-policy.test.mjs
