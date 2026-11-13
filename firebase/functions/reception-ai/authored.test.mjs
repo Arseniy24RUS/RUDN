@@ -159,3 +159,17 @@ test('one authored critical error caps the entire independent shift at60',async(
   }
   assert.equal(v.result.total,60);assert.equal(v.result.cap,60);assert.equal(v.result.points,3);assert.ok(v.result.cases[0].score>60);
 });
+
+
+test('v2 grades selected actions without ordering and removes hidden legal quiz points',()=>{
+  const c=fixture(),state=fullState(),decision=good(),options={knowledgeQuiz:false,orderedActions:false};
+  decision.law={number:'',article:''};decision.assessment.applicationId='';decision.assessment.actDate='';decision.actionIds.reverse();
+  assert.equal(evaluateDecision(c,state,decision,options).score,100);
+  assert.equal(evaluateDecision(c,state,decision).score,90,'Historical scoring remains unchanged');
+  const missing=structuredClone(decision);missing.actionIds=['a1'];
+  assert.equal(evaluateDecision(c,state,missing,options).criteria.find(x=>x.id==='actions').earned,12);
+  const wrong=structuredClone(decision);wrong.assessment.research.fragmentId='wrong-fragment';
+  assert.equal(evaluateDecision(c,state,wrong,options).criteria.find(x=>x.id==='research').earned,0,'Research still requires an applicable source');
+  const forged=good();forged.law={number:'anything',article:'wrong'};forged.assessment.actDate='2020-01-01';forged.assessment.applicationId='wrong';
+  assert.equal(evaluateDecision(c,state,forged,options).score,100,'Hidden knowledge answers never affect v2 results');
+});

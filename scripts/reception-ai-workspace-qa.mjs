@@ -41,7 +41,7 @@ let handle=null;
 async function enter(){
   document.body.classList.add('reception-immersive');
   main.innerHTML='<section class="page reception-page"><div id="receptionAI"></div></section>';
-  handle=await mountReceptionAI(document.getElementById('receptionAI'),{locale:new URLSearchParams(location.search).get('lang')||'ru',studentKey:'reception-repair-qa',context:'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:1});
+  handle=await mountReceptionAI(document.getElementById('receptionAI'),{locale:new URLSearchParams(location.search).get('lang')||'ru',studentKey:'reception-repair-qa',context:'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2});
   window.__qaReception={provider:'mock',handle};
 }
 async function leave(){

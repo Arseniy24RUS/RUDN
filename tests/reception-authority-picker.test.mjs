@@ -22,10 +22,10 @@ test('picker references existing local emblem bytes and escapes search and addre
   }
   const workflow=publicRoutingWorkflow('noise-other-region');
   const origin=routingOriginView(workflow);
-  assert.match(origin,/Москва/);
+  assert.doesNotMatch(origin,/Адрес для ответа|ул\./);
   assert.match(origin,/Московская область/);
   assert.doesNotMatch(origin,/Учебн/);
-  assert.match(routingOriginView({origin:{address:'<img onerror=x>'}}),/&lt;img onerror=x&gt;/);
+  assert.match(routingOriginView({site:{detail:'<img onerror=x>'}}),/&lt;img onerror=x&gt;/);
   assert.match(authorityPickerView({}, {workflow,search:'"><img'}), /&quot;&gt;&lt;img/);
   const html=authorityPickerView({recipientIds:['git-moscow']},{workflow,search:'ГИТ',territoryId:'ru-77'});
   assert.match(html,/data-routing-recipient[^>]+value="git-moscow" checked/);
@@ -49,6 +49,7 @@ test('directory covers all Career authorities and territories without duplicatin
   const html=authorityPickerView({}, {workflow:publicRoutingWorkflow('noise-other-region')});
   assert.equal([...html.matchAll(/data-routing-recipient/g)].length,80);
   assert.match(html,/Уточните поиск/);
+  assert.match(html,/<option value="ru-77" selected>/);
   const remote = regional.authorities.find(row=>row.regionId==='ru-14');
   assert.ok(filterAuthorities({territoryId:'ru-14',search:remote.name}).some(row=>row.id===remote.id));
 });

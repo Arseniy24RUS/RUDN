@@ -1,5 +1,5 @@
 .reception-ai-root .rxa-case-timeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:18px 0}
-.reception-ai-root .rxa-case-timeline>div{min-width:0;border-top:3px solid var(--event-color);padding:10px 0;color:#36516c}
+.reception-ai-root .rxa-case-timeline>div{min-width:0;border-top:3px solid var(--event-color,#667a8e);padding:10px 0;color:#36516c}
 .reception-ai-root .rxa-case-timeline .event-sent{--event-color:#8056b6}
 .reception-ai-root .rxa-case-timeline .event-received{--event-color:#bd751a}
 .reception-ai-root .rxa-case-timeline .event-registered{--event-color:#16856f}
@@ -11,6 +11,7 @@
 .reception-ai-root .rxa-workbook-check{padding:12px;border-left:3px solid #16856f;margin:10px 0;background:#fff;border-radius:4px 12px 12px 4px;overflow-wrap:anywhere}
 .reception-ai-root .rxa-workbook-check.incorrect{border-color:#be641d}
 .reception-ai-root .rxa-workbook-check p{margin:6px 0 0;line-height:1.6}
+.reception-ai-root .rxa-workbook-counting{white-space:pre-line;overflow-wrap:anywhere}
 .reception-ai-root .rxa-deadline-liability{margin-top:20px;padding:16px;background:#fff4e7;border:1px solid #f0d2ac;border-radius:12px}
 .reception-ai-root .rxa-deadline-liability>strong{display:block;font-size:18px;margin:14px 0}
 .reception-ai-root .rxa-deadline-liability summary{cursor:pointer;min-height:44px;display:flex;align-items:center;line-height:1.4}

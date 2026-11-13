@@ -118,7 +118,7 @@ function validateDossier(input,isVariant) {
   } catch (error) { throw new ReceptionError('invalid_case', 503); }
 }
 
-export function validateDecision(input, c, opened) {
+export function validateDecision(input, c, opened, {knowledgeQuiz=true}={}) {
   const d = fields(input, ['procedureId', 'routeId', 'actionIds', 'law', 'deadline', 'basisDocumentIds', 'reasoning','assessment']);
   const authored=Boolean(c.rubric.authored);
   if (!(authored&&d.procedureId==='')&&!c.public.procedures.some(x=>x.id===d.procedureId) || !(authored&&d.routeId==='')&&!c.public.routes.some(x=>x.id===d.routeId)) fail('invalid_decision');
@@ -126,7 +126,7 @@ export function validateDecision(input, c, opened) {
     if (!Array.isArray(ids) || ids.length > allowed.length || new Set(ids).size !== ids.length || ids.some(id => !allowed.includes(id))) fail('invalid_decision');
   };
   checkIds(d.actionIds, c.public.actions.map(x => x.id)); checkIds(d.basisDocumentIds, opened);
-  fields(d.law, ['number', 'article']); string(d.law.number,100,authored?0:1); string(d.law.article,100,authored?0:1);
+  fields(d.law, ['number', 'article']); string(d.law.number,100,authored||!knowledgeQuiz?0:1); string(d.law.article,100,authored||!knowledgeQuiz?0:1);
   if(authored){if(d.deadline!==''&&!parseDateOnly(d.deadline))fail('invalid_decision');}
   else if(!/^\d{4}-\d{2}-\d{2}$/.test(d.deadline))fail('invalid_decision');
   string(d.reasoning, 4000, 0);
@@ -148,8 +148,8 @@ export const normalizeLawNumber = value => {
   const n = normalize(value); return n.match(/^(\d+)(?:-?(?:ФЗ|FZ))?$/)?.[1] || n;
 };
 export const normalizeArticle = value => normalize(String(value).replace(/^\s*(?:ст(?:атья|атьи)?\.?|article|art\.?|第)\s*/i, '').replace(/\s*条\s*$/, ''));
-export function evaluateDecision(c, state, decision) {
-  if(c.rubric.authored)return evaluateAuthoredDecision(c,state,decision);
+export function evaluateDecision(c, state, decision, options={}) {
+  if(c.rubric.authored)return evaluateAuthoredDecision(c,state,decision,options);
   const r = c.rubric, selected = new Set(decision.actionIds);
   const matches = r.requiredActionIds.filter(id => selected.has(id)).length;
   const forbidden = r.forbiddenActionIds.filter(id => selected.has(id)).length;
@@ -162,6 +162,7 @@ export function evaluateDecision(c, state, decision) {
     deadline: [decision.deadline === r.deadline ? 10 : 0, 10],
     evidence: [r.evidenceGroups.length ? Math.round(20 * evidence / r.evidenceGroups.length) : 20, 20]
   };
+  if(options.knowledgeQuiz===false){delete scores.law;for(const row of Object.values(scores)){row[0]*=100/85;row[1]*=100/85;}}
   const missing = r.requiredFactIds.filter(id => !state.knownFactIds.includes(id));
   let score = Object.values(scores).reduce((sum, item) => sum + item[0], 0);
   if (missing.length) score = Math.min(60, score);

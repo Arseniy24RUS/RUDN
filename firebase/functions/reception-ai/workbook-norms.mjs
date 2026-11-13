@@ -1,0 +1,135 @@
+// Public legal guidance, never an answer key. Russian strings are short
+// statutory excerpts; English and Chinese strings translate their meaning.
+// Checked against the linked law text and competent-authority publications.
+const T=(ru,en,zh)=>({ru,en,zh});
+const urls={
+ appeals:'https://mintrud.gov.ru/docs/laws/108',information:'https://mintrud.gov.ru/docs/laws/129',
+ mfc:'https://mchs.gov.ru/uploads/document/2025-06-06/e62ab0b7206ce6b5da088e96cc60bcdf.pdf',
+ bailiff:'https://www.consultant.ru/document/cons_doc_LAW_71450/',
+ bailiffPetition:'https://www.consultant.ru/document/cons_doc_LAW_71450/29f15e492cd084f1734938b2a0490caef1718ea9/',
+ bailiffRefusal:'https://www.consultant.ru/document/cons_doc_LAW_71450/d746b3f15bf2c4815ac8d52b378f8ce58cc32679/',
+ bailiffComplaint:'https://www.consultant.ru/document/cons_doc_LAW_71450/689b0b5b6d7f4b555af391214c3ca1cf9004f50d/',
+ property:'https://www.consultant.ru/document/cons_doc_LAW_182661/',
+ air:'https://favt.gov.ru/public/materials/6/2/d/b/1/62db1c89d5987df3b086aa02970dc4db.pdf',
+ consumer:'https://www.consultant.ru/document/cons_doc_LAW_305/',
+ credit:'https://www.consultant.ru/document/cons_doc_LAW_155986/',
+ privacy:'https://mintrud.gov.ru/docs/laws/130',
+ benefit:'https://sfr.gov.ru/files/branches/kuzbass/Strahovatelyu/0511/Federalnyiyzakonot29dekabrya2006gN255FZObobyazatelnomsotsialnomstrah.pdf',
+ tax:'https://www.consultant.ru/document/cons_doc_LAW_19671/',
+ civil:'https://www.consultant.ru/document/cons_doc_LAW_5142/',
+};
+function norm(id,label,url,ru,en,zh){return {id,label:T(label,label,label),url,text:T(`«${ru}»`,en,zh)};}
+export const CALENDAR_NORMS=Object.freeze(Object.fromEntries([
+ norm('registration59','59-ФЗ, ст. 8, ч. 2',urls.appeals,
+  'Письменное обращение подлежит обязательной регистрации в течение трех дней с момента поступления',
+  'A written appeal must be registered within three days of receipt.', '书面来信须在收到后三日内登记。'),
+ norm('referral59','59-ФЗ, ст. 8, ч. 3–4',urls.appeals,
+  'направляется в течение семи дней со дня регистрации',
+  'An appeal outside the recipient’s competence is forwarded within seven days of registration; copies may be sent to several competent authorities.', '不属于收件机关权限的来信，应自登记之日起七日内转送；涉及多个机关权限的，可分别发送副本。'),
+ norm('review59','59-ФЗ, ст. 12, ч. 1',urls.appeals,
+  'рассматривается в течение 30 дней со дня регистрации письменного обращения',
+  'A written appeal within the authority’s competence is reviewed within 30 days of registration.', '属于机关权限的书面来信，自登记之日起30日内审理。'),
+ norm('courtReturn59','59-ФЗ, ст. 11, ч. 2',urls.appeals,
+  'в течение семи дней со дня регистрации возвращается гражданину, направившему обращение, с разъяснением порядка обжалования данного судебного решения',
+  'An appeal challenging a judicial decision is returned within seven days of registration, with an explanation of the judicial appeal procedure.', '对法院裁判提出异议的来信，自登记之日起七日内退回，并说明相应的司法救济程序。'),
+ norm('unreadable59','59-ФЗ, ст. 11, ч. 4',urls.appeals,
+  'в течение семи дней со дня регистрации обращения сообщается гражданину, направившему обращение, если его фамилия и почтовый адрес поддаются прочтению',
+  'Notify the author within seven days of registration when the text cannot be read but the surname and postal address are readable.', '正文无法辨认但姓氏和邮寄地址可辨认时，应在登记后七日内通知来信人。'),
+ norm('unclear59','59-ФЗ, ст. 11, ч. 4.1',urls.appeals,
+  'в течение семи дней со дня регистрации обращения сообщается гражданину, направившему обращение',
+  'If the subject of a readable appeal cannot be determined, notify its author within seven days of registration.', '能够阅读但无法确定诉求实质的来信，应在登记后七日内通知来信人。'),
+ norm('registration8','8-ФЗ от 09.02.2009, ст. 18, ч. 5',urls.information,
+  'Запрос, составленный в письменной форме, подлежит регистрации в течение трех дней со дня его поступления',
+  'A written request for information must be registered within three days of receipt.', '书面信息请求须在收到后三日内登记。'),
+ norm('information30','8-ФЗ от 09.02.2009, ст. 18, ч. 6',urls.information,
+  'Запрос подлежит рассмотрению в тридцатидневный срок со дня его регистрации',
+  'A request for information is considered within thirty days of registration.', '信息请求自登记之日起三十日内办理。'),
+ norm('information7','8-ФЗ от 09.02.2009, ст. 18, ч. 7',urls.information,
+  'в течение семи дней со дня регистрации запроса он направляется в государственный орган или орган местного самоуправления',
+  'A request outside the recipient’s area of activity is forwarded to the authority concerned within seven days of registration.', '信息请求不属于收件机关职能范围时，应在登记后七日内转交有关机关。'),
+ norm('mfc5','210-ФЗ, ст. 11.2, ч. 6',urls.mfc,
+  'в случае обжалования отказа … в приеме документов у заявителя либо в исправлении допущенных опечаток и ошибок … — в течение пяти рабочих дней со дня ее регистрации',
+  'Complaints about refusal to accept documents, refusal to correct typos or errors, or a missed correction deadline are considered within five working days of registration.', '对拒收材料、拒绝更正笔误或错误、或者超过更正期限的投诉，自登记之日起五个工作日内审理。'),
+ norm('mfc15','210-ФЗ, ст. 11.2, ч. 6',urls.mfc,
+  'подлежит рассмотрению в течение пятнадцати рабочих дней со дня ее регистрации',
+  'The general pre-trial service-complaint period is fifteen working days from registration; the five-day categories are separately specified by law.', '公共服务诉前投诉的一般办理期限为登记后十五个工作日；法律另列适用五日期限的类别。'),
+ norm('bailiffCopy','229-ФЗ, ст. 64.1, ч. 7',urls.bailiffPetition,
+  'не позднее дня, следующего за днем его вынесения',
+  'Send the copy of the ruling no later than the day following its issue; Articles 15–16 govern non-working days.', '裁定副本最迟于作出裁定次日发送；非工作日按第15—16条处理。'),
+ norm('bailiffPetition','229-ФЗ, ст. 64.1, ч. 5',urls.bailiffPetition,
+  'в десятидневный срок со дня поступления к нему заявления, ходатайства',
+  'Unless a special period applies, the authorised bailiff considers a specific application or petition within ten days of receiving it.', '除另有特别期限外，有权司法执行员自本人收到具体申请或请求之日起十日内审理。'),
+ norm('bailiffRefusal','229-ФЗ, ст. 125, ч. 2',urls.bailiffRefusal,
+  'Постановление об отказе в рассмотрении жалобы по существу выносится не позднее трех дней со дня поступления жалобы.',
+  'Issue a ruling refusing examination on the merits no later than three days after receipt of the complaint.', '不予实质审理投诉的裁定，须最迟在收到投诉后三日内作出。'),
+ norm('bailiffComplaint','229-ФЗ, ст. 126, ч. 1',urls.bailiffComplaint,
+  'в течение десяти дней со дня ее поступления',
+  'The official competent to examine a hierarchical complaint must consider it within ten days of receipt.', '有权审查上级申诉的人员应自收到申诉之日起十日内审理。'),
+ norm('bailiffCounting','229-ФЗ, ст. 15, ч. 2–3; ст. 16, ч. 2–4',urls.bailiff,
+  'В сроки, исчисляемые днями, не включаются нерабочие дни.',
+  'Exclude non-working days. Counting begins on the following day; a non-working final day moves to the next working day.', '按日计算的期限不包含非工作日；从次日起算，末日为非工作日则顺延至下一工作日。'),
+ norm('technicalError','218-ФЗ, ст. 61, ч. 1',urls.property,
+  'в течение трех рабочих дней со дня обнаружения технической ошибки в записях или получения от любого заинтересованного лица заявления об исправлении технической ошибки в записях',
+  'Correct a technical record error within three working days of discovering it or receiving an application to correct it.', '登记记录中的技术性错误，应在发现错误或收到更正申请后三个工作日内更正。'),
+ norm('registerError','218-ФЗ, ст. 61, ч. 3',urls.property,
+  'в течение пяти рабочих дней со дня получения документов',
+  'A register error is corrected within five working days of receipt of documents demonstrating the error and containing the necessary correction details.', '收到证明登记错误并包含更正所需信息的材料后，应在五个工作日内更正。'),
+ norm('airClaim','Воздушный кодекс РФ, ст. 127.1, п. 1',urls.air,
+  'Перевозчик обязан в течение тридцати дней с даты поступления претензии рассмотреть ее',
+  'The carrier must consider the claim within thirty days of receiving it.', '承运人应自收到索赔之日起三十日内审查。'),
+ norm('consumerRefund','Закон РФ № 2300-1, ст. 22',urls.consumer,
+  'в течение десяти дней со дня предъявления соответствующего требования',
+  'A demand for a refund for defective goods must be satisfied within ten days of its presentation to the seller.', '因商品存在缺陷而向销售方提出的退款要求，应在提出该要求后十日内满足。'),
+ ...[['insuranceCollective','353-ФЗ, ст. 7, ч. 2.5'],['insuranceCollectivePayoff','353-ФЗ, ст. 11, ч. 10'],['insuranceIndividualRefusal','353-ФЗ, ст. 11, ч. 11'],['insuranceIndividualPayoff','353-ФЗ, ст. 11, ч. 12']].map(([id,label])=>norm(id,label,urls.credit,
+  'в срок, не превышающий семи рабочих дней',
+  'When the conditions of the cited provision are met, the refund is due within seven working days of receiving the borrower’s application.', '符合所引条款条件时，退款应在收到借款人申请后不超过七个工作日内完成。')),
+ norm('personalData','152-ФЗ, ст. 20, ч. 1',urls.privacy,
+  'в течение десяти рабочих дней с даты получения запроса субъекта персональных данных или его представителя',
+  'The controller provides the required information and access within ten working days of receiving the data subject’s or representative’s request.', '数据处理者应在收到数据主体或其代表的请求后十个工作日内提供相关信息和查阅机会。'),
+ norm('benefitPayment','255-ФЗ, ст. 15, ч. 1',urls.benefit,
+  'в срок, не превышающий десяти рабочих дней',
+  'The insurer assigns and pays the benefit within ten working days after receiving all required information and documents.', '保险机构收到全部必要信息和材料后，应在不超过十个工作日内核定并支付待遇。'),
+ norm('benefitRefusal','255-ФЗ, ст. 15, ч. 2',urls.benefit,
+  'в срок, не превышающий одного рабочего дня со дня вынесения указанного решения',
+  'Send the reasoned refusal to both the policyholder and the insured person within one working day after issuing the decision.', '作出有理由的拒付决定后，应在不超过一个工作日内向投保人和被保险人双方发送决定。'),
+ norm('taxReview','НК РФ, ст. 88, п. 2',urls.tax,
+  'в течение трех месяцев со дня представления налогоплательщиком налоговой декларации (расчета)',
+  'The ordinary desk audit in this case lasts three months from submission of the tax return.', '本案普通税务案头核查期限为提交纳税申报表之日起三个月。'),
+ norm('taxAmended','НК РФ, ст. 88, п. 9.1',urls.tax,
+  'прекращается и начинается новая камеральная налоговая проверка на основе уточненной налоговой декларации (расчета)',
+  'An amended return submitted before the earlier audit ends terminates that audit and starts a new audit of the amended return.', '原核查结束前提交更正申报表的，原核查终止，并开始对更正申报表的新核查。'),
+ norm('taxStatement','НК РФ, ст. 88, п. 2; ст. 221.1',urls.tax,
+  'в течение 30 календарных дней',
+  'The simplified-deduction application in this case is checked within 30 calendar days of submission; no extension is specified in the case.', '本案简化抵扣申请自提交之日起30个日历日内核查；题设未规定延期。'),
+ norm('taxCounting','НК РФ, ст. 6.1, п. 2, 5, 7',urls.tax,
+  'Срок, исчисляемый месяцами, истекает в соответствующие месяц и число последнего месяца срока.',
+  'Start on the next day. A month period ends on the corresponding date, or the last date if that month has no such date. A non-working final day moves forward.', '从次日起算；按月计算的期限在相应日期届满，无对应日期则以该月最后一天为末日；末日非工作日则顺延。'),
+ norm('generalCounting','ГК РФ, ст. 191, 193; правило счёта данного задания',urls.civil,
+  'днем окончания срока считается ближайший следующий за ним рабочий день',
+  'This exercise starts on the next day and moves a non-working final day to the next working day. Count all days for a calendar-day period, only working days for a working-day period.', '本练习从次日起算；末日为非工作日时顺延至下一工作日。日历日期限计算所有日期，工作日期限只计算工作日。'),
+].map(row=>[row.id,Object.freeze(row)])));
+
+const overrides={
+ 'budget':'information30','budget-link':'information30','budget-partial':'information30','budget-published':'information30','budget-misdirected':'information7',
+ 'court-cancel':'courtReturn59','court-order-objections':'courtReturn59','unreadable-body':'unreadable59','unclear-subject':'unclear59',
+ 'bailiff-copy-decision':'bailiffCopy','bailiff-specific-petition':'bailiffPetition','bailiff-subordination':'bailiffComplaint','bailiff-unsigned-complaint':'bailiffRefusal',
+ 'egrn-letter':'technicalError','egrn-source-plan':'registerError',
+ 'flight-claim':'airClaim','flight-agent-receipt':'airClaim','flight-cancel-nonrefundable':'airClaim','food-no-receipt-refund':'consumerRefund',
+ 'insurance-collective':'insuranceCollective','insurance-collective-payoff':'insuranceCollectivePayoff','insurance-individual-payoff':'insuranceIndividualPayoff','insurance-individual-refusal':'insuranceIndividualRefusal',
+ 'privacy-own-record':'personalData','sickpay-data':'benefitPayment','sickpay-child-care':'benefitPayment','sickpay-two-payers':'benefitPayment','sickpay-refusal-notice':'benefitRefusal',
+ 'tax-calendar-months':'taxReview','tax-amended-declaration':'taxReview','tax-explanations-only':'taxReview','tax-simplified-statement':'taxStatement',
+};
+export function calendarNormId(c){
+ if(overrides[c.id])return overrides[c.id];
+ const rule=c.rubric?.authored?.calendar?.rule;
+ if(c.id.startsWith('mfc-')||c.id==='complaint-wrong-procedure')return rule==='working5'?'mfc5':'mfc15';
+ return rule==='calendar3'?'registration59':rule==='calendar7'?'referral59':'review59';
+}
+export function calendarNorms(c,{dual=false,registrationCheck=false}={}){
+ const id=calendarNormId(c),ids=[id];
+ if(dual)ids.push('referral59');
+ if(registrationCheck)ids.push(id.startsWith('information')?'registration8':'registration59');
+ if(c.id==='tax-amended-declaration')ids.push('taxAmended');
+ ids.push(c.id.startsWith('bailiff-')?'bailiffCounting':c.id.startsWith('tax-')?'taxCounting':'generalCounting');
+ return [...new Set(ids)].map(key=>structuredClone(CALENDAR_NORMS[key]));
+}

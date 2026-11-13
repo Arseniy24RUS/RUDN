@@ -22,6 +22,9 @@ test('two manually chosen dates remain independent; clearing or changing one doe
   state=reduceCalendarWorkbench(state,{type:'target',target:'deadline'});state=reduceCalendarWorkbench(state,{type:'select',date:'2026-05-30'});
   assert.deepEqual(state.selectedDates,{referral:'2026-05-07',deadline:'2026-05-30'});assert.equal(state.selectedDate,'2026-05-30');
   const cleared=reduceCalendarWorkbench(state,{type:'clear'});assert.deepEqual(cleared.selectedDates,{referral:'2026-05-07',deadline:''});
+  const clearedOther=reduceCalendarWorkbench(state,{type:'clear',target:'referral'});
+  assert.deepEqual(clearedOther.selectedDates,{referral:'',deadline:'2026-05-30'});
+  assert.equal(clearedOther.activeTarget,'deadline');
   assert.deepEqual(reduceCalendarWorkbench(state,{type:'step',unit:'day'}),state,'Removed automatic calculator operations do nothing');
 });
 
@@ -44,7 +47,7 @@ test('coloured sent received and registered events coexist on the same day witho
   const events=['sent','received','registered'].map(id=>({id,label:id,date:'2026-04-30'}));
   const html=calendarWorkbenchView({events});for(const type of ['sent','received','registered'])assert.ok(html.includes('class="event-'+type+'"'));
   assert.match(html,/30 апреля 2026[^>]+sent, received, registered/);assert.doesNotMatch(html,/aria-pressed="true" aria-label=/);
-  assert.match(html,/<strong>3<\/strong>/);assert.match(html,/<strong>7<\/strong>/);assert.match(html,/<strong>30<\/strong>/);
+  assert.match(html,/<strong>трех<\/strong> дней/);assert.match(html,/<strong>семи<\/strong> дней/);assert.match(html,/<strong>30<\/strong> дней/);
 });
 
 test('all three languages retain calendar dates, holiday markers and a complete keyboard grid',()=>{
@@ -120,6 +123,9 @@ test('delegated calendar survives panel replacement and transfers only the expli
   root.fire('click',{calendarAction:'use-date'});assert.deepEqual(used,[{date:'2026-05-07',target:'referral'}]);
   root.fire('click',{calendarAction:'target',target:'deadline'});root.fire('click',{calendarAction:'choose-date',date:'2026-05-30'});root.fire('click',{calendarAction:'use-date'});
   assert.deepEqual(used[1],{date:'2026-05-30',target:'deadline'});
+  root.fire('click',{calendarAction:'clear',target:'referral'});
+  assert.deepEqual(calendar.getState().selectedDates,{referral:'',deadline:'2026-05-30'});
+  assert.equal(calendar.getState().activeTarget,'deadline');
   const snapshot=calendar.getState();snapshot.selectedDates.deadline='2026-06-01';assert.equal(calendar.getState().selectedDates.deadline,'2026-05-30');
   calendar.destroy();root.fire('click',{calendarAction:'choose-date',date:'2026-06-02'});assert.equal(calendar.getState().selectedDate,'2026-05-30');
 });
@@ -139,4 +145,32 @@ test('calendar legal help contains the requested complete provisions with highli
   assert.match(html,/<strong>трех<\/strong> дней/);
   assert.match(html,/<strong>семи<\/strong> дней со дня регистрации/);
   assert.match(html,/<strong>30<\/strong> дней со дня регистрации письменного обращения/);
+  assert.match(html,/Статья 8, часть 2/);
+  assert.doesNotMatch(html,/Статья <strong>|часть <strong>/);
+});
+
+test('calendar keeps one instruction and adds an accessible clear control to each chosen date',()=>{
+  const html=calendarWorkbenchView({state:{selectedDates:{referral:'2026-04-10',deadline:'2026-04-30'}},task:{autoCommit:true}});
+  const beforeHelp=html.split('<details class="rxw-calendar-details"')[0];
+  assert.match(beforeHelp,/<p class="rxw-calendar-instruction">Выберите даты в календаре<\/p>/);
+  assert.doesNotMatch(beforeHelp,/Выберите срок|Моя оценка регистрации|Считайте|Инструменты расчёта/);
+  assert.match(beforeHelp,/data-calendar-action="clear" data-target="referral" aria-label="Очистить дату — .* — 10\.04\.2026"/);
+  assert.match(beforeHelp,/data-calendar-action="clear" data-target="deadline" aria-label="Очистить дату — .* — 30\.04\.2026"/);
+  assert.doesNotMatch(beforeHelp,/data-calendar-action="use-date"/);
+});
+
+test('special workbooks show their own event, target, counting help and statutory provision',()=>{
+  const task={version:2,special:true,autoCommit:true,registrationCheck:false,
+    targets:[{id:'deadline',label:'Рассмотреть жалобу до'}],
+    events:[{id:'officialReceived',kind:'event',label:'Получено приставом',date:'2026-04-30'}],
+    instructions:'Считайте 10 рабочих дней со следующего дня.',
+    norms:[{label:'Федеральный закон № 229-ФЗ',text:'Статья 126, часть 1. В течение десяти рабочих дней.'}]};
+  const html=calendarWorkbenchView({task,normsOpen:true}),[beforeHelp,help]=html.split('<details class="rxw-calendar-details"');
+  assert.match(beforeHelp,/class="event-other">Получено приставом<\/span>/);
+  assert.match(beforeHelp,/data-calendar-action="target" data-target="deadline"/);
+  assert.doesNotMatch(beforeHelp,/data-calendar-action="target" data-target="referral"|registration-timely|Считайте/);
+  assert.match(help,/rxw-calendar-norms-badge/);
+  assert.match(help,/Считайте <strong>10<\/strong> рабочих дней/);
+  assert.match(help,/Статья 126, часть 1\. В течение <strong>десяти<\/strong> рабочих дней/);
+  assert.doesNotMatch(help,/Статья 8|Федеральный закон от 02\.05\.2006/);
 });

@@ -5,7 +5,7 @@ import {selectShiftCases} from './selection.mjs';
 import {CATALOG_METADATA} from './catalog-metadata.mjs';
 import {legacySessionIds, LEGACY_RECOVERY_LIMITS} from './store.mjs';
 import {learningReviewFor} from './learning-review.mjs';
-import {WORKBOOK_VERSION,supportsBasicWorkbook,publicWorkbook,validateWorkbookDecision,evaluateWorkbook} from './workbook.mjs';
+import {WORKBOOK_VERSION,LEGACY_WORKBOOK_VERSION,supportsWorkbook,publicWorkbook,validateWorkbookDecision,evaluateWorkbook} from './workbook.mjs';
 
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
@@ -56,11 +56,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return catalogPromise;
   }
   function scoreDecision(c,state,decision,workbookVersion){
-    // The directory replaces the old destination radio. Keep the authored
-    // action plan for merits grading; recipient correctness is assessed separately.
-    const merits=workbookVersion===WORKBOOK_VERSION&&!decision.routeId?{...decision,routeId:c.rubric.routeIds[0]||''}:decision;
-    const base=evaluateDecision(c,state,merits);
-    return workbookVersion===WORKBOOK_VERSION?evaluateWorkbook(c,decision,base):base;
+    const workbook=[LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(workbookVersion);
+    const options={knowledgeQuiz:workbookVersion!==2,orderedActions:workbookVersion!==2};
+    // The authority picker replaces the old route radio. When a case permits
+    // alternative action plans, grade the student's chosen actions against both.
+    const routes=workbook&&!decision.routeId?(workbookVersion===2?c.rubric.routeIds:[c.rubric.routeIds[0]||'']):[decision.routeId];
+    const candidates=routes.map(routeId=>evaluateDecision(c,state,{...decision,routeId},options));
+    const base=candidates.reduce((best,item)=>!best||item.score>best.score?item:best,null);
+    return workbook?evaluateWorkbook(c,decision,base,workbookVersion):base;
   }
   function checkIdentity(identity) {
     if (!identity || typeof identity.uid !== 'string' || !identity.uid || identity.uid.length > 150) fail('auth', 401);
@@ -82,8 +85,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null}))} : null;
     return {id: s.id, revision: s.revision, mode: s.mode, locale: s.locale, caseIndex: s.caseIndex, caseCount: s.caseData.length,
       startedAt: s.startedAt, updatedAt: s.updatedAt, ...(s.buildId ? {buildId:s.buildId} : {}),
-      status: s.status, case: {id: c.id, ...publicMetadata(c), ...p, ...(s.workbookVersion===WORKBOOK_VERSION?{workbook:localized(publicWorkbook(c),s.locale)}:{})}, messages: state.messages,
-      documents: c.documents.filter(d => state.releasedDocumentIds.includes(d.id)).map(d => localized({id: d.id, title: d.title, type: d.type, text: d.text,
+      status: s.status, case: {id: c.id, ...publicMetadata(c), ...p, ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:localized(publicWorkbook(c,s.workbookVersion),s.locale)}:{})}, messages: state.messages,
+      documents: c.documents.filter(d => state.releasedDocumentIds.includes(d.id)).map(d => localized({id: d.id, title: d.title, type: d.type, text: d.text, chatAttachment:!d.initial,
         ...(d.image?{image:d.image}:{}),...(d.url?{url:d.url}:{}),...(d.sensitive!==undefined?{sensitive:d.sensitive}:{})}, s.locale)),
       openedDocumentIds: state.openedDocumentIds, decision: state.decision || null,
       followup:s.status==='followup'&&c.followup?localized({intro:c.followup.intro,options:c.followup.options},s.locale):null,
@@ -171,7 +174,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (existing) { own(existing, identity); if (existing.startSignature !== signature) fail('request_conflict', 409); return response(existing); }
     const timestamp = clock(), day = dayOf(timestamp), ownerKey = hash(owner);
     if (mode === 'independent' && !identity.teacher && canStartAssessment && !await canStartAssessment(timestamp)) fail('assessment_closed', 403);
-    const all = (await catalogue()).filter(c=>!body.workbookVersion||supportsBasicWorkbook(c));
+    const all = (await catalogue()).filter(c=>!body.workbookVersion||supportsWorkbook(c,body.workbookVersion));
     if (mode === 'independent' && new Set(all.map(c=>c.familyId||c.id)).size < 8) fail('pilot_incomplete', 503);
     if (Object.hasOwn(body, 'caseId')) {
       identifier(body.caseId);
@@ -290,7 +293,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     try {
       if (provider.ready === false) fail('not_configured', 503);
       const dossier = actorCase(c, s.locale);
-      if(s.workbookVersion===WORKBOOK_VERSION){const facts=localized(publicWorkbook(c),s.locale);dossier.correspondenceAddress=facts?.origin||null;dossier.eventLocation=facts?.site||null;}
+      if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)){const facts=localized(publicWorkbook(c,s.workbookVersion),s.locale);dossier.correspondenceAddress=facts?.origin||null;dossier.eventLocation=facts?.site||null;}
       dossier.releasedDocumentIds = dossier.documents.filter(document => state.releasedDocumentIds.includes(document.id)).map(document => document.id);
       const estimate = estimateReservation({actorCase: dossier, messages: state.messages, text, locale: s.locale,
         maxOutputTokens: Math.max(limits.maxOutputTokens, provider.maxOutputTokens || 0), maxCalls: provider.maxCalls || 1});
@@ -323,9 +326,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   }
   async function handle(body, identity) {
     checkIdentity(identity); if (!body || !Object.hasOwn(allowed, body.op)) fail('invalid_operation'); fields(body, allowed[body.op]);
-    if(body.workbookVersion!==undefined&&body.workbookVersion!==WORKBOOK_VERSION)fail('invalid_workbook');
+    if(body.workbookVersion!==undefined&&![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(body.workbookVersion))fail('invalid_workbook');
     if (body.buildId !== undefined && (typeof body.buildId !== 'string' || !/^[a-f0-9]{32}$/.test(body.buildId))) fail('invalid_build');
-    if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).filter(c=>!body.workbookVersion||supportsBasicWorkbook(c)).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
+    if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).filter(c=>!body.workbookVersion||supportsWorkbook(c,body.workbookVersion)).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
     if (body.op === 'start') return start(body, identity);
     if (body.op === 'resume') {
       const session=await get(body.sessionId, identity);
@@ -352,8 +355,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       } else if (body.op === 'decide') {
         if (session.status !== 'active' || state.decision) fail('not_active', 409);
         const rawDecision=copy(body.decision);let workbook;
-        if(session.workbookVersion===WORKBOOK_VERSION){workbook=validateWorkbookDecision(rawDecision?.workbook);delete rawDecision.workbook;}
-        const decision = validateDecision(rawDecision, c, state.openedDocumentIds);
+        if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(session.workbookVersion)){workbook=validateWorkbookDecision(rawDecision?.workbook,session.workbookVersion);delete rawDecision.workbook;}
+        const decision = validateDecision(rawDecision, c, state.openedDocumentIds,{knowledgeQuiz:session.workbookVersion!==2});
         if(workbook)decision.workbook=workbook;
         state.decision=decision;
         if(c.followup){state.feedback=null;session.status='followup';}

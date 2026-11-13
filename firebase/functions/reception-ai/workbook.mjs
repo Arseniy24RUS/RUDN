@@ -1,8 +1,11 @@
 import {parseDateOnly} from './authored.mjs';
 import {fail,fields,copy} from './schema.mjs';
 import {publicRoutingWorkflow,validateRoutingWorkflowDecision,evaluateRoutingWorkflow} from './routing-workflow.mjs';
+import {CALENDAR_RULES,WORKBOOK_CALENDAR,calculateWorkbookDeadline} from './workbook-calendar.mjs';
+import {calendarNormId,calendarNorms} from './workbook-norms.mjs';
 
-export const WORKBOOK_VERSION=1;
+export const LEGACY_WORKBOOK_VERSION=1;
+export const WORKBOOK_VERSION=2;
 const T=(ru,en,zh)=>({ru,en,zh});
 const labels={sent:T('Отправлено','Sent','寄出'),received:T('Поступило','Received','收到'),registered:T('Зарегистрировано','Registered','登记')};
 const targets=[{id:'referral',label:T('Передача по компетенции','Referral to the competent authority','转送主管机关')},{id:'deadline',label:T('Ответ на обращение','Response to the appeal','答复来信')}];
@@ -62,16 +65,27 @@ export function workbookEvents(c){
 export function supportsBasicWorkbook(c){
  return (!c.rubric?.authored||c.rubric.authored.calendar.anchor==='registered'&&['calendar3','calendar7','calendar30'].includes(c.rubric.authored.calendar.rule))&&workbookEvents(c).length===3&&Boolean(publicRoutingWorkflow(c.id))&&(!c.dateVariants||c.dateVariants.every(variant=>workbookEvents(variant).length===3));
 }
-export function publicWorkbook(c){
- if(!supportsBasicWorkbook(c))return null;
- return {version:WORKBOOK_VERSION,events:workbookEvents(c),targets,registrationCheck:true,...publicRoutingWorkflow(c.id)};
+export function supportsWorkbook(c,version=LEGACY_WORKBOOK_VERSION){
+ if(version===LEGACY_WORKBOOK_VERSION)return supportsBasicWorkbook(c);
+ if(version!==WORKBOOK_VERSION||!publicRoutingWorkflow(c.id))return false;
+ return [c,...(c.dateVariants||[])].every(row=>{
+  const calendar=row.rubric?.authored?.calendar;
+  return Boolean(calendar&&CALENDAR_RULES[calendar.rule]&&parseDateOnly(row.rubric.deadline)&&row.public.assessment?.calendar?.events.some(event=>event.id===calendar.anchor&&parseDateOnly(event.date)));
+ });
 }
-export function validateWorkbookDecision(value){
+export function publicWorkbook(c,version=LEGACY_WORKBOOK_VERSION){
+ if(version===WORKBOOK_VERSION)return supportsWorkbook(c,version)?publicCaseWorkbook(c):null;
+ if(!supportsBasicWorkbook(c))return null;
+ return {version,events:workbookEvents(c),targets,registrationCheck:true,...publicRoutingWorkflow(c.id)};
+}
+export function validateWorkbookDecision(value,version=LEGACY_WORKBOOK_VERSION){
+ if(![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(version))fail('invalid_workbook');
  const d=fields(value,['referralDeadline','registrationTimely','routing']);
  if(typeof d.referralDeadline!=='string'||d.referralDeadline!==''&&!parseDateOnly(d.referralDeadline)||typeof d.registrationTimely!=='boolean')fail('invalid_decision');
  return {referralDeadline:parseDateOnly(d.referralDeadline)||'',registrationTimely:d.registrationTimely,routing:validateRoutingWorkflowDecision(d.routing)};
 }
-export function evaluateWorkbook(c,decision,feedback){
+export function evaluateWorkbook(c,decision,feedback,version=LEGACY_WORKBOOK_VERSION){
+ if(version===WORKBOOK_VERSION)return evaluateCaseWorkbook(c,decision,feedback);
  const events=Object.fromEntries(workbookEvents(c).map(row=>[row.id,row.date]));
  if(!events.registered)fail('invalid_case',503);
  const expected={referral:addCalendarDays(events.registered,7),deadline:addCalendarDays(events.registered,30),registrationTimely:events.registered>=events.received&&events.registered<=addCalendarDays(events.received,3)};
@@ -88,5 +102,66 @@ export function evaluateWorkbook(c,decision,feedback){
  result.score=result.criteria.reduce((sum,row)=>sum+row.earned,0);
  if(Number.isFinite(result.cap))result.score=Math.min(result.score,result.cap);
  result.workbook={calendar:{expected,selected,correct,wrongDates:!correct.referral||!correct.deadline},routing};
+ return result;
+}
+
+function caseCalendar(c){
+ const authored=c.rubric.authored.calendar,rule=CALENDAR_RULES[authored.rule],normId=calendarNormId(c);
+ const events=c.public.assessment.calendar.events.map(event=>({id:event.id,date:parseDateOnly(event.date),label:copy(event.label),kind:['sent','received','registered'].includes(event.id)?event.id:'event'}));
+ const dual=normId==='review59'&&authored.anchor==='registered'&&authored.rule==='calendar30';
+ const registrationCheck=(normId.endsWith('59')||normId.startsWith('information'))&&events.some(event=>event.id==='registered')&&events.some(event=>event.id==='received');
+ const shift=authored.acceptedShifts.includes('next_working_day')?'next_working_day':authored.acceptedShifts[0];
+ const label=Object.fromEntries(['ru','en','zh'].map(locale=>[locale,c.public.deadlinePrompt[locale].split('\n')[0].trim()]));
+ const target={id:'deadline',label,anchorId:authored.anchor,ruleId:authored.rule,...rule};
+ return {events,targets:dual?[{id:'referral',label:targets[0].label,anchorId:'registered',ruleId:'calendar7',...CALENDAR_RULES.calendar7},target]:[target],
+  registrationCheck,dual,special:!['registration59','review59','referral59'].includes(normId),liabilityApplicable:normId.endsWith('59'),
+  counting:{start:authored.start,shift,calendar:'ru-federal-five-day'},calendarSnapshotId:WORKBOOK_CALENDAR.id};
+}
+function calendarInstructions(c,task){
+ const anchor=task.events.find(event=>event.id===c.rubric.authored.calendar.anchor).label,rule=CALENDAR_RULES[c.rubric.authored.calendar.rule];
+ const units={'calendar-days':T('календарных дней','calendar days','个日历日'),'working-days':T('рабочих дней','working days','个工作日'),months:T('календарных месяца','calendar months','个日历月')};
+ const start=task.counting.start==='exclude_anchor'?T('Исходный день не включайте: отсчёт начинается на следующий день.','Exclude the starting date; count from the following day.','不计起始日，从次日起算。'):T('Включайте исходный день в срок.','Include the starting date.','将起始日计入期限。');
+ const unit=rule.unit==='months'?T('Отсчитайте соответствующее число месяцев; если такого числа в последнем месяце нет, возьмите его последний день. Это не фиксированное число дней.','Count whole months to the corresponding date; if it does not exist, use that month’s last day. Do not replace months with a fixed number of days.','按月计算至相应日期；末月无该日期时取该月最后一天。不要将月份替换为固定天数。'):
+  rule.unit==='working-days'?T('Пропускайте выходные и нерабочие праздники по федеральной пятидневной неделе; учитывайте перенесённые рабочие дни.','Skip weekends and public holidays under the federal five-day calendar; include transferred working days.','按联邦每周五天工作制跳过周末和非工作节假日，并计入调休后的工作日。'):T('Включайте выходные и праздники в число календарных дней.','Include weekends and holidays when counting calendar days.','计算日历日时包括周末和节假日。');
+ const shift=task.counting.shift==='next_working_day'?T('Если последний день нерабочий, перенесите окончание на ближайший следующий рабочий день.','If the last day is non-working, move the deadline to the next working day.','末日为非工作日时，顺延至下一工作日。'):T('Последний день оставьте без переноса.','Do not shift the final date.','末日不顺延。');
+ const check=T('Отдельно оцените, выполнена ли регистрация в течение 3 календарных дней после поступления; в этом задании к последнему дню применяется то же правило переноса.','Separately judge whether registration was completed within 3 calendar days of receipt; this exercise uses the same final-day adjustment.','另行判断是否在收到后三个日历日内完成登记；本练习对登记期限末日采用相同的顺延规则。');
+ return Object.fromEntries(['ru','en','zh'].map(locale=>{
+  const intro=task.dual?T('Рассчитайте два альтернативных срока от регистрации: 7 дней на направление по компетенции и 30 дней на рассмотрение. Не складывайте 7 и 30; у нового адресата срок начинается от его регистрации.','Calculate two alternative periods from registration: 7 days for referral and 30 days for review. Do not add 7 and 30; a new recipient counts from its own registration.','从登记日起计算两个备选期限：七日转送和三十日审理。不要把7与30相加；新收件机关从自己的登记日起算。')[locale]:
+   ({ru:`Исходное событие: «${anchor.ru}». Срок: ${rule.amount} ${units[rule.unit].ru}.`,en:`Starting event: “${anchor.en}”. Period: ${rule.amount} ${units[rule.unit].en}.`,zh:`起算事件：“${anchor.zh}”。期限：${rule.amount}${units[rule.unit].zh}。`})[locale];
+  return [locale,[intro,start[locale],unit[locale],shift[locale],task.registrationCheck?check[locale]:''].filter(Boolean).join(' ')];
+ }));
+}
+function publicCaseWorkbook(c){
+ const task=caseCalendar(c);
+ return {version:WORKBOOK_VERSION,events:task.events,targets:task.targets,registrationCheck:task.registrationCheck,special:task.special,
+  instructions:calendarInstructions(c,task),counting:task.counting,calendarSnapshotId:task.calendarSnapshotId,
+  norms:calendarNorms(c,task),...publicRoutingWorkflow(c.id)};
+}
+function evaluateCaseWorkbook(c,decision,feedback){
+ if(!supportsWorkbook(c,WORKBOOK_VERSION))fail('invalid_case',503);
+ const task=caseCalendar(c),events=Object.fromEntries(task.events.map(event=>[event.id,event.date])),expected={},selected={},correct={};
+ for(const target of task.targets){
+  expected[target.id]=target.id==='deadline'?parseDateOnly(c.rubric.deadline):calculateWorkbookDeadline({anchorDate:events[target.anchorId],ruleId:target.ruleId,...task.counting});
+  selected[target.id]=parseDateOnly(target.id==='deadline'?decision.deadline:decision.workbook.referralDeadline)||'';
+  correct[target.id]=selected[target.id]===expected[target.id];
+ }
+ if(task.registrationCheck){
+  const last=calculateWorkbookDeadline({anchorDate:events.received,ruleId:'calendar3',...task.counting});
+  expected.registrationTimely=events.registered>=events.received&&events.registered<=last;
+  selected.registrationTimely=decision.workbook.registrationTimely;
+  correct.registrationTimely=selected.registrationTimely===expected.registrationTimely;
+ }
+ const checkPoints=task.registrationCheck?4:0,datePoints=(20-checkPoints)/task.targets.length;
+ const earned=task.targets.reduce((sum,target)=>sum+(correct[target.id]?datePoints:0),0)+(correct.registrationTimely?checkPoints:0);
+ const routing=evaluateRoutingWorkflow(c.id,decision.workbook.routing),result=copy(feedback);
+ for(const criterion of result.criteria){
+  if(['calendar','deadline'].includes(criterion.id))criterion.earned=criterion.max*earned/20;
+  if(criterion.id==='routing')criterion.earned=(c.rubric.procedureIds.includes(decision.procedureId)?7:0)+(routing?.correct?8:0);
+  if(criterion.id==='route')criterion.earned=routing?.correct?criterion.max:0;
+ }
+ result.score=result.criteria.reduce((sum,row)=>sum+row.earned,0);
+ if(Number.isFinite(result.cap))result.score=Math.min(result.score,result.cap);
+ result.workbook={calendar:{version:WORKBOOK_VERSION,targets:task.targets,registrationCheck:task.registrationCheck,special:task.special,
+  liabilityApplicable:task.liabilityApplicable,instructions:calendarInstructions(c,task),expected,selected,correct,wrongDates:task.targets.some(target=>!correct[target.id])},routing};
  return result;
 }

@@ -26,10 +26,10 @@ test('synthetic CI fixture covers the phone browser contract and a complete auth
   assert.deepEqual(catalog.cases.slice(0,3).map(c=>c.level),[1,2,3]);
   const call=async body=>(await service.handle(body,identity)).view;
   let view=await call({op:'start',requestId:'synthetic-start',mode:'training',locale:'ru',caseId:'complaint-routing',level:3});
-  assert.equal(view.case.id,'complaint-routing');assert.equal(view.messages.length,1);assert.equal(view.documents.length,0);
+  assert.equal(view.case.id,'complaint-routing');assert.equal(view.messages.length,1);assert.equal(view.documents.length,1);assert.equal(view.documents[0].chatAttachment,false);
   assert.doesNotMatch(JSON.stringify(view),/qa-plan|criticalRules|evidenceSets|"rubric"/);
   view=await call({op:'message',sessionId:view.id,requestId:'synthetic-message',text:'Покажите тестовые документы',expectedRevision:view.revision});
-  assert.equal(view.documents.length,2);assert.equal(view.messages.length,3);
+  assert.equal(view.documents.length,3);assert.equal(view.messages.length,3);
   const c=cases.find(c=>c.id===view.case.id),decision=canonicalDecision(c);
   for(const id of decision.basisDocumentIds)view=await call({op:'document',sessionId:view.id,requestId:'open-'+id,documentId:id});
   view=await call({op:'decide',sessionId:view.id,requestId:'synthetic-decision',decision});

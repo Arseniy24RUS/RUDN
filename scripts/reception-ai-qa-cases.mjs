@@ -46,6 +46,7 @@ export function createSyntheticReceptionCases() {
       {id:'qa-attachment',text:T('К учебному обращению приложена отдельная вымышленная служебная заметка.'),prompt:T('Есть ли второй тестовый документ?'),initial:false,knowledge:'direct',documentIds:['qa-note']}
     ],
     documents:[
+      {id:'registration',title:T('Карточка поступления'),type:T('Внутренняя запись'),text:T('Служебная регистрационная запись синтетического дела.'),initial:true,factIds:[]},
       {id:'qa-receipt',title:T('Синтетическая квитанция QA-001'),type:T('Тестовый документ'),text:T('Полностью вымышленный образец. Учебное обращение QA-001 зарегистрировано 11 ноября 2026 года. Реального заявителя нет.'),initial:false,factIds:['qa-registration']},
       {id:'qa-note',title:T('Синтетическая служебная заметка QA-002'),type:T('Тестовый документ'),text:T('Полностью вымышленная запись для проверки открытия документов и сохранения выбора. Материал не относится к реальному обращению.'),initial:false,factIds:['qa-attachment']}
     ],

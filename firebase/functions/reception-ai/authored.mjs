@@ -134,7 +134,7 @@ const labels = {
   actions:{ru:'План действий и контроль',en:'Action plan and follow-up',zh:'行动方案与后续处理'},
   rights:{ru:'Права заявителя',en:'Applicant rights',zh:'申请人权利'}
 };
-export function evaluateAuthoredDecision(c,state,decision) {
+export function evaluateAuthoredDecision(c,state,decision,{knowledgeQuiz=true,orderedActions=true}={}) {
   const r = c.rubric.authored, a = decision.assessment, selected = decision.actionIds;
   const factGood = r.factIds.includes(a.factId);
   const evidenceSet = r.evidenceSets.find(set => set.length === decision.basisDocumentIds.length && set.every(id => decision.basisDocumentIds.includes(id)));
@@ -151,15 +151,15 @@ export function evaluateAuthoredDecision(c,state,decision) {
   const finding = answer.finding === proof.finding;
   const plan = r.decisionPlans.length ? r.decisionPlans.find(row => row.routes.includes(decision.routeId)) || {id:'unselected',requiredActions:[],order:[]} : {id:'default',requiredActions:c.rubric.requiredActionIds,order:r.order};
   const matches = plan.requiredActions.filter(id => selected.includes(id)).length, bad = c.rubric.forbiddenActionIds.filter(id => selected.includes(id)).length;
-  const wrongOrder = plan.order.some(([before,after]) => selected.includes(before) && selected.includes(after) && selected.indexOf(before) > selected.indexOf(after));
+  const wrongOrder = orderedActions && plan.order.some(([before,after]) => selected.includes(before) && selected.includes(after) && selected.indexOf(before) > selected.indexOf(after));
   const criticalIds = r.criticalRules.filter(rule => !rule.knownQuestion || state.knownFactIds.includes(rule.knownQuestion)).filter(rule => rule.kind === 'selected' ? selected.includes(rule.id) : !selected.includes(rule.id)).map(rule => rule.id);
   const followupGood = Boolean(state.followupChoiceId && state.followupChoiceId === c.followup.correct);
   const scores = {
     facts:[(factGood ? 10 : 0)+(evidenceIssue ? 0 : 5),15],
-    research:[Object.values(checks).filter(Boolean).length*2+(binding ? 4+(extracted ? 4 : 0)+(finding ? 4 : 0) : 0),20],
+    research:[knowledgeQuiz?Object.values(checks).filter(Boolean).length*2+(binding ? 4+(extracted ? 4 : 0)+(finding ? 4 : 0) : 0):(binding?6+(extracted?7:0)+(finding?7:0):0),20],
     routing:[(c.rubric.procedureIds.includes(decision.procedureId) ? 7 : 0)+(c.rubric.routeIds.includes(decision.routeId) ? 8 : 0),15],
     calendar:[(a.calendar.anchor === r.calendar.anchor ? 2 : 0)+(a.calendar.rule === r.calendar.rule ? 2 : 0)+(a.calendar.start === r.calendar.start ? 2 : 0)+(r.calendar.acceptedShifts.includes(a.calendar.shift) ? 2 : 0)+(parseDateOnly(decision.deadline) === c.rubric.deadline ? 12 : 0),20],
-    actions:[Math.max(0,Math.min(16,14*matches/Math.max(1,plan.requiredActions.length)+(selected.length && plan.requiredActions.length && !wrongOrder ? 2 : 0)-4*bad))+(followupGood ? 4 : 0),20],
+    actions:[Math.max(0,Math.min(16,(orderedActions?14*matches/Math.max(1,plan.requiredActions.length)+(selected.length && plan.requiredActions.length && !wrongOrder ? 2 : 0):16*matches/Math.max(1,plan.requiredActions.length))-4*bad))+(followupGood ? 4 : 0),20],
     rights:[(a.trapId === r.trap ? 5 : 0)+(selected.includes(r.rightsAction) && !criticalIds.length ? 5 : 0),10]
   };
   const score = Object.values(scores).reduce((sum,row) => sum+row[0],0);

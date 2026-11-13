@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {addCalendarDays, workbookEvents, supportsBasicWorkbook, publicWorkbook, validateWorkbookDecision, evaluateWorkbook} from './workbook.mjs';
+import {addCalendarDays, workbookEvents, supportsBasicWorkbook, supportsWorkbook, publicWorkbook, validateWorkbookDecision, evaluateWorkbook} from './workbook.mjs';
+import {calculateWorkbookDeadline,workingCalendarDay,WORKBOOK_CALENDAR} from './workbook-calendar.mjs';
+import {BUNDLED_CALENDARS} from '../../../site/assets/js/calendar-bundled.js';
 import {createReceptionService} from './service.mjs';
 import {createMemoryStore} from './store.mjs';
 import {validateCase, evaluateDecision, hash} from './schema.mjs';
@@ -207,7 +209,7 @@ test('new API catalog excludes incomplete cases while the legacy catalog remains
   assert.equal((await h.service.handle({op:'catalog',locale:'ru'},identity)).cases.length,3);
   await assert.rejects(h.start({caseId:incomplete.id}),errorCode('invalid_case'));
   assert.equal(await h.store.get('starts'),null,'An ineligible case must not consume the daily start quota');
-  for (const workbookVersion of [0,2,'1',null]) {
+  for (const workbookVersion of [0,3,'1',null]) {
     await assert.rejects(h.service.handle({op:'catalog',workbookVersion},identity),errorCode('invalid_workbook'));
     await assert.rejects(h.start({workbookVersion,requestId:`bad-${String(workbookVersion)}`}),errorCode('invalid_workbook'));
   }
@@ -365,4 +367,113 @@ test('legacy snapshots keep their original grading and completed results remain 
   assert.deepEqual(await h.store.get(`sessions/${old.id}`),completed,'Reading a legacy result must not migrate its private score or decision');
   const current=await h.start({requestId:'current-start',caseId:c.id});
   assert.equal((await h.handle({op:'recover',mode:'training',workbookVersion:1})).id,current.id);
+});
+
+function calendarCase(id,ruleId,anchorId,deadline,{registered=true}={}){
+  const c=cases()[0],T=text=>({ru:text,en:text,zh:text});
+  c.id=id;c.datePackId='synthetic-calendar';
+  c.public.assessment.calendar.events=[{id:'sent',label:T('Sent'),date:'2026-04-29'},{id:'received',label:T('Received'),date:'2026-04-30'}];
+  if(registered)c.public.assessment.calendar.events.push({id:'registered',label:T('Registered'),date:'2026-04-30'});
+  if(!c.public.assessment.calendar.events.some(event=>event.id===anchorId))c.public.assessment.calendar.events.push({id:anchorId,label:T('The legally relevant event'),date:'2026-04-30'});
+  c.public.assessment.calendar.rules=[{id:ruleId,label:T('Applicable statutory period')}];
+  c.public.assessment.calendar.starts=[{id:'exclude_anchor',label:T('Following day')}];
+  c.public.assessment.calendar.lastDays=[{id:'next_working_day',label:T('Next working day')}];
+  c.rubric.authored.calendar={anchor:anchorId,rule:ruleId,start:'exclude_anchor',acceptedShifts:['next_working_day']};
+  c.rubric.deadline=deadline;
+  return validateCase(c);
+}
+
+test('v2 calendar uses the frozen public holiday calendar, working days and corresponding-month dates',()=>{
+  assert.equal(WORKBOOK_CALENDAR.id,BUNDLED_CALENDARS.id);
+  for(const [year,data]of Object.entries(WORKBOOK_CALENDAR.years))assert.equal(data.days,BUNDLED_CALENDARS.years[year].days,year);
+  for(const [anchorDate,ruleId,expected]of [
+    ['2026-04-30','calendar3','2026-05-04'],
+    ['2026-04-30','calendar7','2026-05-07'],
+    ['2026-04-30','calendar30','2026-06-01'],
+    ['2026-04-30','working5','2026-05-08'],
+    ['2026-04-30','working7','2026-05-13'],
+    ['2026-04-30','working15','2026-05-25'],
+    ['2026-05-08','working1','2026-05-12'],
+    ['2026-01-31','months3','2026-04-30'],
+    ['2026-11-30','months3','2027-03-01'],
+  ])assert.equal(calculateWorkbookDeadline({anchorDate,ruleId}),expected,`${anchorDate}: ${ruleId}`);
+  assert.equal(calculateWorkbookDeadline({anchorDate:'2026-04-30',ruleId:'calendar30',shift:'no_shift'}),'2026-05-30');
+  assert.equal(workingCalendarDay('2026-05-11'),false,'The transferred holiday must not count as a working Monday');
+  assert.equal(workingCalendarDay('2026-05-08'),true,'A shortened working day still counts');
+  assert.throws(()=>workingCalendarDay('2028-01-01'),RangeError,'Do not silently invent a future production calendar');
+});
+
+test('v2 gives each special procedure its actual event, period, statutory excerpt and one date to select',()=>{
+  for(const [id,rule,anchor,deadline,norm,registrationCheck,special]of [
+    ['anonymous-danger','calendar3','received','2026-05-04','registration59',false,false],
+    ['unreadable-body','calendar7','registered','2026-05-07','unreadable59',true,true],
+    ['court-cancel','calendar7','registered','2026-05-07','courtReturn59',true,true],
+    ['mfc-refusal','working5','registered','2026-05-08','mfc5',false,true],
+    ['mfc-delay','working15','registered','2026-05-25','mfc15',false,true],
+    ['insurance-collective','working7','bank','2026-05-13','insuranceCollective',false,true],
+    ['bailiff-copy-decision','working1','decided','2026-05-04','bailiffCopy',false,true],
+    ['privacy-own-record','working10','received','2026-05-18','personalData',false,true],
+    ['tax-calendar-months','months3','declaration','2026-07-30','taxReview',false,true],
+    ['budget','calendar30','registered','2026-06-01','information30',true,true],
+  ]){
+    const c=calendarCase(id,rule,anchor,deadline,{registered:id!=='anonymous-danger'}),before=structuredClone(c),w=publicWorkbook(c,2);
+    assert.equal(supportsWorkbook(c,2),true);
+    assert.equal(w.version,2);assert.equal(w.special,special);assert.equal(w.registrationCheck,registrationCheck);
+    assert.deepEqual(w.targets.map(t=>t.id),['deadline']);
+    assert.equal(w.targets[0].anchorId,anchor);assert.equal(w.targets[0].ruleId,rule);
+    assert.equal(w.norms[0].id,norm);assert.ok(w.norms[0].text.ru.startsWith('«'));assert.match(w.norms[0].url,/^https:\/\//);
+    for(const language of ['ru','en','zh'])assert.ok(w.instructions[language]&&w.norms.every(n=>n.text[language]));
+    assert.doesNotMatch(JSON.stringify(w),/"(?:expected|correct|answer|rubric|recipientIds|score)"/);
+    assert.equal(JSON.stringify(w).includes(deadline),false,'The calculated answer is not in public guidance');
+    assert.deepEqual(c,before,'Guidance does not mutate or reclassify an archived dossier');
+  }
+});
+
+test('v2 preserves canonical authored deadlines and grades only applicable date targets',()=>{
+  const base={criteria:[{id:'calendar',earned:0,max:20}],explanation:{ru:'Содержательный разбор и исходное правило счёта.',en:'Original case reasoning.',zh:'原案分析。'}};
+  const c=calendarCase('mfc-refusal','working5','registered','2026-05-08'),d=decisionFor(c,{deadline:'2026-05-08',referral:'1900-01-01',registrationTimely:false});
+  const f=evaluateWorkbook(c,d,base,2);
+  assert.equal(f.score,20,'An inapplicable referral or registration choice cannot cost points');
+  assert.deepEqual(Object.keys(f.workbook.calendar.expected),['deadline']);
+  assert.deepEqual(f.explanation,base.explanation,'V2 retains the authored special-procedure explanation');
+  assert.equal(f.workbook.calendar.registrationCheck,false);assert.equal(f.workbook.calendar.liabilityApplicable,false);
+  assert.equal(evaluateWorkbook(c,{...d,deadline:'2026-05-11'},base,2).score,0);
+  const notice=calendarCase('court-cancel','calendar7','registered','2026-05-07');
+  const noticeDecision=decisionFor(notice,{deadline:'2026-05-07',registrationTimely:false});
+  assert.equal(evaluateWorkbook(notice,noticeDecision,base,2).score,16);
+  assert.equal(evaluateWorkbook(notice,{...noticeDecision,workbook:{...noticeDecision.workbook,registrationTimely:true}},base,2).score,20);
+  const unregistered=calendarCase('repeat-no-new','calendar3','received','2026-05-04',{registered:false});
+  assert.equal(evaluateWorkbook(unregistered,decisionFor(unregistered,{deadline:'2026-05-04',registrationTimely:false}),base,2).score,20);
+});
+
+test('v2 basic alternative deadlines use the canonical final-day adjustment while v1 remains unchanged',()=>{
+  const c=calendarCase('river-observation','calendar30','registered','2026-06-01'),base={criteria:[{id:'calendar',earned:0,max:20}]};
+  c.public.assessment.calendar.events.find(e=>e.id==='registered').date='2026-05-04';
+  c.rubric.deadline='2026-06-03';
+  const d=decisionFor(c,{referral:'2026-05-12',deadline:'2026-06-03',registrationTimely:true});
+  const current=evaluateWorkbook(c,d,base,2),old=evaluateWorkbook(c,d,base,1);
+  assert.equal(current.score,20);assert.equal(current.workbook.calendar.expected.registrationTimely,true);
+  assert.equal(current.workbook.calendar.expected.referral,'2026-05-12','The Monday May 11 transfer holiday shifts the referral deadline');
+  assert.equal(old.workbook.calendar.expected.registrationTimely,false,'V1 retains its earlier unshifted three-day convention');
+  assert.equal(old.workbook.calendar.expected.referral,'2026-05-11');
+  assert.deepEqual(publicWorkbook(c,2).targets.map(t=>t.id),['referral','deadline']);
+});
+
+test('v2 API restores cases without registration and records a fully informed single-date solution',async()=>{
+  const c=calendarCase('anonymous-danger','calendar3','received','2026-05-04',{registered:false}),h=harness({catalogue:[c]});
+  assert.equal((await h.service.handle({op:'catalog',workbookVersion:1},identity)).cases.length,0);
+  assert.equal((await h.service.handle({op:'catalog',workbookVersion:2},identity)).cases.length,1);
+  let view=await openEvidence(h,await h.start({caseId:c.id,workbookVersion:2}));
+  noAnswers(view);assert.equal(view.case.workbook.registrationCheck,false);assert.equal(view.case.workbook.norms[0].id,'registration59');
+  const decision=decisionFor(c,{deadline:'2026-05-04',referral:'',registrationTimely:false});
+  decision.actionIds.reverse();decision.law={number:'',article:''};
+  decision.assessment.applicationId='';decision.assessment.actDate='';decision.assessment.calendar={anchor:'',rule:'',start:'',shift:''};
+  view=await submit(h,view,decision,'v2-single');
+  assert.equal(view.feedback.score,100,'Hidden old quizzes and click order must not reduce a correct v2 solution');
+  assert.deepEqual(Object.keys(view.feedback.workbook.calendar.expected),['deadline']);
+  const restarted=harness({store:h.store,catalogue:[c]});
+  assert.deepEqual(await restarted.handle({op:'recover',mode:'training',workbookVersion:2}),view);
+  view=await restarted.handle({op:'next',sessionId:view.id,requestId:'v2-complete'});
+  assert.equal(view.status,'complete');assert.equal(view.result.total,100);
+  assert.deepEqual(view.result.cases[0].decision.workbook,decision.workbook);
 });

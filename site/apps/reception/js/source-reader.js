@@ -77,7 +77,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
   const language=()=>typeof locale==='function'?locale():locale;
   const labels=()=>({en:{close:'Back to case',loading:'Opening document…',failed:'Could not open the document. Try again.',retry:'Try again',document:'Document',selectHint:'Tap a paragraph or select text to use it as a legal basis.',selected:'Selected passage',use:'Use in decision',clear:'Clear selection',saving:'Saving…',selectFailed:'Could not save the passage. Try again.'},zh:{close:'返回案件',loading:'正在打开文件…',failed:'无法打开文件，请重试。',retry:'重试',document:'文件',selectHint:'点击段落或选择文本，将其作为法律依据。',selected:'所选片段',use:'填入决定',clear:'清除选择',saving:'正在保存…',selectFailed:'无法保存片段，请重试。'}}[language()]||{close:'Вернуться к делу',loading:'Открываем документ…',failed:'Не удалось открыть документ. Повторите загрузку.',retry:'Повторить',document:'Документ',selectHint:'Нажмите на абзац или выделите текст, чтобы использовать его как правовое основание.',selected:'Выбранный фрагмент',use:'В решение',clear:'Снять выделение',saving:'Сохраняем…',selectFailed:'Не удалось сохранить фрагмент. Повторите попытку.'});
   const baseLabels=labels;
-  const cabinetLabels=()=>{const text=baseLabels();return embedded?{...text,...({en:{close:'All documents',selected:'Passage selected',use:'Add to decision',clear:'Clear',savedHint:'The passage and citation will be saved in your draft.'},zh:{close:'全部文件',selected:'已选择片段',use:'填入决定',clear:'取消',savedHint:'片段及出处将保存在草稿中。'}}[language()]||{close:'Все документы',selected:'Фрагмент выделен',use:'Добавить в решение',clear:'Снять',savedHint:'Цитата и реквизиты сохранятся в черновике.'})}:text;};
+  const cabinetLabels=()=>{const text=baseLabels();return embedded?{...text,...({en:{close:'All documents',selected:'Passage selected',selectHint:'Tap a paragraph or select text to save a passage.',use:'Save passage',clear:'Clear',savedHint:'The passage and citation will be saved in your draft.'},zh:{close:'全部文件',selected:'已选择片段',selectHint:'点击段落或选择文字以保存所需片段。',use:'保存片段',clear:'取消',savedHint:'片段及出处将保存在草稿中。'}}[language()]||{close:'Все документы',selected:'Фрагмент выделен',selectHint:'Нажмите на абзац или выделите текст, чтобы сохранить нужный фрагмент.',use:'Сохранить фрагмент',clear:'Снять',savedHint:'Цитата и реквизиты сохранятся в черновике.'})}:text;};
   const selectionEnabled=()=>typeof onSelect==='function'&&(typeof canSelect==='function'?canSelect():canSelect)!==false;
   function close(){
     generation++;
@@ -100,6 +100,14 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     if(dialog.parentNode!==target)target.append(dialog);
     return true;
   }
+  function setEmbeddedSearchResults(open){
+    if(!embedded||!dialog||!app)return;
+    dialog.dataset.searchResultsOpen=String(open);
+    const paper=app.root.querySelector('.ll-reader-surface');
+    if(paper)paper.inert=open;
+    const contents=dialog.querySelector('[data-action="toggle-toc"]');
+    if(contents)contents.disabled=open;
+  }
   function decorateEmbeddedReader(){
     if(!embedded||!app)return;
     const reader=app.root.querySelector('.ll-reader');if(!reader)return;
@@ -115,6 +123,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     const find=reader.querySelector('.ll-searchbar button[type="submit"]');if(find)find.innerHTML=cabinetIcon('search');
     const clear=reader.querySelector('[data-action="clear-search"]');if(clear){clear.innerHTML=cabinetIcon('close');clear.setAttribute('aria-label',({en:'Clear search',zh:'清除搜索'}[language()]||'Очистить поиск'));}
     const header=reader.querySelector('.ll-reader-header');if(header&&!header.querySelector('[data-cabinet-document-icon]'))header.insertAdjacentHTML('afterbegin',`<span data-cabinet-document-icon>${cabinetIcon('docs')}</span>`);
+    setEmbeddedSearchResults(Boolean(searchPanel?.querySelector('.ll-search-results:not([hidden])')));
   }
   function fail(error){
     if(error?.name==='AbortError'||!dialog)return;
@@ -194,6 +203,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       }else if(target.dataset.action==='jump-unit'){
         if(embedded){
           target.closest('.ll-search-results').hidden=true;
+          setEmbeddedSearchResults(false);
           if(rs.tocOpen)dialog.querySelector('[data-action="toggle-toc"]')?.click();
         }else{
           rs.searchOpen=false;refreshReaderSearch(owner,doc);

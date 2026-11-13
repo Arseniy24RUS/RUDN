@@ -14,12 +14,10 @@ const display = (value, locale) => typeof value === 'string' ? value : value?.[l
 const normalize = value => String(value ?? '').toLocaleLowerCase('ru').replaceAll('ё','е').trim();
 
 export function routingOriginView(workflow, {locale='ru'} = {}) {
-  if (!workflow?.origin) return '';
-  const copy = labels[locale] || labels.ru;
-  const {origin,site} = workflow;
-  const address = [origin.territory,origin.city,origin.address].map(item=>display(item,locale)).filter(Boolean);
-  const place = site ? [site.territory,site.city,site.detail].map(item=>display(item,locale)).filter(Boolean) : [];
-  return `<dl class="rxa-routing-origin"><div><dt>${esc(copy.origin)}</dt><dd>${esc([...new Set(address)].join(', ') || copy.unknown)}</dd></div>${place.length ? `<div><dt>${esc(copy.site)}</dt><dd>${esc([...new Set(place)].join(', '))}</dd></div>` : ''}</dl>`;
+  const site=workflow?.site;if(!site)return '';
+  const copy=labels[locale]||labels.ru;
+  const place=[site.territory,site.city,site.detail].map(item=>display(item,locale)).filter(Boolean);
+  return place.length?`<dl class="rxa-routing-origin"><div><dt>${esc(copy.site)}</dt><dd>${esc([...new Set(place)].join(', '))}</dd></div></dl>`:'';
 }
 
 export function filterAuthorities({search='',territoryId='',locale='ru',recipientIds=[]}={}) {
@@ -37,7 +35,7 @@ export function filterAuthorities({search='',territoryId='',locale='ru',recipien
   });
 }
 
-export function authorityPickerView(value, {locale='ru',workflow,search='',territoryId='',disabled=false} = {}) {
+export function authorityPickerView(value, {locale='ru',workflow,search='',territoryId='ru-77',disabled=false} = {}) {
   if (!workflow) return '';
   const copy = labels[locale] || labels.ru;
   const recipientIds = Array.isArray(value?.recipientIds) ? value.recipientIds : [];

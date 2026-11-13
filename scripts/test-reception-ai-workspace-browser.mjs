@@ -150,9 +150,9 @@ try{
   const events=Object.fromEntries(view.case.workbook.events.map(event=>[event.id,event.date]));
   const renderedDates=await page.locator('.rxa-case-timeline time').evaluateAll(nodes=>nodes.map(node=>node.dateTime));
   assert.deepEqual(renderedDates,[events.sent,events.received,events.registered]);
-  const address=page.locator('.rxa-routing-origin dd').first();
-  const originAddress=view.case.workbook.origin.address?.ru??view.case.workbook.origin.address;
-  assert.ok((await address.textContent()).includes(originAddress||'Адрес для ответа не указан'));
+  assert.equal(await page.locator('.rxa-brand strong').innerText(),'Обращения граждан');
+  assert.doesNotMatch(await page.locator('.rxa-foyer').innerText(),/Адрес для ответа/);
+  if(view.case.workbook.site)assert.match(await page.locator('.rxa-routing-origin').innerText(),/Место события/);
   assert.deepEqual(await page.locator('.rxa-mobile-nav [data-action="page"]').evaluateAll(buttons=>buttons.map(button=>button.dataset.page)),['reception','chat','documents','calendar','decision']);
   await page.locator('[data-rxa-actor]').waitFor({state:'visible'});
   await page.waitForFunction(()=>{const image=document.querySelector('.rxa-citizen-poster');return image?.complete&&image.naturalWidth>0;});
@@ -168,10 +168,10 @@ try{
   }
   check('Reception actor and initial unread badge',{videoStatus,animationClaim:videoStatus==='decoded video playing'});
   await screenshot('02-phone-reception.png');await noOverflow('reception 390');
-  await address.scrollIntoViewIfNeeded();
-  await screenshot('02b-phone-appeal-address.png');
+  await screenshot('02b-phone-case-context.png');
   stage='chat-and-navigation';
   await navigate('chat');assert.equal(await page.locator('[data-chat-unread]').count(),0);
+  assert.equal(await page.locator('.rxa-attachment[data-id="registration"]').count(),0,'Internal receipt card must stay out of the conversation');
   await page.locator('[data-message-draft]').fill('Покажите, пожалуйста, документы по вашему обращению.');
   view=await apiResponse('message',()=>page.locator('[data-chat-form] button[type="submit"]').click());
   assert.ok(view.documents.length);const messageCount=view.messages.length;
@@ -221,19 +221,19 @@ try{
     const hit=reader.locator('[data-action="jump-unit"]').first();
     await hit.waitFor();
     const searchGeometry=await reader.evaluate(root=>{
-      const toolbar=root.querySelector('.rx-source-dialog-bar').getBoundingClientRect();
-      const search=root.querySelector('[data-reader-search-panel]').getBoundingClientRect();
-      const header=root.querySelector('.ll-reader-header').getBoundingClientRect();
-      const paper=root.querySelector('.ll-paper').getBoundingClientRect();
-      const results=root.querySelector('.ll-search-results'), list=results.getBoundingClientRect();
-      const button=results.querySelector('[data-action="jump-unit"]'), bounds=button.getBoundingClientRect();
-      const hit=document.elementFromPoint(bounds.left+bounds.width/2,bounds.top+bounds.height/2);
-      return {toolbarBottom:toolbar.bottom,searchTop:search.top,searchBottom:search.bottom,headerTop:header.top,
-        resultsBottom:list.bottom,paperTop:paper.top,paperHeight:paper.height,hitReachable:hit===button||button.contains(hit)};
+      const bar=root.querySelector('.rx-source-dialog-bar').getBoundingClientRect(),surface=root.getBoundingClientRect();
+      const results=root.querySelector('.ll-search-results'),list=results.getBoundingClientRect();
+      const button=results.querySelector('[data-action="jump-unit"]'),bounds=button.getBoundingClientRect();
+      const x=bounds.left+bounds.width/2,y=Math.max(bounds.top,list.top)+Math.min(bounds.height,list.height)/2;
+      const target=document.elementFromPoint(x,y);
+      return {toolbarBottom:bar.bottom,resultsTop:list.top,resultsBottom:list.bottom,readerBottom:surface.bottom,
+        mode:root.dataset.searchResultsOpen,paperVisibility:getComputedStyle(root.querySelector('.ll-reader-surface')).visibility,
+        hitReachable:target===button||button.contains(target)};
     });
-    assert.ok(searchGeometry.toolbarBottom<=searchGeometry.searchTop+1&&searchGeometry.searchBottom<=searchGeometry.headerTop+1&&
-      searchGeometry.resultsBottom<=searchGeometry.paperTop+1&&searchGeometry.paperHeight>=100&&searchGeometry.hitReachable,
-      `Phone search overlaps the toolbar or hides the document or a result: ${JSON.stringify(searchGeometry)}`);
+    assert.equal(searchGeometry.mode,'true');
+    assert.equal(searchGeometry.paperVisibility,'hidden');
+    assert.ok(searchGeometry.toolbarBottom<=searchGeometry.resultsTop+1&&searchGeometry.resultsBottom<=searchGeometry.readerBottom+1&&searchGeometry.hitReachable,
+      `Dedicated result list must stay inside the reader with reachable results: ${JSON.stringify(searchGeometry)}`);
     await screenshot('05c-phone-source-search.png');
     const unit=await hit.getAttribute('data-id');
     await hit.click();
@@ -250,10 +250,13 @@ try{
     await page.locator('[data-source-reference-tray]').waitFor({state:'visible'});
     await screenshot('05-phone-source-reference.png');
     await page.locator('[data-source-reference-use]').click();
-    check('In-platform source reference selected');
+    assert.equal(await page.locator('#receptionAI').getAttribute('data-page'),'documents');
+    assert.equal(await page.locator('[data-details="source-notes"]').count(),1);
+    check('Source passage saved in Documents without filling a duplicate legal quiz');
   }else{throw Error('Documents page has no supported in-platform source link');}
   stage='calendar-and-draft';
   await navigate('decision');
+  assert.equal(await page.locator('[data-decision="law.number"], [data-decision="law.article"], [data-decision="assessment.actDate"], [data-decision="assessment.applicationId"], [data-action-order]').count(),0);
   await page.locator('[data-decision="reasoning"]').fill('Факты сопоставлены с документами. Проверяю правовое основание и срок.');
   const reasoning=await page.locator('[data-decision="reasoning"]').inputValue();
   assert.equal(await page.locator('[data-calendar-workbench], [data-decision="deadline"]').count(),0);
@@ -276,7 +279,7 @@ try{
   await norms.locator('summary').click();
   assert.equal(await norms.evaluate(details=>details.open),true);
   const legalQuotes=await norms.innerText();
-  for(const heading of ['Статья 8, часть 2','Статья 8, часть 3','Статья 12, часть 1'])assert.ok(legalQuotes.includes(heading),heading);
+  for(const norm of view.case.workbook.norms)assert.ok(legalQuotes.includes(typeof norm.label==='string'?norm.label:norm.label.ru),'Applicable legal reference is shown');
   await screenshot('06b-phone-calendar-norms.png');
   await navigate('chat');assert.equal(await page.locator('[data-message-draft]').inputValue(),'Уточню обстоятельства после чтения документа.');
   assert.equal(await page.locator('.rxa-message[data-message-id]').count(),messageCount);
@@ -285,6 +288,7 @@ try{
   await screenshot('07-phone-decision.png');
   const route=page.locator('[data-details="assessment-routing"]');
   await route.locator('summary').click();
+  assert.equal(await route.locator('[data-routing-territory]').inputValue(),'ru-77');
   await route.locator('[data-routing-search]').fill('Роскомнадзор');
   assert.ok(await route.locator('[data-routing-recipient]').count()>0);
   const recipient=route.locator('[data-routing-recipient]').first(), recipientId=await recipient.getAttribute('value');
@@ -293,10 +297,10 @@ try{
   const authorityGeometry=await route.locator(`[data-routing-recipient][value="${recipientId}"]`).evaluate(input=>{
     const row=input.closest('label'), text=row.querySelector('span');
     const outer=row.getBoundingClientRect(), name=text.getBoundingClientRect(), control=input.getBoundingClientRect();
-    return {rowHeight:outer.height,checkboxWidth:control.width,nameWidth:name.width,
+    return {rowHeight:outer.height,listHeight:input.closest('.rxa-routing-options').clientHeight,checkboxWidth:control.width,nameWidth:name.width,
       withinRow:control.right<=name.left&&name.right<=outer.right+1,name:text.innerText};
   });
-  assert.ok(authorityGeometry.rowHeight<160&&authorityGeometry.checkboxWidth<=44&&
+  assert.ok(authorityGeometry.rowHeight<=authorityGeometry.listHeight+1&&authorityGeometry.checkboxWidth<=44&&
     authorityGeometry.nameWidth>=100&&authorityGeometry.withinRow&&authorityGeometry.name.includes('Роскомнадзор'),
     `The authority checkbox or label overflows its row: ${JSON.stringify(authorityGeometry)}`);
   await screenshot('07b-phone-authority-picker.png');

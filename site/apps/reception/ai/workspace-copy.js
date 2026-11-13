@@ -29,7 +29,7 @@ const additions = {
     calendarReadOnly:'Решение зафиксировано. Даты и расчёт доступны для просмотра.', deadlineNotSelected:'Дата ещё не выбрана', openCalendar:'Рассчитать срок', reviewCalendar:'Открыть расчёт',
     needCase:'Начните или продолжите приём, чтобы открыть эту страницу.',
     references:'Выбранные правовые основания', noReferences:'Откройте нормативный акт в «Документах», выберите фрагмент и нажмите «В решение».',
-    referenceAdded:'Правовое основание добавлено в черновик.', removeReference:'Убрать основание', useReference:'Заполнить реквизиты',
+    sourceNotes:'Сохранённые фрагменты',referenceAdded:'Фрагмент сохранён в документах.', removeReference:'Убрать основание', useReference:'Заполнить реквизиты',
     useReferenceHint:'Цитата сохранена. Проверьте реквизиты и объясните своими словами, как эта норма относится к делу.',
     savedSessions:'Незавершённые приёмы на этом устройстве', resumeSession:'Вернуться к приёму', recoverSession:'Найти сохранённый приём',
     noSavedSession:'Незавершённый приём не найден. Можно начать новую тренировку.', recovering:'Ищем сохранённый приём…',
@@ -63,7 +63,7 @@ const additions = {
     calendarTask:'Time-limit task', calendarRules:'Time-limit calculation rule', calendarDeadlineHint:'Use the calendar’s date button or enter a date yourself. Your calculation is saved when you switch pages.',
     calendarReadOnly:'The decision is finalized. Dates and your calculation remain available to view.', deadlineNotSelected:'No date chosen yet', openCalendar:'Calculate deadline', reviewCalendar:'Review calculation',
     needCase:'Start or resume a reception to open this page.', references:'Selected legal references',
-    noReferences:'Open a legal document, select a passage and choose “Add to decision”.', referenceAdded:'The legal reference was added to your draft.',
+    noReferences:'Open a legal document, select a passage and choose “Add to decision”.', sourceNotes:'Saved passages',referenceAdded:'The passage was saved in Documents.',
     removeReference:'Remove reference', useReference:'Fill citation fields', useReferenceHint:'Your quotation is saved. Check its citation and explain how it applies to this case.',
     savedSessions:'Unfinished receptions on this device', resumeSession:'Resume reception', recoverSession:'Find saved reception',
     noSavedSession:'No unfinished reception found. You can start a new exercise.', recovering:'Looking for your saved reception…',
@@ -93,7 +93,7 @@ const additions = {
     calendarTask:'期限任务', calendarRules:'期限计算规则', calendarDeadlineHint:'使用日历按钮填入日期，或自行输入。切换页面时会保存计算结果。',
     calendarReadOnly:'决定已提交。仍可查看日期和计算记录。', deadlineNotSelected:'尚未选择日期', openCalendar:'计算期限', reviewCalendar:'查看计算',
     needCase:'请先开始或恢复接待。', references:'已选法律依据', noReferences:'打开法律文件，选择片段，然后点击“加入决定”。',
-    referenceAdded:'法律依据已加入草稿。', removeReference:'移除依据', useReference:'填入引用信息', useReferenceHint:'引用已保存。请核对信息并解释它如何适用于本案。',
+    sourceNotes:'已保存的片段',referenceAdded:'片段已保存到文档中。', removeReference:'移除依据', useReference:'填入引用信息', useReferenceHint:'引用已保存。请核对信息并解释它如何适用于本案。',
     savedSessions:'本设备上未完成的接待', resumeSession:'继续接待', recoverSession:'查找已保存的接待', noSavedSession:'未找到未完成的接待，可开始新的训练。',
     recovering:'正在查找已保存的接待…', recoveryLimited:'暂时无法自动找到之前的接待。可在下方恢复本设备保存的记录。',
     decisionReady:'决定已提交', documentsSectionHint:'在此查阅案件材料和法律文件。', calendarOpen:'期限日历', sourceHint:'在此打开法律、选择条文，并加入决定草稿。',
@@ -102,7 +102,7 @@ const additions = {
 };
 const cabinetCopy = {
   "ru": {
-    "cabinet": "Рабочий кабинет",
+    "cabinet": "Обращения граждан",
     "trainingShift": "Учебная смена",
     "settings": "Настройки",
     "caseNumber": "Дело № {number}",
@@ -114,7 +114,7 @@ const cabinetCopy = {
     "draftStatus": "Черновик",
     "savedDraft": "Изменения сохранены",
     "factsBlock": "Факты и документы",
-    "actionsBlock": "Порядок действий",
+    "actionsBlock": "Необходимые действия",
     "lawFields": "Реквизиты и применение",
     "detailsEmpty": "Откройте раздел для заполнения",
     "factsSelected": "Выбрано материалов: {count}",
@@ -142,7 +142,7 @@ const cabinetCopy = {
     "openDocuments": "Материалы дела"
   },
   "en": {
-    "cabinet": "Workplace",
+    "cabinet": "Citizens’ appeals",
     "trainingShift": "Training shift",
     "settings": "Settings",
     "caseNumber": "Case No. {number}",
@@ -154,7 +154,7 @@ const cabinetCopy = {
     "draftStatus": "Draft",
     "savedDraft": "Changes saved",
     "factsBlock": "Facts and documents",
-    "actionsBlock": "Order of actions",
+    "actionsBlock": "Required actions",
     "lawFields": "Citation and application",
     "detailsEmpty": "Open this section to complete it",
     "factsSelected": "Materials selected: {count}",
@@ -182,7 +182,7 @@ const cabinetCopy = {
     "openDocuments": "Case materials"
   },
   "zh": {
-    "cabinet": "工作台",
+    "cabinet": "公民来信",
     "trainingShift": "教学值班",
     "settings": "设置",
     "caseNumber": "案件编号 {number}",
@@ -194,7 +194,7 @@ const cabinetCopy = {
     "draftStatus": "草稿",
     "savedDraft": "修改已保存",
     "factsBlock": "事实与材料",
-    "actionsBlock": "办理顺序",
+    "actionsBlock": "必要措施",
     "lawFields": "引用信息与适用",
     "detailsEmpty": "展开此项填写",
     "factsSelected": "已选材料：{count}",
