@@ -1,22 +1,27 @@
 import {randomUUID} from 'node:crypto';
 import {ReceptionError, fail, fields, identifier, string, locale, localized, copy, hash, validateCase, validateDecision, evaluateDecision, actorCase,MAX_CATALOG_CASES} from './schema.mjs';
-import {validateActorTurn, estimateReservation, costMicros} from './provider.mjs';
+import {validateActorTurn, estimateReservation, estimateReviewReservation, costMicros, reviewCostMicros} from './provider.mjs';
 import {selectShiftCases} from './selection.mjs';
 import {CATALOG_METADATA} from './catalog-metadata.mjs';
 import {legacySessionIds, LEGACY_RECOVERY_LIMITS} from './store.mjs';
 import {learningReviewFor} from './learning-review.mjs';
 import {WORKBOOK_VERSION,LEGACY_WORKBOOK_VERSION,supportsWorkbook,publicWorkbook,validateWorkbookDecision,evaluateWorkbook} from './workbook.mjs';
+import {DECISION_VERSION,CORRESPONDENCE_WEIGHTS,publicCorrespondenceSources,resolveCorrespondenceCitations,validateCorrespondenceControl,
+  buildCorrespondenceReview,scoreCorrespondenceReview,combineCorrespondenceFeedback} from './correspondence.mjs';
+import {privateCorrespondenceProfile,publicCorrespondenceProfile} from './correspondence-profiles.mjs';
+import {resolveLegalCitation as defaultLegalCitationResolver} from './correspondence-legal-sources.mjs';
 import {calendarNormId} from './workbook-norms.mjs';
 import {normativeActsForCase,validateLegalCitation,hasApplicableLegalCitation} from './normative-acts.mjs';
 
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
-  maxConcurrent: 8, maxDailyTurnsPerStudent: 240, maxDailyStartsPerStudent: 20, leaseMs: 45000, providerTimeoutMs: 30000};
+  maxConcurrent: 8, maxDailyTurnsPerStudent: 240, maxDailyStartsPerStudent: 20, leaseMs: 45000, providerTimeoutMs: 30000,
+  reviewLeaseMs:105000,reviewTimeoutMs:90000};
 const allowed = {
-  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion', 'context'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion', 'context'],
-  recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion', 'context'],
+  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','context'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
+  recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','context'],
   message: ['op', 'sessionId', 'text', 'requestId', 'expectedRevision'], document: ['op', 'sessionId', 'documentId', 'requestId'],
-  decide: ['op', 'sessionId', 'decision', 'requestId'], followup:['op','sessionId','requestId','choiceId'], next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion']
+  decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'], next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion']
 };
 const dayOf = n => new Date(n).toISOString().slice(0, 10), monthOf = n => dayOf(n).slice(0, 7);
 const scopeOf = identity => identity.teacher ? `teacher:${identity.uid}` : `student:${identity.studentKey || identity.uid}`;
@@ -47,10 +52,14 @@ const normalizeSession = s => {
   return s;
 };
 
-export function createReceptionService({store, cases, provider, clock = Date.now, config = {}, canStartAssessment = null, saveResult = null, requireGameplay = false} = {}) {
+export function createReceptionService({store, cases, provider, clock = Date.now, config = {}, canStartAssessment = null, saveResult = null, requireGameplay = false,
+  resolveLegalCitation=defaultLegalCitationResolver,
+  correspondenceProfiles={private:privateCorrespondenceProfile,public:publicCorrespondenceProfile}} = {}) {
   if (!store?.transaction || !store?.get || !provider?.generate) throw new TypeError('Reception adapters are required');
   const limits = {...DEFAULTS, ...config};
   if (limits.leaseMs <= limits.providerTimeoutMs + 3000) throw new TypeError('Lease must exceed provider timeout');
+  if(limits.reviewLeaseMs<=limits.reviewTimeoutMs+3000)throw new TypeError('Review lease must exceed review timeout');
+  if(limits.reviewTimeoutMs>90000||limits.reviewLeaseMs>110000)throw new TypeError('Review limits must fit the 120 second function deadline');
   for (const key of Object.keys(DEFAULTS)) if (!Number.isFinite(limits[key]) || limits[key] <= 0) throw new TypeError('Invalid reception limit');
   let catalogPromise;
   const legacyMigrations = new Map(), seminarMigrations = new Map();
@@ -110,19 +119,35 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       delete p.sources;
       if(p.assessment)delete p.assessment.research;
     }
+    const correspondence=s.decisionVersion===DECISION_VERSION;
+    const profile=correspondence?correspondenceProfiles.public(c,s.locale):null;
+    if(correspondence){
+      // Work-product sessions never publish the old multiple-choice answer menu.
+      delete p.assessment;p.actions=[];p.procedures=[];p.routes=[];p.procedureRequired=false;
+      p.correspondence=profile;p.decisionVersion=DECISION_VERSION;
+    }
     const result = s.status === 'complete' ? {points: s.result.points, maxPoints: 5, total: s.result.total, cap:s.result.cap||null, attemptId: s.result.attemptId,
       ...(s.context==='seminar'?s.seminarProgress:{}),
       journalStatus: s.teacher || s.mode === 'training' || provider.name === 'mock' || typeof saveResult !== 'function' ? 'local' : s.journalSaved ? 'saved' : 'pending',
       cases: s.results.map((r, i) => ({caseId: s.caseData[i].id, title: localized(s.caseData[i].public.title, s.locale), score: r.score,
-        feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null}))} : null;
+         feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null,
+         ...(correspondence?{caseInfo:localized({id:s.caseData[i].id,title:s.caseData[i].public.title,citizen:s.caseData[i].public.citizen,
+           date:s.caseData[i].public.date,role:s.caseData[i].public.role,
+           ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:publicWorkbook(s.caseData[i],s.workbookVersion,{gameplay:Boolean(s.context)})}:{})},s.locale),
+           correspondenceProfile:correspondenceProfiles.public(s.caseData[i],s.locale),
+           correspondenceSources:publicCorrespondenceSources(s.caseData[i],s.caseStates[i],s.locale,{includeFollowup:true})}:{}),
+         ...(s.caseStates[i].control?{control:s.caseStates[i].control}:{})}))} : null;
     return {id: s.id, revision: s.revision, mode: s.mode, locale: s.locale, caseIndex: s.caseIndex, caseCount: s.caseData.length,
       startedAt: s.startedAt, updatedAt: s.updatedAt, ...(s.buildId ? {buildId:s.buildId} : {}), ...(s.context ? {context:s.context} : {}),
       ...(s.context==='seminar'?{seminarProgress:s.seminarProgress}:{}),
+      ...(correspondence?{decisionVersion:DECISION_VERSION,correspondenceSources:publicCorrespondenceSources(c,state,s.locale,{includeFollowup:s.status!=='active'}),
+        draftDecision:state.correspondenceDraft||null,draftControl:state.controlDraft||null,reviewPending:state.reviewPending||null,control:state.control||null}:{}),
       status: s.status, case: {id: c.id, ...publicMetadata(c), ...p, ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale)}:{})}, messages: state.messages,
       documents: c.documents.filter(d => state.releasedDocumentIds.includes(d.id)).map(d => localized({id: d.id, title: d.title, type: d.type, text: d.text, chatAttachment:!s.context&&!d.initial,
         ...(d.image?{image:d.image}:{}),...(d.url?{url:d.url}:{}),...(d.sensitive!==undefined?{sensitive:d.sensitive}:{})}, s.locale)),
       openedDocumentIds: state.openedDocumentIds, decision: state.decision || null,
-      followup:s.status==='followup'&&c.followup?localized({intro:c.followup.intro,options:c.followup.options},s.locale):null,
+      followup:s.status==='followup'&&c.followup?(correspondence?{intro:localized(c.followup.intro,s.locale),control:true,issues:profile?.issues||[]}:
+        localized({intro:c.followup.intro,options:c.followup.options},s.locale)):null,
       followupChoiceId:state.followupChoiceId||null,
       feedback: s.mode === 'training' && state.feedback ? localized(state.feedback, s.locale) : null,
       learningReview: learningReviewFor({mode:s.mode,status:s.status,caseData:c,locale:s.locale}),result, provider: provider.name};
@@ -136,6 +161,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   }
   function sessionEntry(session) {
     return {id: session.id, mode: session.mode, status: session.status, revision: session.revision,
+      ...(session.decisionVersion?{decisionVersion:session.decisionVersion}:{}),
       startedAt: session.startedAt, updatedAt: session.updatedAt, ...(session.workbookVersion?{workbookVersion:session.workbookVersion}:{}),
       ...(session.buildId ? {buildId:session.buildId} : {}), ...(session.context ? {context:session.context} : {})};
   }
@@ -175,6 +201,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     async function indexed() {
       const index = await store.get(`${path}/entries`);
       const candidates = Object.values(index || {}).filter(entry => entry.mode === body.mode && entry.context === body.context && entry.status !== 'complete'
+        && (!body.decisionVersion || entry.decisionVersion===body.decisionVersion)
         && (!body.workbookVersion || entry.workbookVersion===body.workbookVersion) && (!body.buildId || entry.buildId === body.buildId) && /^[a-f0-9]{40}$/.test(entry.id))
         .sort((a, b) => b.updatedAt - a.updatedAt || b.startedAt - a.startedAt || b.id.localeCompare(a.id));
       for (let i = 0; i < candidates.length; i++) {
@@ -182,7 +209,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         const entry = candidates[i], s = normalizeSession(await store.get(`sessions/${entry.id}`));
         if (!s) { await store.transaction(`${path}/entries/${entry.id}`, () => null); continue; }
         own(s, identity);
-        if (s.mode !== body.mode || s.context !== body.context || s.status === 'complete' || body.workbookVersion && s.workbookVersion!==body.workbookVersion || body.buildId && s.buildId !== body.buildId) { await remember(s); continue; }
+        if (s.mode !== body.mode || s.context !== body.context || s.status === 'complete' || body.workbookVersion && s.workbookVersion!==body.workbookVersion || body.buildId && s.buildId !== body.buildId
+          ||body.decisionVersion&&s.decisionVersion!==body.decisionVersion) { await remember(s); continue; }
         return response(s);
       }
       return null;
@@ -257,6 +285,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (context==='free' && mode!=='training') fail('invalid_mode');
     if (body.studentKey && body.studentKey !== identity.studentKey && !identity.teacher) fail('forbidden', 403);
     if (provider.ready === false) fail('not_configured', 503);
+    if(body.decisionVersion===DECISION_VERSION&&typeof provider.reviewDecision!=='function')fail('reviewer_unavailable',503);
     const owner = scopeOf(identity), requestScope = context ? `${owner}:${context}` : owner;
     const id = hash(`${requestScope}:${body.requestId}`).slice(0, 40), signature = hash(body);
     const existing = normalizeSession(await store.get(`sessions/${id}`));
@@ -265,7 +294,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (requireGameplay && body.workbookVersion!==WORKBOOK_VERSION) fail('invalid_workbook');
     const timestamp = clock(), day = dayOf(timestamp), ownerKey = hash(owner);
     if (mode === 'independent' && !identity.teacher && canStartAssessment && !await canStartAssessment(timestamp)) fail('assessment_closed', 403);
-    const all = (await catalogue()).filter(c=>!body.workbookVersion||supportsWorkbook(c,body.workbookVersion));
+    const all = (await catalogue()).filter(c=>(!body.workbookVersion||supportsWorkbook(c,body.workbookVersion))
+      &&(!body.decisionVersion||Boolean(correspondenceProfiles.private(c))));
     if (mode === 'independent' && context !== 'seminar' && new Set(all.map(c=>c.familyId||c.id)).size < 8) fail('pilot_incomplete', 503);
     if (Object.hasOwn(body, 'caseId')) {
       identifier(body.caseId);
@@ -288,6 +318,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       if (!grant.committed) fail('daily_limit', 429);
     }
     const session = {schema: 1, id, owner, studentKey: identity.studentKey || null, uid: identity.uid, teacher: Boolean(identity.teacher),
+      ...(body.decisionVersion?{decisionVersion:body.decisionVersion}:{}),
       mode, locale: language, ...(body.workbookVersion?{workbookVersion:body.workbookVersion}:{}), ...(body.buildId ? {buildId:body.buildId} : {}), startedAt: timestamp, updatedAt: timestamp, revision: 1, status: 'active', caseIndex: 0,
       ...(context ? {context} : {}), ...(seminar ? {seminarProgress:seminar.progress} : {}),
       caseData: selected, caseStates: selected.map(c => initialState(c, language, timestamp,context)), results: [], requests: {},
@@ -300,8 +331,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
 
   // This ledger is entirely server-owned. Reservations are charged pessimistically
   // before a provider call. A crash or ambiguous timeout never refunds spent money.
-  async function reserve(session, requestId, amount) {
-    const now = clock(), day = dayOf(now), month = monthOf(now), owner = hash(session.owner), token = hash(`${session.id}:${requestId}`).slice(0, 40);
+  async function reserve(session, requestId, amount, reviewAttempt = null) {
+    const now = clock(), day = dayOf(now), month = monthOf(now), owner = hash(session.owner);
+    const review = reviewAttempt !== null, leaseMs = review ? limits.reviewLeaseMs : limits.leaseMs;
+    const token = hash(review ? [session.id,'review',requestId,reviewAttempt] : `${session.id}:${requestId}`).slice(0, 40);
     const result = await store.transaction('budget', prior => {
       const b = prior || {}; b.days ||= {}; b.months ||= {}; b.active ||= {}; b.reservations ||= {};
       for (const [key, value] of Object.entries(b.active)) if (value.expiresAt <= now) delete b.active[key];
@@ -315,8 +348,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const o = d.owners[owner] ||= {micros: 0, turns: 0};
       if (Object.keys(b.active).length >= limits.maxConcurrent || d.micros + amount > limits.dailyBudgetMicros || m.micros + amount > limits.monthlyBudgetMicros || o.micros + amount > limits.studentDailyBudgetMicros || o.turns >= limits.maxDailyTurnsPerStudent) return undefined;
       d.micros += amount; m.micros += amount; o.micros += amount; o.turns++;
-      b.active[token] = {expiresAt: now + limits.leaseMs};
-      b.reservations[token] = {amount, day, month, owner, createdAt: now, settled: false}; return b;
+      b.active[token] = {expiresAt: now + leaseMs};
+      b.reservations[token] = {amount, day, month, owner, createdAt: now, settled: false, ...(review ? {review:true} : {})}; return b;
     });
     if (!result.committed) fail('budget_or_rate_limit', 429);
     return token;
@@ -326,7 +359,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       if (!b?.reservations?.[token]) return undefined;
       const r = b.reservations[token]; if (r.settled) return undefined;
       const valid = Number.isSafeInteger(usage?.inputTokens) && usage.inputTokens >= 0 && Number.isSafeInteger(usage?.outputTokens) && usage.outputTokens >= 0;
-      const actual = valid ? costMicros(usage.inputTokens, usage.outputTokens) : r.amount;
+      const actual = !valid ? r.amount : r.review ? reviewCostMicros(usage.inputTokens,usage.outputTokens,usage.cachedInputTokens) : costMicros(usage.inputTokens,usage.outputTokens);
       const delta = actual - r.amount;
       if (b.days?.[r.day]) { b.days[r.day].micros += delta; if (b.days[r.day].owners?.[r.owner]) b.days[r.day].owners[r.owner].micros += delta; }
       if (b.months?.[r.month]) b.months[r.month].micros += delta;
@@ -351,7 +384,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return normalizeSession(result.value);
   }
   async function finalizeSeminar(s) {
-    const available = (await catalogue()).filter(c => !s.workbookVersion || supportsWorkbook(c,s.workbookVersion));
+    const available = (await catalogue()).filter(c => (!s.workbookVersion || supportsWorkbook(c,s.workbookVersion))
+      &&(s.decisionVersion!==DECISION_VERSION||Boolean(correspondenceProfiles.private(c))));
     const recorded = await store.transaction(seminarPath(s.owner), progress => {
       const attempt = progress?.attempts?.[s.id];
       if (!attempt || attempt.caseId !== s.caseData[0].id || attempt.signature !== s.startSignature) return undefined;
@@ -380,7 +414,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         const result = s.context==='seminar'?{...s.result,seminarPoints:s.seminarProgress.seminarPoints}:copy(s.result);
         await saveResult({sessionId: s.id, studentKey: s.studentKey, uid: s.uid, result, startedAt: s.startedAt, completedAt: s.result.completedAt ?? s.updatedAt,
           cases: s.caseData.map(c => ({id: c.id, version: c.version,...(c.datePackId?{datePackId:c.datePackId}:{}),...(c.familyId?{familyId:c.familyId}:{})})),
-          decisions: s.caseStates.map(state => state.followupChoiceId?{...state.decision,followupChoiceId:state.followupChoiceId}:state.decision)});
+          decisions: s.caseStates.map(state => state.control?{...state.decision,control:state.control,correspondenceFeedback:state.feedback?.correspondence}:
+            state.followupChoiceId?{...state.decision,followupChoiceId:state.followupChoiceId}:state.decision)});
         await store.transaction(`sessions/${s.id}`, old => old ? {...old, journalSaved: true} : undefined); s.journalSaved = true;
       } catch { /* The immutable completed shift remains resumable; retry receipt on resume. */ }
     }
@@ -436,7 +471,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         st.knownFactIds = [...new Set([...st.knownFactIds, ...turn.revealedFactIds])];
         if(!current.context)st.releasedDocumentIds = [...new Set([...st.releasedDocumentIds, ...turn.releasedDocumentIds])];
         st.turns++;
-        current.requests[requestId] = {digest, status: 'done', guarded: turn.guarded}; current.lease = null; current.revision++; current.updatedAt = clock(); return current;
+        current.requests[requestId] = {digest, status: 'done', guarded: turn.guarded,
+          ...(generated.actorModels?.reply && generated.actorModels?.verification ? {actorModels:generated.actorModels} : {})};
+        current.lease = null; current.revision++; current.updatedAt = clock(); return current;
       });
       if (!finished.committed) fail('request_interrupted', 409);
       return response(finished.value);
@@ -448,22 +485,146 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       throw error instanceof ReceptionError ? error : new ReceptionError('unavailable', 503);
     } finally { if (reservation) await settle(reservation, usage); }
   }
+  function correspondenceOperational(c,decision,workbookVersion,context) {
+    const base={score:0,criteria:[
+      {id:'route',earned:0,max:CORRESPONDENCE_WEIGHTS.initial.route},
+      {id:'calendar',earned:0,max:CORRESPONDENCE_WEIGHTS.initial.calendar},
+    ],cap:null,explanation:''};
+    if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(workbookVersion))return evaluateWorkbook(c,decision,base,workbookVersion,{gameplay:Boolean(context)});
+    base.criteria[0].earned=c.rubric.routeIds.includes(decision.routeId)?base.criteria[0].max:0;
+    base.criteria[1].earned=decision.deadline===c.rubric.deadline?base.criteria[1].max:0;
+    base.score=base.criteria.reduce((sum,row)=>sum+row.earned,0);
+    return base;
+  }
+
+  async function reviewCorrespondence(body,identity) {
+    const requestId=identifier(body.requestId),requestDigest=hash(body),timestamp=clock(),leaseId=randomUUID();
+    const phase=body.op==='followup'?'control':'initial';
+    let failure;
+    const acquired=await store.transaction('sessions/'+identifier(body.sessionId),old=>{
+      const s=normalizeSession(old);
+      try{
+        own(s,identity);if(s.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
+        const prior=Object.hasOwn(s.requests,requestId)?s.requests[requestId]:null;
+        if(prior){
+          if(prior.digest!==requestDigest)fail('request_conflict',409);
+          if(prior.status==='done')return s;
+          if(s.lease?.until>timestamp)fail('busy',409);
+        }
+        if(s.lease&&s.lease.until>timestamp)fail('busy',409);
+        if(s.status!==(phase==='control'?'followup':'active'))fail('not_active',409);
+        if(body.expectedRevision!==undefined&&(!Number.isSafeInteger(body.expectedRevision)||s.revision!==body.expectedRevision))fail('revision_conflict',409);
+        const c=s.caseData[s.caseIndex],state=s.caseStates[s.caseIndex],profile=correspondenceProfiles.private(c);
+        if(!profile)fail('invalid_case',503);
+        if(phase==='initial'){
+          if(state.decision)fail('not_active',409);
+          const raw=copy(body.decision);let workbook;
+          if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)){
+            workbook=validateWorkbookDecision(raw?.workbook,s.workbookVersion);delete raw.workbook;
+          }
+          const decision=validateDecision(raw,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:s.locale});
+          if(workbook)decision.workbook=workbook;
+          state.correspondenceDraft=decision;
+        }else{
+          if(body.choiceId!==undefined||!state.decision||state.control)fail('invalid_control');
+          state.controlDraft=validateCorrespondenceControl(body.control,c,state,profile,s.locale);
+        }
+        state.reviewPending={requestId,phase,status:'pending'};
+        s.lease={id:leaseId,requestId,until:timestamp+limits.reviewLeaseMs};
+        s.requests[requestId]={digest:requestDigest,status:'pending',phase,attempt:prior ? (prior.attempt||1)+1 : 1};
+        return s;
+      }catch(error){failure=error;return undefined;}
+    });
+    if(!acquired.committed)throw failure||new ReceptionError('conflict',409);
+    const s=normalizeSession(acquired.value);
+    if(s.requests[requestId].status==='done')return response(s);
+    const {attempt}=s.requests[requestId];
+    const c=s.caseData[s.caseIndex],state=s.caseStates[s.caseIndex],profile=correspondenceProfiles.private(c);
+    let reservation,usage;
+    const controller=new AbortController();
+    try{
+      if(provider.ready===false||typeof provider.reviewDecision!=='function')fail('reviewer_unavailable',503);
+      const decision=phase==='initial'?state.correspondenceDraft:state.decision;
+      const evidence=phase==='initial'?await resolveCorrespondenceCitations(c,state,decision.correspondence,s.locale,{resolveLegalCitation,signal:controller.signal}):
+        copy(state.correspondenceEvidence||[]);
+      const operational=phase==='initial'?correspondenceOperational(c,decision,s.workbookVersion,s.context):null;
+      const context=buildCorrespondenceReview(c,state,decision,s.locale,{
+        profile,resolvedCitations:evidence,phase,control:phase==='control'?state.controlDraft:null,operational,
+        workbook:[LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale):null,
+      });
+      const estimate=estimateReviewReservation({context});
+      if(estimate.perCallInputTokens>limits.maxInputAllowance)fail('context_limit',413);
+      // Every failed attempt has a separately charged receipt. A successful request
+      // is returned from the session ledger without invoking the reviewer again.
+      reservation=await reserve(s,requestId,estimate.micros,attempt);
+      let timeout,generated;
+      const deadline=new Promise((_,reject)=>{timeout=setTimeout(()=>{
+        controller.abort();reject(new ReceptionError('review_unavailable',503));
+      },limits.reviewTimeoutMs);});
+      try{generated=await Promise.race([provider.reviewDecision({context,signal:controller.signal}),deadline]);}
+      finally{clearTimeout(timeout);}
+      usage=generated?.usage;
+      if(generated?.verified!==true)fail('review_unconfirmed',503);
+      const feedback=scoreCorrespondenceReview(generated.review,context);
+      const finished=await store.transaction('sessions/'+s.id,old=>{
+        const current=normalizeSession(old);
+        if(!current||current.lease?.id!==leaseId||current.caseIndex!==s.caseIndex)return undefined;
+        const st=current.caseStates[current.caseIndex];
+        if(phase==='initial'){
+          st.decision=copy(decision);st.correspondenceEvidence=copy(evidence);
+          st.correspondenceInitialFeedback=copy(feedback);st.correspondenceDraft=null;
+          if(c.followup){st.feedback=null;current.status='followup';}
+          else{st.feedback=feedback;current.results.push(feedback);current.status='review';}
+        }else{
+          st.control=copy(state.controlDraft);st.controlDraft=null;
+          st.correspondenceControlFeedback=copy(feedback);
+          st.feedback=combineCorrespondenceFeedback(st.correspondenceInitialFeedback,feedback);
+          current.results.push(st.feedback);current.status='review';
+        }
+        st.reviewPending=null;
+        current.requests[requestId]={digest:requestDigest,status:'done',phase,attempt,reviewContextHash:hash(context),
+          ...(generated.reviewModels?.assessment && generated.reviewModels?.verification ? {reviewModels:generated.reviewModels} : {})};
+        current.lease=null;current.revision++;current.updatedAt=clock();return current;
+      });
+      if(!finished.committed)fail('request_interrupted',409);
+      return response(finished.value);
+    }catch(error){
+      const safe=error instanceof ReceptionError?error:new ReceptionError('review_unavailable',503);
+      await store.transaction('sessions/'+s.id,old=>{
+        const current=normalizeSession(old);
+        if(!current||current.lease?.id!==leaseId)return undefined;
+        current.requests[requestId]={digest:requestDigest,status:'failed',phase,attempt};
+        current.caseStates[current.caseIndex].reviewPending={requestId,phase,status:'retry',code:safe.code};
+        current.lease=null;return current;
+      });
+      throw safe;
+    }finally{controller.abort();if(reservation)await settle(reservation,usage);}
+  }
+
   async function handle(body, identity) {
     checkIdentity(identity); if (!body || !Object.hasOwn(allowed, body.op)) fail('invalid_operation'); fields(body, allowed[body.op]);
     if (body.context!==undefined && !['seminar','free'].includes(body.context)) fail('invalid_context');
     if(body.workbookVersion!==undefined&&![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(body.workbookVersion))fail('invalid_workbook');
+    if(body.decisionVersion!==undefined&&body.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
     if (body.buildId !== undefined && (typeof body.buildId !== 'string' || !/^[a-f0-9]{32}$/.test(body.buildId))) fail('invalid_build');
-    if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).filter(c=>!body.workbookVersion||supportsWorkbook(c,body.workbookVersion)).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
+    if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).filter(c=>(!body.workbookVersion||supportsWorkbook(c,body.workbookVersion))&&
+      (!body.decisionVersion||Boolean(correspondenceProfiles.private(c)))).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
     if (body.op === 'start') return start(body, identity);
     if (body.op === 'resume') {
       const session=await get(body.sessionId, identity);
       const historicalResult = session.status==='complete' && !session.context;
       if(body.context && session.context!==body.context && !historicalResult)fail('outdated_session',409);
       if((body.buildId && session.buildId!==body.buildId||body.workbookVersion&&session.workbookVersion!==body.workbookVersion) && session.status!=='complete') fail('outdated_session',409);
+      if(body.decisionVersion&&session.decisionVersion!==body.decisionVersion&&session.status!=='complete')fail('outdated_session',409);
       return response(session);
     }
     if (body.op === 'recover') return recover(body, identity);
     if (body.op === 'message') return message(body, identity);
+    if(['decide','followup'].includes(body.op)){
+      const session=await get(body.sessionId,identity);
+      if(session.decisionVersion===DECISION_VERSION)return reviewCorrespondence(body,identity);
+      if(body.control!==undefined||body.decision?.correspondence!==undefined)fail('invalid_decision_version');
+    }
     if (body.op === 'locale') {
       const language = locale(body.locale); let failure;
       const r = await store.transaction(`sessions/${identifier(body.sessionId)}`, old => {

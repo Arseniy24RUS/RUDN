@@ -1,0 +1,41 @@
+import {COPY} from './copy.js';
+
+const additions = {
+  ru:{
+    responseTitle:'Проект ответа по обращению', responseTask:'Подготовьте связный документ по материалам дела. Подкрепите существенные выводы точными фрагментами источников; поручения добавляйте там, где требуется действие или проверка.',
+    responseSubmit:'Передать проект на проверку', responseConfirm:'Зафиксировать проект', responseConfirmText:'Текст, источники, адресаты и сроки будут сохранены как ваша работа. После фиксации появятся новые сведения для контроля исполнения.',
+    responseUse:'Использовать в проекте',responseAttached:'Источник прикреплён к проекту. Объясните в тексте, какой вывод он подтверждает.',
+    responseQuoteNeeded:'Выберите точный фрагмент источника длиной до 4000 знаков. Текст цитаты должен совпадать с материалом.',
+    responseRouting:'Адресаты рассмотрения',responseRoutingHint:'Выберите, кто рассматривает вопросы обращения. Исполнителей отдельных поручений можно уточнить в их карточках.',
+    responseControlFixed:'Первичный проект зафиксирован. Новые сведения оцениваются отдельно и не меняют оценку первоначального решения.',
+    responseReviewPending:'Проверка ещё не завершена. Черновик сохранён; неподтверждённая оценка не выставляется.',
+    responseReviewRetry:'Повторить проверку',responseReviewUnavailable:'Проверка временно недоступна. Работа сохранена. Повторите запрос — оценка за технический сбой не снижается.',
+    responseInvalidCitation:'Не удалось подтвердить цитату. Откройте источник и выберите его точный фрагмент ещё раз.',
+    responseInvalid:'Проверьте заполнение проекта, источники и адресатов поручений.',responseTooLarge:'Материал превышает технический объём одного запроса. Сократите повторяющиеся цитаты и отправьте проект снова.',
+    responseProtocol:'Обоснование оценки',responseInitial:'Первичный проект',responseControl:'Контроль исполнения',responseTotal:'Итог по делу: 80% за первичный проект и 20% за контроль.',
+    responseCritical:'Критическое нарушение ограничило оценку этого этапа до 60 баллов.',responseNoFeedback:'Проект сохранён. Подробный разбор будет доступен после завершения самостоятельной смены.',
+    responseWork:'Подготовленный документ',responseReturn:'К проекту',responseAssignmentRecipient:'Адресат поручения',responseAssignmentDone:'Вернуться к поручению',
+    responseChooseIssuer:'Кто рассмотрит вопрос',responseSourceUnavailable:'Текст нормативного источника временно недоступен для проверки. Работа сохранена; повторите запрос.',
+  },
+  en:{
+    responseTitle:'Draft response to the appeal',responseTask:'Prepare a coherent document from the case file. Support material conclusions with exact source passages; add assignments where action or verification is needed.',
+    responseSubmit:'Submit draft for review',responseConfirm:'Record the draft',responseConfirmText:'Your text, sources, recipients and deadlines will be saved as your work. New information for follow-through will then become available.',
+    responseUse:'Use in the draft',responseAttached:'The source is attached. Explain in your text which conclusion it supports.',responseQuoteNeeded:'Select an exact source passage of up to 4,000 characters. The quotation must match the source.',
+    responseRouting:'Bodies reviewing the appeal',responseRoutingHint:'Choose who reviews the appeal issues. You can specify recipients of individual assignments in their cards.',
+    responseControlFixed:'Your initial draft is recorded. New information is assessed separately and does not change the initial assessment.',
+    responseReviewPending:'Review is not complete. Your draft is saved; an unconfirmed grade is not recorded.',responseReviewRetry:'Retry review',responseReviewUnavailable:'Review is temporarily unavailable. Your work is saved. Retry the request; technical failure does not lower your grade.',
+    responseInvalidCitation:'The quotation could not be verified. Open the source and select the exact passage again.',responseInvalid:'Check the draft, sources and assignment recipients.',responseTooLarge:'The material exceeds the technical request size. Remove repeated quotations and submit again.',
+    responseProtocol:'Assessment reasons',responseInitial:'Initial draft',responseControl:'Follow-through',responseTotal:'Case result: 80% initial draft and 20% follow-through.',responseCritical:'A critical error capped this stage at 60 points.',responseNoFeedback:'Your draft is saved. Detailed feedback will be available after the independent shift.',
+    responseWork:'Prepared document',responseReturn:'Back to the draft',responseAssignmentRecipient:'Assignment recipient',responseAssignmentDone:'Back to the assignment',responseChooseIssuer:'Body reviewing the issue',responseSourceUnavailable:'The legal source cannot currently be verified. Your work is saved; retry the request.',
+  },
+  zh:{
+    responseTitle:'来信答复草稿',responseTask:'根据案件材料拟定完整文书。以准确的原文片段支持重要结论；需要行动或核查时添加任务。',
+    responseSubmit:'提交草稿审核',responseConfirm:'保存并提交草稿',responseConfirmText:'您的文书、来源、接收方和期限将作为作业保存。之后会显示用于执行监督的新信息。',
+    responseUse:'用于草稿',responseAttached:'来源已附加。请在文书中解释它支持的结论。',responseQuoteNeeded:'请选择不超过4000字符的准确原文。引文必须与来源一致。',
+    responseRouting:'办理机关',responseRoutingHint:'请选择办理各项诉求的机关；具体任务的接收方可在任务卡中指定。',
+    responseControlFixed:'初始草稿已保存。新信息将单独评分，不改变初始作业的分数。',responseReviewPending:'审核尚未完成。草稿已保存；不会记录未经确认的成绩。',responseReviewRetry:'重新审核',responseReviewUnavailable:'审核暂时不可用。作业已保存，请重试。技术故障不会降低成绩。',
+    responseInvalidCitation:'无法核实引文。请打开来源并重新选择准确片段。',responseInvalid:'请检查草稿、来源和任务接收方。',responseTooLarge:'材料超出单次请求的技术容量。请删除重复引文后重新提交。',
+    responseProtocol:'评分理由',responseInitial:'初始草稿',responseControl:'执行监督',responseTotal:'案件总分：初始草稿占80%，执行监督占20%。',responseCritical:'严重错误将本阶段得分上限限制为60分。',responseNoFeedback:'草稿已保存。独立轮班结束后可查看详细反馈。',responseWork:'已拟定的文书',responseReturn:'返回草稿',responseAssignmentRecipient:'任务接收方',responseAssignmentDone:'返回任务',responseChooseIssuer:'办理机关',responseSourceUnavailable:'暂时无法核验法规原文。作业已保存，请重试。',
+  },
+};
+for (const locale of Object.keys(additions)) Object.assign(COPY[locale], additions[locale]);

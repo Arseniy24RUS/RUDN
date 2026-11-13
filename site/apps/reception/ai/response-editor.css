@@ -1,0 +1,165 @@
+/* A writing surface inside the existing five-tab reception cabinet. */
+.reception-ai-root .rxc-icon{width:20px;height:20px;flex-shrink:0;vertical-align:middle}
+.reception-ai-root .rxc-editor,.reception-ai-root .rxc-preview,.reception-ai-root .rxc-control{min-width:0}
+.reception-ai-root .rxc-editor-toolbar,.reception-ai-root .rxc-preview-toolbar,.reception-ai-root .rxc-orders-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.reception-ai-root .rxc-editor-toolbar{padding:0 0 18px;border-bottom:1px solid var(--rxa-border)}
+.reception-ai-root .rxc-editor-toolbar>div,.reception-ai-root .rxc-orders-heading>div{display:flex;align-items:center;gap:10px}
+.reception-ai-root .rxc-editor-toolbar strong{font-size:18px;font-weight:650}
+.reception-ai-root .rxc-editor-toolbar>div>.rxc-icon,.reception-ai-root .rxc-orders-heading>div>.rxc-icon{color:var(--rxa-blue)}
+.reception-ai-root .rxc-document-meta{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(220px,1.4fr);gap:16px;padding:22px 0}
+.reception-ai-root .rxc-editor select,.reception-ai-root .rxc-control select{width:100%;min-width:0;min-height:44px;border:1px solid #c7d7e5;border-radius:9px;background:#fff;color:var(--rxa-ink);padding:10px 34px 10px 12px;font-size:14px}
+.reception-ai-root .rxc-writing-sheet{border:1px solid var(--rxa-border);background:#fff;border-radius:12px;overflow:hidden}
+.reception-ai-root .rxc-writing-section{padding:24px 26px;border-bottom:1px solid var(--rxa-border)}
+.reception-ai-root .rxc-writing-section:last-child{border-bottom:0}
+.reception-ai-root .rxc-writing-heading{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.reception-ai-root .rxc-writing-heading>span{font-size:11px;letter-spacing:.08em;color:#788ea2;font-weight:650}
+.reception-ai-root .rxc-writing-heading>label{font-size:17px;font-weight:650;color:var(--rxa-ink);cursor:text}
+.reception-ai-root .rxc-writing-section>textarea{display:block;width:100%;min-height:134px;padding:13px 15px;border:1px solid #ccdae6;border-radius:9px;background:#fbfcfe;color:var(--rxa-ink);font-size:15px;line-height:1.7;resize:vertical;transition:border-color .15s,background-color .15s}
+.reception-ai-root .rxc-writing-section>textarea:focus{outline:2px solid #c2e1f5;outline-offset:1px;border-color:#63aad6;background:#fff}
+.reception-ai-root .rxc-writing-section>textarea:disabled{background:#f2f5f8;color:#64778b}
+.reception-ai-root .rxc-writing-hint{font-size:12px;line-height:1.55;color:var(--rxa-muted);margin:9px 0 0}
+.reception-ai-root .rxc-source-drawer{margin-top:16px;background:#f6f9fc;border-radius:8px}
+.reception-ai-root .rxc-source-drawer>summary,.reception-ai-root .rxc-control-sources>summary{display:flex;align-items:center;gap:8px;min-height:44px;padding:9px 11px;list-style:none;cursor:pointer;color:#486782;font-size:12px;font-weight:550}
+.reception-ai-root .rxc-source-drawer>summary::-webkit-details-marker,.reception-ai-root .rxc-control-sources>summary::-webkit-details-marker,.reception-ai-root .rxc-order>summary::-webkit-details-marker{display:none}
+.reception-ai-root .rxc-source-drawer>summary>small,.reception-ai-root .rxc-control-sources>summary>small{display:grid;place-items:center;min-width:22px;min-height:22px;padding:1px 5px;border-radius:6px;background:#e5edf5;font-size:11px;color:#466583}
+.reception-ai-root .rxc-source-drawer>summary>.rxc-icon:last-child,.reception-ai-root .rxc-control-sources>summary>.rxc-icon:last-child{margin-left:auto;width:16px;height:16px;transition:transform .15s}
+.reception-ai-root .rxc-source-drawer[open]>summary>.rxc-icon:last-child,.reception-ai-root .rxc-control-sources[open]>summary>.rxc-icon:last-child,.reception-ai-root .rxc-order[open]>summary>.rxc-icon:last-child{transform:rotate(180deg)}
+.reception-ai-root .rxc-source-drawer-body{padding:0 12px 12px}
+.reception-ai-root .rxc-source-picker{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:end;margin-top:9px}
+.reception-ai-root .rxc-source-picker .rxa-btn{font-size:12px}
+.reception-ai-root .rxc-source-quotation{margin-top:12px}
+.reception-ai-root .rxc-source-quotation textarea{min-height:90px;font-size:13px}
+.reception-ai-root .rxc-source-attach{display:flex;justify-content:flex-end;margin-top:9px}
+.reception-ai-root .rxc-source-attach .rxa-btn{font-size:12px}
+.reception-ai-root .rxc-source-links{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:8px}
+.reception-ai-root .rxc-source-links .rxa-btn{font-size:12px;padding:8px 10px}
+.reception-ai-root .rxc-citation{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:4px 9px;padding:10px 0;border-top:1px solid #e1eaf2}
+.reception-ai-root .rxc-citation>div{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px;overflow-wrap:anywhere}
+.reception-ai-root .rxc-citation-number{display:grid;place-items:center;min-width:23px;height:23px;border:1px solid #c8dae9;border-radius:5px;color:#4a7292;background:#fff;font-size:11px}
+.reception-ai-root .rxc-citation>blockquote{grid-column:1/-1;margin:2px 0 0 31px;padding-left:10px;border-left:2px solid #c0d5e6;font-size:12px;line-height:1.6;color:#526f87;white-space:pre-wrap;overflow-wrap:anywhere;max-height:170px;overflow:auto}
+.reception-ai-root .rxc-citation .rxc-icon-button{border:0;background:transparent;padding:8px;min-width:36px;min-height:36px;width:36px;color:#637d93}
+.reception-ai-root .rxc-icon-button>span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.reception-ai-root .rxc-muted{font-size:13px;line-height:1.6;color:var(--rxa-muted)}
+.reception-ai-root .rxc-orders{margin-top:28px}
+.reception-ai-root .rxc-orders-heading{gap:12px}
+.reception-ai-root .rxc-orders-heading h3{font-size:17px;font-weight:650}
+.reception-ai-root .rxc-orders-heading .rxa-btn{font-size:12px}
+.reception-ai-root .rxc-no-orders{margin-top:10px}
+.reception-ai-root .rxc-order{border:1px solid var(--rxa-border);border-radius:11px;background:#fff;margin-top:12px;overflow:hidden}
+.reception-ai-root .rxc-order>summary{display:flex;align-items:center;gap:12px;padding:15px 16px;min-height:66px;cursor:pointer;list-style:none}
+.reception-ai-root .rxc-order-number{display:grid;place-items:center;width:30px;height:34px;border-radius:8px;background:#edf5fc;color:#437698;font-size:12px;font-weight:650;flex-shrink:0}
+.reception-ai-root .rxc-order>summary>span:nth-child(2){flex:1;min-width:0}
+.reception-ai-root .rxc-order>summary strong{display:block;font-size:14px;font-weight:600;line-height:1.5;overflow-wrap:anywhere}
+.reception-ai-root .rxc-order>summary small{display:block;margin-top:3px;color:var(--rxa-muted);font-size:11px;line-height:1.5}
+.reception-ai-root .rxc-order>summary>.rxc-icon:last-child{width:16px;height:16px;transition:transform .15s}
+.reception-ai-root .rxc-order-body{padding:3px 18px 17px;border-top:1px solid #edf1f5}
+.reception-ai-root .rxc-order-body>.rxa-field{margin-top:15px}
+.reception-ai-root .rxc-order-top,.reception-ai-root .rxc-order-bottom{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:15px}
+.reception-ai-root .rxc-order-bottom .quiet{font-size:11px;padding:5px 0;min-height:36px}
+.reception-ai-root .rxc-recipients{margin:18px 0 0;border:0;padding:0;min-width:0}
+.reception-ai-root .rxc-recipients legend{padding:0;font-size:12px;font-weight:650;margin-bottom:7px;color:#34516c}
+.reception-ai-root .rxc-recipient-choice{display:flex;align-items:flex-start;gap:9px;font-size:12px;line-height:1.55;min-height:40px;padding:9px 0;color:#36546e;overflow-wrap:anywhere}
+.reception-ai-root .rxc-recipient-choice input{accent-color:var(--rxa-blue);width:17px;height:17px;flex-shrink:0;margin:1px 0 0}
+.reception-ai-root .rxc-recipients>.quiet{font-size:12px;padding:7px 0}
+.reception-ai-root .rxc-order-citations{margin-top:12px;border-top:1px solid #e5edf4;padding-top:8px}
+.reception-ai-root .rxc-order-citations>summary{font-size:12px;font-weight:550;padding:7px 0;cursor:pointer}
+.reception-ai-root .rxc-order-remove{display:flex;justify-content:flex-end;border-top:1px solid #edf1f5;margin-top:12px;padding-top:7px}
+.reception-ai-root .rxc-order-remove .rxa-btn{font-size:11px;color:#6a7887}
+.reception-ai-root .rxc-preview-toolbar{margin-bottom:18px}
+.reception-ai-root .rxc-preview-toolbar>div{display:flex;gap:8px;flex-wrap:wrap}
+.reception-ai-root .rxc-preview-toolbar .rxa-btn{font-size:12px}
+.reception-ai-root .rxc-preview-stage{background:#eef3f7;border:1px solid #d9e3ec;border-radius:12px;padding:26px 28px 34px;min-width:0}
+.reception-ai-root .rxc-project-mark{font-size:10px;line-height:1.5;color:#63788b;text-transform:uppercase;letter-spacing:.12em;max-width:760px;margin:0 auto 12px}
+.reception-ai-root .rxc-letter{background:#fff;color:#1d3347;border:1px solid #e2e8ed;box-shadow:0 3px 16px #15354d08;padding:50px 54px;min-height:650px;max-width:760px;margin:0 auto;overflow-wrap:anywhere;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.75}
+.reception-ai-root .rxc-letter-issuer{font-family:'Reception Inter','Segoe UI',Arial,sans-serif;font-size:19px;line-height:1.45;font-weight:650;max-width:560px;color:#173a58}
+.reception-ai-root .rxc-letter-rule{height:2px;background:#447396;margin:25px 0 15px}
+.reception-ai-root .rxc-letter-meta{display:flex;justify-content:space-between;gap:20px;font:11px/1.5 'Reception Inter','Segoe UI',Arial,sans-serif;color:#687e92}
+.reception-ai-root .rxc-letter-meta>span{max-width:55%}
+.reception-ai-root .rxc-letter-meta>span+span{text-align:right}
+.reception-ai-root .rxc-letter-subject{font-family:'Reception Inter','Segoe UI',Arial,sans-serif;font-size:20px;font-weight:650;line-height:1.5;letter-spacing:0;margin:34px 0 25px}
+.reception-ai-root .rxc-letter-body{margin-top:30px}
+.reception-ai-root .rxc-letter-block{margin-bottom:20px}
+.reception-ai-root .rxc-letter-block p{margin:0 0 13px;white-space:normal}
+.reception-ai-root .rxc-letter-citations{font:10px/1.5 'Reception Inter','Segoe UI',Arial,sans-serif;text-align:right;display:flex;justify-content:flex-end;gap:5px}
+.reception-ai-root .rxc-letter-citations>a{min-height:28px;min-width:28px;display:grid;place-items:center}
+.reception-ai-root .rxc-letter-empty{font-style:italic;color:#8291a0;margin-top:45px}
+.reception-ai-root .rxc-letter-annex{margin-top:42px;padding-top:22px;border-top:1px solid #cddbe7;font:12px/1.65 'Reception Inter','Segoe UI',Arial,sans-serif}
+.reception-ai-root .rxc-letter-annex h2{font:650 15px/1.5 'Reception Inter','Segoe UI',Arial,sans-serif;letter-spacing:0;margin-bottom:15px}
+.reception-ai-root .rxc-letter-annex ol{padding-left:20px;margin:0}
+.reception-ai-root .rxc-letter-annex li{padding-left:3px;margin:0 0 17px}
+.reception-ai-root .rxc-letter-source-section,.reception-ai-root .rxc-letter-unit{display:block;color:#6a8194;font-size:10px;margin-top:2px}
+.reception-ai-root .rxc-letter-annex blockquote{margin:7px 0;padding:3px 0 3px 11px;border-left:2px solid #c4d6e5;color:#49657d;font-size:11px;white-space:pre-wrap}
+.reception-ai-root .rxc-letter-annex a{display:block;font-size:10px;overflow-wrap:anywhere}
+.reception-ai-root .rxc-letter-order{margin:0 0 22px}
+.reception-ai-root .rxc-letter-order h3{font-size:13px;line-height:1.55;margin-bottom:8px}
+.reception-ai-root .rxc-letter-order dl{margin:0 0 8px}
+.reception-ai-root .rxc-letter-order dl div{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(0,1.4fr);gap:12px;margin-top:4px;font-size:11px}
+.reception-ai-root .rxc-letter-order dt{color:#6a8194}
+.reception-ai-root .rxc-letter-order dd{margin:0}
+.reception-ai-root .rxc-letter-order p{margin:7px 0}
+.reception-ai-root .rxc-control-event{display:flex;align-items:flex-start;gap:13px;border:1px solid #cbddea;border-radius:11px;background:#f4f9fd;padding:18px 20px;margin-bottom:22px;color:#2f526e}
+.reception-ai-root .rxc-control-event>.rxc-icon{margin-top:3px;color:var(--rxa-blue)}
+.reception-ai-root .rxc-control-event p{font-size:14px;line-height:1.7;margin:0 0 10px}
+.reception-ai-root .rxc-control-event p:last-child{margin-bottom:0}
+.reception-ai-root .rxc-control-text>span{font-size:16px;font-weight:650}
+.reception-ai-root .rxc-control-text textarea{min-height:200px}
+.reception-ai-root .rxc-control-text small{font-size:12px;line-height:1.6}
+.reception-ai-root .rxc-control-issues{display:grid;gap:15px;margin-top:25px}
+.reception-ai-root .rxc-control-issue{padding:18px;border:1px solid var(--rxa-border);border-radius:11px;background:#fff;min-width:0}
+.reception-ai-root .rxc-control-issue h3{font-size:14px;font-weight:650;line-height:1.55;margin-bottom:15px;overflow-wrap:anywhere}
+.reception-ai-root .rxc-control-sources{margin-top:12px;border-top:1px solid #e7edf3}
+.reception-ai-root .rxc-control-sources>summary{padding-inline:0}
+.reception-ai-root .rxc-control-sources>div{padding:2px 0 0}
+@media(max-width:820px){
+  .reception-ai-root .rxc-editor-toolbar{gap:10px}
+  .reception-ai-root .rxc-editor-toolbar strong{font-size:17px}
+  .reception-ai-root .rxc-document-meta{grid-template-columns:1fr;gap:14px;padding:18px 0}
+  .reception-ai-root .rxc-writing-section{padding:20px 18px}
+  .reception-ai-root .rxc-writing-section>textarea{font-size:16px;min-height:146px;padding:12px}
+  .reception-ai-root .rxc-source-picker{grid-template-columns:1fr}
+  .reception-ai-root .rxc-source-picker .rxa-btn{justify-self:start}
+  .reception-ai-root .rxc-citation .rxc-icon-button{min-width:44px;min-height:44px}
+  .reception-ai-root .rxc-citation{grid-template-columns:minmax(0,1fr) 44px}
+  .reception-ai-root .rxc-preview-stage{padding:18px 12px}
+  .reception-ai-root .rxc-letter{padding:32px 24px;min-height:590px}
+  .reception-ai-root .rxc-letter-issuer{font-size:17px}
+  .reception-ai-root .rxc-letter-subject{font-size:18px;margin-top:28px}
+  .reception-ai-root .rxc-preview-toolbar{gap:10px}
+  .reception-ai-root .rxc-order-top,.reception-ai-root .rxc-order-bottom{grid-template-columns:1fr}
+  .reception-ai-root .rxc-order-body{padding:2px 15px 14px}
+  .reception-ai-root .rxc-recipient-choice{min-height:44px;padding:11px 0}
+}
+@media(max-width:420px){
+  .reception-ai-root .rxc-editor-toolbar>.rxa-btn{font-size:12px;padding:10px 11px}
+  .reception-ai-root .rxc-editor-toolbar strong{font-size:16px}
+  .reception-ai-root .rxc-writing-section{padding:18px 13px}
+  .reception-ai-root .rxc-writing-heading{gap:9px}
+  .reception-ai-root .rxc-writing-heading>label{font-size:16px}
+  .reception-ai-root .rxc-source-drawer-body{padding-inline:9px}
+  .reception-ai-root .rxc-orders-heading>div{gap:8px}
+  .reception-ai-root .rxc-orders-heading h3{font-size:16px}
+  .reception-ai-root .rxc-letter{padding:26px 18px;font-size:14px}
+  .reception-ai-root .rxc-letter-meta{display:block}
+  .reception-ai-root .rxc-letter-meta>span{display:block;max-width:none;margin-top:4px}
+  .reception-ai-root .rxc-letter-meta>span+span{text-align:left}
+  .reception-ai-root .rxc-preview-stage{padding:15px 8px}
+  .reception-ai-root .rxc-letter-order dl div{grid-template-columns:1fr;gap:0}
+  .reception-ai-root .rxc-control-event{padding:15px;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){.reception-ai-root .rxc-editor *{transition:none!important}}
+.reception-ai-root .rxc-workspace{max-width:100%}
+.reception-ai-root .rxc-workspace>form{min-width:0}
+.reception-ai-root .rxc-chat-source{font-size:11px;min-height:36px;margin:2px 0 0;padding:5px 9px}
+.reception-ai-root .rxc-work-record .rxa-assessment-content{padding:0}
+.reception-ai-root .rxc-protocol-stage{margin:12px 0 24px}
+.reception-ai-root .rxc-protocol-stage h3{font-size:17px;color:var(--rxa-ink,#193a53)}
+.reception-ai-root .rxc-protocol-criterion{border-top:1px solid #dae5ed;margin-top:16px;padding-top:12px}
+.reception-ai-root .rxc-protocol-criterion h4{margin:0 0 9px;font-size:15px}
+.reception-ai-root .rxc-protocol-criterion p{font-size:14px;line-height:1.65;white-space:pre-wrap}
+.reception-ai-root .rxc-protocol-criterion blockquote{margin:10px 0;padding:10px 15px;background:#f4f7fa;border-left:3px solid #90abc0;font-size:14px;line-height:1.6;white-space:pre-wrap}
+
+.rxc-letter-requisites{display:flex;gap:32px;flex-wrap:wrap;margin-top:18px;font:13px/1.5 Arial,sans-serif;color:#46596b}
+.rxc-letter-signature{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin:42px 0 16px;font:13px/1.5 Arial,sans-serif;break-inside:avoid}
+.rxc-letter-signature small{display:block;text-align:center;font-size:11px;color:#627485}
+.reception-ai-root .rxc-letter-specialist{margin:0 0 16px;font:13px/1.5 Arial,sans-serif;overflow-wrap:anywhere}
+@media(max-width:600px){.rxc-letter-signature{flex-wrap:wrap;gap:14px 24px}.rxc-letter-signature>span:first-child{flex-basis:100%}}

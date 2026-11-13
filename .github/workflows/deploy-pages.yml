@@ -246,6 +246,21 @@ jobs:
               'site/apps/reception/', 'site/apps/legal-lab/lib/reader-', 'scripts/test_reception_',
               'firebase/functions/reception-ai/', 'scripts/reception-ai-', 'scripts/test-reception-ai-',
             ))}
+          if os.environ['RECEPTION_AI_RELEASE'] == 'true':
+            allowed.update({
+              'scripts/build-reception-correspondence-corpus.mjs',
+              'scripts/build-reception-correspondence-profiles.mjs',
+              'scripts/check-reception-correspondence-catalog.mjs',
+              'scripts/check-reception-correspondence-catalog.test.mjs',
+              'scripts/reception-correspondence-overrides.mjs',
+              'scripts/reception-correspondence-qa.mjs',
+              'scripts/reception-correspondence-qa-cases.mjs',
+              'scripts/reception-correspondence-test-reviewer.mjs',
+              'scripts/test-reception-correspondence-browser.mjs',
+              'scripts/test-reception-correspondence-dom.mjs',
+              'docs/reception-correspondence-catalog-check.md',
+              'tests/reception-correspondence-editor.test.mjs',
+            })
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
             import re, json, hashlib
@@ -756,12 +771,15 @@ jobs:
           node scripts/reception-ai-catalog-metadata.mjs --check
           node scripts/build-reception-routing-directory.mjs --check
           node scripts/reception-ai-learning-review.mjs --check
-          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs tests/reception-workbook-view.test.mjs tests/reception-game-copy.test.mjs
+          node scripts/build-reception-correspondence-profiles.mjs --check
+          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs tests/reception-workbook-view.test.mjs tests/reception-game-copy.test.mjs tests/reception-correspondence-editor.test.mjs scripts/check-reception-correspondence-catalog.test.mjs
       - name: Verify Reception document and calendar workflow
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |
           npm install --prefix "${{ runner.temp }}/reception-dom-tools" --no-audit --no-fund --ignore-scripts jsdom@26.1.0
           node scripts/test-reception-workbench-dom.mjs --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js"
+          node scripts/test-reception-correspondence-dom.mjs --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js" --out "${{ runner.temp }}/reception-workspace-qa/correspondence-dom"
+          node scripts/test-reception-correspondence-dom.mjs --context seminar --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js" --out "${{ runner.temp }}/reception-workspace-qa/correspondence-dom-seminar"
       - name: Verify Reception mobile workspace in Chromium and WebKit
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |
@@ -773,6 +791,8 @@ jobs:
           node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/webkit"
           node scripts/test-reception-source-search-browser.mjs --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/source-search-chromium"
           node scripts/test-reception-source-search-browser.mjs --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/source-search-webkit"
+          node scripts/test-reception-correspondence-browser.mjs --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/correspondence-chromium"
+          node scripts/test-reception-correspondence-browser.mjs --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/correspondence-webkit"
       - name: Retain Reception mobile workspace evidence
         if: always() && contains(github.event.head_commit.message, '[reception-ai-release]')
         uses: actions/upload-artifact@v4

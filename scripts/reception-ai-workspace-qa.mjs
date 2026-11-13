@@ -12,7 +12,7 @@ const here=path.dirname(fileURLToPath(import.meta.url));
 const defaultRepo=path.resolve(here,'..');
 const arg=(name,fallback)=>{const i=process.argv.indexOf(name);return i<0?fallback:process.argv[i+1];};
 
-export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider}={}){
+export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider,decisionVersion='legacy',serviceOptions={},studentName=''}={}){
   if(!casesDirectory)throw Error('Provide --cases /absolute/path/private-data/cases or RECEPTION_AI_CASES_DIR.');
   repo=await realpath(repo);
   const site=await realpath(path.join(repo,'site'));
@@ -32,7 +32,7 @@ export async function createReceptionFixture({repo=defaultRepo,casesDirectory=pr
       revealedFactIds:facts.map(f=>f.id),releasedDocumentIds:actorCase.documentsAvailableUpfront?[]:actorCase.documents.map(d=>d.id),usage:{inputTokens:0,outputTokens:0}};
   }};
   if(provider.name!=='mock')throw Error('The QA fixture accepts only a local mock provider.');
-  const service=createReceptionService({store,cases,provider});
+  const service=createReceptionService({store,cases,provider,...serviceOptions});
   const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.webm':'video/webm','.mp4':'video/mp4','.woff2':'font/woff2','.gz':'application/gzip'};
   const html=`<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Приёмная · проверка мобильной игры</title><link rel="stylesheet" href="/assets/css/site.css"><link rel="stylesheet" href="/apps/reception/platform.css"><style>body{margin:0}.main{max-width:1320px;margin:0 auto!important;padding:14px 12px 90px}.qa-return{margin:80px auto;max-width:480px;padding:24px;background:white;border-radius:20px}.qa-return button{min-height:48px;padding:12px 20px}.qa-shell-label{font-size:12px;color:#60758c;margin:0 0 10px}@media(max-width:820px){.main{padding:0 0 86px}}body.reception-immersive .main{padding-bottom:0}</style></head><body><main class="main" id="fixtureMain"></main><nav class="mobile-nav" aria-label="Мобильная навигация платформы"><a href="#course"><span aria-hidden="true">◫</span><small>Курс</small></a><a href="#journal"><span aria-hidden="true">▣</span><small>Журнал</small></a></nav><script type="module" src="/__qa/fixture.js"></script></body></html>`;
   const entry=`import {mountReceptionAI} from '/apps/reception/ai/app.js';
@@ -44,7 +44,9 @@ async function enter(){
   const parameters=new URLSearchParams(location.search);
   const requestedContext=parameters.get('context');
   const gameplayContext=['free','seminar'].includes(requestedContext)?requestedContext:undefined;
-  handle=await mountReceptionAI(document.getElementById('receptionAI'),{locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2,gameplayContext});
+  const fullName=${JSON.stringify(studentName)};
+  const backend=fullName?{user:{uid:'reception-repair-qa'},getProfile:()=>({studentKey:'reception-repair-qa',fullName})}:undefined;
+  handle=await mountReceptionAI(document.getElementById('receptionAI'),{backend,locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2,gameplayContext,decisionVersion:${JSON.stringify(decisionVersion)}});
   window.__qaReception={provider:'mock',handle};
 }
 async function leave(){
@@ -62,7 +64,7 @@ await enter();`;
       if(url.pathname==='/api/reception'){
         if(req.method!=='POST')return send(405,mime['.json'],'{}');
         let bytes=0;const chunks=[];
-        for await(const chunk of req){bytes+=chunk.length;if(bytes>32768)throw Error('Body limit');chunks.push(chunk);}
+        for await(const chunk of req){bytes+=chunk.length;if(bytes>262144)throw Error('Body limit');chunks.push(chunk);}
         const input=JSON.parse(Buffer.concat(chunks).toString());
         if(input.op==='start'||input.op==='catalog'||input.op==='recover')input.studentKey=identity.studentKey;
         try{return send(200,mime['.json'],JSON.stringify(await service.handle(input,identity)));}

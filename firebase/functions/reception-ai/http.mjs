@@ -41,7 +41,7 @@ export async function receptionHandler(req, res) {
   if (origin) { res.setHeader('Access-Control-Allow-Origin', origin); res.setHeader('Vary', 'Origin'); }
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'POST'); res.setHeader('Access-Control-Allow-Headers', 'Authorization,Content-Type'); res.setHeader('Access-Control-Max-Age', '600'); res.status(204).end(); return; }
   if (req.method !== 'POST') { res.status(405).json({ok: false, error: {code: 'method'}}); return; }
-  if (!req.is('application/json') || (req.rawBody?.length || 0) > 32768) { res.status(413).json({ok: false, error: {code: 'limit'}}); return; }
+  if (!req.is('application/json') || (req.rawBody?.length || 0) > 262144) { res.status(413).json({ok: false, error: {code: 'limit'}}); return; }
   try {
     const bearer = String(req.headers.authorization || '').match(/^Bearer ([A-Za-z0-9._-]+)$/)?.[1];
     if (!bearer) throw new ReceptionError('auth', 401);

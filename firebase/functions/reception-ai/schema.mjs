@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {validateAuthoredContract,validateAuthoredDecision,evaluateAuthoredDecision,parseDateOnly} from './authored.mjs';
+import {DECISION_VERSION,validateCorrespondence} from './correspondence.mjs';
 
 export const LOCALES = ['ru', 'en', 'zh'];
 export const MODEL = 'gpt-6-luna';
@@ -118,7 +119,14 @@ function validateDossier(input,isVariant) {
   } catch (error) { throw new ReceptionError('invalid_case', 503); }
 }
 
-export function validateDecision(input, c, opened, {knowledgeQuiz=true}={}) {
+export function validateDecision(input, c, opened, {knowledgeQuiz=true,decisionVersion,state,locale:language='ru'}={}) {
+  if(decisionVersion===DECISION_VERSION){
+    const d=fields(input,['procedureId','routeId','actionIds','law','deadline','basisDocumentIds','reasoning','assessment','correspondence']);
+    if(typeof d.deadline!=='string'||d.deadline!==''&&!parseDateOnly(d.deadline))fail('invalid_decision');
+    return {procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:parseDateOnly(d.deadline)||'',
+      basisDocumentIds:[],reasoning:'',correspondence:validateCorrespondence(d.correspondence,c,state||{openedDocumentIds:opened,messages:[]},language)};
+  }
+  if(decisionVersion!==undefined)fail('invalid_decision_version');
   const d = fields(input, ['procedureId', 'routeId', 'actionIds', 'law', 'deadline', 'basisDocumentIds', 'reasoning','assessment']);
   const authored=Boolean(c.rubric.authored);
   if (!(authored&&d.procedureId==='')&&!c.public.procedures.some(x=>x.id===d.procedureId) || !(authored&&d.routeId==='')&&!c.public.routes.some(x=>x.id===d.routeId)) fail('invalid_decision');
