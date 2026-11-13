@@ -77,7 +77,6 @@ function calendarContent(options){
     return `<button type="button" class="rxw-calendar-day ${info.working?'working':'rest'} ${info.type==='working-transfer'?'working-transfer':''} ${info.shortened?'shortened':''} ${outside?'outside-month':''} ${chosen.map(target=>'chosen-'+target.id).join(' ')}" data-calendar-action="choose-date" data-date="${date}" aria-pressed="${date===selected}" aria-label="${esc([formattedDate(date,locale),dayLabel(info,locale),...daily.map(event=>localText(event.label,locale)||t[eventKind(event)]),...chosen.map(target=>target.label)].filter(Boolean).join(', '))}" tabindex="${date===(selected?.startsWith(s.month)?selected:month.days[0].date)?'0':'-1'}" ${off}><span>${Number(date.slice(8))}</span>${info.shortened?'<small aria-hidden="true">−1</small>':info.type==='working-transfer'?'<small aria-hidden="true">↻</small>':''}<b class="rxw-event-dots" aria-hidden="true">${[...new Set(daily.map(eventKind))].map(kind=>`<i class="event-${kind}"></i>`).join('')}</b></button>`;
   }).join('');
   const norms=options.task?.norms||[{label:locale==='ru'?'Федеральный закон от 02.05.2006 № 59-ФЗ «О порядке рассмотрения обращений граждан Российской Федерации»':'59-ФЗ · '+t.norms,text:t.rules.join('\n'),url:'https://mintrud.gov.ru/docs/laws/108'}];
-  const instructions=localText(options.task?.instructions,locale)||(options.task?.special?'':t.counting);
   return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><p class="rxw-calendar-instruction">${t.intro}</p>
     ${options.task?.hideEventList?'':`<div class="rxw-calendar-events">${events.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
     <div class="rxw-calendar-targets" role="group" aria-label="${t.targets}">${targets.map(target=>{
@@ -92,8 +91,8 @@ function calendarContent(options){
     ${options.task?.registrationCheck===false?'':`<label class="rxw-calendar-registration"><input type="checkbox" data-calendar-input="registration-timely" ${s.registrationTimely===true?'checked':''} ${off}><span>${t.timely}</span></label>`}
     <details class="rxw-calendar-details" data-calendar-details="norms" data-details="calendar-norms" ${options.normsOpen?'open':''}>
       <summary><span><strong>${t.norms}</strong>${options.task?.special?`<span class="rxa-unread rxw-calendar-norms-badge" aria-hidden="true">!</span><span class="rxw-sr">${t.specialRules}</span>`:''}</span>${arrow(1)}</summary>
-      <div class="rxw-calendar-details-content">${instructions?`<p class="rxw-calendar-counting-help">${highlightDurations(instructions,locale)}</p>`:''}
-        ${norms.map(norm=>`<section class="rxw-calendar-norm"><h4>${esc(localText(norm.label,locale))}</h4>${localText(norm.text,locale).split('\n').filter(Boolean).map(text=>`<p>${highlightDurations(text,locale)}</p>`).join('')}${norm.url?sourceLinkView({url:norm.url,label:t.external,locale,className:'rxw-calendar-law-link'}):''}</section>`).join('')}
+      <div class="rxw-calendar-details-content">
+        ${norms.map(norm=>`<section class="rxw-calendar-norm"><h4>${esc(localText(norm.label,locale))}</h4>${localText(norm.text,locale).split('\n').filter(Boolean).map(text=>`<p>${highlightDurations(text,locale)}</p>`).join('')}${norm.url?sourceLinkView({url:norm.url,label:t.external,locale,className:'rxw-calendar-law-link',external:true}):''}</section>`).join('')}
       </div>
     </details><p class="rxw-calendar-status" data-calendar-status role="status"></p>`;
 }
@@ -125,10 +124,10 @@ export function createCalendarWorkbench(host,initial={}){
 }
 
 /** One source action: embedded reading where available, external only otherwise. */
-export function sourceLinkView({url,label,locale='ru',className='rxa-btn',disabled=false}={}){
+export function sourceLinkView({url,label,locale='ru',className='rxa-btn',disabled=false,external=false}={}){
   const href=safeSourceURL(url),t=copy[localeKey(locale)];
   if(!href)return `<span class="rxw-source-unavailable">${t.noSource}</span>`;
-  const internal=Boolean(sourceDocumentForURL(href)),title=label||t[internal?'open':'external'];
+  const internal=!external&&Boolean(sourceDocumentForURL(href)),title=label||t[internal?'open':'external'];
   if(disabled)return `<span class="${esc(className)}" aria-disabled="true">${esc(title)}</span>`;
   return `<a class="${esc(className)}" href="${esc(href)}" ${internal?'data-source-reader':'target="_blank" rel="noopener noreferrer"'}>${esc(title)}${internal?'':icon('out')}</a>`;
 }

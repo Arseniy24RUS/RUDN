@@ -34,7 +34,7 @@ window.HTMLMediaElement.prototype.load=function(){};
 
 // Reader CSS load events are acknowledged; real CSS is checked below separately.
 const stylesObserver=new window.MutationObserver(records=>{
-  for(const record of records)for(const node of record.addedNodes)if(node.matches?.('link[rel="stylesheet"]'))queueMicrotask(()=>node.dispatchEvent(new Event('load')));
+  for(const record of records)for(const node of record.addedNodes)if(node.matches?.('link[rel="stylesheet"]'))queueMicrotask(()=>{Object.defineProperty(node,'sheet',{value:{cssRules:[]},configurable:true});node.dispatchEvent(new Event('load'));});
 });
 stylesObserver.observe(document.head,{childList:true});
 const siteRoot=fileURLToPath(new URL('../site/',import.meta.url));
@@ -98,7 +98,7 @@ function savedDraft(){const key=Object.keys(localStorage).find(key=>key.startsWi
 try{
   await click('[data-action="start"]');assert.equal(root.dataset.page,'reception');
   await click('[data-action="page"][data-page="documents"]');
-  await click('[data-action="tab"][data-tab="sources"]');
+  assert.equal(root.querySelectorAll('[data-action="tab"]').length,0);
   assert.equal(root.querySelectorAll('.rxa-source-links a').length,1,'The internal document has no duplicate external action');
   await click('.rxa-source-links a[data-source-reader]');
   await until(()=>document.querySelector('.rx-source-dialog .ll-paper [data-unit]'),'Reader did not load the real corpus');

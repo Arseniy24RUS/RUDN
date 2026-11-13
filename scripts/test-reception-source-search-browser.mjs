@@ -56,12 +56,25 @@ try {
       await page.locator('[data-action="start"]').click();
       await page.locator('#receptionAI[data-session-status="active"]').waitFor();
       await page.locator('#rxaPage-documents').click();
-      await page.locator('[data-action="tab"][data-tab="sources"]').click();
+      assert.equal(await page.locator('.rxa-documents-page [role="tablist"]').count(),0);
       await page.locator('.rxa-source-record').evaluateAll(nodes=>nodes.forEach(node=>{node.open=true;}));
       await page.locator('a[data-source-reader][href*="LAW_59999/"]').first().click();
       const reader=page.locator('.rx-source-embedded');
       await reader.locator('.ll-paper [data-unit]').first().waitFor();
       await page.evaluate(()=>Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,1500))]));
+      const reading=await reader.locator('.ll-paper').evaluate(paper=>{
+        const text=paper.querySelector('.ll-paragraph-text'),bounds=paper.getBoundingClientRect();
+        return {height:bounds.height,top:bounds.top,bottom:bounds.bottom,fontSize:parseFloat(getComputedStyle(text).fontSize),viewport:visualViewport.height};
+      });
+      await page.screenshot({path:path.join(out,`${key}-reading.png`),animations:'disabled'});
+      if(width<=820&&!baseline){
+        assert.ok(reading.height>=reading.viewport*.60&&reading.fontSize>=16,JSON.stringify(reading));
+        const title=reader.locator('.rx-source-title');
+        assert.equal(await title.evaluate(node=>node.open),false);
+        await title.locator('summary').click();
+        assert.match(await title.locator('h2').innerText(),/Федеральный закон.*Обращени|Федеральный закон.*обращений/);
+        await title.locator('summary').click();
+      }
       const search=reader.locator('[data-input="reader-query"]');
       const results=reader.locator('.ll-search-results');
       await search.fill('Статья');
@@ -76,7 +89,7 @@ try {
         const nav=document.querySelector('.rxa-mobile-nav').getBoundingClientRect();
         return {viewport:{width:visualViewport.width,height:visualViewport.height},root:rect(root),bar:rect(get('.rx-source-dialog-bar')),panel:rect(panel),search:rect(get('.ll-searchbar')),results:rect(list),first:rect(list.querySelector('[data-action="jump-unit"]')),title:rect(get('.ll-reader-header')),paper:rect(get('.ll-paper')),tray:rect(get('[data-source-reference-tray]')),navTop:nav.top};
       });
-      if (baseline) {report.push({key,geometry,errors}); continue;}
+      if (baseline) {report.push({key,reading,geometry,errors}); continue;}
       assert.equal(await reader.getAttribute('data-search-results-open'),'true');
       assert.ok(geometry.bar.bottom<=geometry.search.top+1&&geometry.search.bottom<=geometry.results.top+1,JSON.stringify(geometry));
       assert.ok(geometry.results.bottom<=Math.min(geometry.root.bottom,width<=820?geometry.navTop:geometry.viewport.height)+1,JSON.stringify(geometry));
@@ -108,6 +121,7 @@ try {
         return {height:paper.height,top:paper.top,bottom:paper.bottom,unitTop:unit.top};
       });
       assert.ok(opened.height>75&&opened.unitTop>=opened.top-1&&opened.unitTop<opened.bottom,JSON.stringify(opened));
+      if(width<=820)assert.ok(opened.height>=reading.viewport*.60,JSON.stringify(opened));
       await page.screenshot({path:path.join(out,`${key}-opened-hit.png`),animations:'disabled'});
       await search.fill('нетсовпаденийздесь');
       await search.press('Enter');
@@ -116,9 +130,12 @@ try {
       assert.equal(await search.inputValue(),'');
       assert.equal(await results.isVisible(),false);
       assert.equal(await reader.locator('.ll-paper').isVisible(),true);
+      await reader.locator('[data-source-reader-close]').click();
+      assert.equal(await page.locator('.rxa-document-group').count(),2);
+      assert.equal(await page.locator('.rxa-top').isVisible(),true);
       assert.deepEqual(errors,[]);
-      report.push({key,geometry,scroll,unit,opened,errors});
-      console.log(`PASS ${engine} ${key}: ${Math.round(geometry.results.height)}px results, later match ${unit}`);
+      report.push({key,reading,geometry,scroll,unit,opened,errors});
+      console.log(`PASS ${engine} ${key}: ${Math.round(reading.height/reading.viewport*100)}% law text, ${Math.round(geometry.results.height)}px search results, later match ${unit}`);
     } finally {
       await context.close();
       await new Promise(resolve=>fixture.server.close(resolve));

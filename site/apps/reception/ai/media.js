@@ -66,13 +66,43 @@ export function createMessengerMedia(root, {signal} = {}) {
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
   const failedVideo = new Set(), failedImage = new Set();
   let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false, imageReady = false;
+  let watchdog, lastVideoTime = 0, lastProgressAt = 0, sourceVersion = 0;
+  const schedule = view.setTimeout?.bind(view) || globalThis.setTimeout;
+  const unschedule = view.clearTimeout?.bind(view) || globalThis.clearTimeout;
+  const now = () => view.performance?.now?.() ?? Date.now();
+  function cancelFrame() {
+    if (frame !== undefined) video.cancelVideoFrameCallback?.(frame);
+    frame = undefined;
+  }
+  function stopWatchdog() {
+    if (watchdog !== undefined) unschedule(watchdog);
+    watchdog = undefined;
+  }
+  // Some mobile browsers accept play() but never present a frame, or leave its
+  // promise pending. A poster must not be the final result of either failure.
+  // Measure progress only while visible; the original animated WebP is the
+  // recovery path, without changing the animation or its quality.
+  function checkProgress() {
+    watchdog = undefined;
+    if (!shouldPlay() || useImage() || !video.hasAttribute('src')) return;
+    const at = now();
+    if (ready && video.currentTime !== lastVideoTime) {
+      lastVideoTime = video.currentTime; lastProgressAt = at;
+    }
+    if (at - lastProgressAt >= 3000) { error(); return; }
+    watchdog = schedule(checkProgress, 750);
+  }
+  function watchPlayback() {
+    if (watchdog !== undefined) return;
+    lastVideoTime = video.currentTime; lastProgressAt = now();
+    watchdog = schedule(checkProgress, 750);
+  }
 
   function portrait() { ready = false; stage?.removeAttribute('data-rxa-motion-ready'); }
-  function pause() { video.pause(); }
+  function pause() { stopWatchdog(); cancelFrame(); video.pause(); }
   function clearSource() {
     pause();
-    if (frame !== undefined) video.cancelVideoFrameCallback?.(frame);
-    frame = undefined; portrait();
+    sourceVersion++; portrait();
     if (video.hasAttribute('src')) { video.removeAttribute('src'); video.load(); }
   }
   function clearImage() {
@@ -101,7 +131,7 @@ export function createMessengerMedia(root, {signal} = {}) {
   }
   function presentFrame() {
     frame = undefined;
-    if (!stage || video.paused || !video.videoWidth || destroyed) return;
+    if (!shouldPlay() || video.paused || !video.videoWidth) return;
     if (supportsAlpha === undefined) {
       // VP9 decoding support alone does not guarantee transparent WebM support.
       const sample = document.createElement('canvas'); sample.width = sample.height = 1;
@@ -130,14 +160,17 @@ export function createMessengerMedia(root, {signal} = {}) {
     if (video.parentNode !== stage) stage.append(video);
     if (!video.hasAttribute('src')) video.src = url(`assets/gfx1/motion/${actor}.webm`);
     if (video.paused) {
-      const requestedActor = actor;
+      const requestedActor = actor, requestedVersion = sourceVersion;
       const attempt = video.play();
       attempt?.catch(problem => {
-        if (!destroyed && problem?.name !== 'AbortError' && actor === requestedActor) {
+        if (!destroyed && problem?.name !== 'AbortError' && actor === requestedActor && sourceVersion === requestedVersion) {
           failedVideo.add(actor); clearSource(); video.remove(); imagePlayback();
         }
       });
     }
+    // Reacquire a frame callback after a rerender moves the retained video.
+    if (!ready && !video.paused && video.videoWidth) playing();
+    watchPlayback();
   }
   const observer = typeof view.IntersectionObserver === 'function' ? new view.IntersectionObserver(entries => {
     for (const item of entries) if (item.target === stage) { visible = item.isIntersecting; playback(); }
@@ -148,7 +181,7 @@ export function createMessengerMedia(root, {signal} = {}) {
     const candidate = reduce.matches ? null : root.querySelector('[data-rxa-actor]');
     const next = ACTOR.test(candidate?.dataset.rxaActor || '') ? candidate : null;
     if (next === stage) { playback(); return; }
-    if (stage) { observer?.unobserve(stage); stage.removeAttribute('data-rxa-motion-ready'); }
+    if (stage) { cancelFrame(); observer?.unobserve(stage); stage.removeAttribute('data-rxa-motion-ready'); }
     stage = next;
     if (!stage) {
       if (reduce.matches) clearSource(); else pause();

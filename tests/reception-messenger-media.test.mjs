@@ -44,7 +44,9 @@ test('all authored visual passports support their existing citizen or staff anim
   assert.ok(checked.has('S03')&&checked.has('S04'));
 });
 
-function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=true,offscreen=false,hidden=false}={}){
+function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=true,offscreen=false,hidden=false,frameCallbacks=false}={}){
+  let clock=0,nextTimer=0,nextFrame=0;const timers=new Map(),frames=new Map();
+  function tick(ms){const end=clock+ms;for(let count=0;count<1000;count++){const entry=[...timers.entries()].sort((a,b)=>a[1].at-b[1].at)[0];if(!entry||entry[1].at>end)break;clock=entry[1].at;timers.delete(entry[0]);entry[1].fn();}clock=end;}
   class Element extends EventTarget{
     constructor(){super();this.attributes=new Map();this.children=[];this.dataset={};}
     setAttribute(key,value){this.attributes.set(key,String(value));}
@@ -72,14 +74,15 @@ function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=tr
   const document=new EventTarget(),reduce=new EventTarget();reduce.matches=reduced;
   document.hidden=hidden;let video,image,io;
   document.createElement=kind=>kind==='video'?(video=new Video()):kind==='img'?(image=new Image()):{getContext:()=>({drawImage(){},getImageData:()=>({data:[0,0,0,alpha]})})};
-  document.defaultView={innerHeight:900,matchMedia:()=>reduce,...(observer?{IntersectionObserver:class{
+  document.defaultView={innerHeight:900,matchMedia:()=>reduce,performance:{now:()=>clock},setTimeout:(fn,ms)=>{const id=++nextTimer;timers.set(id,{fn,at:clock+ms});return id;},clearTimeout:id=>timers.delete(id),...(observer?{IntersectionObserver:class{
     constructor(callback){this.callback=callback;this.disconnected=false;io=this;}
     observe(target){this.target=target;}unobserve(){}disconnect(){this.disconnected=true;}
     visible(value){this.callback([{target:this.target,isIntersecting:value}]);}
   }}:{})};
+  if(frameCallbacks){Video.prototype.requestVideoFrameCallback=callback=>{const id=++nextFrame;frames.set(id,callback);return id;};Video.prototype.cancelVideoFrameCallback=id=>frames.delete(id);}
   const stage=id=>{const node=new Element();node.dataset.rxaActor=id;return node;};
   const root={ownerDocument:document,stage:stage('C05'),querySelector(){return this.stage;}};
-  return {root,document,reduce,stage,get video(){return video;},get image(){return image;},get observer(){return io;}};
+  return {root,document,reduce,stage,tick,timers,frames,get video(){return video;},get image(){return image;},get observer(){return io;}};
 }
 
 test('rerender retains the video and playhead; hiding, leaving view and destroying pause it',()=>{
@@ -144,4 +147,47 @@ test('a reduced-motion or initially hidden page does not request an animated ima
     const f=fixture({supported:false,...settings}),media=createMessengerMedia(f.root);media.refresh();
     assert.equal(f.image.hasAttribute('src'),false);assert.equal(f.video.hasAttribute('src'),false);media.destroy();
   }
+});
+
+
+test('a decoder that accepts playback without presenting a first frame recovers to animated WebP',()=>{
+  const f=fixture({frameCallbacks:true}),media=createMessengerMedia(f.root);media.refresh();
+  f.video.dispatchEvent(new Event('playing'));assert.equal(f.frames.size,1);
+  // Time can advance in a decoder while requestVideoFrameCallback never fires.
+  for(let i=0;i<4;i++){f.video.currentTime+=.75;f.tick(750);}
+  assert.equal(f.video.hasAttribute('src'),false);assert.equal(f.frames.size,0);
+  assert.ok(f.image.src.endsWith('/C05.webp'));
+  f.image.dispatchEvent(new Event('load'));assert.ok(f.root.stage.hasAttribute('data-rxa-motion-ready'));
+  assert.equal(f.timers.size,0);media.destroy();
+});
+
+test('a pending play request and a frozen visible loop both recover without a media error event',()=>{
+  for(const pending of [true,false]){
+    const f=fixture(),media=createMessengerMedia(f.root);
+    // The controller creates its own retained node; override play before refresh.
+    if(pending)f.video.play=()=>new Promise(()=>{});
+    media.refresh();
+    if(!pending){f.video.dispatchEvent(new Event('playing'));f.video.currentTime=1;f.tick(750);}
+    f.tick(3000);assert.ok(f.image.src?.endsWith('/C05.webp'));
+    assert.equal(f.timers.size,0);media.destroy();
+  }
+});
+
+test('progress recovery is inactive offscreen, in a hidden tab, with reduced motion or after destroy',()=>{
+  for(const hide of [f=>f.observer.visible(false),f=>{f.document.hidden=true;f.document.dispatchEvent(new Event('visibilitychange'));},f=>{f.reduce.matches=true;f.reduce.dispatchEvent(new Event('change'));}]){
+    const f=fixture({frameCallbacks:true}),media=createMessengerMedia(f.root);media.refresh();hide(f);
+    f.tick(6000);assert.equal(f.image.hasAttribute('src'),false);assert.equal(f.timers.size,0);assert.equal(f.frames.size,0);media.destroy();
+  }
+  const f=fixture(),media=createMessengerMedia(f.root);media.refresh();media.destroy();f.tick(6000);
+  assert.equal(f.image.hasAttribute('src'),false);assert.equal(f.timers.size,0);
+});
+
+test('rerender reacquires a suspended frame callback without restarting the retained video',()=>{
+  const f=fixture({frameCallbacks:true}),media=createMessengerMedia(f.root);media.refresh();
+  const oldId=[...f.frames.keys()][0],writes=f.video.srcWrites;
+  f.root.stage=f.stage('C05');media.refresh();assert.equal(f.frames.has(oldId),false);assert.equal(f.frames.size,1);
+  const callback=[...f.frames.values()][0];f.frames.clear();callback();
+  assert.ok(f.root.stage.hasAttribute('data-rxa-motion-ready'));assert.equal(f.video.srcWrites,writes);
+  for(let i=0;i<8;i++){f.video.currentTime+=.75;f.tick(750);}
+  assert.equal(f.image.hasAttribute('src'),false);media.destroy();assert.equal(f.timers.size,0);
 });

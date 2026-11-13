@@ -176,13 +176,16 @@ try{
   view=await apiResponse('message',()=>page.locator('[data-chat-form] button[type="submit"]').click());
   assert.ok(view.documents.length);const messageCount=view.messages.length;
   await page.locator('[data-message-draft]').fill('Уточню обстоятельства после чтения документа.');
+  assert.equal(await page.locator('.rxa-compose-materials,[data-chat-form] input[type="file"]').count(),0);
   await screenshot('03-phone-chat.png');
   await navigate('documents');
   const openDocument=page.locator('[data-action="document"]').first();
   if(await openDocument.count()){await openDocument.click();await idle();assert.ok((await page.locator('.rxa-document-body').textContent()).trim());}
   await screenshot('04-phone-documents.png');
   stage='reader-citation';
-  await click('[data-action="tab"][data-tab="sources"]');
+  await click('[data-action="documents-list"]');
+  assert.equal(await page.locator('[data-action="tab"]').count(),0);
+  assert.equal(await page.locator('.rxa-document-group>h2').count(),2);
   await page.locator('.rxa-source-record').evaluateAll(nodes=>nodes.forEach(node=>{node.open=true;}));
   const law59=page.locator('a[data-source-reader][href*="LAW_59999/"]').first();
   const source=await law59.count()?law59:page.locator('a[data-source-reader]').first();
@@ -337,6 +340,21 @@ try{
   await page.emulateMedia({reducedMotion:'reduce'});await navigate('reception');
   assert.equal(await page.locator('video[data-rxa-motion]').evaluateAll(videos=>videos.every(v=>v.paused)),true);
   check('Reduced motion pauses decorative video');
+  stage='video-startup-recovery';
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.addInitScript(()=>{
+    const original=HTMLMediaElement.prototype.canPlayType;
+    HTMLMediaElement.prototype.canPlayType=function(type){return String(type).includes('vp9')?'probably':original.call(this,type);};
+    HTMLVideoElement.prototype.requestVideoFrameCallback=()=>1;
+    HTMLVideoElement.prototype.cancelVideoFrameCallback=()=>{};
+  });
+  await page.reload({waitUntil:'networkidle'});await idle();await navigate('reception');
+  const recoveryImage=page.locator('[data-rxa-motion-ready] [data-rxa-motion-image]');
+  await recoveryImage.waitFor({state:'visible'});
+  const firstRecoveryFrame=await recoveryImage.screenshot({animations:'allow'});
+  await page.waitForTimeout(420);
+  assert.ok(!firstRecoveryFrame.equals(await recoveryImage.screenshot({animations:'allow'})),'Recovery must show visibly changing animation frames');
+  check('A decoder without a rendered first frame recovers to visibly moving original WebP');
   stage='animated-webp-fallback';
   await page.emulateMedia({reducedMotion:'no-preference'});
   await page.addInitScript(()=>{
@@ -357,7 +375,9 @@ try{
   assert.equal(fallback.header,'RIFF');assert.equal(fallback.format,'WEBP');assert.equal(fallback.frames,120);assert.equal(fallback.width,320);assert.equal(fallback.loop,0);
   assert.ok(fallback.duration>=9500&&fallback.duration<=10500,'The fallback preserves the original loop duration');
   assert.ok(fallback.cornerAlpha<32,'The decoded WebP preserves the transparent background');
-  check('Unsupported VP9 loads the transparent animated WebP asset',{...fallback,framePlaybackObserved:false});
+  const fallbackImage=page.locator('[data-rxa-motion-image]'),firstFallbackFrame=await fallbackImage.screenshot({animations:'allow'});
+  await page.waitForTimeout(420);assert.ok(!firstFallbackFrame.equals(await fallbackImage.screenshot({animations:'allow'})),'Fallback animation frames must visibly change');
+  check('Unsupported VP9 displays the transparent original animation',{...fallback,framePlaybackObserved:true});
   await screenshot('09-phone-webp-fallback.png');
   await navigate('chat');assert.equal(await page.locator('[data-rxa-motion-image][src]').count(),0);
   await navigate('reception');await page.emulateMedia({reducedMotion:'reduce'});

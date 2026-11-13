@@ -52,10 +52,20 @@ const removedSentences = {
   ],
 };
 
+// Role notices can follow case-specific instructions. Remove their complete
+// introductory sentence before adjective cleanup, including older saved copies
+// in which only the noun remains. Keep the instruction that follows untouched.
+const roleCaseNotices = {
+  ru: /(^\s*|[.!?]\s+)(?:(?:[Вв]ымышленное(?: [Уу]чебное)?|[Уу]чебное) )?[Дд]ело\.\s*(?=Вы готовите)/gu,
+  en: /(^\s*|[.!?]\s+)(?:(?:(?:[Aa] )?[Ff]ictional(?: [Tt]raining)?|[Tt]raining) )?[Cc]ase\.\s*(?=You prepare|You are preparing|Prepare a proposed decision)/gu,
+  zh: /(^\s*|[。！？]\s*)(?:虚构(?:的)?(?:教学)?|教学)?(?:案例|案件)。\s*(?=请在所述岗位权限内拟定处理方案。)/gu,
+};
+
 export function gameCopy(value, locale = 'ru') {
   let text = String(value ?? '');
   // These are deliberately incorrect choices about fabricating evidence.
   if (/^(?:Подготовить вымышленные документы|Prepare fictional documents|准备虚构文件)/.test(text)) return text;
+  if (roleCaseNotices[locale]) text = text.replace(roleCaseNotices[locale], '$1');
   for (const pattern of removedSentences[locale] || []) text = text.replace(pattern, '');
   if (locale === 'ru') {
     text = text
@@ -145,8 +155,6 @@ export function gameCopy(value, locale = 'ru') {
   for (const pattern of removedSentences[locale] || []) text = text.replace(pattern, '');
   const leading = String(value ?? '').match(/^\s*/)[0], trailing = String(value ?? '').match(/\s*$/)[0];
   text = text.replace(/ {2,}/g, ' ').trim();
-  if(locale==='ru')text=text.replace(/^[Дд]ело\.\s*(?=Вы готовите)/u,'');
-  if(locale==='en')text=text.replace(/^Case\.\s*(?=You prepare|You are preparing)/u,'');
   if (/^\p{Lu}/u.test(String(value ?? '').trim()) && /^\p{Ll}/u.test(text)) text = text[0].toLocaleUpperCase(locale) + text.slice(1);
   return text ? leading + text + trailing : '';
 }

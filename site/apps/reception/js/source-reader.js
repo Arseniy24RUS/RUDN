@@ -107,6 +107,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     if(paper)paper.inert=open;
     const contents=dialog.querySelector('[data-action="toggle-toc"]');
     if(contents)contents.disabled=open;
+    if(open){const title=dialog.querySelector('.rx-source-title');if(title)title.open=false;}
   }
   function decorateEmbeddedReader(){
     if(!embedded||!app)return;
@@ -122,7 +123,18 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     const toc=bar?.querySelector('[data-action="toggle-toc"]');if(toc){const title=({en:'Contents',zh:'目录'}[language()]||'Оглавление');toc.innerHTML=cabinetIcon('sources');toc.setAttribute('title',title);toc.setAttribute('aria-label',title);}
     const find=reader.querySelector('.ll-searchbar button[type="submit"]');if(find)find.innerHTML=cabinetIcon('search');
     const clear=reader.querySelector('[data-action="clear-search"]');if(clear){clear.innerHTML=cabinetIcon('close');clear.setAttribute('aria-label',({en:'Clear search',zh:'清除搜索'}[language()]||'Очистить поиск'));}
-    const header=reader.querySelector('.ll-reader-header');if(header&&!header.querySelector('[data-cabinet-document-icon]'))header.insertAdjacentHTML('afterbegin',`<span data-cabinet-document-icon>${cabinetIcon('docs')}</span>`);
+    const header=reader.querySelector('.ll-reader-header');
+    if(header&&!header.querySelector('[data-cabinet-document-icon]')){
+      header.insertAdjacentHTML('afterbegin',`<span data-cabinet-document-icon>${cabinetIcon('docs')}</span>`);
+      const title=header.querySelector('h2')?.textContent||cabinetLabels().document;
+      const number=header.querySelector('.ll-eyebrow')?.textContent||title;
+      const compactNumber=number.match(/(?<![\p{L}\d])\d+[-‑–](?:ФЗ|FZ)(?![\p{L}\d])/iu)?.[0]||number;
+      const revision=header.querySelector('.ll-revision')?.textContent;
+      bar?.querySelector('[data-source-reader-close]')?.insertAdjacentHTML('afterend',`<details class="rx-source-title">
+        <summary title="${esc(title)}"><span>${esc(compactNumber)}</span>${cabinetIcon('down')}</summary>
+        <div class="rx-source-title-panel"><h2 lang="ru">${esc(title)}</h2>${revision?`<p lang="ru">${esc(revision)}</p>`:''}
+        ${selectionEnabled()?`<p>${esc(cabinetLabels().selectHint)}</p>`:''}</div></details>`);
+    }
     setEmbeddedSearchResults(Boolean(searchPanel?.querySelector('.ll-search-results:not([hidden])')));
   }
   function fail(error){
@@ -221,7 +233,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     dialog=document.createElement(embedded?'section':'dialog');dialog.className='legal-lab rx-source-dialog'+(embedded?' rx-source-embedded':'');dialog.setAttribute('aria-label',cabinetLabels().document);
     if(embedded){dialog.setAttribute('role','region');dialog.setAttribute('open','');}
     const text=cabinetLabels();
-    dialog.innerHTML=`<div class="rx-source-dialog-bar"><button type="button" data-source-reader-close>${embedded?cabinetIcon('back'):''}<span>${esc(text.close)}</span></button><p role="status" data-source-reader-status>${esc(text.loading)}</p><button type="button" data-source-reader-retry hidden>${esc(text.retry)}</button></div><div class="rx-source-reader-content"></div>${typeof onSelect==='function'?`<footer class="rx-source-reference-tray" data-source-reference-tray ${selectionEnabled()?'':'hidden'}><div class="rx-source-reference-copy"><p role="status" data-source-reference-hint>${esc(text.selectHint)}</p><strong data-source-reference-title></strong><p data-source-reference-preview></p></div><div class="rx-source-reference-actions"><button type="button" data-source-reference-clear hidden>${esc(text.clear)}</button><button type="button" data-source-reference-use disabled>${esc(text.use)}</button></div>${embedded?`<small class="rx-source-reference-note">${esc(text.savedHint)}</small>`:''}</footer>`:''}`;
+    dialog.innerHTML=`<div class="rx-source-dialog-bar"><button type="button" data-source-reader-close aria-label="${esc(text.close)}">${embedded?cabinetIcon('back'):''}<span>${esc(text.close)}</span></button><p role="status" data-source-reader-status>${esc(text.loading)}</p><button type="button" data-source-reader-retry hidden>${esc(text.retry)}</button></div><div class="rx-source-reader-content"></div>${typeof onSelect==='function'?`<footer class="rx-source-reference-tray" data-source-reference-tray ${selectionEnabled()?'':'hidden'}><div class="rx-source-reference-copy"><p role="status" data-source-reference-hint>${esc(text.selectHint)}</p><strong data-source-reference-title></strong><p data-source-reference-preview></p></div><div class="rx-source-reference-actions"><button type="button" data-source-reference-clear hidden>${esc(text.clear)}</button><button type="button" data-source-reference-use disabled>${esc(text.use)}</button></div>${embedded?`<small class="rx-source-reference-note">${esc(text.savedHint)}</small>`:''}</footer>`:''}`;
     if(embedded){if(!refresh()){dialog.remove();dialog=null;session?.abort();session=null;return false;}}
     else{document.body.append(dialog);dialog.showModal();}
     dialog.addEventListener('cancel',event=>{event.preventDefault();close();},{signal:aborter.signal});
