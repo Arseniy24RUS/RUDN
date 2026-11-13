@@ -403,6 +403,32 @@ test('v2 calendar uses the frozen public holiday calendar, working days and corr
   assert.throws(()=>workingCalendarDay('2028-01-01'),RangeError,'Do not silently invent a future production calendar');
 });
 
+test('v2 ordinary appeals include the complete three statutory excerpts and direct article links',()=>{
+  const article8='https://www.consultant.ru/document/cons_doc_LAW_59999/0c7123ee40ad90f89afa6fa544a87ffe76c084c0/';
+  const expected={
+    registration59:{label:'59-ФЗ, ст. 8, ч. 2',url:article8,
+      quote:'Письменное обращение подлежит обязательной регистрации в течение трех дней с момента поступления в государственный орган, орган местного самоуправления или должностному лицу.'},
+    referral59:{label:'59-ФЗ, ст. 8, ч. 3',url:article8,
+      quote:'Письменное обращение, содержащее вопросы, решение которых не входит в компетенцию данных государственного органа, органа местного самоуправления или должностного лица, направляется в течение семи дней со дня регистрации в соответствующий орган или соответствующему должностному лицу, в компетенцию которых входит решение поставленных в обращении вопросов, с уведомлением гражданина, направившего обращение, о переадресации обращения, за исключением случая, указанного в части 4 статьи 11 настоящего Федерального закона.'},
+    review59:{label:'59-ФЗ, ст. 12, ч. 1',url:'https://www.consultant.ru/document/cons_doc_LAW_59999/23fb391f3632e3f68a11e40c5a7711f3513cc674/',
+      quote:'Письменное обращение, поступившее в государственный орган, орган местного самоуправления или должностному лицу в соответствии с их компетенцией, рассматривается в течение 30 дней со дня регистрации письменного обращения, за исключением случая, указанного в части 1.1 настоящей статьи.'},
+  };
+  for(const [rule,anchor,deadline] of [
+    ['calendar3','received','2026-05-04'],['calendar7','registered','2026-05-07'],['calendar30','registered','2026-06-01'],
+  ]){
+    const c=calendarCase('river-observation',rule,anchor,deadline),{norms}=publicWorkbook(c,2);
+    assert.deepEqual(norms.map(row=>row.id).sort(),Object.keys(expected).sort());
+    for(const row of norms){
+      const {label,url,quote}=expected[row.id];
+      assert.equal(row.url,url);
+      for(const locale of ['ru','en','zh']){
+        assert.equal(row.label[locale],label);
+        assert.equal(row.text[locale],`«${quote}»`);
+      }
+    }
+  }
+});
+
 test('v2 gives each special procedure its actual event, period, statutory excerpt and one date to select',()=>{
   for(const [id,rule,anchor,deadline,norm,registrationCheck,special]of [
     ['anonymous-danger','calendar3','received','2026-05-04','registration59',false,false],
