@@ -111,17 +111,12 @@ function caseCalendar(c,gameplay=false){
  const registered=events.find(event=>event.id==='registered');
  const referred=gameplay&&Boolean(registered)&&['review59','referral59'].includes(normId)&&authored.anchor==='registered';
  const dual=referred||normId==='review59'&&authored.anchor==='registered'&&authored.rule==='calendar30';
- if(referred){
-  // A fixed handover in the scenario, independent of the player's answer.
-  events.push({id:'recipientRegistered',date:addCalendarDays(registered.date,2),kind:'event',
-   label:T('Орган получил и зарегистрировал обращение','Recipient received and registered the appeal','受理机关收到并登记来信')});
- }
  const registrationCheck=(normId.endsWith('59')||normId.startsWith('information'))&&events.some(event=>event.id==='registered')&&events.some(event=>event.id==='received');
  const shift=authored.acceptedShifts.includes('next_working_day')?'next_working_day':authored.acceptedShifts[0];
  const label=Object.fromEntries(['ru','en','zh'].map(locale=>[locale,c.public.deadlinePrompt[locale].split('\n')[0].trim()]));
  const target=referred
   ? {id:'deadline',label:T('Крайний срок ответа органа по существу','Deadline for the recipient’s substantive reply','受理机关实质答复的截止日'),
-     anchorId:'recipientRegistered',ruleId:'calendar30',...CALENDAR_RULES.calendar30}
+     anchorId:'referral',ruleId:'calendar30',...CALENDAR_RULES.calendar30}
   : {id:'deadline',label,anchorId:authored.anchor,ruleId:authored.rule,...rule};
  return {events,targets:dual?[{id:'referral',label:targets[0].label,anchorId:'registered',ruleId:'calendar7',...CALENDAR_RULES.calendar7},target]:[target],
   registrationCheck,dual,referred,special:!['registration59','review59','referral59'].includes(normId),liabilityApplicable:normId.endsWith('59'),
@@ -136,7 +131,7 @@ function calendarInstructions(c,task){
  const shift=task.counting.shift==='next_working_day'?T('Если последний день нерабочий, перенесите окончание на ближайший следующий рабочий день.','If the last day is non-working, move the deadline to the next working day.','末日为非工作日时，顺延至下一工作日。'):T('Последний день оставьте без переноса.','Do not shift the final date.','末日不顺延。');
  const check=T('Отдельно оцените, выполнена ли регистрация в течение 3 календарных дней после поступления; в этом задании к последнему дню применяется то же правило переноса.','Separately judge whether registration was completed within 3 calendar days of receipt; this exercise uses the same final-day adjustment.','另行判断是否在收到后三个日历日内完成登记；本练习对登记期限末日采用相同的顺延规则。');
  return Object.fromEntries(['ru','en','zh'].map(locale=>{
-  const intro=task.referred?T('Срок переадресации отсчитывается от первоначальной регистрации. Получивший орган регистрирует обращение в день получения. Срок ответа отсчитывается от этой регистрации.','The referral period starts at the original registration. The recipient registers the appeal on receipt. The reply period starts at that registration.','转送期限从首次登记起算。受理机关在收到当日登记，答复期限从该次登记起算。')[locale]:task.dual?T('Рассчитайте два альтернативных срока от регистрации: 7 дней на направление по компетенции и 30 дней на рассмотрение. Не складывайте 7 и 30; у нового адресата срок начинается от его регистрации.','Calculate two alternative periods from registration: 7 days for referral and 30 days for review. Do not add 7 and 30; a new recipient counts from its own registration.','从登记日起计算两个备选期限：七日转送和三十日审理。不要把7与30相加；新收件机关从自己的登记日起算。')[locale]:
+  const intro=task.referred?T('Отсчитайте 7 дней от первоначальной регистрации для переадресации. Затем отсчитайте 30 дней от рассчитанного срока переадресации: по условию обращение получает и регистрирует другой орган в этот же день.','Count seven days from the original registration for referral. Then count 30 days from that deadline. In this exercise the recipient receives and registers the appeal on that day.','从首次登记日起计算七日转送期限，再从该期限起计算三十日答复期限。本题中受理机关于转送期限当日收到并登记来信。')[locale]:task.dual?T('Рассчитайте два альтернативных срока от регистрации: 7 дней на направление по компетенции и 30 дней на рассмотрение. Не складывайте 7 и 30; у нового адресата срок начинается от его регистрации.','Calculate two alternative periods from registration: 7 days for referral and 30 days for review. Do not add 7 and 30; a new recipient counts from its own registration.','从登记日起计算两个备选期限：七日转送和三十日审理。不要把7与30相加；新收件机关从自己的登记日起算。')[locale]:
    ({ru:`Исходное событие: «${anchor.ru}». Срок: ${rule.amount} ${units[rule.unit].ru}.`,en:`Starting event: “${anchor.en}”. Period: ${rule.amount} ${units[rule.unit].en}.`,zh:`起算事件：“${anchor.zh}”。期限：${rule.amount}${units[rule.unit].zh}。`})[locale];
   return [locale,[intro,start[locale],unit[locale],shift[locale],task.registrationCheck?check[locale]:''].filter(Boolean).join(' ')];
  }));
@@ -151,7 +146,10 @@ function evaluateCaseWorkbook(c,decision,feedback,gameplay){
  if(!supportsWorkbook(c,WORKBOOK_VERSION))fail('invalid_case',503);
  const task=caseCalendar(c,gameplay),events=Object.fromEntries(task.events.map(event=>[event.id,event.date])),expected={},selected={},correct={};
  for(const target of task.targets){
-  expected[target.id]=target.id==='deadline'&&!task.referred?parseDateOnly(c.rubric.deadline):calculateWorkbookDeadline({anchorDate:events[target.anchorId],ruleId:target.ruleId,...task.counting});
+  const anchorDate=target.anchorId==='referral'?expected.referral:events[target.anchorId];
+  expected[target.id]=target.id==='deadline'&&!task.referred
+   ? parseDateOnly(c.rubric.deadline)
+   : calculateWorkbookDeadline({anchorDate,ruleId:target.ruleId,...task.counting});
   selected[target.id]=parseDateOnly(target.id==='deadline'?decision.deadline:decision.workbook.referralDeadline)||'';
   correct[target.id]=selected[target.id]===expected[target.id];
  }

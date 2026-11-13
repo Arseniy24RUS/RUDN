@@ -345,7 +345,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const a=view?.case?.assessment,d=decisionDraft;
     return a?assessmentBlock('calendar',t('calendarRuleSummary'),`${optionsField('assessment.calendar.anchor',t('calendarAnchor'),a.calendar.events,d.assessment.calendar.anchor)}${optionsField('assessment.calendar.rule',t('calendarRule'),a.calendar.rules,d.assessment.calendar.rule)}${optionsField('assessment.calendar.start',t('calendarStart'),a.calendar.starts,d.assessment.calendar.start)}${optionsField('assessment.calendar.shift',t('calendarShift'),a.calendar.lastDays,d.assessment.calendar.shift)}`):'';
   }
-  function calendarTask(){return view?.case?.workbook?{...view.case.workbook,hideEventList:true,eventListIds:['recipientRegistered'],autoCommit:true,internalSources:Boolean(gameplayContext)}:undefined;}
+  function calendarTask(){return view?.case?.workbook?{...view.case.workbook,hideEventList:true,autoCommit:true,internalSources:Boolean(gameplayContext)}:undefined;}
   function calendarPage() {
     const c=view.case||{},a=c.assessment,d=decisionDraft;
     const locked=!active()||paused||(busy&&operation==='decide')||pending?.op==='decide';

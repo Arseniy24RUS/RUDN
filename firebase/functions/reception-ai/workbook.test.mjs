@@ -505,14 +505,14 @@ test('v2 API restores cases without registration and records a fully informed si
 });
 
 
-test('the school road case grades referral and the recipient’s substantive reply from separate registrations',()=>{
+test('the school road case grades referral first and the reply from the referral deadline',()=>{
   const c=calendarCase('hatch','calendar7','registered','2026-05-07');
   const options={gameplay:true}, w=publicWorkbook(c,2,options);
   assert.deepEqual(w.targets.map(({id,anchorId})=>[id,anchorId]),[
-    ['referral','registered'],['deadline','recipientRegistered'],
+    ['referral','registered'],['deadline','referral'],
   ]);
-  assert.equal(w.events.find(event=>event.id==='recipientRegistered').date,'2026-05-02');
-  const d=decisionFor(c,{referral:'2026-05-07',deadline:'2026-06-01',registrationTimely:true});
+  assert.ok(!w.events.some(event=>event.id==='recipientRegistered'));
+  const d=decisionFor(c,{referral:'2026-05-07',deadline:'2026-06-08',registrationTimely:true});
   const score=evaluateWorkbook(c,d,{criteria:[{id:'calendar',earned:0,max:20}]},2,options);
   assert.equal(score.score,20);
   assert.deepEqual(score.workbook.calendar.correct,{referral:true,deadline:true,registrationTimely:true});

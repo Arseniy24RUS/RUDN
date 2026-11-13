@@ -76,12 +76,15 @@ function calendarContent(options){
     const info=dayInfo(date,snapshot),outside=!date.startsWith(s.month),daily=events.filter(event=>event.date===date),chosen=targets.filter(target=>s.selectedDates[target.id]===date);
     return `<button type="button" class="rxw-calendar-day ${info.working?'working':'rest'} ${info.type==='working-transfer'?'working-transfer':''} ${info.shortened?'shortened':''} ${outside?'outside-month':''} ${chosen.map(target=>'chosen-'+target.id).join(' ')}" data-calendar-action="choose-date" data-date="${date}" aria-pressed="${date===selected}" aria-label="${esc([formattedDate(date,locale),dayLabel(info,locale),...daily.map(event=>localText(event.label,locale)||t[eventKind(event)]),...chosen.map(target=>target.label)].filter(Boolean).join(', '))}" tabindex="${date===(selected?.startsWith(s.month)?selected:month.days[0].date)?'0':'-1'}" ${off}><span>${Number(date.slice(8))}</span>${info.shortened?'<small aria-hidden="true">−1</small>':info.type==='working-transfer'?'<small aria-hidden="true">↻</small>':''}<b class="rxw-event-dots" aria-hidden="true">${[...new Set(daily.map(eventKind))].map(kind=>`<i class="event-${kind}"></i>`).join('')}</b></button>`;
   }).join('');
-  const eventList=options.task?.eventListIds
-    ? events.filter(event=>options.task.eventListIds.includes(event.id))
-    : options.task?.hideEventList ? [] : events;
+  const sequential=options.task?.targets?.some(target=>target.anchorId==='referral');
+  const sequenceHint={
+    ru:'Отсчитайте 7 дней от регистрации, затем 30 дней от срока переадресации. Отметьте обе даты.',
+    en:'Count 7 days from registration, then 30 days from the referral deadline. Select both dates.',
+    zh:'从登记日起计算7日，再从转送期限起计算30日。请选择两个日期。',
+  }[localeKey(locale)];
   const norms=options.task?.norms||[{label:locale==='ru'?'Федеральный закон от 02.05.2006 № 59-ФЗ «О порядке рассмотрения обращений граждан Российской Федерации»':'59-ФЗ · '+t.norms,text:t.rules.join('\n'),url:'https://mintrud.gov.ru/docs/laws/108'}];
-  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><p class="rxw-calendar-instruction">${t.intro}</p>
-    ${!eventList.length?'':`<div class="rxw-calendar-events">${eventList.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
+  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><p class="rxw-calendar-instruction">${sequential?sequenceHint:t.intro}</p>
+    ${options.task?.hideEventList?'':`<div class="rxw-calendar-events">${events.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
     <div class="rxw-calendar-targets" role="group" aria-label="${t.targets}">${targets.map(target=>{
       const date=s.selectedDates[target.id],displayDate=date&&formatDateOnly(date);
       const clearLabel=esc(`${t.clearDate} — ${target.label} — ${displayDate}`);

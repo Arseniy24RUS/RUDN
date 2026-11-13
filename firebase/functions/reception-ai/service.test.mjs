@@ -204,10 +204,11 @@ test('new workbook play uses all documents, a real citation and the configured s
   assert.ok(v.case.normativeActs.some(act=>act.id==='reception-law59999'));
   assert.deepEqual(v.documents.map(d=>d.id),c.documents.map(d=>d.id));
   assert.deepEqual(v.openedDocumentIds,[]);
-  assert.equal(v.case.workbook.events.find(e=>e.id==='recipientRegistered').date,'2026-11-13');
+  assert.ok(!v.case.workbook.events.some(e=>e.id==='recipientRegistered'));
+  assert.equal(v.case.workbook.targets.find(target=>target.id==='deadline').anchorId,'referral');
   const decision=canonicalDecision(c);
   decision.procedureId=''; decision.routeId='';
-  decision.deadline='2026-12-13';
+  decision.deadline='2026-12-18';
   decision.assessment.research={recordId:'',fragmentId:'',extracted:'',finding:''};
   decision.workbook={referralDeadline:'2026-11-18',registrationTimely:true,routing:{recipientIds:ROUTING_RECIPIENTS[c.id][0]},
     legalCitation:{docId:'reception-law59999',unitIds:['law59999-u52'],text:'Запрещается направлять жалобу на рассмотрение в государственный орган'}};

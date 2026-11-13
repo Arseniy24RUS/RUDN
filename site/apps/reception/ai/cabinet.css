@@ -83,6 +83,7 @@
 .reception-ai-root.rxa-cabinet .rxa-foyer-scene { border: 0; border-radius: 14px; }
 .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-stage { height: 420px; min-height: 420px; }
 .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-stage::before { background: none; }
+.reception-ai-root.rxa-cabinet .rxa-foyer:not(.rxa-foyer-landing) .rxa-citizen-stage::after { transform: translateY(48px); }
 .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-poster,
 .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-video { width: 315px; height: 430px; top: 12px; filter: drop-shadow(0 5px 9px #19344018); }
 .reception-ai-root.rxa-cabinet .rxa-active-reception { padding: 6px 0; border: 0; border-radius: 0; background: transparent; }
@@ -300,6 +301,7 @@
   .reception-ai-root.rxa-cabinet .rxa-foyer-grid { grid-template-columns: minmax(0,1fr); gap: 0; }
   .reception-ai-root.rxa-cabinet .rxa-foyer-scene { border: 0; border-radius: 0; }
   .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-stage { height: clamp(256px,80vw,360px); min-height: 0; background-position: center; }
+  .reception-ai-root.rxa-cabinet .rxa-foyer:not(.rxa-foyer-landing) .rxa-citizen-stage::after { transform: translateY(min(8.5vw, 34px)); }
   .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-poster,
   .reception-ai-root.rxa-cabinet .rxa-foyer-scene .rxa-citizen-video { width: clamp(230px,69vw,310px); height: clamp(315px,92vw,420px); top: 5px; }
   .reception-ai-root.rxa-cabinet .rxa-active-reception { padding: 15px 18px 5px; border: 0; border-radius: 0; }

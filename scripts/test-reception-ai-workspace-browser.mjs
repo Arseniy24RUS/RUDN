@@ -438,12 +438,14 @@ try{
   assert.ok(illustratedCase.documents.some(document=>document.id==='observation'));
   assert.deepEqual(illustratedCase.case.workbook.targets.map(({id,anchorId,ruleId})=>({id,anchorId,ruleId})),[
     {id:'referral',anchorId:'registered',ruleId:'calendar7'},
-    {id:'deadline',anchorId:'recipientRegistered',ruleId:'calendar30'},
+    {id:'deadline',anchorId:'referral',ruleId:'calendar30'},
   ]);
   await navigate('calendar');
   await calendarTarget('referral').waitFor({state:'visible'});
   await calendarTarget('deadline').waitFor({state:'visible'});
-  check('Appeal calendar shows seven-day referral and thirty-day response with separate starting events');
+  assert.ok(!illustratedCase.case.workbook.events.some(event=>event.id==='recipientRegistered'));
+  assert.match(await page.locator('.rxw-calendar-instruction').innerText(),/7 дней от регистрации, затем 30 дней от срока переадресации/);
+  check('Appeal calendar shows seven-day referral and thirty-day response from the referral deadline');
   await navigate('documents');
   assert.deepEqual(await page.locator('.rxa-document-list [data-action="document"]').evaluateAll(buttons=>buttons.map(button=>button.dataset.id)),initialDocuments);
   await navigate('chat');
