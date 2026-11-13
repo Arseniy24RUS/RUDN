@@ -57,10 +57,17 @@ try {
       await page.locator('#receptionAI[data-session-status="active"]').waitFor();
       await page.locator('#rxaPage-documents').click();
       assert.equal(await page.locator('.rxa-documents-page [role="tablist"]').count(),0);
-      await page.locator('.rxa-source-record').evaluateAll(nodes=>nodes.forEach(node=>{node.open=true;}));
-      await page.locator('a[data-source-reader][href*="LAW_59999/"]').first().click();
+      const act=page.locator('button[data-normative-doc="reception-law59999"]');
+      if(await act.count()){
+        assert.equal(await page.locator('.rxa-document-group').last().locator('a[target="_blank"],.rxa-research-materials').count(),0);
+        await act.first().click();
+      }else{
+        await page.locator('.rxa-source-record').evaluateAll(nodes=>nodes.forEach(node=>{node.open=true;}));
+        await page.locator('a[data-source-reader][href*="LAW_59999/"]').first().click();
+      }
       const reader=page.locator('.rx-source-embedded');
       await reader.locator('.ll-paper [data-unit]').first().waitFor();
+      assert.equal(await reader.locator('a[href^="http"]').count(),0);
       await page.evaluate(()=>Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,1500))]));
       const reading=await reader.locator('.ll-paper').evaluate(paper=>{
         const text=paper.querySelector('.ll-paragraph-text'),bounds=paper.getBoundingClientRect();

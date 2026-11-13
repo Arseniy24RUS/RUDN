@@ -29,7 +29,7 @@ export async function createReceptionFixture({repo=defaultRepo,casesDirectory=pr
     await new Promise(resolve=>setTimeout(resolve,300));
     const facts=actorCase.facts.slice(0,2);
     return {reply:facts.map(f=>localized(f.text,locale)).join(' ')||'Уточните, пожалуйста, какие обстоятельства вас интересуют.',
-      revealedFactIds:facts.map(f=>f.id),releasedDocumentIds:actorCase.documents.map(d=>d.id),usage:{inputTokens:0,outputTokens:0}};
+      revealedFactIds:facts.map(f=>f.id),releasedDocumentIds:actorCase.documentsAvailableUpfront?[]:actorCase.documents.map(d=>d.id),usage:{inputTokens:0,outputTokens:0}};
   }};
   if(provider.name!=='mock')throw Error('The QA fixture accepts only a local mock provider.');
   const service=createReceptionService({store,cases,provider});
@@ -41,7 +41,10 @@ let handle=null;
 async function enter(){
   document.body.classList.add('reception-immersive');
   main.innerHTML='<section class="page reception-page"><div id="receptionAI"></div></section>';
-  handle=await mountReceptionAI(document.getElementById('receptionAI'),{locale:new URLSearchParams(location.search).get('lang')||'ru',studentKey:'reception-repair-qa',context:'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2});
+  const parameters=new URLSearchParams(location.search);
+  const requestedContext=parameters.get('context');
+  const gameplayContext=['free','seminar'].includes(requestedContext)?requestedContext:undefined;
+  handle=await mountReceptionAI(document.getElementById('receptionAI'),{locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2,gameplayContext});
   window.__qaReception={provider:'mock',handle};
 }
 async function leave(){

@@ -9,7 +9,7 @@ export const newRequestId = () => globalThis.crypto?.randomUUID?.()
   || `rxai-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
 export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: fetcher = globalThis.fetch,
-  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion} = {}) {
+  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, context} = {}) {
   const resolveEndpoint = () => {
     if (!endpoint) throw new ReceptionAPIError('not-configured');
     let url;
@@ -25,6 +25,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
     catalog(parameters = {}, options = {}) { return api.request({...parameters, op: 'catalog'}, options); },
     recover(parameters = {}, options = {}) { return api.request({...parameters, op: 'recover'}, options); },
     async request(body, {signal} = {}) {
+      if(context && ['start','recover','resume'].includes(body.op)) body={...body,context};
       if(buildId && ['start','recover','resume'].includes(body.op)) body={...body,buildId};
       if(workbookVersion&&['start','catalog','recover','resume'].includes(body.op))body={...body,workbookVersion};
       const url = resolveEndpoint();

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Synthetic UI fixtures only. No production dossiers, users, provider or database.
- * Public catalog IDs are reused solely to exercise the real difficulty filter.
+ * Public catalog IDs are reused to exercise the real difficulty filter and illustration mapping.
  */
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -48,7 +48,8 @@ export function createSyntheticReceptionCases() {
     documents:[
       {id:'registration',title:T('Карточка поступления'),type:T('Внутренняя запись'),text:T('Служебная регистрационная запись синтетического дела.'),initial:true,factIds:[]},
       {id:'qa-receipt',title:T('Синтетическая квитанция QA-001'),type:T('Тестовый документ'),text:T('Полностью вымышленный образец. Учебное обращение QA-001 зарегистрировано 11 ноября 2026 года. Реального заявителя нет.'),initial:false,factIds:['qa-registration']},
-      {id:'qa-note',title:T('Синтетическая служебная заметка QA-002'),type:T('Тестовый документ'),text:T('Полностью вымышленная запись для проверки открытия документов и сохранения выбора. Материал не относится к реальному обращению.'),initial:false,factIds:['qa-attachment']}
+      {id:'qa-note',title:T('Синтетическая служебная заметка QA-002'),type:T('Тестовый документ'),text:T('Полностью вымышленная запись для проверки открытия документов и сохранения выбора. Материал не относится к реальному обращению.'),initial:false,factIds:['qa-attachment']},
+      ...(id==='river-observation'?[{id:'observation',title:T('Тестовый снимок'),type:T('Тестовый документ'),text:T('Пример наблюдения для проверки галереи.'),initial:false,factIds:[]}]:[])
     ],
     rubric:{
       procedureIds:['qa-procedure'],routeIds:['qa-office'],requiredActionIds:['qa-register','qa-verify','qa-notify'],forbiddenActionIds:['qa-discard'],criticalActionIds:['qa-discard'],requiredFactIds:['qa-registration'],evidenceGroups:[['qa-receipt']],

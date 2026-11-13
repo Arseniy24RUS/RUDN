@@ -236,7 +236,7 @@ jobs:
               'tests/reception-workbench.test.mjs', 'tests/reception-session-storage.test.mjs',
               'tests/reception-ai-qa-cases.test.mjs', 'tests/reception-learning-review.test.mjs',
               'scripts/test-reception-workbench-dom.mjs',
-              'scripts/build-reception-routing-directory.mjs', 'tests/reception-authority-picker.test.mjs',
+              'scripts/build-reception-routing-directory.mjs', 'scripts/build-reception-normative-provisions.mjs', 'tests/reception-authority-picker.test.mjs',
               'scripts/test-reception-source-search-browser.mjs', 'tests/reception-workbook-view.test.mjs', 'tests/reception-game-copy.test.mjs',
               'scripts/platform-main-staging.mjs',
               'site/apps/legal-lab/lib/corpus.mjs',

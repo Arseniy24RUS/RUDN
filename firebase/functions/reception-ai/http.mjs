@@ -54,7 +54,7 @@ export async function receptionHandler(req, res) {
     if (!cachedService || cachedVersion !== version) {
       cachedService = createReceptionService({store: env.store, cases: () => loadPrivateCatalogue(env.db, settings.activeCatalogVersion),
         provider: createOpenAIProvider({apiKey: getOpenAIKey}), config: settings.limits || {},
-        canStartAssessment: createFirebaseAssessmentGate(env.db), saveResult: createFirebaseResultWriter(env.db)});
+        canStartAssessment: createFirebaseAssessmentGate(env.db), saveResult: createFirebaseResultWriter(env.db), requireGameplay: true});
       cachedVersion = version;
     }
     res.status(200).json(await cachedService.handle(req.body, identity));

@@ -2,6 +2,7 @@ import {resourceURL} from '../../../assets/js/release-resources.js';
 import {esc} from './icons.js';
 import {icon as cabinetIcon} from '../ai/cabinet-icons.js';
 import {createSourceReference,sourceReferenceFromSelection} from './source-reference.js';
+import {SOURCE_LOCATORS} from './source-locators.js';
 
 let Corpus,readerView,attachReader,refreshReaderToc,refreshReaderSearch,setReaderQuery,translateDOM,readerImports;
 function loadReader(){
@@ -16,7 +17,7 @@ function loadReader(){
 }
 const BASE=new URL('../',import.meta.url);
 const SHARED_BASE=new URL('../../legal-lab/',import.meta.url);
-const EXISTING={'48601':'civil79','82959':'corruption273'};
+const EXISTING={'48601':'civil79','82959':'corruption273','34661':'koap'};
 const LOCAL_LAWS=new Set(['59999','61801','103023','182661','8559','8585','58968','13744','6719','19671','165795','19109','71450','155986','34823','34683','107289','121895','37318','305','491941','140174','39570','363263','64871']);
 const ALIASES=[
   ['mintrud.gov.ru/docs/laws/129','reception-info8'],
@@ -145,7 +146,10 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
   function translate(){if(app)translateDOM(app.root,language());}
   function unitForElement(element){
     const id=element.dataset.unit,unit=app?.corpus.peekUnit(current.id,'ru',id)||{},descriptor=app?.readerSpec?.descriptor;
-    return {...unit,id,label:unit.label||descriptor?.labels?.[id]||unit.locator||element.querySelector('.ll-paragraph-locator')?.textContent||'',text:unit.text||element.querySelector('.ll-paragraph-text')?.textContent||''};
+    const spec=SOURCE_LOCATORS[current.id],position=Number(id.match(/-u(\d+)$/)?.[1]);
+    const locator=spec?.starts.findLast(([start])=>start<=position)?.[1];
+    const label=locator?`${spec.kind} ${locator}`:unit.label||descriptor?.labels?.[id]||unit.locator||element.querySelector('.ll-paragraph-locator')?.textContent||'';
+    return {...unit,id,label,text:unit.text||element.querySelector('.ll-paragraph-text')?.textContent||''};
   }
   function renderSelection(){
     if(!dialog)return;
@@ -224,8 +228,8 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       }else if(target.dataset.action==='search-page')await search(Number(target.dataset.page));
     }catch(error){if(app===owner)fail(error);}
   }
-  async function open(url,trigger=document.activeElement){
-    const id=sourceDocumentForURL(url);if(!id||closed)return false;
+  async function openDocument(id,trigger=document.activeElement,url=''){
+    if(!id||closed)return false;
     close();
     if(embedded){await beforeOpen?.();if(closed)return false;}
     opener=trigger;sourceURL=url;const ticket=++generation;
@@ -238,7 +242,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     else{document.body.append(dialog);dialog.showModal();}
     dialog.addEventListener('cancel',event=>{event.preventDefault();close();},{signal:aborter.signal});
     dialog.querySelector('[data-source-reader-close]').addEventListener('click',close,{signal:aborter.signal});
-    dialog.querySelector('[data-source-reader-retry]').addEventListener('click',()=>void open(url,opener),{signal:aborter.signal});
+    dialog.querySelector('[data-source-reader-retry]').addEventListener('click',()=>void openDocument(id,opener,url),{signal:aborter.signal});
     dialog.querySelector('[data-source-reference-use]')?.addEventListener('click',()=>void useSelection(),{signal:aborter.signal});
     dialog.querySelector('[data-source-reference-clear]')?.addEventListener('click',()=>{selectedReference=null;dialog.ownerDocument.defaultView.getSelection()?.removeAllRanges();renderSelection();},{signal:aborter.signal});
     try{
@@ -268,7 +272,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       if(ticket!==generation||closed){corpus.destroy();return false;}
       readerState[id]||={original:true,tocOpen:false,searchOpen:embedded};
       current=doc;app={root:dialog.querySelector('.rx-source-reader-content'),corpus,locale:'ru',state:{reader:readerState},unitIndexes:new WeakMap(),isLocked:()=>false,applyPresence:()=>{},fail};
-      app.root.innerHTML=readerView(app,doc,[],{context:'reception',readonly:true});
+      app.root.innerHTML=readerView(app,doc,[],{context:'reception',readonly:true,showSource:!embedded});
       if(embedded)decorateEmbeddedReader();
       translate();await attachReader(app,positions[id]);
       if(ticket!==generation)return false;
@@ -285,12 +289,15 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       return true;
     }catch(error){if(ticket===generation)fail(error);return false;}
   }
+  const open=(url,trigger)=>openDocument(sourceDocumentForURL(url),trigger,url);
   host.addEventListener('click',event=>{
+    const button=event.target.closest('button[data-normative-doc]');
+    if(button){if(!button.disabled)void openDocument(button.dataset.normativeDoc,button);return;}
     const anchor=event.target.closest('a[data-source-reader]');
     if(!anchor||event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||!sourceDocumentForURL(anchor.href))return;
     event.preventDefault();void open(anchor.href,anchor);
   },{signal:lifetime.signal});
   function destroy(){closed=true;close();lifetime.abort();signal?.removeEventListener('abort',destroy);}
   signal?.addEventListener('abort',destroy,{once:true});if(signal?.aborted)destroy();
-  return {open,close,destroy,refresh,isOpen:()=>Boolean(dialog),supports:url=>Boolean(sourceDocumentForURL(url))};
+  return {open,openDocument,close,destroy,refresh,isOpen:()=>Boolean(dialog),supports:url=>Boolean(sourceDocumentForURL(url))};
 }

@@ -76,9 +76,12 @@ function calendarContent(options){
     const info=dayInfo(date,snapshot),outside=!date.startsWith(s.month),daily=events.filter(event=>event.date===date),chosen=targets.filter(target=>s.selectedDates[target.id]===date);
     return `<button type="button" class="rxw-calendar-day ${info.working?'working':'rest'} ${info.type==='working-transfer'?'working-transfer':''} ${info.shortened?'shortened':''} ${outside?'outside-month':''} ${chosen.map(target=>'chosen-'+target.id).join(' ')}" data-calendar-action="choose-date" data-date="${date}" aria-pressed="${date===selected}" aria-label="${esc([formattedDate(date,locale),dayLabel(info,locale),...daily.map(event=>localText(event.label,locale)||t[eventKind(event)]),...chosen.map(target=>target.label)].filter(Boolean).join(', '))}" tabindex="${date===(selected?.startsWith(s.month)?selected:month.days[0].date)?'0':'-1'}" ${off}><span>${Number(date.slice(8))}</span>${info.shortened?'<small aria-hidden="true">−1</small>':info.type==='working-transfer'?'<small aria-hidden="true">↻</small>':''}<b class="rxw-event-dots" aria-hidden="true">${[...new Set(daily.map(eventKind))].map(kind=>`<i class="event-${kind}"></i>`).join('')}</b></button>`;
   }).join('');
+  const eventList=options.task?.eventListIds
+    ? events.filter(event=>options.task.eventListIds.includes(event.id))
+    : options.task?.hideEventList ? [] : events;
   const norms=options.task?.norms||[{label:locale==='ru'?'Федеральный закон от 02.05.2006 № 59-ФЗ «О порядке рассмотрения обращений граждан Российской Федерации»':'59-ФЗ · '+t.norms,text:t.rules.join('\n'),url:'https://mintrud.gov.ru/docs/laws/108'}];
   return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><p class="rxw-calendar-instruction">${t.intro}</p>
-    ${options.task?.hideEventList?'':`<div class="rxw-calendar-events">${events.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
+    ${!eventList.length?'':`<div class="rxw-calendar-events">${eventList.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
     <div class="rxw-calendar-targets" role="group" aria-label="${t.targets}">${targets.map(target=>{
       const date=s.selectedDates[target.id],displayDate=date&&formatDateOnly(date);
       const clearLabel=esc(`${t.clearDate} — ${target.label} — ${displayDate}`);
@@ -92,7 +95,7 @@ function calendarContent(options){
     <details class="rxw-calendar-details" data-calendar-details="norms" data-details="calendar-norms" ${options.normsOpen?'open':''}>
       <summary><span><strong>${t.norms}</strong>${options.task?.special?`<span class="rxa-unread rxw-calendar-norms-badge" aria-hidden="true">!</span><span class="rxw-sr">${t.specialRules}</span>`:''}</span>${arrow(1)}</summary>
       <div class="rxw-calendar-details-content">
-        ${norms.map(norm=>`<section class="rxw-calendar-norm"><h4>${esc(localText(norm.label,locale))}</h4>${localText(norm.text,locale).split('\n').filter(Boolean).map(text=>`<p>${highlightDurations(text,locale)}</p>`).join('')}${norm.url?sourceLinkView({url:norm.url,label:t.external,locale,className:'rxw-calendar-law-link',external:true}):''}</section>`).join('')}
+        ${norms.map(norm=>`<section class="rxw-calendar-norm"><h4>${esc(localText(norm.label,locale))}</h4>${localText(norm.text,locale).split('\n').filter(Boolean).map(text=>`<p>${highlightDurations(text,locale)}</p>`).join('')}${norm.url?(options.task?.internalSources?normativeDocumentButton(sourceDocumentForURL(norm.url),t.open,'rxa-btn quiet rxw-calendar-law-link'):sourceLinkView({url:norm.url,label:t.external,locale,className:'rxw-calendar-law-link',external:true})):''}</section>`).join('')}
       </div>
     </details><p class="rxw-calendar-status" data-calendar-status role="status"></p>`;
 }
@@ -123,6 +126,15 @@ export function createCalendarWorkbench(host,initial={}){
   return {getState:()=>structuredClone(state),update(next={}){if(closed)return;options={...options,...next};state=normalizeCalendarWorkbenchState(Object.hasOwn(next,'state')?next.state:state,options);const focus=owner.activeElement?.dataset?.calendarAction==='choose-date'?owner.activeElement.dataset.date:null;paint();if(focus)container()?.querySelector(`[data-date="${focus}"][data-calendar-action="choose-date"]`)?.focus({preventScroll:true});},destroy};
 }
 
+function normativeDocumentButton(docId,label,className='rxa-btn') {
+  return docId ? `<button type="button" class="${esc(className)}" data-normative-doc="${esc(docId)}">${esc(label)}</button>` : '';
+}
+
+export function normativeActsView(acts,{locale='ru'}={}) {
+  const t=copy[localeKey(locale)];
+  return (acts||[]).map(act=>`<article class="rxa-source"><h3 lang="ru">${esc(act.title)}</h3><p lang="ru">${esc(act.number)}</p><div class="rxa-source-links">${normativeDocumentButton(act.id,t.open)}</div></article>`).join('');
+}
+
 /** One source action: embedded reading where available, external only otherwise. */
 export function sourceLinkView({url,label,locale='ru',className='rxa-btn',disabled=false,external=false}={}){
   const href=safeSourceURL(url),t=copy[localeKey(locale)];
@@ -131,7 +143,7 @@ export function sourceLinkView({url,label,locale='ru',className='rxa-btn',disabl
   if(disabled)return `<span class="${esc(className)}" aria-disabled="true">${esc(title)}</span>`;
   return `<a class="${esc(className)}" href="${esc(href)}" ${internal?'data-source-reader':'target="_blank" rel="noopener noreferrer"'}>${esc(title)}${internal?'':icon('out')}</a>`;
 }
-export function referenceView(reference,{locale='ru',removable=true}={}){
+export function referenceView(reference,{locale='ru',removable=true,internalOnly=false}={}){
   if(!reference)return '';const t=copy[localeKey(locale)];
-  return `<article class="rxw-reference" data-reference-id="${esc(reference.id)}"><header><div><small>${t.reference}</small><h4>${esc(reference.title)}</h4><p>${esc([reference.documentNumber,reference.locator].filter(Boolean).join(' · '))}</p></div>${removable?`<button type="button" data-action="remove-reference" data-id="${esc(reference.id)}" aria-label="${t.remove}">${icon('close')}</button>`:''}</header><blockquote>${esc(reference.text)}</blockquote>${reference.truncated?`<p class="rxw-reference-note">${t.truncated}</p>`:''}${sourceLinkView({url:reference.url,locale})}</article>`;
+  return `<article class="rxw-reference" data-reference-id="${esc(reference.id)}"><header><div><small>${t.reference}</small><h4>${esc(reference.title)}</h4><p>${esc([reference.documentNumber,reference.locator].filter(Boolean).join(' · '))}</p></div>${removable?`<button type="button" data-action="remove-reference" data-id="${esc(reference.id)}" aria-label="${t.remove}">${icon('close')}</button>`:''}</header><blockquote>${esc(reference.text)}</blockquote>${reference.truncated?`<p class="rxw-reference-note">${t.truncated}</p>`:''}${internalOnly?normativeDocumentButton(reference.docId,t.open):sourceLinkView({url:reference.url,locale})}</article>`;
 }

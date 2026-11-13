@@ -39,7 +39,7 @@ export function refreshReaderToc(app,d){
   const reader=app.root.querySelector('[data-reader-doc="'+CSS.escape(d.id)+'"]'),nav=reader?.querySelector('.ll-toc');
   if(nav)nav.innerHTML=app.state.reader[d.id]?.tocOpen?readerToc(app,d):'';
 }
-export function readerView(app,d,selected=[],{context='learning',counts={},review=false,correctIds=[],limit=5,readonly=false,scope}={}){
+export function readerView(app,d,selected=[],{context='learning',counts={},review=false,correctIds=[],limit=5,readonly=false,showSource=true,scope}={}){
   scope?.assert();
   const locale=documentLocale(app,d.id),descriptor=app.corpus.peekReaderDocument(d.id,locale),view={title:descriptor?.title||d.title,revisionLabel:descriptor?.revisionLabel||d.revisionLabel};
   if(!descriptor)throw Error('Reader descriptor unavailable');
@@ -56,7 +56,7 @@ export function readerView(app,d,selected=[],{context='learning',counts={},revie
   };
   spec.afterRender=()=>app.applyPresence();
   scope?.assert();app.readerSpec=spec;
-  let source='';try{const url=new URL(d.sourceUrl);if(['https:','http:'].includes(url.protocol))source='<a href="'+e(url.href)+'" target="_blank" rel="noopener noreferrer">Источник ↗</a>';}catch{}
+  let source='';if(showSource)try{const url=new URL(d.sourceUrl);if(['https:','http:'].includes(url.protocol))source='<a href="'+e(url.href)+'" target="_blank" rel="noopener noreferrer">Источник ↗</a>';}catch{}
   return '<section class="ll-reader" data-reader-doc="'+e(d.id)+'" data-reader-locale="'+locale+'" data-reader-context="'+context+'"><header class="ll-reader-header"><div data-document-text lang="'+locale+'"><span class="ll-eyebrow">'+e(d.number)+'</span><h2>'+e(view.title)+'</h2><span class="ll-revision">'+e(view.revisionLabel)+'</span></div><div class="ll-document-language"><small>'+(locale!=='ru'?'Учебный перевод':'Русский оригинал')+'</small>'+(app.locale!=='ru'?'<button type="button" class="ll-secondary" data-action="toggle-document-original">'+(rs.original?'Показать перевод':'Русский оригинал')+'</button>':'')+source+'</div></header>'+(d.coverage!=='full'?'<div class="ll-text-warning">Материалы временно недоступны</div>':'')+'<div class="ll-reader-dock">'+selectionTrayView(app,selected,context,limit,d.id,readonly)+'</div><div class="ll-reader-surface">'+readerSearchPanel(app,d)+'<div class="ll-reader-grid '+(rs.tocOpen?'toc-open':'')+'"><nav class="ll-toc" aria-label="Оглавление документа">'+(rs.tocOpen?readerToc(app,d):'')+'</nav><article class="ll-paper" tabindex="0" aria-label="Текст документа"></article></div></div></section>';
 }
 export function refreshReaderSearch(app,d){

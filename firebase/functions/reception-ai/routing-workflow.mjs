@@ -27,9 +27,16 @@ function correspondence(caseId) {
   return {territoryId,territory:name,city,address,synthetic:true};
 }
 
-export function publicRoutingWorkflow(caseId) {
+export function publicRoutingWorkflow(caseId,{gameplay=false}={}) {
   if (!Object.hasOwn(ROUTING_RECIPIENTS, caseId)) return null;
-  const location = EVENT_LOCATIONS[caseId];
+  const authoredLocation = EVENT_LOCATIONS[caseId];
+  const unspecified = ['anonymous-danger','landfill-registry-scope'];
+  // A scenario's event region is independent of the correspondence address.
+  const simulatedTerritory = CORRESPONDENCE_TERRITORIES[caseHash('event:'+caseId) % CORRESPONDENCE_TERRITORIES.length];
+  let location = authoredLocation;
+  if (gameplay && !authoredLocation?.territoryId && !unspecified.includes(caseId)) {
+    location = {...authoredLocation, territoryId:caseId==='noise-emergency-work'?'ru-77':simulatedTerritory};
+  }
   const workflow = {origin:correspondence(caseId),recipientLimit:Math.max(...ROUTING_RECIPIENTS[caseId].map(ids => ids.length))};
   if (location) {
     const region = ROUTING_TERRITORIES[location.territoryId];

@@ -3,9 +3,10 @@ import {localized, normalizeLocale, translator} from './copy.js';
 import './workspace-copy.js';
 import {icon} from './cabinet-icons.js';
 import {createReceptionStorage} from './session-storage.js';
-import {calendarWorkbenchView, createCalendarWorkbench, sourceLinkView, referenceView, referenceDecisionPatch} from './workbench.js';
+import {calendarWorkbenchView, createCalendarWorkbench, sourceLinkView, normativeActsView, referenceView, referenceDecisionPatch} from './workbench.js';
 import {learningReviewView, workRecordView} from './learning-review.js';
 import {characterMedia, createMessengerMedia} from './media.js';
+import {caseIllustrations, createIllustrationViewer, illustratedDocumentText, renderIllustrationThumbnails} from './illustrations.js';
 import {createSourceReader} from '../js/source-reader.js';
 import {gameCopy} from '../localization/game-copy.js';
 import {authorityPickerView,routingOriginView,authoritySelectionLabel} from './authority-picker.js';
@@ -45,7 +46,7 @@ export function loadAIStyle() {
   if (!document.getElementById(id)) {
     const link = document.createElement('link'); link.id = id; link.rel = 'stylesheet';
     link.href = new URL('./style.css', import.meta.url).href; document.head.append(link);
-    for(const href of ['./workbench.css','./learning-review.css','./cabinet.css','./authority-picker.css','./workbook.css','../source-reader.css']){const extraStyle=document.createElement('link');extraStyle.rel='stylesheet';extraStyle.href=new URL(href,import.meta.url).href;document.head.append(extraStyle);}
+    for(const href of ['./workbench.css','./learning-review.css','./cabinet.css','./authority-picker.css','./workbook.css','../source-reader.css','./illustrations.css']){const extraStyle=document.createElement('link');extraStyle.rel='stylesheet';extraStyle.href=new URL(href,import.meta.url).href;document.head.append(extraStyle);}
   }
 }
 
@@ -63,6 +64,9 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const presentationToken=Symbol('reception-mount');
   owners.add(presentationToken);presentationOwners.set(body,owners);body.classList.add('reception-immersive');
   const backend = options.backend;
+  const gameplayContext = config.gameplayContext ?? (config.demo ? undefined : options.context === 'free' ? 'free' : 'seminar');
+  const seminar = gameplayContext === 'seminar';
+  const illustrationViewer = createIllustrationViewer(root);
   const ownerNow = () => String(backend?.getProfile?.()?.studentKey || backend?.user?.uid || options.studentKey || 'local-demo');
   const owner = ownerNow();
   const storageKey = `rudn.reception.ai.v1:${encodeURIComponent(owner)}:${options.context || 'course'}:${options.period || 'current'}:${encodeURIComponent(config.endpoint || '')}`;
@@ -72,7 +76,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let routingSearch='',routingTerritory='ru-77';
   let confirmation = false, storageOkay = true, savedCaseId = '', restoring = false, requestedLocale = null, work = Promise.resolve();
   let completedNotified = '', updateAdapter = null, needsResume = false, pendingAt = null, mobilePane = 'desk';
-  let enteringMessages = new Set(), enteringDocuments = new Set(), lastPendingRenderedId = '';
+  let enteringMessages = new Set(), lastPendingRenderedId = '';
   let chatScroll = {top:0,bottom:true}, followupDraft='';
   let detailOpen = new Set();
   let page='reception', calendarState={}, selectedReferences=[], readMessageIds=new Set(), pageScroll={}, savedSessionId='';
@@ -114,16 +118,16 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   restoreSaved(initial);
   const getToken = options.getIdToken || (backend?.getReceptionIdToken ? arg => backend.getReceptionIdToken(arg) : null);
   const api = createReceptionAPI({endpoint:config.endpoint, getIdToken:getToken, demo:config.demo === true,
-    fetch:options.fetch || globalThis.fetch, signal:lifetime.signal, timeoutMs:config.timeoutMs || 60000,buildId,workbookVersion:config.workbookVersion??(config.demo?undefined:2)});
+    fetch:options.fetch || globalThis.fetch, signal:lifetime.signal, timeoutMs:config.timeoutMs || 60000,buildId,context:gameplayContext,workbookVersion:config.workbookVersion??(config.demo?undefined:2)});
   const reader = createSourceReader(root, {signal:lifetime.signal, locale:() => locale,
     presentation:'embedded', getContainer:()=>root.querySelector('[data-source-reader-host]'),
     beforeOpen:()=>{if(page!=='documents'||selectedDoc){selectedDoc='';goPage('documents');}},
     canSelect:()=>active()&&!paused&&!(busy&&operation==='decide')&&pending?.op!=='decide',
     onSelect:reference=>{
       if(!active())return;
-      selectedReferences=[reference,...selectedReferences.filter(item=>item.id!==reference.id)].slice(0,20);
-      notice=t('referenceAdded');
-      if(view.case.workbook?.version>=2){reader.close();persist();goPage('documents');}else{applyReference(reference);goPage('decision');}
+      selectedReferences=gameplayContext?[reference]:[reference,...selectedReferences.filter(item=>item.id!==reference.id)].slice(0,20);
+      notice=t(gameplayContext?'citationAdded':'referenceAdded');
+      if(gameplayContext){detailOpen.add('assessment-legal-citation');reader.close();goPage('decision');}else if(view.case.workbook?.version>=2){reader.close();persist();goPage('documents');}else{applyReference(reference);goPage('decision');}
     }});
   calendar=createCalendarWorkbench(root,{state:calendarState,locale,signal:lifetime.signal,
     onChange:state=>{calendarState=state;if(active()&&view.case?.workbook){decisionDraft.workbook??=blankWorkbook();decisionDraft.workbook.referralDeadline=state.selectedDates?.referral||'';decisionDraft.deadline=state.selectedDates?.deadline||'';decisionDraft.workbook.registrationTimely=state.registrationTimely===true;confirmation=false;}persist();},
@@ -134,9 +138,9 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   // The assessment's material fragment describes the case; its other fragments can quote laws.
   const researchText = fragment => (fragment.id === 'material' ? authoredText : text)(fragment.text);
   const active = () => view?.status === 'active';
-  const canIndependent = () => config.demo === true || (!backend?.isAdmin?.() && options.context !== 'free'
+  const canIndependent = () => gameplayContext!=='free' && (config.demo === true || (!backend?.isAdmin?.() && options.context !== 'free'
     && (typeof options.assessmentAllowed === 'function' ? options.assessmentAllowed() : options.assessmentAllowed !== false)
-    && Boolean(backend?.getProfile?.()?.studentKey || options.studentKey));
+    && Boolean(backend?.getProfile?.()?.studentKey || options.studentKey)));
   const button = (label, action, {primary=false, quiet=false, disabled=false, extra='', glyph=''} = {}) =>
     `<button type="button" class="rxa-btn ${primary?'primary':''} ${quiet?'quiet':''}" data-action="${esc(action)}" ${disabled?'disabled':''} ${extra}>${glyph?icon(glyph):''}${esc(label)}</button>`;
   function persist() {
@@ -158,7 +162,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function markChatRead() {if(page==='chat'&&!document.hidden)for(const message of incomingMessages())readMessageIds.add(message.id);}
   function goPage(next) {
     if(!workspacePages.includes(next)||next!=='reception'&&!view)return;
-    persist();if(next!=='documents')reader.close();page=next;mobilePane=page==='chat'?'chat':'desk';confirmation=false;
+    illustrationViewer.destroy();persist();if(next!=='documents')reader.close();page=next;mobilePane=page==='chat'?'chat':'desk';confirmation=false;
     if(page==='decision')tab='decision';else if(page==='documents'&&tab==='decision')tab='documents';
     markChatRead();persist();render();
   }
@@ -177,7 +181,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(mode==='independent'&&!canIndependent())mode='training';
   }
   async function loadCatalog() {
-    if(catalogLoading||disposed)return;
+    if(seminar||catalogLoading||disposed)return;
     catalogLoading=true;catalogError=false;render();
     try{catalog=await api.catalog({studentKey:backend?.getProfile?.()?.studentKey||options.studentKey,locale});}
     catch(problem){if(problem.code!=='cancelled')catalogError=true;}
@@ -187,7 +191,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(busy||pending||recoverBusy||disposed)return;
     recoverBusy=true;if(!quiet)notice=t('recovering');render();
     try{
-      const modes=chosen?[chosen]:['training','independent'];
+      const modes=chosen?[chosen]:gameplayContext==='free'?['training']:['training','independent'];
       const results=await Promise.allSettled(modes.map(mode=>api.recover({studentKey:backend?.getProfile?.()?.studentKey||options.studentKey,mode})));
       const candidates=results.filter(result=>result.status==='fulfilled'&&result.value).map(result=>result.value)
         .filter(candidate=>!buildId||candidate.buildId===buildId);
@@ -203,6 +207,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
 
   function errorText(problem) {
     const code = String(problem?.code || '').toLowerCase().replaceAll('_','-');
+    if(code==='case-bank-exhausted')return t('caseBankExhausted');
     if(code==='outdated-session')return t('retiredSession');
     if (/not-configured|unsafe-endpoint|pilot-incomplete/.test(code)) return t('config');
     if (/local-demo/.test(code)) return t('localOnly');
@@ -246,7 +251,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function trainingSetup() {
     const filtered=catalog.filter(item=>(!trainingLevel||String(item.level)===trainingLevel)&&(!caseSearch||authoredText(item.title).toLocaleLowerCase(locale).includes(caseSearch.toLocaleLowerCase(locale))));
     const rows=filtered.map(item=>`<option value="${esc(item.id)}" ${trainingCaseId===item.id?'selected':''}>${esc(authoredText(item.title))}${item.level?` · ${esc(t('level'+item.level))}`:''}</option>`).join('');
-    return `<section class="rxa-setup" aria-labelledby="rxaSetupTitle"><div class="rxa-section-heading"><span class="rxa-eyebrow">${esc(t('trainingCases'))}</span><h2 id="rxaSetupTitle">${esc(t('chooseFormat'))}</h2></div><fieldset class="rxa-mode-options"><legend class="rxa-sr">${esc(t('chooseFormat'))}</legend>${[['training',true],['independent',canIndependent()]].map(([id,enabled])=>`<label class="rxa-mode-choice ${mode===id?'selected':''} ${!enabled?'unavailable':''}"><input type="radio" name="mode" value="${id}" ${mode===id?'checked':''} ${!enabled?'disabled':''}><span><strong>${esc(t(id))}</strong><small>${esc(t(id+'Hint'))}</small></span>${icon(id==='training'?'sources':'decision')}</label>`).join('')}</fieldset>${!canIndependent()?`<p class="rxa-availability">${esc(t('independentUnavailable'))}</p>`:''}${mode==='training'?`<div class="rxa-training-controls"><h3>${esc(t('trainingSetup'))}</h3><label class="rxa-field"><span>${esc(t('trainingLevel'))}</span><select name="trainingLevel" data-focus="training-level"><option value="">${esc(t('anyLevel'))}</option>${[1,2,3].map(level=>`<option value="${level}" ${trainingLevel===String(level)?'selected':''}>${esc(t('level'+level))}</option>`).join('')}</select></label><label class="rxa-field"><span>${esc(t('caseSearch'))}</span><input type="search" name="caseSearch" data-focus="case-search" value="${esc(caseSearch)}" placeholder="${esc(t('caseSearchHint'))}" maxlength="120" autocomplete="off"></label><label class="rxa-field full"><span>${esc(t('trainingCase'))}</span><select name="trainingCaseId" data-focus="training-case"><option value="">${esc(t('randomCase'))}</option>${rows}</select></label><p class="rxa-catalog-status" role="status">${esc(catalogLoading?t('catalogLoading'):catalogError?t('catalogUnavailable'):filtered.length?t('catalogCount',{count:filtered.length}):t('noCaseMatch'))}</p>${catalogError?button(t('catalogRetry'),'load-catalog',{quiet:true}):''}</div>`:''}<div class="rxa-start-row">${button(t(mode==='training'?'startTraining':'startIndependent'),'start',{primary:true,disabled:busy||!!pending||recoverBusy,glyph:'arrow'})}${button(t('recoverSession'),'recover',{quiet:true,disabled:busy||!!pending||recoverBusy})}</div></section>`;
+    return `<section class="rxa-setup" aria-labelledby="rxaSetupTitle"><div class="rxa-section-heading"><span class="rxa-eyebrow">${esc(t('trainingCases'))}</span><h2 id="rxaSetupTitle">${esc(t('chooseFormat'))}</h2></div><fieldset class="rxa-mode-options"><legend class="rxa-sr">${esc(t('chooseFormat'))}</legend>${[['training',true],...(gameplayContext==='free'?[]:[['independent',canIndependent()]])].map(([id,enabled])=>`<label class="rxa-mode-choice ${mode===id?'selected':''} ${!enabled?'unavailable':''}"><input type="radio" name="mode" value="${id}" ${mode===id?'checked':''} ${!enabled?'disabled':''}><span><strong>${esc(t(id))}</strong><small>${esc(t(seminar?id+'SeminarHint':id+'Hint'))}</small></span>${icon(id==='training'?'sources':'decision')}</label>`).join('')}</fieldset>${gameplayContext!=='free'&&!canIndependent()?`<p class="rxa-availability">${esc(t('independentUnavailable'))}</p>`:''}${mode==='training'&&!seminar?`<div class="rxa-training-controls"><h3>${esc(t('trainingSetup'))}</h3><label class="rxa-field"><span>${esc(t('trainingLevel'))}</span><select name="trainingLevel" data-focus="training-level"><option value="">${esc(t('anyLevel'))}</option>${[1,2,3].map(level=>`<option value="${level}" ${trainingLevel===String(level)?'selected':''}>${esc(t('level'+level))}</option>`).join('')}</select></label><label class="rxa-field"><span>${esc(t('caseSearch'))}</span><input type="search" name="caseSearch" data-focus="case-search" value="${esc(caseSearch)}" placeholder="${esc(t('caseSearchHint'))}" maxlength="120" autocomplete="off"></label><label class="rxa-field full"><span>${esc(t('trainingCase'))}</span><select name="trainingCaseId" data-focus="training-case"><option value="">${esc(t('randomCase'))}</option>${rows}</select></label><p class="rxa-catalog-status" role="status">${esc(catalogLoading?t('catalogLoading'):catalogError?t('catalogUnavailable'):filtered.length?t('catalogCount',{count:filtered.length}):t('noCaseMatch'))}</p>${catalogError?button(t('catalogRetry'),'load-catalog',{quiet:true}):''}</div>`:''}<div class="rxa-start-row">${button(t(mode==='training'?'startTraining':'startIndependent'),'start',{primary:true,disabled:busy||!!pending||recoverBusy,glyph:'arrow'})}${button(t('recoverSession'),'recover',{quiet:true,disabled:busy||!!pending||recoverBusy})}</div></section>`;
   }
   function help() {
     return `<details class="rxa-help" data-details="help"><summary>${icon('info')}<span>${esc(t('howToWork'))}</span>${icon('chevron')}</summary><div>${[['talk','helpChat'],['docs','helpDocuments'],['calendar','helpCalendar'],['decision','helpDecision']].map(([glyph,key])=>`<p>${icon(glyph)}<span>${esc(t(key))}</span></p>`).join('')}</div></details>`;
@@ -264,7 +269,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function reception() {
     const c=view.case||{};
-    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}<div class="rxa-foyer-grid">${scene(c.citizen,c.id)}<section class="rxa-active-reception"><h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2><p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p><p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>${caseTimelineView(c.workbook,{locale})}${routingOriginView(c.workbook,{locale})}<div class="rxa-actions">${!active()?button(t('continueDecision'),'continue',{primary:true,glyph:'arrow'}):''}${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></section></div><details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary><div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3><div class="rxa-case-meta">${c.level?`<span>${esc(t('level'+c.level))}</span>`:''}${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p><p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div></details>${help()}<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>${savedSessions()}</div>`;
+    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}<div class="rxa-foyer-grid">${scene(c.citizen,c.id)}<section class="rxa-active-reception"><h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2><p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p><p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>${caseTimelineView(c.workbook,{locale})}${routingOriginView(c.workbook,{locale})}<div class="rxa-actions">${!active()?button(t('continueDecision'),'continue',{primary:true,glyph:'arrow'}):''}${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></section></div><details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary><div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3><div class="rxa-case-meta">${!seminar&&c.level?`<span>${esc(t('level'+c.level))}</span>`:''}${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p><p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div></details>${help()}<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>${savedSessions()}</div>`;
   }
 
   function messageTime(at) {
@@ -272,11 +277,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const date = new Date(at); if (!Number.isFinite(date.getTime())) return '';
     return `<time datetime="${date.toISOString()}" title="${esc(new Intl.DateTimeFormat(locale,{dateStyle:'medium',timeStyle:'short'}).format(date))}">${esc(new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',hour12:false}).format(date))}</time>`;
   }
-  function messageMarkup(message, pendingMessage=false) {
+  function messageMarkup(message, pendingMessage=false, illustrationMarkup='') {
     const outgoing=message.role==='user', fresh=enteringMessages.has(message.id)||pendingMessage&&lastPendingRenderedId!==message.id;
     const status=pendingMessage?(busy?t('sendingMessage'):t('awaitingDelivery')):t('sent');
     const opening=message.role==='assistant'&&message.id===`opening-${view.case?.id}`;
-    return `<article class="rxa-message ${outgoing?'user':'assistant'} ${fresh?'rxa-message-enter':''} ${pendingMessage?'rxa-message-pending':''}" data-message-id="${esc(message.id)}" ${pendingMessage?'data-pending-message':''}><span class="rxa-sr">${esc(outgoing?t('you'):text(view.case?.citizen?.name)||t('citizen'))}</span><div class="rxa-bubble"><p>${esc(opening ? authoredText(message.text) : text(message.text))}</p><footer class="rxa-message-meta">${messageTime(message.at)}${outgoing?`<span class="rxa-delivery" data-delivery-state="${pendingMessage?'pending':'sent'}" aria-label="${esc(status)}" title="${esc(status)}">${pendingMessage?`<span class="rxa-delivery-clock" aria-hidden="true"></span><span>${esc(status)}</span>`:icon('checks')}</span>`:''}</footer></div></article>`;
+    return `<article class="rxa-message ${outgoing?'user':'assistant'} ${fresh?'rxa-message-enter':''} ${pendingMessage?'rxa-message-pending':''}" data-message-id="${esc(message.id)}" ${pendingMessage?'data-pending-message':''}><span class="rxa-sr">${esc(outgoing?t('you'):text(view.case?.citizen?.name)||t('citizen'))}</span><div class="rxa-bubble"><p>${esc(opening ? authoredText(message.text) : text(message.text))}</p>${illustrationMarkup}<footer class="rxa-message-meta">${messageTime(message.at)}${outgoing?`<span class="rxa-delivery" data-delivery-state="${pendingMessage?'pending':'sent'}" aria-label="${esc(status)}" title="${esc(status)}">${pendingMessage?`<span class="rxa-delivery-clock" aria-hidden="true"></span><span>${esc(status)}</span>`:icon('checks')}</span>`:''}</footer></div></article>`;
   }
   function conversation() {
     const c=view.case||{}, citizen=c.citizen||{}, messages=Array.isArray(view.messages)?view.messages:[];
@@ -286,18 +291,20 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const typing=busy&&operation==='message', status=typing?t('typing'):error||needsResume?t('connectionPaused'):active()?t('available'):t('conversationClosed');
     const day=items[0]?.at?new Date(items[0].at):null;
     const dateLabel=day&&Number.isFinite(day.getTime())?new Intl.DateTimeFormat(locale,{day:'numeric',month:'long'}).format(day):t('conversation');
-    const docs=(view.documents||[]).filter(doc=>doc.chatAttachment!==false);
-    return `<section class="rxa-conversation" id="rxaConversation" aria-label="${esc(t('chat'))}"><header class="rxa-person"><div class="rxa-person-info"><div class="rxa-person-heading"><img class="rxa-avatar" src="${esc(appearance.avatar)}" alt=""><div><h2>${esc(text(citizen.name)||t('citizen'))}</h2><p class="rxa-presence ${typing?'typing':''} ${error||needsResume?'paused':''}" aria-live="polite"><span aria-hidden="true"></span>${esc(status)}</p></div></div></div><details class="rxa-chat-menu" data-details="chat-menu"><summary aria-label="${esc(t('receptionInfo'))}" title="${esc(t('receptionInfo'))}">${icon('menu')}</summary><div class="rxa-chat-menu-panel"><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p>${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></details></header><div class="rxa-messages" data-case-id="${esc(c.id)}" role="log" aria-label="${esc(t('reviewChat'))}" aria-live="polite" aria-relevant="additions text"><div class="rxa-chat-date">${esc(dateLabel)}</div>${items.map(m=>messageMarkup(m)).join('')}${waiting?messageMarkup({id:`pending-${pending.requestId}`,role:'user',text:pending.text,at:pendingAt},true):''}${typing?`<div class="rxa-typing" data-typing role="status"><span class="rxa-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>${esc(t('typing'))}</span></div>`:''}${docs.length?`<section class="rxa-chat-attachments" aria-label="${esc(t('caseMaterials'))}"><div class="rxa-chat-date">${esc(t('caseMaterials'))}</div>${docs.map(doc=>`<button type="button" class="rxa-attachment ${enteringDocuments.has(doc.id)?'rxa-attachment-enter':''}" data-action="document" data-id="${esc(doc.id)}" ${busy||pending||paused||!active()&&!(view.openedDocumentIds||[]).includes(doc.id)?'disabled':''}>${icon('docs')}<span><strong>${esc(authoredText(doc.title))}</strong><small>${esc((view.openedDocumentIds||[]).includes(doc.id)?t('documentOpened'):t('openDocument'))}</small></span>${icon('out')}</button>`).join('')}</section>`:''}</div>${active()?`<form class="rxa-compose" data-chat-form><div class="rxa-composer-box"><label class="rxa-sr" for="rxaMessage">${esc(t('messageLabel'))}</label><textarea id="rxaMessage" data-message-draft data-focus="message" placeholder="${esc(t('messagePlaceholder'))}" maxlength="2000" rows="1" ${paused?'disabled':''}>${esc(draftMessage)}</textarea><button class="rxa-send" type="submit" aria-label="${esc(t('send'))}" title="${esc(t('send'))}" ${busy||pending||paused||needsResume?'disabled':''}>${icon('send')}</button></div><div class="rxa-compose-actions"><small>${esc(t('enterHint'))}</small><small data-message-count aria-hidden="true">${draftMessage.length?`${draftMessage.length} / 2000`:''}</small></div></form>`:`<div class="rxa-fixed">${icon('check')}<span>${esc(t('fixed'))}</span></div>`}</section>`;
+    const illustrations=renderIllustrationThumbnails(caseIllustrations(c.id,view.documents||[]),{locale});
+    return `<section class="rxa-conversation" id="rxaConversation" aria-label="${esc(t('chat'))}"><header class="rxa-person"><div class="rxa-person-info"><div class="rxa-person-heading"><img class="rxa-avatar" src="${esc(appearance.avatar)}" alt=""><div><h2>${esc(text(citizen.name)||t('citizen'))}</h2><p class="rxa-presence ${typing?'typing':''} ${error||needsResume?'paused':''}" aria-live="polite"><span aria-hidden="true"></span>${esc(status)}</p></div></div></div><details class="rxa-chat-menu" data-details="chat-menu"><summary aria-label="${esc(t('receptionInfo'))}" title="${esc(t('receptionInfo'))}">${icon('menu')}</summary><div class="rxa-chat-menu-panel"><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p>${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></details></header><div class="rxa-messages" data-case-id="${esc(c.id)}" role="log" aria-label="${esc(t('reviewChat'))}" aria-live="polite" aria-relevant="additions text"><div class="rxa-chat-date">${esc(dateLabel)}</div>${items.map((message,index)=>messageMarkup(message,false,index===0?illustrations:'')).join('')}${waiting?messageMarkup({id:`pending-${pending.requestId}`,role:'user',text:pending.text,at:pendingAt},true):''}${typing?`<div class="rxa-typing" data-typing role="status"><span class="rxa-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>${esc(t('typing'))}</span></div>`:''}</div>${active()?`<form class="rxa-compose" data-chat-form><div class="rxa-composer-box"><label class="rxa-sr" for="rxaMessage">${esc(t('messageLabel'))}</label><textarea id="rxaMessage" data-message-draft data-focus="message" placeholder="${esc(t('messagePlaceholder'))}" maxlength="2000" rows="1" ${paused?'disabled':''}>${esc(draftMessage)}</textarea><button class="rxa-send" type="submit" aria-label="${esc(t('send'))}" title="${esc(t('send'))}" ${busy||pending||paused||needsResume?'disabled':''}>${icon('send')}</button></div><div class="rxa-compose-actions"><small>${esc(t('enterHint'))}</small><small data-message-count aria-hidden="true">${draftMessage.length?`${draftMessage.length} / 2000`:''}</small></div></form>`:`<div class="rxa-fixed">${icon('check')}<span>${esc(t('fixed'))}</span></div>`}</section>`;
   }
   function documents(reading=false) {
     const docs=view.documents||[],opened=view.openedDocumentIds||[];
     const selected=docs.find(d=>d.id===selectedDoc);
     if(!reading)return !docs.length?`<p class="rxa-empty">${esc(t('noDocuments'))}</p>`:`<div class="rxa-document-list">${docs.map(d=>`<button type="button" class="rxa-document-button" data-action="document" data-id="${esc(d.id)}" ${busy||pending||paused||!active()&&!opened.includes(d.id)?'disabled':''}>${icon('docs')}<span><strong>${esc(authoredText(d.title))}</strong><small>${esc(opened.includes(d.id)?t('documentOpened'):t('openDocument'))}</small></span></button>`).join('')}</div>`;
     if(!selected||!opened.includes(selected.id))return '';
-    const illustration=documentImage(selected.image),external=safeURL(selected.url);
-    return `<article class="rxa-document"><p class="rxa-doctype">${esc(authoredText(selected.type))}</p><h3>${esc(authoredText(selected.title))}</h3>${selected.sensitive?`<p class="rxa-document-sensitive">${icon('lock')}${esc(t('restrictedMaterial'))}</p>`:''}${illustration?`<img class="rxa-document-image" src="${esc(illustration)}" alt="${esc(authoredText(selected.title))}" loading="lazy">`:''}<div class="rxa-document-body">${esc(authoredText(selected.text))}</div>${external?`<div class="rxa-source-links">${sourceLinkView({url:external,locale,className:'rxa-btn'})}</div>`:''}</article>`;
+    const gallery=renderIllustrationThumbnails(caseIllustrations(view.case?.id,[selected]),{locale});
+    const illustration=gallery?'':documentImage(selected.image),external=gameplayContext?'':safeURL(selected.url);
+    return `<article class="rxa-document"><p class="rxa-doctype">${esc(authoredText(selected.type))}</p><h3>${esc(authoredText(selected.title))}</h3>${selected.sensitive?`<p class="rxa-document-sensitive">${icon('lock')}${esc(t('restrictedMaterial'))}</p>`:''}${gallery}${illustration?`<img class="rxa-document-image" src="${esc(illustration)}" alt="${esc(authoredText(selected.title))}" loading="lazy">`:''}<div class="rxa-document-body">${esc(authoredText(illustratedDocumentText(view.case?.id,selected,locale)))}</div>${external?`<div class="rxa-source-links">${sourceLinkView({url:external,locale,className:'rxa-btn'})}</div>`:''}</article>`;
   }
   function sources() {
+    if(gameplayContext)return normativeActsView(view.case?.normativeActs,{locale});
     const research=view.case?.assessment?.research;
     const records=research?`<section class="rxa-research-materials"><h3>${esc(t('researchMaterials'))}</h3><p class="rxa-panel-intro">${esc(authoredText(research.prompt))}</p>${(research.records||[]).map(record=>`<details class="rxa-source-record" data-details="source-${esc(record.id)}"><summary>${icon('sources')}<span>${esc(text(record.title))}</span></summary>${(record.fragments||[]).map(fragment=>`<article class="rxa-source-fragment" data-record="${esc(record.id)}" data-fragment="${esc(fragment.id)}"><h4>${esc(text(fragment.label))}</h4><div>${esc(researchText(fragment))}</div>${active()?button(t('selectFragment'),'research-fragment',{disabled:busy||!!pending||paused,extra:`data-record="${esc(record.id)}" data-fragment="${esc(fragment.id)}"`}):''}</article>`).join('')}${safeURL(record.url)?sourceLinkView({url:safeURL(record.url),locale,className:'rxa-btn'}):''}</details>`).join('')}</section>`:'';
     return `<section class="rxa-panel" aria-label="${esc(t('legalMaterials'))}">${(view.case?.sources || []).map(source=>{
@@ -309,9 +316,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     return `<fieldset class="rxa-fieldset"><legend>${esc(label)}</legend>${(values || []).map(option=>`<label class="rxa-choice"><input type="${checkbox?'checkbox':'radio'}" data-decision="${id}" data-focus="${id}-${esc(option.id)}" name="rxa-${id}" value="${esc(option.id)}" ${checkbox?selected.includes(option.id)?'checked':'':selected===option.id?'checked':''} ${locked?'disabled':''}><span>${esc(authoredText(option.label??option.text??option.title))}</span></label>`).join('')}</fieldset>`;
   }
   function sectionHint(id) {
+    if(id==='legal-citation')return selectedReferences[0]?.locator||t('detailsEmpty');
     const d=decisionDraft,a=d.assessment;
     if(id==='facts')return d.basisDocumentIds.length?t('factsSelected',{count:d.basisDocumentIds.length}):a?.factId?t('trapSelected'):t('detailsEmpty');
-    if(id==='routing')return d.procedureId&&(view?.case?.workbook?d.workbook?.routing.recipientIds.length:d.routeId)?t('routingSelected'):t('detailsEmpty');
+    if(id==='routing')return (view?.case?.procedureRequired===false||d.procedureId)&&(view?.case?.workbook?d.workbook?.routing.recipientIds.length:d.routeId)?t('routingSelected'):t('detailsEmpty');
     if(id==='actions')return d.actionIds.length?t('actionsSelected',{count:d.actionIds.length}):t('detailsEmpty');
     if(id==='law')return [d.law.number,d.law.article].filter(Boolean).join(' · ')||t('detailsEmpty');
     if(id==='research')return a?.research.recordId&&a?.research.fragmentId?t('researchSelected'):t('detailsEmpty');
@@ -337,7 +345,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const a=view?.case?.assessment,d=decisionDraft;
     return a?assessmentBlock('calendar',t('calendarRuleSummary'),`${optionsField('assessment.calendar.anchor',t('calendarAnchor'),a.calendar.events,d.assessment.calendar.anchor)}${optionsField('assessment.calendar.rule',t('calendarRule'),a.calendar.rules,d.assessment.calendar.rule)}${optionsField('assessment.calendar.start',t('calendarStart'),a.calendar.starts,d.assessment.calendar.start)}${optionsField('assessment.calendar.shift',t('calendarShift'),a.calendar.lastDays,d.assessment.calendar.shift)}`):'';
   }
-  function calendarTask(){return view?.case?.workbook?{...view.case.workbook,hideEventList:true,autoCommit:true}:undefined;}
+  function calendarTask(){return view?.case?.workbook?{...view.case.workbook,hideEventList:true,eventListIds:['recipientRegistered'],autoCommit:true,internalSources:Boolean(gameplayContext)}:undefined;}
   function calendarPage() {
     const c=view.case||{},a=c.assessment,d=decisionDraft;
     const locked=!active()||paused||(busy&&operation==='decide')||pending?.op==='decide';
@@ -351,7 +359,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const select=(name,label,values,value)=>`<label class="rxa-field full"><span>${esc(label)}</span><select data-decision="${esc(name)}" data-focus="${esc(name)}" ${locked?'disabled':''}><option value="">${esc(t('decisionEmpty'))}</option>${values.map(v=>`<option value="${esc(v.id)}" ${v.id===value?'selected':''}>${esc(authoredText(v.label??v.title))}</option>`).join('')}</select></label>`;
     const a=c.assessment,answer=d.assessment;
     const basis=`${optionsField('basisDocumentIds',t('basis'),readable.map(doc=>({id:doc.id,label:doc.title})),d.basisDocumentIds,true)}<p class="rxa-small rxa-muted">${esc(readable.length?t(a?'basisExactHint':'basisHint'):t('noReadDocuments'))}</p>${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}`;
-    const routing=optionsField('procedureId',t('procedure'),c.procedures,d.procedureId)+(c.workbook?authorityPickerView(d.workbook?.routing,{locale,workflow:c.workbook,search:routingSearch,territoryId:routingTerritory,disabled:locked}):optionsField('routeId',t('route'),c.routes,d.routeId));
+    const routing=(c.procedureRequired===false?'':optionsField('procedureId',t('procedure'),c.procedures,d.procedureId))+(c.workbook?authorityPickerView(d.workbook?.routing,{locale,workflow:c.workbook,search:routingSearch,territoryId:routingTerritory,disabled:locked}):optionsField('routeId',t('route'),c.routes,d.routeId));
     const citations=selectedReferences.length?selectedReferences.map(reference=>`<div>${referenceView(reference,{locale,removable:!locked})}${button(t('useReference'),'use-reference',{quiet:true,disabled:locked,extra:`data-id="${esc(reference.id)}"`})}</div>`).join(''):`<p class="rxa-panel-intro">${esc(t('noReferences'))}</p>`;
     const references=`<section class="rxa-references">${citations}${button(t('chooseReferences'),'workspace',{quiet:true,extra:'data-panel="sources"',glyph:'sources'})}</section>`;
     const lawFields=`${a?`<p class="rxa-panel-intro">${esc(authoredText(a.knowledge.prompt))}</p>`:''}<div class="rxa-fields">${field('law.number',authoredText(a?.knowledge.numberLabel)||t('lawNumber'),d.law.number)}${a?field('assessment.actDate',authoredText(a.knowledge.dateLabel)||t('actDate'),answer.actDate,'date'):''}${field('law.article',authoredText(a?.knowledge.unitLabel)||t('lawArticle'),d.law.article)}</div>${a?optionsField('assessment.applicationId',t('applyLaw'),a.knowledge.options,answer.applicationId):''}`;
@@ -361,12 +369,13 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const route=assessmentBlock('routing',t('routingBlock'),routing);
     const actions=assessmentBlock('actions',t('actionsBlock'),a&&c.workbook?.version!==2?orderedActions(c,d,locked):optionsField('actionIds',t('actions'),c.actions,d.actionIds,true));
     let extra='';
-    if(a){
+    if(a&&!gameplayContext){
       const research=a.research,record=research.records.find(r=>r.id===answer.research.recordId),fragment=record?.fragments.find(f=>f.id===answer.research.fragmentId);
       const investigation=`<p class="rxa-panel-intro">${esc(authoredText(research.prompt))}</p>${button(t('viewSources'),'workspace',{extra:'data-panel="sources"',glyph:'sources'})}<div class="rxa-fields">${select('assessment.research.recordId',t('researchRecord'),research.records,answer.research.recordId)}${select('assessment.research.fragmentId',t('researchFragment'),record?.fragments||[],answer.research.fragmentId)}</div>${fragment?`<blockquote class="rxa-selected-fragment">${esc(researchText(fragment))}</blockquote>`:''}<div class="rxa-fields">${field('assessment.research.extracted',authoredText(research.extractedLabel),answer.research.extracted,'text','200')}</div>${optionsField('assessment.research.finding',t('researchFinding'),research.findingOptions,answer.research.finding)}`;
       extra=assessmentBlock('research',t('researchBlock'),investigation)+assessmentBlock('trap',t('trapBlock'),optionsField('assessment.trapId',authoredText(a.trap.prompt),a.trap.options,answer.trapId));
     }
-    return `<section class="rxa-panel" role="tabpanel" id="rxaPanel" aria-labelledby="rxaPage-decision">${caseHeading(t('decision'),t('draftStatus'))}<p class="rxa-draft-status">${icon('cloud')}<span data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</span></p><form data-decision-form><div class="rxa-decision-outline">${facts}${route}${actions}</div>${c.workbook?.version>=2?'':law}${deadlineSummary()}${extra?`<div class="rxa-decision-outline rxa-decision-extra">${extra}</div>`:''}<fieldset class="rxa-fieldset rxa-reasoning-field"><legend>${esc(t('reasoning'))}</legend><label class="rxa-field full"><span class="rxa-sr">${esc(t('reasoning'))}</span><textarea data-decision="reasoning" data-focus="reasoning" maxlength="3000" rows="4" ${locked?'disabled':''}>${esc(d.reasoning)}</textarea><small>${esc(t('reasoningHint'))}</small></label></fieldset><div class="rxa-decision-footer"><small>${esc(t(view.mode==='training'?'afterSubmitTraining':'afterSubmitIndependent'))}</small><button class="rxa-btn primary" type="submit" ${busy||pending||paused?'disabled':''}>${icon('decision')}${esc(t('submit'))}</button></div></form>${confirmation?`<section class="rxa-confirm" role="region" aria-labelledby="rxaConfirmTitle"><h3 id="rxaConfirmTitle" tabindex="-1">${esc(t('confirmTitle'))}</h3><p>${esc(t('confirmText'))}</p><div class="rxa-actions">${button(t('confirm'),'confirm-decision',{primary:true,disabled:busy||!!pending})}${button(t('cancel'),'cancel-confirm',{disabled:busy})}</div></section>`:''}</section>`;
+    if(a&&gameplayContext)extra=assessmentBlock('trap',t('trapBlock'),optionsField('assessment.trapId',authoredText(a.trap.prompt),a.trap.options,answer.trapId));
+    return `<section class="rxa-panel" role="tabpanel" id="rxaPanel" aria-labelledby="rxaPage-decision">${caseHeading(t('decision'),t('draftStatus'))}<p class="rxa-draft-status">${icon('cloud')}<span data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</span></p><form data-decision-form><div class="rxa-decision-outline">${facts}${route}${actions}</div>${gameplayContext?assessmentBlock('legal-citation',t('legalCitation'),`<section class="rxa-references">${selectedReferences.length?referenceView(selectedReferences[0],{locale,removable:!locked,internalOnly:true}):`<p>${esc(t('noReferences'))}</p>`}${button(t('chooseReferences'),'workspace',{quiet:true,extra:'data-panel="sources"',glyph:'sources'})}</section>`):c.workbook?.version>=2?'':law}${deadlineSummary()}${extra?`<div class="rxa-decision-outline rxa-decision-extra">${extra}</div>`:''}<fieldset class="rxa-fieldset rxa-reasoning-field"><legend>${esc(t('reasoning'))}</legend><label class="rxa-field full"><span class="rxa-sr">${esc(t('reasoning'))}</span><textarea data-decision="reasoning" data-focus="reasoning" maxlength="3000" rows="4" ${locked?'disabled':''}>${esc(d.reasoning)}</textarea><small>${esc(t('reasoningHint'))}</small></label></fieldset><div class="rxa-decision-footer"><small>${esc(t(view.mode==='training'?'afterSubmitTraining':seminar?'afterSubmitSeminar':'afterSubmitIndependent'))}</small><button class="rxa-btn primary" type="submit" ${busy||pending||paused?'disabled':''}>${icon('decision')}${esc(t('submit'))}</button></div></form>${confirmation?`<section class="rxa-confirm" role="region" aria-labelledby="rxaConfirmTitle"><h3 id="rxaConfirmTitle" tabindex="-1">${esc(t('confirmTitle'))}</h3><p>${esc(t('confirmText'))}</p><div class="rxa-actions">${button(t('confirm'),'confirm-decision',{primary:true,disabled:busy||!!pending})}${button(t('cancel'),'cancel-confirm',{disabled:busy})}</div></section>`:''}</section>`;
   }
   function followup() {
     const f=view.followup||{},locked=busy||pending||paused;
@@ -376,15 +385,16 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if (!feedback) return '';
     const evidenceIssueKeys = {selection:'evidenceSelection', unopened:'evidenceUnopened', fact:'evidenceFact'};
     const evidenceIssue = evidenceIssueKeys[feedback.evidenceIssue];
-    const labelKeys = {procedure:'procedure',route:'route',routing:'route',actions:'actionsCriterion',law:'lawCriterion',deadline:'deadlineCriterion',evidence:'evidence',facts:'factsCriterion'};
-    return `${workbookFeedbackView(feedback,{locale,training:view.mode==='training'})}<div class="rxa-score"><strong>${esc(feedback.score ?? '')}</strong><span>/ 100</span></div><table class="rxa-criteria"><thead><tr><th>${esc(t('criteria'))}</th><th>${esc(t('earned'))}</th></tr></thead><tbody>${(feedback.criteria||[]).map(row=>`<tr><td>${esc(text(row.label)||t(labelKeys[row.id]||row.id))}</td><td>${esc(row.earned)} / ${esc(row.max)}</td></tr>`).join('')}</tbody></table><p class="rxa-explanation">${esc(text(feedback.explanation))}</p>${evidenceIssue?`<p class="rxa-explanation">${esc(t(evidenceIssue))}</p>`:''}${Array.isArray(feedback.missingFacts)&&feedback.missingFacts.length?`<p class="rxa-explanation">${feedback.missingFacts.map(f=>esc(text(f))).join('\n')}</p>`:''}`;
+    const binary = view.context==='seminar';
+    const labelKeys = {research:'legalCitation',procedure:'procedure',route:'route',routing:'route',actions:'actionsCriterion',law:'lawCriterion',deadline:'deadlineCriterion',evidence:'evidence',facts:'factsCriterion'};
+    return `${workbookFeedbackView(feedback,{locale,training:view.mode==='training',internalSources:Boolean(gameplayContext)})}<div class="rxa-score"><strong>${esc(binary?(Math.abs(feedback.score-100)<1e-8?1:0):feedback.score ?? '')}</strong><span>/ ${binary?1:100}</span></div><table class="rxa-criteria"><thead><tr><th>${esc(t('criteria'))}</th><th>${esc(t('earned'))}</th></tr></thead><tbody>${(feedback.criteria||[]).map(row=>`<tr><td>${esc(gameplayContext&&row.id==='research'?t('legalCitation'):text(row.label)||t(labelKeys[row.id]||row.id))}</td><td>${esc(binary?t(row.earned===row.max?'criterionMet':'criterionReview'):row.earned+' / '+row.max)}</td></tr>`).join('')}</tbody></table><p class="rxa-explanation">${esc(text(feedback.explanation))}</p>${evidenceIssue?`<p class="rxa-explanation">${esc(t(evidenceIssue))}</p>`:''}${Array.isArray(feedback.missingFacts)&&feedback.missingFacts.length?`<p class="rxa-explanation">${feedback.missingFacts.map(f=>esc(text(f))).join('\n')}</p>`:''}`;
   }
   function review() {
-    return `<section class="rxa-panel rxa-review"><div class="rxa-review-icon">${icon('check')}</div><h2>${esc(t(view.feedback?'reviewTitle':'fixed'))}</h2>${view.feedback?feedbackMarkup(view.feedback):`<p class="rxa-panel-intro">${esc(t('reviewHidden'))}</p>`}${learningReviewView({view,catalog,locale})}${workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-review-footer">${button(t(Number(view.caseIndex)+1<Number(view.caseCount)?'next':'finish'),'next',{primary:true,disabled:busy||!!pending,glyph:'arrow'})}</div></section>`;
+    return `<section class="rxa-panel rxa-review"><div class="rxa-review-icon">${icon('check')}</div><h2>${esc(t(view.feedback?'reviewTitle':'fixed'))}</h2>${view.feedback?feedbackMarkup(view.feedback):`<p class="rxa-panel-intro">${esc(t('reviewHidden'))}</p>`}${seminar?'':learningReviewView({view,catalog,locale})}${workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-review-footer">${button(t(Number(view.caseIndex)+1<Number(view.caseCount)?'next':'finish'),'next',{primary:true,disabled:busy||!!pending,glyph:'arrow'})}</div></section>`;
   }
   function documentsPage() {
     const reading=selectedDoc&&(view.openedDocumentIds||[]).includes(selectedDoc);
-    const notes=selectedReferences.length?`<details class="rxa-assessment-block" data-details="source-notes"><summary>${esc(t('sourceNotes'))} · ${selectedReferences.length}</summary><div class="rxa-assessment-content">${selectedReferences.map(reference=>referenceView(reference,{locale,removable:active()})).join('')}</div></details>`:'';
+    const notes=selectedReferences.length?`<details class="rxa-assessment-block" data-details="source-notes"><summary>${esc(t('sourceNotes'))} · ${selectedReferences.length}</summary><div class="rxa-assessment-content">${selectedReferences.map(reference=>referenceView(reference,{locale,removable:active(),internalOnly:Boolean(gameplayContext)})).join('')}</div></details>`:'';
     return `<div class="rxa-desk" id="rxaDesk">${caseHeading(t('documents'))}<div data-source-reader-host></div><div class="rxa-documents-library">${reading?`<div class="rxa-material-reader">${button(t('allDocuments'),'documents-list',{quiet:true,glyph:'arrow'})}${documents(true)}</div>`:`<section class="rxa-document-group"><h2>${esc(t('caseMaterials'))}</h2>${documents()}</section><section class="rxa-document-group"><h2>${esc(t('legalMaterials'))}</h2>${sources()}</section>${notes}`}</div></div>`;
   }
   function workspace() {
@@ -404,7 +414,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const result = view.result;
     if (!result) return `<section class="rxa-complete"><h1>${esc(t('complete'))}</h1><p class="rxa-panel-intro">${esc(t('noResult'))}</p>${button(t('refresh'),'refresh',{primary:true,disabled:busy})}</section>`;
     const journal = result.journalStatus === 'saved' ? 'journalSaved' : ['local','not-applicable'].includes(result.journalStatus) || view.mode === 'training' || view.provider === 'mock' ? 'journalLocal' : 'journalPending';
-    return `<section class="rxa-complete"><div class="rxa-complete-head"><p class="rxa-eyebrow">${esc(t('complete'))}</p><h1>${esc(t('totalScore'))}</h1><div class="rxa-score"><strong>${esc(result.points)}</strong><span>${esc(t('outOf'))} ${esc(result.maxPoints ?? 5)}</span></div><p class="rxa-journal" role="status">${esc(t(journal))}</p>${journal==='journalPending'?`<div class="rxa-actions">${button(t('journalRetry'),'refresh',{disabled:busy})}</div>`:''}</div>${Array.isArray(result.cases)&&result.cases.length?`<h2>${esc(t('casesReview'))}</h2>${result.cases.map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${index+1}. ${esc(authoredText(row.title))} · ${esc(row.score)} / 100</summary>${feedbackMarkup(row.feedback)}</details>`).join('')}`:''}${learningReviewView({view,catalog,locale})}${workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-actions">${button(t(view.mode==='training'?'oneMore':'newSession'),'new-session',{primary:true,disabled:busy,glyph:'arrow'})}${options.onExit?button(t('back'),'exit',{}):''}</div></section>`;
+    return `<section class="rxa-complete"><div class="rxa-complete-head"><p class="rxa-eyebrow">${esc(t('complete'))}</p><h1>${esc(t(Number.isInteger(result.seminarPoints)?'seminarTotal':'totalScore'))}</h1><div class="rxa-score"><strong>${esc(result.seminarPoints??result.points)}</strong><span>${esc(t('outOf'))} ${esc(seminar&&view.mode==='training'?1:result.maxPoints ?? 5)}</span></div>${Number.isInteger(result.seminarPoints)?`<p>${esc(t('casePoints',{count:result.points}))}</p>`:''}<p class="rxa-journal" role="status">${esc(t(journal))}</p>${journal==='journalPending'?`<div class="rxa-actions">${button(t('journalRetry'),'refresh',{disabled:busy})}</div>`:''}</div>${Array.isArray(result.cases)&&result.cases.length?`<h2>${esc(t('casesReview'))}</h2>${result.cases.map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${index+1}. ${esc(authoredText(row.title))} · ${esc(view.context==='seminar'?t('casePoints',{count:Math.abs(row.score-100)<1e-8?1:0}):row.score+' / 100')}</summary>${feedbackMarkup(row.feedback)}</details>`).join('')}`:''}${learningReviewView({view,catalog,locale})}${workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-actions">${button(t(view.mode==='training'?'oneMore':'newSession'),'new-session',{primary:true,disabled:busy||result.remainingCases===0,glyph:'arrow'})}${options.onExit?button(t('back'),'exit',{}):''}</div></section>`;
   }
   function render({scrollChat=false} = {}) {
     if (disposed) return;
@@ -433,7 +443,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const toTop=()=>{if(disposed||page!=='reception'||view?.id!==sessionId||view?.case?.id!==caseId)return;const pane=root.querySelector('.rxa-page-content');if(pane)pane.scrollTop=0;root.scrollTop=0;window.scrollTo({top:0,behavior:'instant'});};
       toTop();requestAnimationFrame(toTop);
     }
-    enteringMessages.clear(); enteringDocuments.clear();
+    enteringMessages.clear();
     const pendingNode=root.querySelector('[data-pending-message]'); if(pendingNode)lastPendingRenderedId=pendingNode.dataset.messageId;
     resizeComposer();
     for (const details of root.querySelectorAll('details[data-details]')) if (detailOpen.has(details.dataset.details)) details.open = true;
@@ -467,13 +477,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function acceptView(next, body) {
     const previousCase = view?.case?.id || savedCaseId;
     const sameCase = (view?.id||savedSessionId)===next.id && previousCase === next.case?.id;
-    const previousIds=new Set(view?.messages?.map(m=>m.id)||[]), previousDocs=new Set(view?.documents?.map(d=>d.id)||[]);
+    const previousIds=new Set(view?.messages?.map(m=>m.id)||[]);
     enteringMessages=new Set(['start','message','next'].includes(body.op)?(next.messages||[]).filter(m=>!previousIds.has(m.id)&&!(m.id===`${body.requestId}-user`&&lastPendingRenderedId===`pending-${body.requestId}`)).map(m=>m.id):[]);
-    enteringDocuments=new Set(body.op==='message'?(next.documents||[]).filter(d=>!previousDocs.has(d.id)).map(d=>d.id):[]);
     view = next; mode = next.mode || mode; confirmation = false;
-    if (!sameCase) { routingSearch='';routingTerritory='ru-77';decisionDraft = blankDecision(); followupDraft='';detailOpen=new Set();draftMessage = ''; selectedDoc = ''; tab = 'documents'; mobilePane='desk';page='reception';chatScroll={top:0,bottom:true};calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
+    if (!sameCase) { illustrationViewer.destroy();routingSearch='';routingTerritory='ru-77';decisionDraft = blankDecision(); followupDraft='';detailOpen=new Set();draftMessage = ''; selectedDoc = ''; tab = 'documents'; mobilePane='desk';page='reception';chatScroll={top:0,bottom:true};calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
     if (next.decision && next.status !== 'active') decisionDraft = restoreDecision(next.decision,!!next.case?.assessment);
-    if (body.op === 'message' && draftMessage.trim() === body.text) draftMessage = '';
     if (body.op === 'document') {selectedDoc = body.documentId; tab='documents'; mobilePane='desk';page='documents';}
     if (body.op === 'decide'||body.op==='followup') {mobilePane='desk';tab='decision';page='decision';}
     if (body.op === 'start') { decisionDraft = blankDecision(); draftMessage = ''; selectedDoc = ''; tab = 'documents';page='reception';calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
@@ -510,7 +518,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         // A definitive rejection is safe to amend; an uncertain transport failure keeps its idempotency key.
         if(/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|revision|conflict|stale|busy/.test(code))needsResume=true;
         if (mutation && (/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|busy|revision|conflict|stale|budget|limit|quota|auth|token|forbidden|not-found|not-configured|unsafe-endpoint|local-demo|profile-required|invalid-|closed|completed|locked|validation|not-active|not-reviewed|pilot-incomplete/.test(code)
-          && !/invalid-response/.test(code))) pending = null;
+          && !/invalid-response/.test(code))) { pending = null; if(body.op==='message'&&!draftMessage)draftMessage=body.text; }
       } finally {
         busy = false; operation = ''; restoring = false; persist(); render({scrollChat:body.op==='message'});
       }
@@ -524,6 +532,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if (!active() || busy || pending || paused || needsResume) return;
     const value = draftMessage.trim();
     if (!value || value.length>2000) { error=new ReceptionAPIError(value?'input-long':'empty-message');render();return; }
+    draftMessage = '';
     await perform({op:'message',sessionId:view.id,text:value,requestId:newRequestId(),expectedRevision:view.revision});
   }
   async function changeLocale(value) {
@@ -596,6 +605,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const target=event.target.closest('[data-action]');if(!target||!root.contains(target)||target.disabled||disposed)return;
     const action=target.dataset.action;
     if(action==='exit'){persist();options.onExit?.();return;}
+    if(action==='illustration-open'&&view){
+      const illustration=caseIllustrations(view.case.id,view.documents||[]).find(item=>item.id===target.dataset.id);
+      illustrationViewer.open(illustration,{locale,trigger:target});return;
+    }
     if(action==='page'){goPage(target.dataset.page);return;}
     if(action==='chat'){goPage('chat');return;}
     if(action==='continue'){goPage(active()?'chat':'decision');return;}
@@ -611,10 +624,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(action==='recover'){await recoverSession();return;}
     if(action==='resume-session'&&!pending){persist();const saved=drafts.readSession(target.dataset.id);if(saved)restoreSaved(saved);view=null;initial=saved;page='reception';await perform({op:'resume',sessionId:target.dataset.id});return;}
     if(action==='remove-reference'&&active()){selectedReferences=selectedReferences.filter(item=>item.id!==target.dataset.id);persist();render();return;}
-    if(action==='use-reference'&&active()){const reference=selectedReferences.find(item=>item.id===target.dataset.id);if(reference){applyReference(reference);render();}return;}
+    if(action==='use-reference'&&!gameplayContext&&active()){const reference=selectedReferences.find(item=>item.id===target.dataset.id);if(reference){applyReference(reference);render();}return;}
     if(action==='retry'&&pending){await perform(clone(pending),{retry:true});return;}
     if(action==='refresh'){const sessionId=view?.id||initial?.sessionId;if(sessionId)await perform({op:'resume',sessionId});return;}
-    if(action==='related-training'&&view?.status==='complete'&&!pending){
+    if(!seminar&&action==='related-training'&&view?.status==='complete'&&!pending){
       const caseId=target.dataset.caseId;
       if(!(view.learningReview?.related||[]).some(item=>item.id===caseId)||!catalog.some(item=>item.id===caseId))return;
       persist();clearSessionDraft();mode='training';trainingCaseId=caseId;trainingLevel='';caseSearch='';persist();render();
@@ -639,7 +652,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     if(action==='start') {
       if(mode==='independent'&&!canIndependent())return;
-      await perform({op:'start',studentKey:backend?.getProfile?.()?.studentKey||options.studentKey||undefined,mode,locale,...(mode==='training'?{...(trainingCaseId?{caseId:trainingCaseId}:{}),...(trainingLevel?{level:Number(trainingLevel)}:{})}:{}),requestId:newRequestId()});return;
+      await perform({op:'start',studentKey:backend?.getProfile?.()?.studentKey||options.studentKey||undefined,mode,locale,...(mode==='training'&&!seminar?{...(trainingCaseId?{caseId:trainingCaseId}:{}),...(trainingLevel?{level:Number(trainingLevel)}:{})}:{}),requestId:newRequestId()});return;
     }
     if(action==='documents-list'){selectedDoc='';persist();render();return;}
     if(action==='document'&&view) {
@@ -648,7 +661,14 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       if((view.openedDocumentIds||[]).includes(target.dataset.id)){selectedDoc=target.dataset.id;persist();render();}
       else await perform({op:'document',sessionId:view.id,documentId:target.dataset.id,requestId:newRequestId()});return;
     }
-    if(action==='confirm-decision'&&active()&&confirmation){await perform({op:'decide',sessionId:view.id,decision:clone(decisionDraft),requestId:newRequestId()});return;}
+    if(action==='confirm-decision'&&active()&&confirmation){
+      const decision=clone(decisionDraft), citation=selectedReferences[0];
+      if(gameplayContext&&citation&&decision.workbook){
+        const {docId,unitIds,text}=citation;
+        decision.workbook.legalCitation={docId,unitIds,text};
+      }
+      await perform({op:'decide',sessionId:view.id,decision,requestId:newRequestId()});return;
+    }
     if(action==='next'&&view?.status==='review'){await perform({op:'next',sessionId:view.id,requestId:newRequestId()});}
   };
   const toggle = event => {const node=event.target;if(!node.matches?.('details[data-details]')||!root.contains(node))return;if(node.open)detailOpen.add(node.dataset.details);else detailOpen.delete(node.dataset.details);persist();};
@@ -669,7 +689,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     restore:async({state:saved,checkpointRef},{signal}={})=>{if(saved.version!==VERSION||checkpointRef.id!==(view?.id||'reception-ai-start'))return {status:'blocked',code:'incompatible'};tab=saved.tab;selectedDoc=saved.selectedDoc;page=workspacePages.includes(saved.page)?saved.page:'reception';mobilePane=page==='chat'?'chat':'desk';render();await restoreUpdateView(root,saved.view,{signal});return {status:'restored',code:'ok'};},
   });
   const cleanup = () => {
-    if(disposed)return Promise.resolve();persist();disposed=true;updateAdapter?.destroy();reader.destroy();calendar.destroy();media.destroy();lifetime.abort();options.signal?.removeEventListener('abort',stop);
+    if(disposed)return Promise.resolve();persist();disposed=true;updateAdapter?.destroy();reader.destroy();calendar.destroy();media.destroy();illustrationViewer.destroy();lifetime.abort();options.signal?.removeEventListener('abort',stop);
     owners.delete(presentationToken);if(!owners.size){body.classList.remove('reception-immersive');presentationOwners.delete(body);}
     root.removeEventListener('input',input);root.removeEventListener('change',change);root.removeEventListener('submit',submit);root.removeEventListener('keydown',keydown);root.removeEventListener('click',click);
     root.removeEventListener('toggle',toggle,true);

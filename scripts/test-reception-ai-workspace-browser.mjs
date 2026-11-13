@@ -171,7 +171,7 @@ try{
   await screenshot('02b-phone-case-context.png');
   stage='chat-and-navigation';
   await navigate('chat');assert.equal(await page.locator('[data-chat-unread]').count(),0);
-  assert.equal(await page.locator('.rxa-attachment[data-id="registration"]').count(),0,'Internal receipt card must stay out of the conversation');
+  assert.equal(await page.locator('.rxa-messages [data-action="document"][data-id="registration"]').count(),0,'Internal receipt card must stay out of the conversation');
   await page.locator('[data-message-draft]').fill('Покажите, пожалуйста, документы по вашему обращению.');
   view=await apiResponse('message',()=>page.locator('[data-chat-form] button[type="submit"]').click());
   assert.ok(view.documents.length);const messageCount=view.messages.length;
@@ -428,6 +428,91 @@ try{
   assert.notEqual(next.case.id,independent.case.id);
   await assertCaseAtTop('Next independent case opens at the top without the previous reception scroll');
   await screenshot('11-phone-next-case.png');
+  stage='case-illustrations';
+  await page.evaluate(()=>sessionStorage.setItem('qa.reception.release','c'.repeat(32)));
+  await page.goto(origin+'/__qa/reception.html?context=free',{waitUntil:'networkidle'});await idle();
+  await bank.selectOption('river-observation');await idle();
+  const illustratedCase=await apiResponse('start',()=>page.locator('[data-action="start"]').click());
+  const initialDocuments=illustratedCase.documents.map(document=>document.id);
+  assert.deepEqual(illustratedCase.openedDocumentIds,[]);
+  assert.ok(illustratedCase.documents.some(document=>document.id==='observation'));
+  assert.deepEqual(illustratedCase.case.workbook.targets.map(({id,anchorId,ruleId})=>({id,anchorId,ruleId})),[
+    {id:'referral',anchorId:'registered',ruleId:'calendar7'},
+    {id:'deadline',anchorId:'recipientRegistered',ruleId:'calendar30'},
+  ]);
+  await navigate('calendar');
+  await calendarTarget('referral').waitFor({state:'visible'});
+  await calendarTarget('deadline').waitFor({state:'visible'});
+  check('Appeal calendar shows seven-day referral and thirty-day response with separate starting events');
+  await navigate('documents');
+  assert.deepEqual(await page.locator('.rxa-document-list [data-action="document"]').evaluateAll(buttons=>buttons.map(button=>button.dataset.id)),initialDocuments);
+  await navigate('chat');
+  assert.equal(await page.locator('.rxa-messages [data-action="document"]').count(),0);
+  await page.locator('[data-message-draft]').fill('Покажите материалы обращения.');
+  const afterMessage=await apiResponse('message',()=>page.locator('[data-chat-form] button[type="submit"]').click());
+  assert.deepEqual(afterMessage.documents.map(document=>document.id),initialDocuments);
+  assert.equal(await page.locator('.rxa-messages [data-action="document"]').count(),0);
+  const thumbnail=page.locator('.rxa-messages [data-action="illustration-open"][data-id="E24__1"]');
+  const viewer=page.locator('.rxa-illustration-dialog');
+  for(const [width,height] of [[390,844],[1280,900]]){
+    await page.setViewportSize({width,height});
+    const thumb=thumbnail.locator('img');
+    assert.equal(await thumb.evaluate(async image=>{await image.decode();return image.naturalWidth;}),420);
+    const thumbBounds=await thumb.boundingBox();
+    await thumbnail.click();
+    const fullImage=viewer.locator('img');
+    const fullWidth=await fullImage.evaluate(async image=>{await image.decode();return image.naturalWidth;});
+    assert.equal(fullWidth,832);
+    const bounds=await fullImage.boundingBox();
+    assert.ok(bounds.width>thumbBounds.width&&bounds.x>=0&&bounds.x+bounds.width<=width+1);
+    assert.ok(bounds.y>=0&&bounds.y+bounds.height<=height+1);
+    await screenshot(`12-illustration-${width}.png`);
+    await page.keyboard.press('Escape');
+    await viewer.waitFor({state:'detached'});
+    assert.equal(await thumbnail.evaluate(button=>document.activeElement===button),true);
+  }
+  await navigate('documents');
+  const photoRecord=page.locator('.rxa-document-list [data-action="document"][data-id="observation"]');
+  const openedPhoto=await apiResponse('document',()=>photoRecord.click());
+  assert.deepEqual(openedPhoto.openedDocumentIds,['observation'],'Opening a chat image does not register its document as read');
+  check('An existing case illustration opens at full size without revealing or marking a case document read');
+  stage='seminar-and-optimistic-chat';
+  await page.evaluate(()=>sessionStorage.setItem('qa.reception.release','d'.repeat(32)));
+  await page.setViewportSize({width:390,height:844});
+  await page.goto(origin+'/__qa/reception.html?context=seminar',{waitUntil:'networkidle'});await idle();
+  assert.equal(await page.locator('[name="trainingCaseId"],[name="trainingLevel"],[name="caseSearch"]').count(),0);
+  assert.equal(await page.locator('[name="mode"][value="training"]').count(),1);
+  assert.equal(await page.locator('[name="mode"][value="independent"]').count(),1);
+  const seminar=await apiResponse('start',()=>page.locator('[data-action="start"]').click());
+  assert.equal(seminar.context,'seminar');assert.equal(seminar.caseCount,1);
+  await navigate('chat');
+  let releaseMessage;
+  const heldMessage=new Promise(resolve=>{releaseMessage=resolve;});
+  const blockMessage=async route=>{
+    if(route.request().postDataJSON()?.op==='message')await heldMessage;
+    await route.continue();
+  };
+  await page.route('**/api/reception',blockMessage);
+  const draft=page.locator('[data-message-draft]'), message='Уточните, пожалуйста, обстоятельства обращения.';
+  await draft.fill(message);
+  const response=page.waitForResponse(r=>r.url().endsWith('/api/reception')&&r.request().postDataJSON()?.op==='message');
+  try{
+    await page.locator('[data-chat-form] button[type="submit"]').click();
+    assert.equal(await draft.inputValue(),'');
+    assert.equal(await page.locator('[data-pending-message].user .rxa-bubble p').innerText(),message);
+    assert.equal(await page.locator('.rxa-message.assistant').count(),1);
+  }finally{releaseMessage();}
+  const sent=await (await response).json();assert.equal(sent.ok,true);
+  await idle();await page.unroute('**/api/reception',blockMessage);
+  assert.equal(await page.locator('.rxa-message.user').count(),1);
+  assert.equal(await page.locator('[data-pending-message]').count(),0);
+  check('Seminar selects one case without filters and shows the cleared composer and outgoing message immediately');
+  if(seminar.case.workbook.targets.some(target=>target.id==='referral')){
+    await navigate('calendar');
+    await calendarTarget('referral').waitFor({state:'visible'});
+    await calendarTarget('deadline').waitFor({state:'visible'});
+    check('Seminar appeal calendar shows both deadlines');
+  }
   assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.status='failed';report.failure={stage,message:error.message};if(page)try{await screenshot('failure.png');}catch{}}
 finally{

@@ -9,6 +9,9 @@ import {loadPrivateCatalogue, createFirebaseAssessmentGate, createFirebaseResult
 import {academicContext, topicGate} from '../../../site/assets/js/access.js';
 import {seminarTopic} from '../../../site/assets/js/seminar-modules.js';
 import {CONTENT_MANIFEST} from '../../../site/apps/reception/content/manifest.js';
+import {ROUTING_RECIPIENTS} from './routing-cases.mjs';
+import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
+import {canonicalDecision} from '../../../scripts/reception-ai-qa-helpers.mjs';
 
 const T = value => ({ru: value, en: 'EN ' + value, zh: '中文 ' + value});
 function fixture(id = 'fixture-1') {
@@ -38,6 +41,7 @@ test('release-scoped recovery restarts obsolete work while completed scores rema
   const legacy=await h.start({requestId:'legacy'});
   const old=await h.start({requestId:'old-build',buildId:oldBuild});
   for(const session of [legacy,old])await assert.rejects(h.service.handle({op:'resume',sessionId:session.id,buildId:newBuild},identity),err('outdated_session'));
+  await assert.rejects(h.service.handle({op:'resume',sessionId:old.id,context:'seminar'},identity),err('outdated_session'));
   assert.equal((await h.service.handle({op:'recover',mode:'training',buildId:newBuild},identity)).view,null);
   const current=await h.start({requestId:'current-build',buildId:newBuild});
   assert.equal(current.buildId,newBuild);
@@ -49,6 +53,12 @@ test('release-scoped recovery restarts obsolete work while completed scores rema
   const stored=await h.store.get(`sessions/${old.id}`);
   const shown=(await h.service.handle({op:'resume',sessionId:old.id,buildId:newBuild},identity)).view;
   assert.deepEqual(shown.result,completed.result);
+  for(const context of ['seminar','free']) {
+    const historical=(await h.service.handle({op:'resume',sessionId:old.id,context,buildId:newBuild,workbookVersion:2},identity)).view;
+    assert.deepEqual(historical.result,completed.result);
+    assert.equal(historical.context,undefined);
+  }
+  await assert.rejects(h.service.handle({op:'resume',sessionId:old.id,context:'seminar'},{uid:'other',studentKey:'87654321'}),err('forbidden'));
   assert.deepEqual(await h.store.get(`sessions/${old.id}`),stored,'Reading an old completed result must preserve its stored record');
   assert.equal(h.calls(),0);
   await assert.rejects(h.start({requestId:'invalid-build',buildId:'latest'}),err('invalid_build'));
@@ -95,6 +105,124 @@ test('manual difficulty and case choices cannot change an independent eight-fami
   const v = await h.start({mode: 'independent'}), saved = await h.store.get(`sessions/${v.id}`);
   assert.equal(v.caseCount, 8); assert.equal(new Set(saved.caseData.map(c => c.familyId)).size, 8);
   assert.equal(v.feedback, null);
+});
+
+test('seminar starts share one nonrepeating case bank across both modes and keep free choices separate', async () => {
+  const authored = CONTENT_MANIFEST.templates.filter(row => row.level===2).slice(0,10);
+  const h = harness({cases:authored.map(row=>fixture(row.id)),config:{maxDailyStartsPerStudent:1}});
+  const firstId = authored[0].id;
+  const free = await h.start({context:'free',caseId:firstId,level:2,requestId:'free'});
+  assert.equal(free.case.id,firstId);
+  await assert.rejects(h.start({context:'free',mode:'independent',requestId:'free-grade'}),err('invalid_mode'));
+  await assert.rejects(h.start({context:'seminar',caseId:firstId,requestId:'picked'}),err('invalid_case'));
+  await assert.rejects(h.start({context:'seminar',level:2,requestId:'level'}),err('invalid_level'));
+  const params = index => ({context:'seminar',mode:index%2?'independent':'training',requestId:`random-${index}`});
+  const all = await Promise.all([...authored.map((_,index)=>h.start(params(index))),h.start(params(0))]);
+  const first = all.pop();
+  assert.equal(first.id,all[0].id);
+  assert.equal(first.case.id,all[0].case.id);
+  assert.deepEqual(all.map(v=>v.case.id).sort(),authored.map(row=>row.id).sort());
+  assert.ok(all.every(v=>v.caseCount===1&&v.documents.length===1&&v.documents[0].chatAttachment===false&&!v.openedDocumentIds.length));
+  assert.ok(all.some(v=>v.seminarProgress.remainingCases===0));
+  await assert.rejects(h.start(params(authored.length)),err('case_bank_exhausted'));
+  assert.equal((await h.start(params(0))).id,first.id);
+  await assert.rejects(h.start({...params(0),mode:'independent'}),err('request_conflict'));
+  assert.equal((await h.service.handle({op:'recover',context:'free',mode:'training'},identity)).view.id,free.id);
+  assert.equal((await h.service.handle({op:'recover',context:'seminar',mode:'training'},identity)).view.context,'seminar');
+  await assert.rejects(h.service.handle({op:'resume',context:'free',sessionId:first.id},identity),err('outdated_session'));
+  const other = await h.service.handle({op:'start',locale:'ru',...params(0)},{uid:'other',studentKey:'87654321'});
+  assert.equal(other.view.seminarProgress.remainingCases,authored.length-1);
+});
+
+test('seminar history excludes earlier shown independent cases and keeps unseen cases in rotation', async () => {
+  const cases=Array.from({length:8},(_,i)=>fixture(`legacy-case-${i}`));
+  const h=harness({cases});
+  const legacy=await h.start({mode:'independent'});
+  const training=await h.start({mode:'training',caseId:legacy.case.id,requestId:'legacy-training'});
+  assert.equal(training.case.id,legacy.case.id);
+  const assigned=await Promise.all(cases.slice(1).map((_,i)=>h.start({context:'seminar',requestId:`seminar-${i}`})));
+  assert.deepEqual(assigned.map(v=>v.case.id).sort(),cases.map(c=>c.id).filter(id=>id!==legacy.case.id).sort());
+  await assert.rejects(h.start({context:'seminar',requestId:'bank-empty'}),err('case_bank_exhausted'));
+});
+
+test('assessed seminar cases accrue one point when solved, cap at five, and survive duplicate saves', async () => {
+  const cases=Array.from({length:9},(_,i)=>fixture(`case-${i}`));
+  const receipts=new Map();let failFirst=true;
+  const h=harness({cases,provider:{name:'openai',async generate(){throw Error('Documents are ready at start');}},
+    async saveResult({sessionId,result}){
+      if(failFirst){failFirst=false;throw Error('journal unavailable');}
+      if(receipts.has(sessionId))assert.deepEqual(result,receipts.get(sessionId));
+      receipts.set(sessionId,result);
+    }});
+  async function play(index,mode,correct){
+    const v=await h.start({context:'seminar',mode,requestId:`seminar-${index}`});
+    const call=body=>h.service.handle({sessionId:v.id,...body},identity).then(r=>r.view);
+    const read=await call({op:'document',documentId:'d1',requestId:'open'});
+    assert.deepEqual(read.openedDocumentIds,['d1']);
+    const reviewed=await call({op:'decide',requestId:'decision',decision:{...goodDecision,actionIds:correct?['a1']:[]}});
+    assert.equal(reviewed.feedback===null,mode==='independent');
+    const finish={op:'next',requestId:'finish'};
+    const result=await call(finish);
+    const replay=await call(finish);
+    assert.equal(result.result.points,correct?1:0);
+    assert.deepEqual({...replay.result,journalStatus:result.result.journalStatus},result.result);
+    return {v,result,replay};
+  }
+  const training=await play(0,'training',true);
+  assert.equal(training.result.result.seminarPoints,undefined);
+  assert.equal(training.result.result.journalStatus,'local');
+  const first=await play(1,'independent',true);
+  await assert.rejects(h.service.handle({op:'resume',sessionId:first.v.id,context:'free'},identity),err('outdated_session'));
+  assert.equal(first.result.result.journalStatus,'pending');
+  assert.equal(first.replay.result.journalStatus,'saved');
+  assert.equal(first.replay.result.seminarPoints,1);
+  const wrong=await play(2,'independent',false);
+  assert.equal(wrong.result.result.seminarPoints,1);
+  for(let i=3;i<=8;i++){
+    const next=await play(i,'independent',true);
+    assert.equal(next.result.result.seminarPoints,Math.min(5,i-1));
+    assert.equal(next.result.result.remainingCases,8-i);
+  }
+  assert.equal(receipts.size,8);
+  assert.equal(receipts.has(training.v.id),false);
+  assert.equal(receipts.get(first.v.id).seminarPoints,1);
+});
+
+test('new workbook play uses all documents, a real citation and the configured standard procedure', async () => {
+  const c=createSyntheticReceptionCases().find(c=>c.id==='complaint-routing');
+  c.public.procedures[0].id='59'; c.rubric.procedureIds=['59'];
+  c.rubric.authored.knowledge={...c.rubric.authored.knowledge,number:'59',actDate:'2006-05-02',articles:['8']};
+  const h=harness({cases:[c],requireGameplay:true});
+  await assert.rejects(h.start({mode:'independent',workbookVersion:2}),err('invalid_context'));
+  await assert.rejects(h.start({context:'seminar',mode:'independent',workbookVersion:1}),err('invalid_workbook'));
+  let v=await h.start({context:'seminar',mode:'independent',workbookVersion:2});
+  const call=body=>h.service.handle({sessionId:v.id,...body},identity).then(r=>r.view);
+  assert.equal(v.case.procedureRequired,false);
+  assert.deepEqual(v.case.procedures,[]);
+  assert.equal(v.case.sources,undefined);
+  assert.equal(v.case.assessment.research,undefined);
+  assert.ok(v.case.normativeActs.some(act=>act.id==='reception-law59999'));
+  assert.deepEqual(v.documents.map(d=>d.id),c.documents.map(d=>d.id));
+  assert.deepEqual(v.openedDocumentIds,[]);
+  assert.equal(v.case.workbook.events.find(e=>e.id==='recipientRegistered').date,'2026-11-13');
+  const decision=canonicalDecision(c);
+  decision.procedureId=''; decision.routeId='';
+  decision.deadline='2026-12-13';
+  decision.assessment.research={recordId:'',fragmentId:'',extracted:'',finding:''};
+  decision.workbook={referralDeadline:'2026-11-18',registrationTimely:true,routing:{recipientIds:ROUTING_RECIPIENTS[c.id][0]},
+    legalCitation:{docId:'reception-law59999',unitIds:['law59999-u52'],text:'Запрещается направлять жалобу на рассмотрение в государственный орган'}};
+  await assert.rejects(call({op:'decide',decision,requestId:'unopened'}),err('invalid_decision'));
+  v=await call({op:'document',documentId:'qa-receipt',requestId:'open'});
+  await assert.rejects(call({op:'decide',decision:{...decision,workbook:{...decision.workbook,legalCitation:{...decision.workbook.legalCitation,correct:true}}},requestId:'forged'}),err('invalid_decision'));
+  v=await call({op:'decide',decision,requestId:'decision'});
+  assert.equal(v.decision.procedureId,'59');
+  v=await call({op:'followup',choiceId:c.followup.correct,requestId:'followup'});
+  assert.equal(v.feedback,null);
+  v=await call({op:'next',requestId:'finish'});
+  assert.equal(v.result.points,1);
+  assert.equal(v.result.seminarPoints,1);
+  assert.equal(v.result.total,100);
+  assert.deepEqual(v.result.cases[0].decision.workbook.legalCitation,decision.workbook.legalCitation);
 });
 
 test('recovery is owner/mode scoped, keeps the full conversation and finds the latest unfinished shift', async () => {
@@ -420,4 +548,19 @@ test('server journal writes are idempotent and preserve a better existing grade'
   assert.equal((await db.memory.get('rudn-platform/v1/grades/12345678/seminar-5')).points, 5);
   assert.equal((await db.memory.get('rudn-platform/v1/attempts/12345678/reception-ai-abcdef')).serverScored, true);
   await assert.rejects(write({...record, result: {...record.result, points: 5}}), err('result_conflict'));
+});
+
+test('out-of-order seminar receipts preserve the cumulative grade and case points', async () => {
+  const db=databaseStub(),write=createFirebaseResultWriter(db);
+  const base={studentKey:'12345678',uid:'test',startedAt:1,completedAt:2,cases:[{id:'fixture-1',version:'v1'}],decisions:[goodDecision]};
+  const record=(id,seminarPoints)=>({...base,sessionId:id,result:{attemptId:`reception-ai-${id}`,points:1,total:100,seminarPoints}});
+  await write(record('third',3));
+  await write(record('first',1));
+  await write(record('third',3));
+  const grade=await db.memory.get('rudn-platform/v1/grades/12345678/seminar-5');
+  const third=await db.memory.get('rudn-platform/v1/attempts/12345678/reception-ai-third');
+  assert.equal(grade.points,3);
+  assert.equal(grade.sourceAttemptId,'reception-ai-third');
+  assert.equal(third.points,3);
+  assert.equal(third.summary.casePoints,1);
 });

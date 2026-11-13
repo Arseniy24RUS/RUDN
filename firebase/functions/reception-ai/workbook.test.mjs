@@ -503,3 +503,17 @@ test('v2 API restores cases without registration and records a fully informed si
   assert.equal(view.status,'complete');assert.equal(view.result.total,100);
   assert.deepEqual(view.result.cases[0].decision.workbook,decision.workbook);
 });
+
+
+test('the school road case grades referral and the recipient’s substantive reply from separate registrations',()=>{
+  const c=calendarCase('hatch','calendar7','registered','2026-05-07');
+  const options={gameplay:true}, w=publicWorkbook(c,2,options);
+  assert.deepEqual(w.targets.map(({id,anchorId})=>[id,anchorId]),[
+    ['referral','registered'],['deadline','recipientRegistered'],
+  ]);
+  assert.equal(w.events.find(event=>event.id==='recipientRegistered').date,'2026-05-02');
+  const d=decisionFor(c,{referral:'2026-05-07',deadline:'2026-06-01',registrationTimely:true});
+  const score=evaluateWorkbook(c,d,{criteria:[{id:'calendar',earned:0,max:20}]},2,options);
+  assert.equal(score.score,20);
+  assert.deepEqual(score.workbook.calendar.correct,{referral:true,deadline:true,registrationTimely:true});
+});

@@ -45,10 +45,13 @@ export function createFirebaseResultWriter(db) {
     // journal retry; new-bank attempts identify their actual dossier version.
     const fullBank=cases.some(c=>c.version?.startsWith('reception-ai-bank-'));
     const contentVersion=fullBank?[...new Set(cases.map(c=>c.version))].sort().join('|'):'reception-ai-pilot-v1';
+    const cumulative = Number.isInteger(result.seminarPoints);
+    const points = cumulative ? result.seminarPoints : result.points;
     const attempt = {id, studentKey, ownerUid: uid, createdAt: new Date(startedAt).toISOString(), completedAt: new Date(completedAt).toISOString(),
       type: 'citizen-reception', engine: fullBank?'reception-ai-v3':'reception-ai-v1', serverScored: true, activitySlug: 'seminar-5', title: 'Приёмная. Интерактивная смена',
-      points: result.points, maxPoints: 5, recordGrade: true, reviewStatus: 'server-scored', sourceSessionId: sessionId,
-      contentVersion, summary: {total: result.total, points: result.points, maxPoints: 5, caseCount: cases.length, complete: true},
+      points, maxPoints: 5, recordGrade: true, reviewStatus: 'server-scored', sourceSessionId: sessionId,
+      contentVersion, summary: {total: result.total, points, maxPoints: 5, caseCount: cases.length, complete: true,
+        ...(cumulative ? {casePoints:result.points} : {})},
       cases, decisions};
     const signature = hash(attempt);
     const saved = await db.ref(`${base}/attempts/${studentKey}/${id}`).transaction(old => old || {...attempt, serverSignature: signature});
@@ -56,8 +59,8 @@ export function createFirebaseResultWriter(db) {
     // The same existing platform convention: preserve a better result. A retry
     // after the attempt write is safe; it completes a previously missed grade.
     await db.ref(`${base}/grades/${studentKey}/seminar-5`).transaction(old => {
-      if (old && Number(old.points) >= result.points) return undefined;
-      return {points: result.points, max: 5, ownerUid: uid, sourceAttemptId: id, activitySlug: 'seminar-5',
+      if (old && Number(old.points) >= points) return undefined;
+      return {points, max: 5, ownerUid: uid, sourceAttemptId: id, activitySlug: 'seminar-5',
         serverScored: true, updatedAt: new Date(completedAt).toISOString()};
     });
   };

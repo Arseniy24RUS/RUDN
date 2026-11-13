@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {characterMedia,createMessengerMedia,RECEPTION_ACTORS} from '../site/apps/reception/ai/media.js';
+import {caseIllustrations,illustratedDocumentText,renderIllustrationThumbnails} from '../site/apps/reception/ai/illustrations.js';
 import {visualCast} from '../site/apps/reception/js/characters.js';
-import {GFX_PASSPORTS} from '../site/apps/reception/js/graphics-data.js';
+import {GFX_EVIDENCE,GFX_PASSPORTS} from '../site/apps/reception/js/graphics-data.js';
 
 test('all eight actors reuse the existing conflict-free cast, posters, avatars and WebM files',async()=>{
   assert.deepEqual(RECEPTION_ACTORS,visualCast(Object.keys(RECEPTION_ACTORS),'reception-ai-pilot-v1').actors);
@@ -42,6 +43,51 @@ test('all authored visual passports support their existing citizen or staff anim
     }
   }
   assert.ok(checked.has('S03')&&checked.has('S04'));
+});
+
+test('every approved case illustration resolves from its document to existing thumbnail and full-size files',async()=>{
+  const approved=GFX_EVIDENCE.filter(entry=>entry.approved);
+  const caseIds=new Set(approved.map(entry=>entry.caseId));
+  for(const caseId of caseIds){
+    const file=new URL(`../site/apps/reception/content/cases/${caseId}.json`,import.meta.url);
+    const {template}=JSON.parse(await readFile(file,'utf8'));
+    const illustrations=caseIllustrations(caseId,template.documents);
+    const expected=approved.filter(entry=>entry.caseId===caseId).map(entry=>entry.id).sort();
+    assert.deepEqual(illustrations.map(entry=>entry.id).sort(),expected,caseId);
+    for(const entry of illustrations){
+      for(const [src,width] of [[entry.thumbnail,420],[entry.full,832]]){
+        assert.ok(src.endsWith(`${entry.id}__w${width}.webp`));
+        const image=await readFile(fileURLToPath(src));
+        assert.equal(image.subarray(8,12).toString(),'WEBP');
+      }
+    }
+  }
+});
+
+test('chat gallery needs a matching image and does not duplicate legacy art or show document content',()=>{
+  const documents=[
+    {id:'photo',title:{en:'Photo <b>title</b>'},text:'Document body',image:'assets/hatch.webp'},
+    {id:'appeal',title:'Appeal text',text:'A separate document'},
+  ];
+  const illustrations=caseIllustrations('hatch',documents);
+  assert.deepEqual(illustrations.map(entry=>entry.id),['E01__1']);
+  assert.equal(caseIllustrations('different-case',documents)[0].id,'document-photo');
+  assert.deepEqual(caseIllustrations('hatch',[documents[1]]),[]);
+  assert.equal(renderIllustrationThumbnails([], {locale:'ru'}),'');
+  assert.deepEqual(caseIllustrations('unmapped',['https://invalid.example/photo.webp','assets/../hatch.webp','assets//hatch.webp'].map(image=>({id:'test',image}))),[]);
+  const markup=renderIllustrationThumbnails(illustrations,{locale:'en'});
+  assert.match(markup,/aria-haspopup="dialog"/);
+  assert.match(markup,/Enlarge image · An open circular manhole/);
+  assert.doesNotMatch(markup,/Document body|Appeal text|w832/);
+  assert.match(renderIllustrationThumbnails(caseIllustrations('different-case',documents),{locale:'en'}),/Enlarge image · Photo &lt;b&gt;title&lt;\/b&gt;/);
+});
+
+test('illustrated document text retains evidentiary details and date variants',()=>{
+  const text='Учебная фотография от 31.05.2026: у выпуска трубы видна вода тёмного цвета. Владелец выпуска в материалах не указан; результатов отбора проб нет.';
+  const document={id:'observation',text};
+  assert.equal(illustratedDocumentText('river-observation',document,'ru'),'Дата снимка 31.05.2026. Владелец выпуска в материалах не указан; результатов отбора проб нет.');
+  assert.equal(illustratedDocumentText('river-old-photo',document,'ru'),text);
+  assert.equal(illustratedDocumentText('river-observation',{id:'observation',text:'A previously unseen document.'},'en'),'A previously unseen document.');
 });
 
 function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=true,offscreen=false,hidden=false,frameCallbacks=false}={}){
