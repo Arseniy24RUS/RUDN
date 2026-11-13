@@ -206,13 +206,14 @@ test('production provider requires both substantive review and verification; no 
     requests.push(JSON.parse(options.body));
     return reply(requests.length===1?review:{valid:false});
   }});
-  await assert.rejects(provider.reviewDecision({context}),err('review_unconfirmed'));
+  await assert.rejects(provider.reviewDecision({context}),err('review_invalid'));
   assert.equal(requests.length,2);
   assert.equal(requests[0].text.format.schema.properties.phase.enum[0],'initial');
   assert.deepEqual(requests.map(({model,reasoning,store,max_output_tokens})=>({model,reasoning,store,max_output_tokens})),[
     {model:'gpt-6.1-sol',reasoning:{effort:'medium'},store:false,max_output_tokens:4096},
-    {model:'gpt-6.1-sol',reasoning:{effort:'medium'},store:false,max_output_tokens:1024},
+    {model:'gpt-6.1-sol',reasoning:{effort:'medium'},store:false,max_output_tokens:3072},
   ]);
+  assert.deepEqual(requests[1].text.format.schema,requests[0].text.format.schema);
   assert.throws(()=>createScriptedCorrespondenceReviewer(),/Explicit/);
   const scripted=createScriptedCorrespondenceReviewer({reviews:[review]});
   assert.equal((await scripted.reviewDecision({context})).verified,true);
@@ -220,19 +221,23 @@ test('production provider requires both substantive review and verification; no 
 });
 
 test('Sol review records the models returned by both API calls and measures cached input',async()=>{
-  const context=await contextFor(),review=reviewFor(context);
+  const context=await contextFor(),review=reviewFor(context),corrected=structuredClone(review);
+  corrected.criteria[0].level=3;
+  corrected.criteria[0].findings.push({type:'missing',section:'facts',quote:'',sourceIds:['case-author-explanation'],explanation:'Требуется пояснение.'});
+  corrected.summary='Проверенная оценка с уточнением критерия.';
   let count=0;
   const provider=createOpenAIProvider({apiKey:'test-only',fetchImpl:async()=>{
     const primary=++count===1;
     return {ok:true,json:async()=>({status:'completed',model:primary?'gpt-6.1-sol':'gpt-6.1-sol-test-snapshot',
-      output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(primary?review:{valid:true})}]}],
+      output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(primary?review:corrected)}]}],
       usage:{input_tokens:2000,input_tokens_details:{cached_tokens:1000},output_tokens:primary?350:50}})};
   }});
   const result=await provider.reviewDecision({context});
   assert.deepEqual(result.reviewModels,{assessment:'gpt-6.1-sol',verification:'gpt-6.1-sol-test-snapshot'});
+  assert.deepEqual(result.review,corrected);
   assert.deepEqual(result.usage,{inputTokens:4000,cachedInputTokens:2000,outputTokens:400});
   assert.equal(reviewCostMicros(4000,400,2000),9200);
   const reservation=estimateReviewReservation({context});
-  assert.equal(reservation.outputTokens,5120);
+  assert.equal(reservation.outputTokens,7168);
   assert.equal(reservation.micros,reviewCostMicros(reservation.inputTokens,reservation.outputTokens));
 });
