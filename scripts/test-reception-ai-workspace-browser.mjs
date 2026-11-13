@@ -6,6 +6,7 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import os from 'node:os';
+import {randomUUID} from 'node:crypto';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 import {createReceptionFixture} from './reception-ai-workspace-qa.mjs';
@@ -52,6 +53,46 @@ async function noOverflow(label){
   check(`No horizontal overflow: ${label}`,geometry);
 }
 async function shellHidden(){assert.equal(await page.locator('nav.mobile-nav').isVisible(),false);}
+async function scrollWorkspace(){
+  const moved=await page.locator('.rxa-page-content').evaluate(content=>{
+    content.scrollTop=content.scrollHeight;
+    return content.scrollTop;
+  });
+  assert.ok(moved>0,'The workspace was actually scrolled before starting the case');
+}
+async function assertCaseAtTop(label){
+  const geometry=await page.locator('.rxa-page-content').evaluate(content=>{
+    const actor=content.querySelector('[data-rxa-actor]');
+    const rect=actor?.getBoundingClientRect(), viewport=content.getBoundingClientRect();
+    return {scrollTop:content.scrollTop,actorVisible:!!rect&&rect.top>=viewport.top-1&&rect.bottom<=viewport.bottom+1};
+  });
+  assert.deepEqual(geometry,{scrollTop:0,actorVisible:true},label);
+  assert.equal(await page.locator('.rxa-foyer [data-chat-unread], .rxa-foyer [data-action="chat"]').count(),0);
+  assert.equal((await page.locator('.rxa-mobile-nav [data-chat-unread]').textContent()).trim(),'1');
+  check(label,geometry);
+}
+const dateText=date=>date.split('-').reverse().join('.');
+function dateAfter(date,days){
+  const value=new Date(date+'T12:00:00Z');value.setUTCDate(value.getUTCDate()+days);
+  return value.toISOString().slice(0,10);
+}
+function calendarTarget(target){return page.locator(`[data-calendar-action="target"][data-target="${target}"]`);}
+async function chooseDate(target,date){
+  await calendarTarget(target).click();
+  await page.locator('[data-calendar-input="year"]').selectOption(date.slice(0,4));
+  await page.locator('[data-calendar-input="month"]').selectOption(date.slice(5,7));
+  await page.locator(`[data-calendar-action="choose-date"][data-date="${date}"]`).click();
+  assert.ok((await calendarTarget(target).textContent()).includes(dateText(date)));
+}
+async function savedDates(referral,deadline){
+  assert.ok((await calendarTarget('referral').textContent()).includes(dateText(referral)));
+  assert.ok((await calendarTarget('deadline').textContent()).includes(dateText(deadline)));
+  assert.equal(await page.locator('[data-calendar-input="registration-timely"]').isChecked(),true);
+}
+async function decisionDates(referral,deadline){
+  const summary=await page.locator('[data-deadline-summary]').textContent();
+  assert.ok(summary.includes(dateText(referral))&&summary.includes(dateText(deadline)));
+}
 async function phoneComposerVisible(label){
   const geometry=await page.evaluate(()=>{
     const field=document.querySelector('[data-message-draft]'),send=document.querySelector('[data-chat-form] button[type="submit"]'),nav=document.querySelector('.rxa-mobile-nav');
@@ -99,12 +140,19 @@ try{
   const selectedCase=allCases.includes('complaint-routing')?'complaint-routing':allCases[0];
   await bank.selectOption(selectedCase);await idle();await shellHidden();
   await screenshot('01-phone-lobby.png');check('Training/independent controls and the supplied catalog with a difficulty filter',{allCases:allCases.length,advancedCases:choices.length,dataKind:report.dataKind});
+  await scrollWorkspace();
   let view=await apiResponse('start',()=>page.locator('[data-action="start"]').click());
   assert.equal(view.provider,'mock');assert.equal(view.mode,'training');
   assert.equal(view.case.id,selectedCase);const sessionId=view.id;
   stage='reception-and-unread';
   assert.equal(await page.locator('#receptionAI').getAttribute('data-page'),'reception');
-  assert.equal((await page.locator('[data-chat-unread]').first().textContent()).trim(),'1');
+  await assertCaseAtTop('New training starts at the top, with one unread badge in bottom navigation');
+  const events=Object.fromEntries(view.case.workbook.events.map(event=>[event.id,event.date]));
+  const renderedDates=await page.locator('.rxa-case-timeline time').evaluateAll(nodes=>nodes.map(node=>node.dateTime));
+  assert.deepEqual(renderedDates,[events.sent,events.received,events.registered]);
+  const address=page.locator('.rxa-routing-origin dd').first();
+  const originAddress=view.case.workbook.origin.address?.ru??view.case.workbook.origin.address;
+  assert.ok((await address.textContent()).includes(originAddress||'Адрес для ответа не указан'));
   assert.deepEqual(await page.locator('.rxa-mobile-nav [data-action="page"]').evaluateAll(buttons=>buttons.map(button=>button.dataset.page)),['reception','chat','documents','calendar','decision']);
   await page.locator('[data-rxa-actor]').waitFor({state:'visible'});
   await page.waitForFunction(()=>{const image=document.querySelector('.rxa-citizen-poster');return image?.complete&&image.naturalWidth>0;});
@@ -120,6 +168,8 @@ try{
   }
   check('Reception actor and initial unread badge',{videoStatus,animationClaim:videoStatus==='decoded video playing'});
   await screenshot('02-phone-reception.png');await noOverflow('reception 390');
+  await address.scrollIntoViewIfNeeded();
+  await screenshot('02b-phone-appeal-address.png');
   stage='chat-and-navigation';
   await navigate('chat');assert.equal(await page.locator('[data-chat-unread]').count(),0);
   await page.locator('[data-message-draft]').fill('Покажите, пожалуйста, документы по вашему обращению.');
@@ -134,7 +184,8 @@ try{
   stage='reader-citation';
   await click('[data-action="tab"][data-tab="sources"]');
   await page.locator('.rxa-source-record').evaluateAll(nodes=>nodes.forEach(node=>{node.open=true;}));
-  const source=page.locator('a[data-source-reader]').first();
+  const law59=page.locator('a[data-source-reader][href*="LAW_59999/"]').first();
+  const source=await law59.count()?law59:page.locator('a[data-source-reader]').first();
   if(await source.count()){
     await source.click();await page.locator('[data-source-reader-host] .rx-source-embedded [data-unit]').first().waitFor({state:'visible'});
     assert.equal(await page.locator('#receptionAI').getAttribute('data-page'),'documents');
@@ -163,8 +214,39 @@ try{
     assert.ok(readerGeometry.navigation.every(button=>!button.disabled&&button.uncovered&&button.left>=0&&button.right<=1281&&button.top>=0&&button.bottom<=901),`Desktop reader keeps all five navigation targets reachable: ${JSON.stringify(readerGeometry)}`);
     await screenshot('05b-desktop-source-reader.png');
     check('Desktop 1280×900 source reader has bounded scrolling text and accessible navigation',readerGeometry);
-    await page.setViewportSize({width:390,height:844});stage='reader-citation';
-    await page.locator('.rx-source-embedded [data-unit]').first().click();
+    await page.setViewportSize({width:390,height:844});stage='mobile-source-search';
+    const reader=page.locator('.rx-source-embedded'), search=reader.locator('[data-input="reader-query"]');
+    await search.fill('Срок');
+    await reader.locator('[data-search-form="reader"] button[type="submit"]').click();
+    const hit=reader.locator('[data-action="jump-unit"]').first();
+    await hit.waitFor();
+    const searchGeometry=await reader.evaluate(root=>{
+      const toolbar=root.querySelector('.rx-source-dialog-bar').getBoundingClientRect();
+      const search=root.querySelector('[data-reader-search-panel]').getBoundingClientRect();
+      const header=root.querySelector('.ll-reader-header').getBoundingClientRect();
+      const paper=root.querySelector('.ll-paper').getBoundingClientRect();
+      const results=root.querySelector('.ll-search-results'), list=results.getBoundingClientRect();
+      const button=results.querySelector('[data-action="jump-unit"]'), bounds=button.getBoundingClientRect();
+      const hit=document.elementFromPoint(bounds.left+bounds.width/2,bounds.top+bounds.height/2);
+      return {toolbarBottom:toolbar.bottom,searchTop:search.top,searchBottom:search.bottom,headerTop:header.top,
+        resultsBottom:list.bottom,paperTop:paper.top,paperHeight:paper.height,hitReachable:hit===button||button.contains(hit)};
+    });
+    assert.ok(searchGeometry.toolbarBottom<=searchGeometry.searchTop+1&&searchGeometry.searchBottom<=searchGeometry.headerTop+1&&
+      searchGeometry.resultsBottom<=searchGeometry.paperTop+1&&searchGeometry.paperHeight>=100&&searchGeometry.hitReachable,
+      `Phone search overlaps the toolbar or hides the document or a result: ${JSON.stringify(searchGeometry)}`);
+    await screenshot('05c-phone-source-search.png');
+    const unit=await hit.getAttribute('data-id');
+    await hit.click();
+    const match=reader.locator(`[data-unit="${unit}"].ll-search-target`);
+    await match.waitFor();
+    await page.waitForFunction(()=>document.activeElement?.matches('.ll-search-target'));
+    assert.equal(await reader.locator('.ll-search-results').isVisible(),false);
+    assert.equal(await search.inputValue(),'Срок');
+    assert.ok(await reader.locator('.ll-paper').evaluate(node=>node.scrollTop>0));
+    await screenshot('05d-phone-source-search-result.png');
+    check('Phone search and result navigation leave the toolbar and law text usable',searchGeometry);
+    stage='reader-citation';
+    await match.click();
     await page.locator('[data-source-reference-tray]').waitFor({state:'visible'});
     await screenshot('05-phone-source-reference.png');
     await page.locator('[data-source-reference-use]').click();
@@ -178,30 +260,58 @@ try{
   await click('[data-deadline-summary] [data-action="page"][data-page="calendar"]');
   assert.equal(await page.locator('#receptionAI').getAttribute('data-page'),'calendar');
   await page.locator('[data-calendar-workbench]').waitFor({state:'visible'});
-  const anchor=page.locator('[data-calendar-action="anchor-event"]').first();
-  if(await anchor.count())await anchor.click();
-  const manualTools=page.locator('[data-calendar-details="tools"]');
-  if(await manualTools.count()&&!await manualTools.evaluate(element=>element.open))await manualTools.locator(':scope > summary').click();
-  if(!await anchor.count()){await page.locator('[data-calendar-input="anchor"]').fill(view.case.date);await page.locator('[data-calendar-input="anchor"]').dispatchEvent('change');}
-  await page.locator('[data-calendar-action="step-day"]').click();
-  await page.locator('[data-calendar-action="use-date"]').click();
-  const deadline=await page.locator('[data-decision="deadline"]').inputValue();assert.match(deadline,/\d{4}-\d{2}-\d{2}/);
+  assert.equal(await page.locator('[data-calendar-action="anchor-event"], [data-calendar-action^="step-"], [data-calendar-action="use-date"], [data-calendar-details="tools"], [data-decision="deadline"]').count(),0);
+  assert.equal(await page.locator('[data-calendar-action="target"]').count(),2);
+  for(const id of ['sent','received','registered']){
+    assert.equal(await page.locator(`[data-calendar-action="choose-date"][data-date="${events[id]}"] .rxw-event-dots .event-${id}`).count(),1);
+  }
+  const referral=dateAfter(events.registered,7),deadline=dateAfter(events.registered,30);
+  await chooseDate('referral',referral);
+  await chooseDate('deadline',deadline);
+  await page.locator('[data-calendar-input="registration-timely"]').check();
+  await savedDates(referral,deadline);
+  await page.locator('.rxa-page-content').evaluate(content=>{content.scrollTop=0;});
   await screenshot('06-phone-calendar.png');
+  const norms=page.locator('[data-calendar-details="norms"]');
+  await norms.locator('summary').click();
+  assert.equal(await norms.evaluate(details=>details.open),true);
+  const legalQuotes=await norms.innerText();
+  for(const heading of ['Статья 8, часть 2','Статья 8, часть 3','Статья 12, часть 1'])assert.ok(legalQuotes.includes(heading),heading);
+  await screenshot('06b-phone-calendar-norms.png');
   await navigate('chat');assert.equal(await page.locator('[data-message-draft]').inputValue(),'Уточню обстоятельства после чтения документа.');
   assert.equal(await page.locator('.rxa-message[data-message-id]').count(),messageCount);
   await navigate('decision');assert.equal(await page.locator('[data-decision="reasoning"]').inputValue(),reasoning);
-  assert.equal(await page.locator('[data-deadline-summary] time').getAttribute('datetime'),deadline);
+  await decisionDates(referral,deadline);
   await screenshot('07-phone-decision.png');
-  await navigate('calendar');assert.equal(await page.locator('[data-decision="deadline"]').inputValue(),deadline);
-  check('Five pages retain chat, decision and calendar drafts');
+  const route=page.locator('[data-details="assessment-routing"]');
+  await route.locator('summary').click();
+  await route.locator('[data-routing-search]').fill('Роскомнадзор');
+  assert.ok(await route.locator('[data-routing-recipient]').count()>0);
+  const recipient=route.locator('[data-routing-recipient]').first(), recipientId=await recipient.getAttribute('value');
+  await recipient.check();
+  await route.locator('.rxa-routing-filters').evaluate(filters=>filters.scrollIntoView({block:'start'}));
+  const authorityGeometry=await route.locator(`[data-routing-recipient][value="${recipientId}"]`).evaluate(input=>{
+    const row=input.closest('label'), text=row.querySelector('span');
+    const outer=row.getBoundingClientRect(), name=text.getBoundingClientRect(), control=input.getBoundingClientRect();
+    return {rowHeight:outer.height,checkboxWidth:control.width,nameWidth:name.width,
+      withinRow:control.right<=name.left&&name.right<=outer.right+1,name:text.innerText};
+  });
+  assert.ok(authorityGeometry.rowHeight<160&&authorityGeometry.checkboxWidth<=44&&
+    authorityGeometry.nameWidth>=100&&authorityGeometry.withinRow&&authorityGeometry.name.includes('Роскомнадзор'),
+    `The authority checkbox or label overflows its row: ${JSON.stringify(authorityGeometry)}`);
+  await screenshot('07b-phone-authority-picker.png');
+  await navigate('calendar');await savedDates(referral,deadline);
+  check('Five pages retain chat, selected authority, registration check and two manually chosen dates');
   stage='exit-and-return';
   await page.locator('header [data-action="exit"]').click();await page.locator('#qaReenter').waitFor({state:'visible'});
   assert.equal(await page.locator('nav.mobile-nav').isVisible(),true);
   await page.locator('#qaReenter').click();await idle();
   assert.equal(await page.locator('#receptionAI').getAttribute('data-page'),'calendar');
-  assert.equal(await page.locator('[data-decision="deadline"]').inputValue(),deadline);
+  await savedDates(referral,deadline);
   await navigate('decision');assert.equal(await page.locator('[data-decision="reasoning"]').inputValue(),reasoning);
-  assert.equal(await page.locator('[data-deadline-summary] time').getAttribute('datetime'),deadline);
+  await decisionDates(referral,deadline);
+  if(!await route.evaluate(details=>details.open))await route.locator('summary').click();
+  assert.equal(await route.locator(`[data-routing-recipient][value="${recipientId}"]`).isChecked(),true);
   const saved=await page.evaluate(()=>Object.values(localStorage).map(value=>{try{return JSON.parse(value);}catch{return null;}}).filter(Boolean));
   assert.ok(saved.some(item=>item.sessionId===sessionId));await shellHidden();
   check('Exit restores platform navigation; return restores same shift and drafts');
@@ -260,6 +370,40 @@ try{
   assert.notEqual(fresh.id,sessionId);assert.equal(fresh.buildId,'b'.repeat(32));
   check('A new release retires the old unfinished local and server session and starts a fresh game');
   await screenshot('10-phone-current-release.png');
+  stage='independent-case-start-and-next';
+  const setup=page.locator('[data-details="exercise-picker"]');
+  await setup.locator('summary').click();
+  await setup.locator('[name="mode"][value="independent"]').check();
+  await scrollWorkspace();
+  const independent=await apiResponse('start',()=>setup.locator('[data-action="start"]').click());
+  assert.equal(independent.mode,'independent');
+  assert.equal(independent.caseCount,8);
+  await assertCaseAtTop('Independent shift starts at the top after scrolling through setup');
+  const sessionIdForNext=independent.id;
+  async function prepareIndependentReview(body){
+    const response=await page.request.post(origin+'/api/reception',{data:{sessionId:sessionIdForNext,requestId:randomUUID(),...body}});
+    const result=await response.json();
+    assert.ok(result.ok,JSON.stringify(result.error));
+    return result.view;
+  }
+  // Prepare a reviewed case without relying on the random exercise's grading
+  // answer key. The next-case transition itself is triggered through the UI.
+  let reviewed=await prepareIndependentReview({op:'decide',decision:{
+    procedureId:independent.case.procedures[0].id,routeId:independent.case.routes[0].id,actionIds:[],
+    law:{number:'',article:''},deadline:dateAfter(independent.case.workbook.events[2].date,30),basisDocumentIds:[],reasoning:'',
+    workbook:{referralDeadline:'',registrationTimely:false,routing:{recipientIds:[]}},
+    assessment:{factId:'',applicationId:'',trapId:'',actDate:'',calendar:{anchor:'',rule:'',start:'',shift:''},research:{recordId:'',fragmentId:'',extracted:'',finding:''}}
+  }});
+  if(reviewed.status==='followup')reviewed=await prepareIndependentReview({op:'followup',choiceId:reviewed.followup.options[0].id});
+  assert.equal(reviewed.status,'review');
+  await page.reload({waitUntil:'networkidle'});await idle();
+  await navigate('reception');await scrollWorkspace();await navigate('decision');
+  const next=await apiResponse('next',()=>page.locator('[data-action="next"]').click());
+  assert.equal(next.id,sessionIdForNext);
+  assert.equal(next.caseIndex,1);
+  assert.notEqual(next.case.id,independent.case.id);
+  await assertCaseAtTop('Next independent case opens at the top without the previous reception scroll');
+  await screenshot('11-phone-next-case.png');
   assert.deepEqual(report.errors,[]);report.status='passed';
 }catch(error){report.status='failed';report.failure={stage,message:error.message};if(page)try{await screenshot('failure.png');}catch{}}
 finally{

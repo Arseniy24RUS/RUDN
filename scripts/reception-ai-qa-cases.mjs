@@ -9,7 +9,7 @@ import {validateCase} from '../firebase/functions/reception-ai/schema.mjs';
 import {CATALOG_METADATA} from '../firebase/functions/reception-ai/catalog-metadata.mjs';
 
 export const SYNTHETIC_VERSION = 'synthetic-reception-ui-qa-v1';
-export const SYNTHETIC_IDS = Object.freeze(['river-observation','budget','complaint-routing']);
+export const SYNTHETIC_IDS = Object.freeze(['river-observation','budget','complaint-routing','ads-consent','access-guide-dog','salary-late-compensation','oms-free-slot','mfc-delay']);
 const site = path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../site');
 const T = (ru,en,zh) => ({ru,en:en||`Synthetic QA: ${ru}`,zh:zh||`合成测试：${ru}`});
 const O = (id,label) => ({id,label:T(label)});
@@ -36,7 +36,7 @@ export function createSyntheticReceptionCases() {
         fact:{prompt:T('Какой факт указан в синтетическом образце?'),options:[O('qa-fact','Учебный образец зарегистрирован'),O('qa-other-fact','Учебный образец отсутствует')]},
         knowledge:{prompt:T('Выберите применение вымышленного правила QA.'),options:[O('qa-apply','Применить условное правило QA'),O('qa-other-apply','Применить другой тестовый образец')],numberLabel:T('Номер вымышленного образца'),dateLabel:T('Дата вымышленного образца'),unitLabel:T('Тестовый пункт')},
         trap:{prompt:T('Как завершить тестовое взаимодействие?'),options:[O('qa-respect','Вежливо уточнить недостающие сведения'),O('qa-ignore','Прервать тестовое взаимодействие')]},
-        calendar:{events:[{id:'qa-registered',label:T('Регистрация тестового образца'),date:'2026-11-11'},{id:'qa-received',label:T('Получение тестового образца'),date:'2026-11-10'}],rules:[O('qa-30','30 календарных дней'),O('qa-7','7 календарных дней')],starts:[O('exclude_anchor','Со следующего дня'),O('include_anchor','Со дня события')],lastDays:[O('no_shift','Без переноса'),O('next_working','Следующий рабочий день')]},
+        calendar:{events:[{id:'sent',label:T('Отправлено'),date:'2026-11-09'},{id:'registered',label:T('Регистрация тестового образца'),date:'2026-11-11'},{id:'received',label:T('Получение тестового образца'),date:'2026-11-10'}],rules:[O('calendar30','30 календарных дней'),O('calendar7','7 календарных дней')],starts:[O('exclude_anchor','Со следующего дня'),O('include_anchor','Со дня события')],lastDays:[O('no_shift','Без переноса'),O('next_working','Следующий рабочий день')]},
         research:{prompt:T('Сопоставьте вымышленную запись и тестовый фрагмент.'),extractedLabel:T('Фрагмент синтетического образца'),findingOptions:[O('qa-found','Тестовая запись найдена'),O('qa-not-found','Тестовой записи нет')],records:[{id:'qa-record',title:T('Синтетическая карточка QA-9999'),url:'',fragments:[{id:'qa-fragment',label:T('Тестовый фрагмент'),text:T('Учебный отдел QA')},{id:'qa-other-fragment',label:T('Посторонний тестовый фрагмент'),text:T('Другой учебный отдел')}]}]}
       }
     },
@@ -54,7 +54,7 @@ export function createSyntheticReceptionCases() {
       legal:{number:'9999',articles:['1']},deadline:'2026-12-11',explanation:T('Технический разбор вымышленного сценария QA. Это не юридическое заключение и не ответ производственного банка.'),
       authored:{factIds:['qa-fact'],evidenceSets:[['qa-receipt']],evidencePaired:true,order:[['qa-register','qa-verify'],['qa-verify','qa-notify']],rightsAction:'qa-notify',criticalRules:[{id:'qa-discard',kind:'selected'}],
         decisionPlans:[{id:'qa-plan',routes:['qa-office'],requiredActions:['qa-register','qa-verify','qa-notify'],order:[['qa-register','qa-verify'],['qa-verify','qa-notify']]}],
-        knowledge:{number:'9999',actDate:'2026-01-01',articles:['1'],correct:'qa-apply'},calendar:{anchor:'qa-registered',rule:'qa-30',start:'exclude_anchor',acceptedShifts:['no_shift']},
+        knowledge:{number:'9999',actDate:'2026-01-01',articles:['1'],correct:'qa-apply'},calendar:{anchor:'registered',rule:'calendar30',start:'exclude_anchor',acceptedShifts:['no_shift']},
         research:{bindings:[{recordId:'qa-record',fragmentId:'qa-fragment'}],accepted:['Учебный отдел QA'],aliases:['QA training office','QA培训部门'],normalize:'text',finding:'qa-found'},trap:'qa-respect'}
     },
     followup:{intro:T('Новое вымышленное обстоятельство: учебный отдел подтвердил получение тестовых документов.'),options:[O('qa-confirm','Зафиксировать тестовое подтверждение'),O('qa-close','Удалить тестовое подтверждение')],correct:'qa-confirm',explanation:T('В этом синтетическом контракте подтверждение фиксируется.'),success:T('Синтетический сценарий завершён.'),failure:T('Проверка интерфейса зафиксировала альтернативный выбор.')}

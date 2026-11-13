@@ -8,6 +8,8 @@ import {learningReviewView, workRecordView} from './learning-review.js';
 import {characterMedia, createMessengerMedia} from './media.js';
 import {createSourceReader} from '../js/source-reader.js';
 import {gameCopy} from '../localization/game-copy.js';
+import {authorityPickerView,routingOriginView,authoritySelectionLabel} from './authority-picker.js';
+import {caseTimelineView,workbookSummaryView,workbookFeedbackView} from './workbook.js';
 import {createUpdateAdapter, captureUpdateView, restoreUpdateView} from '../../../assets/js/platform-update-state.js';
 import {resourceURL, getReleaseContext} from '../../../assets/js/release-resources.js';
 
@@ -16,7 +18,8 @@ const presentationOwners = new WeakMap();
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const clone = value => JSON.parse(JSON.stringify(value));
 const workspacePages = ['reception','chat','documents','calendar','decision'];
-const blankDecision = () => ({procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:'',basisDocumentIds:[],reasoning:''});
+const blankWorkbook = () => ({referralDeadline:'',registrationTimely:false,routing:{recipientIds:[]}});
+const blankDecision = () => ({workbook:blankWorkbook(),procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:'',basisDocumentIds:[],reasoning:''});
 const blankAssessment = () => ({factId:'',applicationId:'',trapId:'',actDate:'',calendar:{anchor:'',rule:'',start:'',shift:''},research:{recordId:'',fragmentId:'',extracted:'',finding:''}});
 function restoreDecision(value, authored=false) {
   const base=blankDecision(), source=value&&typeof value==='object'?value:{};
@@ -28,6 +31,7 @@ function restoreDecision(value, authored=false) {
     for(const key of ['factId','applicationId','trapId','actDate'])if(typeof saved[key]==='string')a[key]=saved[key];
     for(const group of ['calendar','research'])for(const key of Object.keys(a[group]))if(typeof saved[group]?.[key]==='string')a[group][key]=saved[group][key];
   }
+  if(source.workbook&&typeof source.workbook==='object'){base.workbook={referralDeadline:typeof source.workbook.referralDeadline==='string'?source.workbook.referralDeadline:'',registrationTimely:source.workbook.registrationTimely===true,routing:{recipientIds:Array.isArray(source.workbook.routing?.recipientIds)?source.workbook.routing.recipientIds.filter(id=>typeof id==='string').slice(0,2):[]}};}
   return base;
 }
 const safeURL = value => {
@@ -41,7 +45,7 @@ export function loadAIStyle() {
   if (!document.getElementById(id)) {
     const link = document.createElement('link'); link.id = id; link.rel = 'stylesheet';
     link.href = new URL('./style.css', import.meta.url).href; document.head.append(link);
-    for(const href of ['./workbench.css','./learning-review.css','./cabinet.css']){const extraStyle=document.createElement('link');extraStyle.rel='stylesheet';extraStyle.href=new URL(href,import.meta.url).href;document.head.append(extraStyle);}
+    for(const href of ['./workbench.css','./learning-review.css','./cabinet.css','./authority-picker.css','./workbook.css']){const extraStyle=document.createElement('link');extraStyle.rel='stylesheet';extraStyle.href=new URL(href,import.meta.url).href;document.head.append(extraStyle);}
   }
 }
 
@@ -65,6 +69,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let locale = normalizeLocale(options.locale || options.getLocale?.() || document.documentElement.lang);
   let t = translator(locale), view = null, busy = false, disposed = false, paused = false, operation = '', error = null;
   let pending = null, draftMessage = '', decisionDraft = blankDecision(), tab = 'documents', selectedDoc = '', mode = 'training';
+  let routingSearch='',routingTerritory='';
   let confirmation = false, storageOkay = true, savedCaseId = '', restoring = false, requestedLocale = null, work = Promise.resolve();
   let completedNotified = '', updateAdapter = null, needsResume = false, pendingAt = null, mobilePane = 'desk';
   let enteringMessages = new Set(), enteringDocuments = new Set(), lastPendingRenderedId = '';
@@ -109,7 +114,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   restoreSaved(initial);
   const getToken = options.getIdToken || (backend?.getReceptionIdToken ? arg => backend.getReceptionIdToken(arg) : null);
   const api = createReceptionAPI({endpoint:config.endpoint, getIdToken:getToken, demo:config.demo === true,
-    fetch:options.fetch || globalThis.fetch, signal:lifetime.signal, timeoutMs:config.timeoutMs || 60000,buildId});
+    fetch:options.fetch || globalThis.fetch, signal:lifetime.signal, timeoutMs:config.timeoutMs || 60000,buildId,workbookVersion:config.workbookVersion??(config.demo?undefined:1)});
   const reader = createSourceReader(root, {signal:lifetime.signal, locale:() => locale,
     presentation:'embedded', getContainer:()=>root.querySelector('[data-source-reader-host]'),
     beforeOpen:()=>{if(page!=='documents'||tab!=='sources'){tab='sources';goPage('documents');}},
@@ -120,8 +125,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       applyReference(reference);notice=t('referenceAdded');goPage('decision');
     }});
   calendar=createCalendarWorkbench(root,{state:calendarState,locale,signal:lifetime.signal,
-    onChange:state=>{calendarState=state;persist();},
-    onUseDate:date=>{if(!active())return;decisionDraft.deadline=date;confirmation=false;notice=t('deadlineAdded');persist();render();}});
+    onChange:state=>{calendarState=state;if(active()&&view.case?.workbook){decisionDraft.workbook??=blankWorkbook();decisionDraft.workbook.referralDeadline=state.selectedDates?.referral||'';decisionDraft.deadline=state.selectedDates?.deadline||'';decisionDraft.workbook.registrationTimely=state.registrationTimely===true;confirmation=false;}persist();},
+    onUseDate:(date,{target='deadline'}={})=>{if(!active())return;if(target==='referral'&&view.case?.workbook){decisionDraft.workbook??=blankWorkbook();decisionDraft.workbook.referralDeadline=date;}else decisionDraft.deadline=date;confirmation=false;notice=t('deadlineAdded');persist();render();}});
 
   const text = value => localized(value, locale);
   const authoredText = value => gameCopy(text(value), locale);
@@ -165,7 +170,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     detailOpen.add('assessment-law');confirmation=false;persist();
   }
   function clearSessionDraft() {
-    view=null;initial=null;pending=null;error=null;notice='';needsResume=false;draftMessage='';decisionDraft=blankDecision();followupDraft='';
+    routingSearch='';routingTerritory='';view=null;initial=null;pending=null;error=null;notice='';needsResume=false;draftMessage='';decisionDraft=blankDecision();followupDraft='';
     detailOpen.clear();savedCaseId='';savedSessionId='';selectedDoc='';confirmation=false;tab='documents';mobilePane='desk';page='reception';
     pendingAt=null;lastPendingRenderedId='';calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={};drafts.clearCurrent();
     if(mode==='independent'&&!canIndependent())mode='training';
@@ -258,8 +263,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     return `<div class="rxa-foyer rxa-foyer-landing"><section class="rxa-welcome"><span class="rxa-eyebrow">${esc(t('welcome'))}</span><h1>${esc(t('hero'))}</h1><p>${esc(t('welcomeHint'))}</p></section><div class="rxa-foyer-grid">${scene(null,'')}${trainingSetup()}</div>${savedSessions()}${help()}</div>`;
   }
   function reception() {
-    const c=view.case||{}, unread=unreadCount();
-    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}<div class="rxa-foyer-grid">${scene(c.citizen,c.id)}<section class="rxa-active-reception"><h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2><p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p><p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>${unread?`<div class="rxa-new-message">${icon('talk')}<p>${esc(t('newMessageArrived'))}</p><span class="rxa-unread" aria-label="${esc(t('unread',{count:unread}))}">${unread}</span></div>`:''}<div class="rxa-actions">${button(t(active()?'openChat':'continueDecision'),'continue',{primary:true,glyph:'arrow'})}${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></section></div><details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary><div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3><div class="rxa-case-meta">${c.level?`<span>${esc(t('level'+c.level))}</span>`:''}${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p><p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div></details>${help()}<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>${savedSessions()}</div>`;
+    const c=view.case||{};
+    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}<div class="rxa-foyer-grid">${scene(c.citizen,c.id)}<section class="rxa-active-reception"><h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2><p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p><p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>${caseTimelineView(c.workbook,{locale})}${routingOriginView(c.workbook,{locale})}<div class="rxa-actions">${!active()?button(t('continueDecision'),'continue',{primary:true,glyph:'arrow'}):''}${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></section></div><details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary><div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3><div class="rxa-case-meta">${c.level?`<span>${esc(t('level'+c.level))}</span>`:''}${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p><p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div></details>${help()}<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>${savedSessions()}</div>`;
   }
 
   function messageTime(at) {
@@ -304,7 +309,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function sectionHint(id) {
     const d=decisionDraft,a=d.assessment;
     if(id==='facts')return d.basisDocumentIds.length?t('factsSelected',{count:d.basisDocumentIds.length}):a?.factId?t('trapSelected'):t('detailsEmpty');
-    if(id==='routing')return d.procedureId&&d.routeId?t('routingSelected'):t('detailsEmpty');
+    if(id==='routing')return d.procedureId&&(view?.case?.workbook?d.workbook?.routing.recipientIds.length:d.routeId)?t('routingSelected'):t('detailsEmpty');
     if(id==='actions')return d.actionIds.length?t('actionsSelected',{count:d.actionIds.length}):t('detailsEmpty');
     if(id==='law')return [d.law.number,d.law.article].filter(Boolean).join(' · ')||t('detailsEmpty');
     if(id==='research')return a?.research.recordId&&a?.research.fragmentId?t('researchSelected'):t('detailsEmpty');
@@ -321,16 +326,20 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     return `${optionsField('actionIds',t('actions'),c.actions,d.actionIds,true)}${selected.length?`<div class="rxa-order-heading"><h3>${esc(t('actionOrder'))}</h3><p class="rxa-panel-intro">${esc(t('actionOrderHint'))}</p></div><ol class="rxa-action-order" data-action-order>${selected.map((action,index)=>`<li><span><b>${index+1}.</b> ${esc(authoredText(action.label))}</span><div><button type="button" data-action="move-action" data-id="${esc(action.id)}" data-direction="up" data-focus="order-up-${esc(action.id)}" aria-label="${esc(t('moveUp',{action:authoredText(action.label)}))}" title="${esc(t('up'))}" ${locked||index===0?'disabled':''}>${icon('up')}</button><button type="button" data-action="move-action" data-id="${esc(action.id)}" data-direction="down" data-focus="order-down-${esc(action.id)}" aria-label="${esc(t('moveDown',{action:authoredText(action.label)}))}" title="${esc(t('down'))}" ${locked||index===selected.length-1?'disabled':''}>${icon('down')}</button></div></li>`).join('')}</ol>`:''}`;
   }
   function deadlineSummary() {
+    if(view?.case?.workbook)return workbookSummaryView(decisionDraft,{locale});
     const deadline=decisionDraft.deadline;
     return `<section class="rxa-deadline-summary" data-deadline-summary aria-labelledby="rxaDeadlineSummary"><div>${icon('calendar')}<div><h3 id="rxaDeadlineSummary">${esc(t('deadline'))}</h3>${deadline?`<time datetime="${esc(deadline)}">${esc(humanDate(deadline))}</time>`:`<p>${esc(t('deadlineNotSelected'))}</p>`}</div></div>${button(t(deadline?'reviewCalendar':'openCalendar'),'page',{quiet:true,extra:'data-page="calendar"',glyph:'arrow'})}</section>`;
   }
   function calendarRulesMarkup() {
+    if(view?.case?.workbook)return '';
     const a=view?.case?.assessment,d=decisionDraft;
     return a?assessmentBlock('calendar',t('calendarRuleSummary'),`${optionsField('assessment.calendar.anchor',t('calendarAnchor'),a.calendar.events,d.assessment.calendar.anchor)}${optionsField('assessment.calendar.rule',t('calendarRule'),a.calendar.rules,d.assessment.calendar.rule)}${optionsField('assessment.calendar.start',t('calendarStart'),a.calendar.starts,d.assessment.calendar.start)}${optionsField('assessment.calendar.shift',t('calendarShift'),a.calendar.lastDays,d.assessment.calendar.shift)}`):'';
   }
+  function calendarTask(){return view?.case?.workbook?{...view.case.workbook,hideEventList:true,autoCommit:true}:undefined;}
   function calendarPage() {
     const c=view.case||{},a=c.assessment,d=decisionDraft;
     const locked=!active()||paused||(busy&&operation==='decide')||pending?.op==='decide';
+    if(c.workbook)return `<section class="rxa-panel" id="rxaCalendarPanel" aria-labelledby="rxaPage-calendar">${caseHeading(t('calendar'))}${calendarWorkbenchView({state:calendarState,task:calendarTask(),locale,disabled:locked})}<div class="rxa-calendar-footer"><small class="rxa-save-note" data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</small>${button(t('openDecision'),'page',{quiet:true,extra:'data-page="decision"',glyph:'arrow'})}</div></section>`;
     return `<section class="rxa-panel" id="rxaCalendarPanel" aria-labelledby="rxaPage-calendar">${caseHeading(t('calendar'),t('calendarTask'))}${!active()?`<p class="rxa-fixed">${icon('lock')}<span>${esc(t('calendarReadOnly'))}</span></p>`:''}${calendarWorkbenchView({state:calendarState,events:a?.calendar?.events||[],date:c.date,locale,disabled:locked,rulesMarkup:calendarRulesMarkup()})}<details class="rxa-calendar-task" data-details="calendar-task"><summary>${icon('info')}<span>${esc(t('calendarTask'))}</span>${icon('chevron')}</summary><div>${c.date?`<p class="rxa-calendar-case-date"><span>${esc(t('caseDate'))}</span><time datetime="${esc(c.date)}">${esc(humanDate(c.date))}</time></p>`:''}<p>${esc(authoredText(c.deadlinePrompt)||t('calendarHint'))}</p></div></details><details class="rxa-calendar-manual" data-details="calendar-manual"><summary>${icon('edit')}<span>${esc(t('calendarManual'))}</span>${icon('chevron')}</summary><fieldset class="rxa-fieldset rxa-calendar-deadline"><legend>${esc(t('calendarDraftDate'))}</legend><div class="rxa-fields"><label class="rxa-field"><span>${esc(t('deadline'))}</span><input type="date" data-decision="deadline" data-focus="deadline" value="${esc(d.deadline)}" autocomplete="off" ${locked?'disabled':''}></label></div></fieldset></details><div class="rxa-calendar-footer"><small class="rxa-save-note" data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</small>${button(t('openDecision'),'page',{quiet:true,extra:'data-page="decision"',glyph:'arrow'})}</div></section>`;
   }
   function decision() {
@@ -340,7 +349,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const select=(name,label,values,value)=>`<label class="rxa-field full"><span>${esc(label)}</span><select data-decision="${esc(name)}" data-focus="${esc(name)}" ${locked?'disabled':''}><option value="">${esc(t('decisionEmpty'))}</option>${values.map(v=>`<option value="${esc(v.id)}" ${v.id===value?'selected':''}>${esc(authoredText(v.label??v.title))}</option>`).join('')}</select></label>`;
     const a=c.assessment,answer=d.assessment;
     const basis=`${optionsField('basisDocumentIds',t('basis'),readable.map(doc=>({id:doc.id,label:doc.title})),d.basisDocumentIds,true)}<p class="rxa-small rxa-muted">${esc(readable.length?t(a?'basisExactHint':'basisHint'):t('noReadDocuments'))}</p>${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}`;
-    const routing=optionsField('procedureId',t('procedure'),c.procedures,d.procedureId)+optionsField('routeId',t('route'),c.routes,d.routeId);
+    const routing=optionsField('procedureId',t('procedure'),c.procedures,d.procedureId)+(c.workbook?authorityPickerView(d.workbook?.routing,{locale,workflow:c.workbook,search:routingSearch,territoryId:routingTerritory,disabled:locked}):optionsField('routeId',t('route'),c.routes,d.routeId));
     const citations=selectedReferences.length?selectedReferences.map(reference=>`<div>${referenceView(reference,{locale,removable:!locked})}${button(t('useReference'),'use-reference',{quiet:true,disabled:locked,extra:`data-id="${esc(reference.id)}"`})}</div>`).join(''):`<p class="rxa-panel-intro">${esc(t('noReferences'))}</p>`;
     const references=`<section class="rxa-references">${citations}${button(t('chooseReferences'),'workspace',{quiet:true,extra:'data-panel="sources"',glyph:'sources'})}</section>`;
     const lawFields=`${a?`<p class="rxa-panel-intro">${esc(authoredText(a.knowledge.prompt))}</p>`:''}<div class="rxa-fields">${field('law.number',authoredText(a?.knowledge.numberLabel)||t('lawNumber'),d.law.number)}${a?field('assessment.actDate',authoredText(a.knowledge.dateLabel)||t('actDate'),answer.actDate,'date'):''}${field('law.article',authoredText(a?.knowledge.unitLabel)||t('lawArticle'),d.law.article)}</div>${a?optionsField('assessment.applicationId',t('applyLaw'),a.knowledge.options,answer.applicationId):''}`;
@@ -359,14 +368,14 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function followup() {
     const f=view.followup||{},locked=busy||pending||paused;
-    return `<section class="rxa-panel rxa-followup" role="tabpanel" id="rxaPanel" aria-labelledby="rxaPage-decision"><p class="rxa-eyebrow">${esc(t('fixed'))}</p><h2>${esc(t('followupTitle'))}</h2><p class="rxa-followup-intro">${esc(authoredText(f.intro))}</p><form data-followup-form><fieldset class="rxa-fieldset"><legend>${esc(t('followupQuestion'))}</legend>${(f.options||[]).map(option=>`<label class="rxa-choice"><input type="radio" name="rxa-followup" data-followup-choice data-focus="followup-${esc(option.id)}" value="${esc(option.id)}" ${followupDraft===option.id?'checked':''} ${locked?'disabled':''}><span>${esc(authoredText(option.label))}</span></label>`).join('')}</fieldset><div class="rxa-decision-footer"><small data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</small><button class="rxa-btn primary" type="submit" ${locked?'disabled':''}>${icon('check')}${esc(t('followupSubmit'))}</button></div></form><details class="rxa-assessment-block" data-details="fixed-decision"><summary>${esc(t('submittedDecision'))}</summary><div class="rxa-assessment-content"><p><strong>${esc(t('procedure'))}:</strong> ${esc(authoredText(view.case.procedures.find(p=>p.id===decisionDraft.procedureId)?.label))}</p><p><strong>${esc(t('route'))}:</strong> ${esc(authoredText(view.case.routes.find(p=>p.id===decisionDraft.routeId)?.label))}</p><ol class="rxa-fixed-actions">${decisionDraft.actionIds.map(id=>`<li>${esc(authoredText(view.case.actions.find(a=>a.id===id)?.label))}</li>`).join('')}</ol><p><strong>${esc(t('law'))}:</strong> ${esc(decisionDraft.law.number)} · ${esc(decisionDraft.assessment?.actDate||'')} · ${esc(decisionDraft.law.article)}</p><p><strong>${esc(t('deadline'))}:</strong> ${esc(decisionDraft.deadline)}</p><p class="rxa-fixed-reasoning">${esc(decisionDraft.reasoning)}</p></div></details></section>`;
+    return `<section class="rxa-panel rxa-followup" role="tabpanel" id="rxaPanel" aria-labelledby="rxaPage-decision"><p class="rxa-eyebrow">${esc(t('fixed'))}</p><h2>${esc(t('followupTitle'))}</h2><p class="rxa-followup-intro">${esc(authoredText(f.intro))}</p><form data-followup-form><fieldset class="rxa-fieldset"><legend>${esc(t('followupQuestion'))}</legend>${(f.options||[]).map(option=>`<label class="rxa-choice"><input type="radio" name="rxa-followup" data-followup-choice data-focus="followup-${esc(option.id)}" value="${esc(option.id)}" ${followupDraft===option.id?'checked':''} ${locked?'disabled':''}><span>${esc(authoredText(option.label))}</span></label>`).join('')}</fieldset><div class="rxa-decision-footer"><small data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</small><button class="rxa-btn primary" type="submit" ${locked?'disabled':''}>${icon('check')}${esc(t('followupSubmit'))}</button></div></form><details class="rxa-assessment-block" data-details="fixed-decision"><summary>${esc(t('submittedDecision'))}</summary><div class="rxa-assessment-content"><p><strong>${esc(t('procedure'))}:</strong> ${esc(authoredText(view.case.procedures.find(p=>p.id===decisionDraft.procedureId)?.label))}</p><p><strong>${esc(t('route'))}:</strong> ${esc(view.case.workbook?authoritySelectionLabel(decisionDraft.workbook?.routing,{locale}):authoredText(view.case.routes.find(p=>p.id===decisionDraft.routeId)?.label))}</p><ol class="rxa-fixed-actions">${decisionDraft.actionIds.map(id=>`<li>${esc(authoredText(view.case.actions.find(a=>a.id===id)?.label))}</li>`).join('')}</ol><p><strong>${esc(t('law'))}:</strong> ${esc(decisionDraft.law.number)} · ${esc(decisionDraft.assessment?.actDate||'')} · ${esc(decisionDraft.law.article)}</p><p><strong>${esc(t('deadline'))}:</strong> ${esc(decisionDraft.deadline)}</p><p class="rxa-fixed-reasoning">${esc(decisionDraft.reasoning)}</p></div></details></section>`;
   }
   function feedbackMarkup(feedback) {
     if (!feedback) return '';
     const evidenceIssueKeys = {selection:'evidenceSelection', unopened:'evidenceUnopened', fact:'evidenceFact'};
     const evidenceIssue = evidenceIssueKeys[feedback.evidenceIssue];
     const labelKeys = {procedure:'procedure',route:'route',routing:'route',actions:'actionsCriterion',law:'lawCriterion',deadline:'deadlineCriterion',evidence:'evidence',facts:'factsCriterion'};
-    return `<div class="rxa-score"><strong>${esc(feedback.score ?? '')}</strong><span>/ 100</span></div><table class="rxa-criteria"><thead><tr><th>${esc(t('criteria'))}</th><th>${esc(t('earned'))}</th></tr></thead><tbody>${(feedback.criteria||[]).map(row=>`<tr><td>${esc(text(row.label)||t(labelKeys[row.id]||row.id))}</td><td>${esc(row.earned)} / ${esc(row.max)}</td></tr>`).join('')}</tbody></table><p class="rxa-explanation">${esc(text(feedback.explanation))}</p>${evidenceIssue?`<p class="rxa-explanation">${esc(t(evidenceIssue))}</p>`:''}${Array.isArray(feedback.missingFacts)&&feedback.missingFacts.length?`<p class="rxa-explanation">${feedback.missingFacts.map(f=>esc(text(f))).join('\n')}</p>`:''}`;
+    return `${workbookFeedbackView(feedback,{locale,training:view.mode==='training'})}<div class="rxa-score"><strong>${esc(feedback.score ?? '')}</strong><span>/ 100</span></div><table class="rxa-criteria"><thead><tr><th>${esc(t('criteria'))}</th><th>${esc(t('earned'))}</th></tr></thead><tbody>${(feedback.criteria||[]).map(row=>`<tr><td>${esc(text(row.label)||t(labelKeys[row.id]||row.id))}</td><td>${esc(row.earned)} / ${esc(row.max)}</td></tr>`).join('')}</tbody></table><p class="rxa-explanation">${esc(text(feedback.explanation))}</p>${evidenceIssue?`<p class="rxa-explanation">${esc(t(evidenceIssue))}</p>`:''}${Array.isArray(feedback.missingFacts)&&feedback.missingFacts.length?`<p class="rxa-explanation">${feedback.missingFacts.map(f=>esc(text(f))).join('\n')}</p>`:''}`;
   }
   function review() {
     return `<section class="rxa-panel rxa-review"><div class="rxa-review-icon">${icon('check')}</div><h2>${esc(t(view.feedback?'reviewTitle':'fixed'))}</h2>${view.feedback?feedbackMarkup(view.feedback):`<p class="rxa-panel-intro">${esc(t('reviewHidden'))}</p>`}${learningReviewView({view,catalog,locale})}${workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-review-footer">${button(t(Number(view.caseIndex)+1<Number(view.caseCount)?'next':'finish'),'next',{primary:true,disabled:busy||!!pending,glyph:'arrow'})}</div></section>`;
@@ -403,16 +412,24 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(log && log.clientHeight>0 && log.dataset.caseId===view?.case?.id)chatScroll={top:log.scrollTop,bottom:log.scrollHeight-log.scrollTop-log.clientHeight<50};
     const scroll=chatScroll;
     if(root.dataset.caseId===(view?.case?.id||''))for(const el of root.querySelectorAll('details[data-details]')){if(el.open)detailOpen.add(el.dataset.details);else detailOpen.delete(el.dataset.details);}
+    const sameRenderedCase=root.dataset.sessionId===(view?.id||'')&&root.dataset.caseId===(view?.case?.id||'');
+    const resetReceptionScroll=Boolean(view&&!sameRenderedCase&&page==='reception');
     root.classList.add('reception-ai-root','rxa-cabinet'); root.setAttribute('lang',locale); root.setAttribute('aria-busy',String(busy)); root.dataset.mobilePane=mobilePane;root.dataset.page=page;
     root.dataset.sessionStatus=view?.status||'setup';
-    root.dataset.caseId=view?.case?.id||'';
-    const oldContent=root.querySelector('.rxa-page-content');if(oldContent?.dataset.page===page)pageScroll[page]=oldContent.scrollTop;
+    root.dataset.sessionId=view?.id||'';root.dataset.caseId=view?.case?.id||'';
+    const oldContent=root.querySelector('.rxa-page-content');if(sameRenderedCase&&oldContent?.dataset.page===page)pageScroll[page]=oldContent.scrollTop;
+    if(resetReceptionScroll)pageScroll.reception=0;
     markChatRead();
     root.innerHTML = header() + navigation() + `<main class="rxa-page-content" data-page="${page}">`+alerts() + (restoring?`<div class="rxa-loading" role="status"><div class="rxa-spinner" aria-hidden="true"></div>${esc(t('loading'))}</div>`:!view?landing():workspace())+'</main>';
     const content=root.querySelector('.rxa-page-content');if(content)content.scrollTop=Number(pageScroll[page])||0;
-    calendar.update({state:calendarState,rulesMarkup:calendarRulesMarkup(),events:view?.case?.assessment?.calendar?.events||[],date:view?.case?.date,locale,disabled:!active()||paused||pending?.op==='decide'||busy&&operation==='decide'});
+    calendar.update({state:calendarState,task:calendarTask(),rulesMarkup:calendarRulesMarkup(),events:view?.case?.assessment?.calendar?.events||[],date:view?.case?.date,locale,disabled:!active()||paused||pending?.op==='decide'||busy&&operation==='decide'});
     reader.refresh?.();media.refresh();
     updateViewport();
+    if(resetReceptionScroll){
+      const sessionId=view.id,caseId=view.case.id;
+      const toTop=()=>{if(disposed||page!=='reception'||view?.id!==sessionId||view?.case?.id!==caseId)return;const pane=root.querySelector('.rxa-page-content');if(pane)pane.scrollTop=0;root.scrollTop=0;window.scrollTo({top:0,behavior:'instant'});};
+      toTop();requestAnimationFrame(toTop);
+    }
     enteringMessages.clear(); enteringDocuments.clear();
     const pendingNode=root.querySelector('[data-pending-message]'); if(pendingNode)lastPendingRenderedId=pendingNode.dataset.messageId;
     resizeComposer();
@@ -451,7 +468,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     enteringMessages=new Set(['start','message','next'].includes(body.op)?(next.messages||[]).filter(m=>!previousIds.has(m.id)&&!(m.id===`${body.requestId}-user`&&lastPendingRenderedId===`pending-${body.requestId}`)).map(m=>m.id):[]);
     enteringDocuments=new Set(body.op==='message'?(next.documents||[]).filter(d=>!previousDocs.has(d.id)).map(d=>d.id):[]);
     view = next; mode = next.mode || mode; confirmation = false;
-    if (!sameCase) { decisionDraft = blankDecision(); followupDraft='';detailOpen=new Set();draftMessage = ''; selectedDoc = ''; tab = 'documents'; mobilePane='desk';page='reception';chatScroll={top:0,bottom:true};calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
+    if (!sameCase) { routingSearch='';routingTerritory='';decisionDraft = blankDecision(); followupDraft='';detailOpen=new Set();draftMessage = ''; selectedDoc = ''; tab = 'documents'; mobilePane='desk';page='reception';chatScroll={top:0,bottom:true};calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
     if (next.decision && next.status !== 'active') decisionDraft = restoreDecision(next.decision,!!next.case?.assessment);
     if (body.op === 'message' && draftMessage.trim() === body.text) draftMessage = '';
     if (body.op === 'document') {selectedDoc = body.documentId; tab='documents'; mobilePane='desk';page='documents';}
@@ -462,6 +479,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     // previous selection and scroll lock must not enter the next workspace.
     if(!sameCase||page!=='documents'||tab!=='sources')reader.close();
     if(next.case?.assessment)decisionDraft=restoreDecision(decisionDraft,true);else delete decisionDraft.assessment;
+    if(next.case?.workbook){decisionDraft.workbook??=blankWorkbook();calendarState={...calendarState,selectedDates:{referral:decisionDraft.workbook.referralDeadline,deadline:decisionDraft.deadline},registrationTimely:decisionDraft.workbook.registrationTimely};}else delete decisionDraft.workbook;
     savedSessionId=next.id;savedCaseId = next.case?.id || '';markChatRead();
     if (next.status === 'complete' && next.result?.attemptId && completedNotified !== next.result.attemptId) {
       completedNotified = next.result.attemptId;
@@ -535,11 +553,14 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     return required.find(path=>{const value=path.split('.').reduce((v,k)=>v?.[k],decisionDraft);return typeof value!=='string'||!value.trim();});
   }
   const input = event => {
+    if(event.target.matches('[data-routing-search]')&&active()){routingSearch=event.target.value.slice(0,120);render();return;}
     if (event.target.matches('[data-message-draft]')) {draftMessage=event.target.value;resizeComposer();updateDraftStatus();}
     else if(event.target.matches('[data-decision]')&&!['checkbox','radio'].includes(event.target.type))editDecision(event.target);
     else if(event.target.matches('[name=caseSearch]')){caseSearch=event.target.value.slice(0,120);trainingCaseId='';persist();render();}
   };
   const change = event => {
+    if(event.target.matches('[data-routing-territory]')&&active()){routingTerritory=event.target.value;render();return;}
+    if(event.target.matches('[data-routing-recipient]')&&active()&&view.case.workbook){decisionDraft.workbook??=blankWorkbook();const ids=decisionDraft.workbook.routing.recipientIds,limit=view.case.workbook.recipientLimit===2?2:1,id=event.target.value;decisionDraft.workbook.routing.recipientIds=event.target.checked?(limit===1?[id]:[...new Set([...ids,id])].slice(0,limit)):ids.filter(value=>value!==id);confirmation=false;persist();render();return;}
     if(event.target.matches('[data-language]'))void changeLocale(event.target.value);
     else if(event.target.matches('[data-decision]'))editDecision(event.target);
     else if(event.target.matches('[name=mode]')){if(event.target.value==='independent'&&!canIndependent())return;mode=event.target.value;persist();render();}

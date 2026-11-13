@@ -4,14 +4,14 @@ import os from 'node:os';
 import path from 'node:path';
 import {mkdtemp,readFile,readdir,rm,stat,writeFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
-import {createSyntheticReceptionCases,writeSyntheticReceptionCases,SYNTHETIC_VERSION} from '../scripts/reception-ai-qa-cases.mjs';
+import {createSyntheticReceptionCases,writeSyntheticReceptionCases,SYNTHETIC_VERSION,SYNTHETIC_IDS} from '../scripts/reception-ai-qa-cases.mjs';
 import {canonicalDecision} from '../scripts/reception-ai-qa-helpers.mjs';
 import {createReceptionService} from '../firebase/functions/reception-ai/service.mjs';
 import {createMemoryStore} from '../firebase/functions/reception-ai/store.mjs';
 import {validateCase} from '../firebase/functions/reception-ai/schema.mjs';
 
 test('synthetic CI fixture covers the phone browser contract and a complete authored service lifecycle',async()=>{
-  const cases=createSyntheticReceptionCases();assert.equal(cases.length,3);
+  const cases=createSyntheticReceptionCases();assert.equal(cases.length,SYNTHETIC_IDS.length);assert.equal(new Set(cases.map(c=>c.familyId)).size,8);
   for(const c of cases){
     assert.equal(validateCase(c).version,SYNTHETIC_VERSION);
     assert.match(c.public.title.ru,/Синтетическая/);
@@ -23,7 +23,7 @@ test('synthetic CI fixture covers the phone browser contract and a complete auth
   const provider={name:'mock',async generate({actorCase:c}){calls++;return{reply:'Передаю оба вымышленных тестовых документа.',revealedFactIds:c.facts.map(f=>f.id),releasedDocumentIds:c.documents.map(d=>d.id),usage:{inputTokens:0,outputTokens:0}};}};
   const service=createReceptionService({store:createMemoryStore(),cases,provider}),identity={uid:'synthetic-qa',studentKey:'synthetic-qa'};
   const catalog=await service.handle({op:'catalog',locale:'ru'},identity);
-  assert.deepEqual(catalog.cases.map(c=>c.level),[1,2,3]);
+  assert.deepEqual(catalog.cases.slice(0,3).map(c=>c.level),[1,2,3]);
   const call=async body=>(await service.handle(body,identity)).view;
   let view=await call({op:'start',requestId:'synthetic-start',mode:'training',locale:'ru',caseId:'complaint-routing',level:3});
   assert.equal(view.case.id,'complaint-routing');assert.equal(view.messages.length,1);assert.equal(view.documents.length,0);
@@ -43,8 +43,8 @@ test('synthetic CI fixture covers the phone browser contract and a complete auth
 test('synthetic files are reproducible and cannot overwrite different dossiers or enter the public site',async t=>{
   const directory=await mkdtemp(path.join(os.tmpdir(),'reception-synthetic-test-'));
   t.after(()=>rm(directory,{recursive:true,force:true}));
-  assert.equal((await writeSyntheticReceptionCases(directory)).caseCount,3);
-  assert.equal((await readdir(directory)).filter(name=>name.endsWith('.json')).length,3);
+  assert.equal((await writeSyntheticReceptionCases(directory)).caseCount,SYNTHETIC_IDS.length);
+  assert.equal((await readdir(directory)).filter(name=>name.endsWith('.json')).length,SYNTHETIC_IDS.length);
   await writeSyntheticReceptionCases(directory);
   const target=path.join(directory,'complaint-routing.json'),preserved='{"preserve":"different dossier"}\n';
   await writeFile(target,preserved);

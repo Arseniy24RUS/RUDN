@@ -96,3 +96,11 @@ test('the work record contains only the student choices and opened materials, in
   const html=workRecordView({view});assert.match(html,/data-work-record/);assert.match(html,/Моё обоснование/);assert.match(html,/Изученная квитанция/);assert.doesNotMatch(html,/Неоткрытое письмо|Ответ персонажа|<script>/);assert.ok(html.indexOf('Первое действие')<html.indexOf('Второе действие'));
   for(const locale of ['ru','en','zh'])assert.ok(workRecordView({view,locale}).includes('59-ФЗ'));
 });
+
+
+test('workbook records retain the selected recipient and both deadlines without using an answer key',()=>{
+  const view={status:'review',case:{routes:[]},decision:{routeId:'',actionIds:[],law:{},deadline:'2026-12-11',workbook:{referralDeadline:'2026-11-18',registrationTimely:false,routing:{recipientIds:['rkn']}}}};
+  const html=workRecordView({view});
+  assert.match(html,/Федеральная служба по надзору в сфере связи/);assert.match(html,/2026-12-11/);assert.match(html,/2026-11-18/);
+  assert.doesNotMatch(html,/Правильный ответ|Нужно исправить/);
+});

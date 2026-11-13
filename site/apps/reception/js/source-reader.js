@@ -161,7 +161,9 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
   }
   async function search(page=0){
     const owner=app,doc=current;if(!owner?.readerController||!doc)return;
-    const query=owner.root.querySelector('[data-input="reader-query"]')?.value||'';
+    const field=owner.root.querySelector('[data-input="reader-query"]');
+    const query=field?.value||'';
+    if(embedded&&field===field?.ownerDocument.activeElement)field.blur();
     setReaderQuery(owner,doc,query);
     const pending=owner.readerController.search(query,page);
     refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();
@@ -190,7 +192,13 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
         const section=owner.readerSpec.descriptor.sections.find(item=>item.id===target.dataset.id);
         if(section){rs.tocOpen=false;owner.root.querySelector('.ll-reader-grid').classList.remove('toc-open');refreshReaderToc(owner,doc);await owner.readerController.navigate(section.unitIds[0]);}
       }else if(target.dataset.action==='jump-unit'){
-        rs.searchOpen=embedded;refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();await owner.readerController.navigate(target.dataset.id);
+        if(embedded){
+          target.closest('.ll-search-results').hidden=true;
+          if(rs.tocOpen)dialog.querySelector('[data-action="toggle-toc"]')?.click();
+        }else{
+          rs.searchOpen=false;refreshReaderSearch(owner,doc);
+        }
+        await owner.readerController.navigate(target.dataset.id);
       }else if(target.dataset.action==='search-page')await search(Number(target.dataset.page));
     }catch(error){if(app===owner)fail(error);}
   }

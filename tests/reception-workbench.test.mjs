@@ -2,90 +2,66 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {BUNDLED_CALENDARS} from '../site/assets/js/calendar-bundled.js';
-import {normalizeCalendarWorkbenchState,reduceCalendarWorkbench,calendarInterval,calendarWorkbenchView,createCalendarWorkbench,sourceLinkView,referenceView} from '../site/apps/reception/ai/workbench.js';
+import {normalizeCalendarWorkbenchState,reduceCalendarWorkbench,calendarWorkbenchView,createCalendarWorkbench,sourceLinkView,referenceView} from '../site/apps/reception/ai/workbench.js';
 import {createSourceReference,referenceDecisionPatch,safeSourceURL} from '../site/apps/reception/js/source-reference.js';
 import {sourceDocumentForURL} from '../site/apps/reception/js/source-reader.js';
 
-const anchor=date=>reduceCalendarWorkbench({}, {type:'anchor',date});
+const selected=date=>reduceCalendarWorkbench({activeTarget:'deadline'}, {type:'select',date});
 const law={id:'reception-law59999',title:'Федеральный закон от 02.05.2006 N 59-ФЗ',number:'2 мая 2006 года N 59-ФЗ',sourceUrl:'https://www.consultant.ru/document/cons_doc_LAW_59999/'};
 const unit={id:'law59999-u89',label:'Статья 12. Сроки рассмотрения письменного обращения',text:'Письменное обращение рассматривается в течение 30 дней со дня регистрации.'};
 
-test('opening the calendar does not choose a legal anchor or a deadline for the student',()=>{
+test('a blank calendar chooses no dates and keeps the registration judgment unanswered',()=>{
   const state=normalizeCalendarWorkbenchState({}, {date:'2026-11-12',events:[{id:'received',date:'2026-10-08'}]});
-  assert.equal(state.month,'2026-11');assert.equal(state.anchorDate,'');assert.equal(state.selectedDate,'');
-  assert.deepEqual(state.marks,[]);assert.equal(calendarInterval(state),null);
-  const html=calendarWorkbenchView({state,date:'2026-11-12'});
-  assert.match(html,/data-calendar-action="use-date" disabled/);
+  assert.equal(state.month,'2026-10');assert.deepEqual(state.selectedDates,{referral:'',deadline:''});assert.equal(state.registrationTimely,null);
+  const html=calendarWorkbenchView({state});assert.match(html,/data-calendar-action="use-date" disabled/);
+  assert.doesNotMatch(html,/data-calendar-input="anchor"|anchor-event|step-day|step-working|step-month|Исходная дата|Дата дела|Инструменты расчёта/);
 });
 
-test('choosing an event starts a new manual count without marking or including the anchor',()=>{
-  const earlier={...anchor('2026-04-20'),marks:['2026-04-21'],monthOrigin:'2026-04-20'};
-  const state=reduceCalendarWorkbench(earlier,{type:'anchor',date:'2026-04-30'});
-  assert.equal(state.selectedDate,'2026-04-30');assert.equal(state.anchorDate,'2026-04-30');
-  assert.equal(state.monthOrigin,'');assert.deepEqual(state.marks,[]);
-  assert.deepEqual(calendarInterval(state),{calendar:0,working:0,direction:1});
-  assert.deepEqual(calendarInterval({...state,includeAnchor:true}),{calendar:1,working:1,direction:1});
+test('two manually chosen dates remain independent; clearing or changing one does not change the other',()=>{
+  let state=reduceCalendarWorkbench({}, {type:'select',date:'2026-05-07'});
+  state=reduceCalendarWorkbench(state,{type:'target',target:'deadline'});state=reduceCalendarWorkbench(state,{type:'select',date:'2026-05-30'});
+  assert.deepEqual(state.selectedDates,{referral:'2026-05-07',deadline:'2026-05-30'});assert.equal(state.selectedDate,'2026-05-30');
+  const cleared=reduceCalendarWorkbench(state,{type:'clear'});assert.deepEqual(cleared.selectedDates,{referral:'2026-05-07',deadline:''});
+  assert.deepEqual(reduceCalendarWorkbench(state,{type:'step',unit:'day'}),state,'Removed automatic calculator operations do nothing');
 });
 
-test('day and working-day steps use the published holiday and transfer calendar',()=>{
-  const state=anchor('2026-04-30');
-  assert.equal(reduceCalendarWorkbench(state,{type:'step',unit:'day'}).selectedDate,'2026-05-01');
-  const working=reduceCalendarWorkbench(state,{type:'step',unit:'working'});
-  assert.equal(working.selectedDate,'2026-05-04');assert.deepEqual(working.marks,['2026-05-04']);
-  assert.equal(reduceCalendarWorkbench(anchor('2025-10-31'),{type:'step',unit:'working'}).selectedDate,'2025-11-01','transferred working Saturday must be counted');
-  assert.equal(reduceCalendarWorkbench(anchor('2025-12-30'),{type:'step',unit:'working'}).selectedDate,'2026-01-12','New Year break must not be guessed from weekdays');
+test('registration is the student’s judgment and never inferred from the event dates',()=>{
+  const options={events:[{id:'received',date:'2026-04-01'},{id:'registered',date:'2026-04-20'}]};
+  const state=normalizeCalendarWorkbenchState({},options);assert.equal(state.registrationTimely,null);
+  const checked=reduceCalendarWorkbench(state,{type:'registration',value:true});assert.equal(checked.registrationTimely,true);
+  assert.equal(reduceCalendarWorkbench(checked,{type:'registration',value:false}).registrationTimely,false);
+  assert.equal(normalizeCalendarWorkbenchState(checked,options).registrationTimely,true);
 });
 
-test('repeated manual month steps keep the original day after February clipping',()=>{
-  const february=reduceCalendarWorkbench(anchor('2026-01-31'),{type:'step',unit:'month'});
-  const march=reduceCalendarWorkbench(february,{type:'step',unit:'month'});
-  assert.equal(february.selectedDate,'2026-02-28');assert.equal(march.selectedDate,'2026-03-31');
-  const newSelection=reduceCalendarWorkbench(march,{type:'select',date:'2026-03-15'});
-  assert.equal(reduceCalendarWorkbench(newSelection,{type:'step',unit:'month'}).selectedDate,'2026-04-15');
+test('old manually picked deadline migrates while anchors and calculator counts are discarded',()=>{
+  const state=normalizeCalendarWorkbenchState({anchorDate:'2026-04-30',selectedDate:'2026-05-04',marks:['2026-05-04'],includeAnchor:true});
+  assert.deepEqual(state.selectedDates,{referral:'',deadline:'2026-05-04'});assert.equal('anchorDate' in state,false);assert.equal('marks' in state,false);
+  assert.throws(()=>reduceCalendarWorkbench(state,{type:'select',date:'2026-02-30'}),/unavailable/);
+  assert.deepEqual(normalizeCalendarWorkbenchState({selectedDates:{deadline:'garbage',referral:'2026-02-30'}}).selectedDates,{referral:'',deadline:''});
 });
 
-test('counting is explicit, reversible and independent of the selected legal rule',()=>{
-  const selected=reduceCalendarWorkbench(anchor('2026-04-30'),{type:'select',date:'2026-05-04'});
-  assert.deepEqual(selected.marks,[]);assert.deepEqual(calendarInterval(selected),{calendar:4,working:1,direction:1});
-  const marked=reduceCalendarWorkbench(selected,{type:'mark'});
-  assert.deepEqual(marked.marks,['2026-05-04']);assert.deepEqual(reduceCalendarWorkbench(marked,{type:'mark'}).marks,[]);
-  assert.deepEqual(reduceCalendarWorkbench(marked,{type:'clear'}).marks,[]);
-  const moved=reduceCalendarWorkbench(marked,{type:'month',month:'2026-06'});
-  assert.equal(moved.selectedDate,'2026-05-04');assert.deepEqual(moved.marks,marked.marks);
+test('coloured sent received and registered events coexist on the same day without selecting an answer',()=>{
+  const events=['sent','received','registered'].map(id=>({id,label:id,date:'2026-04-30'}));
+  const html=calendarWorkbenchView({events});for(const type of ['sent','received','registered'])assert.ok(html.includes('class="event-'+type+'"'));
+  assert.match(html,/30 апреля 2026[^>]+sent, received, registered/);assert.doesNotMatch(html,/aria-pressed="true" aria-label=/);
+  assert.match(html,/<strong>3<\/strong>/);assert.match(html,/<strong>7<\/strong>/);assert.match(html,/<strong>30<\/strong>/);
 });
 
-test('unavailable years fail visibly instead of manufacturing production-calendar days',()=>{
-  const lastYear=Math.max(...Object.keys(BUNDLED_CALENDARS.years).map(Number));
-  const last=anchor(`${lastYear}-12-31`);
-  assert.throws(()=>reduceCalendarWorkbench(last,{type:'step',unit:'day'}),/unavailable/);
-  assert.throws(()=>reduceCalendarWorkbench(last,{type:'anchor',date:`${lastYear+1}-01-01`}),/unavailable/);
-  assert.equal(last.selectedDate,`${lastYear}-12-31`);
-  const restored=normalizeCalendarWorkbenchState({anchorDate:'2026-02-30',selectedDate:'garbage',marks:['2026-04-30','2026-04-30','garbage']},{date:'2026-11-12'});
-  assert.equal(restored.anchorDate,'');assert.equal(restored.selectedDate,'');assert.deepEqual(restored.marks,['2026-04-30']);
-});
-
-test('calendar presents shortened days, rest days and backward intervals in every UI language',()=>{
+test('all three languages retain calendar dates, holiday markers and a complete keyboard grid',()=>{
   for(const locale of ['ru','en','zh']){
-    const state=reduceCalendarWorkbench(anchor('2026-04-30'),{type:'select',date:'2026-04-27'});
-    const html=calendarWorkbenchView({state,locale,events:[{id:'event',date:'2026-04-30',label:{ru:'Получено',en:'Received',zh:'收到'}}]});
-    assert.ok(html.includes('data-calendar-input="anchor"'));assert.match(html,/shortened[^>]+data-date="2026-04-30"/);
-    assert.match(html,/class="rxw-calendar-day rest/);assert.ok(!html.includes('undefined'));
-    assert.equal(calendarInterval(state).direction,-1);
+    const html=calendarWorkbenchView({locale,state:{month:'2026-04'}});
+    assert.match(html,/shortened[^>]+data-calendar-action="choose-date" data-date="2026-04-30"/);
+    assert.match(html,/data-calendar-details="norms"/);assert.equal((html.match(/data-calendar-action="choose-date"/g)||[]).length%7,0);
+    assert.doesNotMatch(html,/step-day|anchor-event/);
   }
 });
 
-test('month grid completes adjacent weeks without exposing unsupported production-calendar years',()=>{
+test('month edges include adjacent supported dates and never expose unavailable years',()=>{
   const dates=html=>[...html.matchAll(/data-calendar-action="choose-date" data-date="([\d-]+)"/g)].map(match=>match[1]);
-  const november=calendarWorkbenchView({state:{month:'2026-11'},date:'2026-11-12'}),cells=dates(november);
-  assert.equal(cells.length,42);assert.equal(cells[0],'2026-10-26');assert.equal(cells.at(-1),'2026-12-06');
+  const november=calendarWorkbenchView({state:{month:'2026-11'}}),cells=dates(november);
   assert.equal(new Set(cells).size,cells.length);assert.match(november,/outside-month[^>]+data-date="2026-12-01"/);
-  assert.match(november,/case-date[^>]+data-date="2026-11-12"/);
   const years=Object.keys(BUNDLED_CALENDARS.years).sort();
-  for(const month of [years[0]+'-01',years.at(-1)+'-12']){
-    const html=calendarWorkbenchView({state:{month}}),supported=dates(html);
-    assert.ok(supported.every(date=>BUNDLED_CALENDARS.years[date.slice(0,4)]));
-    assert.equal((supported.length+(html.match(/class="rxw-calendar-empty"/g)||[]).length)%7,0);
-  }
+  for(const month of [years[0]+'-01',years.at(-1)+'-12']){const html=calendarWorkbenchView({state:{month}}),supported=dates(html);assert.ok(supported.every(date=>BUNDLED_CALENDARS.years[date.slice(0,4)]));assert.equal((supported.length+(html.match(/class="rxw-calendar-empty"/g)||[]).length)%7,0);}
 });
 
 test('selected passage carries a stable citation with the original act metadata',()=>{
@@ -135,22 +111,32 @@ function hostFixture(){
   return root;
 }
 
-test('delegated calendar survives app panel replacement; only the explicit use action transfers a date',()=>{
+test('delegated calendar survives panel replacement and transfers only the explicitly chosen target',()=>{
   const root=hostFixture(),changes=[],used=[];
-  const calendar=createCalendarWorkbench(root,{date:'2026-04-30',onChange:state=>changes.push(state),onUseDate:date=>used.push(date)});
-  root.fire('click',{calendarAction:'anchor-event',date:'2026-04-30'});
-  root.fire('click',{calendarAction:'step-working'});
-  assert.equal(calendar.getState().selectedDate,'2026-05-04');assert.equal(changes.length,2);assert.deepEqual(used,[]);
+  const calendar=createCalendarWorkbench(root,{date:'2026-04-30',onChange:state=>changes.push(state),onUseDate:(date,meta)=>used.push({date,...meta})});
+  root.fire('click',{calendarAction:'event-month',date:'2026-04-30'});assert.deepEqual(calendar.getState().selectedDates,{referral:'',deadline:''});
+  root.fire('click',{calendarAction:'choose-date',date:'2026-05-07'});assert.deepEqual(used,[]);
   root.replace();calendar.update({locale:'en'});assert.match(root.slot.innerHTML,/Deadline calendar/);
-  root.fire('click',{calendarAction:'use-date'});assert.deepEqual(used,['2026-05-04']);
-  const snapshot=calendar.getState();snapshot.marks.push('2026-05-05');assert.deepEqual(calendar.getState().marks,['2026-05-04']);
-  calendar.destroy();root.fire('click',{calendarAction:'step-day'});assert.equal(calendar.getState().selectedDate,'2026-05-04');
+  root.fire('click',{calendarAction:'use-date'});assert.deepEqual(used,[{date:'2026-05-07',target:'referral'}]);
+  root.fire('click',{calendarAction:'target',target:'deadline'});root.fire('click',{calendarAction:'choose-date',date:'2026-05-30'});root.fire('click',{calendarAction:'use-date'});
+  assert.deepEqual(used[1],{date:'2026-05-30',target:'deadline'});
+  const snapshot=calendar.getState();snapshot.selectedDates.deadline='2026-06-01';assert.equal(calendar.getState().selectedDates.deadline,'2026-05-30');
+  calendar.destroy();root.fire('click',{calendarAction:'choose-date',date:'2026-06-02'});assert.equal(calendar.getState().selectedDate,'2026-05-30');
 });
 
-test('locked decisions, aborts and unavailable date edits cannot silently change a saved count',()=>{
-  const root=hostFixture(),signal=new AbortController(),calendar=createCalendarWorkbench(root,{state:anchor('2026-04-30'),signal:signal.signal});
-  calendar.update({disabled:true});root.fire('click',{calendarAction:'step-day'});assert.equal(calendar.getState().selectedDate,'2026-04-30');
-  calendar.update({disabled:false});root.fire('change',{calendarInput:'anchor'},{value:'2026-02-30'});
-  assert.equal(calendar.getState().anchorDate,'2026-04-30');assert.match(root.slot.status.textContent,/вне загруженного/);
-  signal.abort();root.fire('click',{calendarAction:'step-day'});assert.equal(calendar.getState().selectedDate,'2026-04-30');
+test('locked decisions, aborts and invalid dates cannot change saved choices',()=>{
+  const root=hostFixture(),signal=new AbortController(),calendar=createCalendarWorkbench(root,{state:selected('2026-04-30'),signal:signal.signal});
+  calendar.update({disabled:true});root.fire('click',{calendarAction:'choose-date',date:'2026-05-01'});root.fire('change',{calendarInput:'registration-timely'},{checked:true});assert.equal(calendar.getState().selectedDate,'2026-04-30');assert.equal(calendar.getState().registrationTimely,null);
+  calendar.update({disabled:false});root.fire('click',{calendarAction:'choose-date',date:'2026-02-30'});assert.equal(calendar.getState().selectedDate,'2026-04-30');assert.match(root.slot.status.textContent,/вне загруженного/);
+  signal.abort();root.fire('click',{calendarAction:'choose-date',date:'2026-05-01'});assert.equal(calendar.getState().selectedDate,'2026-04-30');
+});
+
+
+test('calendar legal help contains the requested complete provisions with highlighted periods',()=>{
+  const html=calendarWorkbenchView({locale:'ru'});
+  assert.match(html,/Федеральный закон от 02.05.2006 № 59-ФЗ/);
+  assert.match(html,/обязательной регистрации в течение/);
+  assert.match(html,/<strong>трех<\/strong> дней/);
+  assert.match(html,/<strong>семи<\/strong> дней со дня регистрации/);
+  assert.match(html,/<strong>30<\/strong> дней со дня регистрации письменного обращения/);
 });

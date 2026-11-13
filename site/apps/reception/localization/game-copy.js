@@ -145,6 +145,8 @@ export function gameCopy(value, locale = 'ru') {
   for (const pattern of removedSentences[locale] || []) text = text.replace(pattern, '');
   const leading = String(value ?? '').match(/^\s*/)[0], trailing = String(value ?? '').match(/\s*$/)[0];
   text = text.replace(/ {2,}/g, ' ').trim();
+  if(locale==='ru')text=text.replace(/^[Дд]ело\.\s*(?=Вы готовите)/u,'');
+  if(locale==='en')text=text.replace(/^Case\.\s*(?=You prepare|You are preparing)/u,'');
   if (/^\p{Lu}/u.test(String(value ?? '').trim()) && /^\p{Ll}/u.test(text)) text = text[0].toLocaleUpperCase(locale) + text.slice(1);
   return text ? leading + text + trailing : '';
 }

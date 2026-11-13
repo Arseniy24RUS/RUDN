@@ -24,7 +24,7 @@ window.innerWidth=320;
 globalThis.visualViewport=window.visualViewport=Object.assign(new window.EventTarget(),{height:760,width:320,offsetTop:0,scale:1});
 globalThis.matchMedia=window.matchMedia=()=>({matches:false,addEventListener(){},removeEventListener(){}});
 window.HTMLElement.prototype.scrollIntoView=function(){};
-window.scrollBy=function(){};
+window.scrollBy=function(){};window.scrollTo=function(){};
 window.HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
 window.HTMLDialogElement.prototype.close=function(){this.removeAttribute('open');};
 window.HTMLMediaElement.prototype.canPlayType=function(){return '';};
@@ -138,13 +138,16 @@ try{
   assert.equal(root.querySelector('[data-calendar-workbench], [data-decision="deadline"]'),null);
   await click('[data-deadline-summary] [data-action="page"][data-page="calendar"]');
   assert.equal(root.dataset.page,'calendar');
-  await click('[data-calendar-action="anchor-event"]');
-  assert.equal(find('[data-calendar-details="tools"]').open,false);
-  await click('[data-calendar-details="tools"] > summary');
-  assert.equal(find('[data-calendar-details="tools"]').open,true);
-  await click('[data-calendar-action="step-working"]');
-  assert.equal(find('[data-calendar-details="tools"]').open,true,'Calendar tools remain open while their controller updates');
-  assert.equal(find('[data-decision="deadline"]').value,'','Counting alone does not submit a deadline');
+  await click('[data-calendar-action="event-month"]');
+  assert.equal(find('[data-calendar-details="norms"]').open,false);
+  await click('[data-calendar-details="norms"] > summary');
+  assert.equal(find('[data-calendar-details="norms"]').open,true);
+  await click('[data-calendar-action="target"][data-target="deadline"]');
+  await click('[data-calendar-action="month-next"]');
+  await click('[data-calendar-action="choose-date"][data-date="2026-05-04"]');
+  assert.equal(find('[data-calendar-details="norms"]').open,true,'Legal reference stays open while choosing dates');
+  assert.equal(root.querySelector('[data-calendar-input="anchor"], [data-calendar-action="step-day"]'),null);
+  assert.equal(find('[data-decision="deadline"]').value,'','Picking alone does not submit a deadline');
   await click('[data-calendar-action="use-date"]');
   assert.equal(find('[data-decision="deadline"]').value,'2026-05-04');
   const before=savedDraft();assert.equal(before.selectedReferences.length,1);assert.equal(before.calendarState.selectedDate,'2026-05-04');
@@ -156,12 +159,12 @@ try{
   assert.equal(find('[data-deadline-summary] time').dateTime,'2026-05-04');
   await click('[data-action="page"][data-page="calendar"]');
   assert.equal(find('[data-decision="deadline"]').value,'2026-05-04');
-  assert.equal(find('[data-calendar-details="tools"]').open,true,'Page switching retains the opened calendar tools');
+  assert.equal(find('[data-calendar-details="norms"]').open,true,'Page switching retains the opened legal reference');
   await handle();handle=await mountReceptionAI(root,options,config);
   assert.equal(root.dataset.page,'calendar','Remount restores the Calendar destination');
   assert.equal(root.dataset.mobilePane,'desk','Mobile pane state keeps the restored calendar visible');
   assert.equal(find('[data-decision="deadline"]').value,'2026-05-04');
-  assert.equal(find('[data-calendar-details="tools"]').open,true,'Remount restores the calendar tools state');
+  assert.equal(find('[data-calendar-details="norms"]').open,true,'Remount restores the legal reference state');
   await click('[data-action="page"][data-page="decision"]');
   assert.deepEqual(savedDraft().selectedReferences,before.selectedReferences);
   assert.deepEqual(savedDraft().calendarState,before.calendarState);
@@ -251,7 +254,7 @@ try{
     assert.equal(await legacyReader.open(lawURL),true);legacyReader.destroy();assert.equal(document.querySelector('.rx-source-dialog'),null);
     assert.equal(await legacyReader.open(lawURL),false,'A destroyed legacy reader cannot reopen');
   }finally{legacyReader.destroy();legacyHost.remove();}
-  console.log(JSON.stringify({passed:true,checks:['real corpus embedded inside Documents','embedded table of contents and real corpus search','native partial text selection','legal fields and visible citation','reader close after root rerender','manual calendar to deadline','calendar tools persist across updates, navigation and remount','page transitions','full draft remount','saved citation returns to Documents for repeat selection','close without attaching','320px calendar and five-tab cabinet CSS cascade','reader cleanup on app unmount','missing deadline redirects and focuses Calendar','Calendar deadline shared with decision confirmation','legacy modal reader open, close and destroy'],fileRequests,apiRequests},null,2));
+  console.log(JSON.stringify({passed:true,checks:['real corpus embedded inside Documents','embedded table of contents and real corpus search','native partial text selection','legal fields and visible citation','reader close after root rerender','manual calendar to deadline','legal reference persist across updates, navigation and remount','page transitions','full draft remount','saved citation returns to Documents for repeat selection','close without attaching','320px calendar and five-tab cabinet CSS cascade','reader cleanup on app unmount','missing deadline redirects and focuses Calendar','Calendar deadline shared with decision confirmation','legacy modal reader open, close and destroy'],fileRequests,apiRequests},null,2));
 }finally{
   await handle();stylesObserver.disconnect();dom.window.close();
 }

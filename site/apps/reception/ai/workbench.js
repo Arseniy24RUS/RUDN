@@ -7,9 +7,9 @@ export {createSourceReference,referenceDecisionPatch} from '../js/source-referen
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const copy={
-  ru:{title:'Календарь сроков',intro:'Выберите исходное событие, отсчитайте срок и перенесите выбранную дату в решение.',anchor:'Исходная дата',event:'Дата события',chooseAnchor:'Выберите событие или задайте дату',prev:'Предыдущий месяц',next:'Следующий месяц',month:'Месяц',year:'Год',week:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],selected:'Выбрана дата',none:'Дата ещё не выбрана',working:'Рабочий день',rest:'Нерабочий день',holiday:'Праздник',transfer:'Перенесённый выходной',workingTransfer:'Рабочая суббота / воскресенье',shortened:'Сокращённый рабочий день',anchorLegend:'Исходный день',markedLegend:'Ваша отметка',mark:'Отметить день',unmark:'Убрать отметку',stepDay:'+ 1 день',stepWorking:'+ 1 рабочий',stepMonth:'+ 1 месяц',include:'Учитывать исходный день в подсчёте',elapsed:'В выбранном интервале',before:'До исходной даты',calendarDays:'календарных дней',workingDays:'рабочих дней',marked:'Отмечено вручную',clear:'Очистить отметки',use:'Внести дату в решение',unavailable:'Эта дата вне загруженного производственного календаря.',scope:'Федеральная пятидневная рабочая неделя. Правило срока выберите по документу; календарь показывает только ваш расчёт.',sources:'Календарные данные',open:'Открыть документ',external:'Открыть источник',remove:'Убрать из черновика',reference:'Выбранное правовое основание',truncated:'Фрагмент сокращён до 12 000 знаков.',noSource:'Источник недоступен',days:'дней'},
-  en:{title:'Deadline calendar',intro:'Choose the starting event, count the period and add your chosen date to the decision.',anchor:'Starting date',event:'Event date',chooseAnchor:'Choose an event or enter a date',prev:'Previous month',next:'Next month',month:'Month',year:'Year',week:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],selected:'Selected date',none:'No date selected',working:'Working day',rest:'Non-working day',holiday:'Public holiday',transfer:'Transferred day off',workingTransfer:'Working weekend',shortened:'Shortened working day',anchorLegend:'Starting day',markedLegend:'Your mark',mark:'Mark this day',unmark:'Remove mark',stepDay:'+ 1 day',stepWorking:'+ 1 workday',stepMonth:'+ 1 month',include:'Include the starting day in the count',elapsed:'In the selected interval',before:'Before the starting date',calendarDays:'calendar days',workingDays:'working days',marked:'Marked manually',clear:'Clear marks',use:'Use date in decision',unavailable:'This date is outside the available production calendar.',scope:'Russian federal five-day working week. Choose the applicable rule from the document; this calendar shows only your own count.',sources:'Calendar data',open:'Open document',external:'Open source',remove:'Remove from draft',reference:'Selected legal basis',truncated:'Passage shortened to 12,000 characters.',noSource:'Source unavailable',days:'days'},
-  zh:{title:'期限日历',intro:'选择起始事件，计算期限，再将所选日期填入决定。',anchor:'起始日期',event:'事件日期',chooseAnchor:'选择事件或输入日期',prev:'上个月',next:'下个月',month:'月份',year:'年份',week:['一','二','三','四','五','六','日'],selected:'所选日期',none:'尚未选择日期',working:'工作日',rest:'非工作日',holiday:'法定节假日',transfer:'调休休息日',workingTransfer:'周末工作日',shortened:'缩短工时的工作日',anchorLegend:'起始日',markedLegend:'您的标记',mark:'标记该日',unmark:'取消标记',stepDay:'+ 1 天',stepWorking:'+ 1 工作日',stepMonth:'+ 1 个月',include:'将起始日计入天数',elapsed:'所选区间内',before:'起始日期之前',calendarDays:'个日历日',workingDays:'个工作日',marked:'手动标记',clear:'清除标记',use:'将日期填入决定',unavailable:'此日期超出了已加载的工作日历范围。',scope:'俄罗斯联邦每周五天工作制。请依据文件选择期限规则；日历仅显示您自己的计算。',sources:'日历数据',open:'打开文件',external:'打开来源',remove:'从草稿中移除',reference:'所选法律依据',truncated:'片段已缩短至 12,000 个字符。',noSource:'来源不可用',days:'天'},
+  ru:{title:'Календарь сроков',prev:'Предыдущий месяц',next:'Следующий месяц',month:'Месяц',year:'Год',week:['Пн','Вт','Ср','Чт','Пт','Сб','Вс'],working:'Рабочий день',rest:'Нерабочий день',holiday:'Праздник',transfer:'Перенесённый выходной',workingTransfer:'Рабочая суббота / воскресенье',shortened:'Сокращённый рабочий день',unavailable:'Эта дата вне загруженного производственного календаря.',sources:'Календарные данные',open:'Открыть документ',external:'Открыть источник',remove:'Убрать из черновика',reference:'Выбранное правовое основание',truncated:'Фрагмент сокращён до 12 000 знаков.',noSource:'Источник недоступен',},
+  en:{title:'Deadline calendar',prev:'Previous month',next:'Next month',month:'Month',year:'Year',week:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],working:'Working day',rest:'Non-working day',holiday:'Public holiday',transfer:'Transferred day off',workingTransfer:'Working weekend',shortened:'Shortened working day',unavailable:'This date is outside the available production calendar.',sources:'Calendar data',open:'Open document',external:'Open source',remove:'Remove from draft',reference:'Selected legal basis',truncated:'Passage shortened to 12,000 characters.',noSource:'Source unavailable',},
+  zh:{title:'期限日历',prev:'上个月',next:'下个月',month:'月份',year:'年份',week:['一','二','三','四','五','六','日'],working:'工作日',rest:'非工作日',holiday:'法定节假日',transfer:'调休休息日',workingTransfer:'周末工作日',shortened:'缩短工时的工作日',unavailable:'此日期超出了已加载的工作日历范围。',sources:'日历数据',open:'打开文件',external:'打开来源',remove:'从草稿中移除',reference:'所选法律依据',truncated:'片段已缩短至 12,000 个字符。',noSource:'来源不可用',},
 };
 const localeKey=value=>value==='en'||value==='zh'?value:'ru';
 const languageTag=locale=>({ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[localeKey(locale)]);
@@ -18,135 +18,81 @@ const calendarYears=snapshot=>Object.keys(snapshot.years||{}).sort();
 function knownDate(value,snapshot){const date=parseDateOnly(value);return date&&snapshot.years?.[date.slice(0,4)]?date:'';}
 function monthExists(value,snapshot){return /^\d{4}-\d{2}$/.test(value||'')&&Boolean(knownDate(value+'-01',snapshot));}
 function nextMonth(month,delta){return addCalendarMonths(month+'-01',delta).slice(0,7);}
+const calendarCopy={
+  ru:{title:'Календарь сроков',intro:'Рассчитайте два срока от даты регистрации: 7 дней — на передачу по компетенции, 30 дней — на рассмотрение обращения.',note:'Это альтернативные действия, а не 7 + 30 дней. У нового адресата срок рассмотрения начинается с его регистрации обращения.',counting:'Для этого задания начинайте отсчёт со следующего дня. Считайте все календарные дни, включая выходные; последнюю дату не переносите.',referral:'Передать по компетенции до',deadline:'Рассмотреть обращение до',pick:'Выберите срок, затем отметьте дату в календаре.',timely:'Обращение зарегистрировано своевременно',judgment:'Моя оценка регистрации',norms:'Сроки рассмотрения обращений',sent:'Отправлено',received:'Поступило',registered:'Зарегистрировано',clearDate:'Очистить выбранную дату',empty:'Дата не выбрана',use:'Сохранить выбранную дату',saved:'Дата сохранена',
+    rules:['Статья 8, часть 2. Письменное обращение подлежит обязательной регистрации в течение трех дней с момента поступления в государственный орган, орган местного самоуправления или должностному лицу.','Статья 8, часть 3. Письменное обращение, содержащее вопросы, решение которых не входит в компетенцию данных государственного органа, органа местного самоуправления или должностного лица, направляется в течение семи дней со дня регистрации в соответствующий орган или соответствующему должностному лицу, в компетенцию которых входит решение поставленных в обращении вопросов, с уведомлением гражданина, направившего обращение, о переадресации обращения.','Статья 12, часть 1. Письменное обращение, поступившее в государственный орган, орган местного самоуправления или должностному лицу в соответствии с их компетенцией, рассматривается в течение 30 дней со дня регистрации письменного обращения.']},
+  en:{title:'Deadline calendar',intro:'Calculate two dates from registration: 7 days to refer the matter to the competent body, and 30 days to consider the appeal.',note:'These are alternative actions, not 7 + 30 days. A new recipient counts its consideration period from its own registration.',counting:'For this exercise, start counting on the following day. Count every calendar day, including weekends; do not shift the last date.',referral:'Refer to the competent body by',deadline:'Consider the appeal by',pick:'Choose a deadline, then select its date on the calendar.',timely:'The appeal was registered on time',judgment:'My assessment of registration',norms:'Legal provisions',sent:'Sent',received:'Received',registered:'Registered',clearDate:'Clear selected date',empty:'No date selected',use:'Save selected date',saved:'Date saved',
+    rules:['Register an appeal within 3 days of receipt (Article 8, part 2).','Refer matters outside the body’s competence within 7 days of registration and notify the applicant (Article 8, part 3).','The competent body’s general consideration period is 30 days from registration (Article 12, part 1).']},
+  zh:{title:'期限日历',intro:'从登记日期计算两个期限：7天内转送有权机关，30天内审查诉求。',note:'这是两种不同的处理方式，不是7天加30天。新接收机关从其自身登记日期计算审查期限。',counting:'本练习从次日起计数。计入周末等所有日历日，不顺延最后一天。',referral:'转送有权机关的截止日',deadline:'审查诉求的截止日',pick:'先选择期限，再在日历中选择日期。',timely:'诉求已及时登记',judgment:'我对登记是否及时的判断',norms:'法律规定',sent:'已发送',received:'已收到',registered:'已登记',clearDate:'清除所选日期',empty:'尚未选择日期',use:'保存所选日期',saved:'日期已保存',
+    rules:['收到诉求后3天内登记（第8条第2款）。','不属于本机关职权范围的事项，应在登记之日起7天内转送并通知申请人（第8条第3款）。','有权机关的一般审查期限为登记之日起30天（第12条第1款）。']},
+};
+const targetIds=new Set(['referral','deadline']);
+function taskTargets(options){const t=calendarCopy[localeKey(options.locale)];const rows=options.task?.targets||[{id:'referral',label:t.referral},{id:'deadline',label:t.deadline}];const unique=new Map();for(const row of rows){if(targetIds.has(row.id))unique.set(row.id,{id:row.id,label:localText(row.label,options.locale)||t[row.id]});}return unique.size?[...unique.values()]:[{id:'deadline',label:t.deadline}];}
+function taskEvents(options){return options.task?.events||options.events||[];}
 export function normalizeCalendarWorkbenchState(value={},options={}){
-  const snapshot=options.snapshot||BUNDLED_CALENDARS;
-  const fallback=knownDate(options.date,snapshot)||(options.events||[]).map(event=>knownDate(event.date,snapshot)).find(Boolean)||`${calendarYears(snapshot)[0]}-01-01`;
-  const anchorDate=knownDate(value?.anchorDate,snapshot),selectedDate=knownDate(value?.selectedDate,snapshot);
-  return {anchorDate,selectedDate,monthOrigin:knownDate(value?.monthOrigin,snapshot),month:monthExists(value?.month,snapshot)?value.month:(selectedDate||anchorDate||fallback).slice(0,7),marks:[...new Set((Array.isArray(value?.marks)?value.marks:[]).map(date=>knownDate(date,snapshot)).filter(Boolean))].sort().slice(0,400),includeAnchor:Boolean(value?.includeAnchor)};
+  const snapshot=options.snapshot||BUNDLED_CALENDARS,targets=taskTargets(options);
+  const fallback=taskEvents(options).map(event=>knownDate(event.date,snapshot)).find(Boolean)||knownDate(options.date,snapshot)||`${calendarYears(snapshot)[0]}-01-01`;
+  const selectedDates={referral:knownDate(value?.selectedDates?.referral,snapshot),deadline:knownDate(value?.selectedDates?.deadline??value?.selectedDate,snapshot)};
+  const activeTarget=targets.some(target=>target.id===value?.activeTarget)?value.activeTarget:targets[0].id;
+  return {month:monthExists(value?.month,snapshot)?value.month:(selectedDates[activeTarget]||fallback).slice(0,7),activeTarget,selectedDates,selectedDate:selectedDates.deadline,registrationTimely:typeof value?.registrationTimely==='boolean'?value.registrationTimely:null};
 }
-export function calendarInterval(state,snapshot=BUNDLED_CALENDARS){
-  const anchor=knownDate(state.anchorDate,snapshot),selected=knownDate(state.selectedDate,snapshot);
-  if(!anchor||!selected)return null;
-  const direction=selected>=anchor?1:-1;let calendar=0,working=0;
-  if(state.includeAnchor){calendar++;if(dayInfo(anchor,snapshot).working)working++;}
-  for(let date=addDays(anchor,direction);direction>0?date<=selected:date>=selected;date=addDays(date,direction)){
-    if(!knownDate(date,snapshot))return null;
-    calendar++;if(dayInfo(date,snapshot).working)working++;
-  }
-  return {calendar,working,direction};
-}
-/** Every operation follows the student's action. No case answer or duration is accepted. */
-export function reduceCalendarWorkbench(state,action,snapshot=BUNDLED_CALENDARS){
-  const next=normalizeCalendarWorkbenchState(state,{snapshot}),date=knownDate(action.date,snapshot);
-  if(action.type==='anchor'){
-    if(!date)throw Error('calendar/date-unavailable');
-    return {...next,anchorDate:date,selectedDate:date,monthOrigin:'',month:date.slice(0,7),marks:[]};
-  }
+/** Dates are picked by the student. No durations, correct answers or calculator steps are accepted. */
+export function reduceCalendarWorkbench(state,action,snapshot=BUNDLED_CALENDARS,options={}){
+  const next=normalizeCalendarWorkbenchState(state,{...options,snapshot});
+  if(action.type==='target'&&taskTargets(options).some(target=>target.id===action.target))return {...next,activeTarget:action.target};
   if(action.type==='select'){
-    if(!date)throw Error('calendar/date-unavailable');
-    return {...next,selectedDate:date,monthOrigin:'',month:date.slice(0,7)};
+    const date=knownDate(action.date,snapshot);if(!date)throw Error('calendar/date-unavailable');
+    const selectedDates={...next.selectedDates,[next.activeTarget]:date};return {...next,selectedDates,selectedDate:selectedDates.deadline,month:date.slice(0,7)};
   }
-  if(action.type==='month'){
-    if(!monthExists(action.month,snapshot))throw Error('calendar/date-unavailable');
-    return {...next,month:action.month};
-  }
-  if(action.type==='include')return {...next,includeAnchor:Boolean(action.value)};
-  if(action.type==='clear')return {...next,marks:[]};
-  if(action.type==='mark'){
-    const selected=next.selectedDate;if(!selected)return next;
-    return {...next,marks:next.marks.includes(selected)?next.marks.filter(mark=>mark!==selected):[...next.marks,selected].sort()};
-  }
-  if(action.type==='step'){
-    const from=next.selectedDate||next.anchorDate;if(!from)return next;
-    const origin=next.monthOrigin||from,months=(Number(from.slice(0,4))-Number(origin.slice(0,4)))*12+Number(from.slice(5,7))-Number(origin.slice(5,7))+1;
-    let target=action.unit==='month'?addCalendarMonths(origin,months):addDays(from,1);
-    if(!knownDate(target,snapshot))throw Error('calendar/date-unavailable');
-    if(action.unit==='working'){
-      for(let guard=0;!dayInfo(target,snapshot).working&&guard<366;guard++){
-        target=addDays(target,1);if(!knownDate(target,snapshot))throw Error('calendar/date-unavailable');
-      }
-    }
-    return {...next,selectedDate:target,monthOrigin:action.unit==='month'?origin:'',month:target.slice(0,7),marks:[...new Set([...next.marks,target])].sort()};
-  }
+  if(action.type==='clear'){const selectedDates={...next.selectedDates,[next.activeTarget]:''};return {...next,selectedDates,selectedDate:selectedDates.deadline};}
+  if(action.type==='month'){if(!monthExists(action.month,snapshot))throw Error('calendar/date-unavailable');return {...next,month:action.month};}
+  if(action.type==='registration')return {...next,registrationTimely:Boolean(action.value)};
   return next;
 }
 function dayLabel(info,locale){const t=copy[localeKey(locale)];if(localeKey(locale)==='ru')return info.label;return info.shortened?t.shortened:({holiday:t.holiday,transfer:t.transfer,'working-transfer':t.workingTransfer}[info.type]||(info.working?t.working:t.rest));}
 function formattedDate(date,locale,options={}){return new Intl.DateTimeFormat(languageTag(locale),{day:'numeric',month:'long',year:'numeric',timeZone:'UTC',...options}).format(new Date(date+'T00:00:00Z'));}
 function arrow(direction){return icon(direction<0?'back':'chevron');}
-const calendarCopy={
-  ru:{tools:'Инструменты расчёта',toolsHint:'Исходная дата, ручные шаги и отметки',currentDay:'Дата дела',chosen:'Выбрано',timeline:'Хронология обращения',dateInDraft:'Выбранная дата',chooseDate:'Выберите дату в календаре',use:'Перенести в решение',legend:'Обозначения календаря'},
-  en:{tools:'Counting tools',toolsHint:'Starting date, manual steps and marks',currentDay:'Case date',chosen:'Selected',timeline:'Case timeline',dateInDraft:'Chosen date',chooseDate:'Choose a date on the calendar',use:'Add to decision',legend:'Calendar legend'},
-  zh:{tools:'计算工具',toolsHint:'起始日期、逐日计算及标记',currentDay:'案件日期',chosen:'已选择',timeline:'案件时间线',dateInDraft:'所选日期',chooseDate:'请在日历中选择日期',use:'填入决定',legend:'日历图例'},
-};
+const boldNumbers=text=>esc(text).replace(/\d+|трех|семи/g,'<strong>$&</strong>');
 function calendarContent(options){
-  const {events=[],locale='ru',disabled=false,snapshot=BUNDLED_CALENDARS}=options,t={...copy[localeKey(locale)],...calendarCopy[localeKey(locale)]},s=normalizeCalendarWorkbenchState(options.state,options),month=monthDays(s.month,snapshot),interval=calendarInterval(s,snapshot),marks=new Set(s.marks),year=s.month.slice(0,4),monthNumber=s.month.slice(5),off=disabled?'disabled':'',years=calendarYears(snapshot),min=`${years[0]}-01-01`,max=`${years.at(-1)}-12-31`;
-  const selected=s.selectedDate?dayInfo(s.selectedDate,snapshot):null,chosenEvent=events.find(event=>parseDateOnly(event.date)===s.anchorDate),caseDate=knownDate(options.date,snapshot);
-  const within=date=>s.anchorDate&&s.selectedDate&&date>=([s.anchorDate,s.selectedDate].sort()[0])&&date<=([s.anchorDate,s.selectedDate].sort()[1]);
+  const {locale='ru',disabled=false,snapshot=BUNDLED_CALENDARS}=options,t={...copy[localeKey(locale)],...calendarCopy[localeKey(locale)]},s=normalizeCalendarWorkbenchState(options.state,options),events=taskEvents(options),targets=taskTargets(options),month=monthDays(s.month,snapshot),year=s.month.slice(0,4),monthNumber=s.month.slice(5),off=disabled?'disabled':'',years=calendarYears(snapshot),selected=s.selectedDates[s.activeTarget];
+  const types=['sent','received','registered'],eventKind=event=>types.includes(event.kind)?event.kind:types.includes(event.id)?event.id:'other';
   const start=addDays(s.month+'-01',-month.offset),cellCount=Math.ceil((month.offset+month.days.length)/7)*7;
   const cells=Array.from({length:cellCount},(_,index)=>{
-    const date=addDays(start,index);
-    if(!knownDate(date,snapshot))return '<span class="rxw-calendar-empty" aria-hidden="true"></span>';
-    const info=dayInfo(date,snapshot),outside=!date.startsWith(s.month),current=date===caseDate;
-    return `<button type="button" class="rxw-calendar-day ${info.working?'working':'rest'} ${info.type==='working-transfer'?'working-transfer':''} ${info.shortened?'shortened':''} ${date===s.anchorDate?'anchor':''} ${within(date)?'in-range':''} ${marks.has(date)?'marked':''} ${outside?'outside-month':''} ${current?'case-date':''}" data-calendar-action="choose-date" data-date="${date}" aria-pressed="${date===s.selectedDate}" aria-label="${esc([formattedDate(date,locale),dayLabel(info,locale),date===s.anchorDate?t.anchorLegend:'',current?t.currentDay:'',marks.has(date)?t.markedLegend:''].filter(Boolean).join(', '))}" tabindex="${date===(s.selectedDate.startsWith(s.month)?s.selectedDate:month.days[0].date)?'0':'-1'}" ${off}><span>${Number(date.slice(8))}</span>${info.shortened?'<small aria-hidden="true">−1</small>':info.type==='working-transfer'?'<small aria-hidden="true">↻</small>':''}${marks.has(date)?'<i aria-hidden="true"></i>':''}</button>`;
+    const date=addDays(start,index);if(!knownDate(date,snapshot))return '<span class="rxw-calendar-empty" aria-hidden="true"></span>';
+    const info=dayInfo(date,snapshot),outside=!date.startsWith(s.month),daily=events.filter(event=>event.date===date),chosen=targets.filter(target=>s.selectedDates[target.id]===date);
+    return `<button type="button" class="rxw-calendar-day ${info.working?'working':'rest'} ${info.type==='working-transfer'?'working-transfer':''} ${info.shortened?'shortened':''} ${outside?'outside-month':''} ${chosen.map(target=>'chosen-'+target.id).join(' ')}" data-calendar-action="choose-date" data-date="${date}" aria-pressed="${date===selected}" aria-label="${esc([formattedDate(date,locale),dayLabel(info,locale),...daily.map(event=>localText(event.label,locale)||t[eventKind(event)]),...chosen.map(target=>target.label)].filter(Boolean).join(', '))}" tabindex="${date===(selected?.startsWith(s.month)?selected:month.days[0].date)?'0':'-1'}" ${off}><span>${Number(date.slice(8))}</span>${info.shortened?'<small aria-hidden="true">−1</small>':info.type==='working-transfer'?'<small aria-hidden="true">↻</small>':''}<b class="rxw-event-dots" aria-hidden="true">${[...new Set(daily.map(eventKind))].map(kind=>`<i class="event-${kind}"></i>`).join('')}</b></button>`;
   }).join('');
-  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3><p>${t.intro}</p></div></header>
-    ${events.length?`<div class="rxw-calendar-events" aria-label="${t.timeline}">${events.map(event=>`<button type="button" data-calendar-action="anchor-event" data-event-id="${esc(event.id)}" data-date="${esc(parseDateOnly(event.date)||'')}" aria-pressed="${event===chosenEvent}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale))}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`:''}
+  const norms=options.task?.norms||[{label:locale==='ru'?'Федеральный закон от 02.05.2006 № 59-ФЗ «О порядке рассмотрения обращений граждан Российской Федерации»':'59-ФЗ · '+t.norms,text:t.rules.join('\n'),url:'https://mintrud.gov.ru/docs/laws/108'}];
+  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><p class="rxw-calendar-instruction">${boldNumbers(t.intro)}</p>
+    ${options.task?.hideEventList?'':`<div class="rxw-calendar-events">${events.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
+    <div class="rxw-calendar-targets" role="group" aria-label="${esc(t.pick)}">${targets.map(target=>`<button type="button" data-calendar-action="target" data-target="${target.id}" aria-pressed="${s.activeTarget===target.id}" ${off}><span>${esc(target.label)}</span><strong>${s.selectedDates[target.id]?esc(formatDateOnly(s.selectedDates[target.id])):t.empty}</strong></button>`).join('')}</div>
+    <p class="rxw-calendar-pick">${t.pick}</p>
     <div class="rxw-calendar-sheet"><div class="rxw-calendar-month"><button type="button" data-calendar-action="month-prev" aria-label="${t.prev}" ${disabled||!monthExists(nextMonth(s.month,-1),snapshot)?'disabled':''}>${arrow(-1)}</button><div><label><span class="rxw-sr">${t.month}</span><select data-calendar-input="month" ${off}>${Array.from({length:12},(_,index)=>{const number=String(index+1).padStart(2,'0');return `<option value="${number}" ${number===monthNumber?'selected':''}>${esc(formattedDate(`${year}-${number}-01`,locale,{day:undefined,year:undefined,month:'long'}))}</option>`;}).join('')}</select></label><label><span class="rxw-sr">${t.year}</span><select data-calendar-input="year" ${off}>${years.map(value=>`<option ${value===year?'selected':''}>${value}</option>`).join('')}</select></label></div><button type="button" data-calendar-action="month-next" aria-label="${t.next}" ${disabled||!monthExists(nextMonth(s.month,1),snapshot)?'disabled':''}>${arrow(1)}</button></div>
     <div class="rxw-calendar-week" aria-hidden="true">${t.week.map(day=>`<span>${day}</span>`).join('')}</div><div class="rxw-calendar-grid" role="group" aria-label="${esc(formattedDate(s.month+'-01',locale,{day:undefined}))}">${cells}</div></div>
-    <div class="rxw-calendar-legend rxw-calendar-main-legend" aria-label="${t.legend}"><span class="anchor">${t.anchorLegend}</span><span class="case-date">${t.currentDay}</span><span class="selected">${t.chosen}</span></div>
-    <details class="rxw-calendar-details" data-calendar-details="tools" data-details="calendar-tools" ${options.toolsOpen?'open':''}><summary><span><strong>${t.tools}</strong><small>${t.toolsHint}</small></span>${arrow(1)}</summary><div class="rxw-calendar-details-content">
-    <label class="rxw-calendar-anchor"><span>${t.anchor}</span><input type="date" data-calendar-input="anchor" value="${s.anchorDate}" min="${min}" max="${max}" ${off}><small>${s.anchorDate?esc(chosenEvent?localText(chosenEvent.label,locale):formattedDate(s.anchorDate,locale)):t.chooseAnchor}</small></label>
-    <div class="rxw-calendar-tools"><button type="button" data-calendar-action="mark" aria-pressed="${marks.has(s.selectedDate)}" ${disabled||!s.selectedDate?'disabled':''}>${marks.has(s.selectedDate)?t.unmark:t.mark}</button><button type="button" data-calendar-action="step-day" ${disabled||!s.selectedDate?'disabled':''}>${t.stepDay}</button><button type="button" data-calendar-action="step-working" ${disabled||!s.selectedDate?'disabled':''}>${t.stepWorking}</button><button type="button" data-calendar-action="step-month" ${disabled||!s.selectedDate?'disabled':''}>${t.stepMonth}</button></div>
-    <label class="rxw-calendar-include"><input type="checkbox" data-calendar-input="include-anchor" ${s.includeAnchor?'checked':''} ${off}>${t.include}</label>
-    <div class="rxw-calendar-count" aria-live="polite">${interval?`<span>${interval.direction<0?t.before:t.elapsed}</span><strong>${interval.calendar} <small>${t.calendarDays}</small><b> · </b>${interval.working} <small>${t.workingDays}</small></strong>`:''}<span>${t.marked}: <b>${s.marks.length}</b></span></div>
-    <button type="button" class="rxw-calendar-clear" data-calendar-action="clear" ${disabled||!s.marks.length?'disabled':''}>${t.clear}</button>
-    <div class="rxw-calendar-legend"><span class="rest">${t.rest}</span><span class="working-transfer">${t.workingTransfer}</span><span class="shortened">${t.shortened}</span></div>
-    <p class="rxw-calendar-scope">${t.scope}</p><details class="rxw-calendar-provenance"><summary>${t.sources}</summary><p>${esc(year)} · ${esc(snapshot.years[year]?.sourceDate||'')}</p>${(snapshot.years[year]?.sources||[]).map(source=>`<a href="${esc(safeSourceURL(source.url))}" target="_blank" rel="noopener noreferrer">${esc(source.provider)}</a>`).join('')}</details></div></details>
-    ${options.rulesMarkup||''}
-    <div class="rxw-calendar-selection" aria-live="polite"><span>${t.dateInDraft}</span><strong>${s.selectedDate?esc(formattedDate(s.selectedDate,locale)):t.chooseDate}</strong>${selected?`<small>${esc(dayLabel(selected,locale))}</small>`:''}</div>
-    <div class="rxw-calendar-footer"><button type="button" class="rxw-calendar-use" data-calendar-action="use-date" ${disabled||!s.selectedDate?'disabled':''}>${t.use}${arrow(1)}</button></div>
-    <p class="rxw-calendar-status" data-calendar-status role="status"></p>`;
+    <div class="rxw-calendar-legend rxw-calendar-main-legend">${types.map(type=>`<span class="event-${type}">${t[type]}</span>`).join('')}</div>
+    <div class="rxw-calendar-footer"><button type="button" class="rxw-calendar-clear" data-calendar-action="clear" ${disabled||!selected?'disabled':''}>${t.clearDate}</button>${options.task?.autoCommit?'':`<button type="button" class="rxw-calendar-use" data-calendar-action="use-date" ${disabled||!selected?'disabled':''}>${t.use}${arrow(1)}</button>`}</div>
+    ${options.task?.registrationCheck===false?'':`<label class="rxw-calendar-registration"><input type="checkbox" data-calendar-input="registration-timely" ${s.registrationTimely===true?'checked':''} ${off}><span><small>${t.judgment}</small>${t.timely}</span></label>`}
+    <p class="rxw-calendar-note">${t.note}</p><p class="rxw-calendar-note">${t.counting}</p>
+    <details class="rxw-calendar-details" data-calendar-details="norms" data-details="calendar-norms" ${options.normsOpen?'open':''}><summary><span><strong>${t.norms}</strong></span>${arrow(1)}</summary><div class="rxw-calendar-details-content">${norms.map(norm=>`<section class="rxw-calendar-norm"><h4>${esc(localText(norm.label,locale))}</h4>${localText(norm.text,locale).split('\n').map(text=>`<p>${boldNumbers(text)}</p>`).join('')}${sourceLinkView({url:norm.url,label:t.external,locale,className:'rxw-calendar-law-link'})}</section>`).join('')}</div></details><p class="rxw-calendar-status" data-calendar-status role="status"></p>`;
 }
 export function calendarWorkbenchView(options={}){return `<section class="rxw-calendar" data-calendar-workbench>${calendarContent(options)}</section>`;}
-
-/** Delegation survives the app's panel renders. update() paints only the calendar. */
+/** Delegation survives panel replacement. onUseDate includes the chosen target. */
 export function createCalendarWorkbench(host,initial={}){
-  let options={...initial},state=normalizeCalendarWorkbenchState(initial.state,initial),closed=false,toolsOpen=false;
-  const owner=host.ownerDocument||document;
-  const container=()=>host.matches?.('[data-calendar-workbench]')?host:host.querySelector('[data-calendar-workbench]');
-  function paint(){const node=container();if(node&&!closed){const tools=node.querySelector('[data-calendar-details="tools"]');if(tools)toolsOpen=tools.open;node.innerHTML=calendarContent({...options,state,toolsOpen});}}
-  function notify(action,focusDate){
-    const snapshot=options.snapshot||BUNDLED_CALENDARS;
-    try{state=reduceCalendarWorkbench(state,action,snapshot);paint();if(focusDate)container()?.querySelector(`[data-date="${focusDate}"][data-calendar-action="choose-date"]`)?.focus({preventScroll:true});options.onChange?.(structuredClone(state),{action:action.type});}
-    catch{const status=container()?.querySelector('[data-calendar-status]');if(status)status.textContent=copy[localeKey(options.locale)].unavailable;}
-  }
-  function click(event){
-    const target=event.target.closest?.('[data-calendar-action]');if(!target||!container()?.contains(target)||options.disabled||target.disabled)return;
-    const action=target.dataset.calendarAction;
-    if(action==='use-date'){if(state.selectedDate)options.onUseDate?.(state.selectedDate);return;}
-    if(action==='anchor-event')notify({type:'anchor',date:target.dataset.date});
+  let options={...initial},state=normalizeCalendarWorkbenchState(initial.state,initial),closed=false,normsOpen=false;
+  const owner=host.ownerDocument||document,container=()=>host.matches?.('[data-calendar-workbench]')?host:host.querySelector('[data-calendar-workbench]');
+  function paint(){const node=container();if(node&&!closed){const norms=node.querySelector('[data-calendar-details="norms"]');if(norms)normsOpen=norms.open;node.innerHTML=calendarContent({...options,state,normsOpen});}}
+  function notify(action,focusDate){try{state=reduceCalendarWorkbench(state,action,options.snapshot||BUNDLED_CALENDARS,options);paint();if(focusDate)container()?.querySelector(`[data-date="${focusDate}"][data-calendar-action="choose-date"]`)?.focus({preventScroll:true});options.onChange?.(structuredClone(state),{action:action.type});}catch{const status=container()?.querySelector('[data-calendar-status]');if(status)status.textContent=copy[localeKey(options.locale)].unavailable;}}
+  function click(event){const target=event.target.closest?.('[data-calendar-action]');if(!target||!container()?.contains(target)||options.disabled||target.disabled)return;const action=target.dataset.calendarAction;
+    if(action==='use-date'){const date=state.selectedDates[state.activeTarget];if(date)options.onUseDate?.(date,{target:state.activeTarget});return;}
+    if(action==='target')notify({type:'target',target:target.dataset.target});
     else if(action==='choose-date')notify({type:'select',date:target.dataset.date},target.dataset.date);
+    else if(action==='event-month')notify({type:'month',month:target.dataset.date.slice(0,7)});
     else if(action==='month-prev'||action==='month-next')notify({type:'month',month:nextMonth(state.month,action==='month-prev'?-1:1)});
-    else if(action==='mark'||action==='clear')notify({type:action});
-    else if(action.startsWith('step-'))notify({type:'step',unit:action.slice(5)});
+    else if(action==='clear')notify({type:'clear'});
   }
-  function change(event){
-    const target=event.target;if(!target.dataset.calendarInput||!container()?.contains(target)||options.disabled)return;
-    const key=target.dataset.calendarInput;
-    if(key==='anchor')notify({type:'anchor',date:target.value});
-    else if(key==='include-anchor')notify({type:'include',value:target.checked});
-    else if(key==='month'||key==='year')notify({type:'month',month:key==='month'?`${state.month.slice(0,4)}-${target.value}`:`${target.value}-${state.month.slice(5)}`});
-  }
-  function keydown(event){
-    const target=event.target.closest?.('[data-calendar-action="choose-date"]');if(!target||!container()?.contains(target)||options.disabled)return;
-    const steps={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7};let date;
-    if(event.key in steps)date=addDays(target.dataset.date,steps[event.key]);
-    else if(event.key==='PageUp'||event.key==='PageDown')date=addCalendarMonths(target.dataset.date,event.key==='PageUp'?-1:1);
-    else return;
-    event.preventDefault();notify({type:'select',date},date);
-  }
-  host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('keydown',keydown);
-  const abortSignal=initial.signal;
+  function change(event){const target=event.target;if(!target.dataset.calendarInput||!container()?.contains(target)||options.disabled)return;const key=target.dataset.calendarInput;if(key==='registration-timely')notify({type:'registration',value:target.checked});else if(key==='month'||key==='year')notify({type:'month',month:key==='month'?`${state.month.slice(0,4)}-${target.value}`:`${target.value}-${state.month.slice(5)}`});}
+  function keydown(event){const target=event.target.closest?.('[data-calendar-action="choose-date"]');if(!target||!container()?.contains(target)||options.disabled)return;const steps={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7};let date;if(event.key in steps)date=addDays(target.dataset.date,steps[event.key]);else if(event.key==='PageUp'||event.key==='PageDown')date=addCalendarMonths(target.dataset.date,event.key==='PageUp'?-1:1);else return;event.preventDefault();notify({type:'select',date},date);}
+  host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('keydown',keydown);const abortSignal=initial.signal;
   function destroy(){if(closed)return;closed=true;host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('keydown',keydown);abortSignal?.removeEventListener('abort',destroy);}
   abortSignal?.addEventListener('abort',destroy,{once:true});if(abortSignal?.aborted)destroy();else paint();
   return {getState:()=>structuredClone(state),update(next={}){if(closed)return;options={...options,...next};state=normalizeCalendarWorkbenchState(Object.hasOwn(next,'state')?next.state:state,options);const focus=owner.activeElement?.dataset?.calendarAction==='choose-date'?owner.activeElement.dataset.date:null;paint();if(focus)container()?.querySelector(`[data-date="${focus}"][data-calendar-action="choose-date"]`)?.focus({preventScroll:true});},destroy};

@@ -236,6 +236,7 @@ jobs:
               'tests/reception-workbench.test.mjs', 'tests/reception-session-storage.test.mjs',
               'tests/reception-ai-qa-cases.test.mjs', 'tests/reception-learning-review.test.mjs',
               'scripts/test-reception-workbench-dom.mjs',
+              'scripts/build-reception-routing-directory.mjs', 'tests/reception-authority-picker.test.mjs',
               'scripts/platform-main-staging.mjs',
               'site/apps/legal-lab/lib/corpus.mjs',
               'site/assets/js/main.js',
@@ -752,8 +753,9 @@ jobs:
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |
           node scripts/reception-ai-catalog-metadata.mjs --check
+          node scripts/build-reception-routing-directory.mjs --check
           node scripts/reception-ai-learning-review.mjs --check
-          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs
+          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs
       - name: Verify Reception document and calendar workflow
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |

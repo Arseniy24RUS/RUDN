@@ -103,14 +103,16 @@
 .rx-source-embedded .ll-eyebrow{font:inherit;color:#526c89;font-size:12px;letter-spacing:0;text-transform:none;display:block}
 .rx-source-embedded .ll-revision{font:inherit;color:#61768c;font-size:11px;display:block;margin-top:4px}
 .rx-source-embedded .ll-reader-dock{display:none}
-.rx-source-embedded .ll-reader-search-panel{max-height:30%;flex-shrink:0;border:0;background:transparent;margin:0 0 4px;overflow:auto}
-.rx-source-embedded .ll-searchbar{display:flex;flex-wrap:nowrap;gap:4px;padding:0 0 0 12px;border:1px solid #becde0;border-radius:10px;background:transparent;min-height:44px;margin:0}
+/* Legal Lab floats its search over the paper. The cabinet stacks it between
+   the back toolbar and the document, with a single scroll area for results. */
+.rx-source-embedded .ll-reader-search-panel{position:static;display:flex;flex-direction:column;gap:0;flex:0 1 auto;min-height:46px;max-height:none;margin:0 0 4px;border:0;border-radius:0;background:transparent;box-shadow:none;overflow:hidden}
+.rx-source-embedded .ll-reader-search-panel>.ll-searchbar{position:static;display:flex;flex-wrap:nowrap;flex:none;gap:4px;padding:0 0 0 12px;border:1px solid #becde0;border-radius:10px;background:transparent;min-height:44px;margin:0}
 .rx-source-embedded .ll-searchbar>input{border:0!important;border-radius:0;background:transparent;flex:1;min-width:0;width:100%;padding:10px 0;color:#142d46;font-family:inherit;font-size:16px;font-weight:400;line-height:1.4;box-shadow:none}
 .rx-source-embedded .ll-searchbar>input::placeholder{color:#718198;opacity:1}
 .rx-source-embedded .ll-searchbar>button{min-width:42px;min-height:44px;border:0;background:transparent!important;color:#3c5e7e!important;border-radius:8px;padding:10px;font-size:14px}
 .rx-source-embedded .ll-searchbar>button svg{width:20px;height:20px}
 .rx-source-embedded .ll-searchbar>button[data-action=clear-search]{min-width:36px;width:36px;padding:10px 7px}
-.rx-source-embedded .ll-search-results{padding:10px 0;max-height:180px;border:0;background:transparent;font:inherit;font-size:12px}
+.rx-source-embedded .ll-reader-search-panel .ll-search-results{min-height:0;max-height:min(180px,calc(var(--rxa-visible-height,100dvh) * .17));padding:6px 0;border:0;background:transparent;font:inherit;font-size:12px;overflow:auto;overscroll-behavior:contain}
 .rx-source-embedded .ll-search-results button{border:1px solid #d7e1eb;border-radius:8px;padding:9px 10px;background:#fff}
 .rx-source-embedded .ll-search-results button b,.rx-source-embedded .ll-search-results button span{font-size:12px;line-height:1.55}
 .rx-source-embedded .ll-reader-surface{background:transparent;padding:0;min-height:0;flex:1;display:flex;flex-direction:column;overflow:hidden}

@@ -83,3 +83,13 @@ test('catalog rejects malformed difficulty and training sends the chosen case un
   assert.deepEqual(await client.request(body),view);assert.deepEqual(bodies.at(-1),body);
   assert.deepEqual(await client.recover({mode:'training'}),view);
 });
+
+
+test('the current workbook version is attached only to session lifecycle and catalog reads',async()=>{
+  const calls=[];
+  const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',workbookVersion:1,getIdToken:async()=> 'token',
+    fetch:async(_url,options)=>{const body=JSON.parse(options.body);calls.push(body);return body.op==='catalog'?new Response(JSON.stringify({ok:true,cases:[]}),{status:200}):accepted();}});
+  for(const op of ['catalog','start','recover','resume','message','decide'])await client.request({op,requestId:'stable'});
+  assert.deepEqual(calls.map(body=>body.workbookVersion),[1,1,1,1,undefined,undefined]);
+  assert.ok(calls.every(body=>body.requestId==='stable'));
+});
