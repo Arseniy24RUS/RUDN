@@ -18,12 +18,14 @@ test('the actor receives current appeal chronology without learner role, grading
  assert.equal(actor.participantContext.currentAppeal.scope,'current_appeal');
  assert.equal(actor.participantContext.conversationalBackground.evidentiary,false);
  assert.match(actor.participantContext.conversationalBackground.service,/ЕГРН/);
+ assert.match(actor.participantContext.conversationalBackground.location,/Красногорск/);
+ assert.equal(actor.participantContext.conversationalBackground.branchAddressKnown,false);
  assert.equal(actor.documents.length,0);
  for(const marker of ['learner-only-instructions','hidden-solution-title','grading-key-sentinel','unreleased-control-material','2026-06-30'])assert.ok(!JSON.stringify(actor).includes(marker));
  assert.deepEqual(source,before);
  const instructions=buildActorInstructions(actor,'ru');
  assert.match(instructions,/CURRENT appeal only/);assert.match(instructions,/earlier service application/);
- assert.match(instructions,/Do not say/);
+ assert.match(instructions,/Do not say/);assert.match(instructions,/Do not invent a location or exact branch address/);
 });
 
 test('both Luna stages get the same chronology and optional personal background',async()=>{
@@ -40,4 +42,5 @@ test('both Luna stages get the same chronology and optional personal background'
  const verification=JSON.parse(payloads[1].input[0].content);
  assert.deepEqual(verification.canonicalDossier.participantContext,actor.participantContext);
  assert.match(payloads[1].instructions,/original service application/);
+ assert.match(payloads[1].instructions,/reject any asserted street or building number/);
 });

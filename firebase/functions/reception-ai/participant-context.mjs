@@ -11,20 +11,23 @@ const BACKGROUND = {
   ru: {
     service: 'получение выписки из ЕГРН о своей квартире',
     purpose: 'упорядочить личные документы на недвижимость',
+    location: 'МФЦ в Красногорске, Московская область',
     currentComplaint: 'Текущее обращение касается нового требования документов со стороны МФЦ, а не рассмотрения самой услуги Росреестра.',
-    limits: 'Это необязательный бытовой фон, а не доказательство. Дата первоначального заявления на услугу неизвестна. Даты ниже относятся только к текущему обращению; не выводите из них другие даты или сроки.'
+    limits: 'Это необязательный бытовой фон, а не доказательство. Точный адрес отделения и дата первоначального заявления на услугу неизвестны. Не придумывайте улицу, номер дома или дату. Даты ниже относятся только к текущему обращению; не выводите из них другие даты или сроки.'
   },
   en: {
     service: 'obtaining an EGRN property-register extract for their own apartment',
     purpose: 'organizing personal property documents',
+    location: 'an MFC in Krasnogorsk, Moscow Oblast',
     currentComplaint: 'The current complaint concerns a new document demand by the MFC, rather than the substantive Rosreestr service.',
-    limits: 'This is optional conversational background, not evidence. The original service application date is unknown. The dates below concern only the current appeal; do not infer other dates or deadlines.'
+    limits: 'This is optional conversational background, not evidence. The exact branch address and original service application date are unknown. Do not invent a street, building number or date. The dates below concern only the current appeal; do not infer other dates or deadlines.'
   },
   zh: {
     service: '获取本人公寓的不动产统一登记簿（EGRN）摘录',
     purpose: '整理个人房产文件',
+    location: '莫斯科州克拉斯诺戈尔斯克的多功能中心（MFC）',
     currentComplaint: '本次投诉针对多功能中心（MFC）新提出的材料要求，而非俄罗斯不动产登记局服务本身的办理。',
-    limits: '这只是可选的生活背景，不是证据。最初申请该服务的日期未知。以下日期仅属于本次申诉，不得据此推断其他日期或期限。'
+    limits: '这只是可选的生活背景，不是证据。分中心的详细地址及最初申请该服务的日期未知。不得编造街道、门牌号或日期。以下日期仅属于本次申诉，不得据此推断其他日期或期限。'
   }
 };
 
@@ -38,7 +41,7 @@ export function buildParticipantContext(c, locale = 'ru') {
   }) : [];
   const result = {currentAppeal: {scope: 'current_appeal', events}};
   if (c?.id === 'mfc-second-demand') {
-    result.conversationalBackground = {optional: true, evidentiary: false, ...BACKGROUND[language]};
+    result.conversationalBackground = {optional: true, evidentiary: false, branchAddressKnown: false, ...BACKGROUND[language]};
   }
   return result;
 }
