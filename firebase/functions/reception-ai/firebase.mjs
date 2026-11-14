@@ -2,6 +2,35 @@ import {hash, ReceptionError} from './schema.mjs';
 
 export const PRIVATE_ROOT = 'rudn-platform/v1/receptionAI';
 
+export async function resolveReceptionIdentity(body, decoded, {db, store}) {
+  const teacher = decoded.email === 'omnistat@yandex.ru';
+  if (teacher) return {uid: decoded.uid, teacher: true};
+  const anonymous = decoded.firebase?.sign_in_provider === 'anonymous';
+  const guest = anonymous && !Object.hasOwn(body, 'studentKey');
+  let studentKey = body.studentKey;
+  if (body.sessionId && typeof body.sessionId === 'string' && /^[a-f0-9]{40}$/.test(body.sessionId)) {
+    const session = await store.get(`sessions/${body.sessionId}`);
+    if (!session) throw new ReceptionError('not_found', 404);
+    if (session.guest === true) {
+      if (!guest || session.owner !== `guest:${decoded.uid}` || session.context !== 'free' || session.mode !== 'training' || session.studentKey) {
+        throw new ReceptionError('forbidden', 403);
+      }
+      return {uid: decoded.uid, guest: true};
+    }
+    studentKey = session.studentKey;
+  } else if (guest && body.context === 'free' && ['catalog', 'start', 'recover'].includes(body.op)) {
+    return {uid: decoded.uid, guest: true};
+  }
+  if (!/^\d{5,20}$/.test(studentKey || '')) throw new ReceptionError('profile_required', 403);
+  // Canonical profiles are checked on every request. We do not claim that the
+  // platform's deliberately passwordless profile selection verifies a person.
+  const alias = (await db.ref(`rudn-platform/v1/studentAliases/${studentKey}`).get()).val();
+  if (alias) studentKey = alias;
+  if (!/^\d{5,20}$/.test(studentKey || '')) throw new ReceptionError('profile_required', 403);
+  const profile = (await db.ref(`rudn-platform/v1/profiles/${studentKey}`).get()).val();
+  if (!profile || profile.mergedInto || profile.studentKey !== studentKey || profile.ownerUid !== decoded.uid && profile.ownerUids?.[decoded.uid] !== true) throw new ReceptionError('forbidden', 403);
+  return {uid: decoded.uid, studentKey, teacher: false};
+}
 // Firebase deploys functions/ without the browser's access.js. Keep this
 // server-side check in step with that module and the Reception topic order.
 const DAY_MS = 86400000;

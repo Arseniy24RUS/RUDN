@@ -40,10 +40,15 @@ const c=await createCorrespondenceQACase(),store=createMemoryStore(),identity={u
 const reviewer=createScriptedCorrespondenceReviewer({reviews:[()=>{throw new ReceptionError('review_unavailable',503);},context=>explicitQAReview(context,{initialLevel:3}),context=>explicitQAReview(context,{controlLevel:3})]});
 const provider={...reviewer,name:'mock',generate:async()=>({reply:'Представленные документы относятся к двум вопросам обращения.',revealedFactIds:[],releasedDocumentIds:[],usage:{inputTokens:0,outputTokens:0}})};
 const service=createReceptionService({store,cases:[c],provider,correspondenceProfiles:correspondenceQAProfiles,requireGameplay:seminar});
-const calls=[];let lastView,lastError,handle;
+const calls=[];let lastView,lastError,handle,dropReplyTo='',awaitActor=null;
 const fetchAPI=async(_url,options)=>{const body=JSON.parse(options.body);calls.push(structuredClone(body));
-  try{const response=await service.handle(body,identity);if(response.view)lastView=response.view;return {ok:true,status:200,json:async()=>response};}
-  catch(error){lastError=error.code;return {ok:false,status:error.status||500,json:async()=>({ok:false,error:{code:error.code||'qa-error'}})};}};
+  if(body.op==='message'&&awaitActor)await awaitActor;
+  let response;
+  try{response=await service.handle(body,identity);if(response.view)lastView=response.view;}
+  catch(error){lastError=error.code;return {ok:false,status:error.status||500,json:async()=>({ok:false,error:{code:error.code||'qa-error'}})};}
+  if(dropReplyTo===body.op){dropReplyTo='';throw Error('Simulated connection loss after commit');}
+  return {ok:true,status:200,json:async()=>response};
+};
 const root=document.getElementById('receptionAI'),{mountReceptionAI}=await import('../site/apps/reception/ai/app.js');
 const options={locale:'ru',studentKey:identity.studentKey,fetch:fetchAPI,context:gameplayContext||'course',period:'qa',showLanguageSelector:true};
 const config={endpoint:'/api/reception',demo:true,workbookVersion:2,decisionVersion:'correspondence-v1',...(gameplayContext?{gameplayContext}:{})};
@@ -73,6 +78,22 @@ try{
     passed('Seminar context reaches the real service, assigns the case and exposes the native statutory source collection');
   }
   stage='sources';
+  await go('chat');
+  let releaseActor;
+  awaitActor=new Promise(resolve=>{releaseActor=resolve;});
+  input('[data-message-draft]','Подскажите, пожалуйста, когда вы впервые сообщили о проблеме?');
+  node('[data-chat-form]').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
+  assert.equal(node('[data-message-draft]').value,'');
+  node('#rxaPage-documents').click();
+  node('[data-action="document"][data-id="d1"]').click();
+  assert.ok(node('.rxa-document-body').textContent.trim());
+  assert.equal(node('[data-response-action="use-source"][data-source-key="document:d1"]').disabled,true);
+  assert.equal(calls.filter(call=>call.op==='document').length,0);
+  releaseActor();await settle();
+  assert.equal(root.dataset.page,'documents');
+  assert.equal(node('[data-response-action="use-source"][data-source-key="document:d1"]').disabled,false);
+  assert.equal(calls.filter(call=>call.op==='document').length,1);
+  passed('The composer clears immediately and an opened material can be read while the reply is pending, then recorded and used');
   for(const id of ['d1','d2']){await go('documents');if(root.querySelector('[data-action="documents-list"]'))await click('[data-action="documents-list"]');await click(`[data-action="document"][data-id="${id}"]`);await click(`[data-response-action="use-source"][data-source-key="document:${id}"]`);}
   assert.equal(root.querySelectorAll('[data-response-section="facts"] .rxc-citation').length,2);passed('Opened documents attach to the facts section without authored answer choices');
   await go('chat');await click(`[data-response-action="use-source"][data-source-key="dialogue:opening-${c.id}"]`);
@@ -102,14 +123,32 @@ try{
   await handle();handle=await mountReceptionAI(root,options,config);await settle();await click('[data-action="retry"]');
   assert.equal(lastView.status,'followup');assert.equal(calls.filter(call=>call.op==='decide').at(-1).requestId,first.requestId);assert.equal(root.querySelectorAll('[data-followup-choice]').length,0);
   const initial=(await store.get('sessions/'+lastView.id)).caseStates[0].correspondenceInitialFeedback;passed('Retry after resume uses the retained idempotency key and opens the free control stage');
+  assert.equal(document.activeElement.hasAttribute('data-stage-heading'),true);
   const savedLetter=structuredClone(lastView.decision.correspondence);
   await writeFile(path.join(out,'example-letter.html'),correspondencePrintHTML({draft:savedLetter,caseInfo:lastView.case,profile:lastView.case.correspondence,sources:lastView.correspondenceSources,recipients:[{id:recipient,label:authority.name}],locale:'ru'}));
   stage='control';input('[data-response-control-field="text"]','Дорожка восстановлена; этот результат фиксируется отдельно. Итогового решения по жалобе нет. Жалобу необходимо оставить на контроле и запросить самостоятельное заключение.');
   await select('[data-response-status-field][data-issue-id="repair"]','resolved');await select('[data-response-status-field][data-issue-id="complaint"]','pending');
-  check('[data-response-status-evidence="followup"][data-issue-id="repair"]');check('[data-response-status-evidence="followup"][data-issue-id="complaint"]');await submit('[data-followup-form]');
+  check('[data-response-status-evidence="followup"][data-issue-id="repair"]');check('[data-response-status-evidence="followup"][data-issue-id="complaint"]');
+  dropReplyTo='followup';
+  await submit('[data-followup-form]');
+  assert.equal(root.dataset.sessionStatus,'followup');assert.equal(lastView.status,'review');
+  assert.ok(node('[data-followup-form] [role="alert"]'));
+  const reviewCalls=reviewer.reviewCalls;
+  await click('[data-action="retry"]');
+  assert.equal(calls.at(-1).op,'resume');assert.equal(calls.filter(call=>call.op==='followup').length,1);
+  assert.equal(reviewer.reviewCalls,reviewCalls);assert.equal(root.dataset.sessionStatus,'review');
+  assert.equal(document.activeElement.hasAttribute('data-stage-heading'),true);
+  passed('A lost control response is reconciled before retry and the reviewer is called once');
   assert.equal(lastView.status,'review');assert.equal(lastView.feedback.correspondence.initialScore,initial.score);
   assert.equal(lastView.feedback.correspondence.control.phase,'control');assert.deepEqual(lastView.decision.correspondence,savedLetter);passed('The control assessment preserves the initial letter and initial score');
-  await click('[data-action="next"]');assert.equal(lastView.status,'complete');assert.ok(lastView.result.cases[0].caseInfo.citizen.name);assert.equal(root.querySelectorAll('[data-response-result="0"] [data-response-action="download"]').length,1);passed('The completed case retains its own document, citizen and export controls');
+  dropReplyTo='next';
+  await click('[data-action="next"]');
+  assert.equal(lastView.status,'complete');assert.equal(root.dataset.sessionStatus,'review');
+  await click('[data-action="retry"]');assert.equal(calls.at(-1).op,'resume');
+  assert.equal(calls.filter(call=>call.op==='next').length,1);
+  assert.equal(document.activeElement.hasAttribute('data-stage-heading'),true);
+  passed('A lost finish response restores final result without repeating the finishing action');
+  assert.equal(lastView.status,'complete');assert.ok(lastView.result.cases[0].caseInfo.citizen.name);assert.equal(root.querySelectorAll('[data-response-result="0"] [data-response-action="download"]').length,1);passed('The completed case retains its own document, citizen and export controls');
   stage='locales';for(const locale of ['en','zh','ru']){await select('[data-language]',locale);assert.equal(root.lang,locale);assert.ok(node('.rxc-letter-body').textContent.includes(prose.facts));}passed('Locale changes preserve the authored document and assessment');
   if(!seminar){
   stage='legacy-resume';

@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import os from 'node:os';
 import {mkdir,writeFile,readFile} from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
 import {pathToFileURL} from 'node:url';
 import {createReceptionFixture} from './reception-ai-workspace-qa.mjs';
 import {createCorrespondenceQACase,correspondenceQAProfiles,explicitQAReview} from './reception-correspondence-qa-cases.mjs';
@@ -73,12 +74,20 @@ async function runScenario({width,height,locale='ru',retry=false}) {
     if(await page.locator('[data-action="documents-list"]').count())await page.locator('[data-action="documents-list"]').click();
     await page.locator('[data-normative-doc="reception-law59999"]').first().click();
     const reader=page.locator('.rx-source-embedded');await reader.locator('.ll-paper [data-unit]').first().waitFor();
-    const search=reader.locator('[data-input="reader-query"]');await search.fill('Запрещается направлять жалобу');await search.press('Enter');
+    const search=reader.locator('[data-input="reader-query"]');
+    if(locale!=='ru'){
+      await search.fill(locale==='en'?'seven days of registration':'七日');await search.press('Enter');
+      await reader.locator('.ll-search-results [data-action="jump-unit"]').first().waitFor();
+    }
+    await search.fill(locale==='ru'?'Запрещается направлять жалобу':'Статья 8.');await search.press('Enter');
     await reader.locator('.ll-search-results [data-action="jump-unit"]').first().click();
-    const paragraph=reader.locator('.ll-paper [data-unit]').filter({hasText:'Запрещается направлять жалобу'}).first();await paragraph.click();
+    const paragraph=reader.locator('.ll-paper [data-unit="law59999-u52"]');
+    if(locale!=='ru')assert.doesNotMatch(await paragraph.innerText(),/Запрещается направлять жалобу/);
+    await paragraph.click();
     await reader.locator('[data-source-reference-use]').click();
     await page.locator('[data-correspondence-editor]').waitFor();
-    assert.equal(await page.locator('[data-response-section="legalBasis"] .rxc-citation').count(),1);check('Real legal reader transfers a pinned paragraph into the letter');
+    const citation=page.locator('[data-response-section="legalBasis"] .rxc-citation');
+    assert.equal(await citation.count(),1);check('Real legal reader transfers a pinned paragraph into the letter');
     await page.locator('[data-response-field="subject"]').fill('О восстановлении дорожки и проверке прежнего ответа');
     for(const [section,value]of Object.entries(text))await page.locator(`[data-response-field="sections.${section}"]`).fill(value);
     await page.locator('[data-response-action="add-order"]').click();
@@ -92,7 +101,7 @@ async function runScenario({width,height,locale='ru',retry=false}) {
     await page.locator('[data-routing-territory]').selectOption('');
     // Search by the same public directory name a student can see.
     const authority=(await import('../site/apps/reception/ai/authority-directory.js')).RECEPTION_AUTHORITIES.find(row=>row.id===recipient);
-    await page.locator('[data-routing-search]').fill(authority.name);
+    await page.locator('[data-routing-search]').fill(typeof authority.name==='string'?authority.name:authority.name[locale]||authority.name.ru);
     await page.locator(`[data-routing-recipient][value="${recipient}"]`).check();
     await page.locator('[data-response-action="recipient-done"]').click();
     await page.locator('.rxc-order-citations summary').click();
@@ -138,13 +147,15 @@ async function runScenario({width,height,locale='ru',retry=false}) {
     await page.locator('#receptionAI[data-session-status="followup"]').waitFor();
     assert.equal(await page.locator('[data-followup-choice]').count(),0);
     await page.locator('[data-response-control-field="text"]').fill('Дорожка восстановлена, этот результат фиксируется отдельно. Проверка прежнего ответа не завершена; жалобу необходимо оставить на контроле и запросить самостоятельное заключение.');
-    await page.locator('[data-response-status-field][data-issue-id="repair"]').selectOption('resolved');
+    const repairEvidence=page.locator('[data-response-status-evidence="followup"][data-issue-id="repair"]');
+    const repairStatus=page.locator('[data-response-status-field][data-issue-id="repair"]');
+    await repairEvidence.check();
+    assert.equal(await repairStatus.inputValue(),'');
+    await repairStatus.selectOption('resolved');
+    assert.ok(await repairEvidence.isChecked(),'Selecting a status retains previously checked evidence');
     await page.locator('[data-response-status-field][data-issue-id="complaint"]').selectOption('pending');
-    for(const issue of ['repair','complaint']){
-      await page.locator(`[data-details="response-control-sources-${issue}"] summary`).click();
-      await page.locator(`[data-response-status-evidence="followup"][data-issue-id="${issue}"]`).check();
-    }
-    await overflow();await shot('control');check('Follow-through uses a free conclusion and separate issue states with evidence');
+    await page.locator('[data-response-status-evidence="followup"][data-issue-id="complaint"]').check();
+    await overflow();await shot('control');check('Follow-through lets players choose visible evidence before or after status');
     await page.locator('[data-followup-form] button[type="submit"]').click();await page.locator('#receptionAI[data-session-status="review"]').waitFor();await idle();
     await page.locator('[data-action="next"]').click();await page.locator('#receptionAI[data-session-status="complete"]').waitFor();await idle();
     await page.locator('[data-details="result-0"] summary').first().click();
@@ -152,6 +163,14 @@ async function runScenario({width,height,locale='ru',retry=false}) {
     await page.locator('[data-details="response-protocol"] summary').first().click();
     assert.equal(await page.locator('.rxc-protocol-stage').count(),2);await overflow();await shot('assessment');
     assert.ok(reviews.length>=2&&reviews.every(body=>!body.includes(studentName)),'Profile data must stay out of review payloads');
+    const originalAct=JSON.parse(gunzipSync(await readFile(new URL('../firebase/functions/reception-ai/correspondence-corpus/reception-law59999.json.gz',import.meta.url))));
+    const originalParagraph=originalAct.units.find(unit=>unit.id==='law59999-u52');
+    const reviewRequest=reviews.map(JSON.parse).find(request=>request.op==='decide');
+    const canonicalCitation=reviewRequest.decision.correspondence.citations.find(item=>item.kind==='legal');
+    assert.deepEqual(canonicalCitation.unitIds,[originalParagraph.id]);
+    assert.equal(canonicalCitation.quote,originalParagraph.text.trim());
+    check('Saved and submitted legal passage is bound to the exact Russian paragraph');
+
     assert.equal(errors.length,0,errors.join('\n'));check('Final feedback distinguishes initial and control scores; no browser exceptions');
     row.status='passed';
   } catch(error) {row.status='failed';row.error=String(error);row.browserErrors=errors;await shot('failure').catch(()=>{});throw error;}

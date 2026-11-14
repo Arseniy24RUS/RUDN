@@ -116,6 +116,37 @@ const COPY={
   }
 };
 
+const ISSUE_TITLES={
+  'Сообщения на телефон':['Messages sent to the phone','发送到手机的信息'],
+  'Содержание экрана':['Screen contents','屏幕内容'],
+  'Обстоятельства передачи номера':['Circumstances of sharing the phone number','电话号码转交情况'],
+  'Сведения об охранной организации':['Information about the security company','保安机构信息'],
+  'Документы и действия работника':['Employee records and actions','工作人员的文件及行为'],
+  'Новое сообщение о шуме':['New noise report','新的噪声反映'],
+  'Порядок рассмотрения прежнего сообщения':['Handling of the previous report','此前反映事项的办理'],
+  'Предложение об улучшении доступности':['Accessibility improvement proposal','改善无障碍通行的建议'],
+  'Просьба предоставить сведения о соседях':['Request for information about neighbours','索取邻居信息的请求'],
+  'Организация автобусного движения':['Bus service arrangements','公交运行安排'],
+  'Маршрут автобуса':['Bus route','公交线路'],
+  'Публикация медицинских сведений':['Publication of medical information','公开医疗信息'],
+  'Публикация персональных данных':['Publication of personal data','公开个人信息'],
+  'Яма у дома':['Pothole by the building','楼旁路面坑洞'],
+  'Освещение на подходе':['Lighting on the approach','通道照明'],
+  'Ночное световое воздействие':['Light disturbance at night','夜间灯光干扰'],
+  'Свет от конструкции':['Light from the structure','构筑物发出的光'],
+  'Восстановление дорожки':['Restoration of the path','修复步道'],
+  'Рассмотрение жалобы на прежний ответ':['Review of the complaint about the previous reply','对先前答复不服的投诉办理'],
+  'Назначение полученного платежа':['Purpose of the payment received','已收款项的用途'],
+  'Остальная часть пособия':['Remaining benefit payment','尚未支付的补助款'],
+  'Сообщение о гуле':['Report of a humming noise','关于持续嗡鸣声的反映'],
+};
+
+export function correspondenceIssueTitle(issue,frozen,locale='ru') {
+  const title=localized(issue?.title,locale);
+  if(issue?.id==='main')return localized(frozen?.public?.title,locale)||title;
+  return ISSUE_TITLES[title]?.[locale==='en'?0:locale==='zh'?1:-1]||title;
+}
+
 /** Public context only. Correct kinds, findings, deadlines and future events are private. */
 export function publicCorrespondenceProfile(caseIdOrTemplate,locale='ru'){
   const profile=bank.profiles[caseIdOf(caseIdOrTemplate)];
@@ -146,7 +177,7 @@ export function publicCorrespondenceProfile(caseIdOrTemplate,locale='ru'){
     kind:internal?'internal':'reply',kindLabel:title,documentKind:internal?'internal':'correspondence',
     title,task:internal?copy.internalTask:copy.task,
     caseTitle,
-    issues:profile.issues.map(issue=>({id:issue.id,title:issue.id==='main'?caseTitle:issue.title})),
+    issues:profile.issues.map(issue=>({id:issue.id,title:correspondenceIssueTitle(issue,frozen,language)})),
     sections,sectionPrompts:{facts:copy.factsPrompt,legalBasis:copy.legalBasisPrompt,resolution:copy.resolutionPrompt,nextSteps:copy.nextStepsPrompt},
     role:{title:roleTitle},
     issuer,origin:clone(issuer),

@@ -25,6 +25,11 @@ const scenarios = [
 if (arg('--scenario')) scenarios.splice(0,scenarios.length,...scenarios.filter(row=>`${row.width}x${row.height}`===arg('--scenario')));
 assert.ok(scenarios.length,'Unknown scenario');
 const baseline = process.argv.includes('--baseline');
+const locale = arg('--locale','ru');
+assert.ok(['ru','en','zh'].includes(locale),'Use --locale ru, en or zh');
+const searchText={ru:'Статья',en:'Article',zh:'条'}[locale];
+const noResults={ru:'Совпадений нет',en:'No matches',zh:'没有匹配'}[locale];
+const titleText={ru:/Федеральный закон.*[Оо]бращени/u,en:/Federal Law.*Citizens’ Appeals/u,zh:/联邦法.*公民来文/u}[locale];
 const report = [];
 let browser;
 await mkdir(out,{recursive:true});
@@ -43,7 +48,7 @@ try {
     page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
     const key=`${width}x${height}-text${textScale}`;
     try {
-      const response=await page.goto(`${origin}/__qa/reception.html`,{waitUntil:'domcontentloaded'});
+      const response=await page.goto(`${origin}/__qa/reception.html?context=free&lang=${locale}`,{waitUntil:'domcontentloaded'});
       assert.equal(response.status(),200);
       assert.match(await page.title(),/Приёмная/);
       assert.equal(new URL(page.url()).pathname,'/__qa/reception.html');
@@ -52,7 +57,9 @@ try {
         // is not applied to CSS text-size-adjust percentages.
         await page.addStyleTag({content:`.rx-source-embedded .ll-searchbar>input,.rx-source-embedded .ll-reader-header h2,.rx-source-embedded .ll-paragraph-text{font-size:${textScale*0.16}px!important}.rx-source-embedded .ll-search-results button,.rx-source-embedded .ll-search-results button b,.rx-source-embedded .ll-search-results button span,.rx-source-embedded .ll-search-results strong{font-size:${textScale*0.12}px!important}`});
       }
-      await page.locator('[name="trainingCaseId"] option[value]').nth(1).waitFor({state:'attached'});
+      const cases=page.locator('[name="trainingCaseId"]');
+      await cases.locator('option[value]').nth(1).waitFor({state:'attached'});
+      await cases.selectOption({index:1});
       await page.locator('[data-action="start"]').click();
       await page.locator('#receptionAI[data-session-status="active"]').waitFor();
       await page.locator('#rxaPage-documents').click();
@@ -67,6 +74,7 @@ try {
       }
       const reader=page.locator('.rx-source-embedded');
       await reader.locator('.ll-paper [data-unit]').first().waitFor();
+      assert.equal(await reader.locator('.ll-reader').getAttribute('data-reader-locale'),locale);
       assert.equal(await reader.locator('a[href^="http"]').count(),0);
       await page.evaluate(()=>Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,1500))]));
       const reading=await reader.locator('.ll-paper').evaluate(paper=>{
@@ -79,12 +87,12 @@ try {
         const title=reader.locator('.rx-source-title');
         assert.equal(await title.evaluate(node=>node.open),false);
         await title.locator('summary').click();
-        assert.match(await title.locator('h2').innerText(),/Федеральный закон.*Обращени|Федеральный закон.*обращений/);
+        assert.match(await title.locator('h2').innerText(),titleText);
         await title.locator('summary').click();
       }
       const search=reader.locator('[data-input="reader-query"]');
       const results=reader.locator('.ll-search-results');
-      await search.fill('Статья');
+      await search.fill(searchText);
       await search.press('Enter');
       const hits=results.locator('[data-action="jump-unit"]');
       await hits.nth(3).waitFor({state:'attached'});
@@ -122,7 +130,7 @@ try {
       await selected.waitFor();
       await page.waitForFunction(id=>document.activeElement?.dataset.unit===id,unit);
       assert.equal(await results.isVisible(),false);
-      assert.equal(await search.inputValue(),'Статья');
+      assert.equal(await search.inputValue(),searchText);
       const opened=await selected.evaluate(node=>{
         const unit=node.getBoundingClientRect(),paper=node.closest('.ll-paper').getBoundingClientRect();
         return {height:paper.height,top:paper.top,bottom:paper.bottom,unitTop:unit.top};
@@ -132,11 +140,23 @@ try {
       await page.screenshot({path:path.join(out,`${key}-opened-hit.png`),animations:'disabled'});
       await search.fill('нетсовпаденийздесь');
       await search.press('Enter');
-      await results.locator('strong').filter({hasText:'Совпадений нет'}).waitFor();
+      await results.locator('strong').filter({hasText:noResults}).waitFor();
       await reader.locator('[data-action="clear-search"]').click();
       assert.equal(await search.inputValue(),'');
       assert.equal(await results.isVisible(),false);
       assert.equal(await reader.locator('.ll-paper').isVisible(),true);
+      if(locale!=='ru'){
+        await reader.locator('[data-action="toggle-document-original"]').click();
+        await reader.locator('.ll-reader[data-reader-locale="ru"]').waitFor();
+        await reader.locator(`.ll-paper [data-unit="${unit}"]`).waitFor();
+        await reader.locator('[data-action="toggle-document-original"]').click();
+        await reader.locator(`.ll-reader[data-reader-locale="${locale}"]`).waitFor();
+        await reader.locator(`.ll-paper [data-unit="${unit}"]`).waitFor();
+        await search.fill('Статья 8.');
+        await search.press('Enter');
+        await results.locator('[data-action="jump-unit"]').first().waitFor();
+        await reader.locator('[data-action="clear-search"]').click();
+      }
       await reader.locator('[data-source-reader-close]').click();
       assert.equal(await page.locator('.rxa-document-group').count(),2);
       assert.equal(await page.locator('.rxa-top').isVisible(),true);

@@ -418,3 +418,11 @@
   .reception-ai-root.rxa-cabinet *::before,
   .reception-ai-root.rxa-cabinet *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+
+.rxa-cabinet .rxa-operation-status{margin:12px 0;line-height:1.5}
+.rxa-cabinet .rxa-operation-status .rxa-btn{margin-top:8px}
+.rxa-cabinet .rxa-omissions ul{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0}
+.rxa-cabinet .rxa-omissions .rxa-btn{text-align:start}
+.rxa-cabinet .rxc-assessed-routing{margin-bottom:16px}
+.rxa-cabinet .rxc-assessed-routing h2{margin:0 0 8px}

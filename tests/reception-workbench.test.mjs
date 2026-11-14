@@ -159,7 +159,7 @@ test('calendar keeps one instruction and adds an accessible clear control to eac
   assert.doesNotMatch(beforeHelp,/data-calendar-action="use-date"/);
 });
 
-test('special workbooks show their own event, target and statutory quotation without authored instructions',()=>{
+test('special workbooks show their own event, target and statutory quotation separate from the counting instructions',()=>{
   const task={version:2,special:true,autoCommit:true,registrationCheck:false,
     targets:[{id:'deadline',label:'Рассмотреть жалобу до'}],
     events:[{id:'officialReceived',kind:'event',label:'Получено приставом',date:'2026-04-30'}],
@@ -168,7 +168,8 @@ test('special workbooks show their own event, target and statutory quotation wit
   const html=calendarWorkbenchView({task,normsOpen:true}),[beforeHelp,help]=html.split('<details class="rxw-calendar-details"');
   assert.match(beforeHelp,/class="event-other">Получено приставом<\/span>/);
   assert.match(beforeHelp,/data-calendar-action="target" data-target="deadline"/);
-  assert.doesNotMatch(beforeHelp,/data-calendar-action="target" data-target="referral"|registration-timely|Считайте/);
+  assert.match(beforeHelp,/rxw-calendar-instruction">Считайте 10 рабочих дней со следующего дня\./);
+  assert.doesNotMatch(beforeHelp,/data-calendar-action="target" data-target="referral"|registration-timely/);
   assert.match(help,/rxw-calendar-norms-badge/);
   assert.doesNotMatch(help,/Считайте|rxw-calendar-counting-help/);
   assert.match(help,/Статья 126, часть 1\. В течение <strong>десяти<\/strong> рабочих дней/);
@@ -178,7 +179,9 @@ test('special workbooks show their own event, target and statutory quotation wit
 
 test('calendar statutory citations retain their exact article URL and open the original source',()=>{
   const url='https://www.consultant.ru/document/cons_doc_LAW_59999/0c7123ee40ad90f89afa6fa544a87ffe76c084c0/';
-  const html=calendarWorkbenchView({task:{norms:[{label:'59-ФЗ, ст. 8, ч. 2',text:'Письменное обращение подлежит обязательной регистрации в течение трех дней с момента поступления.',url}],instructions:'Не показывать авторскую инструкцию.'}});
+  const html=calendarWorkbenchView({task:{norms:[{label:'59-ФЗ, ст. 8, ч. 2',text:'Письменное обращение подлежит обязательной регистрации в течение трех дней с момента поступления.',url}],instructions:'Считайте со следующего дня.'}});
   assert.ok(html.includes(`href="${url}" target="_blank" rel="noopener noreferrer"`));
-  assert.doesNotMatch(html,/data-source-reader|Не показывать авторскую инструкцию|rxw-calendar-counting-help/);
+  const [instructions,quotes]=html.split('<details class="rxw-calendar-details"');
+  assert.match(instructions,/Считайте со следующего дня\./);
+  assert.doesNotMatch(quotes,/Считайте со следующего дня|data-source-reader|rxw-calendar-counting-help/);
 });

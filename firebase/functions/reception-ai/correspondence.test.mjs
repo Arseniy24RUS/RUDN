@@ -181,13 +181,13 @@ test('review can identify actual order values and knows the bounds of image evid
   const checked=validateCorrespondence(value,photo,state),sources=await resolveCorrespondenceCitations(photo,state,checked,'ru');
   const context=buildCorrespondenceReview(photo,state,{correspondence:checked},'ru',{profile:{...profile,
     constraints:['Проект не означает исполнение.'],routing:{policy:'fixture'},response:{representsDraftOnly:true}},resolvedCitations:sources,operational});
-  assert.ok(context.sections.orders.includes('mvd (Министерство внутренних дел Российской Федерации)'));
-  assert.ok(context.sections.orders.includes('dueDate: 2026-11-30'));
+  assert.ok(context.sections.orders.includes('Адресат: Министерство внутренних дел Российской Федерации'));
+  assert.ok(context.sections.orders.includes('Срок: 2026-11-30'));
   assert.equal(context.sources.find(source=>source.id==='document:d1').imageProvidedToReviewer,false);
   assert.deepEqual(context.sources.find(source=>source.id==='document:d1').factIds,['q1']);
   assert.equal(context.profile.response.representsDraftOnly,true);
   const review=reviewFor(context);review.criteria.find(row=>row.id==='resolution').level=3;
-  review.criteria.find(row=>row.id==='resolution').findings.push({type:'incorrect',section:'orders',quote:'mvd',
+  review.criteria.find(row=>row.id==='resolution').findings.push({type:'incorrect',section:'orders',quote:'Министерство внутренних дел Российской Федерации',
     sourceIds:['case-author-explanation'],explanation:'Тест позволяет указать выбранное значение поручения.'});
   assert.equal(validateCorrespondenceReview(review,context).criteria.length,4);
 });

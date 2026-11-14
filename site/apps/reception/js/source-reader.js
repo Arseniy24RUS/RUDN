@@ -3,6 +3,7 @@ import {esc} from './icons.js';
 import {icon as cabinetIcon} from '../ai/cabinet-icons.js';
 import {createSourceReference,sourceReferenceFromSelection} from './source-reference.js';
 import {SOURCE_LOCATORS} from './source-locators.js';
+import {documentTranslations} from './source-reader-translations.js';
 
 let Corpus,readerView,attachReader,refreshReaderToc,refreshReaderSearch,setReaderQuery,translateDOM,readerImports;
 function loadReader(){
@@ -18,6 +19,11 @@ function loadReader(){
 const BASE=new URL('../',import.meta.url);
 const SHARED_BASE=new URL('../../legal-lab/',import.meta.url);
 const EXISTING={'48601':'civil79','82959':'corruption273','34661':'koap'};
+const localizedReaderCopy={
+  ru:{original:'Русский оригинал',translation:'Показать перевод',translatedSelection:'В черновике сохранится соответствующий фрагмент русского оригинала.',tooLong:'Откройте русский оригинал и выделите фрагмент до 4 000 знаков.',switchFailed:'Не удалось переключить язык документа. Повторите попытку.'},
+  en:{original:'Russian original',translation:'Show translation',studyTranslation:'Study translation',machineTranslation:'Machine-assisted study translation',translatedSelection:'Your draft will cite the corresponding passage in the Russian original.',tooLong:'Open the Russian original and select a passage of up to 4,000 characters.',switchFailed:'Could not switch the document language. Try again.'},
+  zh:{original:'俄文原文',translation:'显示译文',studyTranslation:'学习译文',machineTranslation:'机器辅助学习译文',translatedSelection:'草稿中将引用对应的俄文原文段落。',tooLong:'请打开俄文原文，选择不超过 4,000 个字符的片段。',switchFailed:'无法切换文件语言，请重试。'},
+};
 const LOCAL_LAWS=new Set(['59999','61801','103023','182661','8559','8585','58968','13744','6719','19671','165795','19109','71450','155986','34823','34683','107289','121895','37318','305','491941','140174','39570','363263','64871']);
 const ALIASES=[
   ['mintrud.gov.ru/docs/laws/129','reception-info8'],
@@ -74,8 +80,9 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
   const positions={},readerState={};
   const embedded=presentation==='embedded';
   let mountedContainer=null;
-  let dialog=null,app=null,current=null,session=null,opener=null,generation=0,closed=false,selectedReference=null,sourceURL='',saving=false;
-  const language=()=>typeof locale==='function'?locale():locale;
+  let dialog=null,app=null,current=null,session=null,opener=null,generation=0,closed=false,selectedReference=null,sourceURL='',saving=false,switching=false;
+  const language=()=>{const value=String((typeof locale==='function'?locale():locale)||'');return /^en/i.test(value)?'en':/^zh/i.test(value)?'zh':'ru';};
+  const readerCopy=()=>localizedReaderCopy[language()];
   const labels=()=>({en:{close:'Back to case',loading:'Opening document…',failed:'Could not open the document. Try again.',retry:'Try again',document:'Document',selectHint:'Tap a paragraph or select text to use it as a legal basis.',selected:'Selected passage',use:'Use in decision',clear:'Clear selection',saving:'Saving…',selectFailed:'Could not save the passage. Try again.'},zh:{close:'返回案件',loading:'正在打开文件…',failed:'无法打开文件，请重试。',retry:'重试',document:'文件',selectHint:'点击段落或选择文本，将其作为法律依据。',selected:'所选片段',use:'填入决定',clear:'清除选择',saving:'正在保存…',selectFailed:'无法保存片段，请重试。'}}[language()]||{close:'Вернуться к делу',loading:'Открываем документ…',failed:'Не удалось открыть документ. Повторите загрузку.',retry:'Повторить',document:'Документ',selectHint:'Нажмите на абзац или выделите текст, чтобы использовать его как правовое основание.',selected:'Выбранный фрагмент',use:'В решение',clear:'Снять выделение',saving:'Сохраняем…',selectFailed:'Не удалось сохранить фрагмент. Повторите попытку.'});
   const baseLabels=labels;
   const cabinetLabels=()=>{const text=baseLabels();return embedded?{...text,...({en:{close:'All documents',selected:'Passage selected',selectHint:'Tap a paragraph or select text to save a passage.',use:'Save passage',clear:'Clear',savedHint:'The passage and citation will be saved in your draft.'},zh:{close:'全部文件',selected:'已选择片段',selectHint:'点击段落或选择文字以保存所需片段。',use:'保存片段',clear:'取消',savedHint:'片段及出处将保存在草稿中。'}}[language()]||{close:'Все документы',selected:'Фрагмент выделен',selectHint:'Нажмите на абзац или выделите текст, чтобы сохранить нужный фрагмент.',use:'Сохранить фрагмент',clear:'Снять',savedHint:'Цитата и реквизиты сохранятся в черновике.'})}:text;};
@@ -84,7 +91,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     generation++;
     if(app?.readerController&&current)positions[current.id]=app.readerController.capture();
     app?.readerController?.destroy();app?.corpus?.destroy();session?.abort();
-    app=null;current=null;session=null;selectedReference=null;saving=false;
+    app=null;current=null;session=null;selectedReference=null;saving=false;switching=false;
     dialog?.close?.();dialog?.remove();dialog=null;
     mountedContainer?.classList.remove('rx-source-reader-open');mountedContainer=null;
     if(embedded)delete host.dataset.sourceReaderOpen;
@@ -99,6 +106,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     if(mountedContainer!==target)mountedContainer?.classList.remove('rx-source-reader-open');
     mountedContainer=target;target.classList.add('rx-source-reader-open');host.dataset.sourceReaderOpen='true';
     if(dialog.parentNode!==target)target.append(dialog);
+    if(app&&app.locale!==language()&&!switching)void switchDocumentLanguage(false);
     return true;
   }
   function setEmbeddedSearchResults(open){
@@ -131,9 +139,11 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       const number=header.querySelector('.ll-eyebrow')?.textContent||title;
       const compactNumber=number.match(/(?<![\p{L}\d])\d+[-‑–](?:ФЗ|FZ)(?![\p{L}\d])/iu)?.[0]||number;
       const revision=header.querySelector('.ll-revision')?.textContent;
+      const lang=app.readerSpec.descriptor.locale;
       bar?.querySelector('[data-source-reader-close]')?.insertAdjacentHTML('afterend',`<details class="rx-source-title">
         <summary title="${esc(title)}"><span>${esc(compactNumber)}</span>${cabinetIcon('down')}</summary>
-        <div class="rx-source-title-panel"><h2 lang="ru">${esc(title)}</h2>${revision?`<p lang="ru">${esc(revision)}</p>`:''}
+        <div class="rx-source-title-panel"><h2 lang="${lang}">${esc(title)}</h2>${revision?`<p lang="${lang}">${esc(revision)}</p>`:''}
+        ${lang!=='ru'?`<p>${esc(documentTranslations[current.id]?readerCopy().machineTranslation:readerCopy().studyTranslation)}</p>`:''}
         ${selectionEnabled()?`<p>${esc(cabinetLabels().selectHint)}</p>`:''}</div></details>`);
     }
     setEmbeddedSearchResults(Boolean(searchPanel?.querySelector('.ll-search-results:not([hidden])')));
@@ -144,59 +154,157 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     const retry=dialog.querySelector('[data-source-reader-retry]');retry.hidden=false;
   }
   function translate(){if(app)translateDOM(app.root,language());}
-  function unitForElement(element){
-    const id=element.dataset.unit,unit=app?.corpus.peekUnit(current.id,'ru',id)||{},descriptor=app?.readerSpec?.descriptor;
+  function originalUnit(id,unit){
     const spec=SOURCE_LOCATORS[current.id],position=Number(id.match(/-u(\d+)$/)?.[1]);
     const locator=spec?.starts.findLast(([start])=>start<=position)?.[1];
-    const label=locator?`${spec.kind} ${locator}`:unit.label||descriptor?.labels?.[id]||unit.locator||element.querySelector('.ll-paragraph-locator')?.textContent||'';
-    return {...unit,id,label,text:unit.text||element.querySelector('.ll-paragraph-text')?.textContent||''};
+    return {...unit,id,label:locator?`${spec.kind} ${locator}`:unit.label||unit.locator||''};
+  }
+  function unitForElement(element){
+    const id=element.dataset.unit,descriptor=app.readerSpec.descriptor,locale=descriptor.locale;
+    const unit=app.corpus.peekUnit(current.id,locale,id);
+    const display={...unit,id,label:unit?.label||descriptor.labels[id]||unit?.locator||'',text:unit?.text||element.querySelector('.ll-paragraph-text')?.textContent||''};
+    return locale==='ru'?originalUnit(id,display):display;
+  }
+  function setSelection(reference){
+    selectedReference=reference?{...reference,displayLocale:app.readerSpec.descriptor.locale}:null;
+    renderSelection();
   }
   function renderSelection(){
     if(!dialog)return;
     const tray=dialog.querySelector('[data-source-reference-tray]');if(!tray)return;
     tray.hidden=!selectionEnabled();
     const text=cabinetLabels(),selected=Boolean(selectedReference);
-    tray.querySelector('[data-source-reference-hint]').textContent=selected?text.selected:text.selectHint;
+    tray.dataset.sourceReferenceFeedback=String(selected&&selectedReference.displayLocale!=='ru');
+    tray.querySelector('[data-source-reference-hint]').textContent=selected?(selectedReference.displayLocale==='ru'?text.selected:readerCopy().translatedSelection):text.selectHint;
     tray.dataset.selected=String(selected);
     tray.querySelector('[data-source-reference-title]').textContent=selectedReference?.locator||'';
     tray.querySelector('[data-source-reference-preview]').textContent=selectedReference?.text.slice(0,160)||'';
-    const use=tray.querySelector('[data-source-reference-use]');use.disabled=!selected||saving;use.innerHTML=(embedded?cabinetIcon('decision'):'')+`<span>${esc(saving?text.saving:text.use)}</span>`;
+    const use=tray.querySelector('[data-source-reference-use]');use.disabled=!selected||saving||switching;use.innerHTML=(embedded?cabinetIcon('decision'):'')+`<span>${esc(saving?text.saving:text.use)}</span>`;
     tray.querySelector('[data-source-reference-clear]').hidden=!selected;
     if(app?.readerSpec){app.readerSpec.selected=selectedReference?.unitIds||[];app.readerController?.update(app.readerSpec);}
   }
+  function selectionFeedback(message){
+    const tray=dialog.querySelector('[data-source-reference-tray]');
+    tray.dataset.sourceReferenceFeedback='true';
+    tray.querySelector('[data-source-reference-hint]').textContent=message;
+  }
   function captureSelection(){
-    if(!selectionEnabled()||!app||!current||saving)return false;
+    if(!selectionEnabled()||!app||!current||saving||switching)return false;
     const selection=dialog.ownerDocument.defaultView.getSelection();
     const reference=sourceReferenceFromSelection(selection,app.root.querySelector('.ll-paper'),current,unitForElement,sourceURL);
     if(!reference)return false;
-    selectedReference=reference;renderSelection();return true;
+    setSelection(reference);return true;
   }
   async function useSelection(){
-    if(!selectedReference||saving||!selectionEnabled())return;
-    const ticket=generation,reference=structuredClone(selectedReference);
+    if(!selectedReference||saving||switching||!selectionEnabled())return;
+    const ticket=generation,owner=app,doc=current,{displayLocale,...selection}=structuredClone(selectedReference);
     saving=true;renderSelection();
     try{
+      let reference=selection;
+      if(displayLocale!=='ru'){
+        const original=await owner.corpus.readerDocument(doc.id,'ru',{activate:false});
+        const ordered=selection.unitIds.map(id=>original.units.find(unit=>unit.id===id));
+        if(ordered.some((unit,index)=>!unit||index>0&&unit.index!==ordered[index-1].index+1))throw Error('Selected passage is unavailable');
+        const loaded=await owner.corpus.loadUnits(doc.id,'ru',selection.unitIds);
+        if(ticket!==generation)return;
+        const units=ordered.map(unit=>unit&&loaded.has(unit.id)?originalUnit(unit.id,{...unit,...loaded.get(unit.id)}):null);
+        if(units.some(unit=>!unit))throw Error('Selected passage is unavailable');
+        reference=createSourceReference(doc,{units,url:sourceURL});
+        if(!reference||units.length>40||reference.text.length>4000){
+          saving=false;renderSelection();selectionFeedback(readerCopy().tooLong);return;
+        }
+      }
       const result=await onSelect(reference);
       if(ticket!==generation)return;
       if(result!==false)close();else{saving=false;renderSelection();}
     }catch{
       if(ticket!==generation)return;
-      saving=false;renderSelection();dialog.querySelector('[data-source-reference-hint]').textContent=cabinetLabels().selectFailed;
+      saving=false;renderSelection();selectionFeedback(cabinetLabels().selectFailed);
+    }
+  }
+  function renderDocument(){
+    const selected=selectedReference?.unitIds||[];
+    dialog.querySelector('.rx-source-dialog-bar .ll-reader-tools')?.remove();
+    dialog.querySelector('.rx-source-title')?.remove();
+    app.root.innerHTML=readerView(app,current,selected,{context:'reception',readonly:true,showSource:!embedded});
+    const bar=dialog.querySelector('.rx-source-dialog-bar');
+    const languageTools=app.root.querySelector('.ll-document-language');
+    bar.querySelector('.ll-document-language')?.remove();
+    const toggle=languageTools?.querySelector('[data-action="toggle-document-original"]');
+    if(languageTools){
+      languageTools.hidden=!toggle||!app.locales.includes(app.locale);
+      if(!languageTools.hidden&&embedded)bar.append(languageTools);
+    }
+    if(embedded)decorateEmbeddedReader();
+    translate();
+    if(toggle&&!languageTools.hidden){
+      const displayingOriginal=readerState[current.id].original;
+      const label=displayingOriginal?readerCopy().translation:readerCopy().original;
+      toggle.textContent=label;
+      toggle.title=label;
+      toggle.setAttribute('aria-label',label);
+      const format=languageTools.querySelector('small');
+      format.textContent=displayingOriginal?readerCopy().original:(documentTranslations[current.id]?readerCopy().machineTranslation:readerCopy().studyTranslation);
+      if(embedded&&!displayingOriginal){
+        const abbreviated=document.createElement('span');
+        abbreviated.className='rx-source-translation-label';
+        abbreviated.textContent=readerCopy().studyTranslation;
+        toggle.prepend(abbreviated);
+        toggle.setAttribute('aria-label',`${format.textContent}. ${label}`);
+      }
+    }
+    const labels=cabinetLabels(),back=bar.querySelector('[data-source-reader-close]');
+    back.setAttribute('aria-label',labels.close);
+    back.querySelector('span').textContent=labels.close;
+    dialog.querySelector('[data-source-reference-clear]')?.replaceChildren(labels.clear);
+    dialog.querySelector('.rx-source-reference-note')?.replaceChildren(labels.savedHint);
+    renderSelection();
+  }
+  async function switchDocumentLanguage(toggleOriginal){
+    if(!app||!current||switching||saving)return;
+    const owner=app,doc=current,ticket=generation,lang=language(),rs=readerState[doc.id];
+    const oldOriginal=rs.original,oldLocale=owner.locale;
+    const original=!owner.locales.includes(lang)||(toggleOriginal?!rs.original:lang==='ru');
+    const position=owner.readerController?.capture();
+    const control=dialog.querySelector('[data-action="toggle-document-original"]');
+    const focus=control===dialog.ownerDocument.activeElement;
+    const status=dialog.querySelector('[data-source-reader-status]');
+    switching=true;dialog.dataset.languageSwitching='true';if(control)control.disabled=true;status.textContent=cabinetLabels().loading;renderSelection();
+    let changed=false;
+    try{
+      await owner.corpus.readerDocument(doc.id,original?'ru':lang);
+      if(ticket!==generation)return;
+      owner.locale=lang;rs.original=original;rs.uiLocale=lang;
+      changed=true;renderDocument();await attachReader(owner,position);
+      if(ticket!==generation)return;
+      status.textContent='';
+      if(focus)dialog.querySelector('[data-action="toggle-document-original"]')?.focus({preventScroll:true});
+    }catch(error){
+      if(ticket!==generation)return;
+      owner.locale=oldLocale;rs.original=oldOriginal;rs.uiLocale=oldLocale;
+      if(changed){
+        try{await owner.corpus.readerDocument(doc.id,oldOriginal?'ru':oldLocale);if(ticket!==generation)return;renderDocument();await attachReader(owner,position);}
+        catch(other){if(ticket===generation)fail(other);}
+      }
+      if(ticket!==generation)return;
+      if(error?.name!=='AbortError')status.textContent=readerCopy().switchFailed;
+    }finally{
+      if(ticket===generation){switching=false;delete dialog.dataset.languageSwitching;if(control?.isConnected)control.disabled=false;renderSelection();}
     }
   }
   async function search(page=0){
-    const owner=app,doc=current;if(!owner?.readerController||!doc)return;
+    const owner=app,doc=current,controller=owner?.readerController;if(!controller||!doc||switching)return;
     const field=owner.root.querySelector('[data-input="reader-query"]');
     const query=field?.value||'';
     if(embedded&&field===field?.ownerDocument.activeElement)field.blur();
     setReaderQuery(owner,doc,query);
-    const pending=owner.readerController.search(query,page);
+    const pending=controller.search(query,page);
     refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();
-    try{await pending;if(app!==owner)return;refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();}
-    catch(error){if(app===owner)fail(error);}
+    try{await pending;if(app!==owner||owner.readerController!==controller)return;refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();}
+    catch(error){if(app===owner&&owner.readerController===controller)fail(error);}
   }
   async function action(event){
-    const target=event.target.closest('[data-action]');if(!target||!app||!current)return;
+    const target=event.target.closest('[data-action]');if(!target||!app||!current||switching)return;
     const owner=app,doc=current,rs=readerState[doc.id];
     try{
       if(target.dataset.unit&&selectionEnabled()){
@@ -204,7 +312,9 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
         if(!nativeSelection?.isCollapsed&&(target.contains(nativeSelection?.anchorNode)||target.contains(nativeSelection?.focusNode))&&captureSelection())return;
         nativeSelection?.removeAllRanges();
         const unit=unitForElement(target),reference=createSourceReference(doc,{units:[unit],url:sourceURL});
-        selectedReference=reference?.id===selectedReference?.id?null:reference;renderSelection();
+        setSelection(reference?.id===selectedReference?.id?null:reference);
+      }else if(target.dataset.action==='toggle-document-original'){
+        await switchDocumentLanguage(true);
       }else if(target.dataset.action==='toggle-toc'){
         rs.tocOpen=!rs.tocOpen;owner.root.querySelector('.ll-reader-grid').classList.toggle('toc-open',rs.tocOpen);
         target.setAttribute('aria-expanded',String(rs.tocOpen));refreshReaderToc(owner,doc);
@@ -268,13 +378,20 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
           };
         }
       }
-      const doc=await corpus.load(id);await corpus.readerDocument(id,'ru');
+      const doc=await corpus.load(id),entry=await corpus.readerData.entry(id);
+      const translation=documentTranslations[id];
+      if(!shared&&translation?.sourceSha256===entry.sourceSha256&&translation?.sourceFileSha256===entry.sourceFileSha256){
+        Object.assign(entry.locales,translation.locales);
+      }
+      const locales=Object.keys(entry.locales),lang=language();
+      const rs=readerState[id]||={original:lang==='ru'||!locales.includes(lang),tocOpen:false,searchOpen:embedded};
+      if(!locales.includes(lang)||lang==='ru')rs.original=true;
+      else if(rs.uiLocale&&rs.uiLocale!==lang)rs.original=false;
+      rs.uiLocale=lang;
+      await corpus.readerDocument(id,rs.original?'ru':lang);
       if(ticket!==generation||closed){corpus.destroy();return false;}
-      readerState[id]||={original:true,tocOpen:false,searchOpen:embedded};
-      current=doc;app={root:dialog.querySelector('.rx-source-reader-content'),corpus,locale:'ru',state:{reader:readerState},unitIndexes:new WeakMap(),isLocked:()=>false,applyPresence:()=>{},fail};
-      app.root.innerHTML=readerView(app,doc,[],{context:'reception',readonly:true,showSource:!embedded});
-      if(embedded)decorateEmbeddedReader();
-      translate();await attachReader(app,positions[id]);
+      current=doc;app={root:dialog.querySelector('.rx-source-reader-content'),corpus,locale:lang,locales,state:{reader:readerState},unitIndexes:new WeakMap(),isLocked:()=>false,applyPresence:()=>{},fail};
+      renderDocument();await attachReader(app,positions[id]);
       if(ticket!==generation)return false;
       dialog.querySelector('[data-source-reader-status]').textContent='';
       dialog.addEventListener('click',action,{signal:aborter.signal});

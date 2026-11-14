@@ -25,7 +25,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
     catalog(parameters = {}, options = {}) { return api.request({...parameters, op: 'catalog'}, options); },
     recover(parameters = {}, options = {}) { return api.request({...parameters, op: 'recover'}, options); },
     async request(body, {signal} = {}) {
-      if(context && ['start','recover','resume'].includes(body.op)) body={...body,context};
+      if(context && (['start','recover','resume'].includes(body.op)||context==='free'&&body.op==='catalog')) body={...body,context};
       if(buildId && ['start','recover','resume'].includes(body.op)) body={...body,buildId};
       if(workbookVersion&&['start','catalog','recover','resume'].includes(body.op))body={...body,workbookVersion};
       // A resumed session retains its own assessment contract.

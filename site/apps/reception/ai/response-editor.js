@@ -1,5 +1,5 @@
 /**
- * Student-authored correspondence. This module never receives a model answer.
+ * Student-authored correspondence and presentation of assessment feedback.
  *
  * The host owns persistence, navigation and submission. Inputs expose:
  *   data-response-field="subject|kind|sections.<name>"
@@ -21,6 +21,9 @@
  * A source picker value is kind + ":" + id. No URLs or source titles are
  * accepted as submitted citations; the server resolves source IDs.
  */
+import {RECEPTION_AUTHORITIES} from './authority-directory.js';
+import {localizedAuthorityName} from './authority-picker.js';
+
 const SECTION_IDS = ['facts', 'legalBasis', 'resolution', 'nextSteps'];
 const DOCUMENT_KINDS = ['reply', 'notification', 'referral', 'request', 'return', 'internal', 'special'];
 const ORDER_KINDS = ['request', 'referral', 'execution', 'review', 'notification', 'control'];
@@ -56,6 +59,7 @@ const copy = {
     kinds:{reply:'Ответ заявителю', notification:'Уведомление', referral:'Направление по компетенции', request:'Запрос материалов', return:'Возврат с разъяснением', internal:'Служебный документ', special:'Проект решения / постановления'},
     orderKinds:{request:'Запросить материалы',referral:'Направить по компетенции',execution:'Организовать исполнение',review:'Провести проверку',notification:'Уведомить',control:'Проверить результат'},
     sourceKinds:{document:'Материалы дела',dialogue:'Разговор',legal:'Нормативные источники'},
+    event:'Новое сообщение по делу', controlFields:{status:'состояние вопроса',evidence:'подтверждающие материалы',source:'материал дела',rule:'правило проверки',reason:'критерий оценки',answer:'проект ответа',section:'раздел проекта',order:'поручение',next:'дальнейшие действия'},
     statuses:{pending:'Оставить на контроле',resolved:'Исполнение подтверждено',referred:'Передано по компетенции'},
   },
   en: {
@@ -81,6 +85,7 @@ const copy = {
     kinds:{reply:'Reply to the applicant',notification:'Notice',referral:'Referral to a competent body',request:'Request for materials',return:'Return with explanation',internal:'Internal document',special:'Draft decision / order'},
     orderKinds:{request:'Request materials',referral:'Refer to the competent body',execution:'Arrange implementation',review:'Conduct a review',notification:'Notify',control:'Check the result'},
     sourceKinds:{document:'Case materials',dialogue:'Conversation',legal:'Legal sources'},
+    event:'New case information', controlFields:{status:'issue status',evidence:'supporting evidence',source:'case material',rule:'review requirement',reason:'assessment criterion',answer:'draft response',section:'draft section',order:'assignment',next:'next steps'},
     statuses:{pending:'Keep under review',resolved:'Completion confirmed',referred:'Referred to a competent body'},
   },
   zh: {
@@ -106,6 +111,7 @@ const copy = {
     kinds:{reply:'答复申请人',notification:'通知',referral:'按职权转送',request:'材料请求',return:'退回并说明',internal:'内部文书',special:'决定 / 命令草案'},
     orderKinds:{request:'请求材料',referral:'按职权转送',execution:'组织执行',review:'开展核查',notification:'通知',control:'核查结果'},
     sourceKinds:{document:'案件材料',dialogue:'对话',legal:'法规来源'},
+    event:'案件新信息', controlFields:{status:'问题状态',evidence:'证明材料',source:'案件材料',rule:'评审要求',reason:'评分标准',answer:'答复草稿',section:'草稿章节',order:'任务',next:'后续行动'},
     statuses:{pending:'继续监督',resolved:'已确认执行',referred:'已按职权转送'},
   },
 };
@@ -208,7 +214,7 @@ function publicSources(sources=[],locale='ru') {
   return result;
 }
 function sourceTitle(citation,sources,t) { return sources.find(source=>source.id===citation.sourceId&&source.kind===citation.kind)?.title||t.sourceKinds[citation.kind]||t.source; }
-function recipientLabel(id,recipients,locale) { const row=(recipients||[]).find(recipient=>recipient.id===id);return local(row?.label??row?.name,locale)||id; }
+function recipientLabel(id,recipients,locale) { const row=(recipients||[]).find(recipient=>recipient.id===id);return local(row?.label??row?.name,locale)||copy[language(locale)].noRecipient; }
 function sourcePicker(section,draft,sources,locale,disabled) {
   const t=copy[language(locale)],attached=draft.citations.filter(item=>item.section===section);
   const rows=attached.map(citation=>{
@@ -288,35 +294,137 @@ export function correspondencePreviewView(options={}) {
 }
 
 export function restoreCorrespondenceControl(value) {
-  const source=value&&typeof value==='object'?value:{},seen=new Set();
-  return {text:string(source.text),statuses:(Array.isArray(source.statuses)?source.statuses:[]).filter(row=>{
-    if(!row||!string(row.issueId,100)||seen.has(row.issueId)||!CONTROL_STATUSES.includes(row.status))return false;
-    seen.add(row.issueId);return true;
-  }).slice(0,20).map(row=>({issueId:string(row.issueId,100),status:row.status,evidenceSourceIds:ids(row.evidenceSourceIds)}))};
+  const source=value&&typeof value==='object'?value:{},seen=new Set(),statuses=[];
+  for(const row of Array.isArray(source.statuses)?source.statuses:[]) {
+    const issueId=string(row?.issueId,100);
+    if(!issueId||seen.has(issueId))continue;
+    const status=CONTROL_STATUSES.includes(row.status)?row.status:'';
+    const evidenceSourceIds=ids(row.evidenceSourceIds);
+    if(!status&&!evidenceSourceIds.length)continue;
+    seen.add(issueId);
+    statuses.push({issueId,status,evidenceSourceIds});
+    if(statuses.length===20)break;
+  }
+  return {text:string(source.text),statuses};
 }
+
 export function reduceCorrespondenceControl(value,action={}) {
   const draft=restoreCorrespondenceControl(value);
-  if(action.type==='text')draft.text=string(action.value);
-  else if(string(action.issueId,100)) {
-    let row=draft.statuses.find(item=>item.issueId===action.issueId);
-    if(action.type==='status') {
-      if(!CONTROL_STATUSES.includes(action.value)){draft.statuses=draft.statuses.filter(item=>item.issueId!==action.issueId);return draft;}
-      if(!row&&draft.statuses.length<20){row={issueId:action.issueId,status:action.value,evidenceSourceIds:[]};draft.statuses.push(row);}
-      if(row)row.status=action.value;
-    } else if(action.type==='evidence'&&row&&string(action.sourceId,240))row.evidenceSourceIds=action.selected?ids([...row.evidenceSourceIds,action.sourceId]):row.evidenceSourceIds.filter(id=>id!==action.sourceId);
+  if(action.type==='text')return {...draft,text:string(action.value)};
+  const issueId=string(action.issueId,100);
+  if(!issueId)return draft;
+  const row=draft.statuses.find(item=>item.issueId===issueId)||{issueId,status:'',evidenceSourceIds:[]};
+  if(action.type==='status')row.status=CONTROL_STATUSES.includes(action.value)?action.value:'';
+  if(action.type==='evidence'&&string(action.sourceId,240)) {
+    const remaining=row.evidenceSourceIds.filter(id=>id!==action.sourceId&&!SOURCE_KINDS.some(kind=>id===kind+':'+action.sourceId));
+    row.evidenceSourceIds=action.selected?ids([...remaining,action.sourceId]):remaining;
   }
-  return draft;
+  if(!draft.statuses.includes(row))draft.statuses.push(row);
+  return restoreCorrespondenceControl(draft);
+}
+
+export function correspondenceControlSubmission(value) {
+  const draft=restoreCorrespondenceControl(value);
+  return {...draft,statuses:draft.statuses.filter(row=>row.status)};
+}
+
+export function correspondenceControlOmissions(draft,issues,sources) {
+  const rows=restoreCorrespondenceControl(draft).statuses;
+  const available=publicSources(sources);
+  return (Array.isArray(issues)?issues:[]).filter(issue=>issue?.id).flatMap(issue=>{
+    const row=rows.find(item=>item.issueId===issue.id);
+    const omission=(kind)=>({kind,issueId:issue.id,title:issue.title,focusId:'response-'+kind+'-'+issue.id});
+    return [
+      ...(!row?.status?[omission('status')]:[]),
+      ...(available.length&&!available.some(source=>row?.evidenceSourceIds.some(id=>id===source.id||id===source.key))?[omission('evidence')]:[]),
+    ];
+  });
 }
 
 /** New facts are supplied by the server only after the first decision is fixed. */
-export function correspondenceControlView({draft,correspondence,issues,profile={},intro='',sources=[],locale='ru',disabled=false}={}) {
+export function correspondenceControlView({draft,correspondence,issues,intro='',sources=[],locale='ru',disabled=false}={}) {
   const d=restoreCorrespondenceControl(draft),t=copy[language(locale)],available=publicSources(sources,locale),off=disabled?' disabled':'';
   const rows=Array.isArray(issues)?issues:(Array.isArray(correspondence?.orders)?correspondence.orders.map(order=>({id:order.id,title:order.issue||order.instruction})):[]);
-  const issueRows=rows.filter(row=>row&&typeof row.id==='string').slice(0,20).map((issue,index)=>{
+  const issueRows=rows.filter(row=>row&&typeof row.id==='string').slice(0,20).map(issue=>{
     const status=d.statuses.find(row=>row.issueId===issue.id),id=esc(issue.id);
-    return '<section class="rxc-control-issue"><h3>'+String(index+1)+'. '+esc(local(issue.title,locale)||t.issue)+'</h3><label class="rxa-field"><span>'+esc(t.issueStatus)+'</span><select data-response-status-field="status" data-issue-id="'+id+'" data-focus="response-status-'+id+'"'+off+'><option value="">'+esc(t.statusChoose)+'</option>'+CONTROL_STATUSES.map(value=>'<option value="'+value+'" '+(status?.status===value?'selected':'')+'>'+esc(t.statuses[value])+'</option>').join('')+'</select></label>'+(available.length?'<details class="rxc-control-sources" data-details="response-control-sources-'+id+'"><summary>'+glyph('link')+'<span>'+esc(t.controlEvidence)+'</span><small>'+(status?.evidenceSourceIds.length||0)+'</small>'+glyph('chevron')+'</summary><div>'+available.map(source=>'<label class="rxc-recipient-choice"><input type="checkbox" data-response-status-evidence="'+esc(source.id)+'" data-issue-id="'+id+'" '+(status?.evidenceSourceIds.includes(source.id)?'checked ':'')+(disabled||!status?'disabled':'')+'><span>'+esc(source.title)+'</span></label>').join('')+'</div></details>':'')+'</section>';
+    const options=CONTROL_STATUSES.map(value=>'<option value="'+value+'"'+(status?.status===value?' selected':'')+'>'+esc(t.statuses[value])+'</option>').join('');
+    const statusField='<label class="rxa-field"><span>'+esc(t.issueStatus)+'</span><select data-response-status-field="status" data-issue-id="'+id+'" data-focus="response-status-'+id+'"'+off+'><option value="">'+esc(t.statusChoose)+'</option>'+options+'</select></label>';
+    const sourceOptions=available.map(source=>{
+      const checked=status?.evidenceSourceIds.some(value=>value===source.id||value===source.key);
+      return '<label class="rxc-recipient-choice"><input type="checkbox" data-response-status-evidence="'+esc(source.id)+'" data-issue-id="'+id+'" data-focus="response-evidence-'+id+'-'+esc(source.key)+'"'+(checked?' checked':'')+off+'><span>'+esc(source.title)+'</span></label>';
+    }).join('');
+    const evidenceField=sourceOptions?'<fieldset class="rxc-control-sources" tabindex="-1" data-focus="response-evidence-'+id+'"><legend>'+esc(t.controlEvidence)+'</legend><div>'+sourceOptions+'</div></fieldset>':'';
+    return '<section class="rxc-control-issue"><h3>'+esc(local(issue.title,locale)||t.issue)+'</h3><div class="rxc-control-fields">'+statusField+evidenceField+'</div></section>';
   }).join('');
-  return '<section class="rxc-control" data-correspondence-control>'+(local(intro,locale)?'<div class="rxc-control-event">'+glyph('paper')+'<div>'+paragraphHTML(local(intro,locale))+'</div></div>':'')+'<label class="rxa-field rxc-control-text"><span>'+esc(t.controlText)+'</span><textarea data-response-control-field="text" data-focus="response-control-text" maxlength="'+TEXT_LIMIT+'" rows="7" aria-describedby="rxc-control-hint"'+off+'>'+esc(d.text)+'</textarea><small id="rxc-control-hint">'+esc(t.controlHint)+'</small></label>'+(issueRows?'<div class="rxc-control-issues">'+issueRows+'</div>':'')+'</section>';
+  const event=local(intro,locale);
+  return '<section class="rxc-control" data-correspondence-control>'+(event?'<div class="rxc-control-event">'+glyph('paper')+'<div><h3>'+esc(t.event)+'</h3>'+paragraphHTML(event)+'</div></div>':'')+(issueRows?'<div class="rxc-control-issues">'+issueRows+'</div>':'')+'<label class="rxa-field rxc-control-text"><span>'+esc(t.controlText)+'</span><textarea data-response-control-field="text" data-focus="response-control-text" maxlength="'+TEXT_LIMIT+'" rows="7" aria-describedby="rxc-control-hint"'+off+'>'+esc(d.text)+'</textarea><small id="rxc-control-hint">'+esc(t.controlHint)+'</small></label></section>';
+}
+
+/** Translate only presentation fields. Original student and evidence passages stay verbatim. */
+export function presentCorrespondenceFeedback(feedback,{locale='ru',issues=[],sources=[],actions=[],recipients=[]}={}) {
+  if(!feedback?.correspondence)return feedback;
+  const t=copy[language(locale)],terms=t.controlFields,protocol=feedback.correspondence;
+  const citations=[...(protocol.citations||[]),...(protocol.initial?.citations||[]),...(protocol.control?.citations||[])];
+  const issueLabels=new Map((issues||[]).map(issue=>[issue.id,local(issue.title,locale)||t.issue]));
+  const sourceLabels=new Map(publicSources(sources,locale).flatMap(source=>[[source.key,source.title],[source.id,source.title]]));
+  for(const citation of citations)if(citation.title)sourceLabels.set('citation:'+citation.id,local(citation.title,locale));
+  const actionLabels=new Map((actions||[]).filter(action=>action.label).map(action=>[action.id,local(action.label,locale)]));
+  for(const authority of [...RECEPTION_AUTHORITIES,...(recipients||[])])actionLabels.set(authority.id,local(authority.label??authority.name,locale));
+  const statusPair=/['"]?\b([a-z][a-z0-9_-]*)['"]?\s*[:：=]\s*['"]?(pending|resolved|referred)\b['"]?/gi;
+  const pair=(_,id,state)=>(issueLabels.get(id)||t.issue)+': '+t.statuses[state.toLowerCase()];
+  const fields={
+    evidenceSourceIds:terms.evidence,eligibleEvidenceIds:terms.evidence,sourceIds:terms.source,documentIds:terms.source,
+    citationIds:t.sources,citationId:t.source,ruleId:terms.rule,issueId:t.issue,recipientIds:t.recipients,dueDate:t.due,
+    factIds:t.section.facts,knownFactIds:t.section.facts,revealedFactIds:t.section.facts,openedDocumentIds:t.sources,
+    releasedDocumentIds:t.sources,sourceId:t.source,maxPoints:terms.reason,rubricVersion:terms.reason,
+    expectedResult:t.expected,knownQuestion:terms.rule,maxLevel:terms.reason,requiresObservedEvidence:terms.evidence,
+    caseId:t.matter,caseVersion:t.matter,datePackId:t.matter,criticalRules:terms.rule,acceptablePlans:t.operation,
+    initialSubmission:terms.answer,frozenCase:t.matter,operational:terms.reason,sections:terms.section,orders:t.orders,
+    statuses:t.issueStatus,nextAction:terms.next,legalBasis:t.section.legalBasis,nextSteps:t.section.nextSteps,
+  };
+  const fieldPattern=new RegExp('\\b(?:'+Object.keys(fields).join('|')+')\\b','g');
+  const prefixedId=/\b(?:certificate|citation|critical-rule|document|dialogue|fact|legal):[a-z0-9][a-z0-9_.:/-]*/gi;
+  function prose(value) {
+    if(typeof value!=='string')return value;
+    return value.replace(statusPair,pair)
+      .replace(prefixedId,id=>sourceLabels.get(id)||(id.startsWith('critical-rule:')?terms.rule:terms.source))
+      .replace(/\`([a-z0-9_.:/-]+)\`/gi,(_,id)=>t.statuses[id]||sourceLabels.get(id)||actionLabels.get(id)||issueLabels.get(id)||fields[id]||terms.reason)
+      .replace(fieldPattern,id=>fields[id])
+      .replace(/\b[a-z][a-z0-9]*(?:[_-][a-z0-9]+)+\b/gi,id=>sourceLabels.get(id)||actionLabels.get(id)||issueLabels.get(id)||(id.endsWith('-author-explanation')?terms.rule:id))
+      .replace(/\b(?:d\d+|q\d+|(?:msg|order|citation)[_-]?\d+)\b/gi,id=>sourceLabels.get(id)||terms.source);
+  }
+  function orderQuote(value) {
+    const keys={issue:t.issue,kind:t.operation,recipients:t.recipients,instruction:t.instruction,dueDate:t.due,expectedResult:t.expected};
+    return value.split('\n').flatMap(line=>{
+      if(/^\s*(?:id|citationIds):\s*/.test(line))return [];
+      const match=line.match(/^(issue|kind|recipients|instruction|dueDate|expectedResult): *(.*)$/);
+      if(!match)return /^order[\w-]*$/i.test(line.trim())?[]:[line];
+      const [, key, raw]=match;
+      if(!raw)return [];
+      const label=key==='kind'?t.orderKinds[raw]||'':key==='recipients'
+        ?raw.split('; ').map(item=>actionLabels.get(item.split(' (')[0])||item.match(/^[a-z0-9_.:/-]+ \((.+)\)$/i)?.[1]||'').filter(Boolean).join(', ')
+        :raw;
+      return label?[keys[key]+': '+label]:[];
+    }).join('\n').trim();
+  }
+  function finding(value,legacy) {
+    if(!value)return value;
+    let quote=value.quote;
+    // Older reviews can quote the server's serialized statuses or assignments.
+    if(legacy&&quote&&value.section==='statuses')quote=quote.replace(statusPair,pair).replace(/^\s*(pending|resolved|referred)\s*$/i,(_,id)=>t.statuses[id.toLowerCase()]);
+    if(legacy&&quote&&value.section==='orders')quote=actionLabels.get(quote)||t.orderKinds[quote]||orderQuote(quote);
+    if(legacy&&quote&&value.section==='kind')quote=t.kinds[quote]||quote;
+    return {...value,quote,explanation:prose(value.explanation)};
+  }
+  function phase(value) {
+    if(!value)return value;
+    const legacy=value.displayFormat!==1;
+    return {...value,summary:prose(value.summary),
+      criteria:(value.criteria||[]).map(row=>({...row,reason:prose(row.reason),findings:(row.findings||[]).map(item=>finding(item,legacy))})),
+      criticalErrors:(value.criticalErrors||[]).map(row=>({...row,finding:finding(row.finding,legacy)}))};
+  }
+  return {...feedback,explanation:prose(feedback.explanation),
+    correspondence:protocol.phase==='complete'?{...protocol,initial:phase(protocol.initial),control:phase(protocol.control)}:phase(protocol)};
 }
 
 export const correspondencePrintCSS = [

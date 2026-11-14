@@ -220,13 +220,38 @@ class Backend{
     if(!active())throw serviceError('diagnostics/identity-changed');
     return result;
   }
-  async getReceptionIdToken({forceRefresh=false}={}){
+  receptionGuestAllowed(){return !this.getProfile()&&!this.isAdmin()&&!this.loginPending}
+  async ensureReceptionGuest(){
+    if(!this.receptionGuestAllowed())throw serviceError('reception/identity-changed');
+    if(!this.receptionGuestPending)this.receptionGuestPending=(async()=>{
+      // Give free play a persistent browser identity independent of the student
+      // and teacher login. It cannot authenticate requests for their sessions.
+      const {app:appMod,auth:authMod}=await import('../vendor/firebase/firebase-core.js');
+      if(!this.receptionGuestAuth){
+        const appName='reception-guest';
+        const firebaseConfig=CONFIG.emulators?{...CONFIG.firebase,projectId:'demo-rudn',databaseURL:'https://demo-rudn-default-rtdb.firebaseio.com'}:CONFIG.firebase;
+        const app=appMod.getApps().find(candidate=>candidate.name===appName)||appMod.initializeApp(firebaseConfig,appName);
+        this.receptionGuestAuth=authMod.initializeAuth(app,{persistence:[authMod.indexedDBLocalPersistence,authMod.browserLocalPersistence]});
+        if(CONFIG.emulators)authMod.connectAuthEmulator(this.receptionGuestAuth,CONFIG.emulators.auth,{disableWarnings:true});
+      }
+      const auth=this.receptionGuestAuth;
+      await bounded(auth.authStateReady());
+      if(!this.receptionGuestAllowed())throw serviceError('reception/identity-changed');
+      if(!auth.currentUser)await authMod.signInAnonymously(auth);
+      if(!this.receptionGuestAllowed()||!auth.currentUser?.isAnonymous)throw serviceError('reception/identity-changed');
+      return auth.currentUser.uid;
+    })().finally(()=>this.receptionGuestPending=null);
+    return this.receptionGuestPending;
+  }
+  async getReceptionIdToken({forceRefresh=false,guestUid}={}){
     // The browser authenticates to our reception service; the OpenAI credential
     // is held by that service and is never sent to the browser.
-    if(!this.user)throw serviceError('reception/auth-required');
-    const user=this.user,generation=this.generation;
+    const currentUser=()=>guestUid?this.receptionGuestAuth?.currentUser:this.user;
+    const user=currentUser(),generation=this.generation;
+    const guestMatches=()=>!guestUid||this.receptionGuestAllowed()&&user?.isAnonymous&&user.uid===guestUid;
+    if(!user||!guestMatches())throw serviceError('reception/auth-required');
     const token=await user.getIdToken(Boolean(forceRefresh));
-    if(this.user?.uid!==user.uid||this.generation!==generation)throw serviceError('reception/identity-changed');
+    if(currentUser()?.uid!==user.uid||!guestMatches()||!guestUid&&this.generation!==generation)throw serviceError('reception/identity-changed');
     return token;
   }
   async signOut(){

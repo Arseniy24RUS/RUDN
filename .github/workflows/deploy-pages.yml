@@ -249,6 +249,12 @@ jobs:
           if os.environ['RECEPTION_AI_RELEASE'] == 'true':
             allowed.update({
               'scripts/build-reception-correspondence-corpus.mjs',
+              'scripts/build-reception-reader-translations.mjs',
+              'scripts/translate-reception-reader.py',
+              'scripts/reception-reader-reviewed-en.json',
+              'scripts/reception-reader-reviewed-zh.json',
+              'scripts/reception-reader-reviewed-titles.json',
+              'scripts/test-reception-source-search-browser.mjs',
               'scripts/build-reception-correspondence-profiles.mjs',
               'scripts/check-reception-correspondence-catalog.mjs',
               'scripts/check-reception-correspondence-catalog.test.mjs',
@@ -772,6 +778,7 @@ jobs:
           node scripts/build-reception-routing-directory.mjs --check
           node scripts/reception-ai-learning-review.mjs --check
           node scripts/build-reception-correspondence-profiles.mjs --check
+          node scripts/build-reception-reader-translations.mjs --check
           node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs tests/reception-workbook-view.test.mjs tests/reception-game-copy.test.mjs tests/reception-correspondence-editor.test.mjs scripts/check-reception-correspondence-catalog.test.mjs
       - name: Verify Reception document and calendar workflow
         if: contains(github.event.head_commit.message, '[reception-ai-release]')

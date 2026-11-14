@@ -4,6 +4,7 @@ import {
   blankCorrespondence, restoreCorrespondence, reduceCorrespondence,
   correspondenceEditorView, correspondencePreviewView, correspondencePrintHTML,
   restoreCorrespondenceControl, reduceCorrespondenceControl, correspondenceControlView,
+  correspondenceControlOmissions, correspondenceControlSubmission, presentCorrespondenceFeedback,
 } from '../site/apps/reception/ai/response-editor.js';
 
 test('a saved letter preserves the student’s prose, section sources and ordered work',()=>{
@@ -127,20 +128,54 @@ test('a source citation needs a real passage and long texts are never silently c
   assert.equal(attached.citations[0].quote,'Short complete source.');
 });
 
-test('control records require an explicit status and preserve supporting evidence',()=>{
+test('control evidence can be selected before a status and is retained while the draft changes',()=>{
   let draft=restoreCorrespondenceControl({});
   draft=reduceCorrespondenceControl(draft,{type:'text',value:'Фотография относится к другой дате; исполнение пока не подтверждено.'});
   draft=reduceCorrespondenceControl(draft,{type:'evidence',issueId:'repair',sourceId:'photo',selected:true});
-  assert.equal(draft.statuses.length,0,'attaching evidence does not silently decide the issue');
+  assert.deepEqual(draft.statuses,[{issueId:'repair',status:'',evidenceSourceIds:['photo']}]);
+  assert.deepEqual(correspondenceControlSubmission(draft).statuses,[]);
+  const issues=[{id:'repair',title:'Восстановление дорожки'}];
+  const sources=[{id:'photo',kind:'document',title:'Датированная фотография'}];
+  assert.deepEqual(correspondenceControlOmissions(draft,issues,sources).map(row=>row.focusId),['response-status-repair']);
+  const markup=correspondenceControlView({draft,issues,sources,intro:'Поступил снимок.'});
+  assert.ok(markup.indexOf('Поступил снимок.')<markup.indexOf('data-response-status-field'));
+  assert.match(markup,/data-response-status-evidence="photo" data-issue-id="repair"[^>]+ checked>/);
   draft=reduceCorrespondenceControl(draft,{type:'status',issueId:'repair',value:'pending'});
   draft=reduceCorrespondenceControl(draft,{type:'evidence',issueId:'repair',sourceId:'photo',selected:true});
   assert.deepEqual(restoreCorrespondenceControl(JSON.parse(JSON.stringify(draft))),draft);
   assert.equal(draft.statuses[0].status,'pending');
   assert.deepEqual(draft.statuses[0].evidenceSourceIds,['photo']);
+  assert.deepEqual(correspondenceControlOmissions(draft,issues,sources),[]);
+  const cleared=reduceCorrespondenceControl(draft,{type:'status',issueId:'repair',value:''});
+  assert.deepEqual(cleared.statuses[0].evidenceSourceIds,['photo']);
+  const legacy={...cleared,statuses:[{...cleared.statuses[0],evidenceSourceIds:['document:photo']}]};
+  assert.deepEqual(reduceCorrespondenceControl(legacy,{type:'evidence',issueId:'repair',sourceId:'photo',selected:false}).statuses,[]);
   const html=correspondenceControlView({draft,issues:[{id:'repair',title:'Восстановление дорожки'}],sources:[{id:'photo',kind:'document',title:'Датированная фотография'}]});
   assert.ok(html.includes('data-response-control-field="text"'));
   assert.ok(html.includes('data-issue-id="repair"'));
   assert.ok(!html.includes('type="radio"'));
+});
+
+test('saved review translates structured quotes and feedback without editing original prose',()=>{
+  const authored='I wrote “main: pending” and cited Article 12.';
+  const law={quote:'Authoritative statutory text'};
+  const stored={score:65,explanation:'See document:repair-photo and evidenceSourceIds.',correspondence:{phase:'complete',
+    initial:{citations:[law],criteria:[{reason:'Use citation:legal-001.',findings:[
+      {section:'resolution',quote:authored,explanation:'Compare critical-rule:unauthorised-action.'},
+      {section:'orders',quote:'id: order-1\nkind: request\nrecipients: mvd (Ministry of Internal Affairs)\ninstruction: Verify facts.',explanation:'Describe this assignment.'},
+    ]}]},control:{criteria:[{reason:'The review marked "main": "pending".',findings:[
+      {section:'statuses',quote:'main: pending',explanation:'See document:repair-photo and evidenceSourceIds.'},
+    ]}]}}};
+  const result=presentCorrespondenceFeedback(stored,{locale:'en',issues:[{id:'main',title:'Pothole on the road'}],
+    sources:[{id:'repair-photo',kind:'document',title:'Repair photograph'}]});
+  assert.equal(result.explanation,'See Repair photograph and supporting evidence.');
+  assert.equal(result.correspondence.control.criteria[0].findings[0].quote,'Pothole on the road: Keep under review');
+  assert.equal(result.correspondence.control.criteria[0].reason,'The review marked Pothole on the road: Keep under review.');
+  assert.equal(result.correspondence.initial.criteria[0].findings[0].quote,authored);
+  assert.equal(result.correspondence.initial.citations[0].quote,law.quote);
+  assert.match(result.correspondence.initial.criteria[0].findings[1].quote,/Action: Request materials/);
+  assert.doesNotMatch(result.correspondence.initial.criteria[0].findings[1].quote,/order-1|\bmvd\b/);
+  assert.equal(stored.correspondence.control.criteria[0].findings[0].quote,'main: pending');
 });
 
 test('all three locales provide the same writing, preview and control affordances',()=>{

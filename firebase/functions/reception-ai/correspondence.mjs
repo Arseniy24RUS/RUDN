@@ -1,6 +1,7 @@
 import {createHash} from 'node:crypto';
 import {ReceptionError} from './schema.mjs';
 import {ROUTING_AUTHORITY_IDS,ROUTING_AUTHORITIES} from './routing-directory.mjs';
+import {correspondenceIssueTitle} from './correspondence-profiles.mjs';
 
 export const DECISION_VERSION = 'correspondence-v1';
 export const CORRESPONDENCE_RUBRIC_VERSION = 'correspondence-rubric-1';
@@ -13,6 +14,23 @@ export const CORRESPONDENCE_WEIGHTS = Object.freeze({
 export const CORRESPONDENCE_SECTIONS = Object.freeze(['facts','legalBasis','resolution','nextSteps']);
 const ORDER_KINDS = new Set(['request','referral','execution','review','notification','control']);
 const STATUS = new Set(['pending','resolved','referred']);
+const REVIEW_LABELS={
+  ru:{issue:'Вопрос обращения',fields:['Вопрос','Действие','Адресат','Поручение','Срок','Подтверждение исполнения'],
+    statuses:['Оставить на контроле','Исполнение подтверждено','Передано по компетенции'],
+    orders:['Запросить материалы','Направить по компетенции','Организовать исполнение','Провести проверку','Уведомить','Проверить результат'],
+    kinds:['Ответ заявителю','Уведомление','Направление по компетенции','Запрос материалов','Возврат с разъяснением','Служебный документ','Проект решения / постановления']},
+  en:{issue:'Appeal issue',fields:['Issue','Action','Recipient','Instruction','Deadline','Evidence of completion'],
+    statuses:['Keep under review','Completion confirmed','Referred to a competent body'],
+    orders:['Request materials','Refer to the competent body','Arrange implementation','Conduct a review','Notify','Check the result'],
+    kinds:['Reply to the applicant','Notice','Referral to a competent body','Request for materials','Return with explanation','Internal document','Draft decision / order']},
+  zh:{issue:'来信问题',fields:['问题','行动','接收方','任务说明','执行期限','完成结果的证明'],
+    statuses:['继续监督','已确认执行','已按职权转送'],
+    orders:['请求材料','按职权转送','组织执行','开展核查','通知','核查结果'],
+    kinds:['答复申请人','通知','按职权转送','材料请求','退回并说明','内部文书','决定 / 命令草案']},
+};
+const DOCUMENT_KINDS=['reply','notification','referral','request','return','internal','special'];
+const STATUS_INDEX=[...STATUS];
+const ORDER_INDEX=[...ORDER_KINDS];
 const own = (value,key) => Object.prototype.hasOwnProperty.call(value,key);
 const clone = value => structuredClone(value);
 const digest = value => createHash('sha256').update(value).digest('hex');
@@ -205,17 +223,24 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   if(phase==='control'&&c.followup)sources.push({id:'control-author-explanation',kind:'authored-explanation',text:local(c.followup.explanation,locale),available:false});
   const rules=criticalRules(c,state,profile,phase,locale);
   for(const rule of rules)sources.push({id:'critical-rule:'+rule.id,kind:'critical-rule',text:rule.text,available:false});
+  const display=REVIEW_LABELS[locale]||REVIEW_LABELS.ru;
+  const issues=(profile?.issues||[]).map(issue=>({...issue,title:correspondenceIssueTitle(issue,c,locale)}));
   const sections=phase==='control'?{control:control.text}:clone(decision.correspondence.sections);
   if(phase==='initial'){
     sections.subject=decision.correspondence.subject;
-    sections.kind=decision.correspondence.kind;
-    sections.orders=decision.correspondence.orders.map(order=>[
-      'id: '+order.id,'issue: '+order.issue,'kind: '+order.kind,
-      'recipients: '+order.recipientIds.map(id=>id+' ('+ROUTING_AUTHORITIES[id].name+')').join('; '),
-      'instruction: '+order.instruction,'dueDate: '+order.dueDate,'expectedResult: '+order.expectedResult,
-      'citationIds: '+order.citationIds.join(', '),
-    ].join('\n')).join('\n\n');
-  }else sections.statuses=control.statuses.map(row=>row.issueId+': '+row.status).join('\n');
+    sections.kind=display.kinds[DOCUMENT_KINDS.indexOf(decision.correspondence.kind)]||'';
+    sections.orders=decision.correspondence.orders.map(order=>{
+      const values=[
+        order.issue,display.orders[ORDER_INDEX.indexOf(order.kind)],
+        order.recipientIds.map(id=>local(ROUTING_AUTHORITIES[id].name,locale)).join(', '),
+        order.instruction,order.dueDate,order.expectedResult,
+      ];
+      return values.flatMap((value,index)=>value?[display.fields[index]+': '+value]:[]).join('\n');
+    }).join('\n\n');
+  }else{
+    const title=id=>issues.find(issue=>issue.id===id)?.title||display.issue;
+    sections.statuses=control.statuses.map(row=>title(row.issueId)+': '+display.statuses[STATUS_INDEX.indexOf(row.status)]).join('\n');
+  }
   const rubric=phase==='initial'?CORRESPONDENCE_WEIGHTS.initial:CORRESPONDENCE_WEIGHTS.control;
   const ids=phase==='initial'?CORRESPONDENCE_SECTIONS:['verification','status','nextAction'];
   const citedControlIds=new Set();
@@ -249,7 +274,14 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
       .map(plan=>({id:plan.id,actions:(plan.requiredActions||[]).map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)}))})),
     forbiddenActions:c.rubric.forbiddenActionIds.map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)})),
     criticalRules:rules,operational,
-    submission:phase==='initial'?clone(decision.correspondence):clone(control),
+    submission:phase==='initial'?clone(decision.correspondence):{
+      text:control.text,statuses:control.statuses.map(row=>({...row,
+        issueTitle:issues.find(issue=>issue.id===row.issueId)?.title||display.issue,
+        statusLabel:display.statuses[STATUS_INDEX.indexOf(row.status)],
+        evidenceTitles:row.evidenceSourceIds.map(id=>accessible.find(source=>source.id===id||source.kind+':'+source.id===id)?.title||
+          resolvedCitations.find(source=>source.id===id)?.title).filter(Boolean),
+      })),
+    },
     initialSubmission:phase==='control'?clone(state.decision?.correspondence):null,
     initialScore:phase==='control'?state.correspondenceInitialFeedback?.score:null,
     newInformation:phase==='control'?local(c.followup?.intro,locale):null,
@@ -348,7 +380,7 @@ export function scoreCorrespondenceReview(rawReview,context) {
     score,criteria,explanation:review.summary,missingFacts:[],cap,authored:false,
     criticalIds:review.criticalErrors.map(row=>row.ruleId),
     ...(context.operational?.workbook?{workbook:clone(context.operational.workbook)}:{}),
-    correspondence:{version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase:context.phase,rawScore:raw,score,cap,
+    correspondence:{version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase:context.phase,displayFormat:1,rawScore:raw,score,cap,
       criteria:clone(criteria),criticalErrors:review.criticalErrors,summary:review.summary,
       citations:context.resolvedCitations.map(({id,kind,sourceId,title,url,locator,quote,contentSha256,unitIds,language})=>({
         id,kind,sourceId,title,url:url||'',locator:locator||'',quote,contentSha256:contentSha256||'',...(unitIds?{unitIds}:{}),

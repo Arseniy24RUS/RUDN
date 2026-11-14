@@ -53,3 +53,13 @@ test('directory covers all Career authorities and territories without duplicatin
   const remote = regional.authorities.find(row=>row.regionId==='ru-14');
   assert.ok(filterAuthorities({territoryId:'ru-14',search:remote.name}).some(row=>row.id===remote.id));
 });
+
+
+test('localized authority names retain the same scored IDs and can be found in either language',()=>{
+  for(const [locale,queries] of [['en',['authorized unit','Профильное подразделение']],['zh',['主管部门','Профильное подразделение']]]){
+    for(const search of queries)assert.ok(filterAuthorities({search,locale}).some(row=>row.id==='reception-unit'));
+    const chooser=authorityPickerView({recipientIds:['reception-unit']},{locale,workflow:{recipientLimit:1}});
+    assert.match(chooser,locale==='en'?/Authorized unit of the authority/:/收到来信机关的主管部门/);
+    assert.match(chooser,/value="reception-unit" checked/);
+  }
+});

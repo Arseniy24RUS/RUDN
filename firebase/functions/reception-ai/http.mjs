@@ -4,7 +4,7 @@ import {getDatabase} from 'firebase-admin/database';
 import {createReceptionService} from './service.mjs';
 import {createFirebaseStore} from './store.mjs';
 import {createOpenAIProvider} from './provider.mjs';
-import {PRIVATE_ROOT, loadPrivateCatalogue, createFirebaseAssessmentGate, createFirebaseResultWriter} from './firebase.mjs';
+import {PRIVATE_ROOT, loadPrivateCatalogue, createFirebaseAssessmentGate, createFirebaseResultWriter, resolveReceptionIdentity} from './firebase.mjs';
 import {ReceptionError, hash} from './schema.mjs';
 
 export const RECEPTION_OPENAI_SECRET = 'RUDN_RECEPTION_OPENAI_KEY';
@@ -16,23 +16,6 @@ function getRuntime() {
   const databaseURL = process.env.FIREBASE_DATABASE_EMULATOR_HOST ? `https://${projectId}-default-rtdb.firebaseio.com` : 'https://rudn-gmu-learning-platform-default-rtdb.europe-west1.firebasedatabase.app';
   const app = getApps().find(a => a.name === 'reception-ai-admin') || initializeApp({projectId, databaseURL}, 'reception-ai-admin');
   const db = getDatabase(app); return runtime = {db, auth: getAuth(app), store: createFirebaseStore(db)};
-}
-async function resolveIdentity(body, decoded, {db, store}) {
-  const teacher = decoded.email === 'omnistat@yandex.ru';
-  if (teacher) return {uid: decoded.uid, teacher: true};
-  let studentKey = body.studentKey;
-  if (body.sessionId && typeof body.sessionId === 'string' && /^[a-f0-9]{40}$/.test(body.sessionId)) {
-    const session = await store.get(`sessions/${body.sessionId}`); if (!session) throw new ReceptionError('not_found', 404); studentKey = session.studentKey;
-  }
-  if (!/^\d{5,20}$/.test(studentKey || '')) throw new ReceptionError('profile_required', 403);
-  // Canonical profiles are checked on every request. We do not claim that the
-  // platform's deliberately passwordless profile selection verifies a person.
-  const alias = (await db.ref(`rudn-platform/v1/studentAliases/${studentKey}`).get()).val();
-  if (alias) studentKey = alias;
-  if (!/^\d{5,20}$/.test(studentKey || '')) throw new ReceptionError('profile_required', 403);
-  const profile = (await db.ref(`rudn-platform/v1/profiles/${studentKey}`).get()).val();
-  if (!profile || profile.mergedInto || profile.studentKey !== studentKey || profile.ownerUid !== decoded.uid && profile.ownerUids?.[decoded.uid] !== true) throw new ReceptionError('forbidden', 403);
-  return {uid: decoded.uid, studentKey, teacher: false};
 }
 export async function receptionHandler(req, res) {
   res.setHeader('Cache-Control', 'no-store'); res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -49,11 +32,12 @@ export async function receptionHandler(req, res) {
     try { decoded = await env.auth.verifyIdToken(bearer); } catch { throw new ReceptionError('auth', 401); }
     const settings = (await env.db.ref(`${PRIVATE_ROOT}/config`).get()).val();
     if (settings?.enabled !== true || !getOpenAIKey()) throw new ReceptionError('not_configured', 503);
-    const identity = await resolveIdentity(req.body || {}, decoded, env);
-    const version = `${settings.activeCatalogVersion}:${hash(settings.limits || {})}`;
+    const identity = await resolveReceptionIdentity(req.body || {}, decoded, env);
+    const guestEnabled = settings.guestEnabled !== false;
+    const version = `${settings.activeCatalogVersion}:${hash(settings.limits || {})}:${guestEnabled}`;
     if (!cachedService || cachedVersion !== version) {
       cachedService = createReceptionService({store: env.store, cases: () => loadPrivateCatalogue(env.db, settings.activeCatalogVersion),
-        provider: createOpenAIProvider({apiKey: getOpenAIKey}), config: settings.limits || {},
+        provider: createOpenAIProvider({apiKey: getOpenAIKey}), config: settings.limits || {}, guestEnabled,
         canStartAssessment: createFirebaseAssessmentGate(env.db), saveResult: createFirebaseResultWriter(env.db), requireGameplay: true});
       cachedVersion = version;
     }

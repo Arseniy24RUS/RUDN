@@ -21,7 +21,7 @@
 .rx-source-dialog .ll-reader {display:flex;flex-direction:column;flex:1;min-width:0;min-height:0;border:0;border-radius:0;}
 .rx-source-dialog .ll-reader-header {padding:14px 22px;flex-shrink:0;max-height:24%;overflow:auto;}
 .rx-source-dialog .ll-reader-header h2 {font-size:18px;line-height:1.45;margin:4px 0;}
-.rx-source-dialog .ll-document-language {display:none;}
+.rx-source-dialog .ll-document-language {display:flex;align-items:center;gap:8px;}
 .rx-source-dialog .ll-reader-dock {position:static;flex-shrink:0;}
 .rx-source-dialog .ll-selection-tray {position:static;padding:5px 12px;max-height:none;}
 .rx-source-dialog .ll-reader-surface {display:flex;flex-direction:column;flex:1;min-height:0;}
@@ -94,6 +94,11 @@
 .rx-source-embedded .rx-source-dialog-bar p:empty{display:none}
 .rx-source-embedded .rx-source-title{display:none}
 .rx-source-embedded .rx-source-dialog-bar .ll-reader-tools{margin-left:auto;display:flex;gap:3px}
+.rx-source-embedded .rx-source-dialog-bar>.ll-document-language{order:2;flex:none}
+.rx-source-embedded .rx-source-dialog-bar>.ll-document-language small{display:none}
+.rx-source-embedded .rx-source-dialog-bar>.ll-document-language button{font-size:11px;padding:4px 7px;max-width:88px;white-space:normal;text-align:center}
+.rx-source-embedded .rx-source-dialog-bar>.ll-document-language button:has(.rx-source-translation-label){display:block}
+.rx-source-translation-label{display:block;color:#526c89;font-size:9px;line-height:1.2}
 .rx-source-embedded .rx-source-dialog-bar .ll-reader-tools button{min-width:44px;justify-content:center;padding:8px}
 .rx-source-embedded .rx-source-dialog-bar .ll-reader-tools [data-action=toggle-reader-search]{display:none}
 .rx-source-embedded .rx-source-reader-content{min-height:0;flex:1;display:flex;flex-direction:column;overflow:hidden}
@@ -198,4 +203,10 @@
  .rx-source-embedded .rx-source-reference-actions{display:flex;flex:1;min-width:0}
  .rx-source-embedded .rx-source-reference-actions [data-source-reference-clear]{order:2;flex:0 0 auto;margin:0;border-radius:10px}
  .rx-source-embedded .rx-source-reference-actions [data-source-reference-use]{flex:1;min-height:44px;padding:8px;min-width:0}
+}
+.rx-source-dialog[data-language-switching=true] .ll-paper{cursor:progress}
+.rx-source-embedded [data-source-reference-tray][data-source-reference-feedback=true] .rx-source-reference-copy{display:block;grid-column:1/-1}
+@media(max-width:820px){
+ .rx-source-embedded [data-source-reference-tray][data-source-reference-feedback=true]{flex-wrap:wrap}
+ .rx-source-embedded [data-source-reference-tray][data-source-reference-feedback=true] .rx-source-reference-copy{flex:0 0 100%;padding:6px 8px}
 }

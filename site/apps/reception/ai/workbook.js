@@ -1,3 +1,5 @@
+import {localizedAuthorityName} from './authority-picker.js';
+
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const display=(value,locale)=>typeof value==='string'?value:value?.[locale]||value?.ru||'';
 const date=value=>/^\d{4}-\d{2}-\d{2}$/.test(value||'')?value.split('-').reverse().join('.'):'—';
@@ -45,7 +47,7 @@ export function workbookFeedbackView(feedback,{locale='ru',training=false,intern
    return `<div class="rxa-workbook-check ${correct?'correct':'incorrect'}"><strong>${esc(label)} · ${esc(correct?t.correct:t.wrong)}</strong><p>${esc(t.your)}: ${esc(selected)}${correct?'':`<br>${esc(t.expected)}: <strong>${esc(expected)}</strong>`}</p></div>`;
  }).join('');
  const calculation=display(c.instructions,locale)||(c.targets||c.special?'':t.calculation);
- const authority=w.routing?`<div class="rxa-workbook-check ${w.routing.correct?'correct':'incorrect'}"><strong>${esc(t.recipient)} · ${esc(w.routing.correct?t.correct:t.wrong)}</strong><p>${w.routing.correct?'':esc(t.expected)+': '}${w.routing.expectedRecipients.map(row=>esc(display(row.name,locale))).join('; ')}</p></div>`:'';
+ const authority=w.routing?`<div class="rxa-workbook-check ${w.routing.correct?'correct':'incorrect'}"><strong>${esc(t.recipient)} · ${esc(w.routing.correct?t.correct:t.wrong)}</strong><p>${w.routing.correct?'':esc(t.expected)+': '}${w.routing.expectedRecipients.map(row=>esc(localizedAuthorityName(row,locale))).join('; ')}</p></div>`:'';
  const fine=training&&c.wrongDates&&(c.liabilityApplicable??c.version!==2)?`<aside class="rxa-deadline-liability" data-deadline-liability><h3>${esc(t.fine)}</h3><p>${esc(t.fineLead)}</p><strong>${esc(t.fineAmount)}</strong><details><summary>${esc(t.source)}</summary><blockquote lang="ru">${esc(fineQuote)}</blockquote>${internalSources?`<button type="button" class="rxa-btn quiet" data-normative-doc="koap">${esc(t.source)}</button>`:`<a href="https://www.consultant.ru/document/cons_doc_LAW_34661/d77345129355a19915d59a897cdff745a2a55258/" target="_blank" rel="noopener noreferrer">${esc(t.source)}</a>`}</details></aside>`:'';
  return `<section class="rxa-workbook-feedback" data-workbook-feedback><h3>${esc(t.review)}</h3>${rows}${calculation?`<p class="rxa-workbook-counting">${esc(calculation)}</p>`:''}${authority}${fine}</section>`;
 }

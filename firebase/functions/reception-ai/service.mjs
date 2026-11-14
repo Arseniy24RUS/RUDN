@@ -16,15 +16,18 @@ import {normativeActsForCase,validateLegalCitation,hasApplicableLegalCitation} f
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
   maxConcurrent: 8, maxDailyTurnsPerStudent: 240, maxDailyStartsPerStudent: 20, leaseMs: 45000, providerTimeoutMs: 30000,
-  reviewLeaseMs:105000,reviewTimeoutMs:90000};
+  reviewLeaseMs:105000,reviewTimeoutMs:90000,
+  guestDailyBudgetMicros:750_000,guestMonthlyBudgetMicros:5_000_000,guestMaxConcurrent:2,
+  guestMaxDailyStartsPerUid:3,guestMaxDailyStarts:12};
 const allowed = {
   start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','context'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
   recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','context'],
   message: ['op', 'sessionId', 'text', 'requestId', 'expectedRevision'], document: ['op', 'sessionId', 'documentId', 'requestId'],
-  decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'], next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion']
+  decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'], next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion','context']
 };
 const dayOf = n => new Date(n).toISOString().slice(0, 10), monthOf = n => dayOf(n).slice(0, 7);
-const scopeOf = identity => identity.teacher ? `teacher:${identity.uid}` : `student:${identity.studentKey || identity.uid}`;
+const scopeOf = identity => identity.teacher ? `teacher:${identity.uid}`
+  : identity.guest ? `guest:${identity.uid}` : `student:${identity.studentKey || identity.uid}`;
 const values = rows => Array.isArray(rows) ? rows : Object.values(rows || {});
 const MAX_SEMINAR_POINTS = 5;
 const seminarPath = owner => `seminarProgress/${hash(owner)}`;
@@ -53,7 +56,7 @@ const normalizeSession = s => {
 };
 
 export function createReceptionService({store, cases, provider, clock = Date.now, config = {}, canStartAssessment = null, saveResult = null, requireGameplay = false,
-  resolveLegalCitation=defaultLegalCitationResolver,
+  guestEnabled = true, resolveLegalCitation=defaultLegalCitationResolver,
   correspondenceProfiles={private:privateCorrespondenceProfile,public:publicCorrespondenceProfile}} = {}) {
   if (!store?.transaction || !store?.get || !provider?.generate) throw new TypeError('Reception adapters are required');
   const limits = {...DEFAULTS, ...config};
@@ -98,11 +101,13 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   }
   function checkIdentity(identity) {
     if (!identity || typeof identity.uid !== 'string' || !identity.uid || identity.uid.length > 150) fail('auth', 401);
-    if (!identity.teacher && !identity.studentKey) fail('profile_required', 403);
+    if (identity.guest && (identity.teacher || identity.studentKey)) fail('forbidden', 403);
+    if (!identity.guest && !identity.teacher && !identity.studentKey) fail('profile_required', 403);
   }
   function own(session, identity) {
     if (!session) fail('not_found', 404);
-    if (session.owner !== scopeOf(identity)) fail('forbidden', 403);
+    if (session.owner !== scopeOf(identity) || Boolean(session.guest) !== Boolean(identity.guest)) fail('forbidden', 403);
+    if (identity.guest && (session.context !== 'free' || session.mode !== 'training' || session.studentKey || session.teacher)) fail('forbidden', 403);
   }
   async function get(id, identity) {
     identifier(id); const s = normalizeSession(await store.get(`sessions/${id}`)); own(s, identity); return s;
@@ -142,6 +147,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       ...(s.context==='seminar'?{seminarProgress:s.seminarProgress}:{}),
       ...(correspondence?{decisionVersion:DECISION_VERSION,correspondenceSources:publicCorrespondenceSources(c,state,s.locale,{includeFollowup:s.status!=='active'}),
         draftDecision:state.correspondenceDraft||null,draftControl:state.controlDraft||null,reviewPending:state.reviewPending||null,control:state.control||null}:{}),
+      operationInProgress: Boolean(s.lease && s.lease.until > clock()),
       status: s.status, case: {id: c.id, ...publicMetadata(c), ...p, ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale)}:{})}, messages: state.messages,
       documents: c.documents.filter(d => state.releasedDocumentIds.includes(d.id)).map(d => localized({id: d.id, title: d.title, type: d.type, text: d.text, chatAttachment:!s.context&&!d.initial,
         ...(d.image?{image:d.image}:{}),...(d.url?{url:d.url}:{}),...(d.sensitive!==undefined?{sensitive:d.sensitive}:{})}, s.locale)),
@@ -279,6 +285,21 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   function remainingSeminarCases(available, progress) {
     return available.filter(c => !Object.hasOwn(progress.assigned || {}, c.id)).length;
   }
+  async function reserveGuestStart(day, ownerKey, id, timestamp) {
+    const grant = await store.transaction('guestStarts', old => {
+      const starts = old || {};
+      const cutoff = dayOf(timestamp - 32 * 86400000);
+      for (const key of Object.keys(starts)) if (key < cutoff) delete starts[key];
+      const today = starts[day] ||= {};
+      const owners = Object.values(today);
+      if (today[id] === ownerKey) return starts;
+      if (owners.length >= limits.guestMaxDailyStarts ||
+          owners.filter(owner => owner === ownerKey).length >= limits.guestMaxDailyStartsPerUid) return undefined;
+      today[id] = ownerKey;
+      return starts;
+    });
+    if (!grant.committed) fail('guest_daily_limit', 429);
+  }
   async function start(body, identity) {
     identifier(body.requestId); const language = locale(body.locale), {mode,context} = body;
     if (!['training', 'independent'].includes(mode)) fail('invalid_mode');
@@ -308,7 +329,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const seminar = context==='seminar' ? await reserveSeminarCase(owner,id,signature,available,mode) : null;
     const multiCase = mode==='independent' && !seminar;
     const selected=selectShiftCases(available,id,{count:multiCase?8:1,caseId:seminar?.caseId||body.caseId,balanced:multiCase});
-    if (!seminar) {
+    if (identity.guest) await reserveGuestStart(day, ownerKey, id, timestamp);
+    else if (!seminar) {
       const grant = await store.transaction(`starts/${day}/${ownerKey}`, old => {
         const value = old || {ids: {}}; value.ids ||= {};
         if (value.ids[id]) return value;
@@ -318,6 +340,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       if (!grant.committed) fail('daily_limit', 429);
     }
     const session = {schema: 1, id, owner, studentKey: identity.studentKey || null, uid: identity.uid, teacher: Boolean(identity.teacher),
+      ...(identity.guest ? {guest:true} : {}),
       ...(body.decisionVersion?{decisionVersion:body.decisionVersion}:{}),
       mode, locale: language, ...(body.workbookVersion?{workbookVersion:body.workbookVersion}:{}), ...(body.buildId ? {buildId:body.buildId} : {}), startedAt: timestamp, updatedAt: timestamp, revision: 1, status: 'active', caseIndex: 0,
       ...(context ? {context} : {}), ...(seminar ? {seminarProgress:seminar.progress} : {}),
@@ -335,7 +358,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const now = clock(), day = dayOf(now), month = monthOf(now), owner = hash(session.owner);
     const review = reviewAttempt !== null, leaseMs = review ? limits.reviewLeaseMs : limits.leaseMs;
     const token = hash(review ? [session.id,'review',requestId,reviewAttempt] : `${session.id}:${requestId}`).slice(0, 40);
+    let limitCode = 'budget_or_rate_limit';
     const result = await store.transaction('budget', prior => {
+      limitCode = 'budget_or_rate_limit';
       const b = prior || {}; b.days ||= {}; b.months ||= {}; b.active ||= {}; b.reservations ||= {};
       for (const [key, value] of Object.entries(b.active)) if (value.expiresAt <= now) delete b.active[key];
       // Keep billing aggregates and recent receipts bounded. Expired receipts are
@@ -346,12 +371,24 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       if (b.reservations[token]) return undefined;
       const d = b.days[day] ||= {micros: 0, owners: {}}, m = b.months[month] ||= {micros: 0}; d.owners ||= {};
       const o = d.owners[owner] ||= {micros: 0, turns: 0};
-      if (Object.keys(b.active).length >= limits.maxConcurrent || d.micros + amount > limits.dailyBudgetMicros || m.micros + amount > limits.monthlyBudgetMicros || o.micros + amount > limits.studentDailyBudgetMicros || o.turns >= limits.maxDailyTurnsPerStudent) return undefined;
+      const active = Object.values(b.active);
+      if (session.guest) {
+        if ((m.guestMicros || 0) + amount > limits.guestMonthlyBudgetMicros) limitCode = 'guest_monthly_limit';
+        else if ((d.guestMicros || 0) + amount > limits.guestDailyBudgetMicros) limitCode = 'guest_daily_limit';
+        else if (active.filter(request => request.guest).length >= limits.guestMaxConcurrent) limitCode = 'guest_busy';
+        if (limitCode !== 'budget_or_rate_limit') return undefined;
+      }
+      if (active.length >= limits.maxConcurrent || d.micros + amount > limits.dailyBudgetMicros || m.micros + amount > limits.monthlyBudgetMicros || o.micros + amount > limits.studentDailyBudgetMicros || o.turns >= limits.maxDailyTurnsPerStudent) return undefined;
       d.micros += amount; m.micros += amount; o.micros += amount; o.turns++;
-      b.active[token] = {expiresAt: now + leaseMs};
-      b.reservations[token] = {amount, day, month, owner, createdAt: now, settled: false, ...(review ? {review:true} : {})}; return b;
+      const guest = session.guest ? {guest:true} : {};
+      if (session.guest) {
+        d.guestMicros = (d.guestMicros || 0) + amount;
+        m.guestMicros = (m.guestMicros || 0) + amount;
+      }
+      b.active[token] = {expiresAt: now + leaseMs, ...guest};
+      b.reservations[token] = {amount, day, month, owner, createdAt: now, settled: false, ...guest, ...(review ? {review:true} : {})}; return b;
     });
-    if (!result.committed) fail('budget_or_rate_limit', 429);
+    if (!result.committed) fail(limitCode, 429);
     return token;
   }
   async function settle(token, usage) {
@@ -361,8 +398,16 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const valid = Number.isSafeInteger(usage?.inputTokens) && usage.inputTokens >= 0 && Number.isSafeInteger(usage?.outputTokens) && usage.outputTokens >= 0;
       const actual = !valid ? r.amount : r.review ? reviewCostMicros(usage.inputTokens,usage.outputTokens,usage.cachedInputTokens) : costMicros(usage.inputTokens,usage.outputTokens);
       const delta = actual - r.amount;
-      if (b.days?.[r.day]) { b.days[r.day].micros += delta; if (b.days[r.day].owners?.[r.owner]) b.days[r.day].owners[r.owner].micros += delta; }
-      if (b.months?.[r.month]) b.months[r.month].micros += delta;
+      const day = b.days?.[r.day], month = b.months?.[r.month];
+      if (day) {
+        day.micros += delta;
+        if (day.owners?.[r.owner]) day.owners[r.owner].micros += delta;
+        if (r.guest) day.guestMicros += delta;
+      }
+      if (month) {
+        month.micros += delta;
+        if (r.guest) month.guestMicros += delta;
+      }
       r.settled = true; r.chargedMicros = actual; r.usage = valid ? usage : null;
       if (b.active) delete b.active[token]; return b;
     });
@@ -409,7 +454,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   }
   async function deliverResult(s) {
     if(s.status==='complete' && s.context==='seminar' && !s.seminarFinalized) await finalizeSeminar(s);
-    if (s.status === 'complete' && !s.journalSaved && s.mode === 'independent' && !s.teacher && provider.name !== 'mock' && typeof saveResult === 'function') {
+    if (s.status === 'complete' && !s.journalSaved && s.mode === 'independent' && !s.teacher && !s.guest && provider.name !== 'mock' && typeof saveResult === 'function') {
       try {
         const result = s.context==='seminar'?{...s.result,seminarPoints:s.seminarProgress.seminarPoints}:copy(s.result);
         await saveResult({sessionId: s.id, studentKey: s.studentKey, uid: s.uid, result, startedAt: s.startedAt, completedAt: s.result.completedAt ?? s.updatedAt,
@@ -480,7 +525,11 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     } catch (error) {
       await store.transaction(`sessions/${s.id}`, old => {
         const current = normalizeSession(old); if (!current || current.lease?.id !== leaseId) return undefined;
-        current.requests[requestId] = {digest, status: 'failed'}; current.lease = null; return current;
+        // A quota rejection occurs before any model call. Preserve the option to
+        // retry the identical guest message once the allowance is available.
+        if (s.guest && !reservation && error instanceof ReceptionError && error.status === 429) delete current.requests[requestId];
+        else current.requests[requestId] = {digest, status: 'failed'};
+        current.lease = null; return current;
       });
       throw error instanceof ReceptionError ? error : new ReceptionError('unavailable', 503);
     } finally { if (reservation) await settle(reservation, usage); }
@@ -607,6 +656,13 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(body.workbookVersion!==undefined&&![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(body.workbookVersion))fail('invalid_workbook');
     if(body.decisionVersion!==undefined&&body.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
     if (body.buildId !== undefined && (typeof body.buildId !== 'string' || !/^[a-f0-9]{32}$/.test(body.buildId))) fail('invalid_build');
+    if (identity.guest) {
+      if (Object.hasOwn(body, 'studentKey')) fail('forbidden', 403);
+      if (['catalog', 'start', 'recover'].includes(body.op) && body.context !== 'free') fail('forbidden', 403);
+      if (['start', 'recover'].includes(body.op) && body.mode !== 'training') fail('forbidden', 403);
+      if (body.op === 'start' && (body.workbookVersion !== WORKBOOK_VERSION || body.decisionVersion !== DECISION_VERSION)) fail('invalid_workbook');
+      if (!guestEnabled && ['start', 'message', 'decide', 'followup'].includes(body.op)) fail('guest_unavailable', 503);
+    }
     if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).filter(c=>(!body.workbookVersion||supportsWorkbook(c,body.workbookVersion))&&
       (!body.decisionVersion||Boolean(correspondenceProfiles.private(c)))).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
     if (body.op === 'start') return start(body, identity);

@@ -1,4 +1,5 @@
 import {RECEPTION_AUTHORITIES, RECEPTION_TERRITORIES} from './authority-directory.js';
+import {RECEPTION_AUTHORITY_NAMES} from './authority-names.js';
 import {resourceURL} from '../../../assets/js/release-resources.js';
 
 const labels = {
@@ -7,11 +8,16 @@ const labels = {
   zh:{origin:'回复地址',unknown:'未提供回复地址',site:'事件地点',title:'哪个机构应处理事项或起草回复？',search:'查找机构或部门',territory:'机构管辖地区',all:'所有地区',selected:'已选择',empty:'未找到相关机构。请修改搜索条件或地区。',more:'请缩小搜索范围或选择地区以查看更多机构。'},
 };
 const MAX_VISIBLE_AUTHORITIES = 80;
-const ruNames = new Intl.Collator('ru');
+const authoritiesById=new Map(RECEPTION_AUTHORITIES.flatMap(row=>[[row.id,row],...(row.careerId?[[row.careerId,row]]:[])]));
 const siteRoot = new URL('../../../', import.meta.url);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const display = (value, locale) => typeof value === 'string' ? value : value?.[locale] || value?.ru || '';
 const normalize = value => String(value ?? '').toLocaleLowerCase('ru').replaceAll('ё','е').trim();
+
+export function localizedAuthorityName(authority,locale='ru'){
+  const names=RECEPTION_AUTHORITY_NAMES[authority?.id]||RECEPTION_AUTHORITY_NAMES[authoritiesById.get(authority?.id)?.id];
+  return names?.[locale==='en'?0:locale==='zh'?1:-1]||display(authority?.name,locale);
+}
 
 export function routingOriginView(workflow, {locale='ru'} = {}) {
   const site=workflow?.site;if(!site)return '';
@@ -22,16 +28,17 @@ export function routingOriginView(workflow, {locale='ru'} = {}) {
 
 export function filterAuthorities({search='',territoryId='',locale='ru',recipientIds=[]}={}) {
   const words = normalize(search).split(/\s+/).filter(Boolean);
+  const collator=new Intl.Collator(locale);
   return RECEPTION_AUTHORITIES.filter(authority => {
     if (recipientIds.includes(authority.id)) return true;
     if (territoryId && authority.territoryIds.length && !authority.territoryIds.includes(territoryId)) return false;
     const regionNames = authority.territoryIds.map(id => RECEPTION_TERRITORIES[id]?.name);
-    const text = normalize([authority.name,authority.shortName,...regionNames.flatMap(value=>[display(value,locale),display(value,'ru')])].join(' '));
+    const text = normalize([authority.name,authority.shortName,localizedAuthorityName(authority,locale),...regionNames.flatMap(value=>[display(value,locale),display(value,'ru')])].join(' '));
     return words.every(word=>text.includes(word));
   }).sort((a,b) => {
     const firstSelected = Number(recipientIds.includes(b.id)) - Number(recipientIds.includes(a.id));
     const firstLocal = territoryId ? Number(b.territoryIds.includes(territoryId)) - Number(a.territoryIds.includes(territoryId)) : 0;
-    return firstSelected || firstLocal || ruNames.compare(a.name,b.name);
+    return firstSelected || firstLocal || collator.compare(localizedAuthorityName(a,locale),localizedAuthorityName(b,locale));
   });
 }
 
@@ -48,10 +55,10 @@ export function authorityPickerView(value, {locale='ru',workflow,search='',terri
     const region = authority.territoryIds.map(id=>display(RECEPTION_TERRITORIES[id]?.name,locale)).filter(Boolean).join(' · ');
     const emblem = authority.emblem ? `<img width="30" height="30" loading="lazy" decoding="async" src="${esc(resourceURL(authority.emblem,siteRoot).href)}" alt="">` : '';
     const short = authority.shortName && authority.shortName !== authority.name ? ` <small>${esc(authority.shortName)}</small>` : '';
-    const name = esc(display(authority.name,locale));
+    const name = esc(localizedAuthorityName(authority,locale));
     return `<label class="rxa-routing-authority"><input type="checkbox" data-routing-recipient data-focus="routing-recipient-${esc(authority.id)}" value="${esc(authority.id)}" ${selected?'checked':''} ${locked?'disabled':''}>${emblem}<span>${name}${short}${region?`<small class="rxa-routing-jurisdiction">${esc(region)}</small>`:''}</span></label>`;
   }).join('');
   return `<fieldset class="rxa-fieldset rxa-routing-picker"><legend>${esc(copy.title)}</legend><div class="rxa-routing-filters"><label>${esc(copy.search)}<input type="search" data-routing-search data-focus="routing-search" autocomplete="off" maxlength="120" value="${esc(search)}" ${disabled?'disabled':''}></label><label>${esc(copy.territory)}<select data-routing-territory data-focus="routing-territory" ${disabled?'disabled':''}><option value="">${esc(copy.all)}</option>${regions.map(([id,row])=>`<option value="${esc(id)}" ${id===territoryId?'selected':''}>${esc(display(row.name,locale))}</option>`).join('')}</select></label></div><p class="rxa-routing-count" aria-live="polite">${esc(copy.selected)} ${recipientIds.length}/${limit}</p><div class="rxa-routing-options" data-routing-options>${items||`<p>${esc(copy.empty)}</p>`}</div>${offices.length>MAX_VISIBLE_AUTHORITIES?`<p class="rxa-routing-count">${esc(copy.more)}</p>`:''}</fieldset>`;
 }
 
-export function authoritySelectionLabel(value,{locale='ru'}={}){return (value?.recipientIds||[]).map(id=>RECEPTION_AUTHORITIES.find(row=>row.id===id||row.careerId===id)).filter(Boolean).map(row=>display(row.name,locale)).join('; ');}
+export function authoritySelectionLabel(value,{locale='ru'}={}){return (value?.recipientIds||[]).map(id=>authoritiesById.get(id)).filter(Boolean).map(row=>localizedAuthorityName(row,locale)).join('; ');}

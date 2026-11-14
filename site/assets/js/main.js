@@ -718,6 +718,12 @@ function renderGamesRoute(module){
 }
 function renderReception(topic,{context='course'}={}){
   const free=context==='free';
+  const guest=attemptOwner()==='guest';
+  if(!free&&guest){
+    app.innerHTML=contentPage(loc(topic.seminar,'title'),ui('signInToContinue'),`<section class="panel"><div class="page-actions"><button type="button" class="btn btn-primary" id="receptionLogin">${ui('login')}</button><a class="btn btn-neutral" href="#games/reception">${esc(gamesText('free'))}</a></div></section>`);
+    app.querySelector('#receptionLogin').addEventListener('click',openAuthDialog);
+    return;
+  }
   navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module:'reception'});
   if(!document.getElementById('receptionPlatformStyle')){
     const link=document.createElement('link');link.id='receptionPlatformStyle';link.rel='stylesheet';
@@ -746,9 +752,11 @@ function renderReception(topic,{context='course'}={}){
     try{
       const {mountReception}=await import('../../apps/reception/ai/entry.js?v=6.0.0');
       if(!active())return;
+      const guestUid=guest?await backend.ensureReceptionGuest():null;
+      if(!active())return;
       mountStarted=true;
       mountedCleanup=await mountReception(mount,{
-        backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,
+        backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,guest,guestUid,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
         assessmentAllowed:()=>{if(free)return false;const access=accessSnapshot();return topicGate(topic.number,access.overrides,access.now).open;},
         onExit:()=>{location.hash=free?'games':'dashboard'}

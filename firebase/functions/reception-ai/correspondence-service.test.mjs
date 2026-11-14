@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import {createReceptionService} from './service.mjs';
 import {createMemoryStore} from './store.mjs';
+import {resolveReceptionIdentity} from './firebase.mjs';
 import {validateCase} from './schema.mjs';
 import {DECISION_VERSION} from './correspondence.mjs';
 import {ROUTING_RECIPIENTS} from './routing-cases.mjs';
@@ -208,4 +209,139 @@ test('forged evidence and legacy downgrade cannot create a grade',async()=>{
   await assert.rejects(h.service.handle({op:'decide',sessionId:view.id,requestId:'downgrade',decision:old},identity),err('invalid_correspondence'));
   assert.equal(h.reviewer.reviewCalls,0);
   assert.equal((await h.store.get('sessions/'+view.id)).results.length,0);
+});
+
+
+const guestIdentity = {uid:'anonymous-reception-browser',guest:true};
+const guestStart = (service, requestId, actor=guestIdentity) => service.handle({
+  op:'start',context:'free',mode:'training',locale:'ru',workbookVersion:2,decisionVersion:DECISION_VERSION,requestId,
+},actor);
+
+test('the verified anonymous identity only resolves free-play guests and their own session',async()=>{
+  const store=createMemoryStore(),uid=guestIdentity.uid;
+  const env={store,db:{ref:()=>{throw Error('Guest auth never resolves a student profile')}}};
+  const token={uid,firebase:{sign_in_provider:'anonymous'}};
+  const free={op:'catalog',context:'free'};
+  assert.deepEqual(await resolveReceptionIdentity(free,token,env),guestIdentity);
+  await assert.rejects(resolveReceptionIdentity({...free,context:'seminar'},token,env),err('profile_required'));
+  await assert.rejects(resolveReceptionIdentity(free,{uid,firebase:{sign_in_provider:'password'}},env),err('profile_required'));
+  const sessionId='a'.repeat(40);
+  const request={op:'resume',sessionId};
+  const record={owner:`guest:${uid}`,guest:true,context:'free',mode:'training'};
+  await store.transaction('sessions/'+sessionId,()=>record);
+  assert.deepEqual(await resolveReceptionIdentity(request,token,env),guestIdentity);
+  await assert.rejects(resolveReceptionIdentity(request,{...token,uid:'some-other-browser'},env),err('forbidden'));
+  await assert.rejects(resolveReceptionIdentity(request,{...token,firebase:{sign_in_provider:'password'}},env),err('forbidden'));
+  await assert.rejects(resolveReceptionIdentity({...request,studentKey:identity.studentKey},token,env),err('forbidden'));
+  await store.transaction('sessions/'+sessionId,()=>({...record,context:'seminar'}));
+  await assert.rejects(resolveReceptionIdentity(request,token,env),err('forbidden'));
+});
+
+test('guest play journals neither review stage nor completed score, stays separate from the signed-in profile',async()=>{
+  const h=await harness([explicitReview,explicitReview]);
+  let journalWrites=0;
+  const provider={name:'openai', reviewDecision:async({context})=>({review:explicitReview(context),verified:true,usage:{inputTokens:100,outputTokens:20}}),
+    generate:async()=>({reply:'Документы у вас.',revealedFactIds:[],releasedDocumentIds:[],usage:{inputTokens:100,outputTokens:20}})};
+  const service=createReceptionService({store:h.store,cases:[h.c],provider,correspondenceProfiles:profiles,requireGameplay:true,
+    saveResult:()=>{journalWrites++;}});
+  const handle=(body,actor=guestIdentity)=>service.handle(body,actor);
+  const {cases}=await handle({op:'catalog',context:'free',locale:'zh',workbookVersion:2,decisionVersion:DECISION_VERSION});
+  assert.equal(cases[0].id,h.c.id);
+  for(const request of [{op:'start',context:'seminar',mode:'training'},{op:'start',context:'free',mode:'independent'},
+    {op:'recover',context:'seminar',mode:'training'},{op:'catalog',context:'free',studentKey:identity.studentKey}]) {
+    await assert.rejects(handle(request),err('forbidden'));
+  }
+  let {view}=await guestStart(service,'guest-start');
+  const sessionId=view.id;
+  assert.deepEqual((await handle({op:'recover',context:'free',mode:'training'})).view,view);
+  assert.equal((await handle({op:'recover',context:'free',mode:'training'},identity)).view,null);
+  for(const actor of [identity,{...guestIdentity,guest:false,studentKey:identity.studentKey},{...guestIdentity,uid:'another-anonymous-browser'}]){
+    await assert.rejects(handle({op:'resume',sessionId},actor),err('forbidden'));
+  }
+  await assert.rejects(handle({op:'resume',context:'seminar',sessionId}),err('outdated_session'));
+  view=(await handle({op:'message',sessionId,requestId:'guest-message',expectedRevision:view.revision,text:'Что произошло?'})).view;
+  assert.equal(view.messages.at(-1).role,'assistant');
+  for(const documentId of ['d1','d2'])view=(await handle({op:'document',sessionId,documentId,requestId:'guest-open-'+documentId})).view;
+  const initial={op:'decide',sessionId,requestId:'guest-init',decision:h.decision};
+  view=(await handle(initial)).view;
+  assert.equal(view.status,'followup');
+  assert.equal((await handle(initial)).view.status,'followup');
+  view=(await handle({op:'followup',sessionId,requestId:'guest-control',control})).view;
+  assert.equal(view.status,'review');
+  const finish={op:'next',sessionId,requestId:'guest-complete'};
+  view=(await handle(finish)).view;
+  assert.equal(view.status,'complete');
+  assert.equal(view.result.journalStatus,'local');
+  assert.equal(view.result.seminarPoints,undefined);
+  assert.deepEqual((await handle(finish)).view.result,view.result);
+  assert.equal(journalWrites,0);
+  assert.equal(await h.store.get('seminarProgress'),null);
+  const ledger=await h.store.get('budget'),receipts=Object.values(ledger.reservations);
+  assert.equal(receipts.length,3);
+  assert.ok(receipts.every(receipt=>receipt.guest && receipt.settled));
+  assert.equal(receipts.filter(receipt=>receipt.review).length,2);
+  const total=receipts.reduce((sum,receipt)=>sum+receipt.chargedMicros,0);
+  assert.equal(Object.values(ledger.days)[0].guestMicros,total);
+  assert.equal(Object.values(ledger.months)[0].guestMicros,total);
+});
+
+test('guest starts enforce both concurrent daily caps and preserve idempotency at the cap',async()=>{
+  let now=Date.UTC(2026,10,14,12);
+  const h=await harness([explicitReview],{clock:()=>now});
+  const starts=Array.from({length:5},(_,i)=>guestStart(h.service,'same-browser-'+i));
+  const first=await Promise.allSettled(starts);
+  assert.equal(first.filter(row=>row.status==='fulfilled').length,3);
+  assert.ok(first.filter(row=>row.status==='rejected').every(row=>row.reason.code==='guest_daily_limit'));
+  const index=first.findIndex(row=>row.status==='fulfilled');
+  assert.equal((await guestStart(h.service,'same-browser-'+index)).view.id,first[index].value.view.id);
+  const shared=await Promise.allSettled(Array.from({length:16},(_,i)=>guestStart(h.service,'shared',{uid:'unique-browser-'+i,guest:true})));
+  assert.equal(shared.filter(row=>row.status==='fulfilled').length,9);
+  assert.ok(shared.filter(row=>row.status==='rejected').every(row=>row.reason.code==='guest_daily_limit'));
+  assert.equal((await h.start()).mode,'training','The shared cap does not block a student');
+  now+=86400000;
+  assert.equal((await guestStart(h.service,'new-day')).view.status,'active');
+});
+
+test('the guest model allowance limits concurrent chat independently and releases unused request keys',async()=>{
+  const h=await harness([explicitReview]);
+  let entered=0, release, notify;
+  const active=new Promise(resolve=>notify=resolve);
+  const held=new Promise(resolve=>release=resolve);
+  const provider={name:'openai',reviewDecision:async()=>{},generate:async()=>{
+    if(++entered===2)notify();
+    await held;
+    return {reply:'Документы у вас.',revealedFactIds:[],releasedDocumentIds:[],usage:{inputTokens:100,outputTokens:20}};
+  }};
+  const service=createReceptionService({store:h.store,cases:[h.c],provider,correspondenceProfiles:profiles});
+  const actor=i=>({uid:'browser-'+i,guest:true});
+  const views=(await Promise.all([0,1,2].map(i=>guestStart(service,'start',actor(i))))).map(row=>row.view);
+  const body=i=>({op:'message',sessionId:views[i].id,requestId:'message',expectedRevision:views[i].revision,text:'Что произошло?'});
+  const first=[0,1].map(i=>service.handle(body(i),actor(i)));
+  try{
+    await active;
+    const during=(await service.handle({op:'resume',sessionId:views[0].id},actor(0))).view;
+    assert.equal(during.operationInProgress,true);
+    await assert.rejects(service.handle(body(2),actor(2)),err('guest_busy'));
+    assert.equal(entered,2);
+  }finally{release();await Promise.all(first);}
+  const third=(await service.handle(body(2),actor(2))).view;
+  assert.equal(third.messages.at(-1).role,'assistant');
+  assert.equal(third.operationInProgress,false);
+});
+
+test('guest expense caps preserve a validated decision draft before an uncharged review',async()=>{
+  for(const [config,code] of [[{guestDailyBudgetMicros:10_000},'guest_daily_limit'],[{guestMonthlyBudgetMicros:10_000},'guest_monthly_limit']]){
+    const h=await harness([explicitReview],{config});
+    const {view}=await guestStart(h.service,'limited');
+    const sessionId=view.id;
+    for(const documentId of ['d1','d2'])await h.service.handle({op:'document',sessionId,documentId,requestId:'open-'+documentId},guestIdentity);
+    const decision={op:'decide',sessionId,requestId:'quota-review',decision:h.decision};
+    await assert.rejects(h.service.handle(decision,guestIdentity),err(code));
+    const resumed=(await h.service.handle({op:'resume',sessionId},guestIdentity)).view;
+    assert.equal(resumed.draftDecision.correspondence.subject,h.decision.correspondence.subject);
+    assert.equal(resumed.operationInProgress,false);
+    assert.equal(resumed.reviewPending.code,code);
+    assert.equal(h.reviewer.reviewCalls,0);
+    assert.equal(await h.store.get('budget'),null);
+  }
 });

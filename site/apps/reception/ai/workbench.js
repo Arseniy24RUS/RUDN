@@ -3,6 +3,7 @@ import {BUNDLED_CALENDARS} from '../../../assets/js/calendar-bundled.js';
 import {addDays,addCalendarMonths,dayInfo,formatDateOnly,monthDays,parseDateOnly} from '../../../assets/js/legal-calendar.js';
 import {sourceDocumentForURL} from '../js/source-reader.js';
 import {safeSourceURL} from '../js/source-reference.js';
+import {documentTitles} from '../js/source-reader-translations.js';
 export {createSourceReference,referenceDecisionPatch} from '../js/source-reference.js';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -76,14 +77,9 @@ function calendarContent(options){
     const info=dayInfo(date,snapshot),outside=!date.startsWith(s.month),daily=events.filter(event=>event.date===date),chosen=targets.filter(target=>s.selectedDates[target.id]===date);
     return `<button type="button" class="rxw-calendar-day ${info.working?'working':'rest'} ${info.type==='working-transfer'?'working-transfer':''} ${info.shortened?'shortened':''} ${outside?'outside-month':''} ${chosen.map(target=>'chosen-'+target.id).join(' ')}" data-calendar-action="choose-date" data-date="${date}" aria-pressed="${date===selected}" aria-label="${esc([formattedDate(date,locale),dayLabel(info,locale),...daily.map(event=>localText(event.label,locale)||t[eventKind(event)]),...chosen.map(target=>target.label)].filter(Boolean).join(', '))}" tabindex="${date===(selected?.startsWith(s.month)?selected:month.days[0].date)?'0':'-1'}" ${off}><span>${Number(date.slice(8))}</span>${info.shortened?'<small aria-hidden="true">−1</small>':info.type==='working-transfer'?'<small aria-hidden="true">↻</small>':''}<b class="rxw-event-dots" aria-hidden="true">${[...new Set(daily.map(eventKind))].map(kind=>`<i class="event-${kind}"></i>`).join('')}</b></button>`;
   }).join('');
-  const sequential=options.task?.targets?.some(target=>target.anchorId==='referral');
-  const sequenceHint={
-    ru:'Отсчитайте 7 дней от регистрации, затем 30 дней от срока переадресации. Отметьте обе даты.',
-    en:'Count 7 days from registration, then 30 days from the referral deadline. Select both dates.',
-    zh:'从登记日起计算7日，再从转送期限起计算30日。请选择两个日期。',
-  }[localeKey(locale)];
+  const instructions=localText(options.task?.instructions,locale)||t.intro;
   const norms=options.task?.norms||[{label:locale==='ru'?'Федеральный закон от 02.05.2006 № 59-ФЗ «О порядке рассмотрения обращений граждан Российской Федерации»':'59-ФЗ · '+t.norms,text:t.rules.join('\n'),url:'https://mintrud.gov.ru/docs/laws/108'}];
-  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><p class="rxw-calendar-instruction">${sequential?sequenceHint:t.intro}</p>
+  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><p class="rxw-calendar-instruction">${esc(instructions)}</p>
     ${options.task?.hideEventList?'':`<div class="rxw-calendar-events">${events.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
     <div class="rxw-calendar-targets" role="group" aria-label="${t.targets}">${targets.map(target=>{
       const date=s.selectedDates[target.id],displayDate=date&&formatDateOnly(date);
@@ -134,8 +130,11 @@ function normativeDocumentButton(docId,label,className='rxa-btn') {
 }
 
 export function normativeActsView(acts,{locale='ru'}={}) {
-  const t=copy[localeKey(locale)];
-  return (acts||[]).map(act=>`<article class="rxa-source"><h3 lang="ru">${esc(act.title)}</h3><p lang="ru">${esc(act.number)}</p><div class="rxa-source-links">${normativeDocumentButton(act.id,t.open)}</div></article>`).join('');
+  const lang=localeKey(locale),t=copy[lang];
+  return (acts||[]).map(act=>{
+    const title=lang!=='ru'&&documentTitles[act.id]?.[lang];
+    return `<article class="rxa-source"><h3 lang="${title?lang:'ru'}">${esc(title||act.title)}</h3><p lang="ru">${esc(act.number)}</p><div class="rxa-source-links">${normativeDocumentButton(act.id,t.open)}</div></article>`;
+  }).join('');
 }
 
 /** One source action: embedded reading where available, external only otherwise. */
