@@ -473,6 +473,12 @@ try{
   for(const [width,height] of [[390,844],[1280,900]]){
     await page.setViewportSize({width,height});
     const thumb=thumbnail.locator('img');
+    // A lazy image can reject decode() before the viewport schedules its request.
+    await thumb.scrollIntoViewIfNeeded();
+    await page.waitForFunction(()=>{
+      const image=document.querySelector('.rxa-document [data-action="illustration-open"][data-id="E24__1"] img');
+      return image?.complete&&image.naturalWidth>0;
+    });
     assert.equal(await thumb.evaluate(async image=>{await image.decode();return image.naturalWidth;}),420);
     const thumbBounds=await thumb.boundingBox();
     await thumbnail.click();
