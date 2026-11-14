@@ -1,3 +1,4 @@
+import {buildConflictContractMaterials} from './contract-materials.mjs';
 import {randomUUID} from 'node:crypto';
 import {ReceptionError, fail, fields, identifier, string, locale, localized, copy, hash, validateCase, validateDecision, evaluateDecision, actorCase,MAX_CATALOG_CASES} from './schema.mjs';
 import {validateActorTurn, estimateReservation, estimateReviewReservation, costMicros, reviewCostMicros} from './provider.mjs';
@@ -56,6 +57,18 @@ const normalizeSession = s => {
     for (const key of ['messages', 'knownFactIds', 'releasedDocumentIds', 'openedDocumentIds']) state[key] = values(state[key]);
     if(state.controlWorkflow)state.controlWorkflow=normalizeControlWorkflow(state.controlWorkflow);
     if(state.decision){for(const key of ['actionIds','basisDocumentIds'])state.decision[key]=values(state.decision[key]);if(state.decision.workbook){state.decision.workbook.routing??={};state.decision.workbook.routing.recipientIds=values(state.decision.workbook.routing.recipientIds);}}
+  }
+  // Repair only the current active case. Keep the session identity, revision,
+  // history, drafts, observed facts and all completed results untouched.
+  if(s.status==='active'){
+    const c=s.caseData[s.caseIndex],state=s.caseStates[s.caseIndex];
+    if(c&&state){
+      const supplements=buildConflictContractMaterials(c);
+      for(const material of supplements){
+        if(!c.documents.some(doc=>doc.id===material.id))c.documents.push(material);
+        if(!state.releasedDocumentIds.includes(material.id))state.releasedDocumentIds.push(material.id);
+      }
+    }
   }
   return s;
 };
