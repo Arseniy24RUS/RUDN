@@ -566,3 +566,21 @@ test('out-of-order seminar receipts preserve the cumulative grade and case point
   assert.equal(third.points,3);
   assert.equal(third.summary.casePoints,1);
 });
+
+test('monetary enforcement accepts only booleans and defaults to enabled', () => {
+  for (const value of [null, 0, 1, 'false', undefined]) {
+    assert.throws(() => harness({config:{enforceMonetaryBudgets:value}}), TypeError);
+  }
+  assert.doesNotThrow(() => harness({config:{enforceMonetaryBudgets:true}}));
+});
+
+test('disabled monetary caps keep the student daily turn limit and exact spend', async () => {
+  const h=harness({config:{enforceMonetaryBudgets:false,dailyBudgetMicros:1,monthlyBudgetMicros:1,studentDailyBudgetMicros:1,maxDailyTurnsPerStudent:1}});
+  let v=await h.start();
+  v=(await h.service.handle({op:'message',sessionId:v.id,requestId:'first',expectedRevision:v.revision,text:'Что произошло?'},identity)).view;
+  await assert.rejects(h.service.handle({op:'message',sessionId:v.id,requestId:'second',expectedRevision:v.revision,text:'Что ещё?'},identity),err('budget_or_rate_limit'));
+  assert.equal(h.calls(),1);
+  const ledger=await h.store.get('budget'),day=Object.values(ledger.days)[0],receipts=Object.values(ledger.reservations);
+  assert.equal(day.micros,145);assert.equal(Object.values(day.owners)[0].turns,1);
+  assert.equal(receipts.length,1);assert.equal(receipts[0].chargedMicros,145);assert.equal(receipts[0].settled,true);
+});

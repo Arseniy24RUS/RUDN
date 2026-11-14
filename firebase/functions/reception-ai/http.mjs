@@ -37,14 +37,18 @@ export async function receptionHandler(req, res) {
     const version = `${settings.activeCatalogVersion}:${hash(settings.limits || {})}:${guestEnabled}`;
     if (!cachedService || cachedVersion !== version) {
       cachedService = createReceptionService({store: env.store, cases: () => loadPrivateCatalogue(env.db, settings.activeCatalogVersion),
-        provider: createOpenAIProvider({apiKey: getOpenAIKey}), config: settings.limits || {}, guestEnabled,
+        provider: createOpenAIProvider({apiKey: getOpenAIKey, onDiagnostic: diagnostic => console.warn(JSON.stringify(diagnostic))}), config: settings.limits || {}, guestEnabled,
         canStartAssessment: createFirebaseAssessmentGate(env.db), saveResult: createFirebaseResultWriter(env.db), requireGameplay: true});
       cachedVersion = version;
     }
     res.status(200).json(await cachedService.handle(req.body, identity));
   } catch (error) {
-    // Neither student text, private dossiers, prompts, credentials nor provider
-    // exception bodies are written to logs or returned to the browser.
+    // Only bounded operational codes are logged; never student text, credentials or exception bodies.
+    const status = error instanceof ReceptionError ? error.status : 503;
+    if (status >= 500 || status === 429) {
+      const op = ['catalog','start','recover','resume','locale','message','document','draft','decide','followup','next'].includes(req.body?.op) ? req.body.op : 'unknown';
+      console.warn(JSON.stringify({event:'reception_request_failed',op,status,code:error instanceof ReceptionError ? error.code : 'unavailable'}));
+    }
     res.status(error instanceof ReceptionError ? error.status : 503).json({ok: false, error: {code: error instanceof ReceptionError ? error.code : 'unavailable'}});
   }
 }

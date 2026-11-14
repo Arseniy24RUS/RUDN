@@ -238,13 +238,13 @@ test('the verified anonymous identity only resolves free-play guests and their o
   await assert.rejects(resolveReceptionIdentity(request,token,env),err('forbidden'));
 });
 
-test('guest play journals neither review stage nor completed score, stays separate from the signed-in profile',async()=>{
+test('disabled monetary caps allow guest chat and both reviews with exact ledger and separate profile',async()=>{
   const h=await harness([explicitReview,explicitReview]);
   let journalWrites=0;
   const provider={name:'openai', reviewDecision:async({context})=>({review:explicitReview(context),verified:true,usage:{inputTokens:100,outputTokens:20}}),
     generate:async()=>({reply:'Документы у вас.',revealedFactIds:[],releasedDocumentIds:[],usage:{inputTokens:100,outputTokens:20}})};
   const service=createReceptionService({store:h.store,cases:[h.c],provider,correspondenceProfiles:profiles,requireGameplay:true,
-    saveResult:()=>{journalWrites++;}});
+    saveResult:()=>{journalWrites++;},config:{enforceMonetaryBudgets:false,dailyBudgetMicros:1,monthlyBudgetMicros:1,studentDailyBudgetMicros:1,guestDailyBudgetMicros:1,guestMonthlyBudgetMicros:1}});
   const handle=(body,actor=guestIdentity)=>service.handle(body,actor);
   const {cases}=await handle({op:'catalog',context:'free',locale:'zh',workbookVersion:2,decisionVersion:DECISION_VERSION});
   assert.equal(cases[0].id,h.c.id);
@@ -303,7 +303,8 @@ test('guest starts enforce both concurrent daily caps and preserve idempotency a
   assert.equal((await guestStart(h.service,'new-day')).view.status,'active');
 });
 
-test('the guest model allowance limits concurrent chat independently and releases unused request keys',async()=>{
+for (const [config,code] of [[{guestMaxConcurrent:2},'guest_busy'],[{guestMaxConcurrent:3,maxConcurrent:2},'budget_or_rate_limit']]) {
+test(`disabled monetary caps retain concurrent allowance (${code}) and release unused request keys`,async()=>{
   const h=await harness([explicitReview]);
   let entered=0, release, notify;
   const active=new Promise(resolve=>notify=resolve);
@@ -313,7 +314,7 @@ test('the guest model allowance limits concurrent chat independently and release
     await held;
     return {reply:'Документы у вас.',revealedFactIds:[],releasedDocumentIds:[],usage:{inputTokens:100,outputTokens:20}};
   }};
-  const service=createReceptionService({store:h.store,cases:[h.c],provider,correspondenceProfiles:profiles});
+  const service=createReceptionService({store:h.store,cases:[h.c],provider,correspondenceProfiles:profiles,config:{enforceMonetaryBudgets:false,...config}});
   const actor=i=>({uid:'browser-'+i,guest:true});
   const views=(await Promise.all([0,1,2].map(i=>guestStart(service,'start',actor(i))))).map(row=>row.view);
   const body=i=>({op:'message',sessionId:views[i].id,requestId:'message',expectedRevision:views[i].revision,text:'Что произошло?'});
@@ -322,13 +323,15 @@ test('the guest model allowance limits concurrent chat independently and release
     await active;
     const during=(await service.handle({op:'resume',sessionId:views[0].id},actor(0))).view;
     assert.equal(during.operationInProgress,true);
-    await assert.rejects(service.handle(body(2),actor(2)),err('guest_busy'));
+    await assert.rejects(service.handle(body(2),actor(2)),err(code));
     assert.equal(entered,2);
   }finally{release();await Promise.all(first);}
   const third=(await service.handle(body(2),actor(2))).view;
   assert.equal(third.messages.at(-1).role,'assistant');
   assert.equal(third.operationInProgress,false);
 });
+
+}
 
 test('guest expense caps preserve a validated decision draft before an uncharged review',async()=>{
   for(const [config,code] of [[{guestDailyBudgetMicros:10_000},'guest_daily_limit'],[{guestMonthlyBudgetMicros:10_000},'guest_monthly_limit']]){

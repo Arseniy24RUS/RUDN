@@ -60,7 +60,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   guestEnabled = true, resolveLegalCitation=defaultLegalCitationResolver,
   correspondenceProfiles={private:privateCorrespondenceProfile,public:publicCorrespondenceProfile}} = {}) {
   if (!store?.transaction || !store?.get || !provider?.generate) throw new TypeError('Reception adapters are required');
-  const limits = {...DEFAULTS, ...config};
+  const limits = {enforceMonetaryBudgets:true, ...DEFAULTS, ...config};
+  if (typeof limits.enforceMonetaryBudgets !== 'boolean') throw new TypeError('Invalid monetary budget enforcement flag');
   if (limits.leaseMs <= limits.providerTimeoutMs + 3000) throw new TypeError('Lease must exceed provider timeout');
   if(limits.reviewLeaseMs<=limits.reviewTimeoutMs+3000)throw new TypeError('Review lease must exceed review timeout');
   if(limits.reviewTimeoutMs>90000||limits.reviewLeaseMs>110000)throw new TypeError('Review limits must fit the 120 second function deadline');
@@ -374,12 +375,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const o = d.owners[owner] ||= {micros: 0, turns: 0};
       const active = Object.values(b.active);
       if (session.guest) {
-        if ((m.guestMicros || 0) + amount > limits.guestMonthlyBudgetMicros) limitCode = 'guest_monthly_limit';
-        else if ((d.guestMicros || 0) + amount > limits.guestDailyBudgetMicros) limitCode = 'guest_daily_limit';
+        if (limits.enforceMonetaryBudgets && (m.guestMicros || 0) + amount > limits.guestMonthlyBudgetMicros) limitCode = 'guest_monthly_limit';
+        else if (limits.enforceMonetaryBudgets && (d.guestMicros || 0) + amount > limits.guestDailyBudgetMicros) limitCode = 'guest_daily_limit';
         else if (active.filter(request => request.guest).length >= limits.guestMaxConcurrent) limitCode = 'guest_busy';
         if (limitCode !== 'budget_or_rate_limit') return undefined;
       }
-      if (active.length >= limits.maxConcurrent || d.micros + amount > limits.dailyBudgetMicros || m.micros + amount > limits.monthlyBudgetMicros || o.micros + amount > limits.studentDailyBudgetMicros || o.turns >= limits.maxDailyTurnsPerStudent) return undefined;
+      if (active.length >= limits.maxConcurrent || limits.enforceMonetaryBudgets && (d.micros + amount > limits.dailyBudgetMicros || m.micros + amount > limits.monthlyBudgetMicros || o.micros + amount > limits.studentDailyBudgetMicros) || o.turns >= limits.maxDailyTurnsPerStudent) return undefined;
       d.micros += amount; m.micros += amount; o.micros += amount; o.turns++;
       const guest = session.guest ? {guest:true} : {};
       if (session.guest) {
