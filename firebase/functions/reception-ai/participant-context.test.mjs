@@ -29,7 +29,7 @@ test('background is narrowly authored, localized, optional and independent from 
     const c=fixture();c.id='mfc-second-demand';
     const b=buildParticipantContext(c,locale).conversationalBackground;
     assert.equal(b.optional,true);assert.equal(b.evidentiary,false);
-    assert.ok(b.service.length);assert.ok(b.currentComplaint.length);assert.ok(b.limits.length);
+    assert.ok(b.service.length);assert.ok(b.priorContact.length);assert.ok(b.limits.length);
   }
   for(const id of ['staff-case','mfc-second-demand-copy','mfc-other'])assert.equal(buildParticipantContext({...fixture(),id}).conversationalBackground,undefined);
   assert.match(buildParticipantContext({...fixture(),id:'mfc-second-demand'}).conversationalBackground.service,/ЕГРН/);

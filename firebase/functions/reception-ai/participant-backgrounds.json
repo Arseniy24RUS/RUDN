@@ -1,0 +1,3209 @@
+{
+  "version": "reception-participant-background-v1",
+  "cases": {
+    "access-counter": {
+      "sourceSHA256": "40ddd6e6214f8f97e8b1575ec8fa536bd9ecd9c6a39f7c5283633be78fb42679",
+      "service": {
+        "ru": "Я пришёл оформить документы по своей квартире.",
+        "en": "I came to arrange paperwork for my apartment.",
+        "zh": "我来办理与自己公寓有关的文件。"
+      },
+      "purpose": {
+        "ru": "Мне нужно привести домашние бумаги в порядок.",
+        "en": "I need to put my household documents in order.",
+        "zh": "我想把家里的文件整理妥当。"
+      },
+      "priorContact": {
+        "ru": "Во время этого визита сотрудник направил меня на недоступный второй этаж.",
+        "en": "During this visit a staff member directed me to the inaccessible second floor.",
+        "zh": "这次来访时，工作人员让我去无法到达的二楼。"
+      }
+    },
+    "access-guide-dog": {
+      "sourceSHA256": "3452bab4e99a1eabc1358fb6e261f5c76ddef87ac85fb9127e77e2f6cd5e4674",
+      "service": {
+        "ru": "Я пришёл на приём по личным документам с собакой-проводником.",
+        "en": "I came for an appointment about personal documents with my guide dog.",
+        "zh": "我带着导盲犬来办理个人文件。"
+      },
+      "purpose": {
+        "ru": "Мне важно самостоятельно заниматься повседневными делами.",
+        "en": "I want to manage everyday matters independently.",
+        "zh": "我希望独立处理日常事务。"
+      },
+      "priorContact": {
+        "ru": "При входе я показал документ о подготовке собаки, но в зал меня не пустили.",
+        "en": "At the entrance I showed the dog’s training document but was not allowed into the hall.",
+        "zh": "进门时我出示了导盲犬的训练证明，但仍未能进入大厅。"
+      }
+    },
+    "access-reading-choice": {
+      "sourceSHA256": "1b169c5f55c366bf2ed5d3600b384bb8fb8ec52fbcbab23c7700427c59129378",
+      "service": {
+        "ru": "Я оформляю личные документы и не могу разобрать мелкий текст.",
+        "en": "I am arranging personal documents and cannot make out the small print.",
+        "zh": "我正在办理个人文件，但看不清小字。"
+      },
+      "purpose": {
+        "ru": "Мне важно самой понимать условия перед принятием решения.",
+        "en": "I need to understand the terms myself before deciding.",
+        "zh": "我希望自己理解条款后再作决定。"
+      },
+      "priorContact": {
+        "ru": "На нынешний приём я пришла с дочерью и попросила прочитать документ в отдельном помещении.",
+        "en": "I came to this appointment with my daughter and asked for the document to be read in a private room.",
+        "zh": "这次我和女儿一起来，提出在单独房间里听完整文件。"
+      }
+    },
+    "access-written-dialogue": {
+      "sourceSHA256": "ce3f1923f1146c3d1300b11acec481c41242b5a2ce28c9e60f548049fa1bc770",
+      "service": {
+        "ru": "Я пришла самостоятельно оформить личные документы.",
+        "en": "I came to arrange my personal documents independently.",
+        "zh": "我来独立办理自己的个人文件。"
+      },
+      "purpose": {
+        "ru": "Мне нужно понимать объяснения и самой выбирать дальнейшие действия.",
+        "en": "I need to understand explanations and make my own choices.",
+        "zh": "我需要理解说明，并自己决定接下来的事。"
+      },
+      "priorContact": {
+        "ru": "Во время этого визита мой талон объявили только голосом, а затем предложили прийти с родственником.",
+        "en": "During this visit my ticket was called only aloud and I was then told to return with a relative.",
+        "zh": "这次来访时只通过广播叫了我的号码，随后有人让我带亲属再来。"
+      }
+    },
+    "ads-channel-scope": {
+      "sourceSHA256": "3d5fadd7a7ef5715a370cb8803d31b35a65602fc5071f94b96cd6577d6a1a35d",
+      "service": {
+        "ru": "Магазин присылает рекламу по SMS, хотя я выбирал только электронную почту.",
+        "en": "The shop sends advertising texts although I selected email only.",
+        "zh": "商店向我发送广告短信，而我只选择了电子邮件。"
+      },
+      "purpose": {
+        "ru": "Хочу сам выбирать, какие рекламные уведомления получать на телефон.",
+        "en": "I want to choose which advertising notifications reach my phone.",
+        "zh": "我希望自己决定手机接收哪些广告通知。"
+      },
+      "priorContact": {
+        "ru": "Раньше согласился на письма с акциями, затем получил SMS и услышал от магазина, что согласие у них общее.",
+        "en": "I previously agreed to promotional emails, then received texts and was told by the shop that its consent covered everything.",
+        "zh": "我此前同意接收促销邮件，后来收到短信，商店则说同意是统一的。"
+      }
+    },
+    "ads-consent": {
+      "sourceSHA256": "92b16f91f928184c655618f58f203ee5854489799fb5603e902c25f2d6525f12",
+      "service": {
+        "ru": "После покупки стали приходить сообщения с предложениями товаров.",
+        "en": "After a purchase, messages offering products started arriving.",
+        "zh": "购物后，我开始收到推销商品的短信。"
+      },
+      "purpose": {
+        "ru": "Хочу пользоваться телефоном без нежелательной рекламы и разобраться, откуда она.",
+        "en": "I want to use my phone without unwanted advertising and understand where it comes from.",
+        "zh": "我想不受无关广告打扰地使用手机，并弄清广告来源。"
+      },
+      "priorContact": {
+        "ru": "Сначала оставил номер магазину, затем сохранил сообщения и запрос об отказе; после него пришла новая реклама, но передачи номера я не видел.",
+        "en": "I first gave the shop my number, then saved the messages and my opt-out request; another advertisement arrived afterward, but I did not witness any transfer of my number.",
+        "zh": "我先给商店留下号码，随后保存了广告和退订请求；退订后又收到广告，但我并未看到号码被转交的过程。"
+      }
+    },
+    "ads-service-message": {
+      "sourceSHA256": "a96cc95536993661ecf5bbdafcb89d83a9683bc9b1a23662b59ff57600188f8d",
+      "service": {
+        "ru": "Получил сообщение о готовности моего оплаченного заказа к выдаче.",
+        "en": "I received a message that my paid order is ready for collection.",
+        "zh": "我收到通知，说已付款订单可以领取。"
+      },
+      "purpose": {
+        "ru": "Хочу получать заказ и понимать, какие сообщения связаны с покупкой.",
+        "en": "I want to collect my order and understand which messages relate to the purchase.",
+        "zh": "我想领取订单，并了解哪些通知属于购买服务的一部分。"
+      },
+      "priorContact": {
+        "ru": "Раньше сам оформил заказ и указал телефон для связи, потом получил уведомление и сравнил его с чужим рекламным примером из интернета.",
+        "en": "I placed the order myself and provided a contact number, then received the notice and compared it with someone else's advertising example online.",
+        "zh": "我先自行下单并留下联系电话，后来收到通知，又拿它与网上他人的广告示例作比较。"
+      }
+    },
+    "ads-withdrawal-time": {
+      "sourceSHA256": "e514f10a54eb91aeaf3c573ea47480da178caf45c6bffe7dea288f4ca9ac998d",
+      "service": {
+        "ru": "После отказа от рекламных SMS мне продолжают отправлять акции.",
+        "en": "Promotional texts continue after I asked for them to stop.",
+        "zh": "我要求停止广告短信后，仍有促销信息发来。"
+      },
+      "purpose": {
+        "ru": "Хочу перестать отвлекаться на рекламу, которую больше не желаю получать.",
+        "en": "I want to stop being distracted by advertising I no longer wish to receive.",
+        "zh": "我不想再被已经不愿接收的广告打扰。"
+      },
+      "priorContact": {
+        "ru": "При оформлении карты согласилась на SMS, позже направила подтверждённое требование прекратить их; спорная реклама отправлена уже после него.",
+        "en": "I agreed to texts when getting the card, later submitted a confirmed request to stop them; the disputed advertisement was sent afterward.",
+        "zh": "办卡时我同意接收短信，后来提出并确认送达了停发要求；争议广告是在此之后发送的。"
+      }
+    },
+    "anonymous-danger": {
+      "sourceSHA256": "543ee78d9cfd492703b2c4952b40aa8ed606396fbd8d163316ed06282666bdf6",
+      "service": {
+        "ru": "Я дежурный и разбираю поступивший лист о возможном опасном действии.",
+        "en": "I am the duty officer examining a received sheet about a possible dangerous act.",
+        "zh": "我是值班人员，正在查看一张反映可能危险行为的来纸。"
+      },
+      "purpose": {
+        "ru": "Мне нужно понять, какие сведения о текущей ситуации действительно есть в материале.",
+        "en": "I need to understand what information about the current situation is actually present.",
+        "zh": "我需要弄清材料中实际有哪些关于当前情况的信息。"
+      },
+      "priorContact": {
+        "ru": "Лист уже поступил без контактов автора, и связаться с ним для уточнений нельзя.",
+        "en": "The sheet arrived without author contact details and I cannot contact the author for clarification.",
+        "zh": "纸张已收到，但没有作者联系方式，无法向其核实。"
+      }
+    },
+    "authority-contact": {
+      "sourceSHA256": "01d1be9b28286cadfb9b0779b8de535579f4dcabda80550d440a5d286e5a62af",
+      "service": {
+        "ru": "Я написал о предприятии, относящемся к федеральному экологическому надзору.",
+        "en": "My letter concerns a facility subject to federal environmental supervision.",
+        "zh": "我写信反映一家属于联邦环境监管范围的企业。"
+      },
+      "purpose": {
+        "ru": "Хочу понять, куда попало письмо, чтобы не тратить время на пересылки.",
+        "en": "I want to understand where my letter is going and avoid repeated forwarding.",
+        "zh": "我想弄清信件送往哪里，免得一直转来转去。"
+      },
+      "priorContact": {
+        "ru": "После подготовки письма мне предложили управление по области из-за похожего названия территории.",
+        "en": "After I prepared the letter, someone suggested a regional office because the territorial names looked similar.",
+        "zh": "信写好后，有人因为地区名称相似，建议我交给州级辖区的管理局。"
+      }
+    },
+    "bailiff-copy-decision": {
+      "sourceSHA256": "9d63f9b56d5911c0a9a5f901d51f0073206f0939aea560990f997e0e021b9299",
+      "service": {
+        "ru": "Я хочу получить направление копии уже вынесенного постановления по ходатайству.",
+        "en": "I want the copy of an already issued ruling on my petition to be sent.",
+        "zh": "我希望已就申请作出的决定书副本能够寄出。"
+      },
+      "purpose": {
+        "ru": "Мне нужно знать содержание решения, чтобы планировать дальнейшие личные дела.",
+        "en": "I need to know the decision to plan my personal affairs.",
+        "zh": "我需要了解决定内容，安排后续个人事务。"
+      },
+      "priorContact": {
+        "ru": "После сообщения о рассмотрении я уточнил отправку и узнал, что в журнале есть только подпись.",
+        "en": "After being told the petition was considered I asked about dispatch and learned the log records only signing.",
+        "zh": "得知申请已审理后，我询问寄送情况，了解到日志只有签署记录。"
+      }
+    },
+    "bailiff-specific-petition": {
+      "sourceSHA256": "93de267ac6ea1c72f4bad86338b7dec663e8de6187c35bd7e8b96f96c0264895",
+      "service": {
+        "ru": "Я прошу проверить сведения о конкретном счёте должника в моём исполнительном производстве.",
+        "en": "I ask for information about a specific debtor account to be checked in my enforcement case.",
+        "zh": "我请求在自己的执行案件中核查债务人的某个具体账户。"
+      },
+      "purpose": {
+        "ru": "Взыскание важно для моего семейного бюджета.",
+        "en": "Recovery matters to my family budget.",
+        "zh": "款项执行关系到我的家庭预算。"
+      },
+      "priorContact": {
+        "ru": "Я подала подписанное ходатайство, а затем получила лишь стандартное уведомление о сроке.",
+        "en": "I submitted a signed petition and then received only a standard notice about the time limit.",
+        "zh": "我提交了签字申请，随后只收到关于办理期限的标准通知。"
+      }
+    },
+    "bailiff-subordination": {
+      "sourceSHA256": "1a051eb5087506a23c8f27d8802cc5d4eed5a032688865272dc59126ad0ed0db",
+      "service": {
+        "ru": "Я жалуюсь на бездействие пристава по конкретному исполнительному производству.",
+        "en": "I am complaining about a bailiff’s inaction in a specific enforcement case.",
+        "zh": "我投诉执行员在具体执行案件中的不作为。"
+      },
+      "purpose": {
+        "ru": "Мне нужно понимать, как движется дело, связанное с ожидаемыми деньгами.",
+        "en": "I need to understand progress in a matter involving money I am awaiting.",
+        "zh": "这件事关系到我等待的款项，我想了解进展。"
+      },
+      "priorContact": {
+        "ru": "Жалоба уже поступила должностному лицу, а обращение в суд я пока только обдумываю.",
+        "en": "The official has already received my complaint and I am only considering court action.",
+        "zh": "负责人已收到投诉，而向法院提出申请目前只是我的想法。"
+      }
+    },
+    "bailiff-unsigned-complaint": {
+      "sourceSHA256": "61ee608c0e7a28715adadfaad439ac0091f78f1251ee6d0123ba99a893684a46",
+      "service": {
+        "ru": "Я подал бумажную жалобу на пристава, но забыл поставить подпись.",
+        "en": "I submitted a paper complaint about a bailiff but forgot to sign it.",
+        "zh": "我提交了针对执行员的纸质投诉，却忘了签字。"
+      },
+      "purpose": {
+        "ru": "Мне важно разобраться с ведением своего исполнительного дела.",
+        "en": "I want to sort out the handling of my enforcement case.",
+        "zh": "我想弄清自己执行案件的办理情况。"
+      },
+      "priorContact": {
+        "ru": "При подаче я оставил напечатанную фамилию, а затем узнал о проблеме с подписью.",
+        "en": "I left my typed surname when submitting it and later learned about the missing signature.",
+        "zh": "递交时我留下了打印的姓氏，后来才知道缺少签名的问题。"
+      }
+    },
+    "beer-distance": {
+      "sourceSHA256": "945a53a93313f7c727ade67e290ab4bdd4a40ab84e8a282561ba0972a4c1c8b6",
+      "service": {
+        "ru": "Меня беспокоит отдельный наружный щит с рекламой пива недалеко от школы.",
+        "en": "I am concerned about a standalone outdoor beer advertisement near a school.",
+        "zh": "我关注学校附近一块独立户外啤酒广告牌。"
+      },
+      "purpose": {
+        "ru": "Я часто бываю у школы и обращаю внимание на то, что видят дети по дороге.",
+        "en": "I often visit the school and notice what children see on their way.",
+        "zh": "我常去学校，会留意孩子们沿途看到的内容。"
+      },
+      "priorContact": {
+        "ru": "До нынешнего обращения владелец щита объяснил размещение только расстоянием до школы.",
+        "en": "Before this request the board owner justified the placement only by its distance from the school.",
+        "zh": "在这次反映之前，广告牌主人只用与学校的距离解释设置理由。"
+      }
+    },
+    "beer-online-agegate": {
+      "sourceSHA256": "40a648c5ff62b29e839707391d2928fa2b2649f516bcbb8bcc0a33539fb8523b",
+      "service": {
+        "ru": "Я увидел на сайте рекламный баннер конкретного пива.",
+        "en": "I saw a banner advertising a specific beer on a website.",
+        "zh": "我在网站上看到宣传某款啤酒的横幅。"
+      },
+      "purpose": {
+        "ru": "Мне важно понимать, какие рекламные материалы встречаются при обычном просмотре страниц.",
+        "en": "I want to understand the advertising encountered during ordinary browsing.",
+        "zh": "我想了解日常浏览网页时遇到的广告内容。"
+      },
+      "priorContact": {
+        "ru": "Когда возник вопрос о баннере, представитель сослался на отметку о возрасте и предупреждение.",
+        "en": "When the banner was questioned a representative pointed to the age label and warning.",
+        "zh": "有人对横幅提出疑问后，代表指向了年龄标识和警示语。"
+      }
+    },
+    "beer-required-menu": {
+      "sourceSHA256": "49aa9dd902cfca6c28c503a8e43e6a49cc760fdc8912dd32aa7989b509cdeba5",
+      "service": {
+        "ru": "Я спрашиваю о строке пива в общем перечне ассортимента и цен.",
+        "en": "I am asking about a beer entry in a general assortment and price list.",
+        "zh": "我询问的是普通品种价格表中的啤酒条目。"
+      },
+      "purpose": {
+        "ru": "При выборе заказа мне важно понимать, где информация для покупателя, а где отдельное продвижение товара.",
+        "en": "When choosing an order I want to distinguish customer information from a separate promotion.",
+        "zh": "点单时，我想分清顾客信息与单独促销。"
+      },
+      "priorContact": {
+        "ru": "Раньше я обращался по поводу отдельной акции, а нынешний вопрос касается другого материала.",
+        "en": "I previously raised a separate promotion and this question concerns a different item.",
+        "zh": "我此前反映过另一项促销，这次问的是不同的材料。"
+      }
+    },
+    "beer-warning-area": {
+      "sourceSHA256": "70e153e6cb903ff14765960c19741aa07e20a6f8bec7fe44b5a192122cd3b31e",
+      "service": {
+        "ru": "Внутри магазина размещена реклама с предупреждением о чрезмерном употреблении алкоголя.",
+        "en": "An advertisement inside a shop includes a warning about excessive alcohol consumption.",
+        "zh": "商店内的一则广告带有过量饮酒警示。"
+      },
+      "purpose": {
+        "ru": "Я хочу понимать содержание заметных покупателю предупреждений.",
+        "en": "I want to understand the warnings visible to shoppers.",
+        "zh": "我想弄清顾客能看到的警示内容。"
+      },
+      "priorContact": {
+        "ru": "В нынешнем вопросе я сравниваю площадь предупреждения с площадью всей рекламы и отдельной отметкой возраста.",
+        "en": "In this question I am comparing the warning area with the whole advertisement and the separate age label.",
+        "zh": "这次我比较的是警示语、整幅广告和单独年龄标识的面积。"
+      }
+    },
+    "budget": {
+      "sourceSHA256": "c2999f1ef399b2841f7d701044654381c84a59c54729627f4feda52dccacc2ea",
+      "service": {
+        "ru": "Ищу принятое решение о бюджете, приложения и опубликованные материалы его обсуждения.",
+        "en": "I am looking for the adopted budget decision, annexes and published discussion materials.",
+        "zh": "我在查找已通过的预算决定、附件及公开讨论材料。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, что предусмотрено для повседневных нужд жителей.",
+        "en": "I want to understand what is planned for residents' everyday needs.",
+        "zh": "我想了解预算为居民的日常需求安排了什么。"
+      },
+      "priorContact": {
+        "ru": "Перед обращением смотрел сайт и нашёл проект; в запросе указал контакты и электронный способ получения.",
+        "en": "Before making the request I checked the website and found a draft; I provided contact details and asked for electronic access.",
+        "zh": "申请前我查看了网站，只找到草案；申请中已填写联系方式并选择电子方式获取。"
+      }
+    },
+    "budget-link": {
+      "sourceSHA256": "16e68a95fcafa2431d39bcf1e55f142ac5888ad556e1aae1a80ce78308107777",
+      "service": {
+        "ru": "Хочу получить принятое решение о бюджете и два приложения.",
+        "en": "I want the adopted budget decision and its two annexes.",
+        "zh": "我想取得已通过的预算决定及两份附件。"
+      },
+      "purpose": {
+        "ru": "Хочу понять, на какие местные нужды запланированы деньги.",
+        "en": "I want to understand which local needs the money is intended for.",
+        "zh": "我想了解资金计划用于哪些地方需求。"
+      },
+      "priorContact": {
+        "ru": "Сначала искал документы на сайте, затем направил запрос; сейчас уточняю его, поскольку в проекте ответа вижу только ссылку на главную.",
+        "en": "I first searched the website, then submitted a request; I am clarifying it now because the draft reply only links to the homepage.",
+        "zh": "我先在网站查找，随后提交了申请；现在看到答复草稿只有首页链接，因此进一步说明需求。"
+      }
+    },
+    "budget-misdirected": {
+      "sourceSHA256": "8f562b6933ef3ca7245d0e4a0e56325485af173052bf9021fe54ea565b3084a9",
+      "service": {
+        "ru": "Запрашиваю действующее решение о местном бюджете, приложения и опубликованные материалы обсуждения.",
+        "en": "I am requesting the current local budget decision, annexes and published discussion materials.",
+        "zh": "我申请获取现行地方预算决定、附件及已公开的讨论材料。"
+      },
+      "purpose": {
+        "ru": "Хочу разобраться в расходах округа, о которых говорят соседи.",
+        "en": "I want to understand the district spending my neighbours discuss.",
+        "zh": "我想弄清邻居们谈论的辖区支出。"
+      },
+      "priorContact": {
+        "ru": "Раньше отправил запрос в управу из-за знакомого названия, получил ответ, что документы не её, а на сайте пока нашёл лишь проект.",
+        "en": "I previously sent the request to the district administration because I recognised its name, was told the documents were not theirs, and have only found a draft online.",
+        "zh": "此前我因为熟悉名称而向区行政机构提出申请，被告知文件不属于该机构，在网上也只找到了草案。"
+      }
+    },
+    "budget-partial": {
+      "sourceSHA256": "47193f19589451b8a71f9d87d0db14bb4ca33940ad0710441f1049d44ba29171",
+      "service": {
+        "ru": "Прошу суммы расходов по мероприятиям программы и описание выполненных работ.",
+        "en": "I am asking for spending totals by programme activity and descriptions of completed work.",
+        "zh": "我申请了解项目各项活动的支出总额和已完成工作的说明。"
+      },
+      "purpose": {
+        "ru": "Хочу сопоставить обещанные работы с тем, на что потрачены общие деньги.",
+        "en": "I want to compare the promised work with how public money was spent.",
+        "zh": "我想把承诺的工作与公共资金的实际用途进行对照。"
+      },
+      "priorContact": {
+        "ru": "На прежний запрос получил отказ из-за персональных данных в ведомости; теперь поясняю, что чужие телефоны и счета мне не нужны.",
+        "en": "My earlier request was refused because the statement contains personal data; I am clarifying that I do not need anyone's phone numbers or bank accounts.",
+        "zh": "此前的申请因报表含个人信息被拒，现在我说明自己不需要他人的电话或银行账户。"
+      }
+    },
+    "budget-published": {
+      "sourceSHA256": "0868ff48ae39b3f2296ba4c4ca980ff0a61d16b6eac28a3e553f51a9b4953be9",
+      "service": {
+        "ru": "Нужны электронные тексты принятого бюджета и обоих приложений.",
+        "en": "I need electronic copies of the adopted budget and both annexes.",
+        "zh": "我需要已通过的预算及两份附件的电子文本。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно прочитать документы дома и понять местные расходы.",
+        "en": "I want to read the documents at home and understand local spending.",
+        "zh": "我想在家仔细阅读文件，了解地方支出。"
+      },
+      "priorContact": {
+        "ru": "Сначала получил от соседа старую ссылку, затем подал запрос через электронную форму; заверенные копии не заказывал.",
+        "en": "I first received an old link from a neighbour, then submitted an electronic request; I did not order certified copies.",
+        "zh": "我先从邻居那里得到旧链接，随后通过电子表单提出申请，没有要求认证副本。"
+      }
+    },
+    "complaint-access-materials": {
+      "sourceSHA256": "f2a6baa6bc101a20a097475024edfaeef3856a5ee28ea8a7a2604419427b1613",
+      "service": {
+        "ru": "После проверки площадки я захотела увидеть акт и фотографии её состояния.",
+        "en": "After the site inspection, I wanted to see the report and photographs of its condition.",
+        "zh": "场地检查后，我想看看检查记录和现场照片。"
+      },
+      "purpose": {
+        "ru": "Мне важно понимать, что именно проверили, прежде чем снова пользоваться площадкой.",
+        "en": "I want to understand what was inspected before using the site again.",
+        "zh": "再次使用场地前，我想了解到底检查了哪些内容。"
+      },
+      "priorContact": {
+        "ru": "Сначала мне сообщили о проверке, затем отказали в ознакомлении со всей папкой, сославшись на чужие личные сведения.",
+        "en": "First I was told about the inspection; later access to the entire folder was refused because it contained another person’s private information.",
+        "zh": "先有人告知检查已完成，后来又以材料夹内有他人个人信息为由，拒绝让我查看全部材料。"
+      }
+    },
+    "complaint-officer-not-organ": {
+      "sourceSHA256": "d65a5b047116adc18465dc519cfe445c0ff070ee26b13df0b25c274e2cfb46c8",
+      "service": {
+        "ru": "Я оспариваю действия сотрудника при рассмотрении моего прежнего обращения.",
+        "en": "I am complaining about an officer’s handling of my earlier submission.",
+        "zh": "我投诉的是工作人员处理我之前来信时的行为。"
+      },
+      "purpose": {
+        "ru": "Хочу получить понятный ответ на свой бытовой вопрос и не начинать объяснения заново.",
+        "en": "I want a clear answer to my everyday concern without having to explain everything again.",
+        "zh": "我想把生活中的问题问清楚，不想每次都从头解释。"
+      },
+      "priorContact": {
+        "ru": "После прежнего рассмотрения я подал жалобу, а руководитель поручил этому же сотруднику подготовить и подписать окончательный ответ.",
+        "en": "After the earlier handling, I complained, but the manager assigned the same officer to prepare and sign the final reply.",
+        "zh": "之前的事项处理后，我提出投诉，但负责人又让同一名工作人员准备并签署最终答复。"
+      }
+    },
+    "complaint-routing": {
+      "sourceSHA256": "2308993e9952e6a3889133150176943d009e5dd65ed63d621d341e3a569b1265",
+      "service": {
+        "ru": "В прежнем письме я изложил обычный житейский вопрос, но начальник отдела не рассмотрел мои доводы.",
+        "en": "My earlier letter raised an everyday concern, but the department head did not address my arguments.",
+        "zh": "我之前就生活中的问题写信，但科室负责人没有回应我的具体理由。"
+      },
+      "purpose": {
+        "ru": "Хочу разобраться с оставшимися вопросами, а не снова получить ответ мимо сути.",
+        "en": "I want the remaining questions clarified instead of another reply that misses the point.",
+        "zh": "我想把尚未解决的问题弄清楚，不想再收到答非所问的回复。"
+      },
+      "priorContact": {
+        "ru": "До нынешней жалобы я получил ответ начальника отдела; теперь в приёмной предлагают передать жалобу ему же.",
+        "en": "Before this complaint I received the department head’s reply; now the reception office proposes sending the complaint back to him.",
+        "zh": "本次投诉前，我已收到科室负责人的答复；现在接待处又打算把投诉交还给他。"
+      }
+    },
+    "complaint-wrong-procedure": {
+      "sourceSHA256": "caeb0cd94b82897b213134f42f0fd16277f0658c9a05aedea11dc5a7cb86f6e2",
+      "service": {
+        "ru": "Я принесла в МФЦ пакет для оформления услуги, но работник отказался его принять.",
+        "en": "I brought an application package to the public service centre, but the employee refused to accept it.",
+        "zh": "我带着申请材料去多功能服务中心办理业务，工作人员却拒收。"
+      },
+      "purpose": {
+        "ru": "Мне нужно продвинуть оформление документов, чтобы не откладывать связанные с ними повседневные дела.",
+        "en": "I need the paperwork to move forward so that related everyday arrangements are not put on hold.",
+        "zh": "我想把手续办下去，免得相关的日常安排一直搁着。"
+      },
+      "priorContact": {
+        "ru": "После отказа я подала жалобу с указанием работника и услуги, а затем её назвали обычным письмом с ожиданием тридцать дней.",
+        "en": "After the refusal, I complained, identifying the employee and service, but it was then treated as an ordinary letter with a thirty-day wait.",
+        "zh": "被拒收后，我投诉时写明了工作人员和业务，后来却被告知按普通来信等三十天。"
+      }
+    },
+    "conflict-creditor": {
+      "sourceSHA256": "73ef826938e4f9f6b8e82562fb8587fbbd86d5dfac56cd5b2ee2fdb95bfdff27",
+      "service": {
+        "ru": "Я готовлю проект по обращению организации, которая должна мне по личному займу.",
+        "en": "I am drafting a response concerning an organization that owes me a personal loan.",
+        "zh": "我正在处理一家欠我个人借款的机构的来件草稿。"
+      },
+      "purpose": {
+        "ru": "Возврат этих денег важен для моего домашнего бюджета.",
+        "en": "Repayment matters to my household budget.",
+        "zh": "这笔钱的归还关系到我的家庭预算。"
+      },
+      "priorContact": {
+        "ru": "До нынешнего разговора мне поручили материалы этой организации, и я заметил связь с моими личными деньгами.",
+        "en": "Before this conversation I was assigned its materials and noticed the connection with my own money.",
+        "zh": "在这次谈话前，我接到了该机构的材料，并注意到它与个人钱款的联系。"
+      }
+    },
+    "conflict-namesake": {
+      "sourceSHA256": "7e0f15aa67ad4be6fd30cccc315df3803271ee30f673159078d9810a6fcee80b",
+      "service": {
+        "ru": "Мне поручили ответить гражданину с такой же фамилией, как у меня.",
+        "en": "I was assigned a response to a citizen with the same surname as mine.",
+        "zh": "我被安排回复一位与我同姓的公民。"
+      },
+      "purpose": {
+        "ru": "Я хочу спокойно выполнить обычную работу по его обращению.",
+        "en": "I want to complete the ordinary work on the letter.",
+        "zh": "我希望正常完成这份来件的工作。"
+      },
+      "priorContact": {
+        "ru": "После распределения дела коллега обратил внимание только на совпадение наших фамилий.",
+        "en": "After the assignment a colleague pointed only to our matching surnames.",
+        "zh": "分配材料后，一位同事仅因我们同姓提出了疑问。"
+      }
+    },
+    "conflict-reassignment": {
+      "sourceSHA256": "ee0a4307f40b2560307a1ca625ba5d23c0f5156cff0e91a8ce3bc1494ed7fdf7",
+      "service": {
+        "ru": "Речь идёт об обращении, которое передали другому сотруднику из-за моей личной связи.",
+        "en": "This concerns a letter reassigned because of my personal connection.",
+        "zh": "这份来件因我的个人关系已经转给另一名工作人员。"
+      },
+      "purpose": {
+        "ru": "Мне хочется помочь коллеге с привычной работой, но моя связь с делом никуда не исчезла.",
+        "en": "I want to help a colleague with familiar work while that connection remains.",
+        "zh": "我想帮助同事处理熟悉的工作，但我与此事的联系仍然存在。"
+      },
+      "priorContact": {
+        "ru": "После передачи новый исполнитель попросил меня написать проект вне обычной служебной переписки.",
+        "en": "After reassignment the new handler asked me to write the draft outside the usual official correspondence.",
+        "zh": "转交后，新承办人请我在正常公务流程之外代写草稿。"
+      }
+    },
+    "conflict-relative": {
+      "sourceSHA256": "d0f32b375be23b1e97960580f82830d9b03538d81b71f2f881086ee2d54a0e90",
+      "service": {
+        "ru": "Я прошу проверить действия подрядчика по вопросу из приложенного договора.",
+        "en": "I am asking for a review of a contractor’s actions under the attached contract.",
+        "zh": "我请求核查承包方在所附合同事项中的行为。"
+      },
+      "purpose": {
+        "ru": "Мне нужен понятный результат по делу, затрагивающему мои обычные расходы и планы.",
+        "en": "I need a clear outcome for a matter affecting my everyday spending and plans.",
+        "zh": "这件事影响我的日常开支和安排，我想得到明确结果。"
+      },
+      "priorContact": {
+        "ru": "До нынешнего обсуждения я направил обращение с договором и перепиской.",
+        "en": "Before this discussion I submitted a letter with the contract and correspondence.",
+        "zh": "在这次讨论前，我已提交来信、合同和往来通信。"
+      }
+    },
+    "court-cancel": {
+      "sourceSHA256": "2228619faebecbb5c205d7ced02dbb64691336c14edc74f13b1de10be8367c60",
+      "service": {
+        "ru": "Я не согласен с судебным постановлением и прошу администрацию его отменить.",
+        "en": "I disagree with a court ruling and am asking the administration to cancel it.",
+        "zh": "我不认同法院裁判，希望行政机关把它撤销。"
+      },
+      "purpose": {
+        "ru": "Хочу понять, как это решение повлияет на мои обычные дела и нужно ли его исполнять.",
+        "en": "I want to understand how the ruling affects my everyday affairs and whether I must comply.",
+        "zh": "我想弄清裁判会怎样影响我的日常生活，以及是否还要履行。"
+      },
+      "priorContact": {
+        "ru": "С этим требованием я уже написал в обычную приёмную исполнительного органа, считая, что любое начальство может пересмотреть решение.",
+        "en": "I have already taken this request to an executive authority’s reception office, assuming any higher official could review the ruling.",
+        "zh": "我已就此写信给行政机关的普通接待处，以为上级机关都能重新审查裁判。"
+      }
+    },
+    "court-installments": {
+      "sourceSHA256": "df4c953906c4d6ece13c22f0c7a760de7d432d5614a73daee4f7a1211c7c3daf",
+      "service": {
+        "ru": "Сумму по вступившему в силу решению я не оспариваю, но сейчас не могу выплатить её целиком.",
+        "en": "I do not dispute the amount awarded by the final judgment, but cannot pay it all at once.",
+        "zh": "我不争议已生效判决中的金额，但目前无法一次付清。"
+      },
+      "purpose": {
+        "ru": "Мне нужен посильный график, чтобы совместить выплаты с обязательными повседневными расходами.",
+        "en": "I need manageable payments alongside essential daily expenses.",
+        "zh": "我希望付款安排能兼顾必须承担的日常开支。"
+      },
+      "priorContact": {
+        "ru": "Я составила ежемесячный график и принесла сведения о доходах и расходах в муниципальную приёмную, где получила талон; суд отдельный график пока не утверждал.",
+        "en": "I drew up a monthly schedule and brought income and expense information to the municipal reception office, which issued a ticket; no separate schedule has yet been approved by the court.",
+        "zh": "我自行拟了按月支付的计划，带着收入和开支材料去市政接待处领了受理凭条，法院尚未另行批准支付计划。"
+      }
+    },
+    "court-order-objections": {
+      "sourceSHA256": "f64518dff90e8468b690c74f1713596531107eb8174c940ef12610f71524a306",
+      "service": {
+        "ru": "Я получил судебный приказ о взыскании денег и с ним не согласен.",
+        "en": "I received a court payment order and disagree with the claim.",
+        "zh": "我收到要求支付款项的法院命令，对追偿并不认同。"
+      },
+      "purpose": {
+        "ru": "Хочу изложить возражения, прежде чем считать этот денежный вопрос окончательно решённым.",
+        "en": "I want my objections heard before treating this financial matter as settled.",
+        "zh": "我想先把异议说清楚，再看这笔款项该如何处理。"
+      },
+      "priorContact": {
+        "ru": "После получения копии я отправил письмо только в администрацию и получил регистрационный талон; в суд возражения ещё не направлял.",
+        "en": "After receiving the copy, I wrote only to the administration and obtained a registration ticket; I have not yet sent objections to the court.",
+        "zh": "收到副本后，我只给行政机关寄了信并拿到登记凭条，还没有向法院提交异议。"
+      }
+    },
+    "court-typo-not-merits": {
+      "sourceSHA256": "f417a7db8fafc3e557d7a7954ef16eeae9ca7e247b94ab03aa29505443994959",
+      "service": {
+        "ru": "В решении о взыскании один раз неверно написана буква моей фамилии, при этом остальные личные сведения совпадают.",
+        "en": "A judgment for payment misspells one letter of my surname once, while the other identifying details match.",
+        "zh": "追偿判决中有一处把我姓氏的一个字母写错了，其余身份信息一致。"
+      },
+      "purpose": {
+        "ru": "Мне важно иметь документ с правильным именем и понять, что означает ошибка для указанной суммы.",
+        "en": "I want my name recorded correctly and to understand what the error means for the amount owed.",
+        "zh": "我想让文件里的姓名准确，也想弄清笔误对所列金额有什么影响。"
+      },
+      "priorContact": {
+        "ru": "До нынешнего обращения я получил лишь совет знакомого, что опечатка отменяет решение; заявления в суд об исправлении ещё не подавал.",
+        "en": "Before this enquiry, I only had a friend’s advice that a typo cancels the judgment; I have not yet applied to the court for correction.",
+        "zh": "本次咨询前，只有熟人说笔误会让判决失效；我还未向法院申请更正。"
+      }
+    },
+    "driver-planned-extension": {
+      "sourceSHA256": "30874b118879aab8ddd9dd266bc9aaeaec040fddf52b7e3f079f5db76003a687",
+      "service": {
+        "ru": "В выданном заранее графике работодатель предусмотрел одиннадцать часов управления, назвав последние два доездом до стоянки.",
+        "en": "The employer’s advance schedule sets eleven hours of driving, calling the final two a drive to parking.",
+        "zh": "雇主提前排出的计划安排驾驶十一小时，把最后两小时叫作驶往停车点。"
+      },
+      "purpose": {
+        "ru": "Мне нужно понимать нагрузку смены, чтобы работать и восстанавливаться между выходами.",
+        "en": "I need to understand the shift workload so I can work and recover between shifts.",
+        "zh": "我想弄清每班负担，才能安排工作和班次之间的恢复。"
+      },
+      "priorContact": {
+        "ru": "До начала работы нам выдали этот план со ссылкой на право продления; упомянутое прежнее перекрытие дороги было на другом рейсе.",
+        "en": "Before work began, we received this plan citing an extension provision; the earlier road closure mentioned concerned a different trip.",
+        "zh": "开工前我们就拿到了这个引用延长规定的计划；提到的以往封路发生在另一趟行程。"
+      }
+    },
+    "driver-shifts": {
+      "sourceSHA256": "72ad08b9a7f0c61592bf56ab1779cb0c953a5dff9356543e46b3c6da9e9833ae",
+      "service": {
+        "ru": "Я вижу один автобус на линии с утра до вечера и переживаю за режим водителя.",
+        "en": "I see the same bus operating from morning to evening and worry about the driver’s working hours.",
+        "zh": "我看到同一辆公交车从早跑到晚，担心司机的作息。"
+      },
+      "purpose": {
+        "ru": "Хочу пользоваться перевозкой, не тревожась об усталости человека за рулём.",
+        "en": "I want to use the service without worrying about an exhausted driver.",
+        "zh": "我希望乘车时不用担心驾驶员过度疲劳。"
+      },
+      "priorContact": {
+        "ru": "Я уже отправил номер автобуса и сведения о поездке; в приложенной ведомости значатся два водителя, а их смену лично я не наблюдал.",
+        "en": "I have already sent the bus number and trip details; the attached roster lists two drivers, and I did not personally observe the changeover.",
+        "zh": "我已提交车号和行程信息；随附名单中有两名司机，但我没有亲眼看到交班。"
+      }
+    },
+    "driver-split-break": {
+      "sourceSHA256": "1fae9d9e9296f615730f535eb82d63b40af482e12b1279882d2c6692dfc110e7",
+      "service": {
+        "ru": "В междугородной поездке водитель делал перерывы на пятнадцать и затем тридцать минут вместо одного длинного.",
+        "en": "On an intercity trip, the driver took a fifteen-minute break followed later by a thirty-minute break instead of one long break.",
+        "zh": "一次城际行程中，司机先休息十五分钟，后来又休息三十分钟，没有一次连续长休息。"
+      },
+      "purpose": {
+        "ru": "Как пассажиру мне важно спокойно доехать и понимать, как устроен отдых водителя.",
+        "en": "As a passenger I want a reassuring journey and to understand the driver’s rest arrangements.",
+        "zh": "作为乘客，我想安心到达，也想了解司机如何安排休息。"
+      },
+      "priorContact": {
+        "ru": "В первом сообщении я указал отсутствие непрерывных сорока пяти минут; приложенная хронология показывает два свободных от другой работы перерыва.",
+        "en": "My first report pointed to the absence of forty-five uninterrupted minutes; the attached timeline shows two breaks free from other work.",
+        "zh": "首次反映时，我说的是没有连续四十五分钟休息；随附时间记录显示两次休息都没有安排其他工作。"
+      }
+    },
+    "driver-waiting-work": {
+      "sourceSHA256": "ba88e96ee479483dd6603ee9fe07a5c006bbc60686d45ff70a43f3ea04ca2e84",
+      "service": {
+        "ru": "Два часа ожидания посадки на конечной работодатель записал мне как свободный отдых.",
+        "en": "The employer recorded my two hours waiting for boarding at the terminus as free rest.",
+        "zh": "雇主把我在终点站等待乘客上车的两小时记成自由休息。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы учёт отражал время, когда я остаюсь на работе и не могу распорядиться им сам.",
+        "en": "I want the record to reflect time when I remain on duty and cannot use it freely.",
+        "zh": "我希望记录能反映我仍在岗位、不能自行支配的时间。"
+      },
+      "priorContact": {
+        "ru": "После смены я увидел такую отметку в табеле, хотя в этот промежуток оставался готовым к посадке и указаниям диспетчера.",
+        "en": "After the shift I saw that entry in the timesheet, although I had remained ready for boarding and the dispatcher’s instructions.",
+        "zh": "下班后我看到了这样的工时记录，但那段时间我一直在准备上客并等待调度指示。"
+      }
+    },
+    "education-accreditation-scope": {
+      "sourceSHA256": "ce396fc14a25b98cec8a9588dd620753cca7d21cba63ad631ef1ee38dd463203",
+      "service": {
+        "ru": "Хочу проверить сведения об аккредитации выбранного направления бакалавриата 38.03.04.",
+        "en": "I want to check accreditation information for my chosen bachelor's programme, 38.03.04.",
+        "zh": "我想核实拟报考的38.03.04本科专业的认证信息。"
+      },
+      "purpose": {
+        "ru": "Выбираю, куда поступать, и хочу понимать документы по своей программе.",
+        "en": "I am choosing where to study and want to understand the documents for my programme.",
+        "zh": "我正在选择就读院校，希望了解自己所选专业的文件情况。"
+      },
+      "priorContact": {
+        "ru": "Сначала увидел общее обещание вуза, затем посмотрел выписку и ответ органа; они не подтвердили запись по моему направлению.",
+        "en": "I first saw the university's general claim, then checked the extract and the authority's reply; they did not confirm an entry for my programme.",
+        "zh": "我先看到院校的笼统宣传，随后查看了摘录和主管机关答复，但未能确认我所选专业的记录。"
+      }
+    },
+    "education-dpo-accreditation": {
+      "sourceSHA256": "e24c9ee38bb46c8252068edc2f803712e898532978fbad7ce5b0cdd04f5e3d88",
+      "service": {
+        "ru": "Рассматриваю курс повышения квалификации с выдачей удостоверения после успешного обучения.",
+        "en": "I am considering a professional development course leading to a certificate after successful completion.",
+        "zh": "我正在考虑一个完成后可取得结业证书的职业进修课程。"
+      },
+      "purpose": {
+        "ru": "Хочу обновить рабочие знания и выбрать понятное обучение.",
+        "en": "I want to update my work skills and make an informed course choice.",
+        "zh": "我想更新工作知识，并弄清课程情况后再作选择。"
+      },
+      "priorContact": {
+        "ru": "При проверке нашёл лицензионные сведения нужного исполнителя, но не запись об аккредитации самого курса; с этим вопросом обращаюсь сейчас.",
+        "en": "While checking, I found licensing information for the provider but no accreditation entry for the course; that is what I am asking about now.",
+        "zh": "核实时我找到了该培训机构的许可信息，却没有找到课程本身的认证记录，因此来咨询。"
+      }
+    },
+    "education-provider-identity": {
+      "sourceSHA256": "24414da7e27b98edd1bd3575ca47a103434926cca319adcf563a9134552f173a",
+      "service": {
+        "ru": "Проверяю, какая организация будет обучать по предложенному договору.",
+        "en": "I am checking which organisation will provide the teaching under the proposed contract.",
+        "zh": "我想核实拟签合同中实际提供教学的是哪家机构。"
+      },
+      "purpose": {
+        "ru": "Хочу выбрать обучение и понимать, кому доверяю его проведение.",
+        "en": "I want to choose a course and understand who will deliver it.",
+        "zh": "我想选择课程，并清楚由谁负责教学。"
+      },
+      "priorContact": {
+        "ru": "Сначала посмотрел лицензию на сайте, потом сравнил её с договором и заметил разные юридические лица при одном названии.",
+        "en": "I first checked the licence on the website, then compared it with the contract and noticed different legal entities using the same name.",
+        "zh": "我先查看网站上的许可证，再与合同对照，发现名称相同但法人主体不同。"
+      }
+    },
+    "education-register": {
+      "sourceSHA256": "fe7f2d57c78cde0292af35f892cd7c9f452b296c84c392c88c5121a689bab391",
+      "service": {
+        "ru": "Хочу проверить лицензию центра дополнительного образования по организации из договора.",
+        "en": "I want to check the supplementary education centre's licence against the organisation named in the contract.",
+        "zh": "我想按合同中的机构主体核实这家补充教育中心的许可证。"
+      },
+      "purpose": {
+        "ru": "Выбираю занятия и хочу понимать, кто оказывает услугу.",
+        "en": "I am choosing classes and want to understand who provides the service.",
+        "zh": "我正在选择课程，希望弄清实际服务提供者。"
+      },
+      "priorContact": {
+        "ru": "Раньше искал запись в реестре аккредитации, затем сравнил договор с выписками и увидел одинаковые названия при разных идентификаторах.",
+        "en": "I previously searched the accreditation register, then compared the contract with the extracts and found matching names but different identifiers.",
+        "zh": "此前我查的是认证登记册，后来对照合同和摘录，发现名称相同而识别号码不同。"
+      }
+    },
+    "egrn-letter": {
+      "sourceSHA256": "d8824ca8c7f79027d717b018b2f8495352909315be10eb2b334ae81fbd88c1be",
+      "service": {
+        "ru": "В записи ЕГРН моя фамилия отличается от правильного исходного документа.",
+        "en": "My surname in the property register differs from the correct source document.",
+        "zh": "不动产登记中的姓氏与正确的原始文件不一致。"
+      },
+      "purpose": {
+        "ru": "Мне нужны согласованные документы для обычных дел с квартирой.",
+        "en": "I need consistent paperwork for ordinary apartment matters.",
+        "zh": "我需要一致的文件来处理日常住房事务。"
+      },
+      "priorContact": {
+        "ru": "Заявление об исправлении уже прошло через МФЦ и поступило в орган регистрации.",
+        "en": "My correction request has already passed through the service centre and reached the registration authority.",
+        "zh": "更正申请已通过多功能服务中心送到登记机关。"
+      }
+    },
+    "egrn-map-layer": {
+      "sourceSHA256": "7259deb4025edde045b0a56744c2818cf8e664620912238c284b77ccf5c624f0",
+      "service": {
+        "ru": "На карте сервиса контур объекта выглядит смещённым.",
+        "en": "The object outline looks displaced on the service map.",
+        "zh": "服务地图上的对象轮廓看起来偏移了。"
+      },
+      "purpose": {
+        "ru": "Я смотрю схему, чтобы разобраться в документах на свой участок.",
+        "en": "I use the map to understand the paperwork for my plot.",
+        "zh": "我查看地图是为了弄清自己地块的文件。"
+      },
+      "priorContact": {
+        "ru": "Сначала я сравнил отображения и выписку, затем написал о картинке в сервисе.",
+        "en": "I first compared the displays and the extract, then wrote about the service image.",
+        "zh": "我先比较了不同显示和登记摘录，随后就服务中的画面写信反映。"
+      }
+    },
+    "egrn-rights-dispute": {
+      "sourceSHA256": "14faf0f2d1f7f5785b1fe1a5f2daebc0b533cb0ad20b47cbd5e009b6a0a1158d",
+      "service": {
+        "ru": "Я хочу изменить указанную в документах границу участка.",
+        "en": "I want to change the plot boundary shown in the documents.",
+        "zh": "我想改变文件中记载的地块边界。"
+      },
+      "purpose": {
+        "ru": "Мне кажется, с другой границей пользоваться участком было бы удобнее.",
+        "en": "I think a different boundary would make the plot easier to use.",
+        "zh": "我觉得换一条边界会让地块使用更方便。"
+      },
+      "priorContact": {
+        "ru": "До нынешнего разговора подготовлен лишь проект заявления, а сосед уже возражает против изменения.",
+        "en": "Before this conversation only a draft request was prepared and the neighbour had already objected.",
+        "zh": "在这次谈话前只有申请草稿，邻居已对改变边界提出异议。"
+      }
+    },
+    "egrn-source-plan": {
+      "sourceSHA256": "c7ffdc6c1d39ea02e19da5a744191964d48bba567249aeec33353b026c286dda",
+      "service": {
+        "ru": "В ЕГРН указан неверный номер помещения из первоначального плана.",
+        "en": "The register contains the wrong room number from the original plan.",
+        "zh": "登记中沿用了原始平面图里错误的房间号码。"
+      },
+      "purpose": {
+        "ru": "Мне нужно, чтобы домашние документы правильно описывали помещение.",
+        "en": "I need my household paperwork to describe the premises correctly.",
+        "zh": "我希望家中的文件能正确描述该房屋。"
+      },
+      "priorContact": {
+        "ru": "После обнаружения расхождения я передал исправленный план с подтверждающими документами.",
+        "en": "After discovering the discrepancy I submitted a corrected plan and supporting documents.",
+        "zh": "发现不一致后，我提交了更正后的平面图及相关文件。"
+      }
+    },
+    "electronic-draft-only": {
+      "sourceSHA256": "6c521d9ac68cee1660c570fbe67322cee031179dcd8b867860650441e7bb02a3",
+      "service": {
+        "ru": "Обращаюсь по поводу того, как учитывается отправка моего электронного письма в личном кабинете.",
+        "en": "I am asking how submission of my electronic appeal through my account is recorded.",
+        "zh": "我想了解个人账户中电子诉求的提交时间如何记录。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, когда ждать ответ, и не пропустить его.",
+        "en": "I want to know when to expect a reply and avoid missing it.",
+        "zh": "我想知道何时能收到答复，以免错过。"
+      },
+      "priorContact": {
+        "ru": "Сначала сохранил текст как неотправленный черновик, позже нажал «Отправить» и получил подтверждение; до этого письмо оставалось у меня.",
+        "en": "I first saved the text as an unsent draft, later pressed Send and received confirmation; until then the letter remained with me.",
+        "zh": "我先将文字保存为未发送草稿，后来点击发送并收到确认；在此之前内容一直没有提交。"
+      }
+    },
+    "electronic-email": {
+      "sourceSHA256": "0abddaa33fe7e20c2fe1d6c12fb25bb3443cfa8a34fbb36ada8940b25bf2c54f",
+      "service": {
+        "ru": "Уточняю последовательность поступления моего электронного обращения.",
+        "en": "I am clarifying the receipt sequence for my electronic appeal.",
+        "zh": "我想弄清电子诉求的接收先后过程。"
+      },
+      "purpose": {
+        "ru": "Хочу отслеживать обращение и понимать, от какого события ждать дальнейших действий.",
+        "en": "I want to track my appeal and understand which event starts the next steps.",
+        "zh": "我想跟进诉求，了解应从哪个环节开始等待后续处理。"
+      },
+      "priorContact": {
+        "ru": "Сначала написал на общий контактный email, позже отправил через официальный сервис с подтверждением личности и получил подтверждение поступления.",
+        "en": "I first wrote to a general contact email, then used the official identity-verified service and received a receipt confirmation.",
+        "zh": "我先写信到一般联系邮箱，随后通过身份验证的官方服务提交，并收到了接收确认。"
+      }
+    },
+    "electronic-optional-attachment": {
+      "sourceSHA256": "25ca91f1f8cb0670a512a3a109e33c53acecb3a4628ee0877ef2f56391fd1ef1",
+      "service": {
+        "ru": "Подал через личный кабинет описание проблемы, но дополнительная фотография не открывается.",
+        "en": "I submitted a description of the problem through my account, but an optional photograph will not open.",
+        "zh": "我通过个人账户提交了问题说明，但附加照片打不开。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы прочитали мой текст и разобрались с описанной проблемой.",
+        "en": "I want my text to be read and the described problem considered.",
+        "zh": "我希望文字内容得到阅读，所述问题得到处理。"
+      },
+      "priorContact": {
+        "ru": "После подтверждения поступления сотрудник предложил удалить всё письмо из-за файла; сейчас уточняю судьбу уже отправленного текста.",
+        "en": "After receipt was confirmed, an employee suggested deleting the entire letter because of the file; I am now asking what will happen to the submitted text.",
+        "zh": "收到接收确认后，工作人员因附件问题建议删除整封信，我现在来询问已提交文字将如何处理。"
+      }
+    },
+    "electronic-receipt-not-result": {
+      "sourceSHA256": "73a4c250e7bab92735614db86d070602e6e6d127d36b5b4711284d0a681abbba",
+      "service": {
+        "ru": "В кабинете вижу уведомление о доставке обращения, но не решение по нему.",
+        "en": "My account shows a delivery notice for my appeal, but no decision.",
+        "zh": "个人账户显示诉求已送达，但没有处理决定。"
+      },
+      "purpose": {
+        "ru": "Хочу понять, продвинулось ли решение моей просьбы и чего ждать дальше.",
+        "en": "I want to understand whether my request has progressed and what to expect next.",
+        "zh": "我想知道自己的请求是否已有进展，以及接下来会怎样。"
+      },
+      "priorContact": {
+        "ru": "Сначала отправил обращение, затем получил сообщение о доставке и принял его за положительный результат; сейчас проверяю это понимание.",
+        "en": "I first submitted the appeal, then received a delivery message and took it as a positive outcome; I am now checking that understanding.",
+        "zh": "我先提交诉求，随后收到送达通知并以为请求已获满足，现在来核实这种理解。"
+      }
+    },
+    "fire-corridor-blocked": {
+      "sourceSHA256": "0b393bb1d90d0b4efc9cf30976766860ea92918ec6beaeb79639d6635311405d",
+      "service": {
+        "ru": "После замены дверной ручки проход к выходу остаётся заставлен коробками и тележками.",
+        "en": "After the door handle was replaced, boxes and trolleys still obstruct the route to the exit.",
+        "zh": "更换门把手后，通向出口的走廊仍被箱子和推车堵住。"
+      },
+      "purpose": {
+        "ru": "Хочу свободно пройти к выходу, когда нахожусь в здании.",
+        "en": "I want to be able to reach the exit freely while in the building.",
+        "zh": "我希望在楼内时能够顺畅走到出口。"
+      },
+      "priorContact": {
+        "ru": "Раньше вопрос касался выхода, затем мне предъявили акт о механизме двери; теперь уточняю, что этот акт не объясняет оставшиеся вещи в коридоре.",
+        "en": "The earlier issue concerned the exit, then I was shown a report about the door mechanism; I am now explaining that it does not address the objects left in the corridor.",
+        "zh": "此前反映的是出口问题，后来对方出示了门锁机构记录；现在我说明这份记录没有涉及走廊里仍堆放的物品。"
+      }
+    },
+    "fire-inside-release": {
+      "sourceSHA256": "4b0aaa2b4616a7d1aba72089784816dae32b536b9bc83ee6aeb0c48677cebd13",
+      "service": {
+        "ru": "Увидел снаружи замок на двери запасного выхода и хочу понять ситуацию.",
+        "en": "I saw a lock on the outside of an emergency exit door and want to understand the situation.",
+        "zh": "我看到备用出口门外侧有锁，想了解情况。"
+      },
+      "purpose": {
+        "ru": "Хочу чувствовать себя спокойно при посещении здания.",
+        "en": "I want to feel safe when visiting the building.",
+        "zh": "我希望进入该建筑时能够安心。"
+      },
+      "priorContact": {
+        "ru": "Сначала попробовал дверь с улицы и встревожился, затем узнал о проверке открывания изнутри без ключа; сейчас уточняю своё наблюдение.",
+        "en": "I first tried the door from outside and became concerned, then learned it had been checked for keyless opening from inside; I am clarifying what I observed.",
+        "zh": "我先从街道一侧试门并感到担心，后来得知有人检查过内部无需钥匙即可打开，现在来说明自己的观察。"
+      }
+    },
+    "fire-key": {
+      "sourceSHA256": "a77fbb48d0ae74a4d97517b21f3b66e121d5059695dfebb545890a08a01ca9a5",
+      "service": {
+        "ru": "У обозначенного выхода дверь не открывается изнутри без ключа, а ключ у охраны на другом этаже.",
+        "en": "The marked exit cannot be opened from inside without a key, which security keeps on another floor.",
+        "zh": "标明的出口无法从内部无钥匙打开，而钥匙在另一层保安处。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, как люди смогут выйти из зала без ожидания охранника.",
+        "en": "I want to understand how people can leave the hall without waiting for a guard.",
+        "zh": "我想知道人们如何不必等保安就能离开大厅。"
+      },
+      "priorContact": {
+        "ru": "Сначала заметил закрытую дверь, затем охрана объяснила, где ключ; сейчас сообщаю об этом, дыма не наблюдаю.",
+        "en": "I first noticed the closed door, then security explained where the key was; I am reporting this now and see no smoke.",
+        "zh": "我先发现门关着，随后保安说明钥匙在哪里；现在报告这一情况，并未看到烟。"
+      }
+    },
+    "fire-other-exit-report": {
+      "sourceSHA256": "eccfd8bea44080e224ea0d902ebb11ff8797066c2c4e3b4e86b805f59d19385f",
+      "service": {
+        "ru": "Проверяю, решён ли вопрос с тем выходом, о котором я сообщал.",
+        "en": "I am checking whether the problem with the exit I reported has been resolved.",
+        "zh": "我想核实此前反映的那个出口问题是否已解决。"
+      },
+      "purpose": {
+        "ru": "Хочу пользоваться зданием и знать, что именно этот выход доступен.",
+        "en": "I want to use the building knowing that this particular exit is accessible.",
+        "zh": "我希望使用建筑时，能确认这个具体出口可以通行。"
+      },
+      "priorContact": {
+        "ru": "Раньше сообщил о человеке с ключом у выхода, потом получил акт с фотографией другой двери; сейчас прошу разобраться с несоответствием.",
+        "en": "I previously reported someone with a key at the exit, then received a report showing a different door; I am asking about the mismatch.",
+        "zh": "此前我反映出口处有人持钥匙让人等待，后来收到的记录却拍了另一扇门，现在来询问这种不一致。"
+      }
+    },
+    "flight-agent-receipt": {
+      "sourceSHA256": "553bfe6d8011805ebe943365b61d279a12a689a4ba41cf62dd6a204d72dc3760",
+      "service": {
+        "ru": "Я добиваюсь рассмотрения претензии по авиаперелёту.",
+        "en": "I am seeking consideration of an air travel claim.",
+        "zh": "我希望航空出行申诉得到处理。"
+      },
+      "purpose": {
+        "ru": "Мне нужно понимать, когда ждать содержательного ответа, чтобы планировать свои расходы.",
+        "en": "I need to know when to expect a substantive reply so I can plan my spending.",
+        "zh": "我想知道何时能收到实质答复，以便安排开支。"
+      },
+      "priorContact": {
+        "ru": "Сначала я написал на сайт покупки билета, затем претензию получил сам перевозчик.",
+        "en": "I first wrote to the ticket website and the carrier later received the claim itself.",
+        "zh": "我先写给购票网站，之后承运人本人收到了申诉。"
+      }
+    },
+    "flight-cancel-nonrefundable": {
+      "sourceSHA256": "13ffc791d10e381dba9132e2f1ac8a9d9a2456046ea9e79849a94e3ba5542502",
+      "service": {
+        "ru": "Перевозчик отменил единственный рейс в моём неиспользованном билете.",
+        "en": "The carrier cancelled the only flight on my unused ticket.",
+        "zh": "承运人取消了我尚未使用的机票上的唯一航班。"
+      },
+      "purpose": {
+        "ru": "Я рассчитывал на поездку и теперь хочу разобраться с деньгами за билет.",
+        "en": "I had planned the trip and now want to sort out the ticket money.",
+        "zh": "我原本安排了这次出行，现在想弄清票款的事。"
+      },
+      "priorContact": {
+        "ru": "После отмены я заявил отказ от полёта, направил претензию и услышал предложение ваучера.",
+        "en": "After cancellation I declined the flight, submitted a claim and was offered a voucher.",
+        "zh": "取消后，我表示放弃乘机并提交申诉，得到的是代金券的提议。"
+      }
+    },
+    "flight-claim": {
+      "sourceSHA256": "6e1eac5c78ae88e1b4bb920e3b5b6e6602586420a5329b98dcaa148c6192f9be",
+      "service": {
+        "ru": "Я прошу рассмотреть расходы, связанные с задержкой рейса.",
+        "en": "I am asking for consideration of expenses connected with a delayed flight.",
+        "zh": "我请求处理航班延误带来的费用问题。"
+      },
+      "purpose": {
+        "ru": "Эти расходы нарушили мой обычный бюджет поездки.",
+        "en": "Those expenses disrupted my ordinary travel budget.",
+        "zh": "这些费用打乱了我原来的出行预算。"
+      },
+      "priorContact": {
+        "ru": "Сначала я направила претензию перевозчику, получила автоматическое подтверждение, а позже обратилась в приёмную.",
+        "en": "I first submitted a claim to the carrier, received an automatic acknowledgement and later contacted the reception office.",
+        "zh": "我先向承运人提交申诉，收到自动确认后，又联系了接待处。"
+      }
+    },
+    "flight-weather-care": {
+      "sourceSHA256": "6e0d3ebd791dcbd20b953c0db162978fcc6824b55de862747dfb9ea455e0631d",
+      "service": {
+        "ru": "Во время долгой дневной задержки рейса не организовали горячее питание.",
+        "en": "Hot meals were not arranged during a long daytime flight delay.",
+        "zh": "白天长时间航班延误期间没有安排热餐。"
+      },
+      "purpose": {
+        "ru": "Мне нужно было нормально поесть, пока я ждала продолжения поездки.",
+        "en": "I needed a proper meal while waiting to continue my trip.",
+        "zh": "等待继续行程时，我需要正常吃饭。"
+      },
+      "priorContact": {
+        "ru": "Во время ожидания воду дали, а представитель объяснил отсутствие другого обслуживания погодой.",
+        "en": "Water was provided during the wait and a representative attributed the lack of other care to the weather.",
+        "zh": "等待中拿到了水，但代表用天气原因解释没有其他服务。"
+      }
+    },
+    "food-manufactured-date": {
+      "sourceSHA256": "c023a6a78934bd7a80cddc5cd0b575661ec0baec9c04eb4568bb996b28304d88",
+      "service": {
+        "ru": "На упаковке питания я принял дату изготовления за окончание срока годности.",
+        "en": "I mistook the food’s manufacturing date for its expiry date.",
+        "zh": "我把食品包装上的生产日期误当成了保质期截止日。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать маркировку, чтобы выбирать пригодные продукты для обычного питания.",
+        "en": "I want to understand the label so I can choose suitable food for everyday use.",
+        "zh": "我想看懂标签，好选择适合日常食用的食品。"
+      },
+      "priorContact": {
+        "ru": "Сначала я пожаловался на просроченную продажу по обрезанному снимку, затем появился полный снимок с отдельным полем срока годности, который на момент покупки ещё не истёк.",
+        "en": "I first complained about expired goods using a cropped photo; a full photo then showed a separate expiry field that had not expired at purchase.",
+        "zh": "我先根据裁切照片投诉销售过期食品，后来完整照片显示另有保质期截止栏，购买时尚未到期。"
+      }
+    },
+    "food-no-receipt-refund": {
+      "sourceSHA256": "9c19d70eaede6c6cf19dec707890b1a97b86a3d4725c0221f40729526c045c86",
+      "service": {
+        "ru": "Детское питание было просрочено уже при покупке, но бумажный чек у меня потерялся.",
+        "en": "The baby food was already expired when purchased, but I lost the paper receipt.",
+        "zh": "婴幼儿食品买到时已经过期，但我的纸质小票丢了。"
+      },
+      "purpose": {
+        "ru": "Хочу вернуть потраченные деньги, чтобы купить пригодное питание вместо этого товара.",
+        "en": "I want the money back so I can buy suitable food instead.",
+        "zh": "我想拿回货款，另买可食用的食品。"
+      },
+      "priorContact": {
+        "ru": "До письма в орган продавец получил моё требование вернуть деньги и отказал только из-за отсутствия чека, хотя покупка подтверждена платежом и самим продавцом.",
+        "en": "Before I wrote to the authority, the seller received my refund demand and refused solely because the receipt was missing, although payment records and the seller confirm the purchase.",
+        "zh": "给机关写信前，卖方已收到退款要求，却仅因没有小票拒绝，尽管支付记录和卖方自身都确认了购买。"
+      }
+    },
+    "food-other-batch": {
+      "sourceSHA256": "3004fbaa668cc1be7c95521782b2188d6b5d316da5010e70971d080698635867",
+      "service": {
+        "ru": "Я купила продукт с истёкшим сроком и сообщаю о той же партии, оставшейся на полке.",
+        "en": "I bought an expired product and am reporting the same batch remaining on the shelf.",
+        "zh": "我买到过期食品，现在反映的是货架上仍有同一批次。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно покупать продукты и понимать, что происходит с оставшимся товаром.",
+        "en": "I want to shop with confidence and understand what is happening to the remaining stock.",
+        "zh": "我想安心买食品，也想知道剩余商品如何处理。"
+      },
+      "priorContact": {
+        "ru": "Стоимость покупки мне уже вернули; после этого магазин показал документ на другую, более новую партию, а я не прошу повторного возврата.",
+        "en": "My purchase has already been refunded; afterwards the shop showed paperwork for a different, newer batch, and I am not seeking another refund.",
+        "zh": "我已收到这次购买的退款，之后商店出示的却是更新的另一批文件，我没有要求再次退款。"
+      }
+    },
+    "food-recall-wrong-batch": {
+      "sourceSHA256": "5ff4f12e28cd199e423f2c9765645132a16d934142bcc534c064f0d478577810",
+      "service": {
+        "ru": "В моём обращении указан один номер опасной партии, а акт об изъятии относится к другому.",
+        "en": "My report identifies one hazardous batch, while the withdrawal certificate concerns another.",
+        "zh": "我反映的危险批次与撤货记录里的批次编号不同。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, что сделано именно с товаром, который я заметила в продаже.",
+        "en": "I want to understand what was done about the actual goods I saw on sale.",
+        "zh": "我想知道针对我实际看到在售的商品做了什么。"
+      },
+      "priorContact": {
+        "ru": "После обращения мне прислали акт по другой партии; снимок оставшегося товара показывает номер из моего первоначального сообщения.",
+        "en": "After my report I received a certificate for another batch; the photograph of remaining stock shows the number in my original message.",
+        "zh": "反映后我收到另一批次的处理记录，而剩余商品照片显示的仍是我最初报告的编号。"
+      }
+    },
+    "gas-address-correction": {
+      "sourceSHA256": "80230d36e8918715072ee123f7775e8bcf0c484daacce5150d0d57bfca72ecf8",
+      "service": {
+        "ru": "Я сообщил о запахе газа, но в подтверждении оказался другой корпус.",
+        "en": "I reported a gas smell but the acknowledgement names a different building section.",
+        "zh": "我报告了燃气气味，但确认信息中写成了另一栋楼。"
+      },
+      "purpose": {
+        "ru": "Мне важно, чтобы сообщение относилось к тому месту, где я заметил запах.",
+        "en": "I need the report to concern the place where I noticed the smell.",
+        "zh": "我希望消息对应我闻到气味的那个地方。"
+      },
+      "priorContact": {
+        "ru": "Сначала я позвонил из безопасного места, затем обнаружил расхождение и принёс письмо.",
+        "en": "I first called from a safe place, then discovered the discrepancy and brought a letter.",
+        "zh": "我先在安全地点打电话，随后发现出入并带来了信件。"
+      }
+    },
+    "gas-past-incident": {
+      "sourceSHA256": "9aa0c27ee410a2281c748a14047bb5acefb90e0c94a53dc97f8437ce5a5c774d",
+      "service": {
+        "ru": "Я прошу объяснить выполненные действия по прежней газовой заявке.",
+        "en": "I ask for an explanation of work under my earlier gas report.",
+        "zh": "我请求说明此前燃气报修中采取的措施。"
+      },
+      "purpose": {
+        "ru": "Мне хочется понимать, что сделали у дома после моего сообщения.",
+        "en": "I want to understand what was done at my home after that report.",
+        "zh": "我想了解自己反映后住处做了什么。"
+      },
+      "priorContact": {
+        "ru": "Раньше специалисты приезжали, затем я получил только ответ о закрытии заявки и теперь спрашиваю подробности.",
+        "en": "Specialists visited earlier, then I received only a closure notice and am now asking for details.",
+        "zh": "此前专业人员到过现场，之后我只收到关闭工单的答复，现在来问具体情况。"
+      }
+    },
+    "gas-planned-outage": {
+      "sourceSHA256": "d8672e338a3c202e01dd133e099b35c474256c7794310cca4343c858ac0e7927",
+      "service": {
+        "ru": "На фоне объявления о плановых работах я заметила запах газа.",
+        "en": "With a notice of planned works posted, I noticed a smell of gas.",
+        "zh": "在看到计划施工通知的情况下，我闻到了燃气味。"
+      },
+      "purpose": {
+        "ru": "Мне важно чувствовать себя спокойно возле дома.",
+        "en": "I want to feel safe around my home.",
+        "zh": "我希望在家附近能够安心。"
+      },
+      "priorContact": {
+        "ru": "Сначала я увидела объявление и услышала объяснение соседа, но передача нынешнего сообщения диспетчеру ещё не подтверждена.",
+        "en": "I first saw the notice and heard a neighbour’s explanation, but dispatch of this current report is not yet confirmed.",
+        "zh": "我先看到了公告，又听了邻居的解释，但尚未确认这次消息已送达调度员。"
+      }
+    },
+    "gas-smell": {
+      "sourceSHA256": "c7a7aa8bb888d620132010691c0e760fec610dbabe0aa4ff39bd1030e5a9cc4a",
+      "service": {
+        "ru": "По пути я почувствовал сильный запах у газового шкафа рядом с проходом.",
+        "en": "On my way I noticed a strong smell by a gas cabinet beside a walkway.",
+        "zh": "途中经过步行通道旁的燃气柜时，我闻到很重的气味。"
+      },
+      "purpose": {
+        "ru": "Я беспокоюсь о привычном проходе, которым пользуются люди.",
+        "en": "I am concerned about the everyday walkway people use.",
+        "zh": "我担心大家日常使用的这条通道。"
+      },
+      "priorContact": {
+        "ru": "После наблюдения я сразу пришёл в приёмную, не обращаясь к диспетчеру.",
+        "en": "After noticing it I came straight to the reception office without contacting a dispatcher.",
+        "zh": "发现后我直接到了接待处，还没有联系调度员。"
+      }
+    },
+    "guard-contractor": {
+      "sourceSHA256": "ca28676e5888c616d5cda377a3d0beb649d15cad1ec037253c04bba6ed0f6e01",
+      "service": {
+        "ru": "Хочу разобраться в действиях охранника у входа в клуб и документах его организации.",
+        "en": "I want to understand the guard's actions at the club entrance and his employer's documents.",
+        "zh": "我想了解俱乐部门口保安的行为及其雇主的文件情况。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно посещать заведение и понимать, кто отвечает за охрану.",
+        "en": "I want to visit the venue comfortably and know who provides security.",
+        "zh": "我希望安心进入场所，并知道由谁提供安保。"
+      },
+      "priorContact": {
+        "ru": "После задержания обратился к администратору, увидел копию лицензии фирмы с другим названием и принёс описание эпизода и запись.",
+        "en": "After being stopped, I approached the administrator, saw a licence copy bearing a different company name, and brought an account and recording of the incident.",
+        "zh": "被拦下后我找了管理员，看到许可证复印件上是另一家公司名称，并带来了经过说明和记录。"
+      }
+    },
+    "guard-current-register": {
+      "sourceSHA256": "19cfae680a02dbcfe23a9192c431bfb8050ee177a5a77c2e4521e282f8432830",
+      "service": {
+        "ru": "Проверяю документы организации, которая охраняет объект.",
+        "en": "I am checking the documents of the organisation providing security at the site.",
+        "zh": "我在核实提供场所安保的机构文件。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, кому доверена безопасность посетителей.",
+        "en": "I want to know who is entrusted with visitors' safety.",
+        "zh": "我想知道访客安全交由谁负责。"
+      },
+      "priorContact": {
+        "ru": "Сначала увидел старую копию на стенде, затем ознакомился с ответом лицензирующего органа; вопрос о документах конкретного работника у меня остался.",
+        "en": "I first saw an old copy on the noticeboard, then read the licensing authority's reply; I still have questions about the individual guard's documents.",
+        "zh": "我先看到公告栏上的旧复印件，随后查看许可机关答复，但对具体保安人员的证件仍有疑问。"
+      }
+    },
+    "guard-identification-request": {
+      "sourceSHA256": "e53f80b62fc31424b94886fa3ed05fb3a0bdf0a6f01ea86102a98c557f4cf4cb",
+      "service": {
+        "ru": "Охранник потребовал соблюсти условие входа, но отказался показать свои документы.",
+        "en": "A guard required me to follow an entry condition but refused to show his documents.",
+        "zh": "保安要求我遵守入场条件，却拒绝出示自己的证件。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, кто обращается ко мне с такими требованиями при посещении объекта.",
+        "en": "I want to know who is making such demands when I visit the site.",
+        "zh": "我想在进入场所时知道究竟是谁向我提出这些要求。"
+      },
+      "priorContact": {
+        "ru": "Во время разговора попросил предъявить удостоверение и личную карточку, услышал «только полиции» и теперь обращаюсь по этому эпизоду.",
+        "en": "During the conversation I asked to see his guard ID and personal card, was told Only to police, and am now raising that incident.",
+        "zh": "交谈中我要求查看保安证件和个人卡，得到只向警察出示的答复，现在就此事提出诉求。"
+      }
+    },
+    "guard-property-inspection": {
+      "sourceSHA256": "cfe7d594146870cc950bddecf9d9798fddaa80d49c98b46c66ca942c0321ecc4",
+      "service": {
+        "ru": "На входе охранник связал моё удержание с отказом открыть сумку.",
+        "en": "At the entrance a guard said I would be held because I refused to open my bag.",
+        "zh": "入口处保安说，因为我拒绝打开包，所以要扣留我。"
+      },
+      "purpose": {
+        "ru": "Хочу посещать объект без непонятного принуждения и разобраться в прошедшем эпизоде.",
+        "en": "I want to visit without unclear coercion and understand the completed incident.",
+        "zh": "我希望进入场所时不受到不明强制，并弄清已经结束的事情。"
+      },
+      "priorContact": {
+        "ru": "Тогда отказался предъявить содержимое сумки и услышал условие охранника; эпизод завершён, сейчас обращаюсь за разбором случившегося.",
+        "en": "I declined to show the bag's contents and heard the guard's condition; the incident is over and I am now seeking a review.",
+        "zh": "当时我拒绝展示包内物品，听到保安提出条件；事情已经结束，我现在来要求了解经过。"
+      }
+    },
+    "hatch": {
+      "sourceSHA256": "98d578aee5bd720558b9d335d298fee9bf806d3437bd89c2dce5c650c7b29e21",
+      "service": {
+        "ru": "На пешеходной дорожке у остановки открыт люк без ограждения, и я чуть не провалился.",
+        "en": "An unguarded manhole is open on the path by the stop, and I nearly fell in.",
+        "zh": "车站旁步道上的井口敞开且没有围挡，我差点掉进去。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно пользоваться дорожкой, по которой также ходят дети в школу.",
+        "en": "I want to use the path safely; children also take it to school.",
+        "zh": "我希望能安全走这条路，孩子们上学也会经过。"
+      },
+      "priorContact": {
+        "ru": "После случившегося я позвонил в управляющую компанию без получения номера заявки, затем подал письменное обращение; по недавнему сообщению соседа люк всё ещё открыт.",
+        "en": "After the incident I called the management company without receiving a job number, then submitted a written report; a recent neighbour’s update says it remains open.",
+        "zh": "事后我给物业打电话但没有拿到工单号，随后提交书面反映；邻居刚传来的消息说井口仍开着。"
+      }
+    },
+    "hatch-barrier": {
+      "sourceSHA256": "7a8aa339471161fddffc6d32540820ebb2016cb94782238e18a299bded3b268c",
+      "service": {
+        "ru": "Отсутствовавшую крышку люка установили, но оставили ограждение поперёк всей дорожки.",
+        "en": "The missing manhole cover was installed, but the barrier was left across the entire path.",
+        "zh": "缺失的井盖装回去了，但围栏仍横挡住整条步道。"
+      },
+      "purpose": {
+        "ru": "Мне нужно пройти с коляской, не оказываясь перед непроходимым заграждением.",
+        "en": "I need to get through with a pushchair without meeting an impassable barrier.",
+        "zh": "我需要推婴儿车通行，不想被围栏完全挡住。"
+      },
+      "priorContact": {
+        "ru": "После сообщения об отсутствующей крышке сетевая организация сообщила о выполнении заявки; новый снимок показывает и крышку, и оставшееся ограждение.",
+        "en": "After the missing-cover report, the network operator said the job was complete; the newer photo shows both the cover and the remaining barrier.",
+        "zh": "报告井盖缺失后，管网单位称工单已完成；新照片同时拍到了井盖和未撤的围栏。"
+      }
+    },
+    "hatch-known-owner": {
+      "sourceSHA256": "86022e9b7f50ccad8e5965429916eb6b5005dc1f4fc0f0ae667502d9bb73a5fd",
+      "service": {
+        "ru": "У колодца у входа во двор по-прежнему нет крышки, хотя обслуживающая служба уже установлена.",
+        "en": "The manhole at the courtyard entrance still lacks a cover although the servicing organisation has been identified.",
+        "zh": "院入口处的井仍没有盖子，负责维护的单位已经查明。"
+      },
+      "purpose": {
+        "ru": "Хочу пользоваться входом во двор без опасного отверстия на пути.",
+        "en": "I want to use the courtyard entrance without an open hole in the way.",
+        "zh": "我希望经过院入口时不再面对危险的洞口。"
+      },
+      "priorContact": {
+        "ru": "При прошлом обращении выясняли принадлежность колодца; теперь я принёс письмо службы с совпадающим номером, но срок ремонта она ещё не подтвердила.",
+        "en": "The earlier contact concerned who services the manhole; I have now brought the service’s letter with the matching number, but it has not confirmed a repair time.",
+        "zh": "上次联系时在查井的归属；这次我带来维护单位的来信，编号一致，但修复时间尚未确认。"
+      }
+    },
+    "hatch-location": {
+      "sourceSHA256": "565611c7cdeaff4a0dbb659767c2cda18e70ad1908b643de3a3cf67758aaf25a",
+      "service": {
+        "ru": "Я заметил провал вдали от своего дома, а в карточку попал мой почтовый адрес.",
+        "en": "I noticed a hole away from home, but my postal address was entered as the incident location.",
+        "zh": "我是在远离住处的地方看到坑洞，登记卡却填成了我的通信地址。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы моё сообщение помогло разобраться с опасным местом на пешеходном пути.",
+        "en": "I want my report to help address the dangerous spot on the pedestrian path.",
+        "zh": "我希望这条反映能帮助处理步行路上的危险地点。"
+      },
+      "priorContact": {
+        "ru": "После моего письма диспетчер направил заявку к моему подъезду; выезда пока не было, а я принёс фото с ориентиром и сохранённый маршрут.",
+        "en": "After my letter, the dispatcher directed the job to my building entrance; no visit has occurred yet, and I brought a landmark photo and saved route.",
+        "zh": "我写信后，调度把工单指向我家楼门，目前尚未出现场；我带来了有参照物的照片和保存的行程。"
+      }
+    },
+    "hatch-network": {
+      "sourceSHA256": "6a75760a5094593cf90ad8c036c8ca997cbe86315896d6feeb47166f0c63e2f3",
+      "service": {
+        "ru": "Крышка колодца лежит рядом, а открытый проход не защищён ограждением.",
+        "en": "The manhole cover lies nearby and the open path is not protected by a barrier.",
+        "zh": "井盖放在旁边，敞开的通行处没有防护围栏。"
+      },
+      "purpose": {
+        "ru": "Хочу нормально проходить по этой дорожке и понимать, к какому объекту относится сообщение.",
+        "en": "I want to use the path normally and understand which asset the report concerns.",
+        "zh": "我想正常走这条路，也想弄清报告涉及的设施。"
+      },
+      "priorContact": {
+        "ru": "Сначала сотрудник сослался на обслуживание двора управляющей компанией, затем диспетчер прислал схему другой сети с тем же номером колодца.",
+        "en": "An employee first referred to the courtyard management company; the dispatcher then supplied a different network’s plan with the same manhole number.",
+        "zh": "工作人员起初说院区由物业维护，随后调度提供了另一管网的示意图，井的编号一致。"
+      }
+    },
+    "hatch-restored": {
+      "sourceSHA256": "e88c02d4354ffa3d87a102082ee043c14844a180ae09735b86a9b2c20efd6e90",
+      "service": {
+        "ru": "Я сообщал об открытом люке, а после ремонта крышка закреплена и проход свободен.",
+        "en": "I reported an open manhole; after repair, the cover is secured and the path is clear.",
+        "zh": "我曾反映井口敞开；修复后井盖已固定，通道畅通。"
+      },
+      "purpose": {
+        "ru": "Мне было нужно безопасно проходить и получить объяснение выполненных работ.",
+        "en": "I wanted safe passage and an explanation of the work completed.",
+        "zh": "我需要安全通行，也想知道具体做了哪些工作。"
+      },
+      "priorContact": {
+        "ru": "После жалобы сосед сообщил о ремонте, затем появились акт и снимок того же колодца; фото в моём телефоне осталось прежним, сделанным до ремонта.",
+        "en": "After my complaint a neighbour mentioned the repair, followed by a certificate and photo of the same manhole; my phone still holds the old pre-repair photo.",
+        "zh": "投诉后邻居告诉我已经修好，随后有了同一口井的记录和照片；我手机里仍是修复前的旧照片。"
+      }
+    },
+    "heritage-approved-restoration": {
+      "sourceSHA256": "c3b80eb444854f018242865d976d33b63dd6326c7425801531090504c2cbae4c",
+      "service": {
+        "ru": "На охраняемом здании временно снимают фасадные детали.",
+        "en": "Facade elements are being temporarily removed from a protected building.",
+        "zh": "一处受保护建筑正在临时拆卸外墙构件。"
+      },
+      "purpose": {
+        "ru": "Мне важно сохранить знакомый облик дома и понять, что происходит.",
+        "en": "I care about preserving the building's familiar appearance and understanding the work.",
+        "zh": "我关心建筑熟悉的外观能否保留，想了解施工情况。"
+      },
+      "priorContact": {
+        "ru": "Сначала увидел снятие и встревожился, затем появились проект, разрешение и журнал работ; сейчас хочу разобраться в этих материалах.",
+        "en": "I first saw the removal and became concerned, then the project, permit and work log became available; I now want to understand them.",
+        "zh": "我先看到构件被拆下而担心，随后看到了设计、许可和施工日志，现在希望弄清这些材料。"
+      }
+    },
+    "heritage-identified-status": {
+      "sourceSHA256": "bb427b0052b0094ccec2811fbe60e8e677d74b37e89340ba21d6f9c4e6398099",
+      "service": {
+        "ru": "Пытаюсь разобраться в охранных документах дома, где сохраняют фасад.",
+        "en": "I am trying to understand the protection documents for a building undergoing facade conservation.",
+        "zh": "我想了解一处正在进行外墙保护工程的建筑的保护文件。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы знакомый старый дом не потерял важные детали из-за путаницы в его статусе.",
+        "en": "I want the familiar old building to retain its important details despite confusion about its status.",
+        "zh": "我希望熟悉的老建筑不会因保护身份混乱而失去重要细节。"
+      },
+      "priorContact": {
+        "ru": "Сначала не нашёл дом в одной форме поиска, затем услышал объяснение подрядчика и увидел у соседей документ о выявленном объекте.",
+        "en": "I first failed to find the building in one search form, then heard the contractor's explanation and saw neighbours' document identifying it as a heritage property.",
+        "zh": "我先在一个查询页面没找到该楼，后来听到承包方解释，又看到邻居持有的已认定遗产建筑文件。"
+      }
+    },
+    "heritage-license-not-permit": {
+      "sourceSHA256": "542ed1692fd2ea237ce23d076743dde6b89289522c03ba03309e6188ad508796",
+      "service": {
+        "ru": "Разбираюсь, какие работы ведутся на охраняемом доме и к чему относится показанный документ.",
+        "en": "I am checking the work at a protected building and what the displayed document covers.",
+        "zh": "我在了解受保护建筑上的工程，以及展示文件所针对的内容。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы при ремонте сохранились особенности здания.",
+        "en": "I want the building's distinctive features preserved during the work.",
+        "zh": "我希望施工过程中能保留建筑特色。"
+      },
+      "priorContact": {
+        "ru": "После вопроса о работах мне показали лицензию организации и письмо собственника; сейчас готовлю материалы для рассмотрения, поскольку самого дома в лицензии нет.",
+        "en": "After I asked about the work, I was shown the firm's licence and the owner's letter; I am preparing the materials for consideration because the licence does not name the building.",
+        "zh": "询问工程后，对方向我出示机构许可证和业主信函；许可证没有列出这栋楼，所以我现在整理材料供审查。"
+      }
+    },
+    "heritage-stair": {
+      "sourceSHA256": "fb9e05bc9db649dcf1b73e0383bc9f65063b95bfc308a5fd45e403759e51869a",
+      "service": {
+        "ru": "В старом охраняемом доме снимают детали лестницы, хотя на стенде указан ремонт кровли.",
+        "en": "Staircase elements are being removed in an old protected building, while the noticeboard describes roof repairs.",
+        "zh": "一栋受保护老楼正在拆卸楼梯构件，但公告栏写的是屋顶维修。"
+      },
+      "purpose": {
+        "ru": "Хочу сохранить знакомую лестницу и понять, как с ней поступят при ремонте.",
+        "en": "I want the familiar staircase preserved and to understand what the works involve.",
+        "zh": "我希望熟悉的楼梯得以保存，并了解维修中会如何处理。"
+      },
+      "priorContact": {
+        "ru": "Сначала заметил снятие деталей, потом сравнил снимки с карточкой работ; сейчас обращаюсь о характере работ, а не о текущей опасности.",
+        "en": "I first noticed the removal, then compared photographs with the work description; I am asking about the work rather than reporting a present danger.",
+        "zh": "我先注意到构件被拆下，随后对照照片和工程说明；现在反映的是工程性质，并非眼前的危险。"
+      }
+    },
+    "insurance-collective": {
+      "sourceSHA256": "7c15903f0c04119dc27773ad83d602da1dbee7659699d7b50a8dd9b31dd50052",
+      "service": {
+        "ru": "При кредите меня включили в коллективное личное страхование, где страхователем указан кредитор.",
+        "en": "With my loan I was enrolled in collective personal insurance naming the lender as policyholder.",
+        "zh": "办理贷款时，我加入了以贷款方为投保人的团体人身保险。"
+      },
+      "purpose": {
+        "ru": "Хочу отказаться от участия и разобраться с расходами по своему кредиту.",
+        "en": "I want to leave the arrangement and understand my loan-related expenses.",
+        "zh": "我想退出这项保险，理清贷款相关费用。"
+      },
+      "priorContact": {
+        "ru": "Раньше банк и страховая отправляли меня друг к другу; кредитор уже получил отказ в пределах тридцати дней, а в публичную приёмную я написала позже.",
+        "en": "The bank and insurer previously referred me to each other; the lender has already received my refusal within thirty days, and I wrote to the public reception office later.",
+        "zh": "之前银行和保险公司相互推让我去找对方；贷款方已在三十天内收到退出申请，我后来才给公共接待处写信。"
+      }
+    },
+    "insurance-collective-payoff": {
+      "sourceSHA256": "f6cfa376142898d9fbce943dbb75f8bd65513f13a2bb361ff9b2bc697a196b81",
+      "service": {
+        "ru": "После полного досрочного погашения кредита я хочу разобраться с платой за коллективное страхование, где страхователем был банк.",
+        "en": "After repaying my loan fully ahead of time, I want to clarify the charge for collective insurance in which the bank was the policyholder.",
+        "zh": "提前还清贷款后，我想弄清由银行作为投保人的团体保险费用。"
+      },
+      "purpose": {
+        "ru": "Хочу закрыть связанные с кредитом расходы и понимать, какая часть денег ещё связана со страхованием.",
+        "en": "I want to settle the costs linked to the loan and understand which money still relates to insurance.",
+        "zh": "我想理清贷款相关支出，了解哪些款项还与保险有关。"
+      },
+      "priorContact": {
+        "ru": "После погашения банк получил моё заявление об исключении и возврате, но теперь предлагает ждать будущего перечисления от страховщика.",
+        "en": "After repayment, the bank received my request for removal and refund, but now suggests waiting for a future transfer from the insurer.",
+        "zh": "还清后，银行已收到我的退出和退款申请，现在却让我等保险公司以后向银行转款。"
+      }
+    },
+    "insurance-individual-payoff": {
+      "sourceSHA256": "084674d411fde41e852ac45914156547786b7e57e74c6ab98704dbe55bb01c2a",
+      "service": {
+        "ru": "Я полностью погасил кредит досрочно, а связанный с ним личный страховой полис ещё должен действовать.",
+        "en": "I repaid my loan fully ahead of time while its linked personal insurance policy still had time to run.",
+        "zh": "我提前还清贷款，而与之关联的个人保险合同原本还应继续有效。"
+      },
+      "purpose": {
+        "ru": "Хочу разобраться с оставшимися расходами после того, как сам кредит уже закрыт.",
+        "en": "I want to understand the remaining costs now that the loan itself is settled.",
+        "zh": "贷款结清后，我想弄清剩余相关费用。"
+      },
+      "priorContact": {
+        "ru": "После погашения я направил страховщику заявление о возврате; в ответе упомянули только прошедшие с заключения тридцать дней.",
+        "en": "After repayment, I applied to the insurer for a refund; the reply mentioned only that thirty days had passed since signing.",
+        "zh": "还清后，我向保险公司提交退款申请，回复却只提到签约已过三十天。"
+      }
+    },
+    "insurance-individual-refusal": {
+      "sourceSHA256": "8bf8a189ce066c414852fd6a1d7edfde1d568102a381a5ad6bdd68aca9162655",
+      "service": {
+        "ru": "В купленном вместе с кредитом полисе страхователем указана я сама.",
+        "en": "The policy bought with my loan names me personally as policyholder.",
+        "zh": "与贷款一起购买的保单上，投保人写的是我本人。"
+      },
+      "purpose": {
+        "ru": "Хочу отказаться от полиса и понимать, что происходит с уплаченной страховой премией.",
+        "en": "I want to cancel the policy and understand what happens to the premium paid.",
+        "zh": "我想退出保单，也想知道已付保费如何处理。"
+      },
+      "priorContact": {
+        "ru": "Сначала я написала только банку, затем страховщик получил подписанный отказ на двадцатый день; теперь мне отвечают о четырнадцати днях и согласовании с банком.",
+        "en": "I first wrote only to the bank; the insurer then received my signed refusal on day twenty, but the reply refers to fourteen days and bank approval.",
+        "zh": "我先只给银行写信，后来保险公司在第二十天收到签署的退出申请，现在却回复说期限是十四天并要等银行同意。"
+      }
+    },
+    "landfill-after-fire": {
+      "sourceSHA256": "a37799f7c193dda62a570b7938267f102fc57f29e9864954788dee75646b0b65",
+      "service": {
+        "ru": "После прекращения горения мусорная куча осталась на месте.",
+        "en": "The waste pile remains after the burning stopped.",
+        "zh": "燃烧停止后，垃圾堆仍留在原处。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы возле привычного окружения не оставался накопленный мусор.",
+        "en": "I want accumulated waste removed from my everyday surroundings.",
+        "zh": "我希望日常生活周边不再堆着这些垃圾。"
+      },
+      "priorContact": {
+        "ru": "Раньше сообщил о горении и отходах, позже увидел акт тушения и фотографии оставшейся кучи; сейчас спрашиваю о незавершённой части обращения.",
+        "en": "I previously reported both burning and waste, then saw the extinguishing report and photographs of the remaining pile; I am asking about the unresolved part.",
+        "zh": "此前我反映了燃烧和垃圾问题，后来看到灭火记录和垃圾仍在的照片，现在询问尚未解决的部分。"
+      }
+    },
+    "landfill-current-burning": {
+      "sourceSHA256": "26c18e3358a774cc0648e431d6f100caf3cb2c6f4a9c5ef8c43c6f9ea1797499",
+      "service": {
+        "ru": "Сейчас из дома вижу, что на пустыре горит мусор.",
+        "en": "I can currently see waste burning on vacant land from my home.",
+        "zh": "我现在从家中看到空地上的垃圾正在燃烧。"
+      },
+      "purpose": {
+        "ru": "Беспокоюсь о происходящем рядом и хочу, чтобы сообщение не потерялось.",
+        "en": "I am concerned about what is happening nearby and want my report to be heard.",
+        "zh": "我担心附近的情况，希望报告得到关注。"
+      },
+      "priorContact": {
+        "ru": "Это сообщение о продолжающемся горении; пока мне предложили сначала выяснить собственника, оперативной передачи сообщения ещё нет.",
+        "en": "This is a report of ongoing burning; so far I have been told to identify the owner first, and the report has not yet been relayed urgently.",
+        "zh": "这是对正在燃烧情况的报告，目前有人建议先查明所有者，尚未作紧急转达。"
+      }
+    },
+    "landfill-registry-scope": {
+      "sourceSHA256": "adec114b4299c83508aa2d59934cc7644f45211a3bcff1559584e90990a01a90",
+      "service": {
+        "ru": "Обращаюсь о мусорной площадке вне территории моего постоянного проживания.",
+        "en": "I am raising an issue about a waste site outside the area where I live.",
+        "zh": "我反映的是常住地以外的一处垃圾场地问题。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы рассмотрели именно состояние указанного объекта, а ответ мог получить дома.",
+        "en": "I want the specified site's condition considered while receiving correspondence at home.",
+        "zh": "我希望审查的是所指场地的情况，而答复可寄到家中。"
+      },
+      "priorContact": {
+        "ru": "К обращению приложил сведения об объекте, но мне предложили отдел по месту домашнего адреса; сейчас поясняю различие мест.",
+        "en": "I attached information about the site, but was directed to an office near my home address; I am clarifying the different locations.",
+        "zh": "我在诉求中附上了场地信息，却被建议联系家庭住址附近的部门，现在说明这两个地点不同。"
+      }
+    },
+    "landfill-territory": {
+      "sourceSHA256": "b392d50697aa2eb8a9dc92de67cd4522bad64a5f4ab8b599b6c13dd842b72b12",
+      "service": {
+        "ru": "Во время пребывания на даче заметил дым от мусорной площадки.",
+        "en": "While staying at my holiday home I noticed smoke from a waste site.",
+        "zh": "在乡间住处时，我注意到垃圾场地冒烟。"
+      },
+      "purpose": {
+        "ru": "Беспокоюсь об окружающей обстановке там, где провожу время.",
+        "en": "I am concerned about the surroundings where I spend time.",
+        "zh": "我关心自己常去之处的周边环境。"
+      },
+      "priorContact": {
+        "ru": "После наблюдения написал в орган по месту постоянного проживания, а в ответе привязали поиск участка к домашнему адресу, хотя указал другое место.",
+        "en": "After seeing it I wrote to an authority where I normally live; the reply tied the search to my home address although I had identified another location.",
+        "zh": "看到情况后我写信给常住地的机关，虽说明了另一地点，答复却仍按家庭住址查找地块。"
+      }
+    },
+    "mfc-change-not-typo": {
+      "sourceSHA256": "205b1c5d803fcd31260a0259905f7d88912fdeaec16e76fbf2a58f8041fc423e",
+      "service": {
+        "ru": "После получения документа я сменила фамилию и хочу обновить прежнюю запись.",
+        "en": "After receiving the document, I changed my surname and want the earlier entry updated.",
+        "zh": "拿到文件后我改了姓，现在想更新旧记录。"
+      },
+      "purpose": {
+        "ru": "Мне удобнее пользоваться документами с одинаковыми текущими сведениями о себе.",
+        "en": "It is easier to use documents when they carry consistent current details about me.",
+        "zh": "证件上的个人信息一致且为现用信息，日常使用更方便。"
+      },
+      "priorContact": {
+        "ru": "Я попросила исправить фамилию как опечатку и получила отказ; при первоначальной выдаче фамилия совпадала с моими тогдашними документами.",
+        "en": "I requested a typo correction and was refused; at original issue, the surname matched my documents at that time.",
+        "zh": "我按更正笔误提出申请后被拒，但文件最初签发时的姓氏与当时证件一致。"
+      }
+    },
+    "mfc-correction-overdue": {
+      "sourceSHA256": "1645530af70665ae8d3f2c163bd16540bc3e638bd2e078a1debede60395dc3a7",
+      "service": {
+        "ru": "В результате услуги признана опечатка, но исправленный документ я пока не получила.",
+        "en": "A typo in the service result has been acknowledged, but I have not received the corrected document.",
+        "zh": "业务结果中的笔误已经确认，但我还没拿到更正后的文件。"
+      },
+      "purpose": {
+        "ru": "Мне нужен документ с верными данными для обычного оформления своих дел.",
+        "en": "I need accurate paperwork for my everyday administrative affairs.",
+        "zh": "我需要信息正确的文件来办理日常事务。"
+      },
+      "priorContact": {
+        "ru": "МФЦ своевременно передал заявление выдавшему органу, ошибка признана, но установленный срок исправления уже прошёл без результата.",
+        "en": "The service centre forwarded my application to the issuing authority on time; the error was acknowledged, but the correction period has passed without a result.",
+        "zh": "服务中心已及时把申请转给签发机关，错误也已认可，但更正期限已过，结果仍未拿到。"
+      }
+    },
+    "mfc-delay": {
+      "sourceSHA256": "8f26c651ce153f428289071b6e63431bdcead8e82fb3d991ed943927b7c701ff",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Хочу собрать сведения о жилье для домашних документов.",
+        "en": "I want housing information for my household paperwork.",
+        "zh": "我想为家庭文件收集住房信息。"
+      },
+      "priorContact": {
+        "ru": "Пакет приняли с распиской, но затем в органе сообщили, что он ещё не поступил.",
+        "en": "The centre accepted the package with a receipt but the authority later said it had not arrived.",
+        "zh": "中心收下材料并给了收据，但后来机关表示尚未收到。"
+      }
+    },
+    "mfc-extra-paper": {
+      "sourceSHA256": "24cd28603cef9f2f2f896e725b390f49907096658d1954c42873373d9f415362",
+      "service": {
+        "ru": "Оформляю жилищную субсидию, а после приёма пакета попросили дополнительную бумажную справку.",
+        "en": "I am applying for a housing subsidy and was asked for an extra paper certificate after my documents were accepted.",
+        "zh": "我在申请住房补贴，材料收下后又被要求补交纸质证明。"
+      },
+      "purpose": {
+        "ru": "Хочу привести регулярные расходы на жильё в более понятный порядок.",
+        "en": "I want to manage my regular housing expenses more predictably.",
+        "zh": "我想更有条理地安排日常住房支出。"
+      },
+      "priorContact": {
+        "ru": "Сначала сдал пакет в МФЦ и получил расписку, потом работник попросил справку ради удобства; теперь обжалую это дополнительное требование.",
+        "en": "I first submitted the package at the service centre and received a receipt, then an employee asked for a certificate for convenience; I am now challenging that additional demand.",
+        "zh": "我先在综合服务中心提交材料并取得收据，后来工作人员说为方便而要求证明，现在就额外要求投诉。"
+      }
+    },
+    "mfc-identity-required": {
+      "sourceSHA256": "d510eaf39f3c8460c86e7cabc73590403fe434e5c7afd66ec443670d2bd4ee13",
+      "service": {
+        "ru": "Оформляю выписку о своих пенсионных сведениях и спорю о подтверждении личности на приёме.",
+        "en": "I am requesting an extract of my pension information and questioning identity verification at the appointment.",
+        "zh": "我在申请本人的养老金信息摘录，并对现场身份核验提出疑问。"
+      },
+      "purpose": {
+        "ru": "Хочу проверить свои записи и хранить документы в порядке.",
+        "en": "I want to check my records and keep my documents organised.",
+        "zh": "我想核对个人记录并整理好文件。"
+      },
+      "priorContact": {
+        "ru": "После отправки заявления пришёл на личный приём с фотографией паспорта в телефоне; мне объяснили, что для выбранного способа её недостаточно.",
+        "en": "After submitting the application I attended in person with a passport photo on my phone; I was told it was insufficient for this method.",
+        "zh": "提交申请后，我带着手机中的护照照片到现场，被告知这种办理方式下照片不够。"
+      }
+    },
+    "mfc-institution": {
+      "sourceSHA256": "cb05be1acc6ab8cc324447e7f60eeabbc604c037b4c13753990cfb3588a3fd70",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Мне нужно упорядочить сведения о жилье.",
+        "en": "I need to organize my housing information.",
+        "zh": "我需要整理住房信息。"
+      },
+      "priorContact": {
+        "ru": "После приёма пакета центр объяснил ожидание своим общим порядком отправки по пятницам.",
+        "en": "After accepting the package the centre explained the wait by its general Friday dispatch rule.",
+        "zh": "接收材料后，中心用统一的周五发送规定解释等待原因。"
+      }
+    },
+    "mfc-interagency-silence": {
+      "sourceSHA256": "56b018007d9120b6e08e0c9c0010903044df98b5522b540c4be004249fef803e",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Хочу разобраться с домашними жилищными документами.",
+        "en": "I want to sort out my household housing paperwork.",
+        "zh": "我想处理家里的住房文件。"
+      },
+      "priorContact": {
+        "ru": "МФЦ передал пакет, а орган затем отказал, сославшись на отсутствие межведомственного ответа.",
+        "en": "The centre forwarded the package and the authority later refused because an interagency reply was missing.",
+        "zh": "中心转交了材料，之后机关以未收到部门间回复为由拒绝。"
+      }
+    },
+    "mfc-ready-not-issued": {
+      "sourceSHA256": "dc87cfb47402dfd1056962e0869e64ea639a28dcec4a6cb08397da5b0a636e6d",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Мне нужен готовый документ для домашней папки о жилье.",
+        "en": "I need the finished document for my household housing file.",
+        "zh": "我需要把办好的文件放入家庭住房资料中。"
+      },
+      "priorContact": {
+        "ru": "После подачи мне говорили о продолжающемся рассмотрении, затем я увидел запись о поступлении готового результата в центр.",
+        "en": "After submission I was told review continued, then I saw a record that the finished result had reached the centre.",
+        "zh": "提交后一直被告知仍在审理，后来我看到成品已到中心的记录。"
+      }
+    },
+    "mfc-refusal": {
+      "sourceSHA256": "518ecd1f7f77945dfa7746f78a310191d306a87334c43a8fd7e3c7da96eb4b81",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Мне нужно собрать понятные сведения о жилье.",
+        "en": "I need clear information about the housing.",
+        "zh": "我需要整理清楚住房信息。"
+      },
+      "priorContact": {
+        "ru": "Во время визита работник не принял пакет и потребовал дополнительную справку, которой я не нашла в перечне.",
+        "en": "During the visit a worker refused the package and requested an additional certificate I could not find in the list.",
+        "zh": "来访时工作人员不收材料，并索要清单中没有找到的额外证明。"
+      }
+    },
+    "mfc-second-demand": {
+      "sourceSHA256": "275595aa83c6eb79d169d2f1850197811f82c85ccfe3411cd2c7c6cdc19c87ec",
+      "service": {
+        "ru": "Заказываю выписку ЕГРН о своей квартире.",
+        "en": "I am requesting a Unified State Register of Real Estate extract for my apartment.",
+        "zh": "我在申请自己公寓的不动产统一登记簿摘录。"
+      },
+      "purpose": {
+        "ru": "Хочу привести в порядок документы на квартиру.",
+        "en": "I want to organise my apartment documents.",
+        "zh": "我想整理好公寓的相关文件。"
+      },
+      "priorContact": {
+        "ru": "После первого отказа поставил недостающую подпись и повторно сдал пакет в МФЦ; уже после приёма работник предъявил новый список требований к тем же документам.",
+        "en": "After the first refusal I added the missing signature and resubmitted the package at the service centre; after acceptance an employee raised new demands about the unchanged documents.",
+        "zh": "首次被拒后我补上了缺少的签名并重新提交到综合服务中心，材料收下后工作人员又对未变更的文件提出新要求。"
+      }
+    },
+    "mfc-service-not-overdue": {
+      "sourceSHA256": "349003e49dfbcfba7c944f803681edce7d7c3a7f3d96d62e01e1ee6f810ede34",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Хочу заранее собрать документы о жилье и спланировать свои дела.",
+        "en": "I want to gather housing documents ahead of time and plan my errands.",
+        "zh": "我希望提前备齐住房文件，安排自己的事务。"
+      },
+      "priorContact": {
+        "ru": "Сначала я записался на приём, позже подал полный пакет и теперь спрашиваю о сроке готовности.",
+        "en": "I first booked an appointment, later submitted the full package and am now asking when it will be ready.",
+        "zh": "我先预约，之后提交全部材料，现在询问何时能办好。"
+      }
+    },
+    "mfc-service-refusal": {
+      "sourceSHA256": "6aa3b652dac6cb12820808e054c442048e2a6e1ed7bfff9616f43d2d1249488a",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Мне нужны сведения о жилье для обычных домашних дел.",
+        "en": "I need housing information for ordinary household matters.",
+        "zh": "我需要住房信息来处理普通家庭事务。"
+      },
+      "priorContact": {
+        "ru": "МФЦ сначала принял и передал пакет, затем выдал результат с подписью предоставляющего услугу органа.",
+        "en": "The centre first accepted and forwarded the package, then issued the result signed by the service authority.",
+        "zh": "中心先接收并转交材料，之后交给我由服务机关签署的结果。"
+      }
+    },
+    "mfc-territorial-choice": {
+      "sourceSHA256": "e0b05ef0df9ba5295a84657a62a8ed9c1c0b4db53fe1d7331b81764911eec9af",
+      "service": {
+        "ru": "Мне нужна справка со сведениями о моём жилье для личных документов.",
+        "en": "I need a certificate containing information about my home for my personal records.",
+        "zh": "我需要一份载有本人住房信息的证明，用于整理个人文件。"
+      },
+      "purpose": {
+        "ru": "Хочу совместить оформление домашних документов с обычным рабочим днём.",
+        "en": "I want to fit household paperwork around an ordinary working day.",
+        "zh": "我想在正常工作日里顺便办理家庭文件。"
+      },
+      "priorContact": {
+        "ru": "В этот визит работник не принял комплект, сославшись только на место моей регистрации.",
+        "en": "On this visit the worker refused the package solely because of my registered residence.",
+        "zh": "这次工作人员仅因我的登记居住地而不收材料。"
+      }
+    },
+    "mfc-typo-issuer": {
+      "sourceSHA256": "9a39b5da70895295339c9f0967cb0d709edac01b2d3d26650d7bdd59a9df0ea4",
+      "service": {
+        "ru": "В полученном через МФЦ документе неверно написана буква моей фамилии.",
+        "en": "The document received through the service centre misspells one letter of my surname.",
+        "zh": "我通过多功能服务中心领取的文件把姓氏一个字母写错了。"
+      },
+      "purpose": {
+        "ru": "Хочу пользоваться документом без расхождения с моими исходными сведениями.",
+        "en": "I want to use the document without a mismatch against my original details.",
+        "zh": "我希望文件与自己最初提交的信息一致，使用时不再有出入。"
+      },
+      "priorContact": {
+        "ru": "Сначала МФЦ принял и передал просьбу об исправлении, затем выдавший орган подписал отказ, после которого я принесла жалобу обратно в МФЦ.",
+        "en": "The centre first accepted and forwarded my correction request; the issuing authority then signed a refusal, after which I brought my complaint back to the centre.",
+        "zh": "服务中心先受理并转交更正请求，之后签发机关作出书面拒绝，我才把投诉带回服务中心。"
+      }
+    },
+    "mfc-typo-refusal": {
+      "sourceSHA256": "07246fda151f94fdc80a6037bcd94064d8cd91fa662893683253356d05fed8b6",
+      "service": {
+        "ru": "В документе, оформленном самим МФЦ, допущена опечатка при верных исходных сведениях.",
+        "en": "A document issued within the centre’s own powers contains a typo despite correct original details.",
+        "zh": "由多功能服务中心在自身权限内出具的文件有笔误，而原始信息正确。"
+      },
+      "purpose": {
+        "ru": "Мне важно получить аккуратный документ, который можно использовать без объяснений о неверной букве.",
+        "en": "I want an accurate document I can use without explaining the incorrect letter each time.",
+        "zh": "我想拿到准确的文件，免得使用时总要解释错字。"
+      },
+      "priorContact": {
+        "ru": "После выдачи я попросила исправить букву, работник отказался и предложил читать внимательнее; затем была подана жалоба руководителю на работника.",
+        "en": "After issue I asked for the letter to be corrected; the employee refused and told me to read more carefully, and I then complained to the manager about the employee.",
+        "zh": "领取后我要求改正字母，工作人员拒绝并说应该仔细看，之后我向负责人投诉该工作人员。"
+      }
+    },
+    "mfc-voluntary-document": {
+      "sourceSHA256": "524801a85bd108ccd1ce5e76684abfeddf52859aed0bd74b9a52a4b04218869c",
+      "service": {
+        "ru": "Оформляю жилищную субсидию и принёс дополнительную справку добровольно.",
+        "en": "I am applying for a housing subsidy and brought an additional certificate voluntarily.",
+        "zh": "我在申请住房补贴，自愿带来了一份额外证明。"
+      },
+      "purpose": {
+        "ru": "Хочу собрать понятный комплект документов для своих домашних расходов.",
+        "en": "I want an organised set of documents relating to my household expenses.",
+        "zh": "我想把与家庭支出有关的材料整理清楚。"
+      },
+      "priorContact": {
+        "ru": "Раньше получил справку, затем принёс её непосредственно в орган, оказывающий услугу; там отказались принять её из-за межведомственного обмена, и теперь я жалуюсь.",
+        "en": "I obtained the certificate earlier, then took it directly to the service-providing authority; it refused it because information can be exchanged between agencies, and I am now complaining.",
+        "zh": "我先取得证明，随后直接交给提供服务的机关，却因可跨部门调取而被拒收，所以现在投诉。"
+      }
+    },
+    "noise-emergency-work": {
+      "sourceSHA256": "0ee0fa8011618ea1c445af76ac6e59ccc6f753dfd2eb531292af34b70ee13784",
+      "service": {
+        "ru": "Меня разбудил шум резки трубы во время ночных работ.",
+        "en": "Pipe cutting during nighttime work woke me.",
+        "zh": "夜间施工切割管道的声音把我吵醒了。"
+      },
+      "purpose": {
+        "ru": "Я хочу спокойно спать дома и понимать причины такого шума.",
+        "en": "I want to sleep peacefully at home and understand the reason for the noise.",
+        "zh": "我希望在家安睡，也想了解噪声的原因。"
+      },
+      "priorContact": {
+        "ru": "После ночного эпизода я написал жалобу именно об этих аварийных работах.",
+        "en": "After the nighttime episode I wrote specifically about those emergency works.",
+        "zh": "夜间事件后，我专门就这次抢修写了投诉。"
+      }
+    },
+    "noise-other-region": {
+      "sourceSHA256": "d21e05a582baf83216eeabf4631a732e762f9b50543aaa2aea21e78d66e6d201",
+      "service": {
+        "ru": "Я сообщаю о шуме, который слышала на даче.",
+        "en": "I am reporting noise I heard at my country home.",
+        "zh": "我反映在乡间住处听到的噪声。"
+      },
+      "purpose": {
+        "ru": "Я приезжаю туда отдыхать и рассчитываю на спокойный вечер.",
+        "en": "I go there to rest and expect a quiet evening.",
+        "zh": "我去那里休息，希望晚上安静。"
+      },
+      "priorContact": {
+        "ru": "В письме об этом событии я указала домашний адрес для переписки, отличный от места шума.",
+        "en": "In the letter about that event I gave my home correspondence address, which differs from the noise location.",
+        "zh": "写信反映此事时，我填写了与噪声地点不同的家庭通信地址。"
+      }
+    },
+    "noise-two-subjects": {
+      "sourceSHA256": "5f1787580008251db63d16c757b5073bb5a005f46044d7b7ca1ae494001bc7aa",
+      "service": {
+        "ru": "Я сообщаю о новом ночном шуме у кафе и о рассмотрении прежнего сообщения.",
+        "en": "I am reporting new nighttime noise by a café and the handling of my earlier report.",
+        "zh": "我反映咖啡馆附近新的夜间噪声，也质疑此前消息的处理。"
+      },
+      "purpose": {
+        "ru": "Мне важно отдыхать дома и понимать, что происходит с моими обращениями.",
+        "en": "I need rest at home and clarity about what happens to my letters.",
+        "zh": "我需要在家休息，也想知道自己的来件如何处理。"
+      },
+      "priorContact": {
+        "ru": "После прежнего ответа появился новый эпизод, и в нынешнем письме я изложил оба вопроса.",
+        "en": "After the earlier reply a new episode occurred and I included both matters in this letter.",
+        "zh": "此前答复之后又出现了新情况，我在这封信中写了两个问题。"
+      }
+    },
+    "noise-ventilation": {
+      "sourceSHA256": "fae1a61a4084a1f228462069afa47f93494f7fcf20147d3d6b05f32c39000e96",
+      "service": {
+        "ru": "После выключения музыки кафе в квартире остался устойчивый гул.",
+        "en": "A steady hum remained in my apartment after the café music stopped.",
+        "zh": "咖啡馆关掉音乐后，公寓里仍有持续嗡鸣。"
+      },
+      "purpose": {
+        "ru": "Этот звук мешает обычному отдыху дома.",
+        "en": "The sound interferes with ordinary rest at home.",
+        "zh": "这个声音影响我在家正常休息。"
+      },
+      "priorContact": {
+        "ru": "Раньше мне ответили только о музыке, после чего я описал сохраняющийся гул и наблюдение за вентилятором.",
+        "en": "The earlier reply addressed only music, so I described the remaining hum and the observation involving the fan.",
+        "zh": "此前答复只谈音乐，因此我又描述了持续嗡鸣及与风机有关的观察。"
+      }
+    },
+    "oms-free-slot": {
+      "sourceSHA256": "4139b68d447b829ac6b7995f343eba3699db406d79e27cd2c5410817f790e946",
+      "service": {
+        "ru": "Хочу разобраться в записи на плановый приём по своему направлению.",
+        "en": "I want to understand the booking for a planned appointment under my referral.",
+        "zh": "我想了解按转诊单预约计划就诊的安排。"
+      },
+      "purpose": {
+        "ru": "Хочу попасть на приём по полису и не потратить деньги из-за невнимательно прочитанного письма.",
+        "en": "I want an appointment under my insurance and to avoid unnecessary spending because I overlooked part of an email.",
+        "zh": "我希望使用医保就诊，避免因没有仔细阅读邮件而多花钱。"
+      },
+      "priorContact": {
+        "ru": "После обращения за записью получила письмо, заметила платную ссылку первой и не открыла вложение; сейчас спрашиваю о предложенном бесплатном приёме.",
+        "en": "After seeking an appointment I received an email, noticed the paid link first and did not open the attachment; I am asking about the offered free appointment.",
+        "zh": "申请预约后我收到邮件，先看到付费链接而没打开附件，现在来询问提供的免费预约。"
+      }
+    },
+    "oms-other-region": {
+      "sourceSHA256": "53e663f92ef9fdbcb6514165c0d5ffdd1b2d71e6329de11adc4e6feeb387f964",
+      "service": {
+        "ru": "Пришла с направлением на плановый приём по ОМС, но услышала возражение из-за региона полиса.",
+        "en": "I came with a referral for a planned insurance-covered appointment but was challenged because of the policy's region.",
+        "zh": "我持转诊单申请医保计划就诊，却因保单签发地区受到质疑。"
+      },
+      "purpose": {
+        "ru": "Хочу получить назначенную помощь без лишней оплаты.",
+        "en": "I want the referred care without unnecessary payment.",
+        "zh": "我希望获得转诊安排的医疗服务，不必额外付费。"
+      },
+      "priorContact": {
+        "ru": "Раньше обратилась в участвующую в ОМС поликлинику с направлением, там сослались на регион полиса и предложили платный вариант.",
+        "en": "I previously took the referral to a clinic participating in compulsory insurance; it cited the policy's region and offered paid care.",
+        "zh": "此前我持转诊单到参与医保的门诊，那里以保单地区为由，改为建议付费就诊。"
+      }
+    },
+    "oms-paid-offer": {
+      "sourceSHA256": "8969e691c54bdf2ea8ff580b4156707d4c8bc9f71a17c27793543d6362884bc4",
+      "service": {
+        "ru": "Пытаюсь записаться на плановое обследование по направлению.",
+        "en": "I am trying to book a planned examination under my referral.",
+        "zh": "我想按转诊单预约计划检查。"
+      },
+      "purpose": {
+        "ru": "Хочу пройти обследование по полису и понимать порядок записи.",
+        "en": "I want the examination under my insurance and a clear booking process.",
+        "zh": "我希望通过医保完成检查，并了解预约流程。"
+      },
+      "priorContact": {
+        "ru": "Сначала получила направление, затем в регистратуре устно предложили платную запись из-за отсутствия мест; письменного порядка мне не дали.",
+        "en": "I first received the referral, then reception verbally offered a paid booking because there were no slots; I received no written booking guidance.",
+        "zh": "我先取得转诊单，随后挂号处口头说没有名额并建议付费预约，没有给我书面流程说明。"
+      }
+    },
+    "oms-urgent-now": {
+      "sourceSHA256": "215961b8f485bcb3406827fa93e125bbc2218e670adedc51b307d65f137ed55d",
+      "service": {
+        "ru": "Пришла по вопросу записи к врачу, но прямо сейчас резко ухудшилось самочувствие и трудно дышать.",
+        "en": "I came about booking a doctor, but my condition has suddenly worsened and I am struggling to breathe now.",
+        "zh": "我本来来询问医生预约，但现在身体突然不适，呼吸困难。"
+      },
+      "purpose": {
+        "ru": "Хочу получить помощь, потому что стало тяжело продолжать разговор.",
+        "en": "I want help because continuing the conversation has become difficult.",
+        "zh": "我希望得到帮助，因为已经很难继续交谈。"
+      },
+      "priorContact": {
+        "ru": "Прежняя жалоба на запись уже сохранена; ухудшение возникло сейчас во время разговора, и я сообщаю о нём дежурному.",
+        "en": "My earlier booking complaint is already saved; the deterioration occurred during this conversation and I am telling the duty officer.",
+        "zh": "此前关于预约的投诉已保存，现在交谈过程中身体恶化，我正在告知值班人员。"
+      }
+    },
+    "parcel-customs-notice": {
+      "sourceSHA256": "0dc4f0f36f3bd9092fbb573e57b17c6410fc067940be66a1297abfd37b1cc6a1",
+      "service": {
+        "ru": "Ожидаю международную посылку, по которой пришёл запрос сведений о содержимом.",
+        "en": "I am waiting for an international parcel for which information about its contents has been requested.",
+        "zh": "我正在等待一件国际包裹，现收到要求补充内容物信息的通知。"
+      },
+      "purpose": {
+        "ru": "Хочу получить свою посылку и не перепутать официальный запрос с посторонним сообщением.",
+        "en": "I want to receive my parcel and distinguish an official request from an unrelated message.",
+        "zh": "我想收到包裹，并分清官方要求与无关信息。"
+      },
+      "priorContact": {
+        "ru": "Раньше обсуждал поиск у оператора, теперь почта сообщила о таможенных операциях, и у меня появилось другое уведомление по этой посылке.",
+        "en": "I previously discussed tracing it with the operator; now the post office has mentioned customs processing and I have a different notice for this parcel.",
+        "zh": "此前咨询过向运营商查找包裹，现在邮政提到海关手续，我也收到了这件包裹的新通知。"
+      }
+    },
+    "parcel-damaged-delivery": {
+      "sourceSHA256": "ea2cbb073e52e910cd00d415acd095a467cf740764f2cbc1c1d08dd843eb31db",
+      "service": {
+        "ru": "Полученная посылка имеет повреждённую упаковку и недостачу содержимого.",
+        "en": "The delivered parcel has damaged packaging and missing contents.",
+        "zh": "收到的包裹包装破损，内容物有所缺少。"
+      },
+      "purpose": {
+        "ru": "Хочу разобраться, что произошло с вещами при доставке.",
+        "en": "I want to understand what happened to the items during delivery.",
+        "zh": "我想弄清物品在运输中发生了什么。"
+      },
+      "priorContact": {
+        "ru": "Сначала ожидал посылку и получил сведения о выпуске, затем при вручении был составлен акт; сейчас мне вновь отвечают только о выпуске.",
+        "en": "I first waited for the parcel and received release information, then a report was drawn up at delivery; I am now being told only about release again.",
+        "zh": "我先等待包裹并获知放行信息，交付时又制作了记录；现在得到的答复却仍只谈放行。"
+      }
+    },
+    "parcel-release": {
+      "sourceSHA256": "680811d7a0fc7aa491822590f2f864ae8883639e3b2741136e3327f568f95227",
+      "service": {
+        "ru": "Международная посылка задержалась после отметки о выпуске и начала почтовой обработки.",
+        "en": "My international parcel is delayed after release and the start of postal processing.",
+        "zh": "国际包裹在显示放行并进入邮政处理后停滞。"
+      },
+      "purpose": {
+        "ru": "Жду заказанные вещи и хочу понять, где сейчас посылка.",
+        "en": "I am waiting for the ordered items and want to know where the parcel is now.",
+        "zh": "我在等待订购的物品，想知道包裹现在在哪里。"
+      },
+      "priorContact": {
+        "ru": "До этого писал только в таможню, ориентируясь на обсуждения форума; затем сверил трекинг и увидел почтовую обработку после выпуска.",
+        "en": "I had written only to customs based on forum discussions, then checked tracking and saw postal processing after release.",
+        "zh": "此前我根据论坛讨论只向海关写信，后来查看物流，发现放行后已有邮政处理记录。"
+      }
+    },
+    "parcel-wrong-tracking": {
+      "sourceSHA256": "a250c763394f46eeae5780ffe31399b3ea60fea81dc1d5d692d53ccfb3d4f165",
+      "service": {
+        "ru": "Пытаюсь выяснить, доставлена ли моя международная посылка.",
+        "en": "I am trying to establish whether my international parcel has been delivered.",
+        "zh": "我想确认自己的国际包裹是否已经送达。"
+      },
+      "purpose": {
+        "ru": "Хочу получить свой заказ и не искать чужое отправление по ошибке.",
+        "en": "I want to receive my order and avoid mistakenly tracing someone else's parcel.",
+        "zh": "我想收到自己的订单，避免误查他人的邮件。"
+      },
+      "priorContact": {
+        "ru": "Сначала увидел «вручено» на распечатке, позже сравнил её с квитанцией и заметил переставленные цифры; правильный номер проверяю через официальный сервис.",
+        "en": "I first saw Delivered on a printout, then compared it with the receipt and noticed transposed digits; I am checking the correct number through the official service.",
+        "zh": "我先在打印记录上看到已交付，随后与收据比较发现数字颠倒，现通过官方服务核对正确号码。"
+      }
+    },
+    "privacy": {
+      "sourceSHA256": "ac14be0b3bbb15f84faef552c5782c36abd431f2cf47954dbd220271cdf73816",
+      "service": {
+        "ru": "На открытом школьном сайте размещены фамилии детей и сведения о прививках и медицинских группах.",
+        "en": "The public school website lists children’s surnames and vaccination and medical-group information.",
+        "zh": "学校公开网站列出了孩子姓氏、接种情况和医疗分组信息。"
+      },
+      "purpose": {
+        "ru": "Хочу защитить частную сторону школьной жизни ребёнка без дальнейшей пересылки этих сведений.",
+        "en": "I want to protect my child’s private school information without circulating it further.",
+        "zh": "我想保护孩子学校生活中的隐私，不让这些信息继续转发。"
+      },
+      "priorContact": {
+        "ru": "После моей просьбы убрать публикацию сотрудник сослался на общее согласие при зачислении и предложил обсуждение в общем родительском чате.",
+        "en": "After I asked for removal, an employee cited general enrolment consent and suggested discussing it in the shared parent chat.",
+        "zh": "我要求撤下发布内容后，工作人员引用入学时的一般同意书，还建议到家长群讨论。"
+      }
+    },
+    "privacy-aggregate": {
+      "sourceSHA256": "a9a96a3e3328575be91cd8796c6e267043d1dab1d76469cf397fc6208d625b20",
+      "service": {
+        "ru": "Я увидела на школьном сайте таблицу с общими числами участников кружков без имён и классов.",
+        "en": "I saw a school website table giving total club participation without names or classes.",
+        "zh": "我在学校网站看到各兴趣班总人数表，没有姓名和班级。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, какие сведения о школьной жизни доступны посторонним.",
+        "en": "I want to understand what information about school life outsiders can see.",
+        "zh": "我想了解外人能看到哪些学校生活信息。"
+      },
+      "priorContact": {
+        "ru": "После просмотра таблицы я обратилась с вопросом об удалении статистики; внутренние списки мне не открывали, связующих идентификаторов у таблицы нет.",
+        "en": "After viewing it, I asked about deleting the statistics; I was not given internal lists, and the table has no linking identifiers.",
+        "zh": "看过表格后，我询问能否删除统计；我没有接触内部名单，表格也没有可关联身份的标识。"
+      }
+    },
+    "privacy-consent-scope": {
+      "sourceSHA256": "cf72fa44b3f0afdd54afc514667649659507a1214fe8934bf519636dcf9ce256",
+      "service": {
+        "ru": "В открытой школьной таблице рядом с именами опубликованы ограничения по здоровью, хотя согласие касалось имени и фото с праздника.",
+        "en": "An open school table lists health restrictions beside names, although the consent covered a name and event photo.",
+        "zh": "学校公开表格把姓名和健康限制列在一起，但同意书只涉及活动姓名和照片。"
+      },
+      "purpose": {
+        "ru": "Хочу участвовать в школьной жизни ребёнка, не распространяя сведения о его здоровье.",
+        "en": "I want to take part in my child’s school life without spreading health information.",
+        "zh": "我想参与孩子的学校生活，同时不扩散孩子的健康信息。"
+      },
+      "priorContact": {
+        "ru": "Мне показали отдельное согласие на фото, после чего я проверила таблицу без входа и обратилась по поводу сведений о здоровье.",
+        "en": "I was shown separate photo consent, then checked the table without logging in and raised the health-information issue.",
+        "zh": "对方向我出示照片单独同意书后，我核实了表格无需登录即可打开，随后就健康信息提出问题。"
+      }
+    },
+    "privacy-own-record": {
+      "sourceSHA256": "72b48bf946fff629845e2e115a84d618cb29e7820c1db6f600666e4446018709",
+      "service": {
+        "ru": "Я запросила сведения об обработке данных своего ребёнка и возможность ознакомиться именно с ними.",
+        "en": "I requested information about processing my child’s data and access to those particular records.",
+        "zh": "我申请了解自己孩子的数据如何处理，并查看与孩子有关的记录。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, зачем школа хранит сведения о ребёнке и какие записи относятся к нему.",
+        "en": "I want to understand why the school keeps my child’s information and which records concern them.",
+        "zh": "我想了解学校为什么保存孩子的信息，以及哪些记录与孩子有关。"
+      },
+      "priorContact": {
+        "ru": "Оператор уже получил мой запрос и проверил представительство; теперь к ответу предлагают общую таблицу со строками других детей.",
+        "en": "The operator has already received my request and verified my representative status; it now proposes a class-wide table including other children’s rows.",
+        "zh": "处理方已收到请求并核实代理身份，现在却打算随回复提供包含其他孩子记录的全班表格。"
+      }
+    },
+    "privacy-restricted-access": {
+      "sourceSHA256": "136ce31b2792f4a1e338e51d497a21644a5c7da4551f193af0617011a9dc8433",
+      "service": {
+        "ru": "В школьном сервисе я увидела запись о здоровье своего ребёнка и обеспокоилась доступом посторонних.",
+        "en": "I saw my child’s health record in the school service and became concerned about outsider access.",
+        "zh": "我在学校系统看到自己孩子的健康记录，担心外人也能看见。"
+      },
+      "purpose": {
+        "ru": "Хочу пользоваться школьным сервисом и понимать, кто видит эту запись.",
+        "en": "I want to use the school service and know who can see the record.",
+        "zh": "我想正常使用学校系统，也想知道谁能看到这条记录。"
+      },
+      "priorContact": {
+        "ru": "Сначала я скопировала ссылку, но соседка без входа её не открыла; проверка подтвердила ограниченный доступ к моей записи.",
+        "en": "I first copied the link, but my neighbour could not open it without signing in; a check confirmed restricted access to my record.",
+        "zh": "我先复制了链接，但邻居未登录无法打开；核验确认这条记录的访问受到限制。"
+      }
+    },
+    "privacy-withdrawal": {
+      "sourceSHA256": "14eff1a8883619b34bd18563b5f378aab52bf9dfc13d580fecc90a5a1bc85e92",
+      "service": {
+        "ru": "Имя и фото ребёнка остаются в открытом школьном альбоме после моей просьбы прекратить распространение.",
+        "en": "My child’s name and photo remain in an open school album after my request to stop distribution.",
+        "zh": "我要求停止传播后，孩子的姓名和照片仍留在学校公开相册里。"
+      },
+      "purpose": {
+        "ru": "Хочу сама определять дальнейшее открытое присутствие этих фото и имени, сохраняя обычные школьные дела ребёнка.",
+        "en": "I want control over the continued public presence of this photo and name while keeping my child’s ordinary school arrangements.",
+        "zh": "我想决定这些照片和姓名是否继续公开，同时不影响孩子正常的学校事务。"
+      },
+      "priorContact": {
+        "ru": "Сначала я дала отдельное согласие на имя и фото, позже оператор получил требование прекратить их распространение, но файл по-прежнему открывается без входа.",
+        "en": "I first gave separate consent for the name and photo; later the operator received my request to stop distributing them, but the file still opens without login.",
+        "zh": "我先单独同意发布姓名和照片，后来处理方收到停止传播要求，但文件依然无需登录即可打开。"
+      }
+    },
+    "proposal-bench": {
+      "sourceSHA256": "33816fe04293f2e296b9ef6034519def8a6a1bf4ef3227da466573ae36de44f4",
+      "service": {
+        "ru": "Я предлагаю поставить скамейки и навес на пути к поликлинике.",
+        "en": "I propose benches and a canopy on the way to the clinic.",
+        "zh": "我建议在去诊所的路上设置长椅和遮棚。"
+      },
+      "purpose": {
+        "ru": "По дороге мне хочется иметь место, где можно спокойно передохнуть.",
+        "en": "I would like somewhere to rest along the way.",
+        "zh": "我希望途中有个可以安心歇脚的地方。"
+      },
+      "priorContact": {
+        "ru": "Для нынешнего предложения я нарисовала подходящие точки и прошу рассмотреть идею.",
+        "en": "For this proposal I sketched possible points and am asking for the idea to be considered.",
+        "zh": "为这次建议，我画出了可能的位置，请求考虑这个想法。"
+      }
+    },
+    "proposal-one-resident": {
+      "sourceSHA256": "8a39ff2611a77ec855b6089ccefc052b19cf4cfc56cbf13070b836fd02582d62",
+      "service": {
+        "ru": "Я предлагаю установить скамейку у остановки.",
+        "en": "I propose a bench by the bus stop.",
+        "zh": "我建议在车站旁设置长椅。"
+      },
+      "purpose": {
+        "ru": "Мне было бы легче ждать транспорт с возможностью присесть.",
+        "en": "Waiting for transport would be easier with somewhere to sit.",
+        "zh": "有地方坐下会让等车更轻松。"
+      },
+      "priorContact": {
+        "ru": "Я принёс собственное предложение, но сотрудник потребовал подписи большинства жителей.",
+        "en": "I brought my individual proposal but a staff member demanded signatures from most residents.",
+        "zh": "我带来了个人建议，但工作人员要求多数居民签名。"
+      }
+    },
+    "proposal-representative-limits": {
+      "sourceSHA256": "6a247b6009562ad399b7153480c5cc7900135382ed5cee7ed67a724face08753",
+      "service": {
+        "ru": "Я передаю предложение группы об улучшении доступа к дому.",
+        "en": "I am delivering a group proposal to improve access to our building.",
+        "zh": "我代表小组提交改善住宅通行条件的建议。"
+      },
+      "purpose": {
+        "ru": "Нам хочется удобнее пользоваться входом в повседневной жизни.",
+        "en": "We want the entrance to be easier to use in everyday life.",
+        "zh": "我们希望日常进出大门更方便。"
+      },
+      "priorContact": {
+        "ru": "Группа поручила мне передать идею и получить ответ, а при обращении я дополнительно попросил медицинские сведения соседей.",
+        "en": "The group asked me to deliver the idea and receive a reply, and I additionally requested neighbours’ medical information.",
+        "zh": "小组委托我递交建议和接收答复，我在来访时另外索要了邻居的健康信息。"
+      }
+    },
+    "proposal-vote-not-budget": {
+      "sourceSHA256": "cc7ca1153e6aba46a78fc848c31789c699d9d405536fb8a6768b018668894dbc",
+      "service": {
+        "ru": "Мы предлагаем навес у остановки.",
+        "en": "We propose a canopy at the bus stop.",
+        "zh": "我们建议在车站设置遮棚。"
+      },
+      "purpose": {
+        "ru": "При ожидании транспорта нам хочется укрыться от дождя.",
+        "en": "We want shelter from rain while waiting for transport.",
+        "zh": "我们希望等车时能避雨。"
+      },
+      "priorContact": {
+        "ru": "Сначала участники встречи поддержали идею, после чего я пришёл узнать об установке.",
+        "en": "Participants first supported the idea at a meeting and I then came to ask about installation.",
+        "zh": "大家先在会上支持了这个想法，之后我来询问安装事宜。"
+      }
+    },
+    "readable-attachment": {
+      "sourceSHA256": "9abb01660ea36a9d0155bf0199bd2ec6ba487e336b53888a7e13931940ed6b6f",
+      "service": {
+        "ru": "Я дежурный и рассматриваю письмо вместе с приложением о неисправности.",
+        "en": "I am the duty officer examining a letter and its attachment about a fault.",
+        "zh": "我是值班人员，正在一起查看信件及描述故障的附件。"
+      },
+      "purpose": {
+        "ru": "Мне нужно разобраться с комплектом так, чтобы бытовой вопрос автора не потерялся между листами.",
+        "en": "I need to understand the package so the author’s everyday issue is not lost between its pages.",
+        "zh": "我需要理解整套材料，避免作者的日常问题在不同页面间遗漏。"
+      },
+      "priorContact": {
+        "ru": "Основной лист и читаемое приложение поступили и были зарегистрированы вместе.",
+        "en": "The cover sheet and readable attachment arrived and were registered together.",
+        "zh": "首页和清晰可读的附件一同收到并登记。"
+      }
+    },
+    "repeat-acknowledgements": {
+      "sourceSHA256": "e222c9d36ba03aaff220debf8cd7fb1028d8fc86599ee95861d4d1f4510a6a50",
+      "service": {
+        "ru": "Хочу узнать, будут ли восстанавливать проход, о котором писал.",
+        "en": "I want to know whether the passage I reported will be restored.",
+        "zh": "我想知道此前反映的通道是否会恢复。"
+      },
+      "purpose": {
+        "ru": "Мне важно пользоваться привычным проходом в повседневных делах.",
+        "en": "I need the familiar passage for my everyday activities.",
+        "zh": "日常办事需要使用这条熟悉的通道。"
+      },
+      "priorContact": {
+        "ru": "Раньше дважды получил от того же органа только сообщения о регистрации и получении, затем мне предложили прекратить переписку.",
+        "en": "I previously received only registration and receipt notices twice from the same authority, then was told correspondence could be ended.",
+        "zh": "此前同一机关两次只发来登记和接收通知，后来却说可以终止通信。"
+      }
+    },
+    "repeat-new-facts": {
+      "sourceSHA256": "500dfe8043ca698061fce33e0136044d9743343852042ca101df1a6e2988f4ae",
+      "service": {
+        "ru": "Снова обращаюсь об освещении, теперь с материалом о повреждённом кабеле в другом месте.",
+        "en": "I am raising lighting again, now with material showing a damaged cable at another location.",
+        "zh": "我再次反映照明问题，这次带来另一地点电缆损坏的材料。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно пользоваться дорожкой и понимать, что происходит с освещением рядом.",
+        "en": "I want to use the path comfortably and understand the nearby lighting situation.",
+        "zh": "我希望安心走这条路，并了解附近照明设施的情况。"
+      },
+      "priorContact": {
+        "ru": "Раньше писал о светильниках и получал ответы об их исправности, позже сосед сделал новый снимок кабеля, которого в прежнем деле не было.",
+        "en": "I previously wrote about the lamps and received replies saying they worked; later a neighbour took a new cable photograph that was not in the earlier file.",
+        "zh": "此前我反映灯具并收到运行正常的答复，后来邻居新拍了电缆照片，旧材料中没有这张照片。"
+      }
+    },
+    "repeat-no-new": {
+      "sourceSHA256": "cf263006184fed4e2d8b4d0edf4a9ea12a9c163248209afd268865838686b0e8",
+      "service": {
+        "ru": "Повторяю вопрос о порядке работ на участке.",
+        "en": "I am repeating my question about how work at the site is organised.",
+        "zh": "我再次提出有关地块作业安排的问题。"
+      },
+      "purpose": {
+        "ru": "Хочу понять происходящие рядом работы, с объяснением которых всё ещё не согласен.",
+        "en": "I want to understand the nearby work, whose explanation I still disagree with.",
+        "zh": "我想弄清附近的作业，对已有解释仍不认同。"
+      },
+      "priorContact": {
+        "ru": "Раньше тот же орган дважды дал ответы, я прочитал их и снова отправил те же доводы и приложения; новых сведений у меня нет.",
+        "en": "The same authority previously replied twice; I read the replies and resubmitted the same arguments and attachments, with no new information.",
+        "zh": "同一机关此前答复过两次，我已阅读，但仍重新提交相同理由和附件，没有新信息。"
+      }
+    },
+    "repeat-other-authority": {
+      "sourceSHA256": "541bae12d5dbb84d9617dfada908ae8e59a01a15321d9b39b97a6d78628c6c70",
+      "service": {
+        "ru": "Хочу получить ответ по оставшейся части своей проблемы после переписки с другими организациями.",
+        "en": "I want a reply on the remaining part of my problem after correspondence with other organisations.",
+        "zh": "与其他机构通信后，我希望剩余问题得到答复。"
+      },
+      "purpose": {
+        "ru": "Хочу довести повседневный вопрос до ясного результата, не ходя по кругу.",
+        "en": "I want a clear outcome for my everyday problem without going in circles.",
+        "zh": "我希望日常问题得到明确结果，不再来回奔波。"
+      },
+      "priorContact": {
+        "ru": "Раньше отвечали два других органа, а сюда обращаюсь впервые и прилагаю их письма, чтобы было понятно, что уже обсуждалось.",
+        "en": "Two other authorities replied earlier; this is my first approach here, and I attach their letters to show what was already discussed.",
+        "zh": "此前由另外两个机关答复，我第一次来这里，并附上旧信以说明已讨论过的内容。"
+      }
+    },
+    "repeat-routing-only": {
+      "sourceSHA256": "9800a26f27f282143f3d28790854f102ecc41cdf9d17d0a93f04150899776696",
+      "service": {
+        "ru": "Жду ответа на сам вопрос своего обращения, а не только уведомлений о его движении.",
+        "en": "I am waiting for an answer to my appeal itself rather than notices about its progress.",
+        "zh": "我等待的是诉求内容本身的答复，而不只是流转通知。"
+      },
+      "purpose": {
+        "ru": "Хочу понять, будет ли решена описанная мной повседневная проблема.",
+        "en": "I want to know whether the everyday problem I described will be addressed.",
+        "zh": "我想知道自己描述的日常问题能否得到处理。"
+      },
+      "priorContact": {
+        "ru": "Сначала пришёл входящий номер, потом уведомление о пересылке и сообщение о рассмотрении; сейчас повторяю вопрос без новых обстоятельств.",
+        "en": "I first received a reference number, then a forwarding notice and a processing update; I am repeating the question without new circumstances.",
+        "zh": "我先收到收件编号，随后是转交通知和处理中信息；现在再次提出同一问题，没有新增情况。"
+      }
+    },
+    "repeat-same-arguments": {
+      "sourceSHA256": "32d6a1d95d63f758d12044272ee13d5df0b436105b93705f3f330b839594d5b9",
+      "service": {
+        "ru": "Снова пишу о тех же светильниках, по которым уже получал ответы.",
+        "en": "I am writing again about the same lamps for which I have already received replies.",
+        "zh": "我再次反映已经收到过答复的同一组灯具问题。"
+      },
+      "purpose": {
+        "ru": "Хочу разобраться с освещением привычного места, хотя прежние объяснения меня не убедили.",
+        "en": "I want to understand the lighting at a familiar place, as the earlier explanations did not convince me.",
+        "zh": "我想弄清熟悉地点的照明情况，过去的解释未能说服我。"
+      },
+      "priorContact": {
+        "ru": "Раньше трижды отвечал тот же орган, теперь направил четвёртое письмо с прежними доводами и снимками; новых материалов не добавлял.",
+        "en": "The same authority replied three times before; I have now sent a fourth letter with the old arguments and photographs, adding no new material.",
+        "zh": "此前同一机关答复过三次，我现在第四次来信，仍使用旧理由和照片，没有增加新材料。"
+      }
+    },
+    "river-observation": {
+      "sourceSHA256": "2f22aefcce1a962c0351cd46feb78969089f06fcc0f0ddc252f42d4bb201bcf9",
+      "service": {
+        "ru": "Я заметил тёмную воду у трубы и резкий запах у реки.",
+        "en": "I noticed dark water by a pipe and a sharp smell beside the river.",
+        "zh": "我在河边管口看到深色水，并闻到刺鼻气味。"
+      },
+      "purpose": {
+        "ru": "Мне хочется спокойно гулять у воды и понимать, что я увидел.",
+        "en": "I want to walk comfortably by the water and understand what I saw.",
+        "zh": "我希望能安心在水边散步，也想弄清所见情况。"
+      },
+      "priorContact": {
+        "ru": "После наблюдения я подготовил фотографию и схему места и направил обращение.",
+        "en": "After the observation I prepared a photograph and location sketch and submitted a report.",
+        "zh": "观察之后，我准备了照片和位置示意图并提交反映。"
+      }
+    },
+    "river-old-photo": {
+      "sourceSHA256": "d3c8819b3a11b5485df08f0dfc3cb923487609065a4b7d40946389f9822e4edb",
+      "service": {
+        "ru": "Я снова пишу о трубе у воды, приложив старую фотографию.",
+        "en": "I am writing again about a pipe by the water with an old photograph attached.",
+        "zh": "我再次写信反映水边管道，并附上了一张旧照片。"
+      },
+      "purpose": {
+        "ru": "Мне важно понять ситуацию у места, где люди бывают на берегу.",
+        "en": "I want to understand the situation at a place people visit on the bank.",
+        "zh": "我想了解人们会去的岸边地点的情况。"
+      },
+      "priorContact": {
+        "ru": "После сообщения знакомого я переслал снимок как новый и лишь потом заметил его давность.",
+        "en": "After a message from an acquaintance I forwarded the photo as new and only later noticed its age.",
+        "zh": "熟人发来消息后，我把照片当作新照片转发，后来才注意到它很旧。"
+      }
+    },
+    "salary-documents-request": {
+      "sourceSHA256": "62a3a0703c7400d3654758c44d5e519a8cfc21f77227af0e395197aef11487fc",
+      "service": {
+        "ru": "Я запросил справку о своей зарплате и заверенную копию своего приказа о приёме.",
+        "en": "I requested my salary certificate and a certified copy of my appointment order.",
+        "zh": "我申请了自己的工资证明和入职命令认证副本。"
+      },
+      "purpose": {
+        "ru": "Мне нужны эти документы, чтобы спокойно разобраться со своим расчётом.",
+        "en": "I need these documents to understand my own pay calculation.",
+        "zh": "我需要这些文件，好把自己的工资计算弄清楚。"
+      },
+      "priorContact": {
+        "ru": "Работодатель получил письменное заявление и письменно потребовал плату за заверение; до нынешнего обращения документы ещё не выданы.",
+        "en": "The employer received my written request and demanded a certification fee in writing; the documents remain unissued at this enquiry.",
+        "zh": "雇主已收到书面申请，又书面要求收取认证费用；到本次反映时，文件仍未提供。"
+      }
+    },
+    "salary-gross-net": {
+      "sourceSHA256": "ede2a6ba3e5444580917f7871c0e3fc2f21a2bb8a167c05ebe6837da25d220bd",
+      "service": {
+        "ru": "Я сравнил начисленную зарплату с последним переводом и решил, что часть денег не выплатили.",
+        "en": "I compared gross pay with the latest transfer and thought part of my salary was missing.",
+        "zh": "我把应计工资与最后一笔转账相比，以为少发了一部分。"
+      },
+      "purpose": {
+        "ru": "Хочу точно понимать свой месячный доход и планировать обычные расходы.",
+        "en": "I want to understand my monthly income accurately and plan everyday spending.",
+        "zh": "我想准确了解月收入，安排日常开支。"
+      },
+      "priorContact": {
+        "ru": "При первоначальном подсчёте я не учёл первый перевод; теперь в материалах есть оба своевременных платежа за один месяц и отдельно указанные удержания.",
+        "en": "In my first calculation I omitted the earlier transfer; the materials now include both timely payments for the same month and separately listed deductions.",
+        "zh": "最初计算时我漏掉了前一笔转账；现在材料列明同一月份的两笔按时付款和单独扣款。"
+      }
+    },
+    "salary-late-compensation": {
+      "sourceSHA256": "3652f253d0c503ad897a30202b13840e31e96c2e26f1b200b40616b376463db2",
+      "service": {
+        "ru": "Задержанную зарплату уже выплатили полностью, но мой вопрос о компенсации за задержку остался.",
+        "en": "The delayed salary has now been paid in full, but my question about delay compensation remains.",
+        "zh": "拖欠工资已全额支付，但我对延迟支付补偿的问题仍未解决。"
+      },
+      "purpose": {
+        "ru": "Хочу закончить расчёты за отработанный месяц и понимать все относящиеся к нему суммы.",
+        "en": "I want to settle the worked month’s accounts and understand all amounts relating to it.",
+        "zh": "我想把已工作月份的账理清，了解与之有关的所有款项。"
+      },
+      "priorContact": {
+        "ru": "После задержки работодатель письменно признал её и перечислил зарплату; письмо бухгалтерии и расчётный листок не содержат начисления компенсации.",
+        "en": "After the delay, the employer acknowledged it in writing and transferred the salary; the accounting letter and payslip contain no compensation accrual.",
+        "zh": "延迟后，雇主书面承认并支付工资，但财务来信和工资单没有列出补偿计提。"
+      }
+    },
+    "salary-partial": {
+      "sourceSHA256": "ae962a85002d14976691af8b542839c9928763d89a7ae15e5d07871013eebea6",
+      "service": {
+        "ru": "После задержки мне перечислили только часть уже начисленной зарплаты за отработанный месяц.",
+        "en": "After a delay, I received only part of the salary already accrued for the month worked.",
+        "zh": "工资延迟后，我只收到已工作月份应发工资的一部分。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать оставшийся расчёт, чтобы распоряжаться деньгами на повседневные нужды.",
+        "en": "I want to understand the outstanding balance so I can plan money for daily needs.",
+        "zh": "我想弄清尚余多少未付，以安排日常所需。"
+      },
+      "priorContact": {
+        "ru": "До нынешнего обращения пришёл перевод меньше суммы к выплате в листке, а работодатель сослался на сам факт перевода, не объяснив разницу.",
+        "en": "Before this enquiry, a transfer arrived below the payslip’s net amount; the employer cited the transfer itself without explaining the difference.",
+        "zh": "本次反映前，收到的转账少于工资单应付金额；雇主只说已经转账，没有解释差额。"
+      }
+    },
+    "seedlings-batch": {
+      "sourceSHA256": "a2af6ca996e65e6d44a32b307bc1a5f6afff341d37335352adaaa152800c7cc6",
+      "service": {
+        "ru": "Купленные для посадки саженцы относятся к одной партии, а предъявленный сертификат — к другой.",
+        "en": "The seedlings bought for planting belong to one batch, while the certificate shown covers another.",
+        "zh": "买来栽种的苗木属于一个批次，卖方出示的证书却对应另一个批次。"
+      },
+      "purpose": {
+        "ru": "Хочу посадить растения и понимать, какие документы относятся именно к моей покупке.",
+        "en": "I want to plant them and understand which documents actually cover my purchase.",
+        "zh": "我想把植物种下，也想弄清哪些文件真正对应这次购买。"
+      },
+      "priorContact": {
+        "ru": "При обсуждении покупки продавец показал сертификат на другую партию и обещал уточнить сведения у питомника; внешним видом я заражение не устанавливал.",
+        "en": "When we discussed the purchase, the seller showed another batch’s certificate and promised to check with the nursery; I have not diagnosed infestation by appearance.",
+        "zh": "谈到这次购买时，卖方拿出另一批次的证书，答应向苗圃核实；我没有凭外观认定苗木染疫。"
+      }
+    },
+    "seedlings-electronic": {
+      "sourceSHA256": "24f9c46ac14587da3e924bd33d026d61161af556c8abcb5264be7a048965673a",
+      "service": {
+        "ru": "По партии саженцев продавец предъявил реквизиты электронного карантинного сертификата вместо бумаги.",
+        "en": "For this seedling batch, the seller provided electronic quarantine certificate details instead of paper.",
+        "zh": "这批苗木的卖方提供了电子检疫证书信息，没有纸质证书。"
+      },
+      "purpose": {
+        "ru": "Перед посадкой хочу разобраться, относится ли предъявленный документ к этим растениям.",
+        "en": "Before planting, I want to understand whether the document covers these plants.",
+        "zh": "栽种前，我想弄清这份文件是不是对应这些苗木。"
+      },
+      "priorContact": {
+        "ru": "Сначала меня смутило отсутствие бумаги, затем появилась проверенная выписка: партия, объём и получатель совпадают, подпись и действительность подтверждены.",
+        "en": "I was first concerned about the lack of paper; a checked extract then confirmed the batch, quantity and recipient, as well as signature and validity.",
+        "zh": "我起初担心没有纸质文件，随后取得的核验信息确认批次、数量、接收方相符，签名和有效性也已确认。"
+      }
+    },
+    "seedlings-lab-not-certificate": {
+      "sourceSHA256": "9f5348522a050dfb49bb79e8748f805fe04b51229e302ba918d5b44637d325a1",
+      "service": {
+        "ru": "Для купленных саженцев продавец показал лабораторный протокол и назвал его карантинным сертификатом.",
+        "en": "The seedling seller showed a laboratory report and called it a quarantine certificate.",
+        "zh": "苗木卖方出示实验室报告，并把它称作检疫证书。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать документы на растения, которые собираюсь высаживать.",
+        "en": "I want to understand the paperwork for the plants I intend to plant.",
+        "zh": "我想了解准备栽种的植物所附文件到底是什么。"
+      },
+      "priorContact": {
+        "ru": "После вопроса о партии мне предъявили протокол без выявленного карантинного объекта; сертификат на эту перевозку проверка реестра не подтвердила.",
+        "en": "After I asked about the batch, I was shown a report finding no quarantine pest in the sample; a registry check did not confirm a certificate for this shipment.",
+        "zh": "询问批次后，对方给我看了样品未检出检疫对象的报告，但登记系统核查未确认此次运输的检疫证书。"
+      }
+    },
+    "seedlings-outside-zone": {
+      "sourceSHA256": "567bd5ac40072cd3320aff8410f094160905870a28a983ebd0b32a37f137a16d",
+      "service": {
+        "ru": "Я увидел новость о карантине в районе питомника и засомневался в документах на саженцы.",
+        "en": "News of quarantine in the nursery’s district made me question the seedlings’ paperwork.",
+        "zh": "看到苗圃所在地区有检疫限制的新闻后，我对苗木文件产生疑问。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно заниматься посадками и понимать, касается ли сообщение моей партии.",
+        "en": "I want to get on with planting and understand whether the news concerns my batch.",
+        "zh": "我想安心栽种，也想知道这条消息是否涉及我的批次。"
+      },
+      "priorContact": {
+        "ru": "Сначала я ориентировался на заголовок новости, затем специалист сопоставил участок и маршрут с границами зоны и подтвердил, что они вне неё.",
+        "en": "I first relied on the news headline; a specialist then compared the plot and transport route with the zone boundaries and confirmed both were outside.",
+        "zh": "我起初只看新闻标题，后来专业人员核对地块和运输线路，确认均在该区域界线之外。"
+      }
+    },
+    "separate-waste-chain": {
+      "sourceSHA256": "d98992870a2d7f6ea4d1477f505e55e52bb776d3cd895b87976d5de6755ef3ba",
+      "service": {
+        "ru": "Мы с соседями обсуждаем постоянный раздельный сбор отходов во дворе.",
+        "en": "My neighbours and I are discussing permanent separate waste collection in the courtyard.",
+        "zh": "我和邻居们正在讨论院内长期分类收集垃圾。"
+      },
+      "purpose": {
+        "ru": "Хочется сортировать домашнюю упаковку так, чтобы её действительно вывозили отдельно.",
+        "en": "We want to sort household packaging knowing it will actually be collected separately.",
+        "zh": "我们希望分类投放家庭包装垃圾后，确实能得到分类清运。"
+      },
+      "priorContact": {
+        "ru": "Пока обсудили предложение представителя о бесплатных контейнерах; вопрос вывоза не разобран, а соседи уже ждут объявления о запуске.",
+        "en": "We have discussed the representative’s offer of free containers; collection has not been clarified, and the neighbours are already waiting for a launch announcement.",
+        "zh": "目前讨论了代表免费提供容器的提议；清运问题尚未弄清，邻居们已经在等待启动公告。"
+      }
+    },
+    "several-issues": {
+      "sourceSHA256": "6f5c529fad7fe59592b3b50428fe3df0ea4fb76d4f4649ab02af8b3127ad0480",
+      "service": {
+        "ru": "В одном письме я сообщил о редких автобусах и публикации моих личных сведений.",
+        "en": "In one letter I reported infrequent buses and publication of my personal information.",
+        "zh": "我在同一封信中反映公交班次减少和个人信息被公开。"
+      },
+      "purpose": {
+        "ru": "Мне нужны удобные повседневные поездки и спокойствие за частную информацию.",
+        "en": "I need convenient everyday travel and peace of mind about private information.",
+        "zh": "我需要方便的日常出行，也希望私人信息得到妥善对待。"
+      },
+      "priorContact": {
+        "ru": "Заметив обе проблемы, я объединил их в одном обращении и отдельно приложил материал о публикации.",
+        "en": "After noticing both problems I combined them in one letter and attached publication material separately.",
+        "zh": "注意到这两个问题后，我写在同一来件里，另附了公开信息的材料。"
+      }
+    },
+    "several-minimum-attachments": {
+      "sourceSHA256": "fd58aa1cdb35c4b21bc473eaa43d1078e60f9a01edcf90f5ef58f19f437fc244",
+      "service": {
+        "ru": "Я написал об отсутствии автобусной остановки и распространении медицинских сведений ребёнка.",
+        "en": "I wrote about a missing bus stop and disclosure of a child’s medical information.",
+        "zh": "我写信反映缺少公交站点以及儿童医疗信息传播的问题。"
+      },
+      "purpose": {
+        "ru": "Мне важно удобно ездить с ребёнком и беречь семейную частную жизнь.",
+        "en": "I need convenient travel with the child and privacy for my family.",
+        "zh": "我希望带孩子出行方便，也保护家庭隐私。"
+      },
+      "priorContact": {
+        "ru": "Я приложил разные материалы к двум вопросам, после чего всё письмо отправили транспортному подразделению.",
+        "en": "I attached different materials for the two issues and the entire letter was then sent to the transport unit.",
+        "zh": "我分别附上两个问题的材料，随后整封信被转给了交通部门。"
+      }
+    },
+    "several-partial-response": {
+      "sourceSHA256": "0700e5d9daf7ed48f5086b84cd4a2cf4e594f9c8b3ce1451ce55bf75856a07e1",
+      "service": {
+        "ru": "Я сообщил о яме у дома и отсутствии освещения на подходе.",
+        "en": "I reported a pothole by my home and missing lighting on the approach.",
+        "zh": "我反映了住宅旁的坑洞和通路照明缺失。"
+      },
+      "purpose": {
+        "ru": "Мне хочется спокойно возвращаться домой и видеть дорогу.",
+        "en": "I want to come home comfortably and see the path.",
+        "zh": "我希望安心回家，并看清脚下的路。"
+      },
+      "priorContact": {
+        "ru": "После письма яму заделали, но ответ коснулся только ремонта, а весь вопрос отметили как исполненный.",
+        "en": "After the letter the pothole was filled, but the reply covered only repairs and the whole matter was marked complete.",
+        "zh": "写信后坑洞修补了，但答复只谈修路，整个事项却被标成完成。"
+      }
+    },
+    "several-repair-and-complaint": {
+      "sourceSHA256": "54e412c752d1bd951ce82a3f23892f8b8bf3f8c837ec0d954f1d0081789c09eb",
+      "service": {
+        "ru": "Я прошу восстановить дорожку и разобраться в прежнем сообщении о выполнении работ.",
+        "en": "I ask for the path to be repaired and an earlier completion report to be examined.",
+        "zh": "我请求修复小路，并核查此前关于完工的说法。"
+      },
+      "purpose": {
+        "ru": "Эта дорожка нужна мне для обычных выходов из дома.",
+        "en": "I use this path for ordinary trips from home.",
+        "zh": "我日常出门需要使用这条小路。"
+      },
+      "priorContact": {
+        "ru": "Раньше инспектор сообщил о завершении, затем я увидел несоответствие и направил письмо с двумя вопросами.",
+        "en": "An inspector previously reported completion, then I noticed the discrepancy and sent a letter raising both matters.",
+        "zh": "此前检查员称已完工，之后我发现不符，便写信提出这两个问题。"
+      }
+    },
+    "sickpay-child-care": {
+      "sourceSHA256": "87920f1f95aa98197b7fb31fe15a3066d203c1d01108d45128c77d5a2979d5b2",
+      "service": {
+        "ru": "Уточняю оплату больничного по уходу за заболевшим ребёнком.",
+        "en": "I am asking about payment for leave to care for my sick child.",
+        "zh": "我在咨询照顾生病孩子的病假补助。"
+      },
+      "purpose": {
+        "ru": "Хочу планировать семейные расходы на время ухода за ребёнком.",
+        "en": "I want to plan household expenses while caring for my child.",
+        "zh": "我想安排照顾孩子期间的家庭支出。"
+      },
+      "priorContact": {
+        "ru": "После оформления больничного спросила в кадрах, где применили знакомую схему моей прежней болезни; выплаты по нынешнему случаю пока не было.",
+        "en": "After the leave was issued I asked HR, which used the familiar arrangement from my own earlier illness; this claim has not yet been paid.",
+        "zh": "办好病假后我询问人事部门，对方套用了我过去本人患病时的方式；这次尚未发放补助。"
+      }
+    },
+    "sickpay-data": {
+      "sourceSHA256": "1fb257b2f633eda58672c03081cfba11ea3b6514941106d0b3b5ddfb17b4b651",
+      "service": {
+        "ru": "Жду часть выплаты по закрытому больничному, которую выплачивает СФР.",
+        "en": "I am waiting for the Social Fund's portion of payment for completed sick leave.",
+        "zh": "我在等待已结束病假的社会基金支付部分。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, когда можно рассчитывать на деньги для обычных расходов.",
+        "en": "I want to know when I can expect the money for everyday expenses.",
+        "zh": "我想知道何时能拿到这笔钱来支付日常开销。"
+      },
+      "priorContact": {
+        "ru": "Сначала больничный закрыли, позже в кабинете увидела отправку сведений работодателем; теперь уточняю срок по этой последовательности.",
+        "en": "The sick leave ended first, and later I saw the employer's information submission in my account; I am asking about timing in that sequence.",
+        "zh": "病假先结束，后来我在账户中看到雇主提交信息，现在按这个先后顺序询问期限。"
+      }
+    },
+    "sickpay-refusal-notice": {
+      "sourceSHA256": "6f981858c40675ec3e0a9072164f520c7768ee923a87fa75243e1488af98e793",
+      "service": {
+        "ru": "Хочу получить понятную информацию об отказе в пособии по моему случаю.",
+        "en": "I want clear information about the refusal of benefit in my case.",
+        "zh": "我想了解本人补助被拒的具体信息。"
+      },
+      "purpose": {
+        "ru": "Хочу разобраться, почему ожидаемой выплаты нет, и иметь собственный документ для чтения.",
+        "en": "I want to understand why the expected payment is missing and have my own document to read.",
+        "zh": "我想弄清为什么没有预期款项，并取得可自行阅读的文件。"
+      },
+      "priorContact": {
+        "ru": "Сначала об отказе узнал работодатель, затем я услышала об этом случайно и проверила кабинет, где решения не нашла.",
+        "en": "The employer learned of the refusal first, then I heard about it by chance and checked my account, where I found no decision.",
+        "zh": "雇主先得知拒绝决定，后来我偶然听说并查看个人账户，却没有找到决定。"
+      }
+    },
+    "sickpay-two-payers": {
+      "sourceSHA256": "cbde3ce66ff80a5fbcc89331620f094988e11853ef6c27fa6902d43f93d4b3fc",
+      "service": {
+        "ru": "После восьми дней собственной болезни получил деньги только за первые три дня.",
+        "en": "After eight days of my own illness, I received payment for only the first three days.",
+        "zh": "我本人患病八天后，只收到前三天的钱。"
+      },
+      "purpose": {
+        "ru": "Хочу сверить ожидаемые поступления и спланировать обычные расходы после болезни.",
+        "en": "I want to check the expected payments and plan ordinary expenses after illness.",
+        "zh": "我想核对预期收入，安排病后的日常支出。"
+      },
+      "priorContact": {
+        "ru": "После больничного работодатель перечислил сумму и назвал её полной оплатой, но в расчётном листке вижу только три дня; остальную выплату пока не получил.",
+        "en": "After my leave the employer transferred money and called it full payment, but the payslip shows only three days; I have not received the remainder.",
+        "zh": "病假后雇主转来一笔钱并说已全付，但工资单只列三天，其余部分尚未收到。"
+      }
+    },
+    "sidewalk-boundary": {
+      "sourceSHA256": "375e8146ebd9eac7a450c440e0a0616e53e86541db8efbc82b43dbbd02ce5952",
+      "service": {
+        "ru": "При раскопках тротуара материалы перекрыли предусмотренный планом временный проход.",
+        "en": "During pavement excavation, materials blocked the temporary pedestrian corridor shown in the plan.",
+        "zh": "人行道开挖时，施工材料堵住了方案中安排的临时通道。"
+      },
+      "purpose": {
+        "ru": "Мне нужно добираться к остановке с коляской без выхода на дорогу.",
+        "en": "I need to reach the bus stop with a pushchair without entering the road.",
+        "zh": "我需要推着婴儿车去车站，不想走到车行道上。"
+      },
+      "priorContact": {
+        "ru": "До нынешней жалобы я спросил бригадира о проходе, но он сослался на разрешение; письменного ответа не было.",
+        "en": "Before this complaint, I asked the foreman about the passage, but he referred to the permit; there was no written reply.",
+        "zh": "本次投诉前，我问过工长通行问题，他只说有施工许可，没有书面答复。"
+      }
+    },
+    "sidewalk-restoration": {
+      "sourceSHA256": "d242b223b8671ac018e6a5ccf966f6c5538aad4a55750584430befdd5f1a622b",
+      "service": {
+        "ru": "После замены трубопровода тротуарное покрытие ещё не восстановлено и материалы остаются у дома.",
+        "en": "After pipe replacement, the pavement has not yet been restored and materials remain beside the building.",
+        "zh": "管道换完后，人行道路面还没恢复，材料也留在楼旁。"
+      },
+      "purpose": {
+        "ru": "Хочу снова пользоваться привычным тротуаром и понимать, когда закончат оставшиеся работы.",
+        "en": "I want to use the usual pavement again and know when the remaining work will finish.",
+        "zh": "我想重新走惯常的人行道，也想知道余下工作何时结束。"
+      },
+      "priorContact": {
+        "ru": "Перед нынешним обращением мне прислали сообщение о завершении всего комплекса, хотя акт касается испытания трубопровода, а безопасный временный обход пока сохраняется.",
+        "en": "Before this enquiry, I received a message saying all work was complete, although the certificate covers pipe testing and the safe temporary detour remains in use.",
+        "zh": "本次来信前，我收到全部完工的消息，但验收记录只涉及管道试验，目前仍有安全的临时绕行通道。"
+      }
+    },
+    "sidewalk-safe-detour": {
+      "sourceSHA256": "4fca2582208401bc59592ba927c0827579fcf9e562d2950e5d0a63620d231911",
+      "service": {
+        "ru": "Из-за разрешённых работ прямой тротуар закрыли, а проход устроили в обход.",
+        "en": "Permitted works closed the direct pavement and introduced a detour.",
+        "zh": "获准施工后，原来直达的人行道封闭了，需要绕行。"
+      },
+      "purpose": {
+        "ru": "Мне неудобно ходить более длинным путём, и хочется знать, сколько это продлится.",
+        "en": "The longer walk is inconvenient, and I want to know how long it will last.",
+        "zh": "路变长后出门不方便，我想知道还要持续多久。"
+      },
+      "priorContact": {
+        "ru": "В нынешнем обращении я прошу снять ограждение; приложенные разрешение, схема и акт осмотра относятся к этому участку и подтверждают доступный обход.",
+        "en": "In this enquiry I ask for the barrier to be removed; the attached permit, plan and inspection record concern this site and confirm an accessible detour.",
+        "zh": "这次我要求撤掉围挡；随附许可、方案和检查记录都对应此处，并确认绕行通道可正常使用。"
+      }
+    },
+    "sidewalk-updated-permit": {
+      "sourceSHA256": "4068a93b7dc0ecc4d92a3e0caecc8a548260570e5c055cf7c423937b0757a348",
+      "service": {
+        "ru": "На стенде у работ висит листок с окончившимся первоначальным сроком.",
+        "en": "The works noticeboard still displays the expired original period.",
+        "zh": "施工告示板上仍贴着原定期限已经结束的旧通知。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, почему работы продолжаются и когда вернётся привычный проход.",
+        "en": "I want to understand why work continues and when the usual passage will return.",
+        "zh": "我想知道为何仍在施工，以及什么时候能恢复原来的通行。"
+      },
+      "priorContact": {
+        "ru": "Сначала я сфотографировал старый листок, затем получил выписку о продлении именно этих работ; исполнитель признал, что стенд не обновлён.",
+        "en": "I first photographed the old notice and then received an extract extending these same works; the contractor acknowledged that the board had not been updated.",
+        "zh": "我先拍了旧通知，随后收到针对同一施工项目的延期材料；施工方承认未更新告示板。"
+      }
+    },
+    "sign-light-restored": {
+      "sourceSHA256": "9f8ccef0a00e5b9ef6840d2095bed82b0d9330d1418b76ae0d4f846d171ec008",
+      "service": {
+        "ru": "После отключения мешавшей подсветки я слышу в комнате постоянный гул, предположительно от фасадного блока.",
+        "en": "Since the disturbing lighting was switched off, I hear a constant hum in my room, which I suspect comes from a facade unit.",
+        "zh": "扰人的灯关掉后，我在房间里听到持续嗡声，猜测来自外墙设备。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно отдыхать дома и понять причину оставшегося звука.",
+        "en": "I want to rest comfortably at home and understand the remaining sound.",
+        "zh": "我想在家安静休息，也想弄清声音的来源。"
+      },
+      "priorContact": {
+        "ru": "Сначала я пожаловалась на свет и подтверждаю, что он больше не мешает; о гуле сообщаю впервые после отключения, а прежнее фото сделано до него.",
+        "en": "I first complained about the light and confirm it no longer disturbs me; I am reporting the hum for the first time after the switch-off, and the earlier photo predates it.",
+        "zh": "我先投诉灯光，也确认现在灯光已不再打扰；关灯后才首次反映嗡声，原来的照片拍于关灯之前。"
+      }
+    },
+    "sign-night-measurement": {
+      "sourceSHA256": "51e71a22584b164d69a67b63936b014df356834db557a3654dfa2679d3d733b3",
+      "service": {
+        "ru": "Подсветка названия и режима работы мешает мне ночью, когда она включена.",
+        "en": "Illuminated business identification and hours disturb me at night while the lights are on.",
+        "zh": "商户名称和营业时间的灯光在夜间亮起时影响我。"
+      },
+      "purpose": {
+        "ru": "Хочу, чтобы дома можно было спать в обычное ночное время.",
+        "en": "I want to be able to sleep at home during normal night hours.",
+        "zh": "我希望夜里能在家正常睡觉。"
+      },
+      "priorContact": {
+        "ru": "После моей жалобы на свет между полуночью и двумя часами мне показали акт утреннего осмотра при выключенной подсветке.",
+        "en": "After my complaint about light between midnight and two, I was shown a morning inspection record made while the lighting was off.",
+        "zh": "我反映午夜至凌晨两点的灯光后，对方给我看了一份在上午关灯状态下做的检查记录。"
+      }
+    },
+    "sign-not-ad": {
+      "sourceSHA256": "8484407a61d6ec5984688829f69d5cc79cf5c712ab464ed926ba019cfe48f98b",
+      "service": {
+        "ru": "Свет от названия магазина и часов работы попадает ночью в детскую комнату.",
+        "en": "Light from the shop name and opening hours enters the child’s room at night.",
+        "zh": "商店名称和营业时间的灯光夜里照进孩子的房间。"
+      },
+      "purpose": {
+        "ru": "Мне важно, чтобы ребёнок мог отдыхать в комнате без мешающего света.",
+        "en": "I want my child to rest in the room without intrusive light.",
+        "zh": "我希望孩子在房间里休息时不受灯光打扰。"
+      },
+      "priorContact": {
+        "ru": "До нынешнего обращения мне ответили лишь, что конструкция не является рекламой; режим и воздействие света в ответе не разобрали.",
+        "en": "Before this enquiry, I was told only that the sign was not advertising; its operating hours and light impact were not addressed.",
+        "zh": "本次来信前，回复只说该标牌不是广告，没有说明灯光的运行时段和影响。"
+      }
+    },
+    "sign-promotion": {
+      "sourceSHA256": "977b16fd9c556639dd99209128e112d0273a6cb0e8b923657cd51a6d8911e231",
+      "service": {
+        "ru": "Вместо прежней статичной таблички появился экран с меняющимися ценами и скидками, который ночью светит в спальню.",
+        "en": "The former static sign was replaced by a screen with changing prices and discounts that shines into my bedroom at night.",
+        "zh": "原来的静态招牌换成了轮播价格和折扣的屏幕，夜里照进卧室。"
+      },
+      "purpose": {
+        "ru": "Хочу спокойно спать и понять, к какому объекту относится полученное объяснение.",
+        "en": "I want to sleep comfortably and understand which installation the explanation concerns.",
+        "zh": "我想安稳睡觉，也想弄清收到的说明针对的是哪一处设施。"
+      },
+      "priorContact": {
+        "ru": "Ранее мне ответили о старой табличке; после замены я принёс запись полного цикла нового экрана, но инструментальных измерений яркости пока нет.",
+        "en": "The earlier reply concerned the old sign; after its replacement I brought a recording of the new screen’s full cycle, but there are no instrumental brightness measurements yet.",
+        "zh": "之前的回复针对旧招牌；更换后，我带来了新屏幕完整轮播的视频，但目前没有仪器测量亮度的结果。"
+      }
+    },
+    "signal-night-fault": {
+      "sourceSHA256": "5c423240059dbb00ec44a76f495ae94f41f368bae8b638f85a9594d7e5f76c59",
+      "service": {
+        "ru": "По вечерам на переходе периодически пропадает сигнал.",
+        "en": "The crossing signal sometimes disappears late in the evening.",
+        "zh": "这个路口的信号在深夜会间歇性消失。"
+      },
+      "purpose": {
+        "ru": "Я пользуюсь этим переходом, возвращаясь домой поздно.",
+        "en": "I use this crossing when coming home late.",
+        "zh": "我晚归时会经过这个过街点。"
+      },
+      "priorContact": {
+        "ru": "После моего сообщения пришёл ответ о дневной проверке, который не объяснил ночное наблюдение.",
+        "en": "After my report I received a reply about a daytime inspection that did not explain the nighttime observation.",
+        "zh": "报告后收到的答复只说白天检查正常，没有解释夜间的情况。"
+      }
+    },
+    "signal-other-crossing": {
+      "sourceSHA256": "1be14f5c5dd007df02f9d29f76e66a42df66110092f5f022ad74f900788e5fdf",
+      "service": {
+        "ru": "У школьного перехода не реагирует кнопка вызова сигнала.",
+        "en": "The request button does not respond at the school crossing.",
+        "zh": "学校附近过街点的按钮没有反应。"
+      },
+      "purpose": {
+        "ru": "Мне важно спокойно проходить здесь вместе с детьми.",
+        "en": "I want to cross here calmly with children.",
+        "zh": "我希望能安心和孩子们从这里过街。"
+      },
+      "priorContact": {
+        "ru": "После сообщения я получил фотографию проверки другого перехода на том же перекрёстке.",
+        "en": "After reporting it I received a photograph of an inspection at a different crossing on the same junction.",
+        "zh": "反映后，我收到的检查照片却是同一路口的另一个过街点。"
+      }
+    },
+    "signal-timing-proposal": {
+      "sourceSHA256": "65b3426cdc4862e7aee43ae53b9b3598c59d66502a559e071ea9a667c022c5a4",
+      "service": {
+        "ru": "Я предлагаю увеличить время зелёного сигнала для пешеходов.",
+        "en": "I propose a longer green phase for pedestrians.",
+        "zh": "我建议延长行人的绿灯时间。"
+      },
+      "purpose": {
+        "ru": "При обычных походах по делам мне не хватает спокойного времени на переход.",
+        "en": "On everyday errands I feel I lack enough time to cross calmly.",
+        "zh": "平时出门办事时，我觉得从容过街的时间不够。"
+      },
+      "priorContact": {
+        "ru": "В нынешнем обращении я изложил своё впечатление, не проводя расчётов движения.",
+        "en": "In this request I described my impression without carrying out traffic calculations.",
+        "zh": "这次来信写的是我的感受，没有进行交通计算。"
+      }
+    },
+    "signal-visibility": {
+      "sourceSHA256": "fc7aaf5508dfa8b8e9c2409e9fe8db0ee5fff6d7b880ef0a84143d4a0c342ad6",
+      "service": {
+        "ru": "Ветви закрывают сигнал при подходе к переходу со стороны библиотеки.",
+        "en": "Branches obscure the signal on the approach from the library.",
+        "zh": "从图书馆方向接近过街点时，树枝挡住了信号灯。"
+      },
+      "purpose": {
+        "ru": "Я хожу в библиотеку и хочу видеть сигнал до выхода на дорогу.",
+        "en": "I visit the library and want to see the signal before stepping onto the road.",
+        "zh": "我会去图书馆，希望走上道路前看清信号。"
+      },
+      "priorContact": {
+        "ru": "На прежнее сообщение мне ответили об исправности электроники и закрыли заявку.",
+        "en": "My earlier report received a reply about working electronics and the request was closed.",
+        "zh": "此前反映后，答复只说明电子设备正常，随后关闭了事项。"
+      }
+    },
+    "tax-amended-declaration": {
+      "sourceSHA256": "0823430dc25606f48fdbb408ebbeb3fe64de490ebf08c754995a9025d91ca84d",
+      "service": {
+        "ru": "Я оформляю вычет по обычной декларации и позже изменил в ней сумму.",
+        "en": "I am seeking a deduction through an ordinary tax return and later changed the amount.",
+        "zh": "我通过普通纳税申报办理扣除，后来改了其中的金额。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать ожидание по документам, чтобы планировать личные деньги.",
+        "en": "I want to understand the waiting period so I can plan my personal finances.",
+        "zh": "我想弄清材料还要等多久，好安排个人收支。"
+      },
+      "priorContact": {
+        "ru": "Сначала я подал первоначальную декларацию, затем до окончания её проверки — уточнённую за тот же период, и только потом написал в приёмную.",
+        "en": "I filed the original return, then an amended return for the same period before its review finished, and only afterwards wrote to the reception office.",
+        "zh": "我先提交初次申报，在其审核结束前又提交了同一期间的更正申报，之后才给接待处写信。"
+      }
+    },
+    "tax-calendar-months": {
+      "sourceSHA256": "0e5e4f5643a30cfb460cf2b475fcbe1fa0bdc161160ef6f964025d4d95acf6e9",
+      "service": {
+        "ru": "Я подала первоначальную обычную декларацию на вычет и пытаюсь понять срок её проверки.",
+        "en": "I filed an original ordinary return for a deduction and am trying to understand its review period.",
+        "zh": "我提交了申请扣除的普通初次申报，想弄清审核期限。"
+      },
+      "purpose": {
+        "ru": "Мне проще планировать домашние расходы, когда понятно, какого этапа я жду.",
+        "en": "Knowing which stage I am waiting for helps me plan household expenses.",
+        "zh": "知道自己在等哪个办理环节，家庭开支就更好安排。"
+      },
+      "priorContact": {
+        "ru": "После подачи декларации я отсчитала в приложении девяносто дней и позднее написала в приёмную; уточнённой декларации не подавала.",
+        "en": "After filing, I counted ninety days in an app and later wrote to the reception office; I have not filed an amended return.",
+        "zh": "提交后，我在应用里数了九十天，后来又给接待处写信，没有提交更正申报。"
+      }
+    },
+    "tax-explanations-only": {
+      "sourceSHA256": "656a0272295dab58c4577e74e795314e7ca99dcdfc6620f778129de0ca2c883c",
+      "service": {
+        "ru": "Во время проверки моей декларации я пояснил уже указанные суммы и приложил подтверждающий скан.",
+        "en": "During review of my return, I explained the figures already declared and attached a supporting scan.",
+        "zh": "申报审核期间，我解释了原先填报的金额，并附上证明材料扫描件。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, сколько ещё ждать, не путая пояснения с новым оформлением вычета.",
+        "en": "I want to know how much longer to wait without confusing explanations with a new deduction application.",
+        "zh": "我想知道还要等多久，也不想把补充说明与重新申请扣除混在一起。"
+      },
+      "priorContact": {
+        "ru": "Сначала была первоначальная декларация, затем только пояснения без изменения показателей; в проекте справки после этого предложили считать срок заново.",
+        "en": "First came the original return, then explanations without changed figures; a draft note subsequently proposed restarting the period.",
+        "zh": "先有初次申报，后来只是补充说明且未改数据；之后一份说明草稿提出重新计算期限。"
+      }
+    },
+    "tax-simplified-statement": {
+      "sourceSHA256": "d973e1d89f859697d6c827aeff362e5a384bee09ac16ca43899fd9d708aec978",
+      "service": {
+        "ru": "В личном кабинете появился предзаполненный документ для вычета по упрощённому порядку.",
+        "en": "A prefilled simplified deduction application appeared in my online account.",
+        "zh": "个人账户中出现了一份简化扣除程序的预填申请。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать ожидание по вычету, чтобы не строить расходы на неверной дате.",
+        "en": "I want to understand the wait for the deduction so I do not plan expenses around the wrong starting point.",
+        "zh": "我想弄清扣除申请要等多久，避免按错误的起点安排开支。"
+      },
+      "priorContact": {
+        "ru": "Сначала документ оставался неподписанным черновиком; позже я подписал и представил заявление, и это подтверждено квитанцией.",
+        "en": "At first it remained an unsigned draft; later I signed and submitted the application, as confirmed by the receipt.",
+        "zh": "起初它只是未签名的草稿，后来我才签署并提交申请，提交凭证已确认这一点。"
+      }
+    },
+    "trees-current-danger": {
+      "sourceSHA256": "ac8e8b56299e87585a9e78f4cff865e99422ef8c2dcde318f5cffbf7c68cacc9",
+      "service": {
+        "ru": "После ветра повреждённая крупная ветка висит над используемым проходом к дому.",
+        "en": "After strong wind, a large damaged branch hangs over the passage used to reach the building.",
+        "zh": "风后，一根受损的大树枝悬在通往住宅的常用通道上方。"
+      },
+      "purpose": {
+        "ru": "Мне нужно добираться домой, не проходя под повреждённой веткой.",
+        "en": "I need to reach home without passing beneath the damaged branch.",
+        "zh": "我需要回家，但不想从受损树枝下经过。"
+      },
+      "priorContact": {
+        "ru": "После повреждения я написала обращение; оперативная карточка подтверждает состояние, но подход пока не ограничен.",
+        "en": "After the damage I submitted a letter; the operational record confirms the condition, but access has not yet been restricted.",
+        "zh": "树枝受损后我已写信反映，现场记录确认了现状，但通行处尚未限制进入。"
+      }
+    },
+    "trees-other-site": {
+      "sourceSHA256": "1a6599a5c3ebd17debfee797339d7fb486cce57a3d4ae735dc0bfc964f92252a",
+      "service": {
+        "ru": "Во дворе спиливают деревья на одном участке, а показанный рабочими документ перечисляет другой.",
+        "en": "Trees are being cut on one courtyard plot, but the workers’ document lists another.",
+        "zh": "院里一个地块正在伐树，工人出示的文件却列着另一个地块。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать происходящее с деревьями в привычном дворе, не полагаясь на сообщения в чате.",
+        "en": "I want to understand what is happening to the courtyard trees without relying on chat messages.",
+        "zh": "我想了解熟悉院子里的树发生了什么，不想只听群里传言。"
+      },
+      "priorContact": {
+        "ru": "Во время работ мне показали бумагу на другой участок, а подрядчик назвал её общей для квартала; подтверждающего приложения пока нет.",
+        "en": "During the work I was shown paperwork for another plot, and the contractor called it valid for the whole block; there is no supporting annex yet.",
+        "zh": "施工时对方给我看另一地块的文件，承包方说它适用整个街区，但目前没有相应附件佐证。"
+      }
+    },
+    "trees-permit-matches": {
+      "sourceSHA256": "23fd1c753e94a37319f4b29aa788e4098abf04d021443d7d010195c8d72a553a",
+      "service": {
+        "ru": "У дома удалили два дерева, и я хочу понять основание этих работ.",
+        "en": "Two trees near the building were removed, and I want to understand the basis for the work.",
+        "zh": "楼旁两棵树被移除了，我想了解施工依据。"
+      },
+      "purpose": {
+        "ru": "Мне важен знакомый двор и понятное объяснение изменений рядом с домом.",
+        "en": "I care about the familiar courtyard and want a clear explanation of changes near home.",
+        "zh": "我关心熟悉的院子，希望对家旁的变化有个明白解释。"
+      },
+      "priorContact": {
+        "ru": "Сначала я пожаловалась, потому что мне не показывали разрешение; затем ведомство прислало подтверждённые документы именно на удаление этих двух деревьев.",
+        "en": "I first complained because I had not been shown a permit; the authority then sent verified documents specifically covering removal of those two trees.",
+        "zh": "我先因没有看到许可而投诉，随后机关提供了经确认、确实针对这两棵树移除的文件。"
+      }
+    },
+    "trees-pruning-scope": {
+      "sourceSHA256": "9506164482fd41474e8f7548e40876651eb82fc30eca1993a2da1d1cb72bfc2a",
+      "service": {
+        "ru": "На месте дерева остался пень, хотя показанный документ говорит об обрезке определённых ветвей.",
+        "en": "A stump remains where the tree stood, although the document shown authorises pruning specified branches.",
+        "zh": "树的位置只剩树桩，而出示的文件写的是修剪特定树枝。"
+      },
+      "purpose": {
+        "ru": "Хочу понять, что произошло с деревом в знакомом месте и как это связано с показанной бумагой.",
+        "en": "I want to understand what happened to the tree in this familiar place and how it relates to the paperwork shown.",
+        "zh": "我想知道熟悉地点的树发生了什么，以及与所出示文件有何关系。"
+      },
+      "priorContact": {
+        "ru": "Подрядчик показал документ на это дерево, затем карточка специалиста подтвердила удаление ствола; сведений о дополнительном основании в имеющихся материалах нет.",
+        "en": "The contractor showed a document for this tree; a specialist’s record then confirmed trunk removal, while the available materials contain no additional authorisation details.",
+        "zh": "承包方出示了这棵树的文件，之后专业记录确认树干已移除；现有材料没有额外依据的信息。"
+      }
+    },
+    "unclear-subject": {
+      "sourceSHA256": "5049d44b7260f09b1561c76837a63122fce2427a925d83ba3fccc895e7607f8e",
+      "service": {
+        "ru": "Я дежурный и разбираю читаемое письмо без определимого вопроса.",
+        "en": "I am the duty officer examining a legible letter with no identifiable issue.",
+        "zh": "我是值班人员，正在查看一封字迹清楚但无法确定事项的信。"
+      },
+      "purpose": {
+        "ru": "Мне нужно работать с имеющимся текстом, не приписывая автору неуказанную бытовую цель.",
+        "en": "I need to work with the text without assigning the author an unstated everyday purpose.",
+        "zh": "我需要根据现有文字工作，不替作者设定未说明的生活目的。"
+      },
+      "priorContact": {
+        "ru": "Письмо уже зарегистрировано, приложений и понятной ссылки на прежнее дело не поступило.",
+        "en": "The letter has been registered without attachments or a clear reference to an earlier case.",
+        "zh": "信件已经登记，没有附件或明确指向以前事项的线索。"
+      }
+    },
+    "unreadable-body": {
+      "sourceSHA256": "b6f8fbfc5dc8541ba51283651af255a181388213a5c3b4e8948e409a2f431ac1",
+      "service": {
+        "ru": "Я сотрудник канцелярии и разбираю промокшее письмо с нечитаемым основным текстом.",
+        "en": "I am an office clerk examining a wet letter whose main text cannot be read.",
+        "zh": "我是办公室工作人员，正在查看一封受潮且正文无法辨认的信。"
+      },
+      "purpose": {
+        "ru": "Мне нужно обработать полученный материал, хотя бытовая потребность автора неизвестна.",
+        "en": "I need to process the received material although the author’s everyday need is unknown.",
+        "zh": "我需要处理收到的材料，但作者的日常需求不明。"
+      },
+      "priorContact": {
+        "ru": "В канцелярии уже проверили оригинал и качественную копию, но содержание прочитать не удалось.",
+        "en": "The office has checked the original and a good copy but could not read the contents.",
+        "zh": "办公室已检查原件和清晰副本，仍无法读出正文。"
+      }
+    },
+    "waste-chain-ready": {
+      "sourceSHA256": "4537ad11b044368104ed512b505fc06c43812491cbe49b51ad996d5f8d2acddf",
+      "service": {
+        "ru": "Хотим запустить согласованный раздельный сбор на нашей площадке.",
+        "en": "We want to start the arranged separate collection service at our site.",
+        "zh": "我们希望在自家收集点启动已安排的分类收集服务。"
+      },
+      "purpose": {
+        "ru": "Хотим понимать, что сортировать дома и в какие дни выносить.",
+        "en": "We want to know what to sort at home and on which days to take it out.",
+        "zh": "我们想知道在家该分哪些垃圾、哪几天投放。"
+      },
+      "priorContact": {
+        "ru": "Раньше просили контейнеры и получили возражение об отсутствии вывоза; теперь принесли актуальные договор и маршрут, но жильцам условия пока не сообщили.",
+        "en": "We previously requested containers and were told there was no collection; now we have brought the current agreement and route, but residents have not been informed of the arrangements.",
+        "zh": "此前申请容器时被告知没有清运，如今已带来现行合同和路线，但居民尚未获知具体安排。"
+      }
+    },
+    "waste-container-fractions": {
+      "sourceSHA256": "ea35ae40100f9741d68697592ab934b96895ebd18131d00ee08332563ceb9cdf",
+      "service": {
+        "ru": "На площадке возникла путаница, что можно класть в контейнер для вторсырья.",
+        "en": "There is confusion about what can go in the recycling container.",
+        "zh": "垃圾点出现了哪些东西可以放入回收容器的疑问。"
+      },
+      "purpose": {
+        "ru": "Хочу сортировать отходы дома без риска смешать упаковку с опасными предметами.",
+        "en": "I want to sort household waste without mixing packaging with hazardous items.",
+        "zh": "我想在家分类垃圾，避免把包装与危险物品混放。"
+      },
+      "priorContact": {
+        "ru": "Сначала ориентировались на перечень упаковки, затем появилась наклейка «любое вторсырьё» и соседи предложили добавлять лампы и батарейки.",
+        "en": "We first followed the packaging list, then an Any recyclables sticker appeared and neighbours suggested adding lamps and batteries.",
+        "zh": "我们原先按包装清单投放，后来出现了写着任何可回收物的贴纸，邻居便提议加入灯管和电池。"
+      }
+    },
+    "waste-site-register": {
+      "sourceSHA256": "c866adc175faa2ac1e18372289f6c697cdbc4972e3522362d1a529ceea8adb2f",
+      "service": {
+        "ru": "Контейнеры установили на соседнем участке вместо указанной площадки.",
+        "en": "The containers were installed on a neighbouring plot instead of the specified site.",
+        "zh": "容器被放在相邻地块，而不是原先指定的收集点。"
+      },
+      "purpose": {
+        "ru": "Хочу понимать, где устроено место для ежедневного выноса мусора.",
+        "en": "I want to know where the daily waste collection point is meant to be.",
+        "zh": "我想弄清日常倒垃圾的地点究竟设在哪里。"
+      },
+      "priorContact": {
+        "ru": "Сначала ожидали контейнеры на согласованной площадке, потом заметили другое место и получили ответ со ссылкой на реестр.",
+        "en": "We first expected containers at the agreed site, then noticed the different location and received a reply referring to the register.",
+        "zh": "我们先等待在约定收集点安装容器，后来发现位置不同，收到的答复却只引用了登记册。"
+      }
+    }
+  }
+}
