@@ -463,7 +463,12 @@ try{
   const afterMessage=await apiResponse('message',()=>page.locator('[data-chat-form] button[type="submit"]').click());
   assert.deepEqual(afterMessage.documents.map(document=>document.id),initialDocuments);
   assert.equal(await page.locator('.rxa-messages [data-action="document"]').count(),0);
-  const thumbnail=page.locator('.rxa-messages [data-action="illustration-open"][data-id="E24__1"]');
+  assert.equal(await page.locator('.rxa-messages [data-action="illustration-open"]').count(),0,'Case illustrations are not attachments to the opening message');
+  await navigate('documents');
+  const photoRecord=page.locator('.rxa-document-list [data-action="document"][data-id="observation"]');
+  const openedPhoto=await apiResponse('document',()=>photoRecord.click());
+  assert.deepEqual(openedPhoto.openedDocumentIds,['observation']);
+  const thumbnail=page.locator('.rxa-document [data-action="illustration-open"][data-id="E24__1"]');
   const viewer=page.locator('.rxa-illustration-dialog');
   for(const [width,height] of [[390,844],[1280,900]]){
     await page.setViewportSize({width,height});
@@ -482,11 +487,7 @@ try{
     await viewer.waitFor({state:'detached'});
     assert.equal(await thumbnail.evaluate(button=>document.activeElement===button),true);
   }
-  await navigate('documents');
-  const photoRecord=page.locator('.rxa-document-list [data-action="document"][data-id="observation"]');
-  const openedPhoto=await apiResponse('document',()=>photoRecord.click());
-  assert.deepEqual(openedPhoto.openedDocumentIds,['observation'],'Opening a chat image does not register its document as read');
-  check('An existing case illustration opens at full size without revealing or marking a case document read');
+  check('Case illustrations stay in the matching document and open at full size with keyboard focus restored');
   stage='seminar-and-optimistic-chat';
   await page.evaluate(()=>sessionStorage.setItem('qa.reception.release','d'.repeat(32)));
   await page.setViewportSize({width:390,height:844});
