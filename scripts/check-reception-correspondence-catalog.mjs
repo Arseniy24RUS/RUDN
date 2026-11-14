@@ -86,7 +86,12 @@ export function inspectCorrespondenceVariant(c){
         if(review.profile.control!==undefined||review.newInformation!==null)add('initial_review_control_leak');
         if(profile.criticalRules.some(rule=>!review.criticalRules.some(row=>row.id===rule.id)))add('initial_review_critical_rule_missing');
         if(profile.criticalRules.some(rule=>rule.knownQuestion&&!review.criticalRules.some(row=>row.id===rule.id&&row.knownQuestion===rule.knownQuestion)))add('initial_review_critical_condition_missing');
-      }else if(!same(review.profile.control,profile.control)||review.newInformation!==local(c.followup.intro))add('control_review_profile_mismatch');
+      }else{
+        // A historical static episode must not receive execution-v1 materials
+        // which the student has neither requested nor seen in that session.
+        const staticControl=Object.fromEntries(Object.entries(profile.control).filter(([key])=>key!=='workflow'));
+        if(!same(review.profile.control,staticControl)||review.newInformation!==local(c.followup.intro))add('control_review_profile_mismatch');
+      }
       if(hasToken(review))add(phase+'_review_unresolved_tokens');
     }catch{add(phase+'_review_build_failed');}
   }

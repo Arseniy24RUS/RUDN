@@ -12,7 +12,7 @@ const here=path.dirname(fileURLToPath(import.meta.url));
 const defaultRepo=path.resolve(here,'..');
 const arg=(name,fallback)=>{const i=process.argv.indexOf(name);return i<0?fallback:process.argv[i+1];};
 
-export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider,decisionVersion='legacy',serviceOptions={},studentName=''}={}){
+export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider,decisionVersion='legacy',controlVersion='legacy',serviceOptions={},studentName=''}={}){
   if(!casesDirectory)throw Error('Provide --cases /absolute/path/private-data/cases or RECEPTION_AI_CASES_DIR.');
   repo=await realpath(repo);
   const site=await realpath(path.join(repo,'site'));
@@ -46,7 +46,7 @@ async function enter(){
   const gameplayContext=['free','seminar'].includes(requestedContext)?requestedContext:undefined;
   const fullName=${JSON.stringify(studentName)};
   const backend=fullName?{user:{uid:'reception-repair-qa'},getProfile:()=>({studentKey:'reception-repair-qa',fullName})}:undefined;
-  handle=await mountReceptionAI(document.getElementById('receptionAI'),{backend,locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2,gameplayContext,decisionVersion:${JSON.stringify(decisionVersion)}});
+  handle=await mountReceptionAI(document.getElementById('receptionAI'),{backend,locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2,gameplayContext,decisionVersion:${JSON.stringify(decisionVersion)},controlVersion:${JSON.stringify(controlVersion)}});
   window.__qaReception={provider:'mock',handle};
 }
 async function leave(){

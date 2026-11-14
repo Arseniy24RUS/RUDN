@@ -2,6 +2,9 @@ import {COPY} from './copy.js';
 
 const additions = {
   ru:{
+    executionContextLimit:'Действие не зарегистрировано: его объём превышает оставшуюся вместимость дела для проверки. Сократите проект действия. Сохранённый журнал доступен; можно подготовить итоговое заключение.',
+    executionActionLimit:'Достигнут предел действий в этом учебном деле. Сохранённые материалы и журнал доступны; подготовьте итоговое заключение.',
+    executionVersion:'Эта версия контроля недоступна для текущей сессии. Обновите состояние рабочего места; начатая работа сохраняет свой порядок прохождения.',
     responseTitle:'Проект ответа по обращению', responseTask:'Подготовьте связный документ по материалам дела. Подкрепите существенные выводы точными фрагментами источников; поручения добавляйте там, где требуется действие или проверка.',
     responseSubmit:'Передать проект на проверку', responseConfirm:'Зафиксировать проект', responseConfirmText:'Текст, источники, адресаты и сроки будут сохранены как ваша работа. После фиксации появятся новые сведения для контроля исполнения.',
     responseUse:'Использовать в проекте',responseAttached:'Источник прикреплён к проекту. Объясните в тексте, какой вывод он подтверждает.',
@@ -18,6 +21,9 @@ const additions = {
     responseChooseIssuer:'Кто рассмотрит вопрос',responseSourceUnavailable:'Текст нормативного источника временно недоступен для проверки. Работа сохранена; повторите запрос.',
   },
   en:{
+    executionContextLimit:'The action was not recorded because its size exceeds the remaining review capacity. Shorten the action draft. The saved record remains available, and you can prepare the final memorandum.',
+    executionActionLimit:'This training case has reached its action limit. The saved materials and log remain available; prepare the final memorandum.',
+    executionVersion:'This execution version is unavailable for the current session. Refresh the workspace; an existing session keeps its original workflow.',
     responseTitle:'Draft response to the appeal',responseTask:'Prepare a coherent document from the case file. Support material conclusions with exact source passages; add assignments where action or verification is needed.',
     responseSubmit:'Submit draft for review',responseConfirm:'Record the draft',responseConfirmText:'Your text, sources, recipients and deadlines will be saved as your work. New information for follow-through will then become available.',
     responseUse:'Use in the draft',responseAttached:'The source is attached. Explain in your text which conclusion it supports.',responseQuoteNeeded:'Select an exact source passage of up to 4,000 characters. The quotation must match the source.',
@@ -29,6 +35,9 @@ const additions = {
     responseWork:'Prepared document',responseReturn:'Back to the draft',responseAssignmentRecipient:'Assignment recipient',responseAssignmentDone:'Back to the assignment',responseChooseIssuer:'Body reviewing the issue',responseSourceUnavailable:'The legal source cannot currently be verified. Your work is saved; retry the request.',
   },
   zh:{
+    executionContextLimit:'该操作的篇幅超出案件剩余审核容量，尚未登记。请缩短操作草稿。已保存的记录仍可查看，也可准备最终结论。',
+    executionActionLimit:'本教学案件已达到操作次数上限。已保存的材料和日志仍可查看，请准备最终结论。',
+    executionVersion:'当前会话不支持此执行监督版本。请刷新工作区；已开始的会话保留原有流程。',
     responseTitle:'来信答复草稿',responseTask:'根据案件材料拟定完整文书。以准确的原文片段支持重要结论；需要行动或核查时添加任务。',
     responseSubmit:'提交草稿审核',responseConfirm:'保存并提交草稿',responseConfirmText:'您的文书、来源、接收方和期限将作为作业保存。之后会显示用于执行监督的新信息。',
     responseUse:'用于草稿',responseAttached:'来源已附加。请在文书中解释它支持的结论。',responseQuoteNeeded:'请选择不超过4000字符的准确原文。引文必须与来源一致。',

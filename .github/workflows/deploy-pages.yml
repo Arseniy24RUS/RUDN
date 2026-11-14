@@ -266,6 +266,12 @@ jobs:
               'scripts/test-reception-correspondence-dom.mjs',
               'docs/reception-correspondence-catalog-check.md',
               'tests/reception-correspondence-editor.test.mjs',
+              'tests/reception-control-workspace.test.mjs',
+              'scripts/reception-execution-qa.mjs',
+              'scripts/test-reception-execution-dom.mjs',
+              'scripts/test-reception-execution-browser.mjs',
+              'scripts/check-reception-control-workflow.mjs',
+              'docs/RECEPTION_EXECUTION_PATCH.md',
             })
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
@@ -778,8 +784,9 @@ jobs:
           node scripts/build-reception-routing-directory.mjs --check
           node scripts/reception-ai-learning-review.mjs --check
           node scripts/build-reception-correspondence-profiles.mjs --check
+          node scripts/check-reception-control-workflow.mjs --out "${{ runner.temp }}/reception-workspace-qa/execution-coverage.json"
           node scripts/build-reception-reader-translations.mjs --check
-          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs tests/reception-workbook-view.test.mjs tests/reception-game-copy.test.mjs tests/reception-correspondence-editor.test.mjs scripts/check-reception-correspondence-catalog.test.mjs
+          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs tests/reception-workbook-view.test.mjs tests/reception-game-copy.test.mjs tests/reception-correspondence-editor.test.mjs tests/reception-control-workspace.test.mjs scripts/check-reception-correspondence-catalog.test.mjs
       - name: Verify Reception document and calendar workflow
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |
@@ -787,6 +794,7 @@ jobs:
           node scripts/test-reception-workbench-dom.mjs --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js"
           node scripts/test-reception-correspondence-dom.mjs --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js" --out "${{ runner.temp }}/reception-workspace-qa/correspondence-dom"
           node scripts/test-reception-correspondence-dom.mjs --context seminar --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js" --out "${{ runner.temp }}/reception-workspace-qa/correspondence-dom-seminar"
+          node scripts/test-reception-execution-dom.mjs --jsdom "${{ runner.temp }}/reception-dom-tools/node_modules/jsdom/lib/api.js" --out "${{ runner.temp }}/reception-workspace-qa/execution-dom"
       - name: Verify Reception mobile workspace in Chromium and WebKit
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |
@@ -800,6 +808,8 @@ jobs:
           node scripts/test-reception-source-search-browser.mjs --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/source-search-webkit"
           node scripts/test-reception-correspondence-browser.mjs --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/correspondence-chromium"
           node scripts/test-reception-correspondence-browser.mjs --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/correspondence-webkit"
+          node scripts/test-reception-execution-browser.mjs --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/execution-chromium"
+          node scripts/test-reception-execution-browser.mjs --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/execution-webkit"
       - name: Retain Reception mobile workspace evidence
         if: always() && contains(github.event.head_commit.message, '[reception-ai-release]')
         uses: actions/upload-artifact@v4

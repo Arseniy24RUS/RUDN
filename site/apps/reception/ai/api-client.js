@@ -9,7 +9,7 @@ export const newRequestId = () => globalThis.crypto?.randomUUID?.()
   || `rxai-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
 export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: fetcher = globalThis.fetch,
-  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, decisionVersion, context} = {}) {
+  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, decisionVersion, controlVersion, context} = {}) {
   const resolveEndpoint = () => {
     if (!endpoint) throw new ReceptionAPIError('not-configured');
     let url;
@@ -30,6 +30,8 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
       if(workbookVersion&&['start','catalog','recover','resume'].includes(body.op))body={...body,workbookVersion};
       // A resumed session retains its own assessment contract.
       if(decisionVersion==='correspondence-v1'&&['start','catalog','recover'].includes(body.op))body={...body,decisionVersion};
+      // An existing session always retains its frozen execution contract.
+      if(controlVersion==='execution-v1'&&decisionVersion==='correspondence-v1'&&['start','catalog'].includes(body.op))body={...body,controlVersion};
       const url = resolveEndpoint();
       if (lifetime?.aborted || signal?.aborted) throw new ReceptionAPIError('cancelled');
       for (let attempt = 0; attempt < 2; attempt++) {

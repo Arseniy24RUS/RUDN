@@ -4,8 +4,10 @@ import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {
   CASE_OVERRIDES,ISSUE_OVERRIDES,CASE_CONSTRAINTS,INITIAL_RESOLVED_CASES,
-  REOPENED_CASES,COMPLETION_STATES,caseOverride
+  REOPENED_CASES,COMPLETION_STATES,caseOverride,CONTROL_CASE_REVIEW,
+  CONTROL_CONFIRMATIONS,CONTROL_ISSUE_REVIEW,CONTROL_TRANSFER_ONLY_CASES,CONTROL_PHASE_RECIPIENTS
 } from './reception-correspondence-overrides.mjs';
+import {ROUTING_RECIPIENTS} from '../firebase/functions/reception-ai/routing-cases.mjs';
 
 export const PROFILE_SCHEMA_VERSION=1;
 export const PROFILE_VERSION='reception-correspondence-v1';
@@ -17,6 +19,35 @@ const sha256=value=>createHash('sha256').update(value).digest('hex');
 const selected=(options,ids)=>options.filter(item=>ids.includes(item.id));
 const requireValue=(condition,message)=>{if(!condition)throw new Error(message);};
 const sourcePointer=(caseId,path)=>`site/apps/reception/content/cases/${caseId}.json#${path}`;
+
+/** A good action is admissible, not necessarily compulsory in every valid plan. */
+function compileAcceptablePlans(t,expectedActions,forbiddenActions){
+  const allowed=new Set(expectedActions.map(action=>action.id));
+  const routes=new Set(t.correctRoutes);
+  const authored=Array.isArray(t.decisionPlans)&&t.decisionPlans.length?t.decisionPlans:null;
+  const input=authored||[{id:'authored-case-plan',routes:t.correctRoutes,requiredActions:[...allowed],order:t.order||[]}];
+  requireValue(new Set(input.map(plan=>plan.id)).size===input.length,`${t.id}: duplicate decision plan`);
+  const plans=input.map(plan=>{
+    requireValue(typeof plan.id==='string'&&plan.id.length,`${t.id}: decision plan needs an id`);
+    requireValue(Array.isArray(plan.requiredActions)&&plan.requiredActions.length,`${t.id}/${plan.id}: empty decision plan`);
+    const requiredActionIds=unique(plan.requiredActions);
+    requiredActionIds.forEach(id=>requireValue(allowed.has(id),`${t.id}/${plan.id}: unknown or forbidden plan action ${id}`));
+    const routeIds=unique(plan.routes||t.correctRoutes);
+    requireValue(routeIds.length,`${t.id}/${plan.id}: missing permitted route`);
+    routeIds.forEach(id=>requireValue(routes.has(id),`${t.id}/${plan.id}: inadmissible plan route ${id}`));
+    const partialOrder=plan.order||[];
+    partialOrder.forEach(pair=>requireValue(Array.isArray(pair)&&pair.length===2&&pair.every(id=>requiredActionIds.includes(id)),`${t.id}/${plan.id}: order outside the plan`));
+    return {
+      id:plan.id,routeIds,requiredActionIds,
+      forbiddenActionIds:forbiddenActions.map(action=>action.id),partialOrder,
+      acceptEquivalentActions:true,independentActionsMayBeReordered:true,notAClickOrPhraseChecklist:true,
+      source:sourcePointer(t.id,authored?`template.decisionPlans.${plan.id}`:'template.actions')
+    };
+  });
+  const commonActionIds=plans[0].requiredActionIds.filter(id=>plans.every(plan=>plan.requiredActionIds.includes(id)));
+  const commonPartialOrder=plans[0].partialOrder.filter(pair=>plans.every(plan=>plan.partialOrder.some(other=>other[0]===pair[0]&&other[1]===pair[1])));
+  return {plans,commonActionIds,commonPartialOrder};
+}
 
 function buildIssue(t,spec,defaultEvidence){
   const questionIds=spec.questions||t.questions.filter(q=>q.essential).map(q=>q.id);
@@ -73,6 +104,122 @@ function transferPolicy(t,override){
   return 'only_if_supported_by_authored_role_and_routes';
 }
 
+const CONTROL_RESULT_TYPES={
+  risk:'risk-mitigation',identity:'evidence-verification',partial:'substantive-response',
+  new:'new-matter-review',access:'access-restored',delivery:'dispatch-confirmed',
+  redaction:'safe-copy',correction:'document-corrected',payment:'payment',
+  scope:'substantive-review',version:'record-verification',procedure:'procedural-step',
+  chronology:'chronology-review',explanation:'explanation',promise:'performance-confirmed'
+};
+const T=(ru,en,zh)=>({ru,en,zh});
+const russianOriginal=text=>T(text,'Authored teaching material — Russian original:\n\n'+text,'作者编写的教学材料——俄语原文：\n\n'+text);
+const controlBoundary=T(
+  'Материал подтверждает только прямо описанный предмет и результат. Он не устанавливает иные факты, виновность, удовлетворение всех требований или исполнение будущих действий.',
+  'This material establishes only its stated issue and result. It does not establish other facts, liability, satisfaction of every claim or future execution.',
+  '本材料仅证明明确说明的事项及结果，不证明其他事实、责任认定、全部请求均已满足或未来措施已执行。'
+);
+
+/** Compile bounded fictional follow-on evidence without changing original facts. */
+function compileControlWorkflow(t,override,issueSpecs,{sourceHash,primaryFinding,acceptedFollowup}){
+  const row=CONTROL_CASE_REVIEW[t.id],confirmation=CONTROL_CONFIRMATIONS[t.id];
+  requireValue(!!row&&!!confirmation,`${t.id}: missing individually authored control extension`);
+  requireValue(!!CONTROL_RESULT_TYPES[row.episodeType],`${t.id}: unknown control episode type`);
+  requireValue(ROUTING_RECIPIENTS[t.id]?.length,`${t.id}: missing authored routing`);
+  const prefix=`workflow-${t.id}`,eventId=prefix+'-event',materials=[],issues=[];
+  const material=(id,issueIds,title,text,{kind='execution-record',verification='confirmation',original=false,sourceDocumentIds=[],sourcePointer: pointer}={})=>{
+    requireValue(!materials.some(item=>item.id===id),`${t.id}: duplicate control material ${id}`);
+    const value={id,issueIds,title,text,kind,verification,
+      provenance:{kind:original?'original-case':'authored-control-extension',sourceCaseId:t.id,
+        ...(pointer?{sourcePointer:pointer}:{}),...(!original?{authoringVersion:1}:{} )},
+      sourceDocumentIds,factsDoNotEstablish:controlBoundary};
+    materials.push(value);return id;
+  };
+  const extensionTitle=(ru,caseId=t.id)=>T(ru,`Follow-on record — ${caseId}`,`后续记录 — ${caseId}`);
+  function build(spec,{newMatter=false,previousMatter=false}={}){
+    const specific=CONTROL_ISSUE_REVIEW[t.id]?.[spec.id]||{};
+    const phase=CONTROL_PHASE_RECIPIENTS[t.id]?.[spec.id];
+    const knownOriginal=previousMatter&&INITIAL_RESOLVED_CASES.has(t.id);
+    const initialProof=specific.initialProof||(knownOriginal?'documents':null);
+    const scope=previousMatter
+      ? `Самостоятельная фиксация результата прежнего вопроса «${spec.title}» и его границ; последующее новое обстоятельство сюда не входит.`
+      : specific.scope||row.verificationGoal;
+    const goal=previousMatter
+      ? `Сверить первоначальный предмет «${spec.title}» и пределы установленного до нового события.`
+      : specific.goal||row.verificationGoal;
+    const outcome=previousMatter
+      ? `В отдельной записи сохранён результат по первоначальным материалам: ${primaryFinding.join(' ')} Новое событие выделено в самостоятельный предмет. Эта запись не подменяет последующую проверку и не объявляет все будущие требования исполненными.`
+      : specific.confirmation||confirmation;
+    const resultType=previousMatter?'prior-result-scope':phase?.resultType||specific.resultType||CONTROL_RESULT_TYPES[row.episodeType];
+    const transferOnly=!previousMatter&&!newMatter&&CONTROL_TRANSFER_ONLY_CASES.has(t.id);
+    const allowReferral=!previousMatter&&(override.kind==='referral'||t.id==='anonymous-danger');
+    const responseId=prefix+'-'+spec.id+'-result',receiptId=prefix+'-'+spec.id+'-receipt';
+    const initialMaterialIds=[eventId],evidenceMaterialIds=[];
+    material(responseId,[spec.id],extensionTitle(goal),russianOriginal(outcome),{
+      verification:transferOnly?'delivery':'confirmation',kind:transferOnly?'delivery-receipt':'execution-record'
+    });
+    evidenceMaterialIds.push(responseId);
+    if(initialProof){
+      const proofId=prefix+'-'+spec.id+'-original-proof';
+      if(initialProof==='event'){
+        material(proofId,[spec.id],T('Результат из поступившего события','Result stated in the received event','收到事件中已说明的结果'),t.followup.intro,
+          {kind:'author-event',verification:'confirmation',original:true,sourcePointer:sourcePointer(t.id,'template.followup.intro')});
+      }else{
+        const docIds=unique((spec.evidence||[t.factTask.evidence]).flat());
+        const docs=docIds.map(id=>t.documents.find(doc=>doc.id===id));
+        requireValue(docs.every(Boolean),`${t.id}/${spec.id}: missing original control proof`);
+        material(proofId,[spec.id],T('Относимые материалы первоначального дела','Relevant original case documents','原案相关材料'),docs.map(doc=>doc.text).join('\n\n'),
+          {kind:'case-document',verification:'confirmation',original:true,sourceDocumentIds:docIds,sourcePointer:sourcePointer(t.id,'template.documents')});
+      }
+      initialMaterialIds.push(proofId);evidenceMaterialIds.push(proofId);
+    }
+    let referralMaterialId;
+    if(allowReferral){
+      if(transferOnly)referralMaterialId=responseId;
+      else{
+        referralMaterialId=material(receiptId,[spec.id],T('Учебная квитанция получения материалов','Simulated acknowledgement of receipt','模拟材料接收凭据'),
+          russianOriginal(`Компетентный адресат, проверенный для данного предмета, подтвердил получение относимого пакета по вопросу: ${goal} В квитанции речь о получении материалов; ремонт, выплата, виновность и решение по существу ею не подтверждаются.`),
+          {kind:'delivery-receipt',verification:'delivery'});
+      }
+    }
+    return {
+      id:spec.id,title:spec.title,resultType,scope,
+      initialStatus:initialProof?'resolved':'pending',initialMaterialIds,evidenceMaterialIds,
+      deliveryRequired:true,allowReferral,responseMaterialId:responseId,
+      ...(referralMaterialId?{referralMaterialId}:{}),
+      acceptedRecipientSets:structuredClone(phase?.sets||specific.recipients||ROUTING_RECIPIENTS[t.id]),
+      recipientScope:phase?'authored-control-phase':specific.recipients?'subject-specific-authored-routing':'case-level-authored-routing',
+      ...(phase?{recipientBasis:{kind:'authored-control-phase',sourcePointer:sourcePointer(t.id,phase.source.split(',')[0]),sourcePointers:phase.source.split(',').map(pointer=>sourcePointer(t.id,pointer)),reason:phase.reason}}:{}),
+      closureText:previousMatter
+        ? 'Прежний результат сохранён в пределах исходных материалов; новое обстоятельство имеет отдельный предмет и не меняет прошлое задним числом.'
+        : specific.scope||row.completionScope,
+      continuationText:previousMatter
+        ? 'Если первоначальный результат или его доведение не подтверждены, сохранить контроль этой части отдельно от нового предмета.'
+        : `${acceptedFollowup.text} До получения и проверки относимого результата завершение данного предмета не подтверждено.`,
+      professionalResultOnly:true,newIssue:null
+    };
+  }
+  for(const spec of issueSpecs){
+    const hasNew=!!row.newSubjectTitle&&spec===issueSpecs[0];
+    const issue=build(spec,{previousMatter:hasNew});
+    if(hasNew){
+      issue.newIssue=build({id:'new-matter',title:row.newSubjectTitle},{newMatter:true});
+      issue.newIssue.relationship={kind:'new-circumstance',previousIssueId:spec.id,originalEvent:sourcePointer(t.id,'template.followup.intro')};
+    }
+    issues.push(issue);
+  }
+  const allIssues=issues.flatMap(issue=>[issue,...(issue.newIssue?[issue.newIssue]:[])]);
+  material(eventId,allIssues.map(issue=>issue.id),T('Новое событие дела','New case event','案件新事件'),t.followup.intro,{
+    kind:'author-event',original:true,verification:['identity','scope','chronology'].includes(row.episodeType)?'mismatch':'insufficient',
+    sourcePointer:sourcePointer(t.id,'template.followup.intro')
+  });
+  return {
+    version:'execution-v1',provenance:{kind:'authored-control-extension',sourceCaseId:t.id,sourceSHA256:sourceHash,version:1},
+    episodeType:row.episodeType,issues,materials,initialMaterialIds:[eventId],
+    originalEventPreserved:true,noInventedOfficialRequisites:true,
+    authoredExtensionLanguage:'ru',translatedInterfaceFramingOnly:true
+  };
+}
+
 /** Compile the authored bank into a private semantic rubric, never a reply text. */
 export function compileCorrespondenceProfile(payload,{sourceHash}={}){
   const t=payload?.template;
@@ -89,6 +236,7 @@ export function compileCorrespondenceProfile(payload,{sourceHash}={}){
   }));
   const expectedActions=t.actions.filter(a=>a.good).map(a=>({id:a.id,text:a.title,detail:a.detail||'',source:sourcePointer(t.id,`template.actions.${a.id}`)}));
   const forbiddenActions=t.actions.filter(a=>!a.good).map(a=>({id:a.id,text:a.title,detail:a.detail||'',critical:criticalRules.some(r=>r.id===a.id&&r.kind==='selected'),source:sourcePointer(t.id,`template.actions.${a.id}`)}));
+  const planRequirements=compileAcceptablePlans(t,expectedActions,forbiddenActions);
   const primaryFinding=selected(t.factTask.options,t.factTask.correct).map(option=>option.text);
   const issueSpecs=ISSUE_OVERRIDES[t.id]||[{id:'main',title:t.title}];
   const issues=issueSpecs.map(spec=>buildIssue(t,spec,t.factTask.evidence));
@@ -119,12 +267,13 @@ export function compileCorrespondenceProfile(payload,{sourceHash}={}){
       representsDraftOnly:true,officialIssuerNotInvented:true
     },
     issues,primaryFinding,expectedActions,forbiddenActions,
-    acceptablePlans:[{
-      id:'authored-case-plan',requiredActionIds:expectedActions.map(action=>action.id),
-      forbiddenActionIds:forbiddenActions.map(action=>action.id),
-      partialOrder:t.order||[],acceptEquivalentActions:true,
-      independentActionsMayBeReordered:true,notAClickOrPhraseChecklist:true
-    }],
+    acceptablePlans:planRequirements.plans,
+    actionRequirements:{
+      commonActionIds:planRequirements.commonActionIds,
+      acceptablePlanIds:planRequirements.plans.map(plan=>plan.id),
+      selection:'one_coherent_admissible_plan',
+      expectedActionsIsAdmissibleCatalogue:true,doNotUnionAlternativeRequirements:true
+    },
     correctProcedure,correctRoutes,
     routing:{policy:transferPolicy(t,override),accepted:correctRoutes,unacceptable:selected(t.routes,t.routes.map(route=>route.id).filter(id=>!t.correctRoutes.includes(id)))},
     criticalRules,constraints,sources,
@@ -146,8 +295,10 @@ export function compileCorrespondenceProfile(payload,{sourceHash}={}){
       },
       resolution:{
         objective:'Сформулировать исполнимое решение по каждому поставленному вопросу в пределах роли и применимой процедуры.',
-        expectedActionIds:expectedActions.map(action=>action.id),forbiddenActionIds:forbiddenActions.map(action=>action.id),
-        correctProcedure,correctRoutes,partialOrder:t.order||[],
+        expectedActionIds:planRequirements.commonActionIds,forbiddenActionIds:forbiddenActions.map(action=>action.id),
+        acceptablePlanIds:planRequirements.plans.map(plan=>plan.id),
+        alternativeRequirementPolicy:'Достаточен один целостный допустимый план, соответствующий выбранному маршруту. Требования разных альтернатив не суммируются; expectedActionIds содержит только общие обязательные действия.',
+        correctProcedure,correctRoutes,partialOrder:planRequirements.commonPartialOrder,
         roleBoundary:t.role?.text||'',draftIsNotExecutedAction:true
       },
       nextSteps:{
@@ -172,7 +323,8 @@ export function compileCorrespondenceProfile(payload,{sourceHash}={}){
       criticalRules:[],
       authoredFeedback:{success:t.followup.success||'',failure:t.followup.failure||''},
       authoredFeedbackDoesNotProveCompletion:true,
-      simulatedEvent:true
+      simulatedEvent:true,
+      workflow:compileControlWorkflow(t,override,issueSpecs,{sourceHash:sourceHash||sha256(JSON.stringify(payload)),primaryFinding,acceptedFollowup})
     },
     completionStates:COMPLETION_STATES,
     provenance:{
@@ -214,6 +366,17 @@ export async function buildCorrespondenceProfiles({caseDirectory=DEFAULT_CASE_DI
     caseIdsWithoutIndividualReply:Object.values(profiles).filter(profile=>!profile.response.individualReplyRequired).map(profile=>profile.caseId),
     authoredCriticalRuleCount:Object.values(profiles).reduce((sum,profile)=>sum+profile.criticalRules.length,0),
     noAuthoredCriticalRuleCaseIds:Object.values(profiles).filter(profile=>!profile.criticalRules.length).map(profile=>profile.caseId),
+    alternativePlanCaseIds:Object.values(profiles).filter(profile=>profile.acceptablePlans.length>1).map(profile=>profile.caseId),
+    controlWorkflow:{
+      version:'execution-v1',caseCount:ids.length,
+      issueCount:Object.values(profiles).reduce((sum,profile)=>sum+profile.control.workflow.issues.reduce((n,issue)=>n+1+(issue.newIssue?1:0),0),0),
+      newIssueCount:Object.values(profiles).reduce((sum,profile)=>sum+profile.control.workflow.issues.filter(issue=>issue.newIssue).length,0),
+      materialCount:Object.values(profiles).reduce((sum,profile)=>sum+profile.control.workflow.materials.length,0),
+      initialResolvedCount:Object.values(profiles).reduce((sum,profile)=>sum+profile.control.workflow.issues.flatMap(issue=>[issue,...(issue.newIssue?[issue.newIssue]:[])]).filter(issue=>issue.initialStatus==='resolved').length,0),
+      episodeTypeCounts:Object.values(profiles).reduce((acc,profile)=>{const key=profile.control.workflow.episodeType;acc[key]=(acc[key]||0)+1;return acc;},{}),
+      phaseRecipientCaseIds:Object.keys(CONTROL_PHASE_RECIPIENTS).sort(),
+      sourceCaseFactsUnchanged:true,authoredExtensionLanguage:'ru',independentlyLegallyRevalidated:false
+    },
     sourceBankSHA256:sha256(ids.map(id=>`${id}:${profiles[id].provenance.sourceSHA256}`).join('\n')),
     familyCoverage:families,
     documentKindCounts:Object.values(profiles).reduce((acc,profile)=>{acc[profile.documentKind]=(acc[profile.documentKind]||0)+1;return acc;},{}),
@@ -223,7 +386,7 @@ export async function buildCorrespondenceProfiles({caseDirectory=DEFAULT_CASE_DI
   const serialised=JSON.stringify(bank,null,2)+'\n';
   if(check){
     const existing=await readFile(outputFile,'utf8');
-    requireValue(existing===serialised,'Private correspondence profiles are stale; rebuild from authored cases');
+    requireValue(existing.replaceAll('\r\n','\n')===serialised,'Private correspondence profiles are stale; rebuild from authored cases');
   }else if(write){
     await mkdir(dirname(outputFile),{recursive:true});
     await writeFile(outputFile,serialised);

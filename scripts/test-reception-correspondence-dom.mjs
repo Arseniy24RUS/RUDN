@@ -51,7 +51,7 @@ const fetchAPI=async(_url,options)=>{const body=JSON.parse(options.body);calls.p
 };
 const root=document.getElementById('receptionAI'),{mountReceptionAI}=await import('../site/apps/reception/ai/app.js');
 const options={locale:'ru',studentKey:identity.studentKey,fetch:fetchAPI,context:gameplayContext||'course',period:'qa',showLanguageSelector:true};
-const config={endpoint:'/api/reception',demo:true,workbookVersion:2,decisionVersion:'correspondence-v1',...(gameplayContext?{gameplayContext}:{})};
+const config={endpoint:'/api/reception',demo:true,workbookVersion:2,decisionVersion:'correspondence-v1',controlVersion:'legacy',...(gameplayContext?{gameplayContext}:{})};
 const report={suite:'correspondence-functional-dom',context:gameplayContext||null,status:'running',checks:[],errors,limitations:['DOM integration only; no rendered layout, physical device or live model assessment.']};
 const passed=name=>report.checks.push({name,status:'passed'});
 const node=selector=>{const element=root.querySelector(selector);assert.ok(element,`Missing ${selector}; error ${lastError||''}`);return element;};

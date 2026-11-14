@@ -2,6 +2,7 @@ import {createHash} from 'node:crypto';
 import {ReceptionError} from './schema.mjs';
 import {ROUTING_AUTHORITY_IDS,ROUTING_AUTHORITIES} from './routing-directory.mjs';
 import {correspondenceIssueTitle} from './correspondence-profiles.mjs';
+import {controlWorkflowSources,controlReviewContext,publicControlWorkflow} from './control-workflow.mjs';
 
 export const DECISION_VERSION = 'correspondence-v1';
 export const CORRESPONDENCE_RUBRIC_VERSION = 'correspondence-rubric-1';
@@ -80,7 +81,7 @@ function observedFacts(c,state) {
 }
 
 /** Available sources are evidence, never model answers or unopened documents. */
-export function publicCorrespondenceSources(c,state,locale='ru',{includeFollowup=false}={}) {
+export function publicCorrespondenceSources(c,state,locale='ru',{includeFollowup=false,review=false}={}) {
   const opened=new Set(state.openedDocumentIds||[]);
   const documents=c.documents.filter(doc=>opened.has(doc.id)).map(doc=>({
     id:doc.id,kind:'document',title:local(doc.title,locale),text:local(doc.text,locale),
@@ -92,7 +93,8 @@ export function publicCorrespondenceSources(c,state,locale='ru',{includeFollowup
   if(includeFollowup&&c.followup)documents.push({
     id:'followup',kind:'document',title:local({ru:'Новое сообщение по делу',en:'New case information',zh:'案件新信息'},locale),text:local(c.followup.intro,locale),
   });
-  return [...documents,...dialogue];
+  const execution=includeFollowup&&state.controlWorkflow?controlWorkflowSources(state.controlWorkflow,null,locale,{review}):[];
+  return [...documents,...dialogue,...execution];
 }
 
 /** Only syntax and bounds. No character counts, keywords or prose similarity earn points. */
@@ -159,7 +161,7 @@ export async function resolveCorrespondenceCitations(c,state,correspondence,loca
 
 export function validateCorrespondenceControl(value,c,state,profile,locale='ru') {
   keys(value,['text','statuses']);
-  const allowed=new Set((profile?.issues||[]).map(issue=>issue.id));
+  const allowed=new Set((state.controlWorkflow?publicControlWorkflow(state.controlWorkflow,null,locale).issues:profile?.issues||[]).map(issue=>issue.id));
   const sourceIds=new Set(publicCorrespondenceSources(c,state,locale,{includeFollowup:true}).flatMap(source=>[source.id,source.kind+':'+source.id]));
   for(const citation of state.correspondenceEvidence||[])sourceIds.add(citation.id);
   const statuses=array(value.statuses,20).map(row=>{
@@ -201,11 +203,13 @@ function criticalRules(c,state,profile,phase,locale) {
 
 /** The frozen session dossier outranks generic profiles, particularly every date variant. */
 export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null}={}) {
-  const accessible=publicCorrespondenceSources(c,state,locale,{includeFollowup:phase==='control'});
+  const execution=phase==='control'&&state.controlWorkflow?controlReviewContext(state.controlWorkflow,profile,locale):null;
+  const accessible=publicCorrespondenceSources(c,state,locale,{includeFollowup:phase==='control',review:Boolean(execution)});
   const observed=observedFacts(c,state);
   const sources=accessible.map(source=>{
     const document=source.kind==='document'?c.documents.find(document=>document.id===source.id):null;
     return {id:source.kind+':'+source.id,kind:source.kind,title:source.title,text:source.text,available:true,
+      ...(source.provenanceLabel?{provenanceLabel:source.provenanceLabel}:{}),
       ...(document?{factIds:clone(document.factIds||[]),hasImage:Boolean(document.image),imageProvidedToReviewer:false}:{})};
   });
   for(const fact of c.facts)sources.push({id:'fact:'+fact.id,kind:'canonical-fact',title:fact.id,text:local(fact.text,locale),
@@ -219,12 +223,18 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   }
   if(workbook)sources.push({id:'workbook-calendar',kind:'case-calendar',title:'Calendar and assignment shown to the student',
     text:JSON.stringify({events:workbook.events,targets:workbook.targets,counting:workbook.counting}),available:true});
-  sources.push({id:'case-author-explanation',kind:'authored-explanation',text:local(c.rubric.explanation,locale),available:false});
-  if(phase==='control'&&c.followup)sources.push({id:'control-author-explanation',kind:'authored-explanation',text:local(c.followup.explanation,locale),available:false});
+  sources.push({id:'case-author-explanation',kind:'authored-explanation',text:local(c.rubric.explanation,locale),available:false,
+    ...(execution?{scope:'Historical initial decision only. Current execution duties and recipients are defined by execution-rule sources.'}:{})});
+  if(phase==='control'&&c.followup)sources.push({id:'control-author-explanation',kind:'authored-explanation',text:local(c.followup.explanation,locale),available:false,
+    ...(execution?{scope:'Initial follow-up event only. Later released execution materials may establish a subsequent, narrower result. Use the frozen execution state for the current disposition.'}:{})});
   const rules=criticalRules(c,state,profile,phase,locale);
   for(const rule of rules)sources.push({id:'critical-rule:'+rule.id,kind:'critical-rule',text:rule.text,available:false});
+  if(execution)for(const issue of execution.issues)sources.push({id:'execution-rule:'+issue.id,kind:'authored-execution-rule',available:false,
+    title:issue.title,text:JSON.stringify({scope:issue.scope,closureScope:issue.closureScope,continuation:issue.continuation,
+      allowedStatuses:issue.allowedStatuses,acceptedRecipientSets:issue.acceptedRecipientSets,recipientNames:issue.recipientNames,recipientBasis:issue.recipientBasis})});
   const display=REVIEW_LABELS[locale]||REVIEW_LABELS.ru;
-  const issues=(profile?.issues||[]).map(issue=>({...issue,title:correspondenceIssueTitle(issue,c,locale)}));
+  const issues=execution?publicControlWorkflow(state.controlWorkflow,profile,locale).issues:
+    (profile?.issues||[]).map(issue=>({...issue,title:correspondenceIssueTitle(issue,c,locale)}));
   const sections=phase==='control'?{control:control.text}:clone(decision.correspondence.sections);
   if(phase==='initial'){
     sections.subject=decision.correspondence.subject;
@@ -240,6 +250,8 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   }else{
     const title=id=>issues.find(issue=>issue.id===id)?.title||display.issue;
     sections.statuses=control.statuses.map(row=>title(row.issueId)+': '+display.statuses[STATUS_INDEX.indexOf(row.status)]).join('\n');
+    if(execution)sections.execution=publicControlWorkflow(state.controlWorkflow,profile,locale).journal
+      .map(row=>['['+row.id+'] '+row.label,row.reason,row.instruction,row.expectedResult].filter(Boolean).join('\n')).join('\n\n');
   }
   const rubric=phase==='initial'?CORRESPONDENCE_WEIGHTS.initial:CORRESPONDENCE_WEIGHTS.control;
   const ids=phase==='initial'?CORRESPONDENCE_SECTIONS:['verification','status','nextAction'];
@@ -268,13 +280,17 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
       correspondenceOrigin:clone(workbook?.origin||null),site:clone(workbook?.site||null),
       facts:c.facts.map(fact=>({id:fact.id,text:local(fact.text,locale),uncertain:fact.knowledge==='uncertain',
         knowledge:fact.knowledge||null,documentIds:clone(fact.documentIds||[])})),
-      explanation:local(c.rubric.explanation,locale)},
-    profile:profile?clone({issues:profile.issues,acceptedKinds:profile.acceptedKinds,acceptablePlans:profile.acceptablePlans,
+      explanation:local(c.rubric.explanation,locale),...(execution?{explanationScope:'Historical initial decision, not the current execution stage.'}:{})},
+    profile:profile?(execution?{issues:issues.map(({id,title,scope,resultType})=>({id,title,scope,resultType})),
+      control:{version:'execution-v1',assessmentSource:'execution',instruction:'Use current scoped execution rules and recipients; the initial decision has already been assessed.'}}:clone({issues:profile.issues,acceptedKinds:profile.acceptedKinds,acceptablePlans:profile.acceptablePlans,
       constraints:profile.constraints,routing:profile.routing,response:profile.response,criteria:profileCriteria,
-      control:phase==='control'?profile.control:undefined}):null,
-    acceptablePlans:(c.rubric.authored?.decisionPlans?.length?c.rubric.authored.decisionPlans:[{id:'default',requiredActions:c.rubric.requiredActionIds}])
-      .map(plan=>({id:plan.id,actions:(plan.requiredActions||[]).map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)}))})),
-    forbiddenActions:c.rubric.forbiddenActionIds.map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)})),
+      control:phase==='control'?Object.fromEntries(Object.entries(profile.control||{}).filter(([key])=>key!=='workflow')):undefined})):null,
+    acceptablePlans:(execution?[]:profile?.acceptablePlans?.length?profile.acceptablePlans:
+      c.rubric.authored?.decisionPlans?.length?c.rubric.authored.decisionPlans:[{id:'default',requiredActions:c.rubric.requiredActionIds}])
+      .map(plan=>({id:plan.id,routeIds:clone(plan.routeIds||[]),partialOrder:clone(plan.partialOrder||[]),
+        actions:(plan.requiredActionIds||plan.requiredActions||[]).map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)}))})),
+    planPolicy:'Each acceptable plan is a separate lawful alternative. Common requirements apply to every plan; branch-specific requirements apply only within the selected lawful branch. Never require the union of mutually alternative plans.',
+    forbiddenActions:execution?[]:c.rubric.forbiddenActionIds.map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)})),
     criticalRules:rules,operational,
     submission:phase==='initial'?clone(decision.correspondence):{
       text:control.text,statuses:control.statuses.map(row=>({...row,
@@ -284,10 +300,11 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
           resolvedCitations.find(source=>source.id===id)?.title).filter(Boolean),
       })),
     },
-    initialSubmission:phase==='control'?clone(state.decision?.correspondence):null,
+    initialSubmission:phase==='control'?clone(execution?Object.fromEntries(Object.entries(state.decision?.correspondence||{}).filter(([key])=>key!=='citations')):state.decision?.correspondence):null,
     initialScore:phase==='control'?state.correspondenceInitialFeedback?.score:null,
     newInformation:phase==='control'?local(c.followup?.intro,locale):null,
-    sections,sources,resolvedCitations:clone(resolvedCitations),
+    ...(execution?{execution}:{}),
+    sections,sources,resolvedCitations:clone(execution?resolvedCitations.map(({text,...citation})=>citation):resolvedCitations),
     criteria,
   };
   if(Buffer.byteLength(JSON.stringify(context),'utf8')>240000)reject('context_limit',413);

@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import {buildParticipantContext} from './participant-context.mjs';
 import {validateAuthoredContract,validateAuthoredDecision,evaluateAuthoredDecision,parseDateOnly} from './authored.mjs';
 import {DECISION_VERSION,validateCorrespondence} from './correspondence.mjs';
 
@@ -190,5 +191,5 @@ export function actorCase(c, language) {
     ? c.documents.filter(document => document.id !== 'dates' || !document.initial || document.factIds.length > 0)
     : c.documents;
   return localized({id: c.id, citizen: c.public.citizen, opening: c.public.opening,
-    actor: c.actor, facts: c.facts, documents}, language);
+    actor: c.actor, participantContext: buildParticipantContext(c, language), facts: c.facts, documents}, language);
 }

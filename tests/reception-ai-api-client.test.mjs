@@ -5,6 +5,21 @@ import {createReceptionAPI} from '../site/apps/reception/ai/api-client.js';
 const view={id:'test-session',revision:1,status:'active',messages:[]};
 const accepted=()=>new Response(JSON.stringify({ok:true,view}),{status:200,headers:{'Content-Type':'application/json'}});
 
+test('execution is negotiated only for new sessions; recovery and commands preserve the server contract',async()=>{
+  const calls=[];
+  const client=createReceptionAPI({endpoint:'/api/reception',baseURL:'http://127.0.0.1:8787/',demo:true,
+    decisionVersion:'correspondence-v1',controlVersion:'execution-v1',fetch:async(_url,options)=>{
+      const body=JSON.parse(options.body);calls.push(body);
+      return body.op==='catalog'?new Response(JSON.stringify({ok:true,cases:[]}),{status:200}):accepted();
+    }});
+  for(const op of ['catalog','start','resume','recover','control-action','followup'])await client.request({op,requestId:'same'});
+  assert.deepEqual(calls.map(row=>row.controlVersion),['execution-v1','execution-v1',undefined,undefined,undefined,undefined]);
+  assert.ok(calls.every(row=>row.requestId==='same'));
+  const legacy=createReceptionAPI({endpoint:'/api/reception',baseURL:'http://127.0.0.1:8787/',demo:true,
+    decisionVersion:'legacy',controlVersion:'execution-v1',fetch:async(_url,options)=>{calls.push(JSON.parse(options.body));return accepted();}});
+  await legacy.request({op:'start'});assert.equal(calls.at(-1).controlVersion,undefined);
+});
+
 test('the Firebase client scopes start and recovery to this release without changing chat requests',async()=>{
   const calls=[],buildId='a'.repeat(32);
   const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',buildId,getIdToken:async()=> 'token',

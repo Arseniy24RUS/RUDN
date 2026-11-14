@@ -9,21 +9,24 @@ import {WORKBOOK_VERSION,LEGACY_WORKBOOK_VERSION,supportsWorkbook,publicWorkbook
 import {DECISION_VERSION,CORRESPONDENCE_WEIGHTS,publicCorrespondenceSources,resolveCorrespondenceCitations,validateCorrespondenceControl,
   buildCorrespondenceReview,scoreCorrespondenceReview,combineCorrespondenceFeedback} from './correspondence.mjs';
 import {privateCorrespondenceProfile,publicCorrespondenceProfile} from './correspondence-profiles.mjs';
+import {createControlWorkflow,applyControlAction,normalizeControlWorkflow,publicControlWorkflow,validateControlSubmission} from './control-workflow.mjs';
 import {resolveLegalCitation as defaultLegalCitationResolver} from './correspondence-legal-sources.mjs';
 import {calendarNormId} from './workbook-norms.mjs';
 import {normativeActsForCase,validateLegalCitation,hasApplicableLegalCitation} from './normative-acts.mjs';
 
-const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxOutputTokens: 650,
+const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxReviewInputAllowance:320000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
   maxConcurrent: 8, maxDailyTurnsPerStudent: 240, maxDailyStartsPerStudent: 20, leaseMs: 45000, providerTimeoutMs: 30000,
   reviewLeaseMs:105000,reviewTimeoutMs:90000,
   guestDailyBudgetMicros:750_000,guestMonthlyBudgetMicros:5_000_000,guestMaxConcurrent:2,
   guestMaxDailyStartsPerUid:3,guestMaxDailyStarts:12};
 const allowed = {
-  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','context'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
+  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
   recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','context'],
   message: ['op', 'sessionId', 'text', 'requestId', 'expectedRevision'], document: ['op', 'sessionId', 'documentId', 'requestId'],
-  decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'], next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion','context']
+  decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'],
+  'control-action':['op','sessionId','requestId','expectedRevision','action'],
+  next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion','controlVersion','context']
 };
 const dayOf = n => new Date(n).toISOString().slice(0, 10), monthOf = n => dayOf(n).slice(0, 7);
 const scopeOf = identity => identity.teacher ? `teacher:${identity.uid}`
@@ -51,6 +54,7 @@ const normalizeSession = s => {
   s.requests ||= {}; s.results = values(s.results); s.caseStates = values(s.caseStates); s.caseData = values(s.caseData);
   for (const state of s.caseStates) {
     for (const key of ['messages', 'knownFactIds', 'releasedDocumentIds', 'openedDocumentIds']) state[key] = values(state[key]);
+    if(state.controlWorkflow)state.controlWorkflow=normalizeControlWorkflow(state.controlWorkflow);
     if(state.decision){for(const key of ['actionIds','basisDocumentIds'])state.decision[key]=values(state.decision[key]);if(state.decision.workbook){state.decision.workbook.routing??={};state.decision.workbook.routing.recipientIds=values(state.decision.workbook.routing.recipientIds);}}
   }
   return s;
@@ -143,12 +147,18 @@ export function createReceptionService({store, cases, provider, clock = Date.now
            ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:publicWorkbook(s.caseData[i],s.workbookVersion,{gameplay:Boolean(s.context)})}:{})},s.locale),
            correspondenceProfile:correspondenceProfiles.public(s.caseData[i],s.locale),
            correspondenceSources:publicCorrespondenceSources(s.caseData[i],s.caseStates[i],s.locale,{includeFollowup:true})}:{}),
-         ...(s.caseStates[i].control?{control:s.caseStates[i].control}:{})}))} : null;
+         ...(s.caseStates[i].control?{control:s.caseStates[i].control}:{}),
+         ...(s.caseStates[i].controlWorkflow?{controlWorkflow:publicControlWorkflow(s.caseStates[i].controlWorkflow,null,s.locale)}:{})}))} : null;
     return {id: s.id, revision: s.revision, mode: s.mode, locale: s.locale, caseIndex: s.caseIndex, caseCount: s.caseData.length,
       startedAt: s.startedAt, updatedAt: s.updatedAt, ...(s.buildId ? {buildId:s.buildId} : {}), ...(s.context ? {context:s.context} : {}),
       ...(s.context==='seminar'?{seminarProgress:s.seminarProgress,seminarPassScore:SEMINAR_PASS_SCORE}:{}),
       ...(correspondence?{decisionVersion:DECISION_VERSION,correspondenceSources:publicCorrespondenceSources(c,state,s.locale,{includeFollowup:s.status!=='active'}),
         draftDecision:state.correspondenceDraft||null,draftControl:state.controlDraft||null,reviewPending:state.reviewPending||null,control:state.control||null}:{}),
+      ...(s.controlVersion==='execution-v1'?{controlVersion:s.controlVersion,
+        controlWorkflow:state.controlWorkflow?publicControlWorkflow(state.controlWorkflow,null,s.locale):null,
+        controlActionReceipt:state.controlActionReceipt||null,
+        controlValidation:state.controlValidation?localized({valid:false,requestId:state.controlValidation.requestId,
+          findings:values(state.controlValidation.findings)},s.locale):null}:{}),
       operationInProgress: Boolean(s.lease && s.lease.until > clock()),
       status: s.status, case: {id: c.id, ...publicMetadata(c), ...p, ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale)}:{})}, messages: state.messages,
       documents: c.documents.filter(d => state.releasedDocumentIds.includes(d.id)).map(d => localized({id: d.id, title: d.title, type: d.type, text: d.text, chatAttachment:!s.context&&!d.initial,
@@ -170,6 +180,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   function sessionEntry(session) {
     return {id: session.id, mode: session.mode, status: session.status, revision: session.revision,
       ...(session.decisionVersion?{decisionVersion:session.decisionVersion}:{}),
+      ...(session.controlVersion?{controlVersion:session.controlVersion}:{}),
       startedAt: session.startedAt, updatedAt: session.updatedAt, ...(session.workbookVersion?{workbookVersion:session.workbookVersion}:{}),
       ...(session.buildId ? {buildId:session.buildId} : {}), ...(session.context ? {context:session.context} : {})};
   }
@@ -318,7 +329,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const timestamp = clock(), day = dayOf(timestamp), ownerKey = hash(owner);
     if (mode === 'independent' && !identity.teacher && canStartAssessment && !await canStartAssessment(timestamp)) fail('assessment_closed', 403);
     const all = (await catalogue()).filter(c=>(!body.workbookVersion||supportsWorkbook(c,body.workbookVersion))
-      &&(!body.decisionVersion||Boolean(correspondenceProfiles.private(c))));
+      &&(!body.decisionVersion||Boolean(correspondenceProfiles.private(c)))
+      &&(!body.controlVersion||correspondenceProfiles.private(c)?.control?.workflow?.version===body.controlVersion));
     if (mode === 'independent' && context !== 'seminar' && new Set(all.map(c=>c.familyId||c.id)).size < 8) fail('pilot_incomplete', 503);
     if (Object.hasOwn(body, 'caseId')) {
       identifier(body.caseId);
@@ -344,6 +356,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const session = {schema: 1, id, owner, studentKey: identity.studentKey || null, uid: identity.uid, teacher: Boolean(identity.teacher),
       ...(identity.guest ? {guest:true} : {}),
       ...(body.decisionVersion?{decisionVersion:body.decisionVersion}:{}),
+      ...(body.controlVersion?{controlVersion:body.controlVersion}:{}),
       mode, locale: language, ...(body.workbookVersion?{workbookVersion:body.workbookVersion}:{}), ...(body.buildId ? {buildId:body.buildId} : {}), startedAt: timestamp, updatedAt: timestamp, revision: 1, status: 'active', caseIndex: 0,
       ...(context ? {context} : {}), ...(seminar ? {seminarProgress:seminar.progress} : {}),
       caseData: selected, caseStates: selected.map(c => initialState(c, language, timestamp,context)), results: [], requests: {},
@@ -548,6 +561,31 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return base;
   }
 
+  function assertExecutionReviewCapacity(session,c,state,profile,workflow) {
+    // Check BEFORE recording the action. Even a maximum-size final memorandum
+    // must remain assessable after all accepted actions. JSON escaping can cost
+    // six bytes per input code unit, and the review contains the final text twice.
+    // The stored journal and full public documents are never silently truncated.
+    try{
+      for(const language of ['ru','en','zh']){
+        const projected=publicControlWorkflow(workflow,null,language);
+        const statuses=projected.issues.map(issue=>({issueId:issue.id,status:'pending',
+          evidenceSourceIds:projected.materials.filter(material=>material.issueIds.includes(issue.id))
+            .sort((a,b)=>Buffer.byteLength(JSON.stringify({id:b.id,title:b.title}))-Buffer.byteLength(JSON.stringify({id:a.id,title:a.title})))
+            .slice(0,20).map(material=>material.id)}));
+        const context=buildCorrespondenceReview(c,{...state,controlWorkflow:workflow},state.decision,language,{
+          profile,phase:'control',control:{text:'\u0001'.repeat(6000),statuses},resolvedCitations:state.correspondenceEvidence||[],
+          workbook:[LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(session.workbookVersion)?localized(publicWorkbook(c,session.workbookVersion,{gameplay:Boolean(session.context)}),language):null,
+        });
+        // Reserve a margin for different status labels and small review metadata.
+        if(Buffer.byteLength(JSON.stringify(context),'utf8')+4096>240000||estimateReviewReservation({context}).perCallInputTokens+4096>limits.maxReviewInputAllowance)fail('control_context_limit',413);
+      }
+    }catch(error){
+      if(error instanceof ReceptionError&&['context_limit','control_context_limit'].includes(error.code))fail('control_context_limit',413);
+      throw error;
+    }
+  }
+
   async function reviewCorrespondence(body,identity) {
     const requestId=identifier(body.requestId),requestDigest=hash(body),timestamp=clock(),leaseId=randomUUID();
     const phase=body.op==='followup'?'control':'initial';
@@ -579,6 +617,18 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         }else{
           if(body.choiceId!==undefined||!state.decision||state.control)fail('invalid_control');
           state.controlDraft=validateCorrespondenceControl(body.control,c,state,profile,s.locale);
+          if(s.controlVersion==='execution-v1'){
+            if(!state.controlWorkflow)fail('invalid_control',409);
+            const validation=validateControlSubmission(state.controlWorkflow,profile,state.controlDraft);
+            state.controlValidation=validation.valid?null:{...validation,requestId};
+            if(!validation.valid){
+              // An inconsistent closure is returned for correction. It is neither
+              // an assessed zero nor a paid model request, and the draft survives.
+              state.reviewPending=null;
+              s.requests[requestId]={digest:requestDigest,status:'done',phase,outcome:'returned-for-correction'};
+              s.revision++;s.updatedAt=timestamp;return s;
+            }
+          }
         }
         state.reviewPending={requestId,phase,status:'pending'};
         s.lease={id:leaseId,requestId,until:timestamp+limits.reviewLeaseMs};
@@ -599,12 +649,17 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const evidence=phase==='initial'?await resolveCorrespondenceCitations(c,state,decision.correspondence,s.locale,{resolveLegalCitation,signal:controller.signal}):
         copy(state.correspondenceEvidence||[]);
       const operational=phase==='initial'?correspondenceOperational(c,decision,s.workbookVersion,s.context):null;
+      let preparedControl;
+      if(phase==='initial'&&s.controlVersion==='execution-v1'&&c.followup){
+        preparedControl=createControlWorkflow({caseData:c,profile,decision,initialFeedback:operational,locale:s.locale,timestamp});
+        assertExecutionReviewCapacity(s,c,{...state,decision,correspondenceEvidence:evidence,correspondenceInitialFeedback:operational},profile,preparedControl);
+      }
       const context=buildCorrespondenceReview(c,state,decision,s.locale,{
         profile,resolvedCitations:evidence,phase,control:phase==='control'?state.controlDraft:null,operational,
         workbook:[LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale):null,
       });
       const estimate=estimateReviewReservation({context});
-      if(estimate.perCallInputTokens>limits.maxInputAllowance)fail('context_limit',413);
+      if(estimate.perCallInputTokens>(s.controlVersion==='execution-v1'?limits.maxReviewInputAllowance:limits.maxInputAllowance))fail('context_limit',413);
       // Every failed attempt has a separately charged receipt. A successful request
       // is returned from the session ledger without invoking the reviewer again.
       reservation=await reserve(s,requestId,estimate.micros,attempt);
@@ -624,10 +679,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         if(phase==='initial'){
           st.decision=copy(decision);st.correspondenceEvidence=copy(evidence);
           st.correspondenceInitialFeedback=copy(feedback);st.correspondenceDraft=null;
-          if(c.followup){st.feedback=null;current.status='followup';}
+          if(c.followup){
+            if(current.controlVersion==='execution-v1')st.controlWorkflow=copy(preparedControl);
+            st.feedback=null;current.status='followup';
+          }
           else{st.feedback=feedback;current.results.push(feedback);current.status='review';}
         }else{
           st.control=copy(state.controlDraft);st.controlDraft=null;
+          st.controlValidation=null;
           st.correspondenceControlFeedback=copy(feedback);
           st.feedback=combineCorrespondenceFeedback(st.correspondenceInitialFeedback,feedback);
           current.results.push(st.feedback);current.status='review';
@@ -657,16 +716,18 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (body.context!==undefined && !['seminar','free'].includes(body.context)) fail('invalid_context');
     if(body.workbookVersion!==undefined&&![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(body.workbookVersion))fail('invalid_workbook');
     if(body.decisionVersion!==undefined&&body.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
+    if(body.controlVersion!==undefined&&(body.controlVersion!=='execution-v1'||body.decisionVersion!==DECISION_VERSION))fail('invalid_control_version');
     if (body.buildId !== undefined && (typeof body.buildId !== 'string' || !/^[a-f0-9]{32}$/.test(body.buildId))) fail('invalid_build');
     if (identity.guest) {
       if (Object.hasOwn(body, 'studentKey')) fail('forbidden', 403);
       if (['catalog', 'start', 'recover'].includes(body.op) && body.context !== 'free') fail('forbidden', 403);
       if (['start', 'recover'].includes(body.op) && body.mode !== 'training') fail('forbidden', 403);
       if (body.op === 'start' && (body.workbookVersion !== WORKBOOK_VERSION || body.decisionVersion !== DECISION_VERSION)) fail('invalid_workbook');
-      if (!guestEnabled && ['start', 'message', 'decide', 'followup'].includes(body.op)) fail('guest_unavailable', 503);
+      if (!guestEnabled && ['start', 'message', 'decide', 'followup','control-action'].includes(body.op)) fail('guest_unavailable', 503);
     }
     if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).filter(c=>(!body.workbookVersion||supportsWorkbook(c,body.workbookVersion))&&
-      (!body.decisionVersion||Boolean(correspondenceProfiles.private(c)))).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
+      (!body.decisionVersion||Boolean(correspondenceProfiles.private(c)))&&
+      (!body.controlVersion||correspondenceProfiles.private(c)?.control?.workflow?.version===body.controlVersion)).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
     if (body.op === 'start') return start(body, identity);
     if (body.op === 'resume') {
       const session=await get(body.sessionId, identity);
@@ -678,6 +739,23 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }
     if (body.op === 'recover') return recover(body, identity);
     if (body.op === 'message') return message(body, identity);
+    if(body.op==='control-action'){
+      const updated=await mutate(body,identity,(s,timestamp)=>{
+        if(s.controlVersion!=='execution-v1'||s.decisionVersion!==DECISION_VERSION)fail('invalid_control_version');
+        if(s.status!=='followup')fail('not_active',409);
+        if(!Number.isSafeInteger(body.expectedRevision)||body.expectedRevision!==s.revision)fail('revision_conflict',409);
+        const c=s.caseData[s.caseIndex],state=s.caseStates[s.caseIndex];
+        if(!state.controlWorkflow||state.control)fail('invalid_control',409);
+        const workflow=applyControlAction(state.controlWorkflow,null,body.action,{
+          caseData:c,locale:s.locale,timestamp,requestId:body.requestId,expectedRevision:state.controlWorkflow.revision,
+        });
+        assertExecutionReviewCapacity(s,c,state,correspondenceProfiles.private(c),workflow);
+        state.controlWorkflow=workflow;
+        state.controlActionReceipt={requestId:body.requestId,workflowRevision:state.controlWorkflow.revision};
+        state.controlValidation=null;
+      });
+      return response(updated);
+    }
     if(['decide','followup'].includes(body.op)){
       const session=await get(body.sessionId,identity);
       if(session.decisionVersion===DECISION_VERSION)return reviewCorrespondence(body,identity);

@@ -8,10 +8,12 @@ import {
   getCorrespondenceProfile,publicCorrespondenceProfile,correspondenceProfileMeta
 } from './correspondence-profiles.mjs';
 import {buildCorrespondenceProfiles,compileCorrespondenceProfile} from '../../../scripts/build-reception-correspondence-profiles.mjs';
-import {CASE_OVERRIDES,ISSUE_OVERRIDES} from '../../../scripts/reception-correspondence-overrides.mjs';
+import {CASE_OVERRIDES,ISSUE_OVERRIDES,CONTROL_CASE_REVIEW,CONTROL_CONFIRMATIONS,CONTROL_PHASE_RECIPIENTS} from '../../../scripts/reception-correspondence-overrides.mjs';
 import {instantiateCase} from '../../../site/apps/reception/js/cases.js';
 import {LEARNING_REVIEW_DATA} from './learning-review-data.mjs';
 import {buildCorrespondenceReview} from './correspondence.mjs';
+import {createControlWorkflow,publicControlWorkflow,applyControlAction,validateControlSubmission} from './control-workflow.mjs';
+import {ROUTING_RECIPIENTS} from './routing-cases.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../../..');
 const directory=resolve(root,'site/apps/reception/content/cases');
@@ -34,7 +36,7 @@ function frozenContext(id,packId){
       assessment:{calendar:{events:t.calendar.events}}},
     facts:t.questions.map(q=>({id:q.id,text:T(q.answer),knowledge:'direct'})),
     documents:t.documents.map(doc=>({id:doc.id,title:T(doc.title),text:T(doc.text)})),
-    rubric:{deadline:'2026-12-31',forbiddenActionIds:t.actions.filter(action=>!action.good).map(action=>action.id),requiredActionIds:t.actions.filter(action=>action.good).map(action=>action.id),criticalActionIds:(t.criticalRules||[]).filter(rule=>rule.kind==='selected').map(rule=>rule.id),explanation:T(t.factTask.explain),authored:{criticalRules:t.criticalRules||[],calendar:{anchor:t.calendar.anchor,rule:t.calendar.correctRule,start:t.calendar.startPolicy,acceptedShifts:t.calendar.acceptedLastDayPolicies}}},
+    rubric:{deadline:'2026-12-31',forbiddenActionIds:t.actions.filter(action=>!action.good).map(action=>action.id),requiredActionIds:t.actions.filter(action=>action.good).map(action=>action.id),criticalActionIds:(t.criticalRules||[]).filter(rule=>rule.kind==='selected').map(rule=>rule.id),explanation:T(t.factTask.explain),authored:{criticalRules:t.criticalRules||[],decisionPlans:structuredClone(t.decisionPlans||[]),calendar:{anchor:t.calendar.anchor,rule:t.calendar.correctRule,start:t.calendar.startPolicy,acceptedShifts:t.calendar.acceptedLastDayPolicies}}},
     followup:{intro:T(t.followup.intro),correct:t.followup.correct,options:t.followup.options.map(option=>({id:option.id,label:T(option.text)})),explanation:T(t.followup.explain)}
   };
 }
@@ -89,6 +91,38 @@ test('every evidence, fact, action and legal fragment resolves to the authored s
   }
 });
 
+test('repeat-no-new preserves either lawful authored plan without imposing both on the review',()=>{
+  const t=cases.get('repeat-no-new').payload.template,profile=getCorrespondenceProfile('repeat-no-new');
+  assert.equal(profile.acceptablePlans.length,2);
+  assert.deepEqual(profile.acceptablePlans.map(plan=>({id:plan.id,routes:plan.routeIds,requiredActions:plan.requiredActionIds,order:plan.partialOrder})),t.decisionPlans);
+  assert.deepEqual(profile.criteria.resolution.expectedActionIds,['register','compare','rights','track']);
+  assert.deepEqual(profile.criteria.resolution.partialOrder,[]);
+  assert.equal(profile.actionRequirements.doNotUnionAlternativeRequirements,true);
+  const answer=profile.acceptablePlans.find(plan=>plan.id==='ordinary-answer');
+  assert.equal(answer.requiredActionIds.includes('submit'),false);
+  assert.equal(answer.requiredActionIds.includes('notice-draft'),false);
+  const termination=profile.acceptablePlans.find(plan=>plan.id==='termination-review');
+  assert.equal(termination.requiredActionIds.includes('answer'),false);
+  for(const pack of t.datePacks){
+    const c=frozenContext(t.id,pack.id),frozen=getCorrespondenceProfile(c);
+    const decision={correspondence:{version:1,kind:'reply',subject:'',sections:{facts:'',legalBasis:'',resolution:'',nextSteps:''},citations:[],orders:[]}};
+    const state={knownFactIds:c.facts.map(fact=>fact.id),openedDocumentIds:c.documents.map(doc=>doc.id),messages:[],decision};
+    const review=buildCorrespondenceReview(c,state,decision,'ru',{profile:frozen,phase:'initial'});
+    assert.deepEqual(review.acceptablePlans.map(plan=>({id:plan.id,actions:plan.actions.map(action=>action.id)})),
+      review.profile.acceptablePlans.map(plan=>({id:plan.id,actions:plan.requiredActionIds})));
+    assert.deepEqual(review.profile.criteria.resolution.expectedActionIds,['register','compare','rights','track']);
+  }
+});
+
+test('authored alternatives cannot require a forbidden action or an inadmissible route',()=>{
+  const payload=structuredClone(cases.get('repeat-no-new').payload);
+  payload.template.decisionPlans[0].requiredActions.push('auto-stop');
+  assert.throws(()=>compileCorrespondenceProfile(payload),/unknown or forbidden plan action auto-stop/);
+  const wrongRoute=structuredClone(cases.get('repeat-no-new').payload);
+  wrongRoute.template.decisionPlans[0].routes=['blacklist-route'];
+  assert.throws(()=>compileCorrespondenceProfile(wrongRoute),/inadmissible plan route blacklist-route/);
+});
+
 test('all 356 variants project the authored rubric and independent control status into 712 review contexts',()=>{
   let contexts=0;
   for(const [id,{payload}] of cases)for(const pack of payload.template.datePacks){
@@ -115,6 +149,7 @@ test('all 356 variants project the authored rubric and independent control statu
           if(rule.knownQuestion)assert.equal(projected.knownQuestion,rule.knownQuestion,id+' lost condition');
         }
       }else{
+        assert.equal(review.profile.control.workflow,undefined,id+' legacy review must not see future execution materials');
         assert.deepEqual(review.profile.control.expectedStatuses,profile.control.expectedStatuses,id+' control status');
         assert.deepEqual(review.profile.control.expectedOutcomes,profile.control.expectedOutcomes,id+' control outcome');
         assert.equal(review.newInformation,c.followup.intro.ru,id+' frozen control event');
@@ -124,6 +159,149 @@ test('all 356 variants project the authored rubric and independent control statu
     }
   }
   assert.equal(contexts,712);
+});
+
+test('every control extension has an explicit case scope, supported recipients and honest provenance',()=>{
+  const caseIds=catalog.map(row=>row.id).sort();
+  assert.deepEqual(Object.keys(CONTROL_CASE_REVIEW).sort(),caseIds);
+  assert.deepEqual(Object.keys(CONTROL_CONFIRMATIONS).sort(),caseIds);
+  let subjects=0,newSubjects=0,materials=0,initialResolved=0;
+  for(const [id,{hash,payload}] of cases){
+    const profile=getCorrespondenceProfile(id),w=profile.control.workflow;
+    assert.equal(w.version,'execution-v1');
+    assert.equal(w.provenance.sourceSHA256,hash,id);
+    assert.equal(w.provenance.kind,'authored-control-extension');
+    assert.equal(w.originalEventPreserved,true);
+    assert.equal(w.authoredExtensionLanguage,'ru');
+    const definitions=w.issues.flatMap(issue=>[issue,...(issue.newIssue?[issue.newIssue]:[])]);
+    const ids=new Set(w.materials.map(material=>material.id));
+    assert.equal(ids.size,w.materials.length,id+' duplicate material');
+    assert.equal(new Set(definitions.map(issue=>issue.id)).size,definitions.length,id+' duplicate issue');
+    const authoredRecipients=new Set(ROUTING_RECIPIENTS[id].flat());
+    for(const issue of definitions){
+      assert.ok(issue.scope.trim()&&issue.closureText.trim()&&issue.continuationText.trim(),id+'/'+issue.id);
+      assert.ok(ids.has(issue.responseMaterialId),id+'/'+issue.id+' response');
+      for(const set of issue.acceptedRecipientSets)for(const recipient of set){
+        const phase=CONTROL_PHASE_RECIPIENTS[id]?.[issue.id];
+        assert.ok(authoredRecipients.has(recipient)||phase?.sets.flat().includes(recipient),id+'/'+recipient+' unexplained phase role');
+        if(phase){assert.equal(issue.recipientBasis.kind,'authored-control-phase');assert.ok(issue.recipientBasis.sourcePointer.includes(id+'.json#template.'));}
+      }
+      for(const materialId of issue.evidenceMaterialIds){
+        const material=w.materials.find(item=>item.id===materialId);
+        assert.ok(material?.issueIds.includes(issue.id),id+'/'+issue.id+' unrelated confirmation');
+      }
+      if(issue.initialStatus==='resolved'){
+        initialResolved++;
+        assert.ok(issue.initialMaterialIds.some(materialId=>issue.evidenceMaterialIds.includes(materialId)&&w.materials.find(item=>item.id===materialId)?.provenance.kind==='original-case'),id+' unsupported original completion');
+      }
+    }
+    for(const material of w.materials){
+      assert.match(material.id,/^workflow-[a-z0-9_-]+$/);
+      assert.ok(material.id.length<=200);
+      assert.equal(material.provenance.sourceCaseId,id);
+      if(material.provenance.kind==='original-case'){
+        if(material.kind==='author-event')assert.equal(material.text,payload.template.followup.intro,id+' rewritten event');
+        for(const docId of material.sourceDocumentIds)assert.ok(payload.template.documents.some(doc=>doc.id===docId),id+' invented original document');
+      }else assert.equal(material.provenance.kind,'authored-control-extension');
+    }
+    subjects+=definitions.length;newSubjects+=w.issues.filter(issue=>issue.newIssue).length;materials+=w.materials.length;
+  }
+  assert.deepEqual({subjects,newSubjects,materials,initialResolved},{subjects:220,newSubjects:31,materials:431,initialResolved:21});
+});
+
+test('all frozen control variants expose only released materials and close only their evidenced scope',()=>{
+  let variants=0,subjects=0,closed=0,referred=0;
+  for(const [id,{payload}] of cases)for(const pack of payload.template.datePacks){
+    const c=frozenContext(id,pack.id),profile=getCorrespondenceProfile(c);
+    let state=createControlWorkflow({caseData:c,profile,decision:{correspondence:{orders:[]}},timestamp:1});
+    const initial=publicControlWorkflow(state,profile,'ru');
+    const visibleIds=new Set(initial.materials.map(material=>material.id));
+    for(const issue of state.definition.issues){
+      assert.equal(visibleIds.has(issue.responseMaterialId),false,id+' unreleased answer');
+      assert.equal(initial.issues.find(row=>row.id===issue.id).closureText,undefined);
+    }
+    for(const material of initial.materials)assert.equal(material.verification,undefined,id+' exposed sufficiency key');
+    for(const spec of state.definition.issues){
+      const before=new Map(state.issues.map(issue=>[issue.id,issue.status]));
+      const command={issueId:spec.id,kind:'request_evidence',reason:'Сопоставляю поступивший материал с предметом.',instruction:spec.scope,
+        expectedResult:'Относимый документ по данному предмету.',dueDate:'2026-12-31',recipientIds:spec.acceptedRecipientSets[0],evidenceSourceIds:[spec.initialMaterialIds[0]]};
+      let sequence=state.revision;
+      const act=action=>{state=applyControlAction(state,profile,action,{caseData:c,timestamp:sequence+1,requestId:'coverage-'+sequence++,expectedRevision:state.revision});};
+      act(command);
+      assert.equal(state.journal.at(-1).outcome,'request_received',id+'/'+spec.id);
+      const response=state.materials.find(material=>material.id===spec.responseMaterialId);
+      assert.ok(response,id+'/'+spec.id+' missing returned evidence');
+      const evidenceSourceIds=[response.id];
+      if(response.verification==='delivery'){
+        act({...command,kind:'refer',evidenceSourceIds});
+        assert.equal(state.journal.at(-1).outcome,'referred',id+'/'+spec.id);referred++;
+      }else{
+        act({...command,kind:'verify',evidenceSourceIds});
+        assert.equal(state.journal.at(-1).outcome,'evidence_verified',id+'/'+spec.id);
+        act({...command,kind:'notify',evidenceSourceIds});
+        act({...command,kind:'close',evidenceSourceIds});
+        assert.equal(state.journal.at(-1).outcome,'closed',id+'/'+spec.id);closed++;
+      }
+      for(const issue of state.issues)if(issue.id!==spec.id)assert.equal(issue.status,before.get(issue.id),id+' closed another matter');
+      subjects++;
+    }
+    const control={text:'Учебная итоговая запись: проверка структуры, не имитация оценки качества языка.',statuses:state.issues.map(issue=>({issueId:issue.id,status:issue.substantiveStatus,evidenceSourceIds:issue.verifiedEvidenceIds.length?issue.verifiedEvidenceIds:[state.definition.issues.find(spec=>spec.id===issue.id).responseMaterialId]}))};
+    assert.equal(validateControlSubmission(state,profile,control).valid,true,id+'/'+pack.id);
+    for(const locale of ['ru','en','zh']){
+      const view=publicControlWorkflow(state,profile,locale);
+      assert.ok(view.materials.every(material=>material.title&&material.text),id+'/'+locale);
+      assert.ok(!/\{\{[A-Za-z_]\w*\}\}/.test(JSON.stringify(view)),id+' unresolved frozen date');
+    }
+    variants++;
+  }
+  assert.deepEqual({variants,subjects,closed,referred},{variants:356,subjects:440,closed:428,referred:12});
+});
+
+test('court closure means an explanation, while new proceedings and physical results stay separate',()=>{
+  for(const id of ['court-cancel','court-installments','court-typo-not-merits']){
+    const w=getCorrespondenceProfile(id).control.workflow,issue=w.issues[0];
+    assert.equal(issue.resultType,'explanation',id);
+    assert.equal(issue.allowReferral,false,id);
+    const response=w.materials.find(material=>material.id===issue.responseMaterialId);
+    assert.equal(response.verification,'confirmation');
+    assert.equal(response.provenance.kind,'authored-control-extension');
+    assert.ok(/разъяснен/i.test(response.text.ru),id);
+  }
+  const typo=getCorrespondenceProfile('court-typo-not-merits').control.workflow;
+  const text=typo.materials.find(material=>material.id===typo.issues[0].responseMaterialId).text.ru;
+  assert.match(text,/вопрос исполнения долга этим актом не разрешён/);
+  const order=getCorrespondenceProfile('court-order-objections').control.workflow;
+  assert.equal(order.issues[0].newIssue.id,'new-matter');
+  assert.match(order.issues[0].newIssue.title,/исковое заявление/);
+  assert.notEqual(order.issues[0].responseMaterialId,order.issues[0].newIssue.responseMaterialId);
+  const split=getCorrespondenceProfile('several-repair-and-complaint').control.workflow;
+  assert.equal(split.issues.find(issue=>issue.id==='repair').initialStatus,'resolved');
+  assert.equal(split.issues.find(issue=>issue.id==='previous-response').initialStatus,'pending');
+  assert.deepEqual(split.issues.find(issue=>issue.id==='repair').acceptedRecipientSets,[['road-owner']]);
+  assert.deepEqual(split.issues.find(issue=>issue.id==='previous-response').acceptedRecipientSets,[['independent-review']]);
+});
+
+test('new urgent events and a completed emergency phase use the actual control-stage recipient',()=>{
+  const examples=[
+    ['gas-past-incident','new-matter','gas-operator','gas-dispatch'],
+    ['hatch-restored','new-matter','reception-unit','duty-service'],
+    ['oms-urgent-now','main','medical-dispatch','medical-authority']
+  ];
+  for(const [id,issueId,oldRecipient,newRecipient] of examples){
+    const c=frozenContext(id,'a'),profile=getCorrespondenceProfile(c);
+    let state=createControlWorkflow({caseData:c,profile,decision:{correspondence:{orders:[]}},timestamp:1});
+    const spec=state.definition.issues.find(issue=>issue.id===issueId);
+    assert.equal(spec.recipientScope,'authored-control-phase');
+    assert.deepEqual(spec.acceptedRecipientSets,[[newRecipient]]);
+    assert.ok(ROUTING_RECIPIENTS[id].flat().includes(oldRecipient),'Initial routing is preserved');
+    const request={issueId,kind:'request_evidence',reason:'Стадия изменилась по новому событию.',instruction:spec.scope,expectedResult:'Подтверждение результата текущей стадии.',dueDate:'2026-12-31',recipientIds:[oldRecipient],evidenceSourceIds:[spec.initialMaterialIds[0]]};
+    state=applyControlAction(state,profile,request,{caseData:c,timestamp:2,requestId:'old-phase',expectedRevision:state.revision});
+    assert.equal(state.journal.at(-1).outcome,'recipient_unconfirmed',id);
+    assert.equal(state.materials.some(material=>material.id===spec.responseMaterialId),false,id);
+    state=applyControlAction(state,profile,{...request,recipientIds:[newRecipient]},{caseData:c,timestamp:3,requestId:'current-phase',expectedRevision:state.revision});
+    assert.equal(state.journal.at(-1).outcome,'request_received',id);
+    assert.ok(state.materials.some(material=>material.id===spec.responseMaterialId),id);
+  }
 });
 
 test('the public projection contains no expected findings, hidden conversation, future event or answer keys',()=>{
