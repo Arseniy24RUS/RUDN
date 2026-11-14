@@ -241,3 +241,15 @@ test('Sol review records the models returned by both API calls and measures cach
   assert.equal(reservation.outputTokens,7168);
   assert.equal(reservation.micros,reviewCostMicros(reservation.inputTokens,reservation.outputTokens));
 });
+
+test('review prepares a regional order without changing the submitted recipient',async()=>{
+  const recipient='ru-52-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-nizhegorodskoy-oblasti';
+  const value=draft();
+  value.orders=[{id:'regional-order',issue:'Материалы обращения',kind:'request',recipientIds:[recipient],instruction:'Запросить материалы.',dueDate:'2026-12-12',expectedResult:'Ответ с материалами.',citationIds:['proof1']}];
+  const validated=validateCorrespondence(value,c,state);
+  assert.deepEqual(validated.orders[0].recipientIds,[recipient]);
+  const context=await contextFor(value);
+  assert.match(context.sections.orders,/Нижегородской области/);
+  assert.doesNotMatch(context.sections.orders,/undefined/);
+  assert.ok(validateCorrespondenceReview(reviewFor(context),context));
+});

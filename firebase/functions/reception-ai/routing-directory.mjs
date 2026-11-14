@@ -1033,6 +1033,16092 @@ export const ROUTING_AUTHORITIES = {
     "name": "Работодатель, ответственный за выплату своей части пособия",
     "shortName": "Работодатель",
     "territoryId": null
+  },
+  "chelyabinsk-assembly-staff": {
+    "id": "chelyabinsk-assembly-staff",
+    "name": "Аппарат Законодательного Собрания Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "stp-finance-committee": {
+    "id": "stp-finance-committee",
+    "name": "Комитет финансов Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "novosibirsk-mayor-office": {
+    "id": "novosibirsk-mayor-office",
+    "name": "Мэрия города Новосибирска",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "novosibirsk-council-staff": {
+    "id": "novosibirsk-council-staff",
+    "name": "Аппарат Совета депутатов города Новосибирска",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "rostec": {
+    "id": "rostec",
+    "name": "Государственная корпорация по содействию разработке, производству и экспорту высокотехнологичной промышленной продукции «Ростех»",
+    "shortName": "Государственная корпорация «Ростех»",
+    "territoryId": null
+  },
+  "veb": {
+    "id": "veb",
+    "name": "Государственная корпорация развития «ВЭБ.РФ»",
+    "shortName": "ВЭБ.РФ",
+    "territoryId": null
+  },
+  "asv": {
+    "id": "asv",
+    "name": "Государственная корпорация «Агентство по страхованию вкладов»",
+    "shortName": "АСВ",
+    "territoryId": null
+  },
+  "moscow-finance-department": {
+    "id": "moscow-finance-department",
+    "name": "Департамент финансов города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "moscow-economic-policy-department": {
+    "id": "moscow-economic-policy-department",
+    "name": "Департамент экономической политики и развития города Москвы",
+    "shortName": "ДЭПиР",
+    "territoryId": "ru-77"
+  },
+  "moscow-competition-department": {
+    "id": "moscow-competition-department",
+    "name": "Департамент города Москвы по конкурентной политике",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "chelyabinsk-region-finance-ministry": {
+    "id": "chelyabinsk-region-finance-ministry",
+    "name": "Министерство финансов Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "chelyabinsk-region-roads-transport-ministry": {
+    "id": "chelyabinsk-region-roads-transport-ministry",
+    "name": "Министерство дорожного хозяйства и транспорта Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "chelyabinsk-finance-committee": {
+    "id": "chelyabinsk-finance-committee",
+    "name": "Комитет финансов города Челябинска",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "lipetsk-region-finance-ministry": {
+    "id": "lipetsk-region-finance-ministry",
+    "name": "Министерство финансов Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "smolensk-region-finance-ministry": {
+    "id": "smolensk-region-finance-ministry",
+    "name": "Министерство финансов Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "stp-information-communications-committee": {
+    "id": "stp-information-communications-committee",
+    "name": "Комитет по информатизации и связи",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "stp-education-committee": {
+    "id": "stp-education-committee",
+    "name": "Комитет по образованию",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "sverdlovsk-region-finance-ministry": {
+    "id": "sverdlovsk-region-finance-ministry",
+    "name": "Министерство финансов Свердловской области",
+    "shortName": "Минфин Свердловской области",
+    "territoryId": "ru-66"
+  },
+  "sverdlovsk-region-economy-investment-ministry": {
+    "id": "sverdlovsk-region-economy-investment-ministry",
+    "name": "Министерство экономики, инвестиций и территориального развития Свердловской области",
+    "shortName": "Минэкономики, инвестиций и терразвития СО",
+    "territoryId": "ru-66"
+  },
+  "sverdlovsk-region-education-ministry": {
+    "id": "sverdlovsk-region-education-ministry",
+    "name": "Министерство образования Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "tatarstan-finance-ministry": {
+    "id": "tatarstan-finance-ministry",
+    "name": "Министерство финансов Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "tatarstan-digital-development-ministry": {
+    "id": "tatarstan-digital-development-ministry",
+    "name": "Министерство цифрового развития государственного управления, информационных технологий и связи Республики Татарстан",
+    "shortName": "Минцифра Республики Татарстан",
+    "territoryId": "ru-16"
+  },
+  "tatarstan-education-science-ministry": {
+    "id": "tatarstan-education-science-ministry",
+    "name": "Министерство образования и науки Республики Татарстан",
+    "shortName": "Минобразования Татарстана",
+    "territoryId": "ru-16"
+  },
+  "chechen-republic-finance-ministry": {
+    "id": "chechen-republic-finance-ministry",
+    "name": "Министерство финансов Чеченской Республики",
+    "shortName": "Минфин ЧР",
+    "territoryId": "ru-20"
+  },
+  "novosibirsk-finance-department": {
+    "id": "novosibirsk-finance-department",
+    "name": "Департамент финансов и налоговой политики мэрии города Новосибирска",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "nizhny-novgorod-region-finance-ministry": {
+    "id": "nizhny-novgorod-region-finance-ministry",
+    "name": "Министерство финансов Нижегородской области",
+    "shortName": "минфин Нижегородской области",
+    "territoryId": "ru-52"
+  },
+  "kirov-region-finance-ministry": {
+    "id": "kirov-region-finance-ministry",
+    "name": "Министерство финансов Кировской области",
+    "shortName": "Минфин Кировской области",
+    "territoryId": "ru-43"
+  },
+  "samara-region-finance-ministry": {
+    "id": "samara-region-finance-ministry",
+    "name": "Министерство финансов Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "rostov-on-don-municipal-treasury": {
+    "id": "rostov-on-don-municipal-treasury",
+    "name": "Муниципальное казначейство города Ростова-на-Дону",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "kirov-region-agriculture-ministry": {
+    "id": "kirov-region-agriculture-ministry",
+    "name": "Министерство сельского хозяйства и продовольствия Кировской области",
+    "shortName": "Минсельхозпрод",
+    "territoryId": "ru-43"
+  },
+  "ru-83-departament-zdravookhraneniya-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-zdravookhraneniya-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент здравоохранения Ненецкого автономного округа",
+    "shortName": "Департамент здравоохранения НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-truda-i-sotsialnoy-zashchity-naseleniya-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-truda-i-sotsialnoy-zashchity-naseleniya-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент труда и социальной защиты населения Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-83"
+  },
+  "ru-83-upravlenie-gosudarstvennogo-zakaza-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-upravlenie-gosudarstvennogo-zakaza-nenetskogo-avtonomnogo-okruga",
+    "name": "Управление государственного заказа Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-83"
+  },
+  "ru-33-ministerstvo-finansov-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-finansov-vladimirskoy-oblasti",
+    "name": "Министерство финансов Владимирской области",
+    "shortName": "МФ ВО",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-zdravookhraneniya-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-zdravookhraneniya-vladimirskoy-oblasti",
+    "name": "Министерство здравоохранения Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-tsifrovogo-razvitiya-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-tsifrovogo-razvitiya-vladimirskoy-oblasti",
+    "name": "Министерство цифрового развития Владимирской области",
+    "shortName": "Минцифры ВО",
+    "territoryId": "ru-33"
+  },
+  "ru-35-ministerstvo-truda-i-sotsialnoy-zashchity-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-truda-i-sotsialnoy-zashchity-vologodskoy-oblasti",
+    "name": "Министерство труда и социальной защиты Вологодской области",
+    "shortName": "Минтруд области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-lesnogo-kompleksa-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-lesnogo-kompleksa-vologodskoy-oblasti",
+    "name": "Министерство лесного комплекса Вологодской области",
+    "shortName": "Министерство лесного комплекса области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-tsifrovogo-razvitiya-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-tsifrovogo-razvitiya-vologodskoy-oblasti",
+    "name": "Министерство цифрового развития Вологодской области",
+    "shortName": "Министерство цифрового развития области",
+    "territoryId": "ru-35"
+  },
+  "ru-46-ministerstvo-vosstanovleniya-razvitiya-prigranichya-i-stroitelstva-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-vosstanovleniya-razvitiya-prigranichya-i-stroitelstva-kurskoy-oblasti",
+    "name": "Министерство восстановления, развития приграничья и строительства Курской области",
+    "shortName": "Минстрой Курской области",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-gradostroitelnoy-politiki-imushchestvennykh-i-zemelnykh-otnosheniy-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-gradostroitelnoy-politiki-imushchestvennykh-i-zemelnykh-otnosheniy-kurskoy-oblasti",
+    "name": "Министерство градостроительной политики, имущественных и земельных отношений Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-ekonomicheskogo-razvitiya-zanyatosti-naseleniya-i-turizma-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-ekonomicheskogo-razvitiya-zanyatosti-naseleniya-i-turizma-kurskoy-oblasti",
+    "name": "Министерство экономического развития, занятости населения и туризма Курской области",
+    "shortName": "Минэкономразвития Курской области",
+    "territoryId": "ru-46"
+  },
+  "ru-51-ministerstvo-finansov-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-finansov-murmanskoy-oblasti",
+    "name": "Министерство финансов Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-turizma-i-predprinimatelstva-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-turizma-i-predprinimatelstva-murmanskoy-oblasti",
+    "name": "Министерство туризма и предпринимательства Мурманской области",
+    "shortName": "МТП МО",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-murmanskoy-oblasti",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Мурманской области",
+    "shortName": "Минэнерго и ЖКХ МО",
+    "territoryId": "ru-51"
+  },
+  "ru-71-ministerstvo-truda-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-truda-tulskoy-oblasti",
+    "name": "Министерство труда Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-turizma-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-turizma-tulskoy-oblasti",
+    "name": "Министерство туризма Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-tsifrovogo-razvitiya-i-svyazi-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-tsifrovogo-razvitiya-i-svyazi-tulskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-60-ministerstvo-zdravookhraneniya-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-zdravookhraneniya-pskovskoy-oblasti",
+    "name": "Министерство здравоохранения Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-finansov-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-finansov-pskovskoy-oblasti",
+    "name": "Министерство финансов Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-kultury-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-kultury-pskovskoy-oblasti",
+    "name": "Министерство культуры Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-37-departament-zdravookhraneniya-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-zdravookhraneniya-ivanovskoy-oblasti",
+    "name": "Департамент здравоохранения Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-finansov-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-finansov-ivanovskoy-oblasti",
+    "name": "Департамент финансов Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-47-komitet-finansov-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-finansov-leningradskoy-oblasti",
+    "name": "Комитет финансов Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-zdravookhraneniyu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-zdravookhraneniyu-leningradskoy-oblasti",
+    "name": "Комитет по здравоохранению Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-37-departament-turizma-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-turizma-ivanovskoy-oblasti",
+    "name": "Департамент туризма Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-53-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-novgorodskoy-oblasti",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-selskogo-khozyaystva-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-selskogo-khozyaystva-novgorodskoy-oblasti",
+    "name": "Министерство сельского хозяйства Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-proektnogo-i-berezhlivogo-upravleniya-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-proektnogo-i-berezhlivogo-upravleniya-novgorodskoy-oblasti",
+    "name": "Министерство проектного и бережливого управления Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-68-ministerstvo-stroitelstva-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-stroitelstva-tambovskoy-oblasti",
+    "name": "Министерство строительства Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-departament-gosudarstvennogo-zhilishchnogo-nadzora-tambovskoy-oblasti": {
+    "id": "ru-68-departament-gosudarstvennogo-zhilishchnogo-nadzora-tambovskoy-oblasti",
+    "name": "Департамент государственного жилищного надзора Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-departament-lesnogo-khozyaystva-tambovskoy-oblasti": {
+    "id": "ru-68-departament-lesnogo-khozyaystva-tambovskoy-oblasti",
+    "name": "Департамент лесного хозяйства Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-47-komitet-tsifrovogo-razvitiya-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-tsifrovogo-razvitiya-leningradskoy-oblasti",
+    "name": "Комитет цифрового развития Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-10-ministerstvo-promyshlennosti-i-torgovli-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-promyshlennosti-i-torgovli-respubliki-kareliya",
+    "name": "Министерство промышленности и торговли Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-upravlenie-po-molodezhnoy-politike-respubliki-kareliya": {
+    "id": "ru-10-upravlenie-po-molodezhnoy-politike-respubliki-kareliya",
+    "name": "Управление по молодежной политике Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-29-ministerstvo-nauki-vysshey-shkoly-i-nauchno-tekhnologicheskogo-razvitiya-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-nauki-vysshey-shkoly-i-nauchno-tekhnologicheskogo-razvitiya-arkhangelskoy-oblasti",
+    "name": "Министерство науки, высшей школы и научно-технологического развития Архангельской области",
+    "shortName": "миннауки АО",
+    "territoryId": "ru-29"
+  },
+  "ru-31-ministerstvo-obrazovaniya-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-obrazovaniya-belgorodskoy-oblasti",
+    "name": "Министерство образования Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-kultury-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-kultury-belgorodskoy-oblasti",
+    "name": "Министерство культуры Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-regionalnoy-bezopasnosti-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-regionalnoy-bezopasnosti-belgorodskoy-oblasti",
+    "name": "Министерство региональной безопасности Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-39-ministerstvo-gradostroitelnoy-politiki-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-gradostroitelnoy-politiki-kaliningradskoy-oblasti",
+    "name": "Министерство градостроительной политики Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-tsifrovykh-tekhnologiy-i-svyazi-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-tsifrovykh-tekhnologiy-i-svyazi-kaliningradskoy-oblasti",
+    "name": "Министерство цифровых технологий и связи Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-regionalnoy-bezopasnosti-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-regionalnoy-bezopasnosti-kaliningradskoy-oblasti",
+    "name": "Министерство региональной безопасности Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-40-ministerstvo-finansov-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-finansov-kaluzhskoy-oblasti",
+    "name": "Министерство финансов Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-zdravookhraneniya-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-zdravookhraneniya-kaluzhskoy-oblasti",
+    "name": "Министерство здравоохранения Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-sporta-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-sporta-kaluzhskoy-oblasti",
+    "name": "Министерство спорта Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-44-departament-tsifrovogo-razvitiya-kostromskoy-oblasti": {
+    "id": "ru-44-departament-tsifrovogo-razvitiya-kostromskoy-oblasti",
+    "name": "Департамент цифрового развития Костромской области",
+    "shortName": "Депцифры Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-kultury-kostromskoy-oblasti": {
+    "id": "ru-44-departament-kultury-kostromskoy-oblasti",
+    "name": "Департамент культуры Костромской области",
+    "shortName": "Депкультуры Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-ekonomicheskogo-razvitiya-kostromskoy-oblasti": {
+    "id": "ru-44-departament-ekonomicheskogo-razvitiya-kostromskoy-oblasti",
+    "name": "Департамент экономического развития Костромской области",
+    "shortName": "Депэкономразвития Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-69-ministerstvo-molodezhnoy-politiki-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-molodezhnoy-politiki-tverskoy-oblasti",
+    "name": "Министерство молодежной политики Тверской области",
+    "shortName": "Минмолодежи Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-kultury-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-kultury-tverskoy-oblasti",
+    "name": "Министерство культуры Тверской области",
+    "shortName": "Минкультуры Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-tsifrovogo-razvitiya-i-informatsionnykh-tekhnologiy-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-tsifrovogo-razvitiya-i-informatsionnykh-tekhnologiy-tverskoy-oblasti",
+    "name": "Министерство цифрового развития и информационных технологий Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-62-ministerstvo-tsifrovogo-razvitiya-informatsionnykh-tekhnologiy-i-svyazi-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-tsifrovogo-razvitiya-informatsionnykh-tekhnologiy-i-svyazi-ryazanskoy-oblasti",
+    "name": "Министерство цифрового развития, информационных технологий и связи Рязанской области",
+    "shortName": "Мининформ Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-truda-i-sotsialnoy-zashchity-naseleniya-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-truda-i-sotsialnoy-zashchity-naseleniya-ryazanskoy-oblasti",
+    "name": "Министерство труда и социальной защиты населения Рязанской области",
+    "shortName": "МТСЗН Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-po-delam-territoriy-i-informatsionnoy-politike-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-po-delam-territoriy-i-informatsionnoy-politike-ryazanskoy-oblasti",
+    "name": "Министерство территориальной политики Рязанской области",
+    "shortName": "Минтер Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-67-ministerstvo-zdravookhraneniya-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-zdravookhraneniya-smolenskoy-oblasti",
+    "name": "Министерство здравоохранения Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-tsifrovogo-razvitiya-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-tsifrovogo-razvitiya-smolenskoy-oblasti",
+    "name": "Министерство цифрового развития Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-76-ministerstvo-finansov-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-finansov-yaroslavskoy-oblasti",
+    "name": "Министерство финансов Ярославской области",
+    "shortName": "МФ ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-zdravookhraneniya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-zdravookhraneniya-yaroslavskoy-oblasti",
+    "name": "Министерство здравоохранения Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-lesnogo-khozyaystva-i-prirodopolzovaniya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-lesnogo-khozyaystva-i-prirodopolzovaniya-yaroslavskoy-oblasti",
+    "name": "Министерство лесного хозяйства и природопользования Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-29-ministerstvo-svyazi-i-informatsionnykh-tekhnologiy-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-svyazi-i-informatsionnykh-tekhnologiy-arkhangelskoy-oblasti",
+    "name": "Министерство связи и информационных технологий Архангельской области",
+    "shortName": "минсвязи АО",
+    "territoryId": "ru-29"
+  },
+  "ru-57-departament-informatsionno-analiticheskoy-raboty-orlovskoy-oblasti": {
+    "id": "ru-57-departament-informatsionno-analiticheskoy-raboty-orlovskoy-oblasti",
+    "name": "Департамент информационно-аналитической работы Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-gosudarstvennogo-regulirovaniya-tsen-i-tarifov-orlovskoy-oblasti": {
+    "id": "ru-57-departament-gosudarstvennogo-regulirovaniya-tsen-i-tarifov-orlovskoy-oblasti",
+    "name": "Департамент государственного регулирования цен и тарифов Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-11-ministerstvo-turizma-respubliki-komi": {
+    "id": "ru-11-ministerstvo-turizma-respubliki-komi",
+    "name": "Министерство туризма Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-molodezhnoy-politiki-respubliki-komi": {
+    "id": "ru-11-ministerstvo-molodezhnoy-politiki-respubliki-komi",
+    "name": "Министерство молодежной политики Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-zakupok-respubliki-komi": {
+    "id": "ru-11-ministerstvo-zakupok-respubliki-komi",
+    "name": "Министерство закупок Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-10-ministerstvo-obrazovaniya-i-sporta-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-obrazovaniya-i-sporta-respubliki-kareliya",
+    "name": "Министерство образования и спорта Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-48-ministerstvo-obrazovaniya-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-obrazovaniya-lipetskoy-oblasti",
+    "name": "Министерство образования Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-upravlenie-veterinarii-lipetskoy-oblasti": {
+    "id": "ru-48-upravlenie-veterinarii-lipetskoy-oblasti",
+    "name": "Управление ветеринарии Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-lipetskoy-oblasti": {
+    "id": "ru-48-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-lipetskoy-oblasti",
+    "name": "Управление по охране объектов культурного наследия Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-36-upravlenie-molodezhnoy-politiki-voronezhskoy-oblasti": {
+    "id": "ru-36-upravlenie-molodezhnoy-politiki-voronezhskoy-oblasti",
+    "name": "Управление молодежной политики Воронежской области",
+    "shortName": "",
+    "territoryId": "ru-36"
+  },
+  "ru-36-upravlenie-gosudarstvennogo-tekhnicheskogo-nadzora-voronezhskoy-oblasti": {
+    "id": "ru-36-upravlenie-gosudarstvennogo-tekhnicheskogo-nadzora-voronezhskoy-oblasti",
+    "name": "Управление государственного технического надзора Воронежской области",
+    "shortName": "управление гостехнадзора Воронежской области",
+    "territoryId": "ru-36"
+  },
+  "ru-36-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-voronezhskoy-oblasti": {
+    "id": "ru-36-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-voronezhskoy-oblasti",
+    "name": "Управление по охране объектов культурного наследия Воронежской области",
+    "shortName": "УО ОКН ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-50-glavnoe-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-moskovskoy-oblasti": {
+    "id": "ru-50-glavnoe-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-moskovskoy-oblasti",
+    "name": "Главное управление по обеспечению деятельности мировых судей Московской области",
+    "shortName": "ГУОДМС Московской области",
+    "territoryId": "ru-50"
+  },
+  "ru-59-ministerstvo-agropromyshlennogo-kompleksa-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-agropromyshlennogo-kompleksa-permskogo-kraya",
+    "name": "Министерство агропромышленного комплекса Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-finansov-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-finansov-permskogo-kraya",
+    "name": "Министерство финансов Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-kultury-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-kultury-permskogo-kraya",
+    "name": "Министерство культуры Пермского края",
+    "shortName": "Министерство культуры края",
+    "territoryId": "ru-59"
+  },
+  "ru-06-ministerstvo-ekonomicheskogo-razvitiya-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-ekonomicheskogo-razvitiya-respubliki-ingushetiya",
+    "name": "Министерство экономического развития Республики Ингушетия",
+    "shortName": "Минэкономразвития Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-15-ministerstvo-stroitelstva-i-arkhitektury-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-stroitelstva-i-arkhitektury-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство строительства и архитектуры Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-obrazovaniya-i-nauki-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-obrazovaniya-i-nauki-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство образования и науки Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-zdravookhraneniya-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-zdravookhraneniya-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство здравоохранения Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-09-ministerstvo-truda-i-sotsialnogo-razvitiya-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-truda-i-sotsialnogo-razvitiya-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство труда и социального развития Карачаево-Черкесской Республики",
+    "shortName": "Минтрудсоцразвития КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-ekonomicheskogo-razvitiya-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-ekonomicheskogo-razvitiya-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство экономического развития Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-karachaevo-cherkesskoy-respubliki",
+    "name": "Управление записи актов гражданского состояния Карачаево-Черкесской Республики",
+    "shortName": "Управление ЗАГС КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-20-ministerstvo-zdravookhraneniya-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-zdravookhraneniya-chechenskoy-respubliki",
+    "name": "Министерство здравоохранения Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-ekonomicheskogo-i-territorialnogo-razvitiya-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-ekonomicheskogo-i-territorialnogo-razvitiya-chechenskoy-respubliki",
+    "name": "Министерство экономического и территориального развития Чеченской Республики",
+    "shortName": "Минэкономтерразвития ЧР",
+    "territoryId": "ru-20"
+  },
+  "ru-05-ministerstvo-finansov-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-finansov-respubliki-dagestan",
+    "name": "Министерство финансов Республики Дагестан",
+    "shortName": "Минфин РД",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-ekonomiki-i-territorialnogo-razvitiya-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-ekonomiki-i-territorialnogo-razvitiya-respubliki-dagestan",
+    "name": "Министерство экономики и территориального развития Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-obrazovaniya-i-nauki-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-obrazovaniya-i-nauki-respubliki-dagestan",
+    "name": "Министерство образования и науки Республики Дагестан",
+    "shortName": "Минобрнауки РД",
+    "territoryId": "ru-05"
+  },
+  "ru-64-ministerstvo-finansov-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-finansov-saratovskoy-oblasti",
+    "name": "Министерство финансов Саратовской области",
+    "shortName": "Минфин Саратовской области",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-zdravookhraneniya-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-zdravookhraneniya-saratovskoy-oblasti",
+    "name": "Министерство здравоохранения Саратовской области",
+    "shortName": "Минздрав Саратовской области",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-truda-i-sotsialnoy-zashchity-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-truda-i-sotsialnoy-zashchity-saratovskoy-oblasti",
+    "name": "Министерство труда и социальной защиты Саратовской области",
+    "shortName": "Минтрудсоцзащиты Саратовской области",
+    "territoryId": "ru-64"
+  },
+  "ru-01-upravlenie-po-okhrane-i-ispolzovaniyu-obektov-kulturnogo-naslediya-respubliki-adygeya": {
+    "id": "ru-01-upravlenie-po-okhrane-i-ispolzovaniyu-obektov-kulturnogo-naslediya-respubliki-adygeya",
+    "name": "Управление по охране и использованию объектов культурного наследия Республики Адыгея",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-upravlenie-gosudarstvennoy-sluzhby-zanyatosti-naseleniya-respubliki-adygeya": {
+    "id": "ru-01-upravlenie-gosudarstvennoy-sluzhby-zanyatosti-naseleniya-respubliki-adygeya",
+    "name": "Управление государственной службы занятости населения Республики Адыгея",
+    "shortName": "УГСЗН Республики Адыгея",
+    "territoryId": "ru-01"
+  },
+  "ru-01-ministerstvo-finansov-respubliki-adygeya": {
+    "id": "ru-01-ministerstvo-finansov-respubliki-adygeya",
+    "name": "Министерство финансов Республики Адыгея",
+    "shortName": "Минфин Республики Адыгея",
+    "territoryId": "ru-01"
+  },
+  "ru-13-ministerstvo-zdravookhraneniya-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-zdravookhraneniya-respubliki-mordoviya",
+    "name": "Министерство здравоохранения Республики Мордовия",
+    "shortName": "Минздрав Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-finansov-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-finansov-respubliki-mordoviya",
+    "name": "Министерство финансов Республики Мордовия",
+    "shortName": "Минфин Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-ekonomiki-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-ekonomiki-respubliki-mordoviya",
+    "name": "Министерство экономики Республики Мордовия",
+    "shortName": "Минэкономики Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-16-ministerstvo-zdravookhraneniya-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-zdravookhraneniya-respubliki-tatarstan",
+    "name": "Министерство здравоохранения Республики Татарстан",
+    "shortName": "Минздрав Республики Татарстан",
+    "territoryId": "ru-16"
+  },
+  "ru-43-ministerstvo-lesnogo-khozyaystva-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-lesnogo-khozyaystva-kirovskoy-oblasti",
+    "name": "Министерство лесного хозяйства Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-92-departament-zdravookhraneniya-goroda-sevastopolya": {
+    "id": "ru-92-departament-zdravookhraneniya-goroda-sevastopolya",
+    "name": "Департамент здравоохранения города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-58-ministerstvo-finansov-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-finansov-penzenskoy-oblasti",
+    "name": "Министерство финансов Пензенской области",
+    "shortName": "",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-zdravookhraneniya-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-zdravookhraneniya-penzenskoy-oblasti",
+    "name": "Министерство здравоохранения Пензенской области",
+    "shortName": "",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-obrazovaniya-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-obrazovaniya-penzenskoy-oblasti",
+    "name": "Министерство образования Пензенской области",
+    "shortName": "",
+    "territoryId": "ru-58"
+  },
+  "ru-73-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-ulyanovskoy-oblasti",
+    "name": "Министерство экономического развития Ульяновской области",
+    "shortName": "Минэкономразвития Ульяновской области",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-agropromyshlennogo-kompleksa-i-razvitiya-selskikh-territoriy-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-agropromyshlennogo-kompleksa-i-razvitiya-selskikh-territoriy-ulyanovskoy-oblasti",
+    "name": "Министерство агропромышленного комплекса и развития сельских территорий Ульяновской области",
+    "shortName": "Минсельхоз Ульяновской области",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-prosveshcheniya-i-vospitaniya-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-prosveshcheniya-i-vospitaniya-ulyanovskoy-oblasti",
+    "name": "Министерство просвещения и воспитания Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-30-ministerstvo-zdravookhraneniya-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-zdravookhraneniya-astrakhanskoy-oblasti",
+    "name": "Министерство здравоохранения Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-obrazovaniya-i-nauki-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-obrazovaniya-i-nauki-astrakhanskoy-oblasti",
+    "name": "Министерство образования и науки Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-30-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-astrakhanskoy-oblasti": {
+    "id": "ru-30-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-astrakhanskoy-oblasti",
+    "name": "Служба записи актов гражданского состояния Астраханской области",
+    "shortName": "Служба ЗАГС Астраханской области",
+    "territoryId": "ru-30"
+  },
+  "ru-34-komitet-obrazovaniya-nauki-i-molodezhnoy-politiki-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-obrazovaniya-nauki-i-molodezhnoy-politiki-volgogradskoy-oblasti",
+    "name": "Комитет образования и науки Волгоградской области",
+    "shortName": "Облкомобразования",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-ekonomicheskoy-politiki-i-razvitiya-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-ekonomicheskoy-politiki-i-razvitiya-volgogradskoy-oblasti",
+    "name": "Комитет экономической политики и развития Волгоградской области",
+    "shortName": "Облкомэкономразвития",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-zdravookhraneniya-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-zdravookhraneniya-volgogradskoy-oblasti",
+    "name": "Комитет здравоохранения Волгоградской области",
+    "shortName": "Облздрав",
+    "territoryId": "ru-34"
+  },
+  "ru-07-ministerstvo-truda-i-sotsialnoy-zashchity-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-truda-i-sotsialnoy-zashchity-kabardino-balkarskoy-respubliki",
+    "name": "Министерство труда и социальной защиты Кабардино-Балкарской Республики",
+    "shortName": "Минтрудсоцзащиты КБР",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-prosveshcheniya-i-nauki-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-prosveshcheniya-i-nauki-kabardino-balkarskoy-respubliki",
+    "name": "Министерство просвещения и науки Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-ekonomicheskogo-razvitiya-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-ekonomicheskogo-razvitiya-kabardino-balkarskoy-respubliki",
+    "name": "Министерство экономического развития Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-19-ministerstvo-finansov-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-finansov-respubliki-hakasiya",
+    "name": "Министерство финансов Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-ekonomicheskogo-razvitiya-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-ekonomicheskogo-razvitiya-respubliki-hakasiya",
+    "name": "Министерство экономического развития Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-respubliki-hakasiya",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-87-departament-promyshlennoy-politiki-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-promyshlennoy-politiki-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент промышленной политики Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-selskogo-hozyaystva-i-prodovolstviya-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-selskogo-hozyaystva-i-prodovolstviya-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент сельского хозяйства и продовольствия Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-ekonomiki-i-investiciy-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-ekonomiki-i-investiciy-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент экономики и инвестиций Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-45-departament-agropromyshlennogo-kompleksa-kurganskoy-oblasti": {
+    "id": "ru-45-departament-agropromyshlennogo-kompleksa-kurganskoy-oblasti",
+    "name": "Департамент агропромышленного комплекса Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-ekonomicheskogo-razvitiya-kurganskoy-oblasti": {
+    "id": "ru-45-departament-ekonomicheskogo-razvitiya-kurganskoy-oblasti",
+    "name": "Департамент экономического развития Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-grazhdanskoy-zaschity-ohrany-okruzhayuschey-sredy-i-prirodnyh-resursov-kurganskoy-oblasti": {
+    "id": "ru-45-departament-grazhdanskoy-zaschity-ohrany-okruzhayuschey-sredy-i-prirodnyh-resursov-kurganskoy-oblasti",
+    "name": "Департамент гражданской защиты, охраны окружающей среды и природных ресурсов Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-90-ministerstvo-obrazovaniya-i-nauki-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-obrazovaniya-i-nauki-zaporozhskoy-oblasti",
+    "name": "Министерство образования и науки Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-ekonomicheskogo-razvitiya-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-ekonomicheskogo-razvitiya-zaporozhskoy-oblasti",
+    "name": "Министерство экономического развития Запорожской области",
+    "shortName": "Минэкономразвития ЗО",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-energetiki-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-energetiki-zaporozhskoy-oblasti",
+    "name": "Министерство энергетики Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-zdravoohraneniya-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-zdravoohraneniya-zaporozhskoy-oblasti",
+    "name": "Министерство здравоохранения Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-finansov-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-finansov-zaporozhskoy-oblasti",
+    "name": "Министерство финансов Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-75-ministerstvo-zdravoohraneniya-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-zdravoohraneniya-zabaykalskogo-kraya",
+    "name": "Министерство здравоохранения Забайкальского края",
+    "shortName": "",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-finansov-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-finansov-zabaykalskogo-kraya",
+    "name": "Министерство финансов Забайкальского края",
+    "shortName": "Минфин Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-selskogo-hozyaystva-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-selskogo-hozyaystva-zabaykalskogo-kraya",
+    "name": "Министерство сельского хозяйства Забайкальского края",
+    "shortName": "Минсельхоз Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-17-ministerstvo-finansov-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-finansov-respubliki-tyva",
+    "name": "Министерство финансов Республики Тыва",
+    "shortName": "Минфин Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-respubliki-tyva",
+    "name": "Министерство экономического развития и промышленности Республики Тыва",
+    "shortName": "Минэкономразвития Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-93-ministerstvo-finansov-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-finansov-doneckoy-narodnoy-respubliki",
+    "name": "Министерство финансов Донецкой Народной Республики",
+    "shortName": "Минфин ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-17-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-respubliki-tyva",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-24-ministerstvo-zdravoohraneniya-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-zdravoohraneniya-krasnoyarskogo-kraya",
+    "name": "Министерство здравоохранения Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-04-ministerstvo-finansov-respubliki-altay": {
+    "id": "ru-04-ministerstvo-finansov-respubliki-altay",
+    "name": "Министерство финансов Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-ekonomicheskogo-razvitiya-respubliki-altay": {
+    "id": "ru-04-ministerstvo-ekonomicheskogo-razvitiya-respubliki-altay",
+    "name": "Министерство экономического развития Республики Алтай",
+    "shortName": "Минэкономразвития РА",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-selskogo-hozyaystva-respubliki-altay": {
+    "id": "ru-04-ministerstvo-selskogo-hozyaystva-respubliki-altay",
+    "name": "Министерство сельского хозяйства Республики Алтай",
+    "shortName": "Минсельхоз Республики Алтай",
+    "territoryId": "ru-04"
+  },
+  "ru-03-ministerstvo-sporta-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-sporta-respubliki-buryatiya",
+    "name": "Министерство спорта Республики Бурятия",
+    "shortName": "Минспорт РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-turizma-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-turizma-respubliki-buryatiya",
+    "name": "Министерство туризма Республики Бурятия",
+    "shortName": "Минтуризма РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-70-departament-sporta-tomskoy-oblasti": {
+    "id": "ru-70-departament-sporta-tomskoy-oblasti",
+    "name": "Департамент спорта Томской области",
+    "shortName": "ДСТО",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-po-molodezhnoy-politike-tomskoy-oblasti": {
+    "id": "ru-70-departament-po-molodezhnoy-politike-tomskoy-oblasti",
+    "name": "Департамент по молодежной политике Томской области",
+    "shortName": "ДМПТО",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-veterinarii-tomskoy-oblasti": {
+    "id": "ru-70-departament-veterinarii-tomskoy-oblasti",
+    "name": "Департамент ветеринарии Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-66-departament-vnutrenney-politiki-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-vnutrenney-politiki-sverdlovskoy-oblasti",
+    "name": "Департамент внутренней политики Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-54-ministerstvo-nauki-i-innovacionnoy-politiki-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-nauki-i-innovacionnoy-politiki-novosibirskoy-oblasti",
+    "name": "Министерство науки и инновационной политики Новосибирской области",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-cifrovogo-razvitiya-i-svyazi-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-cifrovogo-razvitiya-i-svyazi-novosibirskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Новосибирской области",
+    "shortName": "Минцифра НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-fizicheskoy-kultury-i-sporta-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-fizicheskoy-kultury-i-sporta-novosibirskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Новосибирской области",
+    "shortName": "Министерство ФК и С НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-22-ministerstvo-selskogo-hozyaystva-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-selskogo-hozyaystva-altayskogo-kraya",
+    "name": "Министерство сельского хозяйства Алтайского края",
+    "shortName": "Минсельхоз Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-cifrovogo-razvitiya-i-svyazi-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-cifrovogo-razvitiya-i-svyazi-altayskogo-kraya",
+    "name": "Министерство цифрового развития и связи Алтайского края",
+    "shortName": "Минсвязь Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-finansov-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-finansov-altayskogo-kraya",
+    "name": "Министерство финансов Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-66-departament-po-razvitiyu-turizma-i-industrii-gostepriimstva-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-po-razvitiyu-turizma-i-industrii-gostepriimstva-sverdlovskoy-oblasti",
+    "name": "Департамент по развитию туризма и индустрии гостеприимства Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-93-ministerstvo-ekonomicheskogo-razvitiya-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-ekonomicheskogo-razvitiya-doneckoy-narodnoy-respubliki",
+    "name": "Министерство экономического развития Донецкой Народной Республики",
+    "shortName": "Минэкономразвития ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-selskogo-hozyaystva-pischevoy-i-pererabatyvayuschey-promyshlennosti-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-selskogo-hozyaystva-pischevoy-i-pererabatyvayuschey-promyshlennosti-doneckoy-narodnoy-respubliki",
+    "name": "Министерство сельского хозяйства, пищевой и перерабатывающей промышленности Донецкой Народной Республики",
+    "shortName": "МИНСЕЛЬХОЗ ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-zdravoohraneniya-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-zdravoohraneniya-doneckoy-narodnoy-respubliki",
+    "name": "Министерство здравоохранения Донецкой Народной Республики",
+    "shortName": "МЗ ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-86-departament-gosudarstvennoy-grazhdanskoy-sluzhby-kadrovoy-politiki-i-profilaktiki-korrupcii-hanty-mansiys-46acbf58": {
+    "id": "ru-86-departament-gosudarstvennoy-grazhdanskoy-sluzhby-kadrovoy-politiki-i-profilaktiki-korrupcii-hanty-mansiys-46acbf58",
+    "name": "Департамент государственной гражданской службы, кадровой политики и профилактики коррупции Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Департамент государственной службы и профилактики коррупции Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-promyshlennosti-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-promyshlennosti-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент промышленности Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Деппромышленности Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-stroitelstva-i-arhitektury-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-stroitelstva-i-arhitektury-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент строительства и архитектуры Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депстрой Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-36-kontrolno-schetnaya-palata-voronezhskoy-oblasti": {
+    "id": "ru-36-kontrolno-schetnaya-palata-voronezhskoy-oblasti",
+    "name": "Контрольно-счетная палата Воронежской области",
+    "shortName": "КСП Воронежской области",
+    "territoryId": "ru-36"
+  },
+  "ru-63-upolnomochennyy-po-pravam-cheloveka-v-samarskoy-oblasti": {
+    "id": "ru-63-upolnomochennyy-po-pravam-cheloveka-v-samarskoy-oblasti",
+    "name": "Уполномоченный по правам человека в Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-28-ministerstvo-vneshnih-svyazey-i-turizma-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-vneshnih-svyazey-i-turizma-amurskoy-oblasti",
+    "name": "Министерство внешних связей и туризма Амурской области",
+    "shortName": "министерство ВСТ АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-proektnogo-upravleniya-i-kadrovoy-politiki-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-proektnogo-upravleniya-i-kadrovoy-politiki-amurskoy-oblasti",
+    "name": "Министерство проектного управления и кадровой политики Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-cifrovogo-razvitiya-i-svyazi-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-cifrovogo-razvitiya-i-svyazi-amurskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Амурской области",
+    "shortName": "министерство цифрового развития АО",
+    "territoryId": "ru-28"
+  },
+  "ru-41-ministerstvo-arhitektury-i-gradostroitelstva-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-arhitektury-i-gradostroitelstva-kamchatskogo-kraya",
+    "name": "Министерство архитектуры и градостроительства Камчатского края",
+    "shortName": "Минархитектуры Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-rybnogo-hozyaystva-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-rybnogo-hozyaystva-kamchatskogo-kraya",
+    "name": "Министерство рыбного хозяйства Камчатского края",
+    "shortName": "Минрыбхоз Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-turizma-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-turizma-kamchatskogo-kraya",
+    "name": "Министерство туризма Камчатского края",
+    "shortName": "Минтуризм Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-25-ministerstvo-vnutrenney-politiki-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-vnutrenney-politiki-primorskogo-kraya",
+    "name": "Министерство внутренней политики Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-mezhdunarodnykh-i-vneshneekonomicheskikh-svyazey-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-mezhdunarodnykh-i-vneshneekonomicheskikh-svyazey-primorskogo-kraya",
+    "name": "Министерство международных и внешнеэкономических связей Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-turizma-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-turizma-primorskogo-kraya",
+    "name": "Министерство туризма Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-49-ministerstvo-tsifrovogo-razvitiya-i-svyazi-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-tsifrovogo-razvitiya-i-svyazi-magadanskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Магаданской области",
+    "shortName": "Минцифры Магаданской области",
+    "territoryId": "ru-49"
+  },
+  "ru-49-departament-molodezhnoy-politiki-magadanskoy-oblasti": {
+    "id": "ru-49-departament-molodezhnoy-politiki-magadanskoy-oblasti",
+    "name": "Департамент молодежной политики Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-departament-rybnogo-khozyaystva-magadanskoy-oblasti": {
+    "id": "ru-49-departament-rybnogo-khozyaystva-magadanskoy-oblasti",
+    "name": "Департамент рыбного хозяйства Магаданской области",
+    "shortName": "Депрыбхоз Магаданской области",
+    "territoryId": "ru-49"
+  },
+  "ru-65-ministerstvo-arhitektury-i-gradostroitelstva-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-arhitektury-i-gradostroitelstva-sahalinskoy-oblasti",
+    "name": "Министерство архитектуры и градостроительства Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-sporta-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-sporta-sahalinskoy-oblasti",
+    "name": "Министерство спорта Сахалинской области",
+    "shortName": "Минспорт Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-ekonomicheskogo-razvitiya-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-ekonomicheskogo-razvitiya-sahalinskoy-oblasti",
+    "name": "Министерство экономического развития Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-27-ministerstvo-vnutrenney-i-informacionnoy-politiki-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-vnutrenney-i-informacionnoy-politiki-habarovskogo-kraya",
+    "name": "Министерство внутренней и информационной политики Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-energetiki-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-energetiki-habarovskogo-kraya",
+    "name": "Министерство энергетики Хабаровского края",
+    "shortName": "Минэнерго Хабаровского края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-turizma-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-turizma-habarovskogo-kraya",
+    "name": "Министерство туризма Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-14-departament-veterinarii-respubliki-saha-yakutiya": {
+    "id": "ru-14-departament-veterinarii-respubliki-saha-yakutiya",
+    "name": "Управление ветеринарии Республики Саха (Якутия)",
+    "shortName": "Управление ветеринарии РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-truda-i-socialnogo-razvitiya-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-truda-i-socialnogo-razvitiya-respubliki-saha-yakutiya",
+    "name": "Министерство труда и социального развития Республики Саха (Якутия)",
+    "shortName": "Минтруд РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-gosudarstvennyy-komitet-yusticii-respubliki-saha-yakutiya": {
+    "id": "ru-14-gosudarstvennyy-komitet-yusticii-respubliki-saha-yakutiya",
+    "name": "Государственный комитет юстиции Республики Саха (Якутия)",
+    "shortName": "Госкомюстиции РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-79-departament-promyshlennosti-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-promyshlennosti-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент промышленности правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент строительства и жилищно-коммунального хозяйства правительства Еврейской автономной области",
+    "shortName": "ДСиЖКХ правительства ЕАО",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-po-trudu-i-zanyatosti-naseleniya-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-po-trudu-i-zanyatosti-naseleniya-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент по труду и занятости населения правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-32-departament-finansov-bryanskoy-oblasti": {
+    "id": "ru-32-departament-finansov-bryanskoy-oblasti",
+    "name": "Департамент финансов Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-zdravookhraneniya-bryanskoy-oblasti": {
+    "id": "ru-32-departament-zdravookhraneniya-bryanskoy-oblasti",
+    "name": "Департамент здравоохранения Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-administratsiya-gubernatora-bryanskoy-oblasti-i-pravitelstva-bryanskoy-oblasti": {
+    "id": "ru-32-administratsiya-gubernatora-bryanskoy-oblasti-i-pravitelstva-bryanskoy-oblasti",
+    "name": "Администрация Губернатора Брянской области и Правительства Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-vnutrenney-politiki-bryanskoy-oblasti": {
+    "id": "ru-32-departament-vnutrenney-politiki-bryanskoy-oblasti",
+    "name": "Департамент внутренней политики Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-regionalnoy-bezopasnosti-bryanskoy-oblasti": {
+    "id": "ru-32-departament-regionalnoy-bezopasnosti-bryanskoy-oblasti",
+    "name": "Департамент региональной безопасности Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-obrazovaniya-i-nauki-bryanskoy-oblasti": {
+    "id": "ru-32-departament-obrazovaniya-i-nauki-bryanskoy-oblasti",
+    "name": "Департамент образования и науки Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-ekonomicheskogo-razvitiya-bryanskoy-oblasti": {
+    "id": "ru-32-departament-ekonomicheskogo-razvitiya-bryanskoy-oblasti",
+    "name": "Департамент экономического развития Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-stroitelstva-bryanskoy-oblasti": {
+    "id": "ru-32-departament-stroitelstva-bryanskoy-oblasti",
+    "name": "Департамент строительства Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-sotsialnoy-politiki-i-zanyatosti-naseleniya-bryanskoy-oblasti": {
+    "id": "ru-32-departament-sotsialnoy-politiki-i-zanyatosti-naseleniya-bryanskoy-oblasti",
+    "name": "Департамент социальной политики и занятости населения Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-prirodnykh-resursov-i-ekologii-bryanskoy-oblasti": {
+    "id": "ru-32-departament-prirodnykh-resursov-i-ekologii-bryanskoy-oblasti",
+    "name": "Департамент природных ресурсов и экологии Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-kultury-bryanskoy-oblasti": {
+    "id": "ru-32-departament-kultury-bryanskoy-oblasti",
+    "name": "Департамент культуры Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-bryanskoy-oblasti": {
+    "id": "ru-32-departament-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-bryanskoy-oblasti",
+    "name": "Департамент топливно-энергетического комплекса и жилищно-коммунального хозяйства Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-fizicheskoy-kultury-i-sporta-bryanskoy-oblasti": {
+    "id": "ru-32-departament-fizicheskoy-kultury-i-sporta-bryanskoy-oblasti",
+    "name": "Департамент физической культуры и спорта Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-mirovoy-yustitsii-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-mirovoy-yustitsii-bryanskoy-oblasti",
+    "name": "Управление мировой юстиции Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-imushchestvennykh-otnosheniy-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-imushchestvennykh-otnosheniy-bryanskoy-oblasti",
+    "name": "Управление имущественных отношений Брянской области",
+    "shortName": "УИО БО",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-bryanskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-lesami-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-lesami-bryanskoy-oblasti",
+    "name": "Управление лесами Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-po-okhrane-i-sokhraneniyu-istoriko-kulturnogo-naslediya-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-po-okhrane-i-sokhraneniyu-istoriko-kulturnogo-naslediya-bryanskoy-oblasti",
+    "name": "Управление по охране и сохранению историко-культурного наследия Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-promyshlennosti-transporta-i-svyazi-bryanskoy-oblasti": {
+    "id": "ru-32-departament-promyshlennosti-transporta-i-svyazi-bryanskoy-oblasti",
+    "name": "Департамент промышленности, транспорта и связи Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-gosudarstvennogo-regulirovaniya-tarifov-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-gosudarstvennogo-regulirovaniya-tarifov-bryanskoy-oblasti",
+    "name": "Управление государственного регулирования тарифов Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-potrebitelskogo-rynka-i-uslug-kontrolya-v-sfere-proizvodstva-i-oborota-etilovogo-spirta-alkogolnoy-i-595d8ffbae": {
+    "id": "ru-32-upravlenie-potrebitelskogo-rynka-i-uslug-kontrolya-v-sfere-proizvodstva-i-oborota-etilovogo-spirta-alkogolnoy-i-595d8ffbae",
+    "name": "Управление потребительского рынка и услуг, контроля в сфере производства и оборота этилового спирта, алкогольной и спиртосодержащей продукции Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-arkhitektury-i-gradostroitelstva-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-arkhitektury-i-gradostroitelstva-bryanskoy-oblasti",
+    "name": "Управление архитектуры и градостроительства Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-molodezhnoy-politiki-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-molodezhnoy-politiki-bryanskoy-oblasti",
+    "name": "Управление молодежной политики Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-8a6eb05982": {
+    "id": "ru-32-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-8a6eb05982",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники, аттракционов Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-departament-selskogo-khozyaystva-bryanskoy-oblasti": {
+    "id": "ru-32-departament-selskogo-khozyaystva-bryanskoy-oblasti",
+    "name": "Департамент сельского хозяйства Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-veterinarii-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-veterinarii-bryanskoy-oblasti",
+    "name": "Управление ветеринарии Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-gosudarstvennaya-stroitelnaya-inspektsiya-bryanskoy-oblasti": {
+    "id": "ru-32-gosudarstvennaya-stroitelnaya-inspektsiya-bryanskoy-oblasti",
+    "name": "Государственная строительная инспекция Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-gosudarstvennaya-zhilishchnaya-inspektsiya-bryanskoy-oblasti": {
+    "id": "ru-32-gosudarstvennaya-zhilishchnaya-inspektsiya-bryanskoy-oblasti",
+    "name": "Государственная жилищная инспекция Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-32-upravlenie-gosudarstvennykh-zakupok-bryanskoy-oblasti": {
+    "id": "ru-32-upravlenie-gosudarstvennykh-zakupok-bryanskoy-oblasti",
+    "name": "Управление государственных закупок Брянской области",
+    "shortName": "",
+    "territoryId": "ru-32"
+  },
+  "ru-30-astrakhan-architecture-town-planning": {
+    "id": "ru-30-astrakhan-architecture-town-planning",
+    "name": "Управление по архитектуре и градостроительству администрации муниципального образования «Городской округ город Астрахань»",
+    "shortName": "Управление по архитектуре и градостроительству администрации муниципального образования «Город Астрахань»",
+    "territoryId": "ru-30"
+  },
+  "ru-93-administraciya-glavy-i-pravitelstva-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-administraciya-glavy-i-pravitelstva-doneckoy-narodnoy-respubliki",
+    "name": "Администрация Главы и Правительства Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-09-karachay-district-finance": {
+    "id": "ru-09-karachay-district-finance",
+    "name": "Финансовое управление администрации Карачаевского муниципального района Карачаево-Черкесской Республики",
+    "shortName": "Финансовое управление",
+    "territoryId": "ru-09"
+  },
+  "ru-09-karachay-district-social-protection": {
+    "id": "ru-09-karachay-district-social-protection",
+    "name": "Управление социальной защиты населения администрации Карачаевского муниципального района Карачаево-Черкесской Республики",
+    "shortName": "УСЗН АКМР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-karachay-district-education-sport-youth": {
+    "id": "ru-09-karachay-district-education-sport-youth",
+    "name": "Управление образования, физической культуры, спорта и молодежной политики администрации Карачаевского муниципального района Карачаево-Черкесской Республики",
+    "shortName": "УОФКСМП администрации Карачаевского муниципального района",
+    "territoryId": "ru-09"
+  },
+  "ru-09-karachay-district-administration": {
+    "id": "ru-09-karachay-district-administration",
+    "name": "Администрация Карачаевского муниципального района",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-01-maikop-property-committee": {
+    "id": "ru-01-maikop-property-committee",
+    "name": "Комитет по управлению имуществом муниципального образования «Город Майкоп»",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-90-melitopol-municipal-district-administration": {
+    "id": "ru-90-melitopol-municipal-district-administration",
+    "name": "Администрация Мелитопольского муниципального округа",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-50-reutov-administration": {
+    "id": "ru-50-reutov-administration",
+    "name": "Администрация городского округа Реутов",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-13-saransk-administration": {
+    "id": "ru-13-saransk-administration",
+    "name": "Администрация городского округа Саранск",
+    "shortName": "",
+    "territoryId": "ru-13"
+  },
+  "ru-64-saratov-education-committee": {
+    "id": "ru-64-saratov-education-committee",
+    "name": "Комитет по образованию администрации муниципального образования «Город Саратов»",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-15-vladikavkaz-representatives": {
+    "id": "ru-15-vladikavkaz-representatives",
+    "name": "Собрание представителей г. Владикавказ",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-07-terek-district-local-administration": {
+    "id": "ru-07-terek-district-local-administration",
+    "name": "Местная администрация Терского муниципального района Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-52-ministerstvo-demografii-i-razvitiya-chelovecheskogo-kapitala-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-demografii-i-razvitiya-chelovecheskogo-kapitala-nizhegorodskoy-oblasti",
+    "name": "Министерство демографии и развития человеческого капитала Нижегородской области",
+    "shortName": "Миндемографии Нижегородской области",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-zashchity-obektov-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-zashchity-obektov-nizhegorodskoy-oblasti",
+    "name": "Министерство защиты объектов Нижегородской области",
+    "shortName": "Минзащиты Нижегородской области",
+    "territoryId": "ru-52"
+  },
+  "ru-37-komitet-ivanovskoy-oblasti-po-molodezhnoy-politike": {
+    "id": "ru-37-komitet-ivanovskoy-oblasti-po-molodezhnoy-politike",
+    "name": "Комитет Ивановской области по молодежной политике",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-83-upravlenie-kultury-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-upravlenie-kultury-nenetskogo-avtonomnogo-okruga",
+    "name": "Управление культуры Ненецкого автономного округа",
+    "shortName": "Управление культуры НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-upravlenie-po-gosudarstvennomu-regulirovaniyu-tsen-tarifov-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-upravlenie-po-gosudarstvennomu-regulirovaniyu-tsen-tarifov-nenetskogo-avtonomnogo-okruga",
+    "name": "Управление по государственному регулированию цен (тарифов) Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-vnutrennego-kontrolya-i-nadzora-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-vnutrennego-kontrolya-i-nadzora-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент внутреннего контроля и надзора Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-vnutrenney-politiki-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-vnutrenney-politiki-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент внутренней политики Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-stroitelstva-zhilishchno-kommunalnogo-khozyaystva-energetiki-i-transporta-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-stroitelstva-zhilishchno-kommunalnogo-khozyaystva-energetiki-i-transporta-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент строительства, жилищно-коммунального хозяйства, энергетики и транспорта Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-83"
+  },
+  "ru-11-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-respubliki-komi": {
+    "id": "ru-11-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-respubliki-komi",
+    "name": "Министерство экономического развития и промышленности Республики Коми",
+    "shortName": "Минэкономразвития Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-35-ministerstvo-molodezhnoy-politiki-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-molodezhnoy-politiki-vologodskoy-oblasti",
+    "name": "Министерство молодежной политики Вологодской области",
+    "shortName": "Министерство молодежной политики области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-kultury-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-kultury-vologodskoy-oblasti",
+    "name": "Министерство культуры Вологодской области",
+    "shortName": "Министерство культуры области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-obrazovaniya-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-obrazovaniya-vologodskoy-oblasti",
+    "name": "Министерство образования Вологодской области",
+    "shortName": "Министерство образования области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-zdravookhraneniya-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-zdravookhraneniya-vologodskoy-oblasti",
+    "name": "Министерство здравоохранения Вологодской области",
+    "shortName": "Министерство здравоохранения области",
+    "territoryId": "ru-35"
+  },
+  "ru-46-komitet-molodezhnoy-politiki-kurskoy-oblasti": {
+    "id": "ru-46-komitet-molodezhnoy-politiki-kurskoy-oblasti",
+    "name": "Комитет молодежной политики Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-vnutrenney-politiki-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-vnutrenney-politiki-kurskoy-oblasti",
+    "name": "Министерство внутренней политики Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-komitet-po-tarifam-i-tsenam-kurskoy-oblasti": {
+    "id": "ru-46-komitet-po-tarifam-i-tsenam-kurskoy-oblasti",
+    "name": "Комитет по тарифам и ценам Курской области",
+    "shortName": "КТЦ Курской области",
+    "territoryId": "ru-46"
+  },
+  "ru-31-ministerstvo-finansov-i-byudzhetnoy-politiki-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-finansov-i-byudzhetnoy-politiki-belgorodskoy-oblasti",
+    "name": "Министерство финансов и бюджетной политики Белгородской области",
+    "shortName": "МФБП",
+    "territoryId": "ru-31"
+  },
+  "ru-33-ministerstvo-sotsialnoy-zashchity-naseleniya-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-sotsialnoy-zashchity-naseleniya-vladimirskoy-oblasti",
+    "name": "Министерство социальной защиты населения Владимирской области",
+    "shortName": "МСЗН",
+    "territoryId": "ru-33"
+  },
+  "ru-35-administratsiya-gubernatora-vologodskoy-oblasti": {
+    "id": "ru-35-administratsiya-gubernatora-vologodskoy-oblasti",
+    "name": "Администрация Губернатора Вологодской области",
+    "shortName": "Администрация Губернатора области",
+    "territoryId": "ru-35"
+  },
+  "ru-06-ministerstvo-stroitelstva-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-stroitelstva-respubliki-ingushetiya",
+    "name": "Министерство строительства Республики Ингушетия",
+    "shortName": "Минстрой Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-ingushetiya",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-kultury-i-turizma-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-kultury-i-turizma-respubliki-ingushetiya",
+    "name": "Министерство культуры и туризма Республики Ингушетия",
+    "shortName": "Минкультуры Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-ingushetiya",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Республики Ингушетия",
+    "shortName": "Минэнерго Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-avtomobilnykh-dorog-i-transporta-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-avtomobilnykh-dorog-i-transporta-respubliki-ingushetiya",
+    "name": "Министерство автомобильных дорог и транспорта Республики Ингушетия",
+    "shortName": "Минавтодортранс Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-08-ministerstvo-tsifrovogo-razvitiya-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-tsifrovogo-razvitiya-respubliki-kalmykiya",
+    "name": "Министерство цифрового развития Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-kalmykiya",
+    "name": "Министерство физической культуры и спорта Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-26-ministerstvo-energetiki-i-promyshlennosti-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-energetiki-i-promyshlennosti-stavropolskogo-kraya",
+    "name": "Министерство энергетики и промышленности Ставропольского края",
+    "shortName": "минпром края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-tsifrovogo-razvitiya-i-svyazi-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-tsifrovogo-razvitiya-i-svyazi-stavropolskogo-kraya",
+    "name": "Министерство цифрового развития и связи Ставропольского края",
+    "shortName": "минцифры края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-molodezhnoy-politiki-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-molodezhnoy-politiki-stavropolskogo-kraya",
+    "name": "Министерство молодежной политики Ставропольского края",
+    "shortName": "минмолодежи края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-ekonomicheskogo-razvitiya-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-ekonomicheskogo-razvitiya-stavropolskogo-kraya",
+    "name": "Министерство экономического развития Ставропольского края",
+    "shortName": "минэкономразвития края",
+    "territoryId": "ru-26"
+  },
+  "ru-12-ministerstvo-tsifrovogo-razvitiya-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-tsifrovogo-razvitiya-respubliki-mariy-el",
+    "name": "Министерство цифрового развития Республики Марий Эл",
+    "shortName": "Минцифры Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-truda-i-sotsialnoy-zashchity-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-truda-i-sotsialnoy-zashchity-respubliki-mariy-el",
+    "name": "Министерство труда и социальной защиты Республики Марий Эл",
+    "shortName": "Минтруда и соцзащиты Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-zdravookhraneniya-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-zdravookhraneniya-respubliki-mariy-el",
+    "name": "Министерство здравоохранения Республики Марий Эл",
+    "shortName": "Минздрав Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-21-ministerstvo-ekonomicheskogo-razvitiya-i-imushchestvennykh-otnosheniy-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-ekonomicheskogo-razvitiya-i-imushchestvennykh-otnosheniy-chuvashskoy-respubliki",
+    "name": "Министерство экономического развития и имущественных отношений Чувашской Республики",
+    "shortName": "Минэкономразвития Чувашии",
+    "territoryId": "ru-21"
+  },
+  "ru-21-ministerstvo-finansov-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-finansov-chuvashskoy-respubliki",
+    "name": "Министерство финансов Чувашской Республики",
+    "shortName": "Минфин Чувашии",
+    "territoryId": "ru-21"
+  },
+  "ru-21-ministerstvo-truda-i-sotsialnoy-zashchity-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-truda-i-sotsialnoy-zashchity-chuvashskoy-respubliki",
+    "name": "Министерство труда и социальной защиты Чувашской Республики",
+    "shortName": "Минтруд Чувашии",
+    "territoryId": "ru-21"
+  },
+  "ru-21-ministerstvo-selskogo-khozyaystva-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-selskogo-khozyaystva-chuvashskoy-respubliki",
+    "name": "Министерство сельского хозяйства Чувашской Республики",
+    "shortName": "Минсельхоз Чувашии",
+    "territoryId": "ru-21"
+  },
+  "ru-95-ministerstvo-finansov-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-finansov-hersonskoy-oblasti",
+    "name": "Министерство финансов Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-truda-i-socialnoy-zaschity-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-truda-i-socialnoy-zaschity-hersonskoy-oblasti",
+    "name": "Министерство труда и социальной защиты Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-02-ministerstvo-prosveshcheniya-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-prosveshcheniya-respubliki-bashkortostan",
+    "name": "Министерство просвещения Республики Башкортостан",
+    "shortName": "Минпросвещения РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-veterinarii": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-veterinarii",
+    "name": "Государственный комитет Республики Башкортостан по ветеринарии",
+    "shortName": "ГК РБ по ветеринарии",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki",
+    "name": "Государственный комитет Республики Башкортостан по надзору за техническим состоянием самоходных машин и других видов техники",
+    "shortName": "ГК РБ по гостехнадзору",
+    "territoryId": "ru-02"
+  },
+  "ru-56-ministerstvo-ekonomicheskogo-razvitiya-investitsiy-turizma-i-vneshnikh-svyazey-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-ekonomicheskogo-razvitiya-investitsiy-turizma-i-vneshnikh-svyazey-orenburgskoy-oblasti",
+    "name": "Министерство экономического развития, инвестиций, туризма и внешних связей Оренбургской области",
+    "shortName": "Минэкономразвития Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-tsifrovoy-ekonomiki-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-tsifrovoy-ekonomiki-orenburgskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Оренбургской области",
+    "shortName": "Минцифра Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-arkhitektury-i-prostranstvenno-gradostroitelnogo-razvitiya-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-arkhitektury-i-prostranstvenno-gradostroitelnogo-razvitiya-orenburgskoy-oblasti",
+    "name": "Министерство архитектуры и пространственно-градостроительного развития Оренбургской области",
+    "shortName": "Минархитектуры Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-18-ministerstvo-ekonomiki-udmurtskoy-respubliki": {
+    "id": "ru-18-ministerstvo-ekonomiki-udmurtskoy-respubliki",
+    "name": "Министерство экономики Удмуртской Республики",
+    "shortName": "Минэкономики УР",
+    "territoryId": "ru-18"
+  },
+  "ru-18-ministerstvo-finansov-udmurtskoy-respubliki": {
+    "id": "ru-18-ministerstvo-finansov-udmurtskoy-respubliki",
+    "name": "Министерство финансов Удмуртской Республики",
+    "shortName": "Минфин Удмуртии",
+    "territoryId": "ru-18"
+  },
+  "ru-18-ministerstvo-po-turizmu-udmurtskoy-respubliki": {
+    "id": "ru-18-ministerstvo-po-turizmu-udmurtskoy-respubliki",
+    "name": "Министерство по туризму Удмуртской Республики",
+    "shortName": "Минтуризм УР",
+    "territoryId": "ru-18"
+  },
+  "ru-18-ministerstvo-molodezhnoy-politiki-udmurtskoy-respubliki": {
+    "id": "ru-18-ministerstvo-molodezhnoy-politiki-udmurtskoy-respubliki",
+    "name": "Министерство молодежной политики Удмуртской Республики",
+    "shortName": "Минмолодёжи УР",
+    "territoryId": "ru-18"
+  },
+  "ru-23-ministerstvo-kurortov-turizma-i-olimpiyskogo-naslediya-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-kurortov-turizma-i-olimpiyskogo-naslediya-krasnodarskogo-kraya",
+    "name": "Министерство курортов, туризма и олимпийского наследия Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-krasnodarskogo-kraya",
+    "name": "Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Краснодарского края",
+    "shortName": "Министерство ТЭК и ЖКХ КК",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-transporta-i-dorozhnogo-khozyaystva-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-transporta-i-dorozhnogo-khozyaystva-krasnodarskogo-kraya",
+    "name": "Министерство транспорта и дорожного хозяйства Краснодарского края",
+    "shortName": "министерство транспорта края",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-promyshlennoy-politiki-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-promyshlennoy-politiki-krasnodarskogo-kraya",
+    "name": "Министерство промышленной политики Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-61-ministerstvo-regionalnoy-politiki-i-massovykh-kommunikatsiy-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-regionalnoy-politiki-i-massovykh-kommunikatsiy-rostovskoy-oblasti",
+    "name": "Министерство региональной политики Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-tsifrovogo-razvitiya-informatsionnykh-tekhnologiy-i-svyazi-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-tsifrovogo-razvitiya-informatsionnykh-tekhnologiy-i-svyazi-rostovskoy-oblasti",
+    "name": "Министерство цифрового развития, информационных технологий и связи Ростовской области",
+    "shortName": "мининформсвязь области",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-ekonomicheskogo-razvitiya-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-ekonomicheskogo-razvitiya-rostovskoy-oblasti",
+    "name": "Министерство экономического развития Ростовской области",
+    "shortName": "минэкономразвития области",
+    "territoryId": "ru-61"
+  },
+  "ru-08-sluzhba-regulirovaniya-kontraktnoy-sistemy-v-sfere-zakupok-respubliki-kalmykiya": {
+    "id": "ru-08-sluzhba-regulirovaniya-kontraktnoy-sistemy-v-sfere-zakupok-respubliki-kalmykiya",
+    "name": "Служба регулирования контрактной системы в сфере закупок Республики Калмыкия",
+    "shortName": "Служба закупок Республики Калмыкия",
+    "territoryId": "ru-08"
+  },
+  "ru-91-gosudarstvennyy-komitet-konkurentnoy-politiki": {
+    "id": "ru-91-gosudarstvennyy-komitet-konkurentnoy-politiki",
+    "name": "Государственный комитет конкурентной политики Республики Крым",
+    "shortName": "Комитет госзаказа Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-gosudarstvennyy-komitet-po-delam-arkhivov": {
+    "id": "ru-91-gosudarstvennyy-komitet-po-delam-arkhivov",
+    "name": "Государственный комитет по делам архивов Республики Крым",
+    "shortName": "Госкомархив",
+    "territoryId": "ru-91"
+  },
+  "ru-91-komitet-po-protivodeystviyu-korruptsii-respubliki-krym": {
+    "id": "ru-91-komitet-po-protivodeystviyu-korruptsii-respubliki-krym",
+    "name": "Комитет по противодействию коррупции Республики Крым",
+    "shortName": "",
+    "territoryId": "ru-91"
+  },
+  "ru-95-ministerstvo-ekonomicheskogo-razvitiya-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-ekonomicheskogo-razvitiya-hersonskoy-oblasti",
+    "name": "Министерство экономического развития Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-cifrovogo-razvitiya-i-massovyh-kommunikaciy-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-cifrovogo-razvitiya-i-massovyh-kommunikaciy-hersonskoy-oblasti",
+    "name": "Министерство цифрового развития и массовых коммуникаций Херсонской области",
+    "shortName": "Минцифры Херсонской области",
+    "territoryId": "ru-95"
+  },
+  "ru-63-ministerstvo-turizma-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-turizma-samarskoy-oblasti",
+    "name": "Министерство туризма Самарской области",
+    "shortName": "Минтуризм СО",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-gradostroitelnoy-politiki-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-gradostroitelnoy-politiki-samarskoy-oblasti",
+    "name": "Министерство градостроительной политики Самарской области",
+    "shortName": "Минградполитики СО",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-molodezhnoy-politiki-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-molodezhnoy-politiki-samarskoy-oblasti",
+    "name": "Министерство молодежной политики Самарской области",
+    "shortName": "Минмолодёжи Самарской области",
+    "territoryId": "ru-63"
+  },
+  "ru-92-departament-tsifrovogo-razvitiya-goroda-sevastopolya": {
+    "id": "ru-92-departament-tsifrovogo-razvitiya-goroda-sevastopolya",
+    "name": "Департамент цифрового развития города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-turizma-i-kreativnykh-industriy-goroda-sevastopolya": {
+    "id": "ru-92-departament-turizma-i-kreativnykh-industriy-goroda-sevastopolya",
+    "name": "Департамент туризма и креативных индустрий города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-ekonomicheskogo-razvitiya-goroda-sevastopolya": {
+    "id": "ru-92-departament-ekonomicheskogo-razvitiya-goroda-sevastopolya",
+    "name": "Департамент экономического развития города Севастополя",
+    "shortName": "ДЭРС",
+    "territoryId": "ru-92"
+  },
+  "ru-94-ministerstvo-zdravoohraneniya-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-zdravoohraneniya-luganskoy-narodnoy-respubliki",
+    "name": "Министерство здравоохранения Луганской Народной Республики",
+    "shortName": "Минздрав ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-truda-i-socialnoy-politiki-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-truda-i-socialnoy-politiki-luganskoy-narodnoy-respubliki",
+    "name": "Министерство труда и социальной политики Луганской Народной Республики",
+    "shortName": "Минтруд ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-chrezvychaynyh-situaciy-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-chrezvychaynyh-situaciy-luganskoy-narodnoy-respubliki",
+    "name": "Министерство региональной безопасности Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-08-elista-city-administration": {
+    "id": "ru-08-elista-city-administration",
+    "name": "Администрация города Элисты",
+    "shortName": "Администрация Элисты",
+    "territoryId": "ru-08"
+  },
+  "ru-56-orsk-city-finance-department": {
+    "id": "ru-56-orsk-city-finance-department",
+    "name": "МУ «Финансовое управление администрации города Орска»",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-18-ministerstvo-natsionalnoy-politiki-udmurtskoy-respubliki": {
+    "id": "ru-18-ministerstvo-natsionalnoy-politiki-udmurtskoy-respubliki",
+    "name": "Министерство национальной политики Удмуртской Республики",
+    "shortName": "",
+    "territoryId": "ru-18"
+  },
+  "ru-12-yoshkar-ola-city-administration": {
+    "id": "ru-12-yoshkar-ola-city-administration",
+    "name": "Администрация городского округа «Город Йошкар-Ола»",
+    "shortName": "",
+    "territoryId": "ru-12"
+  },
+  "ru-02-ufa-city-administration": {
+    "id": "ru-02-ufa-city-administration",
+    "name": "Администрация городского округа город Уфа Республики Башкортостан",
+    "shortName": "Администрация ГО г. Уфа РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-23-krasnodar-city-administration": {
+    "id": "ru-23-krasnodar-city-administration",
+    "name": "Администрация муниципального образования город Краснодар",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-26-stavropol-city-duma": {
+    "id": "ru-26-stavropol-city-duma",
+    "name": "Ставропольская городская Дума",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-61-taganrog-city-administration": {
+    "id": "ru-61-taganrog-city-administration",
+    "name": "Администрация города Таганрога",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-95-verkhnerogachik-municipal-administration": {
+    "id": "ru-95-verkhnerogachik-municipal-administration",
+    "name": "Администрация Верхнерогачикского муниципального округа Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-21-urmary-municipal-administration": {
+    "id": "ru-21-urmary-municipal-administration",
+    "name": "Администрация Урмарского муниципального округа Чувашской Республики",
+    "shortName": "",
+    "territoryId": "ru-21"
+  },
+  "ru-94-alchevsk-city-administration": {
+    "id": "ru-94-alchevsk-city-administration",
+    "name": "Администрация городского округа муниципальное образование городской округ город Алчевск Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-92-departament-vnutrenney-politiki-goroda-sevastopolya": {
+    "id": "ru-92-departament-vnutrenney-politiki-goroda-sevastopolya",
+    "name": "Департамент внутренней политики города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-61-taganrog-transport": {
+    "id": "ru-61-taganrog-transport",
+    "name": "Управление транспорта г. Таганрога",
+    "shortName": "УТ г. Таганрога",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-civil-registry": {
+    "id": "ru-61-taganrog-civil-registry",
+    "name": "Отдел записи актов гражданского состояния г. Таганрога Ростовской области",
+    "shortName": "Отдел ЗАГС г. Таганрога",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-housing-utilities": {
+    "id": "ru-61-taganrog-housing-utilities",
+    "name": "Управление жилищно-коммунального хозяйства г. Таганрога",
+    "shortName": "УЖКХ г. Таганрога",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-education": {
+    "id": "ru-61-taganrog-education",
+    "name": "Управление образования г. Таганрога",
+    "shortName": "Гор УО",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-property": {
+    "id": "ru-61-taganrog-property",
+    "name": "Комитет по управлению имуществом г. Таганрога",
+    "shortName": "КУИ",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-culture": {
+    "id": "ru-61-taganrog-culture",
+    "name": "Управление культуры г. Таганрога",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-sport": {
+    "id": "ru-61-taganrog-sport",
+    "name": "Комитет по физической культуре и спорту г. Таганрога",
+    "shortName": "Комитет по ФКиС г. Таганрога",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-social-protection": {
+    "id": "ru-61-taganrog-social-protection",
+    "name": "Управление социальной защиты населения г. Таганрога",
+    "shortName": "УСЗН г. Таганрога",
+    "territoryId": "ru-61"
+  },
+  "ru-61-taganrog-finance": {
+    "id": "ru-61-taganrog-finance",
+    "name": "Финансовое управление г. Таганрога",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-42-ministerstvo-obrazovaniya-kuzbassa": {
+    "id": "ru-42-ministerstvo-obrazovaniya-kuzbassa",
+    "name": "Министерство образования Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-fizicheskoy-kultury-i-sporta-kuzbassa": {
+    "id": "ru-42-ministerstvo-fizicheskoy-kultury-i-sporta-kuzbassa",
+    "name": "Министерство физической культуры и спорта Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-55-ministerstvo-molodezhnoy-politiki-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-molodezhnoy-politiki-omskoy-oblasti",
+    "name": "Министерство молодежной политики Омской области",
+    "shortName": "Минмолодежи Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-72-departament-molodezhnoy-politiki-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-molodezhnoy-politiki-tyumenskoy-oblasti",
+    "name": "Департамент молодежной политики Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-departament-grazhdanskoy-zaschity-i-pozharnoy-bezopasnosti-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-grazhdanskoy-zaschity-i-pozharnoy-bezopasnosti-tyumenskoy-oblasti",
+    "name": "Департамент гражданской защиты и пожарной безопасности Тюменской области",
+    "shortName": "Департамент ГЗПБ Тюменской области",
+    "territoryId": "ru-72"
+  },
+  "ru-42-ministerstvo-lesnogo-kompleksa-i-ohotnichego-hozyaystva-kuzbassa": {
+    "id": "ru-42-ministerstvo-lesnogo-kompleksa-i-ohotnichego-hozyaystva-kuzbassa",
+    "name": "Министерство лесного комплекса и охотничьего хозяйства Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-89-departament-tarifnoy-politiki-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-tarifnoy-politiki-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент тарифной политики Ямало-Ненецкого автономного округа",
+    "shortName": "Департамент тарифной политики ЯНАО",
+    "territoryId": "ru-89"
+  },
+  "ru-24-ministerstvo-cifrovogo-razvitiya-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-cifrovogo-razvitiya-krasnoyarskogo-kraya",
+    "name": "Министерство цифрового развития Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-42-ministerstvo-ugolnoy-promyshlennosti-kuzbassa": {
+    "id": "ru-42-ministerstvo-ugolnoy-promyshlennosti-kuzbassa",
+    "name": "Министерство угольной промышленности Кузбасса",
+    "shortName": "Минуглепром Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-72-departament-po-ohrane-zhivotnogo-mira-tyumenskoy-oblasti-gosohotdepartament": {
+    "id": "ru-72-departament-po-ohrane-zhivotnogo-mira-tyumenskoy-oblasti-gosohotdepartament",
+    "name": "Департамент по охране, контролю и регулированию использования объектов животного мира и среды их обитания Тюменской области",
+    "shortName": "Госохотдепартамент Тюменской области",
+    "territoryId": "ru-72"
+  },
+  "ru-38-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-irkutskoy-oblasti",
+    "name": "Служба записи актов гражданского состояния Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-89-departament-prirodnyh-resursov-i-ekologii-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-prirodnyh-resursov-i-ekologii-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент природных ресурсов и экологии Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-55-ministerstvo-ekonomicheskogo-razvitiya-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-ekonomicheskogo-razvitiya-omskoy-oblasti",
+    "name": "Министерство экономического развития Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-03-ministerstvo-ekonomiki-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-ekonomiki-respubliki-buryatiya",
+    "name": "Министерство экономики Республики Бурятия",
+    "shortName": "Минэкономики Республики Бурятия",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-prirodnyh-resursov-i-ekologii-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-prirodnyh-resursov-i-ekologii-respubliki-buryatiya",
+    "name": "Министерство природных ресурсов и экологии Республики Бурятия",
+    "shortName": "Минприроды РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-55-ministerstvo-truda-i-socialnogo-razvitiya-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-truda-i-socialnogo-razvitiya-omskoy-oblasti",
+    "name": "Министерство труда и социального развития Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-24-ministerstvo-selskogo-hozyaystva-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-selskogo-hozyaystva-krasnoyarskogo-kraya",
+    "name": "Министерство сельского хозяйства Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-89-sluzhba-veterinarii-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-sluzhba-veterinarii-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Служба ветеринарии Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-38-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-irkutskoy-oblasti",
+    "name": "Министерство экономического развития и промышленности Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-cifrovogo-razvitiya-i-svyazi-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-cifrovogo-razvitiya-i-svyazi-irkutskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-27-zakonodatelnaya-duma-habarovskogo-kraya": {
+    "id": "ru-27-zakonodatelnaya-duma-habarovskogo-kraya",
+    "name": "Законодательная Дума Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-70-zakonodatelnaya-duma-tomskoy-oblasti": {
+    "id": "ru-70-zakonodatelnaya-duma-tomskoy-oblasti",
+    "name": "Законодательная Дума Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-87-administraciya-anadyrskogo-municipalnogo-rayona": {
+    "id": "ru-87-administraciya-anadyrskogo-municipalnogo-rayona",
+    "name": "Администрация Анадырского муниципального района",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-45-apparat-gubernatora-kurganskoy-oblasti": {
+    "id": "ru-45-apparat-gubernatora-kurganskoy-oblasti",
+    "name": "Аппарат Губернатора Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-87-departament-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент строительства и жилищно-коммунального хозяйства Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-kultury-i-turizma-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-kultury-i-turizma-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент культуры и туризма Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-socialnoy-politiki-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-socialnoy-politiki-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент социальной политики Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-prirodnyh-resursov-i-ekologii-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-prirodnyh-resursov-i-ekologii-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент природных ресурсов и экологии Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-cifrovogo-razvitiya-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-cifrovogo-razvitiya-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент цифрового развития Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-zdravoohraneniya-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-zdravoohraneniya-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент здравоохранения Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-fizicheskoy-kultury-i-sporta-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-fizicheskoy-kultury-i-sporta-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент физической культуры и спорта Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-grazhdanskoy-zaschity-i-protivopozharnoy-sluzhby-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-grazhdanskoy-zaschity-i-protivopozharnoy-sluzhby-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент гражданской защиты и противопожарной службы Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-komitet-gosudarstvennogo-regulirovaniya-cen-i-tarifov-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-komitet-gosudarstvennogo-regulirovaniya-cen-i-tarifov-chukotskogo-avtonomnogo-okruga",
+    "name": "Комитет государственного регулирования цен и тарифов Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-apparat-gubernatora-i-pravitelstva-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-apparat-gubernatora-i-pravitelstva-chukotskogo-avtonomnogo-okruga",
+    "name": "Аппарат Губернатора и Правительства Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-51-ministerstvo-zdravookhraneniya-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-zdravookhraneniya-murmanskoy-oblasti",
+    "name": "Министерство здравоохранения Мурманской области",
+    "shortName": "Минздрав Мурманской области",
+    "territoryId": "ru-51"
+  },
+  "ru-05-ministerstvo-zdravookhraneniya-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-zdravookhraneniya-respubliki-dagestan",
+    "name": "Министерство здравоохранения Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-09-ministerstvo-zdravookhraneniya-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-zdravookhraneniya-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство здравоохранения Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-45-departament-gosudarstvennogo-regulirovaniya-cen-i-tarifov-kurganskoy-oblasti": {
+    "id": "ru-45-departament-gosudarstvennogo-regulirovaniya-cen-i-tarifov-kurganskoy-oblasti",
+    "name": "Департамент государственного регулирования цен и тарифов Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kurganskoy-oblasti": {
+    "id": "ru-45-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kurganskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Курганской области",
+    "shortName": "Управление ЗАГС Курганской области",
+    "territoryId": "ru-45"
+  },
+  "ru-83-departament-tsifrovogo-razvitiya-i-svyazi-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-tsifrovogo-razvitiya-i-svyazi-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент цифрового развития и связи Ненецкого автономного округа",
+    "shortName": "Департамент цифрового развития НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-finansov-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-finansov-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент финансов Ненецкого автономного округа",
+    "shortName": "ДФ НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-obshchestvennoy-bezopasnosti-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-obshchestvennoy-bezopasnosti-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент общественной безопасности Ненецкого автономного округа",
+    "shortName": "ДОБ НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-obrazovaniya-i-sporta-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-obrazovaniya-i-sporta-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент образования и спорта Ненецкого автономного округа",
+    "shortName": "ДОС НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-prirodnykh-resursov-ekologii-i-agropromyshlennogo-kompleksa-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-prirodnykh-resursov-ekologii-i-agropromyshlennogo-kompleksa-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент природных ресурсов, экологии и агропромышленного комплекса Ненецкого автономного округа",
+    "shortName": "Департамент ПР и АПК НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-apparat-administratsii-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-apparat-administratsii-nenetskogo-avtonomnogo-okruga",
+    "name": "Аппарат Администрации Ненецкого автономного округа",
+    "shortName": "Аппарат Администрации НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-19-pravitelstvo-respubliki-hakasiya": {
+    "id": "ru-19-pravitelstvo-respubliki-hakasiya",
+    "name": "Правительство Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-obrazovaniya-i-nauki-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-obrazovaniya-i-nauki-respubliki-hakasiya",
+    "name": "Министерство образования и науки Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-prirodnyh-resursov-i-ekologii-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-prirodnyh-resursov-i-ekologii-respubliki-hakasiya",
+    "name": "Министерство природных ресурсов и экологии Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-po-delam-yusticii-i-regionalnoy-bezopasnosti-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-po-delam-yusticii-i-regionalnoy-bezopasnosti-respubliki-hakasiya",
+    "name": "Министерство по делам юстиции и региональной безопасности Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-truda-i-socialnoy-zaschity-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-truda-i-socialnoy-zaschity-respubliki-hakasiya",
+    "name": "Министерство труда и социальной защиты Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-respubliki-hakasiya",
+    "name": "Министерство имущественных и земельных отношений Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-zdravoohraneniya-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-zdravoohraneniya-respubliki-hakasiya",
+    "name": "Министерство здравоохранения Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-nacionalnoy-i-territorialnoy-politiki-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-nacionalnoy-i-territorialnoy-politiki-respubliki-hakasiya",
+    "name": "Министерство национальной и территориальной политики Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-respubliki-hakasiya": {
+    "id": "ru-19-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-respubliki-hakasiya",
+    "name": "Государственная инспекция по охране объектов культурного наследия Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-17-sluzhba-po-grazhdanskoy-oborone-i-chrezvychaynym-situaciyam-respubliki-tyva": {
+    "id": "ru-17-sluzhba-po-grazhdanskoy-oborone-i-chrezvychaynym-situaciyam-respubliki-tyva",
+    "name": "Служба по гражданской обороне и чрезвычайным ситуациям Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-sporta-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-sporta-respubliki-tyva",
+    "name": "Министерство спорта Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-17-sluzhba-po-finansovo-byudzhetnomu-nadzoru-respubliki-tyva": {
+    "id": "ru-17-sluzhba-po-finansovo-byudzhetnomu-nadzoru-respubliki-tyva",
+    "name": "Служба по финансово-бюджетному надзору Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-79-birobidzhan-municipal-property-committee": {
+    "id": "ru-79-birobidzhan-municipal-property-committee",
+    "name": "Муниципальное казенное учреждение «Комитет по управлению муниципальным имуществом мэрии города муниципального образования «Город Биробиджан» Еврейской автономной области»",
+    "shortName": "КУМИ мэрии города Биробиджана",
+    "territoryId": "ru-79"
+  },
+  "ru-25-administraciya-dalnerechenskogo-municipalnogo-okruga": {
+    "id": "ru-25-administraciya-dalnerechenskogo-municipalnogo-okruga",
+    "name": "Администрация Дальнереченского муниципального округа Приморского края",
+    "shortName": "Администрация Дальнереченского муниципального округа",
+    "territoryId": "ru-25"
+  },
+  "ru-79-meriya-goroda-birobidzhana": {
+    "id": "ru-79-meriya-goroda-birobidzhana",
+    "name": "Мэрия города муниципального образования «Город Биробиджан» Еврейской автономной области",
+    "shortName": "Мэрия города Биробиджана",
+    "territoryId": "ru-79"
+  },
+  "ru-65-ministerstvo-finansov-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-finansov-sahalinskoy-oblasti",
+    "name": "Министерство финансов Сахалинской области",
+    "shortName": "Сахминфин",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-zdravoohraneniya-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-zdravoohraneniya-sahalinskoy-oblasti",
+    "name": "Министерство здравоохранения Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-22-administraciya-gubernatora-i-pravitelstva-altayskogo-kraya": {
+    "id": "ru-22-administraciya-gubernatora-i-pravitelstva-altayskogo-kraya",
+    "name": "Администрация Губернатора и Правительства Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-28-apparat-gubernatora-amurskoy-oblasti-i-pravitelstva-amurskoy-oblasti": {
+    "id": "ru-28-apparat-gubernatora-amurskoy-oblasti-i-pravitelstva-amurskoy-oblasti",
+    "name": "Аппарат губернатора Амурской области и Правительства Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-65-apparat-gubernatora-i-pravitelstva-sahalinskoy-oblasti": {
+    "id": "ru-65-apparat-gubernatora-i-pravitelstva-sahalinskoy-oblasti",
+    "name": "Аппарат Губернатора и Правительства Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-27-administraciya-gubernatora-i-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-administraciya-gubernatora-i-pravitelstva-habarovskogo-kraya",
+    "name": "Администрация Губернатора и Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-62-ryazanskaya-oblastnaya-duma": {
+    "id": "ru-62-ryazanskaya-oblastnaya-duma",
+    "name": "Рязанская областная Дума",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-69-zakonodatelnoe-sobranie-tverskoy-oblasti": {
+    "id": "ru-69-zakonodatelnoe-sobranie-tverskoy-oblasti",
+    "name": "Законодательное Собрание Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-76-yaroslavskaya-oblastnaya-duma": {
+    "id": "ru-76-yaroslavskaya-oblastnaya-duma",
+    "name": "Ярославская областная Дума",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-59-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-blagoustroystva-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-blagoustroystva-permskogo-kraya",
+    "name": "Министерство жилищно-коммунального хозяйства и благоустройства Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-zdravookhraneniya-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-zdravookhraneniya-permskogo-kraya",
+    "name": "Министерство здравоохранения Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-informatsionnogo-razvitiya-i-svyazi-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-informatsionnogo-razvitiya-i-svyazi-permskogo-kraya",
+    "name": "Министерство информационного развития и связи Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-po-delam-komi-permyatskogo-okruga-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-po-delam-komi-permyatskogo-okruga-permskogo-kraya",
+    "name": "Министерство по делам Коми-Пермяцкого округа Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-obrazovaniya-i-nauki-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-obrazovaniya-i-nauki-permskogo-kraya",
+    "name": "Министерство образования и науки Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-po-turizmu-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-po-turizmu-permskogo-kraya",
+    "name": "Министерство по туризму Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-permskogo-kraya",
+    "name": "Министерство по регулированию контрактной системы в сфере закупок Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-po-upravleniyu-imushchestvom-i-gradostroitelnoy-deyatelnosti-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-po-upravleniyu-imushchestvom-i-gradostroitelnoy-deyatelnosti-permskogo-kraya",
+    "name": "Министерство по управлению имуществом и градостроительной деятельности Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-prirodnykh-resursov-lesnogo-khozyaystva-i-ekologii-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-prirodnykh-resursov-lesnogo-khozyaystva-i-ekologii-permskogo-kraya",
+    "name": "Министерство природных ресурсов, лесного хозяйства и экологии Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-promyshlennosti-i-torgovli-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-promyshlennosti-i-torgovli-permskogo-kraya",
+    "name": "Министерство промышленности и торговли Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-tarifnogo-regulirovaniya-i-energetiki-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-tarifnogo-regulirovaniya-i-energetiki-permskogo-kraya",
+    "name": "Министерство тарифного регулирования и энергетики Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-territorialnoy-bezopasnosti-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-territorialnoy-bezopasnosti-permskogo-kraya",
+    "name": "Министерство территориальной безопасности Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-stroitelstva-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-stroitelstva-permskogo-kraya",
+    "name": "Министерство строительства Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-truda-i-sotsialnogo-razvitiya-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-truda-i-sotsialnogo-razvitiya-permskogo-kraya",
+    "name": "Министерство труда и социального развития Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-agentstvo-po-delam-arkhivov-permskogo-kraya": {
+    "id": "ru-59-agentstvo-po-delam-arkhivov-permskogo-kraya",
+    "name": "Агентство по делам архивов Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-agentstvo-po-delam-molodezhi-permskogo-kraya": {
+    "id": "ru-59-agentstvo-po-delam-molodezhi-permskogo-kraya",
+    "name": "Агентство по делам молодежи Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-fizicheskoy-kultury-i-sporta-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-fizicheskoy-kultury-i-sporta-permskogo-kraya",
+    "name": "Министерство физической культуры и спорта Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-transporta-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-transporta-permskogo-kraya",
+    "name": "Министерство транспорта Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-ministerstvo-ekonomicheskogo-razvitiya-i-investitsiy-permskogo-kraya": {
+    "id": "ru-59-ministerstvo-ekonomicheskogo-razvitiya-i-investitsiy-permskogo-kraya",
+    "name": "Министерство экономического развития и инвестиций Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-agentstvo-po-delam-yustitsii-i-mirovykh-sudey-permskogo-kraya": {
+    "id": "ru-59-agentstvo-po-delam-yustitsii-i-mirovykh-sudey-permskogo-kraya",
+    "name": "Агентство по делам юстиции и мировых судей Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-agentstvo-po-soprovozhdeniyu-kontsessionnykh-proektov-permskogo-kraya": {
+    "id": "ru-59-agentstvo-po-soprovozhdeniyu-kontsessionnykh-proektov-permskogo-kraya",
+    "name": "Агентство по сопровождению концессионных проектов Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-permskogo-kraya": {
+    "id": "ru-59-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-permskogo-kraya",
+    "name": "Инспекция государственного жилищного надзора Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-gosudarstvennaya-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-permskogo-kraya": {
+    "id": "ru-59-gosudarstvennaya-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-permskogo-kraya",
+    "name": "Государственная инспекция по охране объектов культурного наследия Пермского края",
+    "shortName": "Инспекция по охране ОКН ПК",
+    "territoryId": "ru-59"
+  },
+  "ru-59-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-permskogo-kraya": {
+    "id": "ru-59-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-permskogo-kraya",
+    "name": "Инспекция государственного строительного надзора Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-komitet-zapisi-aktov-grazhdanskogo-sostoyaniya-permskogo-kraya": {
+    "id": "ru-59-komitet-zapisi-aktov-grazhdanskogo-sostoyaniya-permskogo-kraya",
+    "name": "Комитет записи актов гражданского состояния Пермского края",
+    "shortName": "Комитет ЗАГС Пермского края",
+    "territoryId": "ru-59"
+  },
+  "ru-59-gosudarstvennaya-veterinarnaya-inspektsiya-permskogo-kraya": {
+    "id": "ru-59-gosudarstvennaya-veterinarnaya-inspektsiya-permskogo-kraya",
+    "name": "Государственная ветеринарная инспекция Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-inspektsiya-gosudarstvennogo-tekhnicheskogo-nadzora-permskogo-kraya": {
+    "id": "ru-59-inspektsiya-gosudarstvennogo-tekhnicheskogo-nadzora-permskogo-kraya",
+    "name": "Инспекция государственного технического надзора Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-21-ministerstvo-zdravookhraneniya-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-zdravookhraneniya-chuvashskoy-respubliki",
+    "name": "Министерство здравоохранения Чувашской Республики",
+    "shortName": "Минздрав Чувашии",
+    "territoryId": "ru-21"
+  },
+  "ru-78-komitet-po-gosudarstvennomu-zakazu-sankt-peterburga": {
+    "id": "ru-78-komitet-po-gosudarstvennomu-zakazu-sankt-peterburga",
+    "name": "Комитет по государственному заказу Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-investitsiyam-sankt-peterburga": {
+    "id": "ru-78-komitet-po-investitsiyam-sankt-peterburga",
+    "name": "Комитет по инвестициям Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-upravlenie-sotsialnogo-pitaniya": {
+    "id": "ru-78-upravlenie-sotsialnogo-pitaniya",
+    "name": "Управление социального питания",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-kulture-sankt-peterburga": {
+    "id": "ru-78-komitet-po-kulture-sankt-peterburga",
+    "name": "Комитет по культуре Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-kontrolyu-za-imushchestvom-sankt-peterburga": {
+    "id": "ru-78-komitet-po-kontrolyu-za-imushchestvom-sankt-peterburga",
+    "name": "Комитет по контролю за имуществом Санкт-Петербурга",
+    "shortName": "ККИ",
+    "territoryId": "ru-78"
+  },
+  "ru-78-gosudarstvennaya-zhilishchnaya-inspektsiya-sankt-peterburga": {
+    "id": "ru-78-gosudarstvennaya-zhilishchnaya-inspektsiya-sankt-peterburga",
+    "name": "Государственная жилищная инспекция Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-promyshlennoy-politike-innovatsiyam-i-torgovle-sankt-peterburga": {
+    "id": "ru-78-komitet-po-promyshlennoy-politike-innovatsiyam-i-torgovle-sankt-peterburga",
+    "name": "Комитет по промышленной политике, инновациям и торговле Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-nauke-i-vysshey-shkole": {
+    "id": "ru-78-komitet-po-nauke-i-vysshey-shkole",
+    "name": "Комитет по науке и высшей школе",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-razvitiyu-turizma-sankt-peterburga": {
+    "id": "ru-78-komitet-po-razvitiyu-turizma-sankt-peterburga",
+    "name": "Комитет по развитию туризма Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-prirodopolzovaniyu-okhrane-okruzhayushchey-sredy-i-obespecheniyu-ekologicheskoy-bezopasnosti": {
+    "id": "ru-78-komitet-po-prirodopolzovaniyu-okhrane-okruzhayushchey-sredy-i-obespecheniyu-ekologicheskoy-bezopasnosti",
+    "name": "Комитет по природопользованию, охране окружающей среды и обеспечению экологической безопасности",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-sotsialnoy-politike-sankt-peterburga": {
+    "id": "ru-78-komitet-po-sotsialnoy-politike-sankt-peterburga",
+    "name": "Комитет по социальной политике Санкт-Петербурга",
+    "shortName": "КСП",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-trudu-i-zanyatosti-naseleniya-sankt-peterburga": {
+    "id": "ru-78-komitet-po-trudu-i-zanyatosti-naseleniya-sankt-peterburga",
+    "name": "Комитет по труду и занятости населения Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-stroitelstvu": {
+    "id": "ru-78-komitet-po-stroitelstvu",
+    "name": "Комитет по строительству",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-razvitiyu-transportnoy-infrastruktury-sankt-peterburga": {
+    "id": "ru-78-komitet-po-razvitiyu-transportnoy-infrastruktury-sankt-peterburga",
+    "name": "Комитет по развитию транспортной инфраструктуры Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-vneshnim-svyazyam-sankt-peterburga": {
+    "id": "ru-78-komitet-po-vneshnim-svyazyam-sankt-peterburga",
+    "name": "Комитет по внешним связям Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-upravlenie-veterinarii-sankt-peterburga": {
+    "id": "ru-78-upravlenie-veterinarii-sankt-peterburga",
+    "name": "Управление ветеринарии Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-delam-zapisi-aktov-grazhdanskogo-sostoyaniya": {
+    "id": "ru-78-komitet-po-delam-zapisi-aktov-grazhdanskogo-sostoyaniya",
+    "name": "Комитет по делам записи актов гражданского состояния",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-tarifam-sankt-peterburga": {
+    "id": "ru-78-komitet-po-tarifam-sankt-peterburga",
+    "name": "Комитет по тарифам Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-i-ekspertizy-sankt-peterburga": {
+    "id": "ru-78-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-i-ekspertizy-sankt-peterburga",
+    "name": "Служба государственного строительного надзора и экспертизы Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-molodezhnoy-politike-i-vzaimodeystviyu-s-obshchestvennymi-organizatsiyami": {
+    "id": "ru-78-komitet-po-molodezhnoy-politike-i-vzaimodeystviyu-s-obshchestvennymi-organizatsiyami",
+    "name": "Комитет по молодежной политике и взаимодействию с общественными организациями",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-zhilishchnyy-komitet": {
+    "id": "ru-78-zhilishchnyy-komitet",
+    "name": "Жилищный комитет",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-gosudarstvennaya-tekhnicheskaya-inspektsiya-sankt-peterburga-gostekhnadzor-sankt-peterburga": {
+    "id": "ru-78-gosudarstvennaya-tekhnicheskaya-inspektsiya-sankt-peterburga-gostekhnadzor-sankt-peterburga",
+    "name": "Государственная техническая инспекция Санкт-Петербурга",
+    "shortName": "Гостехнадзор Санкт-Петербурга",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-fizicheskoy-kulture-i-sportu": {
+    "id": "ru-78-komitet-po-fizicheskoy-kulture-i-sportu",
+    "name": "Комитет по физической культуре и спорту",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-53-administratsiya-velikogo-novgoroda": {
+    "id": "ru-53-administratsiya-velikogo-novgoroda",
+    "name": "Администрация Великого Новгорода",
+    "shortName": "Администрация Великого Новгорода",
+    "territoryId": "ru-53"
+  },
+  "ru-29-administratsiya-gorodskogo-okruga-gorod-arkhangelsk": {
+    "id": "ru-29-administratsiya-gorodskogo-okruga-gorod-arkhangelsk",
+    "name": "Администрация городского округа «Город Архангельск»",
+    "shortName": "Администрация городского округа «Город Архангельск»",
+    "territoryId": "ru-29"
+  },
+  "ru-48-administratsiya-goroda-lipetska": {
+    "id": "ru-48-administratsiya-goroda-lipetska",
+    "name": "Администрация города Липецка",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-39-administratsiya-gorodskogo-okruga-gorod-kaliningrad": {
+    "id": "ru-39-administratsiya-gorodskogo-okruga-gorod-kaliningrad",
+    "name": "Администрация городского округа «Город Калининград»",
+    "shortName": "Администрация городского округа «Город Калининград»",
+    "territoryId": "ru-39"
+  },
+  "ru-78-arkhivnyy-komitet-sankt-peterburga": {
+    "id": "ru-78-arkhivnyy-komitet-sankt-peterburga",
+    "name": "Архивный комитет Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-gosudarstvennogo-finansovogo-kontrolya-sankt-peterburga": {
+    "id": "ru-78-komitet-gosudarstvennogo-finansovogo-kontrolya-sankt-peterburga",
+    "name": "Комитет государственного финансового контроля Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-imushchestvennykh-otnosheniy-sankt-peterburga": {
+    "id": "ru-78-komitet-imushchestvennykh-otnosheniy-sankt-peterburga",
+    "name": "Комитет имущественных отношений Санкт-Петербурга",
+    "shortName": "КИО",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-blagoustroystvu-sankt-peterburga": {
+    "id": "ru-78-komitet-po-blagoustroystvu-sankt-peterburga",
+    "name": "Комитет по благоустройству Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-voprosam-zakonnosti-pravoporyadka-i-bezopasnosti": {
+    "id": "ru-78-komitet-po-voprosam-zakonnosti-pravoporyadka-i-bezopasnosti",
+    "name": "Комитет по вопросам законности, правопорядка и безопасности",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-gosudarstvennomu-kontrolyu-ispolzovaniyu-i-okhrane-pamyatnikov-istorii-i-kultury": {
+    "id": "ru-78-komitet-po-gosudarstvennomu-kontrolyu-ispolzovaniyu-i-okhrane-pamyatnikov-istorii-i-kultury",
+    "name": "Комитет по государственному контролю, использованию и охране памятников истории и культуры",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-gradostroitelstvu-i-arkhitekture": {
+    "id": "ru-78-komitet-po-gradostroitelstvu-i-arkhitekture",
+    "name": "Комитет по градостроительству и архитектуре",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-zdravookhraneniyu": {
+    "id": "ru-78-komitet-po-zdravookhraneniyu",
+    "name": "Комитет по здравоохранению",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-mezhnatsionalnym-otnosheniyam-i-realizatsii-migratsionnoy-politiki-v-sankt-peterburge": {
+    "id": "ru-78-komitet-po-mezhnatsionalnym-otnosheniyam-i-realizatsii-migratsionnoy-politiki-v-sankt-peterburge",
+    "name": "Комитет по межнациональным отношениям и реализации миграционной политики в Санкт-Петербурге",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-transportu": {
+    "id": "ru-78-komitet-po-transportu",
+    "name": "Комитет по транспорту",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-ekonomicheskoy-politike-i-strategicheskomu-planirovaniyu-sankt-peterburga": {
+    "id": "ru-78-komitet-po-ekonomicheskoy-politike-i-strategicheskomu-planirovaniyu-sankt-peterburga",
+    "name": "Комитет по экономической политике и стратегическому планированию Санкт-Петербурга",
+    "shortName": "КЭПиСП",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-po-energetike-i-inzhenernomu-obespecheniyu": {
+    "id": "ru-78-komitet-po-energetike-i-inzhenernomu-obespecheniyu",
+    "name": "Комитет по энергетике и инженерному обеспечению",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-komitet-territorialnogo-razvitiya-sankt-peterburga": {
+    "id": "ru-78-komitet-territorialnogo-razvitiya-sankt-peterburga",
+    "name": "Комитет территориального развития Санкт-Петербурга",
+    "shortName": "",
+    "territoryId": "ru-78"
+  },
+  "ru-78-gosudarstvennaya-administrativno-tekhnicheskaya-inspektsiya": {
+    "id": "ru-78-gosudarstvennaya-administrativno-tekhnicheskaya-inspektsiya",
+    "name": "Государственная административно-техническая инспекция",
+    "shortName": "ГАТИ",
+    "territoryId": "ru-78"
+  },
+  "ru-78-administratsiya-krasnoselskogo-rayona-sankt-peterburga": {
+    "id": "ru-78-administratsiya-krasnoselskogo-rayona-sankt-peterburga",
+    "name": "Администрация Красносельского района Санкт-Петербурга",
+    "shortName": "Администрация Красносельского района Санкт-Петербурга",
+    "territoryId": "ru-78"
+  },
+  "ru-53-ministerstvo-stroitelstva-arkhitektury-i-imushchestvennykh-otnosheniy-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-stroitelstva-arkhitektury-i-imushchestvennykh-otnosheniy-novgorodskoy-oblasti",
+    "name": "Министерство строительства, архитектуры и имущественных отношений Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-63-ministerstvo-nauki-i-vysshego-obrazovaniya-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-nauki-i-vysshego-obrazovaniya-samarskoy-oblasti",
+    "name": "Министерство науки и высшего образования Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-64-ministerstvo-zanyatosti-truda-i-migratsii-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-zanyatosti-truda-i-migratsii-saratovskoy-oblasti",
+    "name": "Министерство занятости, труда и миграции Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-71-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-tulskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-42-ministerstvo-socialnoy-zaschity-naseleniya-kuzbassa": {
+    "id": "ru-42-ministerstvo-socialnoy-zaschity-naseleniya-kuzbassa",
+    "name": "Министерство социальной защиты населения Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-31-ministerstvo-po-delam-molodezhi-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-po-delam-molodezhi-belgorodskoy-oblasti",
+    "name": "Министерство по делам молодежи Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-zdravookhraneniya-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-zdravookhraneniya-belgorodskoy-oblasti",
+    "name": "Министерство здравоохранения Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-avtomobilnykh-dorog-i-transporta-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-avtomobilnykh-dorog-i-transporta-belgorodskoy-oblasti",
+    "name": "Министерство автомобильных дорог и транспорта Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-belgorodskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-obshchestvennykh-kommunikatsiy-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-obshchestvennykh-kommunikatsiy-belgorodskoy-oblasti",
+    "name": "Министерство общественных коммуникаций Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-belgorodskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-belgorodskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольствия Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-belgorodskoy-oblasti",
+    "name": "Министерство экономического развития и промышленности Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-sotsialnoy-zashchity-naseleniya-i-truda-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-sotsialnoy-zashchity-naseleniya-i-truda-belgorodskoy-oblasti",
+    "name": "Министерство социальной защиты населения и труда Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-administratsiya-gubernatora-belgorodskoy-oblasti": {
+    "id": "ru-31-administratsiya-gubernatora-belgorodskoy-oblasti",
+    "name": "Администрация Губернатора и Правительства Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-pravitelstvo-belgorodskoy-oblasti": {
+    "id": "ru-31-pravitelstvo-belgorodskoy-oblasti",
+    "name": "Правительство Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-prirodopolzovaniya-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-prirodopolzovaniya-belgorodskoy-oblasti",
+    "name": "Министерство природопользования Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-inspektsiya-gostekhnadzora-belgorodskoy-oblasti": {
+    "id": "ru-31-inspektsiya-gostekhnadzora-belgorodskoy-oblasti",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Белгородской области с соответствующими государственными инспекциями городов и районов",
+    "shortName": "Инспекция гостехнадзора Белгородской области",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-po-gosudarstvennomu-regulirovaniyu-tsen-i-tarifov-v-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-po-gosudarstvennomu-regulirovaniyu-tsen-i-tarifov-v-belgorodskoy-oblasti",
+    "name": "Управление по государственному регулированию цен и тарифов в Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-po-turizmu-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-po-turizmu-belgorodskoy-oblasti",
+    "name": "Управление по туризму Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-po-delam-arkhivov-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-po-delam-arkhivov-belgorodskoy-oblasti",
+    "name": "Управление по делам архивов Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-belgorodskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-arkhitektury-i-gradostroitelstva-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-arkhitektury-i-gradostroitelstva-belgorodskoy-oblasti",
+    "name": "Управление архитектуры и градостроительства Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-belgorodskoy-oblasti",
+    "name": "Управление государственной охраны объектов культурного наследия Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-ekologicheskogo-i-okhotnichego-nadzora-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-ekologicheskogo-i-okhotnichego-nadzora-belgorodskoy-oblasti",
+    "name": "Управление экологического и охотничьего надзора Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-gosudarstvennogo-zhilishchnogo-nadzora-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-gosudarstvennogo-zhilishchnogo-nadzora-belgorodskoy-oblasti",
+    "name": "Управление государственного жилищного надзора Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-sporta-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-sporta-belgorodskoy-oblasti",
+    "name": "Министерство спорта Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-stroitelstva-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-stroitelstva-belgorodskoy-oblasti",
+    "name": "Министерство строительства Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-veterinarii-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-veterinarii-belgorodskoy-oblasti",
+    "name": "Управление ветеринарии Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-belgorodskiy-gorodskoy-sovet": {
+    "id": "ru-31-belgorodskiy-gorodskoy-sovet",
+    "name": "Белгородский городской Совет",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-ministerstvo-tsifrovogo-razvitiya-belgorodskoy-oblasti": {
+    "id": "ru-31-ministerstvo-tsifrovogo-razvitiya-belgorodskoy-oblasti",
+    "name": "Министерство цифрового развития Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-belgorodskoy-oblasti",
+    "name": "Управление по обеспечению деятельности мировых судей Белгородской области",
+    "shortName": "",
+    "territoryId": "ru-31"
+  },
+  "ru-31-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-belgorodskoy-oblasti": {
+    "id": "ru-31-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-belgorodskoy-oblasti",
+    "name": "Управление государственного строительного надзора Белгородской области",
+    "shortName": "Госстройнадзор Белгородской области",
+    "territoryId": "ru-31"
+  },
+  "ru-37-departament-vnutrenney-politiki-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-vnutrenney-politiki-ivanovskoy-oblasti",
+    "name": "Департамент внутренней политики Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-zhilishchno-kommunalnogo-khozyaystva-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-zhilishchno-kommunalnogo-khozyaystva-ivanovskoy-oblasti",
+    "name": "Департамент жилищно-коммунального хозяйства Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-upravleniya-imushchestvom-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-upravleniya-imushchestvom-ivanovskoy-oblasti",
+    "name": "Департамент управления имуществом Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-komitet-ivanovskoy-oblasti-po-lesnomu-khozyaystvu": {
+    "id": "ru-37-komitet-ivanovskoy-oblasti-po-lesnomu-khozyaystvu",
+    "name": "Комитет Ивановской области по лесному хозяйству",
+    "shortName": "Ивкомлесхоз",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-sotsialnoy-zashchity-naseleniya-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-sotsialnoy-zashchity-naseleniya-ivanovskoy-oblasti",
+    "name": "Департамент социальной защиты населения Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-ekonomicheskogo-razvitiya-i-torgovli-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-ekonomicheskogo-razvitiya-i-torgovli-ivanovskoy-oblasti",
+    "name": "Департамент экономического развития и торговли Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-energetiki-i-tarifov-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-energetiki-i-tarifov-ivanovskoy-oblasti",
+    "name": "Департамент энергетики и тарифов Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-selskogo-khozyaystva-i-prodovolstviya-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-selskogo-khozyaystva-i-prodovolstviya-ivanovskoy-oblasti",
+    "name": "Департамент сельского хозяйства и продовольствия Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-sluzhba-veterinarii-ivanovskoy-oblasti": {
+    "id": "ru-37-sluzhba-veterinarii-ivanovskoy-oblasti",
+    "name": "Служба ветеринарии Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-konkursov-i-auktsionov-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-konkursov-i-auktsionov-ivanovskoy-oblasti",
+    "name": "Департамент конкурсов и аукционов Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-obrazovaniya-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-obrazovaniya-ivanovskoy-oblasti",
+    "name": "Департамент образования и науки Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-kultury-i-turizma-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-kultury-i-turizma-ivanovskoy-oblasti",
+    "name": "Департамент культуры Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-stroitelstva-i-arkhitektury-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-stroitelstva-i-arkhitektury-ivanovskoy-oblasti",
+    "name": "Департамент строительства и архитектуры Ивановской области",
+    "shortName": "ДСиА Ивановской области",
+    "territoryId": "ru-37"
+  },
+  "ru-37-komitet-ivanovskoy-oblasti-po-trudu-sodeystviyu-zanyatosti-naseleniya-i-trudovoy-migratsii": {
+    "id": "ru-37-komitet-ivanovskoy-oblasti-po-trudu-sodeystviyu-zanyatosti-naseleniya-i-trudovoy-migratsii",
+    "name": "Комитет Ивановской области по труду, содействию занятости населения и трудовой миграции",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-sluzhba-gosudarstvennogo-finansovogo-kontrolya-ivanovskoy-oblasti": {
+    "id": "ru-37-sluzhba-gosudarstvennogo-finansovogo-kontrolya-ivanovskoy-oblasti",
+    "name": "Служба государственного финансового контроля Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-sluzhba-gosudarstvennoy-zhilishchnoy-inspektsii-ivanovskoy-oblasti": {
+    "id": "ru-37-sluzhba-gosudarstvennoy-zhilishchnoy-inspektsii-ivanovskoy-oblasti",
+    "name": "Служба государственной жилищной инспекции Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-ivanovskoy-oblasti": {
+    "id": "ru-37-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-ivanovskoy-oblasti",
+    "name": "Служба государственного строительного надзора Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-komitet-ivanovskoy-oblasti-po-obespecheniyu-deyatelnosti-mirovykh-sudey-i-grazhdanskoy-zashchity-naseleniya": {
+    "id": "ru-37-komitet-ivanovskoy-oblasti-po-obespecheniyu-deyatelnosti-mirovykh-sudey-i-grazhdanskoy-zashchity-naseleniya",
+    "name": "Комитет Ивановской области по делам гражданской обороны и защиты населения",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-razvitiya-informatsionnogo-obshchestva-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-razvitiya-informatsionnogo-obshchestva-ivanovskoy-oblasti",
+    "name": "Департамент развития информационного общества Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-prirodnykh-resursov-i-ekologii-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-prirodnykh-resursov-i-ekologii-ivanovskoy-oblasti",
+    "name": "Департамент природных ресурсов и экологии Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-dorozhnogo-khozyaystva-i-transporta-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-dorozhnogo-khozyaystva-i-transporta-ivanovskoy-oblasti",
+    "name": "Департамент дорожного хозяйства и транспорта Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-komitet-ivanovskoy-oblasti-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya": {
+    "id": "ru-37-komitet-ivanovskoy-oblasti-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya",
+    "name": "Комитет Ивановской области по государственной охране объектов культурного наследия",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-departament-sporta-ivanovskoy-oblasti": {
+    "id": "ru-37-departament-sporta-ivanovskoy-oblasti",
+    "name": "Департамент спорта Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-komitet-ivanovskoy-oblasti-zags": {
+    "id": "ru-37-komitet-ivanovskoy-oblasti-zags",
+    "name": "Комитет Ивановской области ЗАГС",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-pravitelstvo-ivanovskoy-oblasti": {
+    "id": "ru-37-pravitelstvo-ivanovskoy-oblasti",
+    "name": "Правительство Ивановской области",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-40-pravitelstvo-kaluzhskoy-oblasti": {
+    "id": "ru-40-pravitelstvo-kaluzhskoy-oblasti",
+    "name": "Правительство Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-administratsiya-gubernatora-kaluzhskoy-oblasti": {
+    "id": "ru-40-administratsiya-gubernatora-kaluzhskoy-oblasti",
+    "name": "Администрация Губернатора Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-upravlenie-arkhitektury-i-gradostroitelstva-kaluzhskoy-oblasti": {
+    "id": "ru-40-upravlenie-arkhitektury-i-gradostroitelstva-kaluzhskoy-oblasti",
+    "name": "Управление архитектуры и градостроительства Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-upravlenie-administrativno-tekhnicheskogo-kontrolya-kaluzhskoy-oblasti": {
+    "id": "ru-40-upravlenie-administrativno-tekhnicheskogo-kontrolya-kaluzhskoy-oblasti",
+    "name": "Управление административно-технического контроля Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kaluzhskoy-oblasti": {
+    "id": "ru-40-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kaluzhskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-komitet-veterinarii-pri-pravitelstve-kaluzhskoy-oblasti": {
+    "id": "ru-40-komitet-veterinarii-pri-pravitelstve-kaluzhskoy-oblasti",
+    "name": "Комитет ветеринарии при Правительстве Калужской области",
+    "shortName": "Комитет ветеринарии",
+    "territoryId": "ru-40"
+  },
+  "ru-40-upravlenie-po-delam-arkhivov-kaluzhskoy-oblasti": {
+    "id": "ru-40-upravlenie-po-delam-arkhivov-kaluzhskoy-oblasti",
+    "name": "Управление по делам архивов Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-kaluzhskoy-oblasti": {
+    "id": "ru-40-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-kaluzhskoy-oblasti",
+    "name": "Управление по охране объектов культурного наследия Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-upravlenie-molodezhnoy-politiki-kaluzhskoy-oblasti": {
+    "id": "ru-40-upravlenie-molodezhnoy-politiki-kaluzhskoy-oblasti",
+    "name": "Управление молодежной политики Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-tsifrovogo-razvitiya-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-tsifrovogo-razvitiya-kaluzhskoy-oblasti",
+    "name": "Министерство цифрового развития Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-prirodnykh-resursov-i-ekologii-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-prirodnykh-resursov-i-ekologii-kaluzhskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-selskogo-khozyaystva-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-selskogo-khozyaystva-kaluzhskoy-oblasti",
+    "name": "Министерство сельского хозяйства Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-kaluzhskoy-oblasti",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-obrazovaniya-i-nauki-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-obrazovaniya-i-nauki-kaluzhskoy-oblasti",
+    "name": "Министерство образования и науки Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-truda-i-sotsialnoy-zashchity-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-truda-i-sotsialnoy-zashchity-kaluzhskoy-oblasti",
+    "name": "Министерство труда и социальной защиты Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-kultury-i-turizma-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-kultury-i-turizma-kaluzhskoy-oblasti",
+    "name": "Министерство культуры и туризма Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-kaluzhskoy-oblasti",
+    "name": "Министерство экономического развития и промышленности Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-transporta-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-transporta-kaluzhskoy-oblasti",
+    "name": "Министерство транспорта Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-sluzhba-po-organizatsionnomu-obespecheniyu-mirovykh-sudey-kaluzhskoy-oblasti": {
+    "id": "ru-40-sluzhba-po-organizatsionnomu-obespecheniyu-mirovykh-sudey-kaluzhskoy-oblasti",
+    "name": "Служба по организационному обеспечению мировых судей Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-ministerstvo-konkurentnoy-politiki-kaluzhskoy-oblasti": {
+    "id": "ru-40-ministerstvo-konkurentnoy-politiki-kaluzhskoy-oblasti",
+    "name": "Министерство конкурентной политики Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-gosudarstvennaya-zhilishchnaya-inspektsiya-kaluzhskoy-oblasti": {
+    "id": "ru-40-gosudarstvennaya-zhilishchnaya-inspektsiya-kaluzhskoy-oblasti",
+    "name": "Государственная жилищная инспекция Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-kaluzhskoy-oblasti": {
+    "id": "ru-40-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-kaluzhskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Калужской области",
+    "shortName": "",
+    "territoryId": "ru-40"
+  },
+  "ru-40-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-c7ebf1854b": {
+    "id": "ru-40-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-c7ebf1854b",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Калужской области",
+    "shortName": "инспекция гостехнадзора Калужской области",
+    "territoryId": "ru-40"
+  },
+  "ru-40-duma-gorodskogo-okruga-goroda-kalugi": {
+    "id": "ru-40-duma-gorodskogo-okruga-goroda-kalugi",
+    "name": "Дума городского округа города Калуги Калужской области",
+    "shortName": "Дума городского округа города Калуги",
+    "territoryId": "ru-40"
+  },
+  "ru-44-komitet-po-delam-molodezhi-kostromskoy-oblasti": {
+    "id": "ru-44-komitet-po-delam-molodezhi-kostromskoy-oblasti",
+    "name": "Комитет по делам молодежи Костромской области",
+    "shortName": "Коммолодежь Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-informatsionnoy-politiki-analiza-i-razvitiya-kommunikatsionnykh-resursov-kostromskoy-oblasti": {
+    "id": "ru-44-departament-informatsionnoy-politiki-analiza-i-razvitiya-kommunikatsionnykh-resursov-kostromskoy-oblasti",
+    "name": "Департамент информационной политики, анализа и развития коммуникационных ресурсов Костромской области",
+    "shortName": "Депинформполитики Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-obrazovaniya-i-nauki-kostromskoy-oblasti": {
+    "id": "ru-44-departament-obrazovaniya-i-nauki-kostromskoy-oblasti",
+    "name": "Департамент образования и науки Костромской области",
+    "shortName": "Депобрнауки Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-agropromyshlennogo-kompleksa-kostromskoy-oblasti": {
+    "id": "ru-44-departament-agropromyshlennogo-kompleksa-kostromskoy-oblasti",
+    "name": "Департамент агропромышленного комплекса Костромской области",
+    "shortName": "Департамент АПК Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-imushchestvennykh-i-zemelnykh-otnosheniy-kostromskoy-oblasti": {
+    "id": "ru-44-departament-imushchestvennykh-i-zemelnykh-otnosheniy-kostromskoy-oblasti",
+    "name": "Департамент имущественных и земельных отношений Костромской области",
+    "shortName": "",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-stroitelstva-zhilishchno-kommunalnogo-khozyaystva-i-toplivno-energeticheskogo-kompleksa-kostromskoy-oblasti": {
+    "id": "ru-44-departament-stroitelstva-zhilishchno-kommunalnogo-khozyaystva-i-toplivno-energeticheskogo-kompleksa-kostromskoy-oblasti",
+    "name": "Департамент строительства, жилищно-коммунального хозяйства и топливно-энергетического комплекса Костромской области",
+    "shortName": "Департамент строительства, ЖКХ и ТЭК Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-regionalnoy-bezopasnosti-kostromskoy-oblasti": {
+    "id": "ru-44-departament-regionalnoy-bezopasnosti-kostromskoy-oblasti",
+    "name": "Департамент региональной безопасности Костромской области",
+    "shortName": "ДРБ Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-komitet-arkhitektury-i-gradostroitelstva-kostromskoy-oblasti": {
+    "id": "ru-44-komitet-arkhitektury-i-gradostroitelstva-kostromskoy-oblasti",
+    "name": "Комитет архитектуры и градостроительства Костромской области",
+    "shortName": "Комарх Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-po-trudu-i-sotsialnoy-zashchite-naseleniya-kostromskoy-oblasti": {
+    "id": "ru-44-departament-po-trudu-i-sotsialnoy-zashchite-naseleniya-kostromskoy-oblasti",
+    "name": "Департамент по труду и социальной защите населения Костромской области",
+    "shortName": "Дептрудсоцзащиты Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-zdravookhraneniya-kostromskoy-oblasti": {
+    "id": "ru-44-departament-zdravookhraneniya-kostromskoy-oblasti",
+    "name": "Департамент здравоохранения Костромской области",
+    "shortName": "Депздрав Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-gosudarstvennaya-zhilishchnaya-inspektsiya-kostromskoy-oblasti": {
+    "id": "ru-44-gosudarstvennaya-zhilishchnaya-inspektsiya-kostromskoy-oblasti",
+    "name": "Государственная жилищная инспекция Костромской области",
+    "shortName": "",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-finansovogo-kontrolya-kostromskoy-oblasti": {
+    "id": "ru-44-departament-finansovogo-kontrolya-kostromskoy-oblasti",
+    "name": "Департамент финансового контроля Костромской области",
+    "shortName": "Депфинконтроль Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-transporta-i-dorozhnogo-khozyaystva-kostromskoy-oblasti": {
+    "id": "ru-44-departament-transporta-i-dorozhnogo-khozyaystva-kostromskoy-oblasti",
+    "name": "Департамент транспорта и дорожного хозяйства Костромской области",
+    "shortName": "",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-prirodnykh-resursov-i-okhrany-okruzhayushchey-sredy-kostromskoy-oblasti": {
+    "id": "ru-44-departament-prirodnykh-resursov-i-okhrany-okruzhayushchey-sredy-kostromskoy-oblasti",
+    "name": "Департамент природных ресурсов и охраны окружающей среды Костромской области",
+    "shortName": "ДПР Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-kostromskoy-oblasti": {
+    "id": "ru-44-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-kostromskoy-oblasti",
+    "name": "Инспекция по охране объектов культурного наследия Костромской области",
+    "shortName": "Охранкультуры Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-finansov-kostromskoy-oblasti": {
+    "id": "ru-44-departament-finansov-kostromskoy-oblasti",
+    "name": "Департамент финансов Костромской области",
+    "shortName": "",
+    "territoryId": "ru-44"
+  },
+  "ru-44-upravlenie-veterinarii-kostromskoy-oblasti": {
+    "id": "ru-44-upravlenie-veterinarii-kostromskoy-oblasti",
+    "name": "Управление ветеринарии Костромской области",
+    "shortName": "",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-lesnogo-khozyaystva-kostromskoy-oblasti": {
+    "id": "ru-44-departament-lesnogo-khozyaystva-kostromskoy-oblasti",
+    "name": "Департамент лесного хозяйства Костромской области",
+    "shortName": "Деплесхоз Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kostromskoy-oblasti": {
+    "id": "ru-44-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kostromskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Костромской области",
+    "shortName": "Управление ЗАГС Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-komitet-po-fizicheskoy-kulture-i-sportu-kostromskoy-oblasti": {
+    "id": "ru-44-komitet-po-fizicheskoy-kulture-i-sportu-kostromskoy-oblasti",
+    "name": "Комитет по физической культуре и спорту Костромской области",
+    "shortName": "Комспорт Костромской области",
+    "territoryId": "ru-44"
+  },
+  "ru-44-departament-gosudarstvennogo-regulirovaniya-tsen-i-tarifov-kostromskoy-oblasti": {
+    "id": "ru-44-departament-gosudarstvennogo-regulirovaniya-tsen-i-tarifov-kostromskoy-oblasti",
+    "name": "Департамент государственного регулирования цен и тарифов Костромской области",
+    "shortName": "",
+    "territoryId": "ru-44"
+  },
+  "ru-44-administratsiya-kostromskoy-oblasti": {
+    "id": "ru-44-administratsiya-kostromskoy-oblasti",
+    "name": "Администрация Костромской области",
+    "shortName": "",
+    "territoryId": "ru-44"
+  },
+  "ru-44-public-employer-inn-4431001782": {
+    "id": "ru-44-public-employer-inn-4431001782",
+    "name": "Администрация городского округа город Волгореченск Костромской области",
+    "shortName": "Администрация городского округа город Волгореченск",
+    "territoryId": "ru-44"
+  },
+  "ru-46-komitet-pravovogo-obespecheniya-kurskoy-oblasti": {
+    "id": "ru-46-komitet-pravovogo-obespecheniya-kurskoy-oblasti",
+    "name": "Комитет правового обеспечения Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-gosudarstvennaya-zhilishchnaya-inspektsiya-kurskoy-oblasti": {
+    "id": "ru-46-gosudarstvennaya-zhilishchnaya-inspektsiya-kurskoy-oblasti",
+    "name": "Государственная жилищная инспекция Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-administratsiya-kurskoy-oblasti": {
+    "id": "ru-46-administratsiya-kurskoy-oblasti",
+    "name": "Администрация Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-zdravookhraneniya-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-zdravookhraneniya-kurskoy-oblasti",
+    "name": "Министерство здравоохранения Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-finansov-i-byudzhetnogo-kontrolya-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-finansov-i-byudzhetnogo-kontrolya-kurskoy-oblasti",
+    "name": "Министерство финансов и бюджетного контроля Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-obrazovaniya-i-nauki-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-obrazovaniya-i-nauki-kurskoy-oblasti",
+    "name": "Министерство образования и науки Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-fizicheskoy-kultury-i-sporta-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-fizicheskoy-kultury-i-sporta-kurskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-sotsialnogo-obespecheniya-materinstva-i-detstva-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-sotsialnogo-obespecheniya-materinstva-i-detstva-kurskoy-oblasti",
+    "name": "Министерство социального обеспечения, материнства и детства Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-kultury-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-kultury-kurskoy-oblasti",
+    "name": "Министерство культуры Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-tsifrovogo-razvitiya-i-svyazi-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-tsifrovogo-razvitiya-i-svyazi-kurskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-prirodnykh-resursov-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-prirodnykh-resursov-kurskoy-oblasti",
+    "name": "Министерство природных ресурсов Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-pravitelstvo-kurskoy-oblasti": {
+    "id": "ru-46-pravitelstvo-kurskoy-oblasti",
+    "name": "Правительство Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-komitet-gosudarstvennogo-stroitelnogo-nadzora-kurskoy-oblasti": {
+    "id": "ru-46-komitet-gosudarstvennogo-stroitelnogo-nadzora-kurskoy-oblasti",
+    "name": "Комитет государственного строительного надзора Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-predstavitelstvo-kurskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii": {
+    "id": "ru-46-predstavitelstvo-kurskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii",
+    "name": "Представительство Курской области при Правительстве Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-gosudarstvennaya-inspektsiya-kurskoy-oblasti-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugi-94f1c358b7": {
+    "id": "ru-46-gosudarstvennaya-inspektsiya-kurskoy-oblasti-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugi-94f1c358b7",
+    "name": "Государственная инспекция Курской области по надзору за техническим состоянием самоходных машин и других видов техники",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-arkhivnoe-upravlenie-kurskoy-oblasti": {
+    "id": "ru-46-arkhivnoe-upravlenie-kurskoy-oblasti",
+    "name": "Архивное управление Курской области",
+    "shortName": "Архивуправление Курской области",
+    "territoryId": "ru-46"
+  },
+  "ru-46-komitet-zags-kurskoy-oblasti": {
+    "id": "ru-46-komitet-zags-kurskoy-oblasti",
+    "name": "Комитет записи актов гражданского состояния Курской области",
+    "shortName": "Комитет ЗАГС Курской области",
+    "territoryId": "ru-46"
+  },
+  "ru-46-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-kurskoy-oblasti": {
+    "id": "ru-46-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-kurskoy-oblasti",
+    "name": "Управление по государственной охране объектов культурного наследия Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-promyshlennosti-torgovli-i-predprinimatelstva-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-promyshlennosti-torgovli-i-predprinimatelstva-kurskoy-oblasti",
+    "name": "Министерство промышленности, торговли и предпринимательства Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-tek-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-tek-kurskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства и ТЭК Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-selskogo-khozyaystva-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-selskogo-khozyaystva-kurskoy-oblasti",
+    "name": "Министерство сельского хозяйства Курской области",
+    "shortName": "Минсельхоз Курской области",
+    "territoryId": "ru-46"
+  },
+  "ru-46-ministerstvo-transporta-i-avtomobilnykh-dorog-kurskoy-oblasti": {
+    "id": "ru-46-ministerstvo-transporta-i-avtomobilnykh-dorog-kurskoy-oblasti",
+    "name": "Министерство транспорта и автомобильных дорог Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-komitet-regionalnoy-bezopasnosti-kurskoy-oblasti": {
+    "id": "ru-46-komitet-regionalnoy-bezopasnosti-kurskoy-oblasti",
+    "name": "Комитет региональной безопасности Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-46-komitet-veterinarii-kurskoy-oblasti": {
+    "id": "ru-46-komitet-veterinarii-kurskoy-oblasti",
+    "name": "Комитет ветеринарии Курской области",
+    "shortName": "",
+    "territoryId": "ru-46"
+  },
+  "ru-48-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-lipetskoy-oblasti": {
+    "id": "ru-48-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-lipetskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Липецкой области",
+    "shortName": "Инспекция госстройнадзора Липецкой области",
+    "territoryId": "ru-48"
+  },
+  "ru-48-gosudarstvennaya-zhilishchnaya-inspektsiya-lipetskoy-oblasti": {
+    "id": "ru-48-gosudarstvennaya-zhilishchnaya-inspektsiya-lipetskoy-oblasti",
+    "name": "Государственная жилищная инспекция Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-e8d8c956b7": {
+    "id": "ru-48-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-e8d8c956b7",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Липецкой области",
+    "shortName": "Инспекция гостехнадзора Липецкой области",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-stroitelstva-i-arkhitektury-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-stroitelstva-i-arkhitektury-lipetskoy-oblasti",
+    "name": "Министерство строительства и архитектуры Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-lipetskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-zdravookhraneniya-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-zdravookhraneniya-lipetskoy-oblasti",
+    "name": "Министерство здравоохранения Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-tsifrovogo-razvitiya-i-iskusstvennogo-intellekta-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-tsifrovogo-razvitiya-i-iskusstvennogo-intellekta-lipetskoy-oblasti",
+    "name": "Министерство цифрового развития и искусственного интеллекта Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-transporta-i-dorozhnogo-khozyaystva-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-transporta-i-dorozhnogo-khozyaystva-lipetskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-regionalnoy-bezopasnosti-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-regionalnoy-bezopasnosti-lipetskoy-oblasti",
+    "name": "Министерство региональной безопасности Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-upravlenie-zags-i-arkhivov-lipetskoy-oblasti": {
+    "id": "ru-48-upravlenie-zags-i-arkhivov-lipetskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния и архивов Липецкой области",
+    "shortName": "Управление ЗАГС и архивов Липецкой области",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-torgovli-i-tsenovoy-politiki-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-torgovli-i-tsenovoy-politiki-lipetskoy-oblasti",
+    "name": "Министерство торговли и ценовой политики Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-vnutrenney-politiki-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-vnutrenney-politiki-lipetskoy-oblasti",
+    "name": "Министерство внутренней политики Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-lesnogo-khozyaystva-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-lesnogo-khozyaystva-lipetskoy-oblasti",
+    "name": "Министерство лесного хозяйства Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-molodezhnoy-politiki-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-molodezhnoy-politiki-lipetskoy-oblasti",
+    "name": "Министерство молодежной политики Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-selskogo-khozyaystva-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-selskogo-khozyaystva-lipetskoy-oblasti",
+    "name": "Министерство сельского хозяйства Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-upravlenie-fizicheskoy-kultury-i-sporta-lipetskoy-oblasti": {
+    "id": "ru-48-upravlenie-fizicheskoy-kultury-i-sporta-lipetskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-sotsialnoy-politiki-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-sotsialnoy-politiki-lipetskoy-oblasti",
+    "name": "Министерство социальной политики Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-lipetskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-energetiki-i-tarifov-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-energetiki-i-tarifov-lipetskoy-oblasti",
+    "name": "Министерство энергетики и тарифов Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-prirodnykh-resursov-i-ekologii-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-prirodnykh-resursov-i-ekologii-lipetskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-ekonomicheskogo-razvitiya-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-ekonomicheskogo-razvitiya-lipetskoy-oblasti",
+    "name": "Министерство экономического развития Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-kultury-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-kultury-lipetskoy-oblasti",
+    "name": "Министерство культуры Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-upravlenie-po-okhrane-ispolzovaniyu-obektov-zhivotnogo-mira-i-vodnykh-biologicheskikh-resursov-lipetskoy-oblasti": {
+    "id": "ru-48-upravlenie-po-okhrane-ispolzovaniyu-obektov-zhivotnogo-mira-i-vodnykh-biologicheskikh-resursov-lipetskoy-oblasti",
+    "name": "Управление по охране, использованию объектов животного мира и водных биологических ресурсов Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-ministerstvo-promyshlennosti-investitsiy-i-nauki-lipetskoy-oblasti": {
+    "id": "ru-48-ministerstvo-promyshlennosti-investitsiy-i-nauki-lipetskoy-oblasti",
+    "name": "Министерство промышленности, инвестиций и науки Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-pravitelstvo-lipetskoy-oblasti": {
+    "id": "ru-48-pravitelstvo-lipetskoy-oblasti",
+    "name": "Правительство Липецкой области",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-48-public-employer-inn-4803002500": {
+    "id": "ru-48-public-employer-inn-4803002500",
+    "name": "Администрация Данковского муниципального округа Липецкой области Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-48"
+  },
+  "ru-77-glavnoe-kontrolnoe-upravlenie-goroda-moskvy": {
+    "id": "ru-77-glavnoe-kontrolnoe-upravlenie-goroda-moskvy",
+    "name": "Главное контрольное управление города Москвы",
+    "shortName": "Главконтроль",
+    "territoryId": "ru-77"
+  },
+  "ru-77-komitet-gosudarstvennogo-stroitelnogo-nadzora-goroda-moskvy": {
+    "id": "ru-77-komitet-gosudarstvennogo-stroitelnogo-nadzora-goroda-moskvy",
+    "name": "Комитет государственного строительного надзора города Москвы",
+    "shortName": "Мосгосстройнадзор",
+    "territoryId": "ru-77"
+  },
+  "ru-77-gosudarstvennaya-inspektsiya-po-kontrolyu-za-ispolzovaniem-obektov-nedvizhimosti-goroda-moskvy": {
+    "id": "ru-77-gosudarstvennaya-inspektsiya-po-kontrolyu-za-ispolzovaniem-obektov-nedvizhimosti-goroda-moskvy",
+    "name": "Государственная инспекция по контролю за использованием объектов недвижимости города Москвы",
+    "shortName": "ГГИ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-torgovli-i-uslug-goroda-moskvy": {
+    "id": "ru-77-departament-torgovli-i-uslug-goroda-moskvy",
+    "name": "Департамент торговли и услуг города Москвы",
+    "shortName": "ДТУ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-informatsionnykh-tekhnologiy-goroda-moskvy": {
+    "id": "ru-77-departament-informatsionnykh-tekhnologiy-goroda-moskvy",
+    "name": "Департамент информационных технологий города Москвы",
+    "shortName": "ДИТ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-kultury-goroda-moskvy": {
+    "id": "ru-77-departament-kultury-goroda-moskvy",
+    "name": "Департамент культуры города Москвы",
+    "shortName": "Депкульт",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-territorialnykh-organov-ispolnitelnoy-vlasti-goroda-moskvy": {
+    "id": "ru-77-departament-territorialnykh-organov-ispolnitelnoy-vlasti-goroda-moskvy",
+    "name": "Департамент территориальных органов исполнительной власти города Москвы",
+    "shortName": "ДТОИВ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-predprinimatelstva-i-innovatsionnogo-razvitiya-goroda-moskvy": {
+    "id": "ru-77-departament-predprinimatelstva-i-innovatsionnogo-razvitiya-goroda-moskvy",
+    "name": "Департамент предпринимательства и инновационного развития города Москвы",
+    "shortName": "ДПИР",
+    "territoryId": "ru-77"
+  },
+  "ru-77-komitet-po-turizmu-goroda-moskvy": {
+    "id": "ru-77-komitet-po-turizmu-goroda-moskvy",
+    "name": "Комитет по туризму города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-komitet-obshchestvennykh-svyazey-i-molodezhnoy-politiki-goroda-moskvy": {
+    "id": "ru-77-komitet-obshchestvennykh-svyazey-i-molodezhnoy-politiki-goroda-moskvy",
+    "name": "Комитет общественных связей и молодежной политики города Москвы",
+    "shortName": "КОС",
+    "territoryId": "ru-77"
+  },
+  "ru-77-upravlenie-delami-mera-i-pravitelstva-moskvy": {
+    "id": "ru-77-upravlenie-delami-mera-i-pravitelstva-moskvy",
+    "name": "Управление делами Мэра и Правительства Москвы",
+    "shortName": "УД",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-kapitalnogo-remonta-goroda-moskvy": {
+    "id": "ru-77-departament-kapitalnogo-remonta-goroda-moskvy",
+    "name": "Департамент капитального ремонта города Москвы",
+    "shortName": "ДКР",
+    "territoryId": "ru-77"
+  },
+  "ru-77-gosudarstvennaya-zhilishchnaya-inspektsiya-goroda-moskvy": {
+    "id": "ru-77-gosudarstvennaya-zhilishchnaya-inspektsiya-goroda-moskvy",
+    "name": "Государственная жилищная инспекция города Москвы",
+    "shortName": "МЖИ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-vneshneekonomicheskikh-i-mezhdunarodnykh-svyazey-goroda-moskvy": {
+    "id": "ru-77-departament-vneshneekonomicheskikh-i-mezhdunarodnykh-svyazey-goroda-moskvy",
+    "name": "Департамент внешнеэкономических и международных связей города Москвы",
+    "shortName": "ДВМС",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-sporta-goroda-moskvy": {
+    "id": "ru-77-departament-sporta-goroda-moskvy",
+    "name": "Департамент спорта города Москвы",
+    "shortName": "Москомспорт",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-natsionalnoy-politiki-i-mezhregionalnykh-svyazey-goroda-moskvy": {
+    "id": "ru-77-departament-natsionalnoy-politiki-i-mezhregionalnykh-svyazey-goroda-moskvy",
+    "name": "Департамент национальной политики и межрегиональных связей города Москвы",
+    "shortName": "ДНПиМС",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-po-obespecheniyu-deyatelnosti-mirovykh-sudey-goroda-moskvy": {
+    "id": "ru-77-departament-po-obespecheniyu-deyatelnosti-mirovykh-sudey-goroda-moskvy",
+    "name": "Департамент по обеспечению деятельности мировых судей города Москвы",
+    "shortName": "ДОДМС",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-truda-i-sotsialnoy-zashchity-naseleniya-goroda-moskvy": {
+    "id": "ru-77-departament-truda-i-sotsialnoy-zashchity-naseleniya-goroda-moskvy",
+    "name": "Департамент труда и социальной защиты населения города Москвы",
+    "shortName": "ДСЗН",
+    "territoryId": "ru-77"
+  },
+  "ru-77-komitet-veterinarii-goroda-moskvy": {
+    "id": "ru-77-komitet-veterinarii-goroda-moskvy",
+    "name": "Комитет ветеринарии города Москвы",
+    "shortName": "Москомвет",
+    "territoryId": "ru-77"
+  },
+  "ru-77-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-goroda-moskvy": {
+    "id": "ru-77-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-goroda-moskvy",
+    "name": "Управление записи актов гражданского состояния города Москвы",
+    "shortName": "ЗАГС",
+    "territoryId": "ru-77"
+  },
+  "ru-77-glavnoe-arkhivnoe-upravlenie-goroda-moskvy": {
+    "id": "ru-77-glavnoe-arkhivnoe-upravlenie-goroda-moskvy",
+    "name": "Главное архивное управление города Москвы",
+    "shortName": "Главархив Москвы",
+    "territoryId": "ru-77"
+  },
+  "ru-77-gosudarstvennaya-inspektsiya-goroda-moskvy-po-kachestvu-selskokhozyaystvennoy-produktsii-syrya-i-prodovolstviya": {
+    "id": "ru-77-gosudarstvennaya-inspektsiya-goroda-moskvy-po-kachestvu-selskokhozyaystvennoy-produktsii-syrya-i-prodovolstviya",
+    "name": "Государственная инспекция города Москвы по качеству сельскохозяйственной продукции, сырья и продовольствия",
+    "shortName": "МосГИК",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-grazhdanskogo-stroitelstva-goroda-moskvy": {
+    "id": "ru-77-departament-grazhdanskogo-stroitelstva-goroda-moskvy",
+    "name": "Департамент гражданского строительства города Москвы",
+    "shortName": "ДГС",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-gradostroitelnoy-politiki-goroda-moskvy": {
+    "id": "ru-77-departament-gradostroitelnoy-politiki-goroda-moskvy",
+    "name": "Департамент градостроительной политики города Москвы",
+    "shortName": "ДГП",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-gorodskogo-imushchestva-goroda-moskvy": {
+    "id": "ru-77-departament-gorodskogo-imushchestva-goroda-moskvy",
+    "name": "Департамент городского имущества города Москвы",
+    "shortName": "ДГИ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-komitet-goroda-moskvy-po-tsenovoy-politike-v-stroitelstve-i-gosudarstvennoy-ekspertize-proektov": {
+    "id": "ru-77-komitet-goroda-moskvy-po-tsenovoy-politike-v-stroitelstve-i-gosudarstvennoy-ekspertize-proektov",
+    "name": "Комитет города Москвы по ценовой политике в строительстве и государственной экспертизе проектов",
+    "shortName": "МКЭ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-stroitelstva-transportnoy-i-inzhenernoy-infrastruktury-goroda-moskvy": {
+    "id": "ru-77-departament-stroitelstva-transportnoy-i-inzhenernoy-infrastruktury-goroda-moskvy",
+    "name": "Департамент строительства транспортной и инженерной инфраструктуры города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-investitsionnoy-i-promyshlennoy-politiki-goroda-moskvy": {
+    "id": "ru-77-departament-investitsionnoy-i-promyshlennoy-politiki-goroda-moskvy",
+    "name": "Департамент инвестиционной и промышленной политики города Москвы",
+    "shortName": "ДИПП",
+    "territoryId": "ru-77"
+  },
+  "ru-77-moskovskaya-administrativnaya-dorozhnaya-inspektsiya": {
+    "id": "ru-77-moskovskaya-administrativnaya-dorozhnaya-inspektsiya",
+    "name": "Московская административная дорожная инспекция",
+    "shortName": "МАДИ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-po-delam-grazhdanskoy-oborony-chrezvychaynym-situatsiyam-i-pozharnoy-bezopasnosti-goroda-moskvy": {
+    "id": "ru-77-departament-po-delam-grazhdanskoy-oborony-chrezvychaynym-situatsiyam-i-pozharnoy-bezopasnosti-goroda-moskvy",
+    "name": "Департамент по делам гражданской обороны, чрезвычайным ситуациям и пожарной безопасности города Москвы",
+    "shortName": "ГОЧСиПБ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-zapadnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-zapadnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Западного административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-vostochnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-vostochnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Восточного административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-severo-vostochnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-severo-vostochnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Северо-Восточного административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-yugo-zapadnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-yugo-zapadnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Юго-Западного административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-tsentralnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-tsentralnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Центрального административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-troitskogo-i-novomoskovskogo-administrativnykh-okrugov-goroda-moskvy": {
+    "id": "ru-77-prefektura-troitskogo-i-novomoskovskogo-administrativnykh-okrugov-goroda-moskvy",
+    "name": "Префектура Троицкого и Новомосковского административных округов города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-severo-zapadnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-severo-zapadnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Северо-Западного административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-zelenogradskogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-zelenogradskogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Зеленоградского административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-severnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-severnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Северного административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-yugo-vostochnogo-administrativnogo-okruga-goroda-moskvy": {
+    "id": "ru-77-prefektura-yugo-vostochnogo-administrativnogo-okruga-goroda-moskvy",
+    "name": "Префектура Юго-Восточного административного округа города Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-prefektura-yuzhnogo-administrativnogo-okruga": {
+    "id": "ru-77-prefektura-yuzhnogo-administrativnogo-okruga",
+    "name": "Префектура Южного административного округа",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-apparat-mera-i-pravitelstva-moskvy": {
+    "id": "ru-77-apparat-mera-i-pravitelstva-moskvy",
+    "name": "Аппарат Мэра и Правительства Москвы",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-50-moskovskaya-oblastnaya-duma": {
+    "id": "ru-50-moskovskaya-oblastnaya-duma",
+    "name": "Московская областная Дума",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-blagoustroystva-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-blagoustroystva-moskovskoy-oblasti",
+    "name": "Министерство благоустройства Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-zhilishchnoy-politiki-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-zhilishchnoy-politiki-moskovskoy-oblasti",
+    "name": "Министерство жилищной политики Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-gosudarstvennogo-upravleniya-informatsionnykh-tekhnologiy-i-svyazi-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-gosudarstvennogo-upravleniya-informatsionnykh-tekhnologiy-i-svyazi-moskovskoy-oblasti",
+    "name": "Министерство государственного управления, информационных технологий и связи Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-energetiki-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-energetiki-moskovskoy-oblasti",
+    "name": "Министерство энергетики Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-glavnoe-kontrolnoe-upravlenie-moskovskoy-oblasti": {
+    "id": "ru-50-glavnoe-kontrolnoe-upravlenie-moskovskoy-oblasti",
+    "name": "Главное контрольное управление Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-moskovskoy-oblasti": {
+    "id": "ru-50-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-moskovskoy-oblasti",
+    "name": "Главное управление государственного строительного надзора Московской области",
+    "shortName": "Главгосстройнадзор Московской области",
+    "territoryId": "ru-50"
+  },
+  "ru-50-glavnoe-upravlenie-grazhdanskoy-zashchity-moskovskoy-oblasti": {
+    "id": "ru-50-glavnoe-upravlenie-grazhdanskoy-zashchity-moskovskoy-oblasti",
+    "name": "Главное управление гражданской защиты Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-glavnoe-upravlenie-regionalnoy-bezopasnosti-moskovskoy-oblasti": {
+    "id": "ru-50-glavnoe-upravlenie-regionalnoy-bezopasnosti-moskovskoy-oblasti",
+    "name": "Главное управление региональной безопасности Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-komitet-lesnogo-khozyaystva-moskovskoy-oblasti": {
+    "id": "ru-50-komitet-lesnogo-khozyaystva-moskovskoy-oblasti",
+    "name": "Комитет лесного хозяйства Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-komitet-po-konkurentnoy-politike-moskovskoy-oblasti": {
+    "id": "ru-50-komitet-po-konkurentnoy-politike-moskovskoy-oblasti",
+    "name": "Комитет по конкурентной политике Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-komitet-po-tsenam-i-tarifam-moskovskoy-oblasti": {
+    "id": "ru-50-komitet-po-tsenam-i-tarifam-moskovskoy-oblasti",
+    "name": "Комитет по ценам и тарифам Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-imushchestvennykh-otnosheniy-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-imushchestvennykh-otnosheniy-moskovskoy-oblasti",
+    "name": "Министерство имущественных отношений Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-zdravookhraneniya-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-zdravookhraneniya-moskovskoy-oblasti",
+    "name": "Министерство здравоохранения Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-obrazovaniya-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-obrazovaniya-moskovskoy-oblasti",
+    "name": "Министерство образования Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-ekonomiki-i-finansov-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-ekonomiki-i-finansov-moskovskoy-oblasti",
+    "name": "Министерство экономики и финансов Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-moskovskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольствия Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-sotsialnogo-razvitiya-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-sotsialnogo-razvitiya-moskovskoy-oblasti",
+    "name": "Министерство социального развития Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-fizicheskoy-kultury-i-sporta-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-fizicheskoy-kultury-i-sporta-moskovskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-kultury-i-turizma-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-kultury-i-turizma-moskovskoy-oblasti",
+    "name": "Министерство культуры и туризма Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-moskovskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-informatsii-i-molodezhnoy-politiki-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-informatsii-i-molodezhnoy-politiki-moskovskoy-oblasti",
+    "name": "Министерство информации и молодежной политики Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-investitsiy-promyshlennosti-i-nauki-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-investitsiy-promyshlennosti-i-nauki-moskovskoy-oblasti",
+    "name": "Министерство инвестиций, промышленности и науки Московской области",
+    "shortName": "Мининвест Московской области",
+    "territoryId": "ru-50"
+  },
+  "ru-50-glavnoe-upravlenie-kulturnogo-naslediya-moskovskoy-oblasti": {
+    "id": "ru-50-glavnoe-upravlenie-kulturnogo-naslediya-moskovskoy-oblasti",
+    "name": "Главное управление культурного наследия Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-komitet-po-arkhitekture-i-gradostroitelstvu-moskovskoy-oblasti": {
+    "id": "ru-50-komitet-po-arkhitekture-i-gradostroitelstvu-moskovskoy-oblasti",
+    "name": "Комитет по архитектуре и градостроительству Московской области",
+    "shortName": "Мособлархитектура",
+    "territoryId": "ru-50"
+  },
+  "ru-50-pravitelstvo-moskovskoy-oblasti": {
+    "id": "ru-50-pravitelstvo-moskovskoy-oblasti",
+    "name": "Правительство Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-57-departament-gosudarstvennogo-imushchestva-i-zemelnykh-otnosheniy-orlovskoy-oblasti": {
+    "id": "ru-57-departament-gosudarstvennogo-imushchestva-i-zemelnykh-otnosheniy-orlovskoy-oblasti",
+    "name": "Департамент государственного имущества и земельных отношений Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-dorozhnogo-khozyaystva-transporta-i-realizatsii-gosudarstvennykh-stroitelnykh-programm-orlovskoy-oblasti": {
+    "id": "ru-57-departament-dorozhnogo-khozyaystva-transporta-i-realizatsii-gosudarstvennykh-stroitelnykh-programm-orlovskoy-oblasti",
+    "name": "Департамент дорожного хозяйства, транспорта и реализации государственных строительных программ Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-zhilishchno-kommunalnogo-khozyaystva-toplivno-energeticheskogo-kompleksa-i-energosberezheniya-orlovskoy-oblasti": {
+    "id": "ru-57-departament-zhilishchno-kommunalnogo-khozyaystva-toplivno-energeticheskogo-kompleksa-i-energosberezheniya-orlovskoy-oblasti",
+    "name": "Департамент жилищно-коммунального хозяйства, топливно-энергетического комплекса и энергосбережения Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-informatsionnykh-tekhnologiy-orlovskoy-oblasti": {
+    "id": "ru-57-departament-informatsionnykh-tekhnologiy-orlovskoy-oblasti",
+    "name": "Департамент информационных технологий Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-po-proektam-razvitiya-territoriy-orlovskoy-oblasti": {
+    "id": "ru-57-departament-po-proektam-razvitiya-territoriy-orlovskoy-oblasti",
+    "name": "Департамент по проектам развития территорий Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-promyshlennosti-i-torgovli-orlovskoy-oblasti": {
+    "id": "ru-57-departament-promyshlennosti-i-torgovli-orlovskoy-oblasti",
+    "name": "Департамент промышленности и торговли Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-selskogo-khozyaystva-orlovskoy-oblasti": {
+    "id": "ru-57-departament-selskogo-khozyaystva-orlovskoy-oblasti",
+    "name": "Департамент сельского хозяйства Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-kultury-orlovskoy-oblasti": {
+    "id": "ru-57-departament-kultury-orlovskoy-oblasti",
+    "name": "Департамент культуры Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-fizicheskoy-kultury-i-sporta-orlovskoy-oblasti": {
+    "id": "ru-57-departament-fizicheskoy-kultury-i-sporta-orlovskoy-oblasti",
+    "name": "Департамент физической культуры и спорта Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-finansov-orlovskoy-oblasti": {
+    "id": "ru-57-departament-finansov-orlovskoy-oblasti",
+    "name": "Департамент финансов Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-ekonomicheskogo-razvitiya-i-investitsionnoy-deyatelnosti-orlovskoy-oblasti": {
+    "id": "ru-57-departament-ekonomicheskogo-razvitiya-i-investitsionnoy-deyatelnosti-orlovskoy-oblasti",
+    "name": "Департамент экономического развития и инвестиционной деятельности Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-obrazovaniya-orlovskoy-oblasti": {
+    "id": "ru-57-departament-obrazovaniya-orlovskoy-oblasti",
+    "name": "Департамент образования Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-regionalnoy-bezopasnosti-orlovskoy-oblasti": {
+    "id": "ru-57-departament-regionalnoy-bezopasnosti-orlovskoy-oblasti",
+    "name": "Департамент региональной безопасности Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-upravlenie-veterinarii-orlovskoy-oblasti": {
+    "id": "ru-57-upravlenie-veterinarii-orlovskoy-oblasti",
+    "name": "Управление ветеринарии Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-upravlenie-lesami-orlovskoy-oblasti": {
+    "id": "ru-57-upravlenie-lesami-orlovskoy-oblasti",
+    "name": "Управление лесами Орловской области",
+    "shortName": "Орёллесхоз",
+    "territoryId": "ru-57"
+  },
+  "ru-57-upravlenie-gradostroitelstva-arkhitektury-i-zemleustroystva-orlovskoy-oblasti": {
+    "id": "ru-57-upravlenie-gradostroitelstva-arkhitektury-i-zemleustroystva-orlovskoy-oblasti",
+    "name": "Управление градостроительства, архитектуры и землеустройства Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-orlovskoy-oblasti": {
+    "id": "ru-57-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-orlovskoy-oblasti",
+    "name": "Управление по государственной охране объектов культурного наследия Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-zdravookhraneniya-orlovskoy-oblasti": {
+    "id": "ru-57-departament-zdravookhraneniya-orlovskoy-oblasti",
+    "name": "Департамент здравоохранения Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-molodezhnoy-politiki-i-realizatsii-patrioticheskikh-proektov-orlovskoy-oblasti": {
+    "id": "ru-57-departament-molodezhnoy-politiki-i-realizatsii-patrioticheskikh-proektov-orlovskoy-oblasti",
+    "name": "Департамент молодежной политики и реализации патриотических проектов Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-vnutrenney-politiki-i-razvitiya-mestnogo-samoupravleniya-orlovskoy-oblasti": {
+    "id": "ru-57-departament-vnutrenney-politiki-i-razvitiya-mestnogo-samoupravleniya-orlovskoy-oblasti",
+    "name": "Департамент внутренней политики и развития местного самоуправления Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-upravlenie-po-organizatsionnomu-obespecheniyu-deyatelnosti-mirovykh-sudey-orlovskoy-oblasti": {
+    "id": "ru-57-upravlenie-po-organizatsionnomu-obespecheniyu-deyatelnosti-mirovykh-sudey-orlovskoy-oblasti",
+    "name": "Управление по организационному обеспечению деятельности мировых судей Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-pravitelstvo-orlovskoy-oblasti": {
+    "id": "ru-57-pravitelstvo-orlovskoy-oblasti",
+    "name": "Правительство Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-administratsiya-gubernatora-i-pravitelstva-orlovskoy-oblasti": {
+    "id": "ru-57-administratsiya-gubernatora-i-pravitelstva-orlovskoy-oblasti",
+    "name": "Администрация Губернатора и Правительства Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-nadzornoy-i-kontrolnoy-deyatelnosti-orlovskoy-oblasti": {
+    "id": "ru-57-departament-nadzornoy-i-kontrolnoy-deyatelnosti-orlovskoy-oblasti",
+    "name": "Департамент надзорной и контрольной деятельности Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-57-departament-sotsialnoy-zashchity-opeki-i-popechitelstva-truda-i-zanyatosti-orlovskoy-oblasti": {
+    "id": "ru-57-departament-sotsialnoy-zashchity-opeki-i-popechitelstva-truda-i-zanyatosti-orlovskoy-oblasti",
+    "name": "Департамент социальной защиты, опеки и попечительства, труда и занятости Орловской области",
+    "shortName": "",
+    "territoryId": "ru-57"
+  },
+  "ru-62-gosudarstvennaya-zhilishchnaya-inspektsiya-ryazanskoy-oblasti": {
+    "id": "ru-62-gosudarstvennaya-zhilishchnaya-inspektsiya-ryazanskoy-oblasti",
+    "name": "Государственная жилищная инспекция Рязанской области",
+    "shortName": "Госжилинспекция Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-gosudarstvennaya-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-ryazanskoy-oblasti": {
+    "id": "ru-62-gosudarstvennaya-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-ryazanskoy-oblasti",
+    "name": "Государственная инспекция по охране объектов культурного наследия Рязанской области",
+    "shortName": "Инспекция ОКН Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-upravlenie-regionalnogo-gosudarstvennogo-nadzora-v-oblasti-tekhnicheskogo-sostoyaniya-samokhodnykh-mashi-555bd31711": {
+    "id": "ru-62-glavnoe-upravlenie-regionalnogo-gosudarstvennogo-nadzora-v-oblasti-tekhnicheskogo-sostoyaniya-samokhodnykh-mashi-555bd31711",
+    "name": "Главное управление регионального государственного надзора в области технического состояния самоходных машин и других видов техники Рязанской области",
+    "shortName": "Управление гостехнадзора Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-upravlenie-kontrolya-i-protivodeystviya-korruptsii-ryazanskoy-oblasti": {
+    "id": "ru-62-glavnoe-upravlenie-kontrolya-i-protivodeystviya-korruptsii-ryazanskoy-oblasti",
+    "name": "Антикоррупционный комитет Рязанской области",
+    "shortName": "АКРО",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-finansov-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-finansov-ryazanskoy-oblasti",
+    "name": "Министерство финансов Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-ryazanskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-arkhivnoe-upravlenie-ryazanskoy-oblasti": {
+    "id": "ru-62-glavnoe-arkhivnoe-upravlenie-ryazanskoy-oblasti",
+    "name": "Главное архивное управление Рязанской области",
+    "shortName": "ГАУРО",
+    "territoryId": "ru-62"
+  },
+  "ru-62-komitet-po-delam-molodezhi-ryazanskoy-oblasti": {
+    "id": "ru-62-komitet-po-delam-molodezhi-ryazanskoy-oblasti",
+    "name": "Комитет по делам молодежи Рязанской области",
+    "shortName": "КДМ Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-komitet-investitsiy-i-turizma-ryazanskoy-oblasti": {
+    "id": "ru-62-komitet-investitsiy-i-turizma-ryazanskoy-oblasti",
+    "name": "Комитет инвестиций и туризма Рязанской области",
+    "shortName": "КИТ Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-upravlenie-po-vzaimodeystviyu-s-federalnymi-territorialnymi-organami-ryazanskoy-oblasti": {
+    "id": "ru-62-glavnoe-upravlenie-po-vzaimodeystviyu-s-federalnymi-territorialnymi-organami-ryazanskoy-oblasti",
+    "name": "Комитет по правопорядку, гражданской обороне и профилактике терроризма Рязанской области",
+    "shortName": "Комитет по правопорядку, ГО и профилактике терроризма РО",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-zdravookhraneniya-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-zdravookhraneniya-ryazanskoy-oblasti",
+    "name": "Министерство здравоохранения Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-ryazanskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольствия Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-transporta-i-avtomobilnykh-dorog-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-transporta-i-avtomobilnykh-dorog-ryazanskoy-oblasti",
+    "name": "Министерство транспорта и автомобильных дорог Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-stroitelnogo-kompleksa-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-stroitelnogo-kompleksa-ryazanskoy-oblasti",
+    "name": "Министерство строительного комплекса Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-ryazanskoy-oblasti",
+    "name": "Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-kultury-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-kultury-ryazanskoy-oblasti",
+    "name": "Министерство культуры Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-ekonomicheskogo-razvitiya-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-ekonomicheskogo-razvitiya-ryazanskoy-oblasti",
+    "name": "Министерство экономического развития Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-prirodopolzovaniya-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-prirodopolzovaniya-ryazanskoy-oblasti",
+    "name": "Министерство природопользования Рязанской области",
+    "shortName": "Минприроды Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-upravlenie-regionalnaya-energeticheskaya-komissiya-ryazanskoy-oblasti": {
+    "id": "ru-62-glavnoe-upravlenie-regionalnaya-energeticheskaya-komissiya-ryazanskoy-oblasti",
+    "name": "Главное управление «Региональная энергетическая комиссия» Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-fizicheskoy-kultury-i-sporta-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-fizicheskoy-kultury-i-sporta-ryazanskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Рязанской области",
+    "shortName": "Минспорт Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-upravlenie-veterinarii-ryazanskoy-oblasti": {
+    "id": "ru-62-glavnoe-upravlenie-veterinarii-ryazanskoy-oblasti",
+    "name": "Главное управление ветеринарии Рязанской области",
+    "shortName": "ГУ ветеринарии Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-ryazanskoy-oblasti": {
+    "id": "ru-62-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-ryazanskoy-oblasti",
+    "name": "Главное управление записи актов гражданского состояния Рязанской области",
+    "shortName": "Главное управление ЗАГС Рязанской области",
+    "territoryId": "ru-62"
+  },
+  "ru-62-pravitelstvo-ryazanskoy-oblasti": {
+    "id": "ru-62-pravitelstvo-ryazanskoy-oblasti",
+    "name": "Правительство Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ministerstvo-obrazovaniya-i-molodezhnoy-politiki-ryazanskoy-oblasti": {
+    "id": "ru-62-ministerstvo-obrazovaniya-i-molodezhnoy-politiki-ryazanskoy-oblasti",
+    "name": "Министерство образования Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-glavnoe-upravlenie-arkhitektury-i-gradostroitelstva-ryazanskoy-oblasti": {
+    "id": "ru-62-glavnoe-upravlenie-arkhitektury-i-gradostroitelstva-ryazanskoy-oblasti",
+    "name": "Главное управление архитектуры и градостроительства Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-gosudarstvennaya-inspektsiya-stroitelnogo-nadzora-ryazanskoy-oblasti": {
+    "id": "ru-62-gosudarstvennaya-inspektsiya-stroitelnogo-nadzora-ryazanskoy-oblasti",
+    "name": "Государственная инспекция строительного надзора Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-ryazanskaya-gorodskaya-duma": {
+    "id": "ru-62-ryazanskaya-gorodskaya-duma",
+    "name": "Рязанская городская Дума",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-62-public-employer-inn-6200010399": {
+    "id": "ru-62-public-employer-inn-6200010399",
+    "name": "Администрация Кораблинского муниципального округа Рязанской области",
+    "shortName": "",
+    "territoryId": "ru-62"
+  },
+  "ru-67-apparat-pravitelstva-smolenskoy-oblasti": {
+    "id": "ru-67-apparat-pravitelstva-smolenskoy-oblasti",
+    "name": "Аппарат Правительства Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-smolenskoy-oblasti-po-osushchestvleniyu-kontrolya-i-vzaimodeystviyu-s-administrativnymi-organami": {
+    "id": "ru-67-ministerstvo-smolenskoy-oblasti-po-osushchestvleniyu-kontrolya-i-vzaimodeystviyu-s-administrativnymi-organami",
+    "name": "Министерство Смоленской области по осуществлению контроля и взаимодействию с административными органами",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-smolenskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-ekonomicheskogo-razvitiya-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-ekonomicheskogo-razvitiya-smolenskoy-oblasti",
+    "name": "Министерство экономического развития Смоленской области",
+    "shortName": "Минэкономразвития Смоленской области",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-investitsionnogo-razvitiya-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-investitsionnogo-razvitiya-smolenskoy-oblasti",
+    "name": "Министерство инвестиционного развития Смоленской области",
+    "shortName": "Министерство инвестразвития Смоленской области",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-promyshlennosti-i-torgovli-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-promyshlennosti-i-torgovli-smolenskoy-oblasti",
+    "name": "Министерство промышленности и торговли Смоленской области",
+    "shortName": "Минпромторг Смоленской области",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-prirodnykh-resursov-i-ekologii-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-prirodnykh-resursov-i-ekologii-smolenskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-energetiki-i-tarifnoy-politiki-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-energetiki-i-tarifnoy-politiki-smolenskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства, энергетики и тарифной политики Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-kultury-i-turizma-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-kultury-i-turizma-smolenskoy-oblasti",
+    "name": "Министерство культуры и туризма Смоленской области",
+    "shortName": "Министерство культуры и туризма",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-smolenskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольствия Смоленской области",
+    "shortName": "Минсельхоз Смоленской области",
+    "territoryId": "ru-67"
+  },
+  "ru-67-glavnoe-upravlenie-veterinarii-smolenskoy-oblasti": {
+    "id": "ru-67-glavnoe-upravlenie-veterinarii-smolenskoy-oblasti",
+    "name": "Главное управление ветеринарии Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-glavnoe-upravlenie-gosudarstvennaya-zhilishchnaya-inspektsiya-smolenskoy-oblasti": {
+    "id": "ru-67-glavnoe-upravlenie-gosudarstvennaya-zhilishchnaya-inspektsiya-smolenskoy-oblasti",
+    "name": "Главное управление «Государственная жилищная инспекция Смоленской области»",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-smolenskoy-oblasti": {
+    "id": "ru-67-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-smolenskoy-oblasti",
+    "name": "Главное управление записи актов гражданского состояния Смоленской области",
+    "shortName": "Главное управление ЗАГС Смоленской области",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-sporta-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-sporta-smolenskoy-oblasti",
+    "name": "Министерство спорта Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-smolenskoy-oblasti-po-vnutrenney-politike": {
+    "id": "ru-67-ministerstvo-smolenskoy-oblasti-po-vnutrenney-politike",
+    "name": "Министерство Смоленской области по внутренней политике",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-transporta-i-dorozhnogo-khozyaystva-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-transporta-i-dorozhnogo-khozyaystva-smolenskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-obrazovaniya-i-nauki-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-obrazovaniya-i-nauki-smolenskoy-oblasti",
+    "name": "Министерство образования и науки Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-truda-i-zanyatosti-naseleniya-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-truda-i-zanyatosti-naseleniya-smolenskoy-oblasti",
+    "name": "Министерство труда и занятости населения Смоленской области",
+    "shortName": "Министерство труда и занятости населения",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-lesnogo-khozyaystva-i-okhrany-obektov-zhivotnogo-mira-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-lesnogo-khozyaystva-i-okhrany-obektov-zhivotnogo-mira-smolenskoy-oblasti",
+    "name": "Министерство лесного хозяйства и охраны объектов животного мира Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-arkhitektury-i-stroitelstva-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-arkhitektury-i-stroitelstva-smolenskoy-oblasti",
+    "name": "Министерство архитектуры и строительства Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-glavnoe-upravlenie-smolenskoy-oblasti-po-delam-molodezhi-i-grazhdansko-patrioticheskomu-vospitaniyu": {
+    "id": "ru-67-glavnoe-upravlenie-smolenskoy-oblasti-po-delam-molodezhi-i-grazhdansko-patrioticheskomu-vospitaniyu",
+    "name": "Главное управление Смоленской области по делам молодежи и гражданско-патриотическому воспитанию",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-i-tekhnicheskogo-nadzora-smolenskoy-oblasti": {
+    "id": "ru-67-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-i-tekhnicheskogo-nadzora-smolenskoy-oblasti",
+    "name": "Главное управление государственного строительного и технического надзора Смоленской области",
+    "shortName": "Главное управление госстройтехнадзора Смоленской области",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-sotsialnogo-razvitiya-i-semeynoy-politiki-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-sotsialnogo-razvitiya-i-semeynoy-politiki-smolenskoy-oblasti",
+    "name": "Министерство социального развития и семейной политики Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-ministerstvo-regionalnoy-bezopasnosti-smolenskoy-oblasti": {
+    "id": "ru-67-ministerstvo-regionalnoy-bezopasnosti-smolenskoy-oblasti",
+    "name": "Министерство региональной безопасности Смоленской области",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-glavnoe-upravlenie-smolenskoy-oblasti-po-regulirovaniyu-kontraktnoy-sistemy": {
+    "id": "ru-67-glavnoe-upravlenie-smolenskoy-oblasti-po-regulirovaniyu-kontraktnoy-sistemy",
+    "name": "Главное управление Смоленской области по регулированию контрактной системы",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-67-glavnoe-upravlenie-smolenskoy-oblasti-po-kulturnomu-naslediyu": {
+    "id": "ru-67-glavnoe-upravlenie-smolenskoy-oblasti-po-kulturnomu-naslediyu",
+    "name": "Главное управление Смоленской области по культурному наследию",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-68-ministerstvo-zdravookhraneniya-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-zdravookhraneniya-tambovskoy-oblasti",
+    "name": "Министерство здравоохранения Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-kultury-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-kultury-tambovskoy-oblasti",
+    "name": "Министерство культуры Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-promyshlennosti-torgovli-i-razvitiya-predprinimatelstva-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-promyshlennosti-torgovli-i-razvitiya-predprinimatelstva-tambovskoy-oblasti",
+    "name": "Министерство промышленности, торговли и развития предпринимательства Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-turizma-i-molodezhnoy-politiki-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-turizma-i-molodezhnoy-politiki-tambovskoy-oblasti",
+    "name": "Министерство туризма Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-fizicheskoy-kultury-i-sporta-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-fizicheskoy-kultury-i-sporta-tambovskoy-oblasti",
+    "name": "Министерство спорта Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-departament-tsen-i-tarifov-tambovskoy-oblasti": {
+    "id": "ru-68-departament-tsen-i-tarifov-tambovskoy-oblasti",
+    "name": "Департамент цен и тарифов Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-sotsialnoy-zashchity-i-semeynoy-politiki-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-sotsialnoy-zashchity-i-semeynoy-politiki-tambovskoy-oblasti",
+    "name": "Министерство социальной защиты и семейной политики Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-finansov-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-finansov-tambovskoy-oblasti",
+    "name": "Министерство финансов Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-ekonomicheskoy-i-investitsionnoy-politiki-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-ekonomicheskoy-i-investitsionnoy-politiki-tambovskoy-oblasti",
+    "name": "Министерство экономической и инвестиционной политики Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-tambovskoy-oblasti",
+    "name": "Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-selskogo-khozyaystva-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-selskogo-khozyaystva-tambovskoy-oblasti",
+    "name": "Министерство сельского хозяйства Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-departament-veterinarii-tambovskoy-oblasti": {
+    "id": "ru-68-departament-veterinarii-tambovskoy-oblasti",
+    "name": "Департамент ветеринарии Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-yustitsii-i-regionalnoy-bezopasnosti-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-yustitsii-i-regionalnoy-bezopasnosti-tambovskoy-oblasti",
+    "name": "Министерство юстиции и региональной безопасности Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-avtomobilnykh-dorog-i-transporta-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-avtomobilnykh-dorog-i-transporta-tambovskoy-oblasti",
+    "name": "Министерство автомобильных дорог и транспорта Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-obrazovaniya-i-nauki-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-obrazovaniya-i-nauki-tambovskoy-oblasti",
+    "name": "Министерство образования и науки Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-truda-i-zanyatosti-naseleniya-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-truda-i-zanyatosti-naseleniya-tambovskoy-oblasti",
+    "name": "Министерство труда и занятости населения Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-imushchestvennykh-otnosheniy-i-gosudarstvennogo-zakaza-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-imushchestvennykh-otnosheniy-i-gosudarstvennogo-zakaza-tambovskoy-oblasti",
+    "name": "Министерство имущественных отношений и государственного заказа Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-tambovskoy-oblasti": {
+    "id": "ru-68-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-tambovskoy-oblasti",
+    "name": "Департамент по государственной охране объектов культурного наследия Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-ministerstvo-ekologii-i-prirodnykh-resursov-tambovskoy-oblasti": {
+    "id": "ru-68-ministerstvo-ekologii-i-prirodnykh-resursov-tambovskoy-oblasti",
+    "name": "Министерство экологии и природных ресурсов Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-68-pravitelstvo-tambovskoy-oblasti": {
+    "id": "ru-68-pravitelstvo-tambovskoy-oblasti",
+    "name": "Правительство Тамбовской области",
+    "shortName": "",
+    "territoryId": "ru-68"
+  },
+  "ru-71-ministerstvo-razvitiya-predprinimatelstva-i-torgovli-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-razvitiya-predprinimatelstva-i-torgovli-tulskoy-oblasti",
+    "name": "Министерство развития предпринимательства и торговли Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-zhilishchnogo-khozyaystva-i-blagoustroystva-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-zhilishchnogo-khozyaystva-i-blagoustroystva-tulskoy-oblasti",
+    "name": "Министерство жилищного хозяйства и благоустройства Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-energetiki-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-energetiki-tulskoy-oblasti",
+    "name": "Министерство энергетики Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-po-regionalnoy-bezopasnosti-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-po-regionalnoy-bezopasnosti-tulskoy-oblasti",
+    "name": "Министерство по региональной безопасности Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-po-pravovomu-obespecheniyu-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-po-pravovomu-obespecheniyu-tulskoy-oblasti",
+    "name": "Министерство по правовому обеспечению Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-komitet-tulskoy-oblasti-po-arkhitekture-i-gradostroitelstvu": {
+    "id": "ru-71-komitet-tulskoy-oblasti-po-arkhitekture-i-gradostroitelstvu",
+    "name": "Комитет Тульской области по архитектуре и градостроительству",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-selskogo-khozyaystva-prirodnykh-resursov-i-ekologii-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-selskogo-khozyaystva-prirodnykh-resursov-i-ekologii-tulskoy-oblasti",
+    "name": "Министерство сельского хозяйства, природных ресурсов и экологии Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-sporta-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-sporta-tulskoy-oblasti",
+    "name": "Министерство спорта Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-stroitelstva-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-stroitelstva-tulskoy-oblasti",
+    "name": "Министерство строительства Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-molodezhnoy-politiki-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-molodezhnoy-politiki-tulskoy-oblasti",
+    "name": "Министерство молодежной политики Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-tulskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-kultury-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-kultury-tulskoy-oblasti",
+    "name": "Министерство культуры Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-komitet-tulskoy-oblasti-po-nauke-i-innovatike": {
+    "id": "ru-71-komitet-tulskoy-oblasti-po-nauke-i-innovatike",
+    "name": "Комитет Тульской области по науке и инноватике",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-promyshlennosti-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-promyshlennosti-tulskoy-oblasti",
+    "name": "Министерство промышленности Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-finansov-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-finansov-tulskoy-oblasti",
+    "name": "Министерство финансов Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-sotsialnoy-zashchity-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-sotsialnoy-zashchity-tulskoy-oblasti",
+    "name": "Министерство социальной защиты Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-vnutrenney-politiki-i-razvitiya-mestnogo-samoupravleniya-v-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-vnutrenney-politiki-i-razvitiya-mestnogo-samoupravleniya-v-tulskoy-oblasti",
+    "name": "Министерство внутренней политики и развития местного самоуправления в Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-komitet-veterinarii-tulskoy-oblasti": {
+    "id": "ru-71-komitet-veterinarii-tulskoy-oblasti",
+    "name": "Комитет ветеринарии Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-komitet-tulskoy-oblasti-po-tarifam": {
+    "id": "ru-71-komitet-tulskoy-oblasti-po-tarifam",
+    "name": "Комитет Тульской области по тарифам",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-obrazovaniya-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-obrazovaniya-tulskoy-oblasti",
+    "name": "Министерство образования Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-inspektsiya-tulskoy-oblasti-po-gosudarstvennomu-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugi-bc6db01ee0": {
+    "id": "ru-71-inspektsiya-tulskoy-oblasti-po-gosudarstvennomu-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugi-bc6db01ee0",
+    "name": "Инспекция Тульской области по государственному надзору за техническим состоянием самоходных машин и других видов техники",
+    "shortName": "Гостехнадзор",
+    "territoryId": "ru-71"
+  },
+  "ru-71-inspektsiya-tulskoy-oblasti-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya": {
+    "id": "ru-71-inspektsiya-tulskoy-oblasti-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya",
+    "name": "Инспекция Тульской области по государственной охране объектов культурного наследия",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-ekonomicheskogo-razvitiya-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-ekonomicheskogo-razvitiya-tulskoy-oblasti",
+    "name": "Министерство экономического развития Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-transporta-i-dorozhnogo-khozyaystva-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-transporta-i-dorozhnogo-khozyaystva-tulskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-gosudarstvennaya-zhilishchnaya-inspektsiya-tulskoy-oblasti": {
+    "id": "ru-71-gosudarstvennaya-zhilishchnaya-inspektsiya-tulskoy-oblasti",
+    "name": "Государственная жилищная инспекция Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-pravitelstvo-tulskoy-oblasti": {
+    "id": "ru-71-pravitelstvo-tulskoy-oblasti",
+    "name": "Правительство Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-apparat-pravitelstva-tulskoy-oblasti": {
+    "id": "ru-71-apparat-pravitelstva-tulskoy-oblasti",
+    "name": "Аппарат Правительства Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-71-ministerstvo-zdravookhraneniya-tulskoy-oblasti": {
+    "id": "ru-71-ministerstvo-zdravookhraneniya-tulskoy-oblasti",
+    "name": "Министерство здравоохранения Тульской области",
+    "shortName": "",
+    "territoryId": "ru-71"
+  },
+  "ru-69-ministerstvo-turizma-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-turizma-tverskoy-oblasti",
+    "name": "Министерство туризма Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-promyshlennosti-i-torgovli-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-promyshlennosti-i-torgovli-tverskoy-oblasti",
+    "name": "Министерство промышленности и торговли Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-stroitelstva-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-stroitelstva-tverskoy-oblasti",
+    "name": "Министерство строительства Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-komitet-gosudarstvennogo-zakaza-tverskoy-oblasti": {
+    "id": "ru-69-komitet-gosudarstvennogo-zakaza-tverskoy-oblasti",
+    "name": "Комитет государственного заказа Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-regionalnoy-politiki-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-regionalnoy-politiki-tverskoy-oblasti",
+    "name": "Министерство региональной политики Тверской области",
+    "shortName": "Минрегион Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-tverskoy-oblasti",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-lesnogo-kompleksa-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-lesnogo-kompleksa-tverskoy-oblasti",
+    "name": "Министерство лесного комплекса Тверской области",
+    "shortName": "Минлес Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-selskogo-khozyaystva-pishchevoy-i-pererabatyvayushchey-promyshlennosti-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-selskogo-khozyaystva-pishchevoy-i-pererabatyvayushchey-promyshlennosti-tverskoy-oblasti",
+    "name": "Министерство сельского хозяйства, пищевой и перерабатывающей промышленности Тверской области",
+    "shortName": "Минсельхоз Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-po-arkhivnomu-delu-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-po-arkhivnomu-delu-tverskoy-oblasti",
+    "name": "Главное управление по архивному делу Тверской области",
+    "shortName": "Главархив Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-tverskoy-oblasti",
+    "name": "Главное управление записи актов гражданского состояния Тверской области",
+    "shortName": "Главное управление ЗАГС Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-arkhitektury-i-gradostroitelnoy-deyatelnosti-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-arkhitektury-i-gradostroitelnoy-deyatelnosti-tverskoy-oblasti",
+    "name": "Главное управление архитектуры и градостроительной деятельности Тверской области",
+    "shortName": "Главархитектура Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-semeynoy-i-demograficheskoy-politiki-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-semeynoy-i-demograficheskoy-politiki-tverskoy-oblasti",
+    "name": "Министерство семейной и демографической политики Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-tverskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-ekonomicheskogo-razvitiya-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-ekonomicheskogo-razvitiya-tverskoy-oblasti",
+    "name": "Министерство экономического развития Тверской области",
+    "shortName": "Минэкономразвития Тверской области",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-dr-7954b5a580": {
+    "id": "ru-69-glavnoe-upravlenie-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-dr-7954b5a580",
+    "name": "Главное управление \"Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники\" Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-tverskoy-oblasti",
+    "name": "Главное управление по государственной охране объектов культурного наследия Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-zdravookhraneniya-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-zdravookhraneniya-tverskoy-oblasti",
+    "name": "Министерство здравоохранения Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-finansov-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-finansov-tverskoy-oblasti",
+    "name": "Министерство финансов Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-obrazovaniya-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-obrazovaniya-tverskoy-oblasti",
+    "name": "Министерство образования Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-sotsialnoy-zashchity-naseleniya-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-sotsialnoy-zashchity-naseleniya-tverskoy-oblasti",
+    "name": "Министерство социальной защиты населения Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-tverskoy-oblasti-po-obespecheniyu-kontrolnykh-funktsiy": {
+    "id": "ru-69-ministerstvo-tverskoy-oblasti-po-obespecheniyu-kontrolnykh-funktsiy",
+    "name": "Министерство Тверской области по обеспечению контрольных функций",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-ministerstvo-transporta-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-transporta-tverskoy-oblasti",
+    "name": "Министерство транспорта Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-gosudarstvennaya-zhilishchnaya-inspektsiya-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-gosudarstvennaya-zhilishchnaya-inspektsiya-tverskoy-oblasti",
+    "name": "Главное управление \"Государственная жилищная инспекция\" Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-gosudarstvennaya-inspektsiya-po-veterinarii-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-gosudarstvennaya-inspektsiya-po-veterinarii-tverskoy-oblasti",
+    "name": "Главное управление \"Государственная инспекция по ветеринарии\" Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-po-trudu-i-zanyatosti-naseleniya-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-po-trudu-i-zanyatosti-naseleniya-tverskoy-oblasti",
+    "name": "Главное управление по труду и занятости населения Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-regionalnaya-energeticheskaya-komissiya-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-regionalnaya-energeticheskaya-komissiya-tverskoy-oblasti",
+    "name": "Главное управление \"Региональная энергетическая комиссия\" Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-glavnoe-upravlenie-regionalnoy-bezopasnosti-tverskoy-oblasti": {
+    "id": "ru-69-glavnoe-upravlenie-regionalnoy-bezopasnosti-tverskoy-oblasti",
+    "name": "Главное управление региональной безопасности Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-komitet-po-fizicheskoy-kulture-i-sportu-tverskoy-oblasti": {
+    "id": "ru-69-komitet-po-fizicheskoy-kulture-i-sportu-tverskoy-oblasti",
+    "name": "Комитет по физической культуре и спорту Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-pravitelstvo-tverskoy-oblasti": {
+    "id": "ru-69-pravitelstvo-tverskoy-oblasti",
+    "name": "Правительство Тверской области",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-69-public-employer-inn-6938001078": {
+    "id": "ru-69-public-employer-inn-6938001078",
+    "name": "Администрация Сандовского муниципального округа",
+    "shortName": "",
+    "territoryId": "ru-69"
+  },
+  "ru-33-administratsiya-gubernatora-vladimirskoy-oblasti": {
+    "id": "ru-33-administratsiya-gubernatora-vladimirskoy-oblasti",
+    "name": "Администрация Губернатора Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-po-organizatsii-deyatelnosti-mirovykh-sudey-organov-zags-i-arkhivov-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-po-organizatsii-deyatelnosti-mirovykh-sudey-organov-zags-i-arkhivov-vladimirskoy-oblasti",
+    "name": "Министерство по организации деятельности мировых судей, органов ЗАГС и архивов Владимирской области",
+    "shortName": "Министерство по организации деятельности мировых судей, органов ЗАГС и архивов",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-kultury-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-kultury-vladimirskoy-oblasti",
+    "name": "Министерство культуры Владимирской области",
+    "shortName": "Минкультуры Владимирской области",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-vnutrenney-politiki-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-vnutrenney-politiki-vladimirskoy-oblasti",
+    "name": "Министерство внутренней политики Владимирской области",
+    "shortName": "МВП",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-selskogo-khozyaystva-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-selskogo-khozyaystva-vladimirskoy-oblasti",
+    "name": "Министерство сельского хозяйства Владимирской области",
+    "shortName": "МСХ",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-vladimirskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-lesnogo-khozyaystva-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-lesnogo-khozyaystva-vladimirskoy-oblasti",
+    "name": "Министерство лесного хозяйства Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-prirodopolzovaniya-i-ekologii-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-prirodopolzovaniya-i-ekologii-vladimirskoy-oblasti",
+    "name": "Министерство природопользования и экологии Владимирской области",
+    "shortName": "Минприроды Владимирской области",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-vladimirskoy-oblasti",
+    "name": "Министерство экономического развития и промышленности Владимирской области",
+    "shortName": "Минэкономразвития и промышленности Владимирской области",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-predprinimatelstva-i-turizma-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-predprinimatelstva-i-turizma-vladimirskoy-oblasti",
+    "name": "Министерство предпринимательства и туризма Владимирской области",
+    "shortName": "МПТ",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-arkhitektury-i-stroitelstva-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-arkhitektury-i-stroitelstva-vladimirskoy-oblasti",
+    "name": "Министерство архитектуры и строительства Владимирской области",
+    "shortName": "МАС",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-vladimirskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Владимирской области",
+    "shortName": "Министерство ЖКХ",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-transporta-i-dorozhnogo-khozyaystva-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-transporta-i-dorozhnogo-khozyaystva-vladimirskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Владимирской области",
+    "shortName": "Минтранс Владимирской области",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-gosudarstvennogo-regulirovaniya-tsen-i-tarifov-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-gosudarstvennogo-regulirovaniya-tsen-i-tarifov-vladimirskoy-oblasti",
+    "name": "Министерство государственного регулирования цен и тарифов Владимирской области",
+    "shortName": "Министерство цен и тарифов",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-truda-i-zanyatosti-naseleniya-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-truda-i-zanyatosti-naseleniya-vladimirskoy-oblasti",
+    "name": "Министерство труда и занятости населения Владимирской области",
+    "shortName": "МТЗН Владимирской области",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-fizicheskoy-kultury-i-sporta-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-fizicheskoy-kultury-i-sporta-vladimirskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Владимирской области",
+    "shortName": "Министерство спорта Владимирской области",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-regionalnoy-bezopasnosti-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-regionalnoy-bezopasnosti-vladimirskoy-oblasti",
+    "name": "Министерство региональной безопасности Владимирской области",
+    "shortName": "Министерство региональной безопасности",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-obrazovaniya-i-molodezhnoy-politiki-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-obrazovaniya-i-molodezhnoy-politiki-vladimirskoy-oblasti",
+    "name": "Министерство образования Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-ministerstvo-molodezhnoy-politiki-vladimirskoy-oblasti": {
+    "id": "ru-33-ministerstvo-molodezhnoy-politiki-vladimirskoy-oblasti",
+    "name": "Министерство молодежной политики Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-inspektsiya-gosudarstvennogo-administrativno-tekhnicheskogo-nadzora-vladimirskoy-oblasti": {
+    "id": "ru-33-inspektsiya-gosudarstvennogo-administrativno-tekhnicheskogo-nadzora-vladimirskoy-oblasti",
+    "name": "Инспекция государственного административно-технического надзора Владимирской области",
+    "shortName": "Влададмтехнадзор",
+    "territoryId": "ru-33"
+  },
+  "ru-33-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-vladimirskoy-oblasti": {
+    "id": "ru-33-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-vladimirskoy-oblasti",
+    "name": "Инспекция государственного жилищного надзора Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-vladimirskoy-oblasti": {
+    "id": "ru-33-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-vladimirskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Владимирской области",
+    "shortName": "ИГСН",
+    "territoryId": "ru-33"
+  },
+  "ru-33-inspektsiya-gosudarstvennogo-nadzora-v-sfere-okhrany-i-ispolzovaniya-obektov-zhivotnogo-mira-vladimirskoy-oblasti": {
+    "id": "ru-33-inspektsiya-gosudarstvennogo-nadzora-v-sfere-okhrany-i-ispolzovaniya-obektov-zhivotnogo-mira-vladimirskoy-oblasti",
+    "name": "Инспекция государственного надзора в сфере охраны и использования объектов животного мира Владимирской области",
+    "shortName": "Госохотинспекция",
+    "territoryId": "ru-33"
+  },
+  "ru-33-inspektsiya-gosudarstvennogo-nadzora-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-v-ef365a3c78": {
+    "id": "ru-33-inspektsiya-gosudarstvennogo-nadzora-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-v-ef365a3c78",
+    "name": "Инспекция государственного надзора за техническим состоянием самоходных машин и других видов техники Владимирской области",
+    "shortName": "Инспекция гостехнадзора Владимирской области",
+    "territoryId": "ru-33"
+  },
+  "ru-33-inspektsiya-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-vladimirskoy-oblasti": {
+    "id": "ru-33-inspektsiya-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-vladimirskoy-oblasti",
+    "name": "Инспекция государственной охраны объектов культурного наследия Владимирской области",
+    "shortName": "ИГООКН",
+    "territoryId": "ru-33"
+  },
+  "ru-33-inspektsiya-veterinarii-i-gosudarstvennogo-nadzora-v-oblasti-obrashcheniya-s-zhivotnymi-vladimirskoy-oblasti": {
+    "id": "ru-33-inspektsiya-veterinarii-i-gosudarstvennogo-nadzora-v-oblasti-obrashcheniya-s-zhivotnymi-vladimirskoy-oblasti",
+    "name": "Инспекция ветеринарии и государственного надзора в области обращения с животными Владимирской области",
+    "shortName": "Госветинспекция",
+    "territoryId": "ru-33"
+  },
+  "ru-33-kontrolno-revizionnaya-inspektsiya-vladimirskoy-oblasti": {
+    "id": "ru-33-kontrolno-revizionnaya-inspektsiya-vladimirskoy-oblasti",
+    "name": "Контрольно-ревизионная инспекция Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-predstavitelstvo-pravitelstva-vladimirskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii": {
+    "id": "ru-33-predstavitelstvo-pravitelstva-vladimirskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii",
+    "name": "Представительство Правительства Владимирской области при Правительстве Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-33-pravitelstvo-vladimirskoy-oblasti": {
+    "id": "ru-33-pravitelstvo-vladimirskoy-oblasti",
+    "name": "Правительство Владимирской области",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-36-ministerstvo-stroitelstva-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-stroitelstva-voronezhskoy-oblasti",
+    "name": "Министерство строительства Воронежской области",
+    "shortName": "Минстрой ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-vnutrenney-politiki-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-vnutrenney-politiki-voronezhskoy-oblasti",
+    "name": "Министерство внутренней политики Воронежской области",
+    "shortName": "МВП Воронежской области",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-regionalnoy-bezopasnosti-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-regionalnoy-bezopasnosti-voronezhskoy-oblasti",
+    "name": "Министерство региональной безопасности Воронежской области",
+    "shortName": "Минбезопасности ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-tarifnogo-regulirovaniya-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-tarifnogo-regulirovaniya-voronezhskoy-oblasti",
+    "name": "Министерство тарифного регулирования Воронежской области",
+    "shortName": "Минтарифов ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-voronezhskoy-oblasti": {
+    "id": "ru-36-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-voronezhskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Воронежской области",
+    "shortName": "инспекция Госстройнадзора Воронежской области",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-kultury-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-kultury-voronezhskoy-oblasti",
+    "name": "Министерство культуры Воронежской области",
+    "shortName": "Минкультуры ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-energetiki-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-energetiki-voronezhskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства и энергетики Воронежской области",
+    "shortName": "Министерство ЖКХ и энергетики ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-predprinimatelstva-torgovli-i-turizma-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-predprinimatelstva-torgovli-i-turizma-voronezhskoy-oblasti",
+    "name": "Министерство предпринимательства, торговли и туризма Воронежской области",
+    "shortName": "Минпредторг ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-finansov-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-finansov-voronezhskoy-oblasti",
+    "name": "Министерство финансов Воронежской области",
+    "shortName": "Минфин ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-zdravookhraneniya-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-zdravookhraneniya-voronezhskoy-oblasti",
+    "name": "Министерство здравоохранения Воронежской области",
+    "shortName": "Минздрав ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-sotsialnoy-zashchity-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-sotsialnoy-zashchity-voronezhskoy-oblasti",
+    "name": "Министерство социальной защиты Воронежской области",
+    "shortName": "Минсоцзащиты ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-voronezhskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Воронежской области",
+    "shortName": "Минимущества ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-lesnogo-khozyaystva-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-lesnogo-khozyaystva-voronezhskoy-oblasti",
+    "name": "Министерство лесного хозяйства Воронежской области",
+    "shortName": "Минлесхоз ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-prirodnykh-resursov-i-ekologii-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-prirodnykh-resursov-i-ekologii-voronezhskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Воронежской области",
+    "shortName": "Минприроды ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-selskogo-khozyaystva-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-selskogo-khozyaystva-voronezhskoy-oblasti",
+    "name": "Министерство сельского хозяйства Воронежской области",
+    "shortName": "Минсельхоз ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-arkhitektury-i-gradostroitelstva-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-arkhitektury-i-gradostroitelstva-voronezhskoy-oblasti",
+    "name": "Министерство архитектуры и градостроительства Воронежской области",
+    "shortName": "Минархитектуры ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-ekonomicheskogo-razvitiya-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-ekonomicheskogo-razvitiya-voronezhskoy-oblasti",
+    "name": "Министерство экономического развития Воронежской области",
+    "shortName": "Минэкономразвития ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-po-razvitiyu-munitsipalnykh-obrazovaniy-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-po-razvitiyu-munitsipalnykh-obrazovaniy-voronezhskoy-oblasti",
+    "name": "Министерство по развитию муниципальных образований Воронежской области",
+    "shortName": "Минтерразвития ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-pravitelstvo-voronezhskoy-oblasti": {
+    "id": "ru-36-pravitelstvo-voronezhskoy-oblasti",
+    "name": "Правительство Воронежской области",
+    "shortName": "",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-fizicheskoy-kultury-i-sporta-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-fizicheskoy-kultury-i-sporta-voronezhskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Воронежской области",
+    "shortName": "",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-voronezhskoy-oblasti",
+    "name": "Министерство по регулированию контрактной системы в сфере закупок Воронежской области",
+    "shortName": "Минзаказ ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-truda-i-zanyatosti-naseleniya-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-truda-i-zanyatosti-naseleniya-voronezhskoy-oblasti",
+    "name": "Министерство труда и занятости населения Воронежской области",
+    "shortName": "Минтруд ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-tsifrovogo-razvitiya-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-tsifrovogo-razvitiya-voronezhskoy-oblasti",
+    "name": "Министерство цифрового развития Воронежской области",
+    "shortName": "Минцифры ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-promyshlennosti-i-transporta-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-promyshlennosti-i-transporta-voronezhskoy-oblasti",
+    "name": "Министерство промышленности и транспорта Воронежской области",
+    "shortName": "Минпромтранс ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-dorozhnoy-deyatelnosti-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-dorozhnoy-deyatelnosti-voronezhskoy-oblasti",
+    "name": "Министерство дорожной деятельности Воронежской области",
+    "shortName": "Минавтодор ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-36-upravlenie-veterinarii-voronezhskoy-oblasti": {
+    "id": "ru-36-upravlenie-veterinarii-voronezhskoy-oblasti",
+    "name": "Управление ветеринарии Воронежской области",
+    "shortName": "",
+    "territoryId": "ru-36"
+  },
+  "ru-36-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-voronezhskoy-oblasti": {
+    "id": "ru-36-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-voronezhskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Воронежской области",
+    "shortName": "Управление ЗАГС",
+    "territoryId": "ru-36"
+  },
+  "ru-36-upravlenie-delami-voronezhskoy-oblasti": {
+    "id": "ru-36-upravlenie-delami-voronezhskoy-oblasti",
+    "name": "Управление делами Воронежской области",
+    "shortName": "",
+    "territoryId": "ru-36"
+  },
+  "ru-36-gosudarstvennaya-zhilishchnaya-inspektsiya-voronezhskoy-oblasti": {
+    "id": "ru-36-gosudarstvennaya-zhilishchnaya-inspektsiya-voronezhskoy-oblasti",
+    "name": "Государственная жилищная инспекция Воронежской области",
+    "shortName": "",
+    "territoryId": "ru-36"
+  },
+  "ru-36-ministerstvo-obrazovaniya-voronezhskoy-oblasti": {
+    "id": "ru-36-ministerstvo-obrazovaniya-voronezhskoy-oblasti",
+    "name": "Министерство образования Воронежской области",
+    "shortName": "Минобр ВО",
+    "territoryId": "ru-36"
+  },
+  "ru-76-ministerstvo-imushchestvennykh-otnosheniy-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-imushchestvennykh-otnosheniy-yaroslavskoy-oblasti",
+    "name": "Министерство имущественных отношений Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-regionalnogo-razvitiya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-regionalnogo-razvitiya-yaroslavskoy-oblasti",
+    "name": "Министерство регионального развития Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-pravitelstvo-yaroslavskoy-oblasti": {
+    "id": "ru-76-pravitelstvo-yaroslavskoy-oblasti",
+    "name": "Правительство Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-agentstvo-po-voprosam-semi-i-detstva-yaroslavskoy-oblasti": {
+    "id": "ru-76-agentstvo-po-voprosam-semi-i-detstva-yaroslavskoy-oblasti",
+    "name": "Агентство по вопросам семьи и детства Ярославской области",
+    "shortName": "АВСиД ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-agropromyshlennogo-kompleksa-i-potrebitelskogo-rynka-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-agropromyshlennogo-kompleksa-i-potrebitelskogo-rynka-yaroslavskoy-oblasti",
+    "name": "Министерство агропромышленного комплекса и потребительского рынка Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-konkurentnoy-politiki-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-konkurentnoy-politiki-yaroslavskoy-oblasti",
+    "name": "Министерство конкурентной политики Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-truda-i-sotsialnoy-podderzhki-naseleniya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-truda-i-sotsialnoy-podderzhki-naseleniya-yaroslavskoy-oblasti",
+    "name": "Министерство труда и социальной поддержки населения Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-obrazovaniya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-obrazovaniya-yaroslavskoy-oblasti",
+    "name": "Министерство образования Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-inspektsiya-administrativno-tekhnicheskogo-i-gosudarstvennogo-zhilishchnogo-nadzora-yaroslavskoy-oblasti": {
+    "id": "ru-76-inspektsiya-administrativno-tekhnicheskogo-i-gosudarstvennogo-zhilishchnogo-nadzora-yaroslavskoy-oblasti",
+    "name": "Инспекция административно-технического и государственного жилищного надзора Ярославской области",
+    "shortName": "ИАТиГЖН ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-kontrolno-revizionnaya-inspektsiya-yaroslavskoy-oblasti": {
+    "id": "ru-76-kontrolno-revizionnaya-inspektsiya-yaroslavskoy-oblasti",
+    "name": "Контрольно-ревизионная инспекция Ярославской области",
+    "shortName": "КРИ ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-regionalnoy-bezopasnosti-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-regionalnoy-bezopasnosti-yaroslavskoy-oblasti",
+    "name": "Министерство региональной безопасности Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-gosudarstvennaya-veterinarnaya-sluzhba-yaroslavskoy-oblasti": {
+    "id": "ru-76-gosudarstvennaya-veterinarnaya-sluzhba-yaroslavskoy-oblasti",
+    "name": "Государственная ветеринарная служба Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-investitsiy-i-promyshlennosti-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-investitsiy-i-promyshlennosti-yaroslavskoy-oblasti",
+    "name": "Министерство инвестиций и промышленности Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-gosudarstvennaya-sluzhba-zanyatosti-naseleniya-yaroslavskoy-oblasti": {
+    "id": "ru-76-gosudarstvennaya-sluzhba-zanyatosti-naseleniya-yaroslavskoy-oblasti",
+    "name": "Государственная служба занятости населения Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-tarifnogo-regulirovaniya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-tarifnogo-regulirovaniya-yaroslavskoy-oblasti",
+    "name": "Министерство тарифного регулирования Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-molodezhnoy-politiki-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-molodezhnoy-politiki-yaroslavskoy-oblasti",
+    "name": "Министерство молодежной политики Ярославской области",
+    "shortName": "ММП ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-kultury-i-turizma-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-kultury-i-turizma-yaroslavskoy-oblasti",
+    "name": "Министерство культуры и туризма Ярославской области",
+    "shortName": "МКТ ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-dorozhnogo-khozyaystva-i-transporta-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-dorozhnogo-khozyaystva-i-transporta-yaroslavskoy-oblasti",
+    "name": "Министерство дорожного хозяйства и транспорта Ярославской области",
+    "shortName": "МДХиТ ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-yaroslavskoy-oblasti",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Ярославской области",
+    "shortName": "МСиЖКХ ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-ekonomicheskogo-razvitiya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-ekonomicheskogo-razvitiya-yaroslavskoy-oblasti",
+    "name": "Министерство экономического развития Ярославской области",
+    "shortName": "МЭР ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-sporta-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-sporta-yaroslavskoy-oblasti",
+    "name": "Министерство спорта Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-agentstvo-po-delam-yustitsii-yaroslavskoy-oblasti": {
+    "id": "ru-76-agentstvo-po-delam-yustitsii-yaroslavskoy-oblasti",
+    "name": "Агентство по делам юстиции Ярославской области",
+    "shortName": "АДЮ ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-sotsialnykh-kommunikatsiy-i-nauchno-tekhnologicheskogo-razvitiya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-sotsialnykh-kommunikatsiy-i-nauchno-tekhnologicheskogo-razvitiya-yaroslavskoy-oblasti",
+    "name": "Министерство социальных коммуникаций и научно-технологического развития Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-tsifrovogo-razvitiya-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-tsifrovogo-razvitiya-yaroslavskoy-oblasti",
+    "name": "Министерство цифрового развития Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-gosudarstvennaya-sluzhba-okhrany-obektov-kulturnogo-naslediya-yaroslavskoy-oblasti": {
+    "id": "ru-76-gosudarstvennaya-sluzhba-okhrany-obektov-kulturnogo-naslediya-yaroslavskoy-oblasti",
+    "name": "Государственная служба охраны объектов культурного наследия Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-yaroslavskoy-oblasti": {
+    "id": "ru-76-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-yaroslavskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Ярославской области",
+    "shortName": "ИГСН ЯО",
+    "territoryId": "ru-76"
+  },
+  "ru-33-public-employer-inn-3300027288": {
+    "id": "ru-33-public-employer-inn-3300027288",
+    "name": "АДМИНИСТРАЦИЯ КОЛЬЧУГИНСКОГО МУНИЦИПАЛЬНОГО ОКРУГА",
+    "shortName": "",
+    "territoryId": "ru-33"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-furmanovskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-furmanovskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Фурмановскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gavrilovo-posadskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gavrilovo-posadskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Гаврилово-Посадскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-kineshma-i-kineshemskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-kineshma-i-kineshemskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по городскому округу Кинешма и Кинешемскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-kokhma-i-ivanovskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-kokhma-i-ivanovskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по городскому округу Кохма и Ивановскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-shuya-i-shuyskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-shuya-i-shuyskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по городскому округу Шуя и Шуйскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-teykovo-i-teykovskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-teykovo-i-teykovskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по городскому округу Тейково и Тейковскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-vichuga-i-vichugskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodskomu-okrugu-vichuga-i-vichugskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по городскому округу Вичуга и Вичугскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodu-ivanovu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-gorodu-ivanovu",
+    "name": "Территориальное управление социальной защиты населения по городу Иванову",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-ilinskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-ilinskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Ильинскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-komsomolskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-komsomolskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Комсомольскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-lezhnevskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-lezhnevskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Лежневскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-lukhskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-lukhskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Лухскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-palekhskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-palekhskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Палехскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-pestyakovskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-pestyakovskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Пестяковскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-privolzhskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-privolzhskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Приволжскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-puchezhskomu-i-verkhnelandekhovskomu-munitsipalnym-rayonam": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-puchezhskomu-i-verkhnelandekhovskomu-munitsipalnym-rayonam",
+    "name": "Территориальное управление социальной защиты населения по Пучежскому и Верхнеландеховскому муниципальным районам",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-rodnikovskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-rodnikovskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Родниковскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-savinskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-savinskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Савинскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-yurevetskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-yurevetskomu-munitsipalnomu-rayonu",
+    "name": "Территориальный отдел социальной защиты населения по Юрьевецкому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-yuzhskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-yuzhskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Южскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-zavolzhskomu-munitsipalnomu-rayonu": {
+    "id": "ru-37-territorialnoe-upravlenie-sotsialnoy-zashchity-naseleniya-po-zavolzhskomu-munitsipalnomu-rayonu",
+    "name": "Территориальное управление социальной защиты населения по Заволжскому муниципальному району",
+    "shortName": "",
+    "territoryId": "ru-37"
+  },
+  "ru-04-edinyy-apparat-glavy-respubliki-altay-i-pravitelstva-respubliki-altay": {
+    "id": "ru-04-edinyy-apparat-glavy-respubliki-altay-i-pravitelstva-respubliki-altay",
+    "name": "Единый аппарат Главы Республики Алтай и Правительства Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-11-administratsiya-munitsipalnogo-obrazovaniya-gorodskogo-okruga-syktyvkar": {
+    "id": "ru-11-administratsiya-munitsipalnogo-obrazovaniya-gorodskogo-okruga-syktyvkar",
+    "name": "Администрация муниципального образования городского округа «Сыктывкар»",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-52-administratsiya-goroda-nizhnego-novgoroda": {
+    "id": "ru-52-administratsiya-goroda-nizhnego-novgoroda",
+    "name": "Администрация города Нижнего Новгорода",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-65-institut-razvitiya-obrazovaniya-sakhalinskoy-oblasti-gurevicha": {
+    "id": "ru-65-institut-razvitiya-obrazovaniya-sakhalinskoy-oblasti-gurevicha",
+    "name": "Государственное автономное образовательное учреждение дополнительного профессионального образования «Институт развития образования Сахалинской области» имени Заслуженного учителя Российской Федерации В.Д. Гуревича",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-67-administratsiya-goroda-smolenska": {
+    "id": "ru-67-administratsiya-goroda-smolenska",
+    "name": "Администрация города Смоленска",
+    "shortName": "",
+    "territoryId": "ru-67"
+  },
+  "ru-72-administraciya-goroda-tobolska": {
+    "id": "ru-72-administraciya-goroda-tobolska",
+    "name": "Администрация города Тобольска",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-16-nizhnekamsk-land-property-department": {
+    "id": "ru-16-nizhnekamsk-land-property-department",
+    "name": "Муниципальное казенное учреждение «Управление земельных и имущественных отношений Нижнекамского муниципального района Республики Татарстан»",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-22-ministerstvo-zdravoohraneniya-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-zdravoohraneniya-altayskogo-kraya",
+    "name": "Министерство здравоохранения Алтайского края",
+    "shortName": "Минздрав Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-ekonomicheskogo-razvitiya-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-ekonomicheskogo-razvitiya-altayskogo-kraya",
+    "name": "Министерство экономического развития Алтайского края",
+    "shortName": "Минэкономразвития Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-obrazovaniya-i-nauki-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-obrazovaniya-i-nauki-altayskogo-kraya",
+    "name": "Министерство образования и науки Алтайского края",
+    "shortName": "Минобрнауки Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-altayskogo-kraya",
+    "name": "Управление государственной охраны объектов культурного наследия Алтайского края",
+    "shortName": "Алтайохранкультура",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-altayskogo-kraya-po-pischevoy-pererabatyvayuschey-farmacevticheskoy-promyshlennosti-i-biotehnologiyam": {
+    "id": "ru-22-upravlenie-altayskogo-kraya-po-pischevoy-pererabatyvayuschey-farmacevticheskoy-promyshlennosti-i-biotehnologiyam",
+    "name": "Управление Алтайского края по пищевой, перерабатывающей, фармацевтической промышленности и биотехнологиям",
+    "shortName": "Алтайпищепром",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-veterinarii-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-veterinarii-altayskogo-kraya",
+    "name": "Управление ветеринарии Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-delami-gubernatora-i-pravitelstva-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-delami-gubernatora-i-pravitelstva-altayskogo-kraya",
+    "name": "Управление делами Губернатора и Правительства Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-altayskogo-kraya",
+    "name": "Управление по обеспечению деятельности мировых судей Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-altayskogo-kraya",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Алтайского края",
+    "shortName": "Минстрой Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-transporta-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-transporta-altayskogo-kraya",
+    "name": "Министерство транспорта Алтайского края",
+    "shortName": "Минтранс Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-sporta-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-sporta-altayskogo-kraya",
+    "name": "Министерство спорта Алтайского края",
+    "shortName": "Минспорт Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-altayskogo-kraya": {
+    "id": "ru-22-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-altayskogo-kraya",
+    "name": "Инспекция по надзору за техническим состоянием самоходных машин и других видов техники Алтайского края",
+    "shortName": "Инспекция гостехнадзора Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-inspekciya-po-kontrolyu-v-oblasti-gradostroitelnoy-deyatelnosti-altayskogo-kraya": {
+    "id": "ru-22-inspekciya-po-kontrolyu-v-oblasti-gradostroitelnoy-deyatelnosti-altayskogo-kraya",
+    "name": "Инспекция по контролю в области градостроительной деятельности Алтайского края",
+    "shortName": "Градостроительная инспекция Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-promyshlennosti-i-energetiki-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-promyshlennosti-i-energetiki-altayskogo-kraya",
+    "name": "Министерство промышленности и энергетики Алтайского края",
+    "shortName": "Минпромэнерго Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-socialnoy-zaschity-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-socialnoy-zaschity-altayskogo-kraya",
+    "name": "Министерство социальной защиты Алтайского края",
+    "shortName": "Минсоцзащита Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-yusticii-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-yusticii-altayskogo-kraya",
+    "name": "Управление юстиции Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-grazhdanskoy-oborony-i-zaschity-naseleniya-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-grazhdanskoy-oborony-i-zaschity-naseleniya-altayskogo-kraya",
+    "name": "Управление гражданской обороны и защиты населения Алтайского края",
+    "shortName": "УГОЗН Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-prirodnyh-resursov-i-ekologii-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-prirodnyh-resursov-i-ekologii-altayskogo-kraya",
+    "name": "Министерство природных ресурсов и экологии Алтайского края",
+    "shortName": "Минприроды Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-inspekciya-finansovo-ekonomicheskogo-kontrolya-i-kontrolya-v-sfere-zakupok-altayskogo-kraya": {
+    "id": "ru-22-inspekciya-finansovo-ekonomicheskogo-kontrolya-i-kontrolya-v-sfere-zakupok-altayskogo-kraya",
+    "name": "Инспекция финансово-экономического контроля и контроля в сфере закупок Алтайского края",
+    "shortName": "Инспекция госфинконтроля Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-inspekciya-stroitelnogo-i-zhilischnogo-nadzora-altayskogo-kraya": {
+    "id": "ru-22-inspekciya-stroitelnogo-i-zhilischnogo-nadzora-altayskogo-kraya",
+    "name": "Инспекция строительного и жилищного надзора Алтайского края",
+    "shortName": "Госинспекция Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-altayskogo-kraya-po-trudu-i-zanyatosti-naseleniya": {
+    "id": "ru-22-upravlenie-altayskogo-kraya-po-trudu-i-zanyatosti-naseleniya",
+    "name": "Управление Алтайского края по труду и занятости населения",
+    "shortName": "УТЗН Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-pravitelstvo-altayskogo-kraya": {
+    "id": "ru-22-pravitelstvo-altayskogo-kraya",
+    "name": "Правительство Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-ministerstvo-kultury-altayskogo-kraya": {
+    "id": "ru-22-ministerstvo-kultury-altayskogo-kraya",
+    "name": "Министерство культуры Алтайского края",
+    "shortName": "Минкультуры Алтайского края",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-altayskogo-kraya-po-razvitiyu-predprinimatelstva-i-rynochnoy-infrastruktury": {
+    "id": "ru-22-upravlenie-altayskogo-kraya-po-razvitiyu-predprinimatelstva-i-rynochnoy-infrastruktury",
+    "name": "Управление Алтайского края по развитию предпринимательства и рыночной инфраструктуры",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-molodezhnoy-politiki-i-realizacii-programm-obschestvennogo-razvitiya-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-molodezhnoy-politiki-i-realizacii-programm-obschestvennogo-razvitiya-altayskogo-kraya",
+    "name": "Управление молодежной политики и реализации программ общественного развития Алтайского края",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-altayskogo-kraya-po-gosudarstvennomu-regulirovaniyu-cen-i-tarifov": {
+    "id": "ru-22-upravlenie-altayskogo-kraya-po-gosudarstvennomu-regulirovaniyu-cen-i-tarifov",
+    "name": "Управление Алтайского края по государственному регулированию цен и тарифов",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-imuschestvennyh-otnosheniy-altayskogo-kraya": {
+    "id": "ru-22-upravlenie-imuschestvennyh-otnosheniy-altayskogo-kraya",
+    "name": "Управление имущественных отношений Алтайского края",
+    "shortName": "Алтайкрайимущество",
+    "territoryId": "ru-22"
+  },
+  "ru-22-upravlenie-altayskogo-kraya-po-razvitiyu-turizma-i-kurortnoy-deyatelnosti": {
+    "id": "ru-22-upravlenie-altayskogo-kraya-po-razvitiyu-turizma-i-kurortnoy-deyatelnosti",
+    "name": "Управление Алтайского края по развитию туризма и курортной деятельности",
+    "shortName": "",
+    "territoryId": "ru-22"
+  },
+  "ru-04-komitet-po-nacionalnoy-politike-i-svyazyam-s-obschestvennostyu-respubliki-altay": {
+    "id": "ru-04-komitet-po-nacionalnoy-politike-i-svyazyam-s-obschestvennostyu-respubliki-altay",
+    "name": "Министерство по национальной политике и связям с общественностью Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-apparat-glavy-respubliki-altay-predsedatelya-pravitelstva-respubliki-altay-i-pravitelstva-respubliki-altay": {
+    "id": "ru-04-apparat-glavy-respubliki-altay-predsedatelya-pravitelstva-respubliki-altay-i-pravitelstva-respubliki-altay",
+    "name": "Администрация Главы Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-yusticii-respubliki-altay": {
+    "id": "ru-04-ministerstvo-yusticii-respubliki-altay",
+    "name": "Министерство юстиции Республики Алтай",
+    "shortName": "Минюст Республики Алтай",
+    "territoryId": "ru-04"
+  },
+  "ru-04-komitet-po-kontrolyu-nadzoru-respubliki-altay": {
+    "id": "ru-04-komitet-po-kontrolyu-nadzoru-respubliki-altay",
+    "name": "Комитет по контролю (надзору) Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-komitet-po-grazhdanskoy-oborone-chrezvychaynym-situaciyam-i-pozharnoy-bezopasnosti-respubliki-altay": {
+    "id": "ru-04-komitet-po-grazhdanskoy-oborone-chrezvychaynym-situaciyam-i-pozharnoy-bezopasnosti-respubliki-altay",
+    "name": "Комитет по гражданской обороне, чрезвычайным ситуациям и пожарной безопасности Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-transporta-i-dorozhnogo-hozyaystva-respubliki-altay": {
+    "id": "ru-04-ministerstvo-transporta-i-dorozhnogo-hozyaystva-respubliki-altay",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-molodezhnoy-politiki-i-sporta-respubliki-altay": {
+    "id": "ru-04-ministerstvo-molodezhnoy-politiki-i-sporta-respubliki-altay",
+    "name": "Министерство молодежной политики и спорта Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-cifrovogo-razvitiya-respubliki-altay": {
+    "id": "ru-04-ministerstvo-cifrovogo-razvitiya-respubliki-altay",
+    "name": "Министерство цифрового развития Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-pravitelstvo-respubliki-altay": {
+    "id": "ru-04-pravitelstvo-respubliki-altay",
+    "name": "Правительство Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-zdravoohraneniya-respubliki-altay": {
+    "id": "ru-04-ministerstvo-zdravoohraneniya-respubliki-altay",
+    "name": "Министерство здравоохранения Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-prirodnyh-resursov-i-ekologii-respubliki-altay": {
+    "id": "ru-04-ministerstvo-prirodnyh-resursov-i-ekologii-respubliki-altay",
+    "name": "Министерство природных ресурсов и экологии Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-inspekciya-po-gosudarstvennoy-ohrane-obektov-kulturnogo-naslediya-respubliki-altay": {
+    "id": "ru-04-inspekciya-po-gosudarstvennoy-ohrane-obektov-kulturnogo-naslediya-respubliki-altay",
+    "name": "Инспекция по государственной охране объектов культурного наследия Республики Алтай",
+    "shortName": "Инспекция госохраны ОКН РА",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-kultury-respubliki-altay": {
+    "id": "ru-04-ministerstvo-kultury-respubliki-altay",
+    "name": "Министерство культуры Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-obrazovaniya-i-nauki-respubliki-altay": {
+    "id": "ru-04-ministerstvo-obrazovaniya-i-nauki-respubliki-altay",
+    "name": "Министерство образования и науки Республики Алтай",
+    "shortName": "Минобрнауки РА",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-truda-socialnogo-razvitiya-i-zanyatosti-naseleniya-respubliki-altay": {
+    "id": "ru-04-ministerstvo-truda-socialnogo-razvitiya-i-zanyatosti-naseleniya-respubliki-altay",
+    "name": "Министерство труда, социального развития и занятости населения Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-04-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-respubliki-altay": {
+    "id": "ru-04-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-respubliki-altay",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Республики Алтай",
+    "shortName": "",
+    "territoryId": "ru-04"
+  },
+  "ru-28-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-amurskoy-oblasti": {
+    "id": "ru-28-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-amurskoy-oblasti",
+    "name": "Государственная инспекция по охране объектов культурного наследия Амурской области",
+    "shortName": "Инспекция по охране ОКНАО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-kultury-i-nacionalnoy-politiki-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-kultury-i-nacionalnoy-politiki-amurskoy-oblasti",
+    "name": "Министерство культуры и национальной политики Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-transporta-i-dorozhnogo-hozyaystva-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-transporta-i-dorozhnogo-hozyaystva-amurskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Амурской области",
+    "shortName": "Минтранс АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-stroitelstva-i-arhitektury-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-stroitelstva-i-arhitektury-amurskoy-oblasti",
+    "name": "Министерство строительства и архитектуры Амурской области",
+    "shortName": "Минстрой АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-molodezhnoy-politiki-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-molodezhnoy-politiki-amurskoy-oblasti",
+    "name": "Управление молодежной политики Амурской области",
+    "shortName": "УМП АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-amurskoy-oblasti",
+    "name": "Управление по обеспечению деятельности мировых судей Амурской области",
+    "shortName": "УДМС АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-prirodnyh-resursov-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-prirodnyh-resursov-amurskoy-oblasti",
+    "name": "Министерство природных ресурсов Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-lesnogo-hozyaystva-i-pozharnoy-bezopasnosti-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-lesnogo-hozyaystva-i-pozharnoy-bezopasnosti-amurskoy-oblasti",
+    "name": "Министерство лесного хозяйства и пожарной безопасности Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-imuschestvennyh-otnosheniy-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-imuschestvennyh-otnosheniy-amurskoy-oblasti",
+    "name": "Министерство имущественных отношений Амурской области",
+    "shortName": "Минимущество области",
+    "territoryId": "ru-28"
+  },
+  "ru-28-pravitelstvo-amurskoy-oblasti": {
+    "id": "ru-28-pravitelstvo-amurskoy-oblasti",
+    "name": "Правительство Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-gosudarstvennaya-zhilischnaya-inspekciya-amurskoy-oblasti": {
+    "id": "ru-28-gosudarstvennaya-zhilischnaya-inspekciya-amurskoy-oblasti",
+    "name": "Государственная жилищная инспекция Амурской области",
+    "shortName": "Амуржилинспекция",
+    "territoryId": "ru-28"
+  },
+  "ru-28-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-bcd40985": {
+    "id": "ru-28-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-bcd40985",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Амурской области",
+    "shortName": "Инспекция Гостехнадзора Амурской области",
+    "territoryId": "ru-28"
+  },
+  "ru-28-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-amurskoy-oblasti": {
+    "id": "ru-28-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-amurskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-ekonomicheskogo-razvitiya-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-ekonomicheskogo-razvitiya-amurskoy-oblasti",
+    "name": "Министерство экономического развития Амурской области",
+    "shortName": "Минэкономразвития АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-zanyatosti-naseleniya-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-zanyatosti-naseleniya-amurskoy-oblasti",
+    "name": "Управление занятости населения Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-yusticii-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-yusticii-amurskoy-oblasti",
+    "name": "Министерство юстиции Амурской области",
+    "shortName": "Минюст АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-gosudarstvennogo-regulirovaniya-cen-i-tarifov-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-gosudarstvennogo-regulirovaniya-cen-i-tarifov-amurskoy-oblasti",
+    "name": "Управление государственного регулирования цен и тарифов Амурской области",
+    "shortName": "УГРЦиТ АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-regionalnoy-bezopasnosti-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-regionalnoy-bezopasnosti-amurskoy-oblasti",
+    "name": "Управление региональной безопасности Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-veterinarii-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-veterinarii-amurskoy-oblasti",
+    "name": "Управление ветеринарии Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-finansov-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-finansov-amurskoy-oblasti",
+    "name": "Министерство финансов Амурской области",
+    "shortName": "Минфин АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-po-fizicheskoy-kulture-i-sportu-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-po-fizicheskoy-kulture-i-sportu-amurskoy-oblasti",
+    "name": "Министерство по физической культуре и спорту Амурской области",
+    "shortName": "Минспорт АО",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-gosudarstvennogo-zakaza-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-gosudarstvennogo-zakaza-amurskoy-oblasti",
+    "name": "Управление государственного заказа Амурской области",
+    "shortName": "Управление госзаказа области",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-obrazovaniya-i-nauki-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-obrazovaniya-i-nauki-amurskoy-oblasti",
+    "name": "Министерство образования и науки Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-zdravoohraneniya-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-zdravoohraneniya-amurskoy-oblasti",
+    "name": "Министерство здравоохранения Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-selskogo-hozyaystva-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-selskogo-hozyaystva-amurskoy-oblasti",
+    "name": "Министерство сельского хозяйства Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-zhilischno-kommunalnogo-hozyaystva-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-zhilischno-kommunalnogo-hozyaystva-amurskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Амурской области",
+    "shortName": "Министерство ЖКХ Амурской области",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-amurskoy-oblasti": {
+    "id": "ru-28-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-amurskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Амурской области",
+    "shortName": "Управление ЗАГС Амурской области",
+    "territoryId": "ru-28"
+  },
+  "ru-28-upravlenie-po-ohrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-i-sredy-ih-obitaniy-63a12be4": {
+    "id": "ru-28-upravlenie-po-ohrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-i-sredy-ih-obitaniy-63a12be4",
+    "name": "Управление по охране, контролю и регулированию использования объектов животного мира и среды их обитания Амурской области",
+    "shortName": "Управление по охране животного мира Амурской области",
+    "territoryId": "ru-28"
+  },
+  "ru-28-ministerstvo-socialnoy-zaschity-naseleniya-amurskoy-oblasti": {
+    "id": "ru-28-ministerstvo-socialnoy-zaschity-naseleniya-amurskoy-oblasti",
+    "name": "Министерство социальной защиты населения Амурской области",
+    "shortName": "",
+    "territoryId": "ru-28"
+  },
+  "ru-03-ministerstvo-kultury-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-kultury-respubliki-buryatiya",
+    "name": "Министерство культуры Республики Бурятия",
+    "shortName": "Минкультуры РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskoe-agentstvo-po-delam-molodezhi": {
+    "id": "ru-03-respublikanskoe-agentstvo-po-delam-molodezhi",
+    "name": "Республиканское агентство по делам молодежи",
+    "shortName": "РАДМ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-finansov-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-finansov-respubliki-buryatiya",
+    "name": "Министерство финансов Республики Бурятия",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-zdravoohraneniya-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-zdravoohraneniya-respubliki-buryatiya",
+    "name": "Министерство здравоохранения Республики Бурятия",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-respubliki-buryatiya",
+    "name": "Министерство имущественных и земельных отношений Республики Бурятия",
+    "shortName": "Минимущество РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-promyshlennosti-torgovli-i-investiciy-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-promyshlennosti-torgovli-i-investiciy-respubliki-buryatiya",
+    "name": "Министерство промышленности, торговли и инвестиций Республики Бурятия",
+    "shortName": "Минпромторг РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-socialnoy-zaschity-naseleniya-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-socialnoy-zaschity-naseleniya-respubliki-buryatiya",
+    "name": "Министерство социальной защиты населения Республики Бурятия",
+    "shortName": "Минсоцзащиты РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-stroitelstva-i-modernizacii-zhilischno-kommunalnogo-kompleksa-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-stroitelstva-i-modernizacii-zhilischno-kommunalnogo-kompleksa-respubliki-buryatiya",
+    "name": "Министерство строительства и модернизации жилищно-коммунального комплекса Республики Бурятия",
+    "shortName": "Минстрой РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-respubliki-buryatiya",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Бурятия",
+    "shortName": "Минсельхозпрод Республики Бурятия",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-obrazovaniya-i-nauki-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-obrazovaniya-i-nauki-respubliki-buryatiya",
+    "name": "Министерство образования и науки Республики Бурятия",
+    "shortName": "Минобрнауки Республики Бурятия",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskaya-sluzhba-po-tarifam-respubliki-buryatiya": {
+    "id": "ru-03-respublikanskaya-sluzhba-po-tarifam-respubliki-buryatiya",
+    "name": "Республиканская служба по тарифам Республики Бурятия",
+    "shortName": "РСТ РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskaya-sluzhba-gosudarstvennogo-stroitelnogo-i-zhilischnogo-nadzora": {
+    "id": "ru-03-respublikanskaya-sluzhba-gosudarstvennogo-stroitelnogo-i-zhilischnogo-nadzora",
+    "name": "Республиканская служба государственного строительного и жилищного надзора",
+    "shortName": "Госстройжилнадзор",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskaya-sluzhba-po-ohrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-otnes-568ef523": {
+    "id": "ru-03-respublikanskaya-sluzhba-po-ohrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-otnes-568ef523",
+    "name": "Республиканская служба по охране, контролю и регулированию использования объектов животного мира, отнесенных к объектам охоты, контролю и надзору в сфере природопользования",
+    "shortName": "Бурприроднадзор",
+    "territoryId": "ru-03"
+  },
+  "ru-03-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-buryatiya": {
+    "id": "ru-03-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-buryatiya",
+    "name": "Управление записи актов гражданского состояния Республики Бурятия",
+    "shortName": "Управление ЗАГС Республики Бурятия",
+    "territoryId": "ru-03"
+  },
+  "ru-03-pravitelstvo-respubliki-buryatiya": {
+    "id": "ru-03-pravitelstvo-respubliki-buryatiya",
+    "name": "Правительство Республики Бурятия",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-03-administraciya-glavy-respubliki-buryatiya-i-pravitelstva-respubliki-buryatiya": {
+    "id": "ru-03-administraciya-glavy-respubliki-buryatiya-i-pravitelstva-respubliki-buryatiya",
+    "name": "Администрация Главы Республики Бурятия и Правительства Республики Бурятия",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-03-polnomochnoe-predstavitelstvo-respubliki-buryatiya-pri-prezidente-rossiyskoy-federacii": {
+    "id": "ru-03-polnomochnoe-predstavitelstvo-respubliki-buryatiya-pri-prezidente-rossiyskoy-federacii",
+    "name": "Полномочное представительство Республики Бурятия при Президенте Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-03-ministerstvo-po-razvitiyu-transporta-energetiki-i-dorozhnogo-hozyaystva-respubliki-buryatiya": {
+    "id": "ru-03-ministerstvo-po-razvitiyu-transporta-energetiki-i-dorozhnogo-hozyaystva-respubliki-buryatiya",
+    "name": "Министерство по развитию транспорта, энергетики и дорожного хозяйства Республики Бурятия",
+    "shortName": "Минтранс РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskoe-agentstvo-zanyatosti-naseleniya": {
+    "id": "ru-03-respublikanskoe-agentstvo-zanyatosti-naseleniya",
+    "name": "Республиканское агентство занятости населения",
+    "shortName": "Агентство занятости",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskoe-agentstvo-po-gosudarstvennym-zakupkam": {
+    "id": "ru-03-respublikanskoe-agentstvo-po-gosudarstvennym-zakupkam",
+    "name": "Республиканское агентство по государственным закупкам",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskoe-agentstvo-lesnogo-hozyaystva": {
+    "id": "ru-03-respublikanskoe-agentstvo-lesnogo-hozyaystva",
+    "name": "Республиканское агентство лесного хозяйства",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-03-respublikanskoe-agentstvo-grazhdanskoy-oborony-i-chrezvychaynyh-situaciy": {
+    "id": "ru-03-respublikanskoe-agentstvo-grazhdanskoy-oborony-i-chrezvychaynyh-situaciy",
+    "name": "Республиканское агентство гражданской обороны и чрезвычайных ситуаций",
+    "shortName": "Республиканское агентство ГО и ЧС",
+    "territoryId": "ru-03"
+  },
+  "ru-03-upravlenie-veterinarii-respubliki-buryatiya": {
+    "id": "ru-03-upravlenie-veterinarii-respubliki-buryatiya",
+    "name": "Управление ветеринарии Республики Бурятия",
+    "shortName": "Управление ветеринарии РБ",
+    "territoryId": "ru-03"
+  },
+  "ru-03-upravlenie-inspekcii-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki": {
+    "id": "ru-03-upravlenie-inspekcii-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki",
+    "name": "Управление инспекции государственного надзора за техническим состоянием самоходных машин и других видов техники",
+    "shortName": "Гостехнадзор Республики Бурятия",
+    "territoryId": "ru-03"
+  },
+  "ru-03-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-respublike-buryatiya": {
+    "id": "ru-03-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-respublike-buryatiya",
+    "name": "Управление по обеспечению деятельности мировых судей в Республике Бурятия",
+    "shortName": "",
+    "territoryId": "ru-03"
+  },
+  "ru-87-departament-finansov-i-imuschestvennyh-otnosheniy-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-finansov-i-imuschestvennyh-otnosheniy-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент финансов и имущественных отношений Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-departament-obrazovaniya-i-nauki-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-departament-obrazovaniya-i-nauki-chukotskogo-avtonomnogo-okruga",
+    "name": "Департамент образования и науки Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-komitet-po-ohrane-obektov-kulturnogo-naslediya-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-komitet-po-ohrane-obektov-kulturnogo-naslediya-chukotskogo-avtonomnogo-okruga",
+    "name": "Комитет по охране объектов культурного наследия Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-i-yuridicheskih-konsultaciy-organizacii-deyatelnos-d4cb474c": {
+    "id": "ru-87-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-i-yuridicheskih-konsultaciy-organizacii-deyatelnos-d4cb474c",
+    "name": "Управление по обеспечению деятельности мировых судей и юридических консультаций, организации деятельности ЗАГС и архивов Чукотского автономного округа",
+    "shortName": "УДМС, ЗАГС и архивов ЧАО",
+    "territoryId": "ru-87"
+  },
+  "ru-87-upravlenie-molodezhnoy-politiki-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-upravlenie-molodezhnoy-politiki-chukotskogo-avtonomnogo-okruga",
+    "name": "Управление молодёжной политики Чукотского автономного округа",
+    "shortName": "",
+    "territoryId": "ru-87"
+  },
+  "ru-87-upravlenie-zakupok-chukotskogo-avtonomnogo-okruga": {
+    "id": "ru-87-upravlenie-zakupok-chukotskogo-avtonomnogo-okruga",
+    "name": "Управление закупок Чукотского автономного округа",
+    "shortName": "Управление закупок ЧАО",
+    "territoryId": "ru-87"
+  },
+  "ru-79-ministerstvo-finansov-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-finansov-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство финансов Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-molodezhnoy-politiki-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-molodezhnoy-politiki-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство молодежной политики Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-po-organizacii-proektnoy-deyatelnosti-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-po-organizacii-proektnoy-deyatelnosti-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент по организации проектной деятельности правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент по регулированию контрактной системы в сфере закупок правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-prirodnyh-resursov-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-prirodnyh-resursov-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент природных ресурсов правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-inspekciya-po-gosudarstvennoy-ohrane-obektov-kulturnogo-naslediya-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-inspekciya-po-gosudarstvennoy-ohrane-obektov-kulturnogo-naslediya-evreyskoy-avtonomnoy-oblasti",
+    "name": "Инспекция по государственной охране объектов культурного наследия Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-zdravoohraneniya-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-zdravoohraneniya-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство здравоохранения Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-kultury-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-kultury-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство культуры Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-obrazovaniya-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-obrazovaniya-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство образования Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-ekonomiki-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-ekonomiki-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство экономики Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-socialnoy-zaschity-naseleniya-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-socialnoy-zaschity-naseleniya-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство социальной защиты населения Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-inspekciya-gosudarstvennogo-stroitelnogo-i-zhilischnogo-nadzora-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-inspekciya-gosudarstvennogo-stroitelnogo-i-zhilischnogo-nadzora-evreyskoy-avtonomnoy-oblasti",
+    "name": "Инспекция государственного строительного и жилищного надзора Еврейской автономной области",
+    "shortName": "Инспекция ГСиЖН ЕАО",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-selskogo-hozyaystva-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-selskogo-hozyaystva-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент сельского хозяйства правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-regionalnoy-bezopasnosti-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-regionalnoy-bezopasnosti-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент региональной безопасности Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-cifrovogo-razvitiya-i-svyazi-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-cifrovogo-razvitiya-i-svyazi-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент цифрового развития и связи Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-sporta-i-fizicheskoy-kultury-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-sporta-i-fizicheskoy-kultury-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство спорта и физической культуры Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-ministerstvo-transporta-i-avtomobilnyh-dorog-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-ministerstvo-transporta-i-avtomobilnyh-dorog-evreyskoy-avtonomnoy-oblasti",
+    "name": "Министерство транспорта и автомобильных дорог Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-veterinarii-pri-pravitelstve-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-veterinarii-pri-pravitelstve-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент ветеринарии при правительстве Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-po-upravleniyu-gosudarstvennym-imuschestvom-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-po-upravleniyu-gosudarstvennym-imuschestvom-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент по управлению государственным имуществом Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-tarifov-i-cen-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-tarifov-i-cen-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент тарифов и цен правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-upravleniya-lesami-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-upravleniya-lesami-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент управления лесами правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-po-ohrane-i-ispolzovaniyu-obektov-zhivotnogo-mira-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-po-ohrane-i-ispolzovaniyu-obektov-zhivotnogo-mira-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент по охране и использованию объектов животного мира правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-departament-zapisi-aktov-grazhdanskogo-sostoyaniya-pravitelstva-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-departament-zapisi-aktov-grazhdanskogo-sostoyaniya-pravitelstva-evreyskoy-avtonomnoy-oblasti",
+    "name": "Департамент записи актов гражданского состояния правительства Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-gosudarstvennaya-inspekciya-pravitelstva-evreyskoy-avtonomnoy-oblasti-po-nadzoru-za-tehnicheskim-sostoyan-bea6d034": {
+    "id": "ru-79-gosudarstvennaya-inspekciya-pravitelstva-evreyskoy-avtonomnoy-oblasti-po-nadzoru-za-tehnicheskim-sostoyan-bea6d034",
+    "name": "Государственная инспекция правительства Еврейской автономной области по надзору за техническим состоянием самоходных машин и других видов техники",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-79-pravitelstvo-evreyskoy-avtonomnoy-oblasti": {
+    "id": "ru-79-pravitelstvo-evreyskoy-avtonomnoy-oblasti",
+    "name": "Правительство Еврейской автономной области",
+    "shortName": "",
+    "territoryId": "ru-79"
+  },
+  "ru-38-pravitelstvo-irkutskoy-oblasti": {
+    "id": "ru-38-pravitelstvo-irkutskoy-oblasti",
+    "name": "Правительство Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-apparat-gubernatora-irkutskoy-oblasti-i-pravitelstva-irkutskoy-oblasti": {
+    "id": "ru-38-apparat-gubernatora-irkutskoy-oblasti-i-pravitelstva-irkutskoy-oblasti",
+    "name": "Аппарат Губернатора Иркутской области и Правительства Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-transporta-i-dorozhnogo-hozyaystva-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-transporta-i-dorozhnogo-hozyaystva-irkutskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-stroitelstva-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-stroitelstva-irkutskoy-oblasti",
+    "name": "Министерство строительства Иркутской области",
+    "shortName": "Минстрой Иркутской области",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-zhilischnoy-politiki-i-energetiki-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-zhilischnoy-politiki-i-energetiki-irkutskoy-oblasti",
+    "name": "Министерство жилищной политики и энергетики Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-obrazovaniya-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-obrazovaniya-irkutskoy-oblasti",
+    "name": "Министерство образования Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-lesnogo-kompleksa-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-lesnogo-kompleksa-irkutskoy-oblasti",
+    "name": "Министерство лесного комплекса Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-po-ohrane-i-ispolzovaniyu-obektov-zhivotnogo-mira-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-po-ohrane-i-ispolzovaniyu-obektov-zhivotnogo-mira-irkutskoy-oblasti",
+    "name": "Служба по охране и использованию объектов животного мира Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-po-molodezhnoy-politike-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-po-molodezhnoy-politike-irkutskoy-oblasti",
+    "name": "Министерство по молодежной политике Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-sporta-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-sporta-irkutskoy-oblasti",
+    "name": "Министерство спорта Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-gosudarstvennogo-ekologicheskogo-nadzora-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-gosudarstvennogo-ekologicheskogo-nadzora-irkutskoy-oblasti",
+    "name": "Служба государственного экологического надзора Иркутской области",
+    "shortName": "служба Госэконадзора Иркутской области",
+    "territoryId": "ru-38"
+  },
+  "ru-38-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-irkutskoy-oblasti": {
+    "id": "ru-38-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-irkutskoy-oblasti",
+    "name": "Агентство по обеспечению деятельности мировых судей Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-veterinarii-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-veterinarii-irkutskoy-oblasti",
+    "name": "Служба ветеринарии Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-gosudarstvennogo-zhilischnogo-i-stroitelnogo-nadzora-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-gosudarstvennogo-zhilischnogo-i-stroitelnogo-nadzora-irkutskoy-oblasti",
+    "name": "Служба государственного жилищного и строительного надзора Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-zdravoohraneniya-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-zdravoohraneniya-irkutskoy-oblasti",
+    "name": "Министерство здравоохранения Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-truda-i-zanyatosti-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-truda-i-zanyatosti-irkutskoy-oblasti",
+    "name": "Министерство труда и занятости Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-upravlenie-delami-gubernatora-irkutskoy-oblasti-i-pravitelstva-irkutskoy-oblasti": {
+    "id": "ru-38-upravlenie-delami-gubernatora-irkutskoy-oblasti-i-pravitelstva-irkutskoy-oblasti",
+    "name": "Управление делами Губернатора Иркутской области и Правительства Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-potrebitelskogo-rynka-i-licenzirovaniya-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-potrebitelskogo-rynka-i-licenzirovaniya-irkutskoy-oblasti",
+    "name": "Служба потребительского рынка и лицензирования Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-prirodnyh-resursov-i-ekologii-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-prirodnyh-resursov-i-ekologii-irkutskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-agentstvo-po-turizmu-irkutskoy-oblasti": {
+    "id": "ru-38-agentstvo-po-turizmu-irkutskoy-oblasti",
+    "name": "Агентство по туризму Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-arhivnoe-agentstvo-irkutskoy-oblasti": {
+    "id": "ru-38-arhivnoe-agentstvo-irkutskoy-oblasti",
+    "name": "Архивное агентство Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-administraciya-ust-ordynskogo-buryatskogo-okruga": {
+    "id": "ru-38-administraciya-ust-ordynskogo-buryatskogo-okruga",
+    "name": "Администрация Усть-Ордынского Бурятского округа",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-imuschestvennyh-otnosheniy-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-imuschestvennyh-otnosheniy-irkutskoy-oblasti",
+    "name": "Министерство имущественных отношений Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-irkutskoy-oblasti",
+    "name": "Служба государственного надзора за техническим состоянием самоходных машин и других видов техники Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-irkutskoy-oblasti",
+    "name": "Министерство по регулированию контрактной системы в сфере закупок Иркутской области",
+    "shortName": "Министерство контрактной системы Иркутской области",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-po-tarifam-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-po-tarifam-irkutskoy-oblasti",
+    "name": "Служба по тарифам Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-po-ohrane-obektov-kulturnogo-naslediya-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-po-ohrane-obektov-kulturnogo-naslediya-irkutskoy-oblasti",
+    "name": "Служба по охране объектов культурного наследия Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-arhitektury-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-arhitektury-irkutskoy-oblasti",
+    "name": "Служба архитектуры Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-kultury-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-kultury-irkutskoy-oblasti",
+    "name": "Министерство культуры Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-finansov-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-finansov-irkutskoy-oblasti",
+    "name": "Министерство финансов Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-sluzhba-gosudarstvennogo-finansovogo-kontrolya-irkutskoy-oblasti": {
+    "id": "ru-38-sluzhba-gosudarstvennogo-finansovogo-kontrolya-irkutskoy-oblasti",
+    "name": "Служба государственного финансового контроля Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-selskogo-hozyaystva-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-selskogo-hozyaystva-irkutskoy-oblasti",
+    "name": "Министерство сельского хозяйства Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-38-ministerstvo-socialnogo-razvitiya-opeki-i-popechitelstva-irkutskoy-oblasti": {
+    "id": "ru-38-ministerstvo-socialnogo-razvitiya-opeki-i-popechitelstva-irkutskoy-oblasti",
+    "name": "Министерство социального развития, опеки и попечительства Иркутской области",
+    "shortName": "",
+    "territoryId": "ru-38"
+  },
+  "ru-41-administraciya-gubernatora-kamchatskogo-kraya": {
+    "id": "ru-41-administraciya-gubernatora-kamchatskogo-kraya",
+    "name": "Администрация Губернатора Камчатского края",
+    "shortName": "",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-kamchatskogo-kraya",
+    "name": "Министерство жилищно-коммунального хозяйства и энергетики Камчатского края",
+    "shortName": "Министерство ЖКХ и энергетики Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-zdravoohraneniya-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-zdravoohraneniya-kamchatskogo-kraya",
+    "name": "Министерство здравоохранения Камчатского края",
+    "shortName": "Минздрав Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-kamchatskogo-kraya",
+    "name": "Министерство имущественных и земельных отношений Камчатского края",
+    "shortName": "Минимущество Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-kultury-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-kultury-kamchatskogo-kraya",
+    "name": "Министерство культуры Камчатского края",
+    "shortName": "Минкультуры Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-lesnogo-i-ohotnichego-hozyaystva-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-lesnogo-i-ohotnichego-hozyaystva-kamchatskogo-kraya",
+    "name": "Министерство лесного и охотничьего хозяйства Камчатского края",
+    "shortName": "Минлесохоты Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-po-delam-molodezhi-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-po-delam-molodezhi-kamchatskogo-kraya",
+    "name": "Министерство по делам молодежи Камчатского края",
+    "shortName": "Минмолодежи Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-obrazovaniya-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-obrazovaniya-kamchatskogo-kraya",
+    "name": "Министерство образования Камчатского края",
+    "shortName": "Минобразования Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-po-vnutrenney-politike-i-razvitiyu-koryakskogo-okruga-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-po-vnutrenney-politike-i-razvitiyu-koryakskogo-okruga-kamchatskogo-kraya",
+    "name": "Министерство по внутренней политике и развитию Корякского округа Камчатского края",
+    "shortName": "МинВП и КО Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-po-chrezvychaynym-situaciyam-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-po-chrezvychaynym-situaciyam-kamchatskogo-kraya",
+    "name": "Министерство по чрезвычайным ситуациям Камчатского края",
+    "shortName": "МЧС Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-prirodnyh-resursov-i-ekologii-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-prirodnyh-resursov-i-ekologii-kamchatskogo-kraya",
+    "name": "Министерство природных ресурсов и экологии Камчатского края",
+    "shortName": "",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-selskogo-hozyaystva-pischevoy-i-pererabatyvayuschey-promyshlennosti-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-selskogo-hozyaystva-pischevoy-i-pererabatyvayuschey-promyshlennosti-kamchatskogo-kraya",
+    "name": "Министерство сельского хозяйства, пищевой и перерабатывающей промышленности Камчатского края",
+    "shortName": "Минсельхозпищепром Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-pravitelstvo-kamchatskogo-kraya": {
+    "id": "ru-41-pravitelstvo-kamchatskogo-kraya",
+    "name": "Правительство Камчатского края",
+    "shortName": "",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-socialnogo-blagopoluchiya-i-semeynoy-politiki-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-socialnogo-blagopoluchiya-i-semeynoy-politiki-kamchatskogo-kraya",
+    "name": "Министерство социального благополучия и семейной политики Камчатского края",
+    "shortName": "Министерство социального благополучия",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-sporta-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-sporta-kamchatskogo-kraya",
+    "name": "Министерство спорта Камчатского края",
+    "shortName": "Минспорт Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-stroitelstva-i-zhilischnoy-politiki-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-stroitelstva-i-zhilischnoy-politiki-kamchatskogo-kraya",
+    "name": "Министерство строительства и жилищной политики Камчатского края",
+    "shortName": "Минстрой Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-transporta-i-dorozhnogo-stroitelstva-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-transporta-i-dorozhnogo-stroitelstva-kamchatskogo-kraya",
+    "name": "Министерство транспорта и дорожного строительства Камчатского края",
+    "shortName": "Минтранс Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-truda-i-razvitiya-kadrovogo-potenciala-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-truda-i-razvitiya-kadrovogo-potenciala-kamchatskogo-kraya",
+    "name": "Министерство труда и развития кадрового потенциала Камчатского края",
+    "shortName": "Министерство труда Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-finansov-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-finansov-kamchatskogo-kraya",
+    "name": "Министерство финансов Камчатского края",
+    "shortName": "Минфин Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-regionalnaya-sluzhba-po-tarifam-i-cenam-kamchatskogo-kraya": {
+    "id": "ru-41-regionalnaya-sluzhba-po-tarifam-i-cenam-kamchatskogo-kraya",
+    "name": "Региональная служба по тарифам и ценам Камчатского края",
+    "shortName": "РСТ Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-cifrovogo-razvitiya-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-cifrovogo-razvitiya-kamchatskogo-kraya",
+    "name": "Министерство цифрового развития Камчатского края",
+    "shortName": "Минцифры Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-ministerstvo-ekonomicheskogo-razvitiya-kamchatskogo-kraya": {
+    "id": "ru-41-ministerstvo-ekonomicheskogo-razvitiya-kamchatskogo-kraya",
+    "name": "Министерство экономического развития Камчатского края",
+    "shortName": "Минэкономразвития Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-i-arhivnogo-dela-kamchatskogo-kraya": {
+    "id": "ru-41-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-i-arhivnogo-dela-kamchatskogo-kraya",
+    "name": "Агентство записи актов гражданского состояния и архивного дела Камчатского края",
+    "shortName": "Агентство ЗАГС и архивного дела Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-agentstvo-po-informacionnoy-politike-kamchatskogo-kraya": {
+    "id": "ru-41-agentstvo-po-informacionnoy-politike-kamchatskogo-kraya",
+    "name": "Агентство по информационной политике Камчатского края",
+    "shortName": "Агентство по информационной политике",
+    "territoryId": "ru-41"
+  },
+  "ru-41-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-kamchatskogo-kraya": {
+    "id": "ru-41-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-kamchatskogo-kraya",
+    "name": "Агентство по обеспечению деятельности мировых судей Камчатского края",
+    "shortName": "Агентство мировых судей Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-sluzhba-ohrany-obektov-kulturnogo-naslediya-kamchatskogo-kraya": {
+    "id": "ru-41-sluzhba-ohrany-obektov-kulturnogo-naslediya-kamchatskogo-kraya",
+    "name": "Служба охраны объектов культурного наследия Камчатского края",
+    "shortName": "Служба ООКН Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-gosudarstvennaya-zhilischnaya-inspekciya-kamchatskogo-kraya": {
+    "id": "ru-41-gosudarstvennaya-zhilischnaya-inspekciya-kamchatskogo-kraya",
+    "name": "Государственная жилищная инспекция Камчатского края",
+    "shortName": "ГЖИ Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-41-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-kamchatskogo-kraya": {
+    "id": "ru-41-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-kamchatskogo-kraya",
+    "name": "Инспекция государственного строительного надзора Камчатского края",
+    "shortName": "Инспекция ГСН Камчатского края",
+    "territoryId": "ru-41"
+  },
+  "ru-27-komitet-po-trudu-i-zanyatosti-naseleniya-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-po-trudu-i-zanyatosti-naseleniya-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет по труду и занятости населения Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-po-delam-molodezhi-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-po-delam-molodezhi-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет по делам молодежи Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-promyshlennosti-i-torgovli-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-promyshlennosti-i-torgovli-habarovskogo-kraya",
+    "name": "Министерство промышленности и торговли Хабаровского края",
+    "shortName": "Минпромторг края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-pravitelstva-habarovskogo-kraya-po-obespecheniyu-deyatelnosti-mirovyh-sudey-i-administrativnyh-komissiy": {
+    "id": "ru-27-komitet-pravitelstva-habarovskogo-kraya-po-obespecheniyu-deyatelnosti-mirovyh-sudey-i-administrativnyh-komissiy",
+    "name": "Комитет Правительства Хабаровского края по обеспечению деятельности мировых судей и административных комиссий",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-lesnogo-hozyaystva-i-lesopererabotki-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-lesnogo-hozyaystva-i-lesopererabotki-habarovskogo-kraya",
+    "name": "Министерство лесного хозяйства и лесопереработки Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-rybnogo-hozyaystva-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-rybnogo-hozyaystva-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет рыбного хозяйства Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-upravlenie-ohotnichego-hozyaystva-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-upravlenie-ohotnichego-hozyaystva-pravitelstva-habarovskogo-kraya",
+    "name": "Управление охотничьего хозяйства Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-gosudarstvennogo-finansovogo-kontrolya-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-gosudarstvennogo-finansovogo-kontrolya-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет государственного финансового контроля Правительства Хабаровского края",
+    "shortName": "Комитет ГФК Правительства края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-transporta-i-dorozhnogo-hozyaystva-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-transporta-i-dorozhnogo-hozyaystva-habarovskogo-kraya",
+    "name": "Министерство транспорта и дорожного хозяйства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-finansov-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-finansov-habarovskogo-kraya",
+    "name": "Министерство финансов Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-imuschestva-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-imuschestva-habarovskogo-kraya",
+    "name": "Министерство имущества Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-obrazovaniya-i-nauki-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-obrazovaniya-i-nauki-habarovskogo-kraya",
+    "name": "Министерство образования и науки Хабаровского края",
+    "shortName": "Минобрнауки Хабаровского края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-upravlenie-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-upravlenie-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-pravitelstva-habarovskogo-kraya",
+    "name": "Управление государственной охраны объектов культурного наследия Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-socialnoy-zaschity-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-socialnoy-zaschity-habarovskogo-kraya",
+    "name": "Министерство социальной защиты Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-cifrovogo-razvitiya-i-svyazi-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-cifrovogo-razvitiya-i-svyazi-habarovskogo-kraya",
+    "name": "Министерство цифрового развития и связи Хабаровского края",
+    "shortName": "Минцифры Хабаровского края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-gosudarstvennogo-stroitelnogo-nadzora-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-gosudarstvennogo-stroitelnogo-nadzora-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет государственного строительного надзора Правительства Хабаровского края",
+    "shortName": "Комитет госстройнадзора Правительства края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-prirodnyh-resursov-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-prirodnyh-resursov-habarovskogo-kraya",
+    "name": "Министерство природных ресурсов Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-zdravoohraneniya-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-zdravoohraneniya-habarovskogo-kraya",
+    "name": "Министерство здравоохранения Хабаровского края",
+    "shortName": "Минздрав Хабаровского края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-stroitelstva-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-stroitelstva-habarovskogo-kraya",
+    "name": "Министерство строительства Хабаровского края",
+    "shortName": "Минстрой края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-po-delam-zapisi-aktov-grazhdanskogo-sostoyaniya-i-arhivov-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-po-delam-zapisi-aktov-grazhdanskogo-sostoyaniya-i-arhivov-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет по делам записи актов гражданского состояния и архивов Правительства Хабаровского края",
+    "shortName": "Комитет по делам ЗАГС и архивов Правительства Хабаровского края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-kultury-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-kultury-habarovskogo-kraya",
+    "name": "Министерство культуры Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-pravitelstva-habarovskogo-kraya-po-grazhdanskoy-zaschite": {
+    "id": "ru-27-komitet-pravitelstva-habarovskogo-kraya-po-grazhdanskoy-zaschite",
+    "name": "Комитет Правительства Хабаровского края по гражданской защите",
+    "shortName": "Комитет Правительства края по ГЗ",
+    "territoryId": "ru-27"
+  },
+  "ru-27-upravlenie-veterinarii-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-upravlenie-veterinarii-pravitelstva-habarovskogo-kraya",
+    "name": "Управление ветеринарии Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-zhilischno-kommunalnogo-hozyaystva-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-zhilischno-kommunalnogo-hozyaystva-habarovskogo-kraya",
+    "name": "Министерство жилищно-коммунального хозяйства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-sporta-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-sporta-habarovskogo-kraya",
+    "name": "Министерство спорта Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-selskogo-hozyaystva-i-prodovolstviya-habarovskogo-kraya",
+    "name": "Министерство сельского хозяйства и продовольствия Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-ministerstvo-ekonomicheskogo-razvitiya-habarovskogo-kraya": {
+    "id": "ru-27-ministerstvo-ekonomicheskogo-razvitiya-habarovskogo-kraya",
+    "name": "Министерство экономического развития Хабаровского края",
+    "shortName": "Минэкономразвития края",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-gosudarstvennogo-zakaza-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-gosudarstvennogo-zakaza-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет государственного заказа Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-komitet-po-cenam-i-tarifam-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-komitet-po-cenam-i-tarifam-pravitelstva-habarovskogo-kraya",
+    "name": "Комитет по ценам и тарифам Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-glavnoe-upravlenie-regionalnogo-gosudarstvennogo-kontrolya-i-licenzirovaniya-pravitelstva-habarovskogo-kraya": {
+    "id": "ru-27-glavnoe-upravlenie-regionalnogo-gosudarstvennogo-kontrolya-i-licenzirovaniya-pravitelstva-habarovskogo-kraya",
+    "name": "Главное управление регионального государственного контроля и лицензирования Правительства Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-27-pravitelstvo-habarovskogo-kraya": {
+    "id": "ru-27-pravitelstvo-habarovskogo-kraya",
+    "name": "Правительство Хабаровского края",
+    "shortName": "",
+    "territoryId": "ru-27"
+  },
+  "ru-24-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-krasnoyarskogo-kraya",
+    "name": "Агентство записи актов гражданского состояния Красноярского края",
+    "shortName": "Агентство ЗАГС Красноярского края",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-krasnoyarskogo-kraya",
+    "name": "Агентство по обеспечению деятельности мировых судей Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-razvitiya-malogo-i-srednego-predprinimatelstva-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-razvitiya-malogo-i-srednego-predprinimatelstva-krasnoyarskogo-kraya",
+    "name": "Агентство развития малого и среднего предпринимательства Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-pechati-i-massovyh-kommunikaciy-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-pechati-i-massovyh-kommunikaciy-krasnoyarskogo-kraya",
+    "name": "Агентство печати и массовых коммуникаций Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-molodezhnoy-politiki-i-realizacii-programm-obschestvennogo-razvitiya-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-molodezhnoy-politiki-i-realizacii-programm-obschestvennogo-razvitiya-krasnoyarskogo-kraya",
+    "name": "Агентство молодежной политики и реализации программ общественного развития Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-po-turizmu-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-po-turizmu-krasnoyarskogo-kraya",
+    "name": "Агентство по туризму Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-po-grazhdanskoy-oborone-chrezvychaynym-situaciyam-i-pozharnoy-bezopasnosti-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-po-grazhdanskoy-oborone-chrezvychaynym-situaciyam-i-pozharnoy-bezopasnosti-krasnoyarskogo-kraya",
+    "name": "Агентство по гражданской обороне, чрезвычайным ситуациям и пожарной безопасности Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-krasnoyarskogo-kraya",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-promyshlennosti-i-torgovli-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-promyshlennosti-i-torgovli-krasnoyarskogo-kraya",
+    "name": "Министерство промышленности и торговли Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-arhivnoe-agentstvo-krasnoyarskogo-kraya": {
+    "id": "ru-24-arhivnoe-agentstvo-krasnoyarskogo-kraya",
+    "name": "Архивное агентство Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-upravlenie-delami-gubernatora-i-pravitelstva-krasnoyarskogo-kraya": {
+    "id": "ru-24-upravlenie-delami-gubernatora-i-pravitelstva-krasnoyarskogo-kraya",
+    "name": "Управление делами Губернатора и Правительства Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-sluzhba-po-veterinarnomu-nadzoru-krasnoyarskogo-kraya": {
+    "id": "ru-24-sluzhba-po-veterinarnomu-nadzoru-krasnoyarskogo-kraya",
+    "name": "Служба по ветеринарному надзору Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-tarifnoy-politiki-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-tarifnoy-politiki-krasnoyarskogo-kraya",
+    "name": "Министерство тарифной политики Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-ekologii-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-ekologii-krasnoyarskogo-kraya",
+    "name": "Министерство экологии Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-prirodnyh-resursov-i-lesnogo-kompleksa-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-prirodnyh-resursov-i-lesnogo-kompleksa-krasnoyarskogo-kraya",
+    "name": "Министерство природных ресурсов и лесного комплекса Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-obrazovaniya-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-obrazovaniya-krasnoyarskogo-kraya",
+    "name": "Министерство образования Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-sluzhba-finansovo-ekonomicheskogo-kontrolya-i-kontrolya-v-sfere-zakupok-krasnoyarskogo-kraya": {
+    "id": "ru-24-sluzhba-finansovo-ekonomicheskogo-kontrolya-i-kontrolya-v-sfere-zakupok-krasnoyarskogo-kraya",
+    "name": "Служба финансово-экономического контроля и контроля в сфере закупок Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-pravitelstvo-krasnoyarskogo-kraya": {
+    "id": "ru-24-pravitelstvo-krasnoyarskogo-kraya",
+    "name": "Правительство Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-truda-i-zanyatosti-naseleniya-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-truda-i-zanyatosti-naseleniya-krasnoyarskogo-kraya",
+    "name": "Агентство труда и занятости населения Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-finansov-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-finansov-krasnoyarskogo-kraya",
+    "name": "Министерство финансов Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-sluzhba-po-gosudarstvennoy-ohrane-obektov-kulturnogo-naslediya-krasnoyarskogo-kraya": {
+    "id": "ru-24-sluzhba-po-gosudarstvennoy-ohrane-obektov-kulturnogo-naslediya-krasnoyarskogo-kraya",
+    "name": "Служба по государственной охране объектов культурного наследия Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-gosudarstvennogo-zakaza-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-gosudarstvennogo-zakaza-krasnoyarskogo-kraya",
+    "name": "Агентство государственного заказа Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-transporta-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-transporta-krasnoyarskogo-kraya",
+    "name": "Министерство транспорта Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-ekonomiki-i-regionalnogo-razvitiya-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-ekonomiki-i-regionalnogo-razvitiya-krasnoyarskogo-kraya",
+    "name": "Министерство экономики и регионального развития Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-socialnoy-politiki-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-socialnoy-politiki-krasnoyarskogo-kraya",
+    "name": "Министерство социальной политики Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-sporta-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-sporta-krasnoyarskogo-kraya",
+    "name": "Министерство спорта Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-ministerstvo-kultury-krasnoyarskogo-kraya": {
+    "id": "ru-24-ministerstvo-kultury-krasnoyarskogo-kraya",
+    "name": "Министерство культуры Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-agentstvo-po-upravleniyu-gosudarstvennym-imuschestvom-krasnoyarskogo-kraya": {
+    "id": "ru-24-agentstvo-po-upravleniyu-gosudarstvennym-imuschestvom-krasnoyarskogo-kraya",
+    "name": "Агентство по управлению государственным имуществом Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-sluzhba-po-kontrolyu-v-oblasti-gradostroitelnoy-deyatelnosti-krasnoyarskogo-kraya": {
+    "id": "ru-24-sluzhba-po-kontrolyu-v-oblasti-gradostroitelnoy-deyatelnosti-krasnoyarskogo-kraya",
+    "name": "Служба по контролю в области градостроительной деятельности Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-sluzhba-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-krasnoyarskogo-kraya": {
+    "id": "ru-24-sluzhba-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-krasnoyarskogo-kraya",
+    "name": "Служба по надзору за техническим состоянием самоходных машин и других видов техники Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-24-sluzhba-stroitelnogo-nadzora-i-zhilischnogo-kontrolya-krasnoyarskogo-kraya": {
+    "id": "ru-24-sluzhba-stroitelnogo-nadzora-i-zhilischnogo-kontrolya-krasnoyarskogo-kraya",
+    "name": "Служба строительного надзора и жилищного контроля Красноярского края",
+    "shortName": "",
+    "territoryId": "ru-24"
+  },
+  "ru-42-ministerstvo-truda-i-socialnoy-zaschity-kuzbassa": {
+    "id": "ru-42-ministerstvo-truda-i-socialnoy-zaschity-kuzbassa",
+    "name": "Министерство труда и социальной защиты Кузбасса",
+    "shortName": "Минтруд Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-turizma-kuzbassa": {
+    "id": "ru-42-ministerstvo-turizma-kuzbassa",
+    "name": "Министерство туризма Кузбасса",
+    "shortName": "Минтуризм Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-komitet-po-upravleniyu-gosudarstvennym-imuschestvom-kuzbassa": {
+    "id": "ru-42-komitet-po-upravleniyu-gosudarstvennym-imuschestvom-kuzbassa",
+    "name": "Комитет по управлению государственным имуществом Кузбасса",
+    "shortName": "КУГИ Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-ekonomicheskogo-razvitiya-kuzbassa": {
+    "id": "ru-42-ministerstvo-ekonomicheskogo-razvitiya-kuzbassa",
+    "name": "Министерство экономического развития Кузбасса",
+    "shortName": "Минэкономразвития Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-promyshlennosti-i-torgovli-kuzbassa": {
+    "id": "ru-42-ministerstvo-promyshlennosti-i-torgovli-kuzbassa",
+    "name": "Министерство промышленности и торговли Кузбасса",
+    "shortName": "Минпромторг Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-stroitelstva-kuzbassa": {
+    "id": "ru-42-ministerstvo-stroitelstva-kuzbassa",
+    "name": "Министерство строительства Кузбасса",
+    "shortName": "Минстрой Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-selskogo-hozyaystva-i-pererabatyvayuschey-promyshlennosti-kuzbassa": {
+    "id": "ru-42-ministerstvo-selskogo-hozyaystva-i-pererabatyvayuschey-promyshlennosti-kuzbassa",
+    "name": "Министерство сельского хозяйства и перерабатывающей промышленности Кузбасса",
+    "shortName": "Минсельхоз Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-prirodnyh-resursov-i-ekologii-kuzbassa": {
+    "id": "ru-42-ministerstvo-prirodnyh-resursov-i-ekologii-kuzbassa",
+    "name": "Министерство природных ресурсов и экологии Кузбасса",
+    "shortName": "МПР Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-zdravoohraneniya-kuzbassa": {
+    "id": "ru-42-ministerstvo-zdravoohraneniya-kuzbassa",
+    "name": "Министерство здравоохранения Кузбасса",
+    "shortName": "Минздрав Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-finansov-kuzbassa": {
+    "id": "ru-42-ministerstvo-finansov-kuzbassa",
+    "name": "Министерство финансов Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-zhilischno-kommunalnogo-i-dorozhnogo-kompleksa-kuzbassa": {
+    "id": "ru-42-ministerstvo-zhilischno-kommunalnogo-i-dorozhnogo-kompleksa-kuzbassa",
+    "name": "Министерство жилищно-коммунального и дорожного комплекса Кузбасса",
+    "shortName": "Министерство ЖК и ДК Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-kultury-i-nacionalnoy-politiki-kuzbassa": {
+    "id": "ru-42-ministerstvo-kultury-i-nacionalnoy-politiki-kuzbassa",
+    "name": "Министерство культуры и национальной политики Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-transporta-kuzbassa": {
+    "id": "ru-42-ministerstvo-transporta-kuzbassa",
+    "name": "Министерство транспорта Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-ministerstvo-cifrovogo-razvitiya-i-svyazi-kuzbassa": {
+    "id": "ru-42-ministerstvo-cifrovogo-razvitiya-i-svyazi-kuzbassa",
+    "name": "Министерство цифрового развития и связи Кузбасса",
+    "shortName": "Минцифра Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-departament-po-chrezvychaynym-situaciyam-kuzbassa": {
+    "id": "ru-42-departament-po-chrezvychaynym-situaciyam-kuzbassa",
+    "name": "Департамент по чрезвычайным ситуациям Кузбасса",
+    "shortName": "ДЧС Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-departament-kontraktnoy-sistemy-kuzbassa": {
+    "id": "ru-42-departament-kontraktnoy-sistemy-kuzbassa",
+    "name": "Департамент контрактной системы Кузбасса",
+    "shortName": "ДКС Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-glavnoe-kontrolnoe-upravlenie-kuzbassa": {
+    "id": "ru-42-glavnoe-kontrolnoe-upravlenie-kuzbassa",
+    "name": "Главное контрольное управление Кузбасса",
+    "shortName": "Кузбассглавконтроль",
+    "territoryId": "ru-42"
+  },
+  "ru-42-arhivnoe-upravlenie-kuzbassa": {
+    "id": "ru-42-arhivnoe-upravlenie-kuzbassa",
+    "name": "Архивное управление Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-kuzbasse": {
+    "id": "ru-42-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-kuzbasse",
+    "name": "Управление по обеспечению деятельности мировых судей в Кузбассе",
+    "shortName": "УпОДМС в Кузбассе",
+    "territoryId": "ru-42"
+  },
+  "ru-42-glavnoe-upravlenie-arhitektury-i-gradostroitelstva-kuzbassa": {
+    "id": "ru-42-glavnoe-upravlenie-arhitektury-i-gradostroitelstva-kuzbassa",
+    "name": "Главное управление архитектуры и градостроительства Кузбасса",
+    "shortName": "Главархитектура Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-gosudarstvennaya-zhilischnaya-inspekciya-kuzbassa": {
+    "id": "ru-42-gosudarstvennaya-zhilischnaya-inspekciya-kuzbassa",
+    "name": "Государственная жилищная инспекция Кузбасса",
+    "shortName": "ГЖИ Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-upravlenie-veterinarii-kuzbassa": {
+    "id": "ru-42-upravlenie-veterinarii-kuzbassa",
+    "name": "Управление ветеринарии Кузбасса",
+    "shortName": "Управление ветеринарии",
+    "territoryId": "ru-42"
+  },
+  "ru-42-upravlenie-gosudarstvennoy-inspekcii-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vi-50e7977a": {
+    "id": "ru-42-upravlenie-gosudarstvennoy-inspekcii-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vi-50e7977a",
+    "name": "Управление государственной инспекции по надзору за техническим состоянием самоходных машин и других видов техники Кузбасса",
+    "shortName": "Управление гостехнадзора Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-pravitelstvo-kemerovskoy-oblasti-kuzbassa": {
+    "id": "ru-42-pravitelstvo-kemerovskoy-oblasti-kuzbassa",
+    "name": "Правительство Кемеровской области — Кузбасса",
+    "shortName": "Правительство Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-administraciya-pravitelstva-kuzbassa": {
+    "id": "ru-42-administraciya-pravitelstva-kuzbassa",
+    "name": "Администрация Правительства Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-predstavitelstvo-kuzbassa-pri-pravitelstve-rossiyskoy-federacii": {
+    "id": "ru-42-predstavitelstvo-kuzbassa-pri-pravitelstve-rossiyskoy-federacii",
+    "name": "Представительство Кузбасса при Правительстве Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-kuzbassa": {
+    "id": "ru-42-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-kuzbassa",
+    "name": "Инспекция государственного строительного надзора Кузбасса",
+    "shortName": "",
+    "territoryId": "ru-42"
+  },
+  "ru-42-regionalnaya-energeticheskaya-komissiya-kuzbassa": {
+    "id": "ru-42-regionalnaya-energeticheskaya-komissiya-kuzbassa",
+    "name": "Региональная энергетическая комиссия Кузбасса",
+    "shortName": "РЭК Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-42-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kuzbassa": {
+    "id": "ru-42-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kuzbassa",
+    "name": "Управление записи актов гражданского состояния Кузбасса",
+    "shortName": "Управление ЗАГС Кузбасса",
+    "territoryId": "ru-42"
+  },
+  "ru-49-ministerstvo-finansov-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-finansov-magadanskoy-oblasti",
+    "name": "Министерство финансов Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-kultury-i-turizma-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-kultury-i-turizma-magadanskoy-oblasti",
+    "name": "Министерство культуры и туризма Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-zdravoohraneniya-i-demograficheskoy-politiki-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-zdravoohraneniya-i-demograficheskoy-politiki-magadanskoy-oblasti",
+    "name": "Министерство здравоохранения и демографической политики Магаданской области",
+    "shortName": "Минздрав Магаданской области",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-truda-i-socialnoy-politiki-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-truda-i-socialnoy-politiki-magadanskoy-oblasti",
+    "name": "Министерство труда и социальной политики Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-obrazovaniya-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-obrazovaniya-magadanskoy-oblasti",
+    "name": "Министерство образования Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-departament-cen-i-tarifov-magadanskoy-oblasti": {
+    "id": "ru-49-departament-cen-i-tarifov-magadanskoy-oblasti",
+    "name": "Департамент цен и тарифов Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-prirodnyh-resursov-i-ekologii-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-prirodnyh-resursov-i-ekologii-magadanskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-stroitelstva-zhilischno-kommunalnogo-hozyaystva-i-energetiki-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-stroitelstva-zhilischno-kommunalnogo-hozyaystva-i-energetiki-magadanskoy-oblasti",
+    "name": "Министерство строительства, жилищно-коммунального хозяйства и энергетики Магаданской области",
+    "shortName": "Министерство строительства, ЖКХ и энергетики Магаданской области",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-ekonomicheskogo-razvitiya-investicionnoy-politiki-i-innovaciy-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-ekonomicheskogo-razvitiya-investicionnoy-politiki-i-innovaciy-magadanskoy-oblasti",
+    "name": "Министерство экономического развития, инвестиционной политики и инноваций Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-vnutrenney-informacionnoy-i-molodezhnoy-politiki-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-vnutrenney-informacionnoy-i-molodezhnoy-politiki-magadanskoy-oblasti",
+    "name": "Министерство внутренней и информационной политики Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-departament-po-delam-grazhdanskoy-oborony-zaschity-ot-chrezvychaynyh-situaciy-i-pozharnoy-bezopasnosti-magadanskoy-oblasti": {
+    "id": "ru-49-departament-po-delam-grazhdanskoy-oborony-zaschity-ot-chrezvychaynyh-situaciy-i-pozharnoy-bezopasnosti-magadanskoy-oblasti",
+    "name": "Департамент по делам гражданской обороны, защиты от чрезвычайных ситуаций и пожарной безопасности Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-departament-administrativnyh-organov-magadanskoy-oblasti": {
+    "id": "ru-49-departament-administrativnyh-organov-magadanskoy-oblasti",
+    "name": "Департамент административных органов Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-dorozhnogo-hozyaystva-i-transporta-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-dorozhnogo-hozyaystva-i-transporta-magadanskoy-oblasti",
+    "name": "Министерство дорожного хозяйства и транспорта Магаданской области",
+    "shortName": "Миндортранс Магаданской области",
+    "territoryId": "ru-49"
+  },
+  "ru-49-departament-fizicheskoy-kultury-i-sporta-magadanskoy-oblasti": {
+    "id": "ru-49-departament-fizicheskoy-kultury-i-sporta-magadanskoy-oblasti",
+    "name": "Департамент физической культуры и спорта Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-departament-imuschestvennyh-i-zemelnyh-otnosheniy-magadanskoy-oblasti": {
+    "id": "ru-49-departament-imuschestvennyh-i-zemelnyh-otnosheniy-magadanskoy-oblasti",
+    "name": "Департамент имущественных и земельных отношений Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-ministerstvo-selskogo-hozyaystva-magadanskoy-oblasti": {
+    "id": "ru-49-ministerstvo-selskogo-hozyaystva-magadanskoy-oblasti",
+    "name": "Министерство сельского хозяйства Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-gosudarstvennaya-zhilischnaya-inspekciya-magadanskoy-oblasti": {
+    "id": "ru-49-gosudarstvennaya-zhilischnaya-inspekciya-magadanskoy-oblasti",
+    "name": "Государственная жилищная инспекция Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-administraciya-osoboy-ekonomicheskoy-zony-magadanskoy-oblasti": {
+    "id": "ru-49-administraciya-osoboy-ekonomicheskoy-zony-magadanskoy-oblasti",
+    "name": "Администрация Особой экономической зоны Магаданской области",
+    "shortName": "Администрация ОЭЗ Магаданской области",
+    "territoryId": "ru-49"
+  },
+  "ru-49-pravitelstvo-magadanskoy-oblasti": {
+    "id": "ru-49-pravitelstvo-magadanskoy-oblasti",
+    "name": "Правительство Магаданской области",
+    "shortName": "",
+    "territoryId": "ru-49"
+  },
+  "ru-49-upravlenie-arhitektury-i-gradostroitelstva-magadanskoy-oblasti": {
+    "id": "ru-49-upravlenie-arhitektury-i-gradostroitelstva-magadanskoy-oblasti",
+    "name": "Департамент архитектуры и градостроительства Магаданской области",
+    "shortName": "ДАиГ МО",
+    "territoryId": "ru-49"
+  },
+  "ru-54-departament-molodezhnoy-politiki-novosibirskoy-oblasti": {
+    "id": "ru-54-departament-molodezhnoy-politiki-novosibirskoy-oblasti",
+    "name": "Департамент молодежной политики Новосибирской области",
+    "shortName": "ДМП НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-upravlenie-delami-gubernatora-novosibirskoy-oblasti-i-pravitelstva-novosibirskoy-oblasti": {
+    "id": "ru-54-upravlenie-delami-gubernatora-novosibirskoy-oblasti-i-pravitelstva-novosibirskoy-oblasti",
+    "name": "Управление делами Губернатора Новосибирской области и Правительства Новосибирской области",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "ru-54-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-novosibirskoy-oblasti": {
+    "id": "ru-54-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-novosibirskoy-oblasti",
+    "name": "Управление по обеспечению деятельности мировых судей Новосибирской области",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "ru-54-upravlenie-informacionnyh-proektov-novosibirskoy-oblasti": {
+    "id": "ru-54-upravlenie-informacionnyh-proektov-novosibirskoy-oblasti",
+    "name": "Управление информационных проектов Новосибирской области",
+    "shortName": "УИП НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-finansov-i-nalogovoy-politiki-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-finansov-i-nalogovoy-politiki-novosibirskoy-oblasti",
+    "name": "Министерство финансов и налоговой политики Новосибирской области",
+    "shortName": "МФ и НП НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-departament-imuschestva-i-zemelnyh-otnosheniy-novosibirskoy-oblasti": {
+    "id": "ru-54-departament-imuschestva-i-zemelnyh-otnosheniy-novosibirskoy-oblasti",
+    "name": "Департамент имущества и земельных отношений Новосибирской области",
+    "shortName": "ДИиЗО НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-kontrolnoe-upravlenie-novosibirskoy-oblasti": {
+    "id": "ru-54-kontrolnoe-upravlenie-novosibirskoy-oblasti",
+    "name": "Контрольное управление Новосибирской области",
+    "shortName": "УК НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-upravlenie-po-delam-zags-novosibirskoy-oblasti": {
+    "id": "ru-54-upravlenie-po-delam-zags-novosibirskoy-oblasti",
+    "name": "Управление по делам записи актов гражданского состояния Новосибирской области",
+    "shortName": "Управление по делам ЗАГС Новосибирской области",
+    "territoryId": "ru-54"
+  },
+  "ru-54-inspekciya-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-690f6e08": {
+    "id": "ru-54-inspekciya-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-690f6e08",
+    "name": "Инспекция государственного надзора за техническим состоянием самоходных машин и других видов техники Новосибирской области",
+    "shortName": "Инспекция гостехнадзора Новосибирской области",
+    "territoryId": "ru-54"
+  },
+  "ru-54-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-novosibirskoy-oblasti": {
+    "id": "ru-54-inspekciya-gosudarstvennogo-stroitelnogo-nadzora-novosibirskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Новосибирской области",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "ru-54-upravlenie-gosudarstvennoy-arhivnoy-sluzhby-novosibirskoy-oblasti": {
+    "id": "ru-54-upravlenie-gosudarstvennoy-arhivnoy-sluzhby-novosibirskoy-oblasti",
+    "name": "Управление государственной архивной службы Новосибирской области",
+    "shortName": "Управление ГАС НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-upravlenie-veterinarii-novosibirskoy-oblasti": {
+    "id": "ru-54-upravlenie-veterinarii-novosibirskoy-oblasti",
+    "name": "Управление ветеринарии Новосибирской области",
+    "shortName": "УВ НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-regionalnoy-politiki-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-regionalnoy-politiki-novosibirskoy-oblasti",
+    "name": "Министерство региональной политики Новосибирской области",
+    "shortName": "Минрегполитики НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-yusticii-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-yusticii-novosibirskoy-oblasti",
+    "name": "Министерство юстиции Новосибирской области",
+    "shortName": "Минюст НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-kultury-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-kultury-novosibirskoy-oblasti",
+    "name": "Министерство культуры Новосибирской области",
+    "shortName": "Минкультуры НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-zdravoohraneniya-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-zdravoohraneniya-novosibirskoy-oblasti",
+    "name": "Министерство здравоохранения Новосибирской области",
+    "shortName": "Минздрав НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-selskogo-hozyaystva-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-selskogo-hozyaystva-novosibirskoy-oblasti",
+    "name": "Министерство сельского хозяйства Новосибирской области",
+    "shortName": "Минсельхоз НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-transporta-i-dorozhnogo-hozyaystva-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-transporta-i-dorozhnogo-hozyaystva-novosibirskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Новосибирской области",
+    "shortName": "Минтранс Новосибирской области",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-promyshlennosti-torgovli-i-razvitiya-predprinimatelstva-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-promyshlennosti-torgovli-i-razvitiya-predprinimatelstva-novosibirskoy-oblasti",
+    "name": "Министерство промышленности, торговли и развития предпринимательства Новосибирской области",
+    "shortName": "Минпромторг НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-novosibirskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства и энергетики Новосибирской области",
+    "shortName": "Министерство ЖКХиЭ НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-novosibirskoy-oblasti": {
+    "id": "ru-54-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-novosibirskoy-oblasti",
+    "name": "Государственная инспекция по охране объектов культурного наследия Новосибирской области",
+    "shortName": "ГИО ОКН НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-truda-i-socialnogo-razvitiya-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-truda-i-socialnogo-razvitiya-novosibirskoy-oblasti",
+    "name": "Министерство труда и социального развития Новосибирской области",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-ekonomicheskogo-razvitiya-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-ekonomicheskogo-razvitiya-novosibirskoy-oblasti",
+    "name": "Министерство экономического развития Новосибирской области",
+    "shortName": "Минэкономразвития НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-prirodnyh-resursov-i-ekologii-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-prirodnyh-resursov-i-ekologii-novosibirskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Новосибирской области",
+    "shortName": "МПР НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-obrazovaniya-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-obrazovaniya-novosibirskoy-oblasti",
+    "name": "Министерство образования Новосибирской области",
+    "shortName": "Минобразования Новосибирской области",
+    "territoryId": "ru-54"
+  },
+  "ru-54-ministerstvo-stroitelstva-novosibirskoy-oblasti": {
+    "id": "ru-54-ministerstvo-stroitelstva-novosibirskoy-oblasti",
+    "name": "Министерство строительства Новосибирской области",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "ru-54-departament-po-tarifam-novosibirskoy-oblasti": {
+    "id": "ru-54-departament-po-tarifam-novosibirskoy-oblasti",
+    "name": "Департамент по тарифам Новосибирской области",
+    "shortName": "",
+    "territoryId": "ru-54"
+  },
+  "ru-54-gosudarstvennaya-zhilischnaya-inspekciya-novosibirskoy-oblasti": {
+    "id": "ru-54-gosudarstvennaya-zhilischnaya-inspekciya-novosibirskoy-oblasti",
+    "name": "Государственная жилищная инспекция Новосибирской области",
+    "shortName": "ГЖИ НСО",
+    "territoryId": "ru-54"
+  },
+  "ru-55-ministerstvo-imuschestvennyh-otnosheniy-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-imuschestvennyh-otnosheniy-omskoy-oblasti",
+    "name": "Министерство имущественных отношений Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-promyshlennosti-i-torgovli-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-promyshlennosti-i-torgovli-omskoy-oblasti",
+    "name": "Министерство промышленности и торговли Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-nauki-vysshego-obrazovaniya-i-nauchno-tehnologicheskogo-razvitiya-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-nauki-vysshego-obrazovaniya-i-nauchno-tehnologicheskogo-razvitiya-omskoy-oblasti",
+    "name": "Министерство науки, высшего образования и научно-технологического развития Омской области",
+    "shortName": "Миннауки Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-selskogo-hozyaystva-pischevoy-i-pererabatyvayuschey-promyshlennosti-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-selskogo-hozyaystva-pischevoy-i-pererabatyvayuschey-promyshlennosti-omskoy-oblasti",
+    "name": "Министерство сельского хозяйства, пищевой и перерабатывающей промышленности Омской области",
+    "shortName": "Минсельхоз Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-prirodnyh-resursov-i-ekologii-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-prirodnyh-resursov-i-ekologii-omskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-glavnoe-upravlenie-lesnogo-hozyaystva-omskoy-oblasti": {
+    "id": "ru-55-glavnoe-upravlenie-lesnogo-hozyaystva-omskoy-oblasti",
+    "name": "Главное управление лесного хозяйства Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-glavnoe-upravlenie-veterinarii-omskoy-oblasti": {
+    "id": "ru-55-glavnoe-upravlenie-veterinarii-omskoy-oblasti",
+    "name": "Главное управление ветеринарии Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-62b937f7": {
+    "id": "ru-55-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-62b937f7",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники при Министерстве сельского хозяйства, пищевой и перерабатывающей промышленности Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-regionalnaya-energeticheskaya-komissiya-omskoy-oblasti": {
+    "id": "ru-55-regionalnaya-energeticheskaya-komissiya-omskoy-oblasti",
+    "name": "Региональная энергетическая комиссия Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-kultury-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-kultury-omskoy-oblasti",
+    "name": "Министерство культуры Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-zdravoohraneniya-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-zdravoohraneniya-omskoy-oblasti",
+    "name": "Министерство здравоохранения Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-glavnoe-upravlenie-kontraktnoy-sistemy-omskoy-oblasti": {
+    "id": "ru-55-glavnoe-upravlenie-kontraktnoy-sistemy-omskoy-oblasti",
+    "name": "Главное управление контрактной системы Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-energetiki-i-zhilischno-kommunalnogo-hozyaystva-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-energetiki-i-zhilischno-kommunalnogo-hozyaystva-omskoy-oblasti",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Омской области",
+    "shortName": "Минэнерго Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-i-gosudarstvennoy-ekspertizy-omskoy-oblasti": {
+    "id": "ru-55-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-i-gosudarstvennoy-ekspertizy-omskoy-oblasti",
+    "name": "Главное управление государственного строительного надзора и государственной экспертизы Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-gosudarstvennaya-zhilischnaya-inspekciya-omskoy-oblasti": {
+    "id": "ru-55-gosudarstvennaya-zhilischnaya-inspekciya-omskoy-oblasti",
+    "name": "Государственная жилищная инспекция Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-apparat-gubernatora-i-pravitelstva-omskoy-oblasti": {
+    "id": "ru-55-apparat-gubernatora-i-pravitelstva-omskoy-oblasti",
+    "name": "Аппарат Губернатора и Правительства Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-glavnoe-gosudarstvenno-pravovoe-upravlenie-omskoy-oblasti": {
+    "id": "ru-55-glavnoe-gosudarstvenno-pravovoe-upravlenie-omskoy-oblasti",
+    "name": "Главное государственно-правовое управление Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-stroitelstva-i-arhitektury-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-stroitelstva-i-arhitektury-omskoy-oblasti",
+    "name": "Министерство строительства и архитектуры Омской области",
+    "shortName": "Минстрой Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-transporta-i-dorozhnogo-hozyaystva-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-transporta-i-dorozhnogo-hozyaystva-omskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Омской области",
+    "shortName": "Минтранс Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-cifrovogo-razvitiya-i-svyazi-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-cifrovogo-razvitiya-i-svyazi-omskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Омской области",
+    "shortName": "Минцифры Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-regionalnoy-bezopasnosti-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-regionalnoy-bezopasnosti-omskoy-oblasti",
+    "name": "Министерство региональной безопасности Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-vnutrenney-politiki-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-vnutrenney-politiki-omskoy-oblasti",
+    "name": "Министерство внутренней политики Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-sporta-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-sporta-omskoy-oblasti",
+    "name": "Министерство спорта Омской области",
+    "shortName": "Минспорт Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-finansov-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-finansov-omskoy-oblasti",
+    "name": "Министерство финансов Омской области",
+    "shortName": "Минфин Омской области",
+    "territoryId": "ru-55"
+  },
+  "ru-55-glavnoe-upravlenie-finansovogo-kontrolya-omskoy-oblasti": {
+    "id": "ru-55-glavnoe-upravlenie-finansovogo-kontrolya-omskoy-oblasti",
+    "name": "Главное управление финансового контроля Омской области",
+    "shortName": "ГУФК",
+    "territoryId": "ru-55"
+  },
+  "ru-55-ministerstvo-obrazovaniya-omskoy-oblasti": {
+    "id": "ru-55-ministerstvo-obrazovaniya-omskoy-oblasti",
+    "name": "Министерство образования Омской области",
+    "shortName": "",
+    "territoryId": "ru-55"
+  },
+  "ru-25-agentstvo-migracionnoy-politiki-primorskogo-kraya": {
+    "id": "ru-25-agentstvo-migracionnoy-politiki-primorskogo-kraya",
+    "name": "Агентство миграционной политики Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-agentstvo-po-delam-molodezhi-primorskogo-kraya": {
+    "id": "ru-25-agentstvo-po-delam-molodezhi-primorskogo-kraya",
+    "name": "Агентство по делам молодежи Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-agentstvo-po-gidrotehnicheskim-sooruzheniyam-melioracii-i-gidrologii-primorskogo-kraya": {
+    "id": "ru-25-agentstvo-po-gidrotehnicheskim-sooruzheniyam-melioracii-i-gidrologii-primorskogo-kraya",
+    "name": "Агентство по гидротехническим сооружениям, мелиорации и гидрологии Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-arhitektury-i-gradostroitelnoy-politiki-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-arhitektury-i-gradostroitelnoy-politiki-primorskogo-kraya",
+    "name": "Министерство архитектуры и градостроительной политики Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-lesnogo-hozyaystva-ohrany-okruzhayuschey-sredy-zhivotnogo-mira-i-prirodnyh-resursov-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-lesnogo-hozyaystva-ohrany-okruzhayuschey-sredy-zhivotnogo-mira-i-prirodnyh-resursov-primorskogo-kraya",
+    "name": "Министерство лесного хозяйства, охраны окружающей среды, животного мира и природных ресурсов Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-zdravoohraneniya-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-zdravoohraneniya-primorskogo-kraya",
+    "name": "Министерство здравоохранения Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-cifrovogo-razvitiya-i-svyazi-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-cifrovogo-razvitiya-i-svyazi-primorskogo-kraya",
+    "name": "Министерство цифрового развития и связи Приморского края",
+    "shortName": "минцифра ПК",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-professionalnogo-obrazovaniya-i-zanyatosti-naseleniya-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-professionalnogo-obrazovaniya-i-zanyatosti-naseleniya-primorskogo-kraya",
+    "name": "Министерство профессионального образования и занятости населения Приморского края",
+    "shortName": "минпроф Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-energetiki-i-gazosnabzheniya-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-energetiki-i-gazosnabzheniya-primorskogo-kraya",
+    "name": "Министерство энергетики и газоснабжения Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-transporta-i-dorozhnogo-hozyaystva-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-transporta-i-dorozhnogo-hozyaystva-primorskogo-kraya",
+    "name": "Министерство транспорта и дорожного хозяйства Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-zhilischno-kommunalnogo-hozyaystva-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-zhilischno-kommunalnogo-hozyaystva-primorskogo-kraya",
+    "name": "Министерство жилищно-коммунального хозяйства Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-gosudarstvenno-pravovogo-upravleniya-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-gosudarstvenno-pravovogo-upravleniya-primorskogo-kraya",
+    "name": "Министерство государственно-правового управления Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-ekonomicheskogo-razvitiya-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-ekonomicheskogo-razvitiya-primorskogo-kraya",
+    "name": "Министерство экономического развития Приморского края",
+    "shortName": "Минэкономразвития ПК",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-finansov-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-finansov-primorskogo-kraya",
+    "name": "Министерство финансов Приморского края",
+    "shortName": "Минфин Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-primorskogo-kraya",
+    "name": "Министерство по регулированию контрактной системы в сфере закупок Приморского края",
+    "shortName": "Министерство закупок Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-primorskogo-kraya",
+    "name": "Министерство имущественных и земельных отношений Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-promyshlennosti-i-torgovli-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-promyshlennosti-i-torgovli-primorskogo-kraya",
+    "name": "Министерство промышленности и торговли Приморского края",
+    "shortName": "Минпромторг Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-stroitelstva-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-stroitelstva-primorskogo-kraya",
+    "name": "Министерство строительства Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-truda-i-socialnoy-politiki-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-truda-i-socialnoy-politiki-primorskogo-kraya",
+    "name": "Министерство труда и социальной политики Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-obrazovaniya-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-obrazovaniya-primorskogo-kraya",
+    "name": "Министерство образования Приморского края",
+    "shortName": "Минобр Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-selskogo-hozyaystva-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-selskogo-hozyaystva-primorskogo-kraya",
+    "name": "Министерство сельского хозяйства Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-agentstvo-po-tarifam-primorskogo-kraya": {
+    "id": "ru-25-agentstvo-po-tarifam-primorskogo-kraya",
+    "name": "Агентство по тарифам Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-kultury-i-arhivnogo-dela-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-kultury-i-arhivnogo-dela-primorskogo-kraya",
+    "name": "Министерство культуры и архивного дела Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-fizicheskoy-kultury-i-sporta-primorskogo-kraya": {
+    "id": "ru-25-ministerstvo-fizicheskoy-kultury-i-sporta-primorskogo-kraya",
+    "name": "Министерство физической культуры и спорта Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-ministerstvo-po-delam-grazhdanskoy-oborony-zaschity-ot-chrezvychaynyh-situaciy-i-likvidacii-posledstviy-s-18ab0be0": {
+    "id": "ru-25-ministerstvo-po-delam-grazhdanskoy-oborony-zaschity-ot-chrezvychaynyh-situaciy-i-likvidacii-posledstviy-s-18ab0be0",
+    "name": "Министерство по делам гражданской обороны, защиты от чрезвычайных ситуаций и ликвидации последствий стихийных бедствий Приморского края",
+    "shortName": "Министерство ГОЧС Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-agentstvo-proektnogo-upravleniya-primorskogo-kraya": {
+    "id": "ru-25-agentstvo-proektnogo-upravleniya-primorskogo-kraya",
+    "name": "Агентство проектного управления Приморского края",
+    "shortName": "Агентство проектов ПК",
+    "territoryId": "ru-25"
+  },
+  "ru-25-departament-gosudarstvennoy-grazhdanskoy-sluzhby-i-kadrov-primorskogo-kraya": {
+    "id": "ru-25-departament-gosudarstvennoy-grazhdanskoy-sluzhby-i-kadrov-primorskogo-kraya",
+    "name": "Департамент государственной гражданской службы и кадров Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-departament-po-zaschite-gosudarstvennoy-tayny-informacionnoy-bezopasnosti-i-mobilizacionnoy-podgotovki-primorskogo-kraya": {
+    "id": "ru-25-departament-po-zaschite-gosudarstvennoy-tayny-informacionnoy-bezopasnosti-i-mobilizacionnoy-podgotovki-primorskogo-kraya",
+    "name": "Департамент по защите государственной тайны, информационной безопасности и мобилизационной подготовки Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-departament-po-koordinacii-pravoohranitelnoy-deyatelnosti-ispolneniya-administrativnogo-zakonodatelstva-i-d4205149": {
+    "id": "ru-25-departament-po-koordinacii-pravoohranitelnoy-deyatelnosti-ispolneniya-administrativnogo-zakonodatelstva-i-d4205149",
+    "name": "Департамент по координации правоохранительной деятельности, исполнения административного законодательства и обеспечения деятельности мировых судей Приморского края",
+    "shortName": "Департамент по координации правоохранительной деятельности Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-departament-zapisi-aktov-grazhdanskogo-sostoyaniya-primorskogo-kraya": {
+    "id": "ru-25-departament-zapisi-aktov-grazhdanskogo-sostoyaniya-primorskogo-kraya",
+    "name": "Департамент записи актов гражданского состояния Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-gosudarstvennaya-zhilischnaya-inspekciya-primorskogo-kraya": {
+    "id": "ru-25-gosudarstvennaya-zhilischnaya-inspekciya-primorskogo-kraya",
+    "name": "Государственная жилищная инспекция Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-i-ekspluataciey-samohodnyh-mashin-i-dr-2aca5359": {
+    "id": "ru-25-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-i-ekspluataciey-samohodnyh-mashin-i-dr-2aca5359",
+    "name": "Государственная инспекция по надзору за техническим состоянием и эксплуатацией самоходных машин и других видов техники, аттракционов Приморского края",
+    "shortName": "Инспекция гостехнадзора Приморского края",
+    "territoryId": "ru-25"
+  },
+  "ru-25-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-primorskogo-kraya": {
+    "id": "ru-25-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-primorskogo-kraya",
+    "name": "Инспекция по охране объектов культурного наследия Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-inspekciya-regionalnogo-stroitelnogo-nadzora-i-kontrolya-v-oblasti-dolevogo-stroitelstva-primorskogo-kraya": {
+    "id": "ru-25-inspekciya-regionalnogo-stroitelnogo-nadzora-i-kontrolya-v-oblasti-dolevogo-stroitelstva-primorskogo-kraya",
+    "name": "Инспекция регионального строительного надзора и контроля в области долевого строительства Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-25-gosudarstvennaya-veterinarnaya-inspekciya-primorskogo-kraya": {
+    "id": "ru-25-gosudarstvennaya-veterinarnaya-inspekciya-primorskogo-kraya",
+    "name": "Государственная ветеринарная инспекция Приморского края",
+    "shortName": "",
+    "territoryId": "ru-25"
+  },
+  "ru-65-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-sahalinskoy-oblasti": {
+    "id": "ru-65-gosudarstvennaya-inspekciya-po-ohrane-obektov-kulturnogo-naslediya-sahalinskoy-oblasti",
+    "name": "Государственная инспекция по охране объектов культурного наследия Сахалинской области",
+    "shortName": "Госинспекция по охране ОКН Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-socialnoy-zaschity-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-socialnoy-zaschity-sahalinskoy-oblasti",
+    "name": "Министерство социальной защиты Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-sahalinskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Сахалинской области",
+    "shortName": "Минимущество Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-kultury-i-arhivnogo-dela-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-kultury-i-arhivnogo-dela-sahalinskoy-oblasti",
+    "name": "Министерство культуры и архивного дела Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-ekologii-i-ustoychivogo-razvitiya-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-ekologii-i-ustoychivogo-razvitiya-sahalinskoy-oblasti",
+    "name": "Министерство экологии и устойчивого развития Сахалинской области",
+    "shortName": "Минэкологии Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-agentstvo-po-delam-molodezhi-sahalinskoy-oblasti": {
+    "id": "ru-65-agentstvo-po-delam-molodezhi-sahalinskoy-oblasti",
+    "name": "Агентство по делам молодёжи Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-turizma-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-turizma-sahalinskoy-oblasti",
+    "name": "Министерство туризма Сахалинской области",
+    "shortName": "Минтуризм Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-sahalinskoy-oblasti": {
+    "id": "ru-65-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-sahalinskoy-oblasti",
+    "name": "Агентство записи актов гражданского состояния Сахалинской области",
+    "shortName": "Агентство ЗАГС Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-agentstvo-lesnogo-i-ohotnichego-hozyaystva-sahalinskoy-oblasti": {
+    "id": "ru-65-agentstvo-lesnogo-i-ohotnichego-hozyaystva-sahalinskoy-oblasti",
+    "name": "Агентство лесного и охотничьего хозяйства Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-cifrovogo-i-tehnologicheskogo-razvitiya-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-cifrovogo-i-tehnologicheskogo-razvitiya-sahalinskoy-oblasti",
+    "name": "Министерство цифрового и технологического развития Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-sahalinskoy-oblasti-po-effektivnomu-upravleniyu-regionom": {
+    "id": "ru-65-ministerstvo-sahalinskoy-oblasti-po-effektivnomu-upravleniyu-regionom",
+    "name": "Министерство Сахалинской области по эффективному управлению регионом",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-investiciy-promyshlennosti-i-vneshnih-svyazey-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-investiciy-promyshlennosti-i-vneshnih-svyazey-sahalinskoy-oblasti",
+    "name": "Министерство инвестиций, промышленности и внешних связей Сахалинской области",
+    "shortName": "Мининвест",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-gosudarstvennogo-upravleniya-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-gosudarstvennogo-upravleniya-sahalinskoy-oblasti",
+    "name": "Министерство государственного управления Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-selskogo-hozyaystva-i-torgovli-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-selskogo-hozyaystva-i-torgovli-sahalinskoy-oblasti",
+    "name": "Министерство сельского хозяйства и торговли Сахалинской области",
+    "shortName": "Сахминсельхозторг",
+    "territoryId": "ru-65"
+  },
+  "ru-65-upravlenie-delami-gubernatora-i-pravitelstva-sahalinskoy-oblasti": {
+    "id": "ru-65-upravlenie-delami-gubernatora-i-pravitelstva-sahalinskoy-oblasti",
+    "name": "Управление делами Губернатора и Правительства Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-predstavitelstvo-sahalinskoy-oblasti-pri-pravitelstve-rossiyskoy-federacii": {
+    "id": "ru-65-predstavitelstvo-sahalinskoy-oblasti-pri-pravitelstve-rossiyskoy-federacii",
+    "name": "Представительство Сахалинской области при Правительстве Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-energetiki-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-energetiki-sahalinskoy-oblasti",
+    "name": "Министерство энергетики Сахалинской области",
+    "shortName": "Минэнерго Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-po-rybolovstvu-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-po-rybolovstvu-sahalinskoy-oblasti",
+    "name": "Министерство по рыболовству Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-gosudarstvennaya-zhilischnaya-inspekciya-sahalinskoy-oblasti": {
+    "id": "ru-65-gosudarstvennaya-zhilischnaya-inspekciya-sahalinskoy-oblasti",
+    "name": "Государственная жилищная инспекция Сахалинской области",
+    "shortName": "Госжилинспекция Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-agentstvo-po-trudu-i-zanyatosti-naseleniya-sahalinskoy-oblasti": {
+    "id": "ru-65-agentstvo-po-trudu-i-zanyatosti-naseleniya-sahalinskoy-oblasti",
+    "name": "Агентство по труду и занятости населения Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-agentstvo-veterinarii-i-plemennogo-zhivotnovodstva-sahalinskoy-oblasti": {
+    "id": "ru-65-agentstvo-veterinarii-i-plemennogo-zhivotnovodstva-sahalinskoy-oblasti",
+    "name": "Агентство ветеринарии и племенного животноводства Сахалинской области",
+    "shortName": "Сахалинское ветплем агентство",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-stroitelstva-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-stroitelstva-sahalinskoy-oblasti",
+    "name": "Министерство строительства Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-transporta-i-dorozhnogo-hozyaystva-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-transporta-i-dorozhnogo-hozyaystva-sahalinskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Сахалинской области",
+    "shortName": "Минтранс Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-30e1fe2e": {
+    "id": "ru-65-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-30e1fe2e",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Сахалинской области",
+    "shortName": "Гостехнадзор",
+    "territoryId": "ru-65"
+  },
+  "ru-65-gosudarstvennaya-inspekciya-stroitelnogo-nadzora-sahalinskoy-oblasti": {
+    "id": "ru-65-gosudarstvennaya-inspekciya-stroitelnogo-nadzora-sahalinskoy-oblasti",
+    "name": "Государственная инспекция строительного надзора Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-sahalinskoy-oblasti": {
+    "id": "ru-65-agentstvo-po-obespecheniyu-deyatelnosti-mirovyh-sudey-sahalinskoy-oblasti",
+    "name": "Агентство по обеспечению деятельности мировых судей Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-regionalnaya-energeticheskaya-komissiya-sahalinskoy-oblasti": {
+    "id": "ru-65-regionalnaya-energeticheskaya-komissiya-sahalinskoy-oblasti",
+    "name": "Региональная энергетическая комиссия Сахалинской области",
+    "shortName": "РЭК Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-pravitelstvo-sahalinskoy-oblasti": {
+    "id": "ru-65-pravitelstvo-sahalinskoy-oblasti",
+    "name": "Правительство Сахалинской области",
+    "shortName": "",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-zhilischno-kommunalnogo-hozyaystva-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-zhilischno-kommunalnogo-hozyaystva-sahalinskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Сахалинской области",
+    "shortName": "Министерство ЖКХ Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-65-ministerstvo-obrazovaniya-sahalinskoy-oblasti": {
+    "id": "ru-65-ministerstvo-obrazovaniya-sahalinskoy-oblasti",
+    "name": "Министерство образования Сахалинской области",
+    "shortName": "Сахминобр",
+    "territoryId": "ru-65"
+  },
+  "ru-65-agentstvo-po-delam-grazhdanskoy-oborony-zaschity-ot-chrezvychaynyh-situaciy-i-pozharnoy-bezopasnosti-sahalinskoy-oblasti": {
+    "id": "ru-65-agentstvo-po-delam-grazhdanskoy-oborony-zaschity-ot-chrezvychaynyh-situaciy-i-pozharnoy-bezopasnosti-sahalinskoy-oblasti",
+    "name": "Агентство по делам гражданской обороны, защиты от чрезвычайных ситуаций и пожарной безопасности Сахалинской области",
+    "shortName": "Агентство по делам ГО, ЧС и ПБ Сахалинской области",
+    "territoryId": "ru-65"
+  },
+  "ru-70-departament-po-socialno-ekonomicheskomu-razvitiyu-sela-tomskoy-oblasti": {
+    "id": "ru-70-departament-po-socialno-ekonomicheskomu-razvitiyu-sela-tomskoy-oblasti",
+    "name": "Департамент по социально-экономическому развитию села Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-zags-tomskoy-oblasti": {
+    "id": "ru-70-departament-zags-tomskoy-oblasti",
+    "name": "Департамент записи актов гражданского состояния Томской области",
+    "shortName": "Департамент ЗАГС Томской области",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-truda-i-zanyatosti-naseleniya-tomskoy-oblasti": {
+    "id": "ru-70-departament-truda-i-zanyatosti-naseleniya-tomskoy-oblasti",
+    "name": "Департамент труда и занятости населения Томской области",
+    "shortName": "ДТЗН Томской области",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-zdravoohraneniya-tomskoy-oblasti": {
+    "id": "ru-70-departament-zdravoohraneniya-tomskoy-oblasti",
+    "name": "Департамент здравоохранения Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-prirodnyh-resursov-i-ohrany-okruzhayuschey-sredy-tomskoy-oblasti": {
+    "id": "ru-70-departament-prirodnyh-resursov-i-ohrany-okruzhayuschey-sredy-tomskoy-oblasti",
+    "name": "Департамент природных ресурсов и охраны окружающей среды Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-po-nauchno-tehnologicheskomu-razvitiyu-i-innovacionnoy-deyatelnosti-tomskoy-oblasti": {
+    "id": "ru-70-departament-po-nauchno-tehnologicheskomu-razvitiyu-i-innovacionnoy-deyatelnosti-tomskoy-oblasti",
+    "name": "Департамент по научно-технологическому развитию и инновационной деятельности Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-transporta-dorozhnoy-deyatelnosti-i-svyazi-tomskoy-oblasti": {
+    "id": "ru-70-departament-transporta-dorozhnoy-deyatelnosti-i-svyazi-tomskoy-oblasti",
+    "name": "Департамент транспорта, дорожной деятельности и связи Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-socialnoy-zaschity-naseleniya-tomskoy-oblasti": {
+    "id": "ru-70-departament-socialnoy-zaschity-naseleniya-tomskoy-oblasti",
+    "name": "Департамент социальной защиты населения Томской области",
+    "shortName": "ДСЗН ТО",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-lesnogo-hozyaystva-tomskoy-oblasti": {
+    "id": "ru-70-departament-lesnogo-hozyaystva-tomskoy-oblasti",
+    "name": "Департамент лесного хозяйства Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-komitet-po-obespecheniyu-deyatelnosti-mirovyh-sudey-tomskoy-oblasti": {
+    "id": "ru-70-komitet-po-obespecheniyu-deyatelnosti-mirovyh-sudey-tomskoy-oblasti",
+    "name": "Комитет по обеспечению деятельности мировых судей Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-po-voprosam-semi-i-detey-tomskoy-oblasti": {
+    "id": "ru-70-departament-po-voprosam-semi-i-detey-tomskoy-oblasti",
+    "name": "Департамент по вопросам семьи и детей Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-predstavitelstvo-tomskoy-oblasti-pri-pravitelstve-rossiyskoy-federacii": {
+    "id": "ru-70-predstavitelstvo-tomskoy-oblasti-pri-pravitelstve-rossiyskoy-federacii",
+    "name": "Представительство Томской области при Правительстве Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-gosudarstvennogo-zakaza-tomskoy-oblasti": {
+    "id": "ru-70-departament-gosudarstvennogo-zakaza-tomskoy-oblasti",
+    "name": "Департамент государственного заказа Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-finansov-tomskoy-oblasti": {
+    "id": "ru-70-departament-finansov-tomskoy-oblasti",
+    "name": "Департамент финансов Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-komitet-po-ohrane-obektov-kulturnogo-naslediya-tomskoy-oblasti": {
+    "id": "ru-70-komitet-po-ohrane-obektov-kulturnogo-naslediya-tomskoy-oblasti",
+    "name": "Комитет по охране объектов культурного наследия Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-ohotnichego-i-rybnogo-hozyaystva-tomskoy-oblasti": {
+    "id": "ru-70-departament-ohotnichego-i-rybnogo-hozyaystva-tomskoy-oblasti",
+    "name": "Департамент охотничьего и рыбного хозяйства Томской области",
+    "shortName": "ДОиРХ ТО",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-stroitelstva-tomskoy-oblasti": {
+    "id": "ru-70-departament-stroitelstva-tomskoy-oblasti",
+    "name": "Департамент строительства Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-zhkh-i-gosudarstvennogo-zhilischnogo-nadzora-tomskoy-oblasti": {
+    "id": "ru-70-departament-zhkh-i-gosudarstvennogo-zhilischnogo-nadzora-tomskoy-oblasti",
+    "name": "Департамент ЖКХ и государственного жилищного надзора Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-inspekciya-gosudarstvennogo-tehnicheskogo-nadzora-tomskoy-oblasti": {
+    "id": "ru-70-inspekciya-gosudarstvennogo-tehnicheskogo-nadzora-tomskoy-oblasti",
+    "name": "Инспекция государственного технического надзора Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-gradostroitelnogo-razvitiya-tomskoy-oblasti": {
+    "id": "ru-70-departament-gradostroitelnogo-razvitiya-tomskoy-oblasti",
+    "name": "Департамент градостроительного развития Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-licenzirovaniya-i-regionalnogo-gosudarstvennogo-kontrolya-tomskoy-oblasti": {
+    "id": "ru-70-departament-licenzirovaniya-i-regionalnogo-gosudarstvennogo-kontrolya-tomskoy-oblasti",
+    "name": "Департамент лицензирования и регионального государственного контроля Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-investicionnoy-i-promyshlennoy-politiki-tomskoy-oblasti": {
+    "id": "ru-70-departament-investicionnoy-i-promyshlennoy-politiki-tomskoy-oblasti",
+    "name": "Департамент инвестиционной и промышленной политики Томской области",
+    "shortName": "ДИПТО",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-po-kulture-tomskoy-oblasti": {
+    "id": "ru-70-departament-po-kulture-tomskoy-oblasti",
+    "name": "Департамент по культуре Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-komitet-gosudarstvennogo-finansovogo-kontrolya-tomskoy-oblasti": {
+    "id": "ru-70-komitet-gosudarstvennogo-finansovogo-kontrolya-tomskoy-oblasti",
+    "name": "Комитет государственного финансового контроля Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-po-upravleniyu-gosudarstvennoy-sobstvennostyu-tomskoy-oblasti": {
+    "id": "ru-70-departament-po-upravleniyu-gosudarstvennoy-sobstvennostyu-tomskoy-oblasti",
+    "name": "Департамент по управлению государственной собственностью Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-obrazovaniya-tomskoy-oblasti": {
+    "id": "ru-70-departament-obrazovaniya-tomskoy-oblasti",
+    "name": "Департамент образования Томской области",
+    "shortName": "ДОТО",
+    "territoryId": "ru-70"
+  },
+  "ru-70-departament-zaschity-naseleniya-i-territorii-tomskoy-oblasti": {
+    "id": "ru-70-departament-zaschity-naseleniya-i-territorii-tomskoy-oblasti",
+    "name": "Департамент защиты населения и территории Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-70-pravitelstvo-tomskoy-oblasti": {
+    "id": "ru-70-pravitelstvo-tomskoy-oblasti",
+    "name": "Правительство Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-17-ministerstvo-dorozhno-transportnogo-kompleksa-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-dorozhno-transportnogo-kompleksa-respubliki-tyva",
+    "name": "Министерство дорожно-транспортного комплекса Республики Тыва",
+    "shortName": "Миндортранс Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-zdravoohraneniya-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-zdravoohraneniya-respubliki-tyva",
+    "name": "Министерство здравоохранения Республики Тыва",
+    "shortName": "Минздрав РТ",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-zemelnyh-i-imuschestvennyh-otnosheniy-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-zemelnyh-i-imuschestvennyh-otnosheniy-respubliki-tyva",
+    "name": "Министерство земельных и имущественных отношений Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-kultury-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-kultury-respubliki-tyva",
+    "name": "Министерство культуры Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-lesnogo-hozyaystva-i-prirodopolzovaniya-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-lesnogo-hozyaystva-i-prirodopolzovaniya-respubliki-tyva",
+    "name": "Министерство лесного хозяйства и природопользования Республики Тыва",
+    "shortName": "Минлесхоз Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-obrazovaniya-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-obrazovaniya-respubliki-tyva",
+    "name": "Министерство образования Республики Тыва",
+    "shortName": "Минобр РТ",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-po-delam-molodezhi-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-po-delam-molodezhi-respubliki-tyva",
+    "name": "Министерство по делам молодежи Республики Тыва",
+    "shortName": "Минмолодежи РТ",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-respubliki-tyva-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok": {
+    "id": "ru-17-ministerstvo-respubliki-tyva-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok",
+    "name": "Министерство Республики Тыва по регулированию контрактной системы в сфере закупок",
+    "shortName": "Мингосзаказ Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-stroitelstva-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-stroitelstva-respubliki-tyva",
+    "name": "Министерство строительства Республики Тыва",
+    "shortName": "Минстрой Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-topliva-i-energetiki-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-topliva-i-energetiki-respubliki-tyva",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Республики Тыва",
+    "shortName": "Министерство энергетики и ЖКХ Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-truda-i-socialnoy-politiki-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-truda-i-socialnoy-politiki-respubliki-tyva",
+    "name": "Министерство труда и социальной политики Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-cifrovogo-razvitiya-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-cifrovogo-razvitiya-respubliki-tyva",
+    "name": "Министерство цифрового развития Республики Тыва",
+    "shortName": "Минцифры Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-ministerstvo-yusticii-respubliki-tyva": {
+    "id": "ru-17-ministerstvo-yusticii-respubliki-tyva",
+    "name": "Министерство юстиции Республики Тыва",
+    "shortName": "Минюст Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-sluzhba-veterinarii-respubliki-tyva": {
+    "id": "ru-17-sluzhba-veterinarii-respubliki-tyva",
+    "name": "Служба ветеринарии Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-17-sluzhba-gosudarstvennoy-zhilischnoy-inspekcii-i-stroitelnogo-nadzora-respubliki-tyva": {
+    "id": "ru-17-sluzhba-gosudarstvennoy-zhilischnoy-inspekcii-i-stroitelnogo-nadzora-respubliki-tyva",
+    "name": "Служба государственной жилищной инспекции и строительного надзора Республики Тыва",
+    "shortName": "",
+    "territoryId": "ru-17"
+  },
+  "ru-17-sluzhba-po-tarifam-respubliki-tyva": {
+    "id": "ru-17-sluzhba-po-tarifam-respubliki-tyva",
+    "name": "Служба по тарифам Республики Тыва",
+    "shortName": "Служба по тарифам РТ",
+    "territoryId": "ru-17"
+  },
+  "ru-17-agentstvo-po-delam-nacionalnostey-respubliki-tyva": {
+    "id": "ru-17-agentstvo-po-delam-nacionalnostey-respubliki-tyva",
+    "name": "Агентство по делам национальностей Республики Тыва",
+    "shortName": "АДН Республики Тыва",
+    "territoryId": "ru-17"
+  },
+  "ru-17-gosudarstvennyy-komitet-po-turizmu-respubliki-tyva": {
+    "id": "ru-17-gosudarstvennyy-komitet-po-turizmu-respubliki-tyva",
+    "name": "Государственный комитет Республики Тыва по туризму",
+    "shortName": "Госкомитет по туризму РТ",
+    "territoryId": "ru-17"
+  },
+  "ru-17-sluzhba-po-licenzirovaniyu-i-nadzoru-otdelnyh-vidov-deyatelnosti-respubliki-tyva": {
+    "id": "ru-17-sluzhba-po-licenzirovaniyu-i-nadzoru-otdelnyh-vidov-deyatelnosti-respubliki-tyva",
+    "name": "Служба по лицензированию и надзору отдельных видов деятельности Республики Тыва",
+    "shortName": "Служба по лицензированию РТ",
+    "territoryId": "ru-17"
+  },
+  "ru-17-gosudarstvennyy-komitet-po-ohrane-obektov-zhivotnogo-mira-respubliki-tyva": {
+    "id": "ru-17-gosudarstvennyy-komitet-po-ohrane-obektov-zhivotnogo-mira-respubliki-tyva",
+    "name": "Государственный комитет по охране объектов животного мира Республики Тыва",
+    "shortName": "Госкомохотнадзор РТ",
+    "territoryId": "ru-17"
+  },
+  "ru-14-upravlenie-arhitektury-i-gradostroitelstva-pri-glave-respubliki-saha-yakutiya": {
+    "id": "ru-14-upravlenie-arhitektury-i-gradostroitelstva-pri-glave-respubliki-saha-yakutiya",
+    "name": "Управление архитектуры и градостроительства при Главе Республики Саха (Якутия)",
+    "shortName": "Управление архитектуры РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-upravlenie-delami-glavy-respubliki-saha-yakutiya-i-pravitelstva-respubliki-saha-yakutiya": {
+    "id": "ru-14-upravlenie-delami-glavy-respubliki-saha-yakutiya-i-pravitelstva-respubliki-saha-yakutiya",
+    "name": "Управление делами Главы Республики Саха (Якутия) и Правительства Республики Саха (Якутия)",
+    "shortName": "Управделами Главы РС(Я) и Правительства РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-obrazovaniya-i-nauki-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-obrazovaniya-i-nauki-respubliki-saha-yakutiya",
+    "name": "Министерство образования и науки Республики Саха (Якутия)",
+    "shortName": "Минобрнауки РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-upravlenie-gosudarstvennogo-stroitelnogo-i-zhilischnogo-nadzora-respubliki-saha-yakutiya": {
+    "id": "ru-14-upravlenie-gosudarstvennogo-stroitelnogo-i-zhilischnogo-nadzora-respubliki-saha-yakutiya",
+    "name": "Управление государственного строительного и жилищного надзора Республики Саха (Якутия)",
+    "shortName": "Управление госстройжилнадзора РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-promyshlennosti-i-geologii-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-promyshlennosti-i-geologii-respubliki-saha-yakutiya",
+    "name": "Министерство промышленности и геологии Республики Саха (Якутия)",
+    "shortName": "Минпромгеологии РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-predprinimatelstva-torgovli-i-turizma-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-predprinimatelstva-torgovli-i-turizma-respubliki-saha-yakutiya",
+    "name": "Министерство предпринимательства, торговли и туризма Республики Саха (Якутия)",
+    "shortName": "Минпред РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-gosudarstvennyy-komitet-respubliki-saha-yakutiya-po-zanyatosti-naseleniya": {
+    "id": "ru-14-gosudarstvennyy-komitet-respubliki-saha-yakutiya-po-zanyatosti-naseleniya",
+    "name": "Государственный комитет Республики Саха (Якутия) по занятости населения",
+    "shortName": "Госкомитет занятости РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-kultury-i-duhovnogo-razvitiya-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-kultury-i-duhovnogo-razvitiya-respubliki-saha-yakutiya",
+    "name": "Министерство культуры и духовного развития Республики Саха (Якутия)",
+    "shortName": "Минкультуры РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-stroitelstva-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-stroitelstva-respubliki-saha-yakutiya",
+    "name": "Министерство строительства Республики Саха (Якутия)",
+    "shortName": "Минстрой РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-zdravoohraneniya-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-zdravoohraneniya-respubliki-saha-yakutiya",
+    "name": "Министерство здравоохранения Республики Саха (Якутия)",
+    "shortName": "Минздрав РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-selskogo-hozyaystva-i-prodovolstvennoy-politiki-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-selskogo-hozyaystva-i-prodovolstvennoy-politiki-respubliki-saha-yakutiya",
+    "name": "Министерство сельского хозяйства и продовольственной политики Республики Саха (Якутия)",
+    "shortName": "Минсельхоз РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-transporta-i-dorozhnogo-hozyaystva-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-transporta-i-dorozhnogo-hozyaystva-respubliki-saha-yakutiya",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Саха (Якутия)",
+    "shortName": "",
+    "territoryId": "ru-14"
+  },
+  "ru-14-upravlenie-po-ohrane-obektov-kulturnogo-naslediya-respubliki-saha-yakutiya": {
+    "id": "ru-14-upravlenie-po-ohrane-obektov-kulturnogo-naslediya-respubliki-saha-yakutiya",
+    "name": "Управление по охране объектов культурного наследия Республики Саха (Якутия)",
+    "shortName": "Управление ОКН РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-po-razvitiyu-arktiki-i-delam-narodov-severa-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-po-razvitiyu-arktiki-i-delam-narodov-severa-respubliki-saha-yakutiya",
+    "name": "Министерство по развитию Арктики и делам народов Севера Республики Саха (Якутия)",
+    "shortName": "МинАрктики РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-po-vneshnim-svyazyam-i-delam-narodov-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-po-vneshnim-svyazyam-i-delam-narodov-respubliki-saha-yakutiya",
+    "name": "Министерство по внешним связям и делам народов Республики Саха (Якутия)",
+    "shortName": "МВСиДН РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-innovaciy-cifrovogo-razvitiya-i-infokommunikacionnyh-tehnologiy-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-innovaciy-cifrovogo-razvitiya-i-infokommunikacionnyh-tehnologiy-respubliki-saha-yakutiya",
+    "name": "Министерство инноваций, цифрового развития и инфокоммуникационных технологий Республики Саха (Якутия)",
+    "shortName": "Мининноваций РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-ekonomiki-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-ekonomiki-respubliki-saha-yakutiya",
+    "name": "Министерство экономики Республики Саха (Якутия)",
+    "shortName": "",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-finansov-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-finansov-respubliki-saha-yakutiya",
+    "name": "Министерство финансов Республики Саха (Якутия)",
+    "shortName": "",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-respubliki-saha-yakutiya",
+    "name": "Министерство жилищно-коммунального хозяйства и энергетики Республики Саха (Якутия)",
+    "shortName": "Министерство ЖКХ и энергетики РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-respubliki-saha-yakutiya",
+    "name": "Министерство имущественных и земельных отношений Республики Саха (Якутия)",
+    "shortName": "",
+    "territoryId": "ru-14"
+  },
+  "ru-14-gosudarstvennyy-komitet-po-cenovoy-politike-respubliki-saha-yakutiya": {
+    "id": "ru-14-gosudarstvennyy-komitet-po-cenovoy-politike-respubliki-saha-yakutiya",
+    "name": "Государственный комитет по ценовой политике Республики Саха (Якутия)",
+    "shortName": "ГКЦ РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-po-fizicheskoy-kulture-i-sportu-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-po-fizicheskoy-kulture-i-sportu-respubliki-saha-yakutiya",
+    "name": "Министерство по физической культуре и спорту Республики Саха (Якутия)",
+    "shortName": "",
+    "territoryId": "ru-14"
+  },
+  "ru-14-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-pri-pravitelstve-respubliki-saha-yakutiya": {
+    "id": "ru-14-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-pri-pravitelstve-respubliki-saha-yakutiya",
+    "name": "Управление записи актов гражданского состояния при Правительстве Республики Саха (Якутия)",
+    "shortName": "Управление ЗАГС РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-administraciya-glavy-respubliki-saha-yakutiya-i-pravitelstva-respubliki-saha-yakutiya": {
+    "id": "ru-14-administraciya-glavy-respubliki-saha-yakutiya-i-pravitelstva-respubliki-saha-yakutiya",
+    "name": "Администрация Главы Республики Саха (Якутия) и Правительства Республики Саха (Якутия)",
+    "shortName": "",
+    "territoryId": "ru-14"
+  },
+  "ru-14-postoyannoe-predstavitelstvo-respubliki-saha-yakutiya-pri-prezidente-rossiyskoy-federacii": {
+    "id": "ru-14-postoyannoe-predstavitelstvo-respubliki-saha-yakutiya-pri-prezidente-rossiyskoy-federacii",
+    "name": "Постоянное представительство Республики Саха (Якутия) при Президенте Российской Федерации",
+    "shortName": "Постпредство РС(Я) при Президенте РФ",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-ekologii-prirodopolzovaniya-i-lesnogo-hozyaystva-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-ekologii-prirodopolzovaniya-i-lesnogo-hozyaystva-respubliki-saha-yakutiya",
+    "name": "Министерство экологии, природопользования и лесного хозяйства Республики Саха (Якутия)",
+    "shortName": "Минэкологии РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-po-delam-grazhdanskoy-oborony-i-obespecheniyu-bezopasnosti-zhiznedeyatelnosti-naseleniya-res-41b6c618": {
+    "id": "ru-14-ministerstvo-po-delam-grazhdanskoy-oborony-i-obespecheniyu-bezopasnosti-zhiznedeyatelnosti-naseleniya-res-41b6c618",
+    "name": "Министерство по делам гражданской обороны и обеспечению безопасности жизнедеятельности населения Республики Саха (Якутия)",
+    "shortName": "МинГОиОБЖН РС(Я)",
+    "territoryId": "ru-14"
+  },
+  "ru-14-ministerstvo-po-delam-molodezhi-i-socialnym-kommunikaciyam-respubliki-saha-yakutiya": {
+    "id": "ru-14-ministerstvo-po-delam-molodezhi-i-socialnym-kommunikaciyam-respubliki-saha-yakutiya",
+    "name": "Министерство по делам молодежи и социальным коммуникациям Республики Саха (Якутия)",
+    "shortName": "",
+    "territoryId": "ru-14"
+  },
+  "ru-14-postoyannoe-predstavitelstvo-respubliki-saha-yakutiya-po-dalnevostochnomu-federalnomu-okrugu": {
+    "id": "ru-14-postoyannoe-predstavitelstvo-respubliki-saha-yakutiya-po-dalnevostochnomu-federalnomu-okrugu",
+    "name": "Постоянное представительство Республики Саха (Якутия) по Дальневосточному федеральному округу",
+    "shortName": "Постпредство РС(Я) по ДФО",
+    "territoryId": "ru-14"
+  },
+  "ru-75-administraciya-gubernatora-zabaykalskogo-kraya": {
+    "id": "ru-75-administraciya-gubernatora-zabaykalskogo-kraya",
+    "name": "Администрация Губернатора Забайкальского края",
+    "shortName": "",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-ekonomicheskogo-razvitiya-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-ekonomicheskogo-razvitiya-zabaykalskogo-kraya",
+    "name": "Министерство экономического развития Забайкальского края",
+    "shortName": "Минэкономразвития Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-po-socialnomu-ekonomicheskomu-infrastrukturnomu-prostranstvennomu-planirovaniyu-i-razvitiyu-7abde94f": {
+    "id": "ru-75-ministerstvo-po-socialnomu-ekonomicheskomu-infrastrukturnomu-prostranstvennomu-planirovaniyu-i-razvitiyu-7abde94f",
+    "name": "Министерство по социальному, экономическому, инфраструктурному, пространственному планированию и развитию Забайкальского края",
+    "shortName": "Министерство по планированию и развитию Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-departament-po-razvitiyu-municipalnyh-obrazovaniy-zabaykalskogo-kraya": {
+    "id": "ru-75-departament-po-razvitiyu-municipalnyh-obrazovaniy-zabaykalskogo-kraya",
+    "name": "Департамент по развитию муниципальных образований Забайкальского края",
+    "shortName": "",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-kultury-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-kultury-zabaykalskogo-kraya",
+    "name": "Министерство культуры Забайкальского края",
+    "shortName": "Минкультуры Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-fizicheskoy-kultury-i-sporta-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-fizicheskoy-kultury-i-sporta-zabaykalskogo-kraya",
+    "name": "Министерство физической культуры и спорта Забайкальского края",
+    "shortName": "Минспорт Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-transporta-i-dorozhnogo-hozyaystva-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-transporta-i-dorozhnogo-hozyaystva-zabaykalskogo-kraya",
+    "name": "Министерство транспорта и дорожного хозяйства Забайкальского края",
+    "shortName": "Минтранс Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-stroitelstva-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-stroitelstva-zabaykalskogo-kraya",
+    "name": "Министерство строительства Забайкальского края",
+    "shortName": "Минстрой Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-departament-truda-i-zanyatosti-zabaykalskogo-kraya": {
+    "id": "ru-75-departament-truda-i-zanyatosti-zabaykalskogo-kraya",
+    "name": "Департамент труда и занятости Забайкальского края",
+    "shortName": "ДТиЗ Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-lesnogo-hozyaystva-i-pozharnoy-bezopasnosti-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-lesnogo-hozyaystva-i-pozharnoy-bezopasnosti-zabaykalskogo-kraya",
+    "name": "Министерство лесного хозяйства и пожарной безопасности Забайкальского края",
+    "shortName": "Минлес Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-nauki-i-professionalnogo-obrazovaniya-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-nauki-i-professionalnogo-obrazovaniya-zabaykalskogo-kraya",
+    "name": "Министерство науки и профессионального образования Забайкальского края",
+    "shortName": "Миннауки Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-departament-po-delam-molodezhi-zabaykalskogo-kraya": {
+    "id": "ru-75-departament-po-delam-molodezhi-zabaykalskogo-kraya",
+    "name": "Департамент по делам молодежи Забайкальского края",
+    "shortName": "ДДМ Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-gosudarstvennaya-zhilischnaya-inspekciya-zabaykalskogo-kraya": {
+    "id": "ru-75-gosudarstvennaya-zhilischnaya-inspekciya-zabaykalskogo-kraya",
+    "name": "Государственная жилищная инспекция Забайкальского края",
+    "shortName": "Госжилинспекция Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-departament-po-voprosam-protivodeystviya-korrupcii-zabaykalskogo-kraya": {
+    "id": "ru-75-departament-po-voprosam-protivodeystviya-korrupcii-zabaykalskogo-kraya",
+    "name": "Департамент по вопросам противодействия коррупции Забайкальского края",
+    "shortName": "Департамент ПК Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-gosudarstvennaya-veterinarnaya-sluzhba-zabaykalskogo-kraya": {
+    "id": "ru-75-gosudarstvennaya-veterinarnaya-sluzhba-zabaykalskogo-kraya",
+    "name": "Государственная ветеринарная служба Забайкальского края",
+    "shortName": "Госветслужба Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-departament-zapisi-aktov-grazhdanskogo-sostoyaniya-zabaykalskogo-kraya": {
+    "id": "ru-75-departament-zapisi-aktov-grazhdanskogo-sostoyaniya-zabaykalskogo-kraya",
+    "name": "Департамент записи актов гражданского состояния Забайкальского края",
+    "shortName": "Департамент ЗАГС Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-departament-po-obespecheniyu-deyatelnosti-mirovyh-sudey-zabaykalskogo-kraya": {
+    "id": "ru-75-departament-po-obespecheniyu-deyatelnosti-mirovyh-sudey-zabaykalskogo-kraya",
+    "name": "Департамент по обеспечению деятельности мировых судей Забайкальского края",
+    "shortName": "ДМС Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-departament-gosudarstvennogo-imuschestva-i-zemelnyh-otnosheniy-zabaykalskogo-kraya": {
+    "id": "ru-75-departament-gosudarstvennogo-imuschestva-i-zemelnyh-otnosheniy-zabaykalskogo-kraya",
+    "name": "Департамент государственного имущества и земельных отношений Забайкальского края",
+    "shortName": "Департамент имущества Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-zhilischno-kommunalnogo-hozyaystva-energetiki-cifrovizacii-i-svyazi-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-zhilischno-kommunalnogo-hozyaystva-energetiki-cifrovizacii-i-svyazi-zabaykalskogo-kraya",
+    "name": "Министерство жилищно-коммунального хозяйства, энергетики, цифровизации и связи Забайкальского края",
+    "shortName": "",
+    "territoryId": "ru-75"
+  },
+  "ru-75-regionalnaya-sluzhba-po-tarifam-i-cenoobrazovaniyu-zabaykalskogo-kraya": {
+    "id": "ru-75-regionalnaya-sluzhba-po-tarifam-i-cenoobrazovaniyu-zabaykalskogo-kraya",
+    "name": "Региональная служба по тарифам и ценообразованию Забайкальского края",
+    "shortName": "РСТ Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-socialnoy-i-demograficheskoy-politiki-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-socialnoy-i-demograficheskoy-politiki-zabaykalskogo-kraya",
+    "name": "Министерство социальной и демографической политики Забайкальского края",
+    "shortName": "Минсоцполитики Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-obrazovaniya-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-obrazovaniya-zabaykalskogo-kraya",
+    "name": "Министерство образования Забайкальского края",
+    "shortName": "",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-razvitiya-grazhdanskogo-obschestva-i-vnutrenney-politiki-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-razvitiya-grazhdanskogo-obschestva-i-vnutrenney-politiki-zabaykalskogo-kraya",
+    "name": "Министерство развития гражданского общества и внутренней политики Забайкальского края",
+    "shortName": "МинРГО Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-gosudarstvennaya-inspekciya-zabaykalskogo-kraya": {
+    "id": "ru-75-gosudarstvennaya-inspekciya-zabaykalskogo-kraya",
+    "name": "Государственная инспекция Забайкальского края",
+    "shortName": "Госинспекция Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-ministerstvo-prirodnyh-resursov-i-ekologii-zabaykalskogo-kraya": {
+    "id": "ru-75-ministerstvo-prirodnyh-resursov-i-ekologii-zabaykalskogo-kraya",
+    "name": "Министерство природных ресурсов и экологии Забайкальского края",
+    "shortName": "Минприроды Забайкальского края",
+    "territoryId": "ru-75"
+  },
+  "ru-75-administraciya-aginskogo-buryatskogo-okruga-zabaykalskogo-kraya": {
+    "id": "ru-75-administraciya-aginskogo-buryatskogo-okruga-zabaykalskogo-kraya",
+    "name": "Администрация Агинского Бурятского округа Забайкальского края",
+    "shortName": "Администрация округа",
+    "territoryId": "ru-75"
+  },
+  "ru-74-upravlenie-delami-gubernatora-i-pravitelstva-chelyabinskoy-oblasti": {
+    "id": "ru-74-upravlenie-delami-gubernatora-i-pravitelstva-chelyabinskoy-oblasti",
+    "name": "Управление делами Губернатора и Правительства Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-selskogo-hozyaystva-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-selskogo-hozyaystva-chelyabinskoy-oblasti",
+    "name": "Министерство сельского хозяйства Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-yusticii-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-yusticii-chelyabinskoy-oblasti",
+    "name": "Главное управление юстиции Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-arhitektury-gradostroitelstva-i-kompleksnogo-razvitiya-territorii-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-arhitektury-gradostroitelstva-i-kompleksnogo-razvitiya-territorii-chelyabinskoy-oblasti",
+    "name": "Министерство архитектуры, градостроительства и комплексного развития территории Челябинской области",
+    "shortName": "Минархитектуры Челябинской области",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-zhilischno-kommunalnogo-hozyaystva-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-zhilischno-kommunalnogo-hozyaystva-chelyabinskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-mezhdunarodnogo-i-mezhregionalnogo-sotrudnichestva-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-mezhdunarodnogo-i-mezhregionalnogo-sotrudnichestva-chelyabinskoy-oblasti",
+    "name": "Министерство международного и межрегионального сотрудничества Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-veterinarii-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-veterinarii-chelyabinskoy-oblasti",
+    "name": "Главное управление ветеринарии Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-koordinacii-razvitiya-turizma-v-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-koordinacii-razvitiya-turizma-v-chelyabinskoy-oblasti",
+    "name": "Главное управление координации развития туризма в Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-bespilotnyh-aviacionnyh-sistem-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-bespilotnyh-aviacionnyh-sistem-chelyabinskoy-oblasti",
+    "name": "Главное управление беспилотных авиационных систем Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-promyshlennosti-novyh-tehnologiy-i-prirodnyh-resursov-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-promyshlennosti-novyh-tehnologiy-i-prirodnyh-resursov-chelyabinskoy-oblasti",
+    "name": "Министерство промышленности, новых технологий и природных ресурсов Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-gosudarstvennyy-komitet-ohrany-obektov-kulturnogo-naslediya-chelyabinskoy-oblasti": {
+    "id": "ru-74-gosudarstvennyy-komitet-ohrany-obektov-kulturnogo-naslediya-chelyabinskoy-oblasti",
+    "name": "Государственный комитет охраны объектов культурного наследия Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-apparat-gubernatora-i-pravitelstva-chelyabinskoy-oblasti": {
+    "id": "ru-74-apparat-gubernatora-i-pravitelstva-chelyabinskoy-oblasti",
+    "name": "Аппарат Губернатора и Правительства Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-chelyabinskoy-oblasti",
+    "name": "Главное управление государственного строительного надзора Челябинской области",
+    "shortName": "Главгосстройнадзор Челябинской области",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-ekologii-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-ekologii-chelyabinskoy-oblasti",
+    "name": "Министерство экологии Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-ekonomicheskogo-razvitiya-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-ekonomicheskogo-razvitiya-chelyabinskoy-oblasti",
+    "name": "Министерство экономического развития Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-imuschestva-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-imuschestva-chelyabinskoy-oblasti",
+    "name": "Министерство имущества Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-zdravoohraneniya-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-zdravoohraneniya-chelyabinskoy-oblasti",
+    "name": "Министерство здравоохранения Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-obrazovaniya-i-nauki-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-obrazovaniya-i-nauki-chelyabinskoy-oblasti",
+    "name": "Министерство образования и науки Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-socialnyh-otnosheniy-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-socialnyh-otnosheniy-chelyabinskoy-oblasti",
+    "name": "Министерство социальных отношений Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-kultury-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-kultury-chelyabinskoy-oblasti",
+    "name": "Министерство культуры Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-po-fizicheskoy-kulture-i-sportu-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-po-fizicheskoy-kulture-i-sportu-chelyabinskoy-oblasti",
+    "name": "Министерство по физической культуре и спорту Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-informacionnyh-tehnologiy-svyazi-i-cifrovogo-razvitiya-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-informacionnyh-tehnologiy-svyazi-i-cifrovogo-razvitiya-chelyabinskoy-oblasti",
+    "name": "Министерство информационных технологий, связи и цифрового развития Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-tarifnogo-regulirovaniya-i-energetiki-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-tarifnogo-regulirovaniya-i-energetiki-chelyabinskoy-oblasti",
+    "name": "Министерство тарифного регулирования и энергетики Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-obschestvennoy-bezopasnosti-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-obschestvennoy-bezopasnosti-chelyabinskoy-oblasti",
+    "name": "Министерство общественной безопасности Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-po-trudu-i-zanyatosti-naseleniya-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-po-trudu-i-zanyatosti-naseleniya-chelyabinskoy-oblasti",
+    "name": "Главное управление по труду и занятости населения Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-lesami-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-lesami-chelyabinskoy-oblasti",
+    "name": "Главное управление лесами Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-gosudarstvennaya-zhilischnaya-inspekciya-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-gosudarstvennaya-zhilischnaya-inspekciya-chelyabinskoy-oblasti",
+    "name": "Главное управление «Государственная жилищная инспекция Челябинской области»",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-glavnoe-upravlenie-molodezhnoy-politiki-chelyabinskoy-oblasti": {
+    "id": "ru-74-glavnoe-upravlenie-molodezhnoy-politiki-chelyabinskoy-oblasti",
+    "name": "Министерство молодежи Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-gosudarstvennyy-komitet-po-delam-arhivov-chelyabinskoy-oblasti": {
+    "id": "ru-74-gosudarstvennyy-komitet-po-delam-arhivov-chelyabinskoy-oblasti",
+    "name": "Государственный комитет по делам архивов Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-gosudarstvennyy-komitet-po-delam-zags-chelyabinskoy-oblasti": {
+    "id": "ru-74-gosudarstvennyy-komitet-po-delam-zags-chelyabinskoy-oblasti",
+    "name": "Государственный комитет по делам ЗАГС Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-ministerstvo-stroitelstva-i-infrastruktury-chelyabinskoy-oblasti": {
+    "id": "ru-74-ministerstvo-stroitelstva-i-infrastruktury-chelyabinskoy-oblasti",
+    "name": "Министерство строительства и инфраструктуры Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-74-pravitelstvo-chelyabinskoy-oblasti": {
+    "id": "ru-74-pravitelstvo-chelyabinskoy-oblasti",
+    "name": "Правительство Челябинской области",
+    "shortName": "",
+    "territoryId": "ru-74"
+  },
+  "ru-19-ministerstvo-kultury-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-kultury-respubliki-hakasiya",
+    "name": "Министерство культуры Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-hakasiya",
+    "name": "Министерство физической культуры и спорта Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-lesnogo-hozyaystva-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-lesnogo-hozyaystva-respubliki-hakasiya",
+    "name": "Министерство лесного хозяйства Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-molodezhnoy-politiki-i-obschestvennogo-razvitiya-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-molodezhnoy-politiki-i-obschestvennogo-razvitiya-respubliki-hakasiya",
+    "name": "Министерство молодежной политики и общественного развития Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-gosudarstvennyy-komitet-tarifnogo-regulirovaniya-respubliki-hakasiya": {
+    "id": "ru-19-gosudarstvennyy-komitet-tarifnogo-regulirovaniya-respubliki-hakasiya",
+    "name": "Государственный комитет тарифного регулирования Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-gosudarstvennyy-komitet-cifrovogo-razvitiya-i-svyazi-respubliki-hakasiya": {
+    "id": "ru-19-gosudarstvennyy-komitet-cifrovogo-razvitiya-i-svyazi-respubliki-hakasiya",
+    "name": "Государственный комитет цифрового развития и связи Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-postoyannoe-predstavitelstvo-respubliki-hakasiya": {
+    "id": "ru-19-postoyannoe-predstavitelstvo-respubliki-hakasiya",
+    "name": "Постоянное представительство Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-transporta-i-dorozhnogo-hozyaystva-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-transporta-i-dorozhnogo-hozyaystva-respubliki-hakasiya",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-gosudarstvennyy-komitet-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-respubliki-hakasiya": {
+    "id": "ru-19-gosudarstvennyy-komitet-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-respubliki-hakasiya",
+    "name": "Государственный комитет по регулированию контрактной системы в сфере закупок Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-gosudarstvennyy-komitet-po-mobilizacionnoy-rabote-i-zaschite-gosudarstvennoy-tayny-respubliki-hakasiya": {
+    "id": "ru-19-gosudarstvennyy-komitet-po-mobilizacionnoy-rabote-i-zaschite-gosudarstvennoy-tayny-respubliki-hakasiya",
+    "name": "Государственный комитет по мобилизационной работе и защите государственной тайны Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-stroitelstva-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-stroitelstva-respubliki-hakasiya",
+    "name": "Министерство строительства Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-respubliki-hakasiya": {
+    "id": "ru-19-ministerstvo-zhilischno-kommunalnogo-hozyaystva-i-energetiki-respubliki-hakasiya",
+    "name": "Министерство жилищно-коммунального хозяйства и энергетики Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-gosudarstvennyy-komitet-po-grazhdanskoy-oborone-chrezvychaynym-situaciyam-i-pozharnoy-bezopasnosti-respubliki-hakasiya": {
+    "id": "ru-19-gosudarstvennyy-komitet-po-grazhdanskoy-oborone-chrezvychaynym-situaciyam-i-pozharnoy-bezopasnosti-respubliki-hakasiya",
+    "name": "Государственный комитет по гражданской обороне, чрезвычайным ситуациям и пожарной безопасности Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-upravlenie-veterinarii-respubliki-hakasiya": {
+    "id": "ru-19-upravlenie-veterinarii-respubliki-hakasiya",
+    "name": "Управление ветеринарии Республики Хакасия",
+    "shortName": "",
+    "territoryId": "ru-19"
+  },
+  "ru-19-apparat-glavy-respubliki-hakasiya-predsedatelya-pravitelstva-respubliki-hakasiya-i-pravitelstva-respubliki-hakasiya": {
+    "id": "ru-19-apparat-glavy-respubliki-hakasiya-predsedatelya-pravitelstva-respubliki-hakasiya-i-pravitelstva-respubliki-hakasiya",
+    "name": "Аппарат Главы Республики Хакасия - Председателя Правительства Республики Хакасия и Правительства Республики Хакасия",
+    "shortName": "Аппарат Главы и Правительства Республики Хакасия",
+    "territoryId": "ru-19"
+  },
+  "ru-86-departament-administrativnogo-obespecheniya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-administrativnogo-obespecheniya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент административного обеспечения Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Департамент административного обеспечения Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-kultury-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-kultury-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент культуры Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депкультуры Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-socialnogo-razvitiya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-socialnogo-razvitiya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент социального развития Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депсоцразвития Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-nedropolzovaniya-i-prirodnyh-resursov-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-nedropolzovaniya-i-prirodnyh-resursov-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент недропользования и природных ресурсов Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депнедра и природных ресурсов Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-regionalnoy-bezopasnosti-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-regionalnoy-bezopasnosti-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент региональной безопасности Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депбезопасности Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-finansov-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-finansov-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент финансов Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депфин Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-dorozhnogo-hozyaystva-i-transporta-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-dorozhnogo-hozyaystva-i-transporta-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент дорожного хозяйства и транспорта Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депдорхоз и транспорта Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-po-upravleniyu-gosudarstvennym-imuschestvom-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-po-upravleniyu-gosudarstvennym-imuschestvom-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент по управлению государственным имуществом Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депимущества Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-fizicheskoy-kultury-i-sporta-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-fizicheskoy-kultury-i-sporta-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент физической культуры и спорта Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депспорт Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-veterinarnaya-sluzhba-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-veterinarnaya-sluzhba-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Ветеринарная служба Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Ветслужба Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-sluzhba-po-delam-arhivov-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-sluzhba-po-delam-arhivov-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Служба по делам архивов Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Архивная служба Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-vnutrenney-politiki-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-vnutrenney-politiki-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент внутренней политики Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депполитики Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-sluzhba-kontrolya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-sluzhba-kontrolya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Служба контроля Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Юграконтроль",
+    "territoryId": "ru-86"
+  },
+  "ru-86-sluzhba-zhilischnogo-i-stroitelnogo-nadzora-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-sluzhba-zhilischnogo-i-stroitelnogo-nadzora-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Служба жилищного надзора Ханты-Мансийского автономного округа — Югры",
+    "shortName": "Жилнадзор Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-sluzhba-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-sluzhba-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Служба государственной охраны объектов культурного наследия Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Госкультохрана Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-regionalnaya-sluzhba-po-tarifam-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-regionalnaya-sluzhba-po-tarifam-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Региональная служба по тарифам Ханты-Мансийского автономного округа - Югры",
+    "shortName": "РСТ Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-sluzhba-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-han-44aaf728": {
+    "id": "ru-86-sluzhba-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-han-44aaf728",
+    "name": "Служба государственного надзора за техническим состоянием самоходных машин и других видов техники Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Гостехнадзор Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-predstavitelstvo-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-predstavitelstvo-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Представительство Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Представительство Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-sluzhba-po-kontrolyu-i-nadzoru-v-sfere-ohrany-okruzhayuschey-sredy-obektov-zhivotnogo-mira-i-lesnyh-otnos-f0f8313b": {
+    "id": "ru-86-sluzhba-po-kontrolyu-i-nadzoru-v-sfere-ohrany-okruzhayuschey-sredy-obektov-zhivotnogo-mira-i-lesnyh-otnos-f0f8313b",
+    "name": "Служба по контролю и надзору в сфере охраны окружающей среды, объектов животного мира и лесных отношений Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Природнадзор Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-pravitelstvo-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-pravitelstvo-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Правительство Ханты-Мансийского автономного округа — Югры",
+    "shortName": "Правительство Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-zdravoohraneniya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-zdravoohraneniya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент здравоохранения Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депздрав Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-gosudarstvennogo-zakaza-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-gosudarstvennogo-zakaza-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент государственного заказа Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депгосзаказа Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-informacionnyh-tehnologiy-i-cifrovogo-razvitiya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-informacionnyh-tehnologiy-i-cifrovogo-razvitiya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент информационных технологий и цифрового развития Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депинформтехнологий Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-truda-i-zanyatosti-naseleniya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-truda-i-zanyatosti-naseleniya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент труда и занятости населения Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Дептруда и занятости Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-ekonomicheskogo-razvitiya-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-ekonomicheskogo-razvitiya-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент экономического развития Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депэкономики Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-molodezhnoy-politiki-grazhdanskih-iniciativ-i-vneshnih-svyazey-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-molodezhnoy-politiki-grazhdanskih-iniciativ-i-vneshnih-svyazey-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент молодежной политики, гражданских инициатив и внешних связей Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Департамент молодежной политики, гражданских инициатив и внешних связей Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-obrazovaniya-i-nauki-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-obrazovaniya-i-nauki-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент образования и науки Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Депобразования и науки Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-departament-zhilischno-kommunalnogo-kompleksa-i-energetiki-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-departament-zhilischno-kommunalnogo-kompleksa-i-energetiki-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Департамент жилищно-коммунального комплекса и энергетики Ханты-Мансийского автономного округа - Югры",
+    "shortName": "ДепЖКК и энергетики Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-86-apparat-gubernatora-pravitelstva-hanty-mansiyskogo-avtonomnogo-okruga-yugry": {
+    "id": "ru-86-apparat-gubernatora-pravitelstva-hanty-mansiyskogo-avtonomnogo-okruga-yugry",
+    "name": "Аппарат Губернатора, Правительства Ханты-Мансийского автономного округа - Югры",
+    "shortName": "Аппарат Губернатора, Правительства Югры",
+    "territoryId": "ru-86"
+  },
+  "ru-45-departament-informacionnoy-i-vnutrenney-politiki-kurganskoy-oblasti": {
+    "id": "ru-45-departament-informacionnoy-i-vnutrenney-politiki-kurganskoy-oblasti",
+    "name": "Департамент информационной и внутренней политики Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-informacionnyh-tehnologiy-i-cifrovogo-razvitiya-kurganskoy-oblasti": {
+    "id": "ru-45-departament-informacionnyh-tehnologiy-i-cifrovogo-razvitiya-kurganskoy-oblasti",
+    "name": "Департамент информационных технологий и цифрового развития Курганской области",
+    "shortName": "Департамент информационных технологий",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-obschestvennoy-bezopasnosti-kurganskoy-oblasti": {
+    "id": "ru-45-departament-obschestvennoy-bezopasnosti-kurganskoy-oblasti",
+    "name": "Департамент общественной безопасности Курганской области",
+    "shortName": "Департамент общественной безопасности",
+    "territoryId": "ru-45"
+  },
+  "ru-45-upravlenie-ohotnichego-hozyaystva-kurganskoy-oblasti": {
+    "id": "ru-45-upravlenie-ohotnichego-hozyaystva-kurganskoy-oblasti",
+    "name": "Управление охотничьего хозяйства Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-kurganskoy-oblasti": {
+    "id": "ru-45-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-kurganskoy-oblasti",
+    "name": "Управление по обеспечению деятельности мировых судей в Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-gosudarstvennaya-zhilischnaya-inspekciya-kurganskoy-oblasti": {
+    "id": "ru-45-gosudarstvennaya-zhilischnaya-inspekciya-kurganskoy-oblasti",
+    "name": "Государственная жилищная инспекция Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-obrazovaniya-i-nauki-kurganskoy-oblasti": {
+    "id": "ru-45-departament-obrazovaniya-i-nauki-kurganskoy-oblasti",
+    "name": "Департамент образования и науки Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-stroitelstva-gosekspertizy-i-zhkh-kurganskoy-oblasti": {
+    "id": "ru-45-departament-stroitelstva-gosekspertizy-i-zhkh-kurganskoy-oblasti",
+    "name": "Департамент строительства, госэкспертизы и ЖКХ Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-upravlenie-po-fizicheskoy-kulture-i-sportu-kurganskoy-oblasti": {
+    "id": "ru-45-upravlenie-po-fizicheskoy-kulture-i-sportu-kurganskoy-oblasti",
+    "name": "Управление по физической культуре и спорту Курганской области",
+    "shortName": "УФКС Курганской области",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-zdravoohraneniya-kurganskoy-oblasti": {
+    "id": "ru-45-departament-zdravoohraneniya-kurganskoy-oblasti",
+    "name": "Департамент здравоохранения Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-imuschestvennyh-i-zemelnyh-otnosheniy-kurganskoy-oblasti": {
+    "id": "ru-45-departament-imuschestvennyh-i-zemelnyh-otnosheniy-kurganskoy-oblasti",
+    "name": "Департамент имущественных и земельных отношений Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-komitet-po-delam-arhivov-kurganskoy-oblasti": {
+    "id": "ru-45-komitet-po-delam-arhivov-kurganskoy-oblasti",
+    "name": "Комитет по делам архивов Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-finansov-kurganskoy-oblasti": {
+    "id": "ru-45-departament-finansov-kurganskoy-oblasti",
+    "name": "Департамент финансов Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-komitet-po-molodezhnoy-politike-kurganskoy-oblasti": {
+    "id": "ru-45-komitet-po-molodezhnoy-politike-kurganskoy-oblasti",
+    "name": "Комитет по молодежной политике Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-45-departament-socialnoy-politiki-kurganskoy-oblasti": {
+    "id": "ru-45-departament-socialnoy-politiki-kurganskoy-oblasti",
+    "name": "Департамент социальной политики Курганской области",
+    "shortName": "ДСП Курганской области",
+    "territoryId": "ru-45"
+  },
+  "ru-45-upravlenie-kultury-kurganskoy-oblasti": {
+    "id": "ru-45-upravlenie-kultury-kurganskoy-oblasti",
+    "name": "Управление культуры Курганской области",
+    "shortName": "",
+    "territoryId": "ru-45"
+  },
+  "ru-66-ministerstvo-cifrovogo-razvitiya-i-svyazi-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-cifrovogo-razvitiya-i-svyazi-sverdlovskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-kultury-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-kultury-sverdlovskoy-oblasti",
+    "name": "Министерство культуры Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-obschestvennoy-bezopasnosti-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-obschestvennoy-bezopasnosti-sverdlovskoy-oblasti",
+    "name": "Министерство общественной безопасности Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-fizicheskoy-kultury-i-sporta-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-fizicheskoy-kultury-i-sporta-sverdlovskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-prirodnyh-resursov-i-ekologii-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-prirodnyh-resursov-i-ekologii-sverdlovskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-mezhdunarodnyh-i-vneshneekonomicheskih-svyazey-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-mezhdunarodnyh-i-vneshneekonomicheskih-svyazey-sverdlovskoy-oblasti",
+    "name": "Министерство международных и внешнеэкономических связей Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-molodezhnoy-politiki-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-molodezhnoy-politiki-sverdlovskoy-oblasti",
+    "name": "Департамент молодежной политики Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-po-trudu-i-zanyatosti-naseleniya-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-po-trudu-i-zanyatosti-naseleniya-sverdlovskoy-oblasti",
+    "name": "Департамент по труду и занятости населения Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-promyshlennosti-i-nauki-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-promyshlennosti-i-nauki-sverdlovskoy-oblasti",
+    "name": "Министерство промышленности и науки Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-po-upravleniyu-gosudarstvennym-imuschestvom-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-po-upravleniyu-gosudarstvennym-imuschestvom-sverdlovskoy-oblasti",
+    "name": "Министерство по управлению государственным имуществом Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-socialnoy-politiki-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-socialnoy-politiki-sverdlovskoy-oblasti",
+    "name": "Министерство социальной политики Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-stroitelstva-i-razvitiya-infrastruktury-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-stroitelstva-i-razvitiya-infrastruktury-sverdlovskoy-oblasti",
+    "name": "Министерство строительства и развития инфраструктуры Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-gosudarstvennyh-zakupok-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-gosudarstvennyh-zakupok-sverdlovskoy-oblasti",
+    "name": "Департамент государственных закупок Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-po-obespecheniyu-deyatelnosti-mirovyh-sudey-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-po-obespecheniyu-deyatelnosti-mirovyh-sudey-sverdlovskoy-oblasti",
+    "name": "Департамент по обеспечению деятельности мировых судей Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-regionalnaya-energeticheskaya-komissiya-sverdlovskoy-oblasti": {
+    "id": "ru-66-regionalnaya-energeticheskaya-komissiya-sverdlovskoy-oblasti",
+    "name": "Региональная энергетическая комиссия Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-po-ohrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-zhivotnogo-mira-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-po-ohrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-zhivotnogo-mira-sverdlovskoy-oblasti",
+    "name": "Департамент по охране, контролю и регулированию использования животного мира Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-upravlenie-delami-gubernatora-sverdlovskoy-oblasti-i-pravitelstva-sverdlovskoy-oblasti": {
+    "id": "ru-66-upravlenie-delami-gubernatora-sverdlovskoy-oblasti-i-pravitelstva-sverdlovskoy-oblasti",
+    "name": "Управление делами Губернатора Свердловской области и Правительства Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-protivodeystviya-korrupcii-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-protivodeystviya-korrupcii-sverdlovskoy-oblasti",
+    "name": "Департамент противодействия коррупции Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-administraciya-severnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti": {
+    "id": "ru-66-administraciya-severnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti",
+    "name": "Администрация Северного управленческого округа Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-administraciya-gornozavodskogo-upravlencheskogo-okruga-sverdlovskoy-oblasti": {
+    "id": "ru-66-administraciya-gornozavodskogo-upravlencheskogo-okruga-sverdlovskoy-oblasti",
+    "name": "Администрация Горнозаводского управленческого округа Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-sverdlovskoy-oblasti": {
+    "id": "ru-66-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-sverdlovskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-energetiki-i-zhilischno-kommunalnogo-hozyaystva-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-energetiki-i-zhilischno-kommunalnogo-hozyaystva-sverdlovskoy-oblasti",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-informacionnoy-politiki-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-informacionnoy-politiki-sverdlovskoy-oblasti",
+    "name": "Департамент информационной политики Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-agropromyshlennogo-kompleksa-i-potrebitelskogo-rynka-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-agropromyshlennogo-kompleksa-i-potrebitelskogo-rynka-sverdlovskoy-oblasti",
+    "name": "Министерство агропромышленного комплекса и потребительского рынка Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-administraciya-vostochnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti": {
+    "id": "ru-66-administraciya-vostochnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti",
+    "name": "Администрация Восточного управленческого округа Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-administraciya-zapadnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti": {
+    "id": "ru-66-administraciya-zapadnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti",
+    "name": "Администрация Западного управленческого округа Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-administraciya-yuzhnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti": {
+    "id": "ru-66-administraciya-yuzhnogo-upravlencheskogo-okruga-sverdlovskoy-oblasti",
+    "name": "Администрация Южного управленческого округа Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-apparat-gubernatora-i-pravitelstva-sverdlovskoy-oblasti": {
+    "id": "ru-66-apparat-gubernatora-i-pravitelstva-sverdlovskoy-oblasti",
+    "name": "Аппарат Губернатора Свердловской области и Правительства Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-gosudarstvennogo-zhilischnogo-i-stroitelnogo-nadzora-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-gosudarstvennogo-zhilischnogo-i-stroitelnogo-nadzora-sverdlovskoy-oblasti",
+    "name": "Департамент государственного жилищного и строительного надзора Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-upravlenie-arhivami-sverdlovskoy-oblasti": {
+    "id": "ru-66-upravlenie-arhivami-sverdlovskoy-oblasti",
+    "name": "Управление архивами Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-transporta-i-dorozhnogo-hozyaystva-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-transporta-i-dorozhnogo-hozyaystva-sverdlovskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-pravitelstvo-sverdlovskoy-oblasti": {
+    "id": "ru-66-pravitelstvo-sverdlovskoy-oblasti",
+    "name": "Правительство Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-ministerstvo-zdravoohraneniya-sverdlovskoy-oblasti": {
+    "id": "ru-66-ministerstvo-zdravoohraneniya-sverdlovskoy-oblasti",
+    "name": "Министерство здравоохранения Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-departament-veterinarii-sverdlovskoy-oblasti": {
+    "id": "ru-66-departament-veterinarii-sverdlovskoy-oblasti",
+    "name": "Департамент ветеринарии Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-66-upravlenie-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-sverdlovskoy-oblasti": {
+    "id": "ru-66-upravlenie-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-sverdlovskoy-oblasti",
+    "name": "Управление государственной охраны объектов культурного наследия Свердловской области",
+    "shortName": "",
+    "territoryId": "ru-66"
+  },
+  "ru-72-departament-finansov-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-finansov-tyumenskoy-oblasti",
+    "name": "Департамент финансов Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-departament-zhkh-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-zhkh-tyumenskoy-oblasti",
+    "name": "Департамент жилищно-коммунального хозяйства Тюменской области",
+    "shortName": "Департамент ЖКХ Тюменской области",
+    "territoryId": "ru-72"
+  },
+  "ru-72-departament-ekonomiki-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-ekonomiki-tyumenskoy-oblasti",
+    "name": "Департамент экономики Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-departament-socialnogo-razvitiya-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-socialnogo-razvitiya-tyumenskoy-oblasti",
+    "name": "Департамент социального развития Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-glavnoe-upravlenie-specialnyh-meropriyatiy-tyumenskoy-oblasti": {
+    "id": "ru-72-glavnoe-upravlenie-specialnyh-meropriyatiy-tyumenskoy-oblasti",
+    "name": "Главное управление специальных мероприятий Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-departament-investicionnoy-politiki-i-gosudarstvennoy-podderzhki-predprinimatelstva-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-investicionnoy-politiki-i-gosudarstvennoy-podderzhki-predprinimatelstva-tyumenskoy-oblasti",
+    "name": "Департамент инвестиционной политики и государственной поддержки предпринимательства Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-upravlenie-gosudarstvennyh-zakupok-tyumenskoy-oblasti": {
+    "id": "ru-72-upravlenie-gosudarstvennyh-zakupok-tyumenskoy-oblasti",
+    "name": "Управление государственных закупок Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-upravlenie-zags-tyumenskoy-oblasti": {
+    "id": "ru-72-upravlenie-zags-tyumenskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Тюменской области",
+    "shortName": "Управление ЗАГС Тюменской области",
+    "territoryId": "ru-72"
+  },
+  "ru-72-departament-obschestvennyh-svyazey-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-obschestvennyh-svyazey-tyumenskoy-oblasti",
+    "name": "Департамент общественных связей Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-tyumenskoy-oblasti": {
+    "id": "ru-72-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-v-tyumenskoy-oblasti",
+    "name": "Управление по обеспечению деятельности мировых судей в Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-upravlenie-po-delam-arhivov-tyumenskoy-oblasti": {
+    "id": "ru-72-upravlenie-po-delam-arhivov-tyumenskoy-oblasti",
+    "name": "Управление по делам архивов Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-72-departament-potrebitelskogo-rynka-i-turizma-tyumenskoy-oblasti": {
+    "id": "ru-72-departament-potrebitelskogo-rynka-i-turizma-tyumenskoy-oblasti",
+    "name": "Департамент потребительского рынка и туризма Тюменской области",
+    "shortName": "",
+    "territoryId": "ru-72"
+  },
+  "ru-89-sluzhba-po-delam-arhivov-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-sluzhba-po-delam-arhivov-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Служба по делам архивов Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-sluzhba-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-yamalo-neneckogo-1b0499c0": {
+    "id": "ru-89-sluzhba-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-yamalo-neneckogo-1b0499c0",
+    "name": "Служба по надзору за техническим состоянием самоходных машин и других видов техники Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-upravlenie-delami-pravitelstva-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-upravlenie-delami-pravitelstva-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Управление делами Правительства Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-regionalnoy-bezopasnosti-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-regionalnoy-bezopasnosti-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент региональной безопасности Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-sluzhba-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-sluzhba-gosudarstvennoy-ohrany-obektov-kulturnogo-naslediya-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Служба государственной охраны объектов культурного наследия Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-gosudarstvennogo-zakaza-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-gosudarstvennogo-zakaza-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент государственного заказа Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-transporta-i-dorozhnogo-hozyaystva-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-transporta-i-dorozhnogo-hozyaystva-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент транспорта и дорожного хозяйства Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-grazhdanskoy-zaschity-i-pozharnoy-bezopasnosti-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-grazhdanskoy-zaschity-i-pozharnoy-bezopasnosti-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент гражданской защиты и пожарной безопасности Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-vnutrenney-politiki-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-vnutrenney-politiki-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент внутренней политики Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-pravitelstvo-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-pravitelstvo-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Правительство Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-po-fizicheskoy-kulture-i-sportu-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-po-fizicheskoy-kulture-i-sportu-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент по физической культуре и спорту Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-stroitelstva-i-zhilischnoy-politiki-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-stroitelstva-i-zhilischnoy-politiki-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент строительства и жилищной политики Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Служба государственного строительного надзора Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-kontrolnyy-departament-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-kontrolnyy-departament-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Контрольный департамент Ямало-Ненецкого автономного округа",
+    "shortName": "Контрольный департамент ЯНАО",
+    "territoryId": "ru-89"
+  },
+  "ru-89-apparat-gubernatora-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-apparat-gubernatora-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Аппарат Губернатора Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-tarifnoy-politiki-energetiki-i-zhilischno-kommunalnogo-kompleksa-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-tarifnoy-politiki-energetiki-i-zhilischno-kommunalnogo-kompleksa-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент энергетики и коммунального комплекса Ямало-Ненецкого автономного округа",
+    "shortName": "ДЭиКК ЯНАО",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-zdravoohraneniya-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-zdravoohraneniya-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент здравоохранения Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-obrazovaniya-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-obrazovaniya-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент образования Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-finansov-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-finansov-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент финансов Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-ekonomiki-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-ekonomiki-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент экономики Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-gosudarstvenno-pravovoy-departament-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-gosudarstvenno-pravovoy-departament-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Государственно-правовой департамент Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-agropromyshlennogo-kompleksa-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-agropromyshlennogo-kompleksa-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент агропромышленного комплекса Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-imuschestvennyh-otnosheniy-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-imuschestvennyh-otnosheniy-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент имущественных отношений Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-informacionnyh-tehnologiy-i-svyazi-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-informacionnyh-tehnologiy-i-svyazi-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент информационных технологий и связи Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-socialnoy-zaschity-naseleniya-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-socialnoy-zaschity-naseleniya-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент социальной защиты населения Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-molodezhnoy-politiki-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-molodezhnoy-politiki-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент молодежной политики Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-kultury-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-kultury-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент культуры Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-zanyatosti-naseleniya-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-zanyatosti-naseleniya-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент занятости населения Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-gosudarstvennogo-zhilischnogo-nadzora-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-gosudarstvennogo-zhilischnogo-nadzora-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент государственного жилищного надзора Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-departament-po-delam-korennyh-malochislennyh-narodov-severa-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-departament-po-delam-korennyh-malochislennyh-narodov-severa-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Департамент по делам коренных малочисленных народов Севера Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-89-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-yamalo-neneckogo-avtonomnogo-okruga": {
+    "id": "ru-89-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-yamalo-neneckogo-avtonomnogo-okruga",
+    "name": "Служба записи актов гражданского состояния Ямало-Ненецкого автономного округа",
+    "shortName": "",
+    "territoryId": "ru-89"
+  },
+  "ru-39-ministerstvo-po-munitsipalnomu-razvitiyu-i-vnutrenney-politike-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-po-munitsipalnomu-razvitiyu-i-vnutrenney-politike-kaliningradskoy-oblasti",
+    "name": "Министерство по муниципальному развитию и внутренней политике Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-molodezhnoy-politiki-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-molodezhnoy-politiki-kaliningradskoy-oblasti",
+    "name": "Министерство молодежной политики Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-sluzhba-po-protivodeystviyu-korruptsii-kaliningradskoy-oblasti": {
+    "id": "ru-39-sluzhba-po-protivodeystviyu-korruptsii-kaliningradskoy-oblasti",
+    "name": "Служба по противодействию коррупции Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-sporta-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-sporta-kaliningradskoy-oblasti",
+    "name": "Министерство спорта Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-po-kulture-i-turizmu-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-po-kulture-i-turizmu-kaliningradskoy-oblasti",
+    "name": "Министерство по культуре и туризму Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-agentstvo-po-rybolovstvu-kaliningradskoy-oblasti": {
+    "id": "ru-39-agentstvo-po-rybolovstvu-kaliningradskoy-oblasti",
+    "name": "Агентство по рыболовству Калининградской области",
+    "shortName": "Агентство по рыболовству",
+    "territoryId": "ru-39"
+  },
+  "ru-39-agentstvo-melioratsii-kaliningradskoy-oblasti": {
+    "id": "ru-39-agentstvo-melioratsii-kaliningradskoy-oblasti",
+    "name": "Агентство мелиорации Калининградской области",
+    "shortName": "Агентство мелиорации",
+    "territoryId": "ru-39"
+  },
+  "ru-39-sluzhba-veterinarii-kaliningradskoy-oblasti": {
+    "id": "ru-39-sluzhba-veterinarii-kaliningradskoy-oblasti",
+    "name": "Служба ветеринарии Калининградской области",
+    "shortName": "Служба ветеринарии",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-prirodnykh-resursov-i-ekologii-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-prirodnykh-resursov-i-ekologii-kaliningradskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Калининградской области",
+    "shortName": "Минприроды Калининградской области",
+    "territoryId": "ru-39"
+  },
+  "ru-39-agentstvo-po-imushchestvu-kaliningradskoy-oblasti": {
+    "id": "ru-39-agentstvo-po-imushchestvu-kaliningradskoy-oblasti",
+    "name": "Агентство по имуществу Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-sluzhba-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-kaliningradskoy-oblasti": {
+    "id": "ru-39-sluzhba-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-kaliningradskoy-oblasti",
+    "name": "Служба государственной охраны объектов культурного наследия Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-kaliningradskoy-oblasti",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Калининградской области",
+    "shortName": "Министерство строительства и ЖКХ Калининградской области",
+    "territoryId": "ru-39"
+  },
+  "ru-39-agentstvo-po-mezhdunarodnym-i-mezhregionalnym-svyazyam-kaliningradskoy-oblasti": {
+    "id": "ru-39-agentstvo-po-mezhdunarodnym-i-mezhregionalnym-svyazyam-kaliningradskoy-oblasti",
+    "name": "Агентство по международным и межрегиональным связям Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-agentstvo-po-obespecheniyu-deyatelnosti-mirovykh-sudey-kaliningradskoy-oblasti": {
+    "id": "ru-39-agentstvo-po-obespecheniyu-deyatelnosti-mirovykh-sudey-kaliningradskoy-oblasti",
+    "name": "Агентство по обеспечению деятельности мировых судей Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-zags-agentstvo-kaliningradskoy-oblasti": {
+    "id": "ru-39-zags-agentstvo-kaliningradskoy-oblasti",
+    "name": "ЗАГС (Агентство) Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-apparat-pravitelstva-kaliningradskoy-oblasti": {
+    "id": "ru-39-apparat-pravitelstva-kaliningradskoy-oblasti",
+    "name": "Аппарат Правительства Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-razvitiya-infrastruktury-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-razvitiya-infrastruktury-kaliningradskoy-oblasti",
+    "name": "Министерство развития инфраструктуры Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-ekonomicheskogo-razvitiya-promyshlennosti-i-torgovli-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-ekonomicheskogo-razvitiya-promyshlennosti-i-torgovli-kaliningradskoy-oblasti",
+    "name": "Министерство экономического развития, промышленности и торговли Калининградской области",
+    "shortName": "Минэкпром Калининградской области",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-selskogo-khozyaystva-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-selskogo-khozyaystva-kaliningradskoy-oblasti",
+    "name": "Министерство сельского хозяйства Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-sotsialnoy-politiki-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-sotsialnoy-politiki-kaliningradskoy-oblasti",
+    "name": "Министерство социальной политики Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-obrazovaniya-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-obrazovaniya-kaliningradskoy-oblasti",
+    "name": "Министерство образования Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-zdravookhraneniya-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-zdravookhraneniya-kaliningradskoy-oblasti",
+    "name": "Министерство здравоохранения Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-finansov-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-finansov-kaliningradskoy-oblasti",
+    "name": "Министерство финансов Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-sluzhba-po-gosudarstvennomu-regulirovaniyu-tsen-i-tarifov-kaliningradskoy-oblasti": {
+    "id": "ru-39-sluzhba-po-gosudarstvennomu-regulirovaniyu-tsen-i-tarifov-kaliningradskoy-oblasti",
+    "name": "Служба по государственному регулированию цен и тарифов Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-72c78e304a": {
+    "id": "ru-39-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhnik-72c78e304a",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Калининградской области (Служба гостехнадзора Калининградской области)",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-regionalnogo-kontrolya-nadzora-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-regionalnogo-kontrolya-nadzora-kaliningradskoy-oblasti",
+    "name": "Министерство регионального контроля (надзора) Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-pravitelstvo-kaliningradskoy-oblasti": {
+    "id": "ru-39-pravitelstvo-kaliningradskoy-oblasti",
+    "name": "Правительство Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-ministerstvo-promyshlennosti-i-torgovli-kaliningradskoy-oblasti": {
+    "id": "ru-39-ministerstvo-promyshlennosti-i-torgovli-kaliningradskoy-oblasti",
+    "name": "Министерство промышленности и торговли Калининградской области",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-39-public-employer-inn-3912002931": {
+    "id": "ru-39-public-employer-inn-3912002931",
+    "name": "Администрация муниципального образования «Янтарный городской округ»",
+    "shortName": "",
+    "territoryId": "ru-39"
+  },
+  "ru-10-pravitelstvo-respubliki-kareliya": {
+    "id": "ru-10-pravitelstvo-respubliki-kareliya",
+    "name": "Правительство Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-administratsiya-glavy-respubliki-kareliya": {
+    "id": "ru-10-administratsiya-glavy-respubliki-kareliya",
+    "name": "Администрация Главы Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-zdravookhraneniya-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-zdravookhraneniya-respubliki-kareliya",
+    "name": "Министерство здравоохранения Республики Карелия",
+    "shortName": "Минздрав Карелии",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-kultury-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-kultury-respubliki-kareliya",
+    "name": "Министерство культуры Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-kareliya",
+    "name": "Министерство природных ресурсов и экологии Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-selskogo-i-rybnogo-khozyaystva-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-selskogo-i-rybnogo-khozyaystva-respubliki-kareliya",
+    "name": "Министерство сельского и рыбного хозяйства Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-sotsialnoy-zashchity-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-sotsialnoy-zashchity-respubliki-kareliya",
+    "name": "Министерство социальной защиты Республики Карелия",
+    "shortName": "Минсоцзащиты Республики Карелия",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-finansov-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-finansov-respubliki-kareliya",
+    "name": "Министерство финансов Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-ekonomicheskogo-razvitiya-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-ekonomicheskogo-razvitiya-respubliki-kareliya",
+    "name": "Министерство экономического развития Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-natsionalnoy-i-regionalnoy-politiki-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-natsionalnoy-i-regionalnoy-politiki-respubliki-kareliya",
+    "name": "Министерство национальной и региональной политики Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-stroitelstva-zhilishchno-kommunalnogo-khozyaystva-i-energetiki-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-stroitelstva-zhilishchno-kommunalnogo-khozyaystva-i-energetiki-respubliki-kareliya",
+    "name": "Министерство строительства, жилищно-коммунального хозяйства и энергетики Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-po-dorozhnomu-khozyaystvu-transportu-i-svyazi-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-po-dorozhnomu-khozyaystvu-transportu-i-svyazi-respubliki-kareliya",
+    "name": "Министерство по дорожному хозяйству, транспорту и связи Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-kareliya": {
+    "id": "ru-10-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-kareliya",
+    "name": "Министерство имущественных и земельных отношений Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-gosudarstvennyy-komitet-respubliki-kareliya-po-obespecheniyu-zhiznedeyatelnosti-i-bezopasnosti-naseleniya": {
+    "id": "ru-10-gosudarstvennyy-komitet-respubliki-kareliya-po-obespecheniyu-zhiznedeyatelnosti-i-bezopasnosti-naseleniya",
+    "name": "Государственный комитет Республики Карелия по обеспечению жизнедеятельности и безопасности населения",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-gosudarstvennyy-komitet-respubliki-kareliya-po-tsenam-i-tarifam": {
+    "id": "ru-10-gosudarstvennyy-komitet-respubliki-kareliya-po-tsenam-i-tarifam",
+    "name": "Государственный комитет Республики Карелия по ценам и тарифам",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-gosudarstvennyy-komitet-respubliki-kareliya-po-stroitelnomu-zhilishchnomu-i-dorozhnomu-nadzoru": {
+    "id": "ru-10-gosudarstvennyy-komitet-respubliki-kareliya-po-stroitelnomu-zhilishchnomu-i-dorozhnomu-nadzoru",
+    "name": "Государственный комитет Республики Карелия по строительному, жилищному и дорожному надзору",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-respubliki-kareliya": {
+    "id": "ru-10-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-respubliki-kareliya",
+    "name": "Управление по охране объектов культурного наследия Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-upravlenie-respubliki-kareliya-po-obespecheniyu-deyatelnosti-mirovykh-sudey": {
+    "id": "ru-10-upravlenie-respubliki-kareliya-po-obespecheniyu-deyatelnosti-mirovykh-sudey",
+    "name": "Управление Республики Карелия по обеспечению деятельности мировых судей",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-kareliya": {
+    "id": "ru-10-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-kareliya",
+    "name": "Управление записи актов гражданского состояния Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-upravlenie-truda-i-zanyatosti-respubliki-kareliya": {
+    "id": "ru-10-upravlenie-truda-i-zanyatosti-respubliki-kareliya",
+    "name": "Управление труда и занятости Республики Карелия",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-10-postoyannoe-predstavitelstvo-respubliki-kareliya-pri-prezidente-rossiyskoy-federatsii": {
+    "id": "ru-10-postoyannoe-predstavitelstvo-respubliki-kareliya-pri-prezidente-rossiyskoy-federatsii",
+    "name": "Постоянное представительство Республики Карелия при Президенте Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-10"
+  },
+  "ru-11-ministerstvo-zdravookhraneniya-respubliki-komi": {
+    "id": "ru-11-ministerstvo-zdravookhraneniya-respubliki-komi",
+    "name": "Министерство здравоохранения Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-finansov-respubliki-komi": {
+    "id": "ru-11-ministerstvo-finansov-respubliki-komi",
+    "name": "Министерство финансов Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-komi": {
+    "id": "ru-11-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-komi",
+    "name": "Министерство имущественных и земельных отношений Республики Коми",
+    "shortName": "Минимущества Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-natsionalnoy-politiki-respubliki-komi": {
+    "id": "ru-11-ministerstvo-natsionalnoy-politiki-respubliki-komi",
+    "name": "Министерство национальной политики Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-transporta-respubliki-komi": {
+    "id": "ru-11-ministerstvo-transporta-respubliki-komi",
+    "name": "Министерство транспорта Республики Коми",
+    "shortName": "Минтранс Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-tarifnogo-regulirovaniya-respubliki-komi": {
+    "id": "ru-11-ministerstvo-tarifnogo-regulirovaniya-respubliki-komi",
+    "name": "Министерство тарифного регулирования Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-agentstvo-proektnogo-upravleniya-respubliki-komi": {
+    "id": "ru-11-agentstvo-proektnogo-upravleniya-respubliki-komi",
+    "name": "Агентство проектного управления Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-agentstvo-po-okhrane-obektov-kulturnogo-naslediya-respubliki-komi": {
+    "id": "ru-11-agentstvo-po-okhrane-obektov-kulturnogo-naslediya-respubliki-komi",
+    "name": "Агентство по охране объектов культурного наследия Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-pravitelstvo-respubliki-komi": {
+    "id": "ru-11-pravitelstvo-respubliki-komi",
+    "name": "Правительство Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-tsifrovogo-razvitiya-i-svyazi-respubliki-komi": {
+    "id": "ru-11-ministerstvo-tsifrovogo-razvitiya-i-svyazi-respubliki-komi",
+    "name": "Министерство цифрового развития и связи Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-postoyannoe-predstavitelstvo-respubliki-komi-pri-prezidente-rossiyskoy-federatsii": {
+    "id": "ru-11-postoyannoe-predstavitelstvo-respubliki-komi-pri-prezidente-rossiyskoy-federatsii",
+    "name": "Постоянное представительство Республики Коми при Президенте Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-predstavitelstvo-respubliki-komi-v-severo-zapadnom-regione-rossiyskoy-federatsii": {
+    "id": "ru-11-predstavitelstvo-respubliki-komi-v-severo-zapadnom-regione-rossiyskoy-federatsii",
+    "name": "Представительство Республики Коми в Северо-Западном регионе Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-komi": {
+    "id": "ru-11-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-komi",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Республики Коми",
+    "shortName": "Минстрой Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-selskogo-khozyaystva-i-torgovli-respubliki-komi": {
+    "id": "ru-11-ministerstvo-selskogo-khozyaystva-i-torgovli-respubliki-komi",
+    "name": "Министерство сельского хозяйства и торговли Республики Коми",
+    "shortName": "Минсельхоз Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-komi": {
+    "id": "ru-11-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-komi",
+    "name": "Министерство природных ресурсов и экологии Республики Коми",
+    "shortName": "Минприроды Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-yustitsii-respubliki-komi": {
+    "id": "ru-11-ministerstvo-yustitsii-respubliki-komi",
+    "name": "Министерство юстиции Республики Коми",
+    "shortName": "Минюст Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-truda-i-sotsialnoy-zashchity-respubliki-komi": {
+    "id": "ru-11-ministerstvo-truda-i-sotsialnoy-zashchity-respubliki-komi",
+    "name": "Министерство труда и социальной защиты Республики Коми",
+    "shortName": "Минтруд Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-kultury-i-arkhivnogo-dela-respubliki-komi": {
+    "id": "ru-11-ministerstvo-kultury-i-arkhivnogo-dela-respubliki-komi",
+    "name": "Министерство культуры и архивного дела Республики Коми",
+    "shortName": "Минкультуры Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-komi": {
+    "id": "ru-11-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-komi",
+    "name": "Министерство физической культуры и спорта Республики Коми",
+    "shortName": "Минспорт Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-ministerstvo-obrazovaniya-i-nauki-respubliki-komi": {
+    "id": "ru-11-ministerstvo-obrazovaniya-i-nauki-respubliki-komi",
+    "name": "Министерство образования и науки Республики Коми",
+    "shortName": "Минобрнауки Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-sluzhba-tekhnicheskogo-nadzora-respubliki-komi": {
+    "id": "ru-11-sluzhba-tekhnicheskogo-nadzora-respubliki-komi",
+    "name": "Служба технического контроля (надзора) Республики Коми",
+    "shortName": "Служба гостехнадзора Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-sluzhba-veterinarii-respubliki-komi": {
+    "id": "ru-11-sluzhba-veterinarii-respubliki-komi",
+    "name": "Служба ветеринарии Республики Коми",
+    "shortName": "Служба ветеринарии Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-sluzhba-grazhdanskoy-oborony-i-chrezvychaynykh-situatsiy-respubliki-komi": {
+    "id": "ru-11-sluzhba-grazhdanskoy-oborony-i-chrezvychaynykh-situatsiy-respubliki-komi",
+    "name": "Служба гражданской обороны и чрезвычайных ситуаций Республики Коми",
+    "shortName": "Служба ГО и ЧС Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-sluzhba-stroitelnogo-i-zhilishchnogo-kontrolya-nadzora-respubliki-komi": {
+    "id": "ru-11-sluzhba-stroitelnogo-i-zhilishchnogo-kontrolya-nadzora-respubliki-komi",
+    "name": "Служба строительного и жилищного контроля (надзора) Республики Коми",
+    "shortName": "Служба стройжилнадзора Республики Коми",
+    "territoryId": "ru-11"
+  },
+  "ru-11-administratsiya-glavy-respubliki-komi-i-pravitelstva-respubliki-komi": {
+    "id": "ru-11-administratsiya-glavy-respubliki-komi-i-pravitelstva-respubliki-komi",
+    "name": "Администрация Главы Республики Коми и Правительства Республики Коми",
+    "shortName": "",
+    "territoryId": "ru-11"
+  },
+  "ru-47-administratsiya-gubernatora-i-pravitelstva-leningradskoy-oblasti": {
+    "id": "ru-47-administratsiya-gubernatora-i-pravitelstva-leningradskoy-oblasti",
+    "name": "Администрация Губернатора и Правительства Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-kontrolnyy-komitet-gubernatora-leningradskoy-oblasti": {
+    "id": "ru-47-kontrolnyy-komitet-gubernatora-leningradskoy-oblasti",
+    "name": "Контрольный комитет Губернатора Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-informatsionnoy-politiki-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-informatsionnoy-politiki-leningradskoy-oblasti",
+    "name": "Комитет информационной политики Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-upravlenie-delami-pravitelstva-leningradskoy-oblasti": {
+    "id": "ru-47-upravlenie-delami-pravitelstva-leningradskoy-oblasti",
+    "name": "Управление делами Правительства Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-pravovogo-obespecheniya-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-pravovogo-obespecheniya-leningradskoy-oblasti",
+    "name": "Комитет правового обеспечения Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-leningradskoy-oblasti-po-obrashcheniyu-s-otkhodami": {
+    "id": "ru-47-komitet-leningradskoy-oblasti-po-obrashcheniyu-s-otkhodami",
+    "name": "Комитет Ленинградской области по обращению с отходами",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-gosudarstvennogo-zhilishchnogo-nadzora-i-kontrolya-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-gosudarstvennogo-zhilishchnogo-nadzora-i-kontrolya-leningradskoy-oblasti",
+    "name": "Комитет государственного жилищного надзора и контроля Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-gosudarstvennogo-ekologicheskogo-nadzora-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-gosudarstvennogo-ekologicheskogo-nadzora-leningradskoy-oblasti",
+    "name": "Комитет государственного экологического надзора Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-pechati-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-pechati-leningradskoy-oblasti",
+    "name": "Комитет по печати Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-mestnomu-samoupravleniyu-mezhnatsionalnym-i-mezhkonfessionalnym-otnosheniyam-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-mestnomu-samoupravleniyu-mezhnatsionalnym-i-mezhkonfessionalnym-otnosheniyam-leningradskoy-oblasti",
+    "name": "Комитет по местному самоуправлению, межнациональным и межконфессиональным отношениям Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-obshchestvennykh-kommunikatsiy-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-obshchestvennykh-kommunikatsiy-leningradskoy-oblasti",
+    "name": "Комитет общественных коммуникаций Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-molodezhnoy-politike-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-molodezhnoy-politike-leningradskoy-oblasti",
+    "name": "Комитет по молодежной политике Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-vneshnim-svyazyam-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-vneshnim-svyazyam-leningradskoy-oblasti",
+    "name": "Комитет по внешним связям Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-spetsialnykh-programm-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-spetsialnykh-programm-leningradskoy-oblasti",
+    "name": "Комитет специальных программ Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-predstavitelstvo-gubernatora-i-pravitelstva-leningradskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii": {
+    "id": "ru-47-predstavitelstvo-gubernatora-i-pravitelstva-leningradskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii",
+    "name": "Представительство Губернатора и Правительства Ленинградской области при Правительстве Российской Федерации",
+    "shortName": "Представительство Ленинградской области при Правительстве Российской Федерации",
+    "territoryId": "ru-47"
+  },
+  "ru-47-predstavitelstvo-gubernatora-i-pravitelstva-leningradskoy-oblasti-v-donetskoy-narodnoy-respublike-upravlenie": {
+    "id": "ru-47-predstavitelstvo-gubernatora-i-pravitelstva-leningradskoy-oblasti-v-donetskoy-narodnoy-respublike-upravlenie",
+    "name": "Представительство Губернатора и Правительства Ленинградской области в Донецкой Народной Республике (управление)",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-gosudarstvennogo-zakaza-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-gosudarstvennogo-zakaza-leningradskoy-oblasti",
+    "name": "Комитет государственного заказа Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-leningradskiy-oblastnoy-komitet-po-upravleniyu-gosudarstvennym-imushchestvom": {
+    "id": "ru-47-leningradskiy-oblastnoy-komitet-po-upravleniyu-gosudarstvennym-imushchestvom",
+    "name": "Ленинградский областной комитет по управлению государственным имуществом",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-razvitiyu-malogo-srednego-biznesa-i-potrebitelskogo-rynka-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-razvitiyu-malogo-srednego-biznesa-i-potrebitelskogo-rynka-leningradskoy-oblasti",
+    "name": "Комитет по развитию малого, среднего бизнеса и потребительского рынка Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-trudu-i-zanyatosti-naseleniya-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-trudu-i-zanyatosti-naseleniya-leningradskoy-oblasti",
+    "name": "Комитет по труду и занятости населения Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-pravoporyadka-i-bezopasnosti-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-pravoporyadka-i-bezopasnosti-leningradskoy-oblasti",
+    "name": "Комитет правопорядка и безопасности Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-informatsionno-analiticheskogo-obespecheniya-i-protokola-gubernatora-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-informatsionno-analiticheskogo-obespecheniya-i-protokola-gubernatora-leningradskoy-oblasti",
+    "name": "Комитет информационно-аналитического обеспечения и протокола Губернатора Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-tarifam-i-tsenovoy-politike-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-tarifam-i-tsenovoy-politike-leningradskoy-oblasti",
+    "name": "Комитет по тарифам и ценовой политике Ленинградской области",
+    "shortName": "ЛенРТК",
+    "territoryId": "ru-47"
+  },
+  "ru-47-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-leningradskoy-oblasti": {
+    "id": "ru-47-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-leningradskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-agropromyshlennomu-i-rybokhozyaystvennomu-kompleksu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-agropromyshlennomu-i-rybokhozyaystvennomu-kompleksu-leningradskoy-oblasti",
+    "name": "Комитет по агропромышленному и рыбохозяйственному комплексу Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-okhrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-okhrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-leningradskoy-oblasti",
+    "name": "Комитет по охране, контролю и регулированию использования объектов животного мира Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-obshchego-i-professionalnogo-obrazovaniya-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-obshchego-i-professionalnogo-obrazovaniya-leningradskoy-oblasti",
+    "name": "Комитет общего и профессионального образования Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-upravlenie-veterinarii-leningradskoy-oblasti": {
+    "id": "ru-47-upravlenie-veterinarii-leningradskoy-oblasti",
+    "name": "Управление ветеринарии Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-dorozhnomu-khozyaystvu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-dorozhnomu-khozyaystvu-leningradskoy-oblasti",
+    "name": "Комитет по дорожному хозяйству Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-toplivno-energeticheskomu-kompleksu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-toplivno-energeticheskomu-kompleksu-leningradskoy-oblasti",
+    "name": "Комитет по топливно-энергетическому комплексу Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-upravlenie-leningradskoy-oblasti-po-gosudarstvennomu-tekhnicheskomu-nadzoru-i-kontrolyu": {
+    "id": "ru-47-upravlenie-leningradskoy-oblasti-po-gosudarstvennomu-tekhnicheskomu-nadzoru-i-kontrolyu",
+    "name": "Управление Ленинградской области по государственному техническому надзору и контролю",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-leningradskoy-oblasti-po-transportu": {
+    "id": "ru-47-komitet-leningradskoy-oblasti-po-transportu",
+    "name": "Комитет Ленинградской области по транспорту",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-prirodnym-resursam-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-prirodnym-resursam-leningradskoy-oblasti",
+    "name": "Комитет по природным ресурсам Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-stroitelstvu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-stroitelstvu-leningradskoy-oblasti",
+    "name": "Комитет по строительству Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-gradostroitelnoy-politiki-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-gradostroitelnoy-politiki-leningradskoy-oblasti",
+    "name": "Комитет градостроительной политики Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-gosudarstvennogo-stroitelnogo-nadzora-i-gosudarstvennoy-ekspertizy-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-gosudarstvennogo-stroitelnogo-nadzora-i-gosudarstvennoy-ekspertizy-leningradskoy-oblasti",
+    "name": "Комитет государственного строительного надзора и государственной экспертизы Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-ekonomicheskogo-razvitiya-i-investitsionnoy-deyatelnosti-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-ekonomicheskogo-razvitiya-i-investitsionnoy-deyatelnosti-leningradskoy-oblasti",
+    "name": "Комитет экономического развития и инвестиционной деятельности Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-sotsialnoy-zashchite-naseleniya-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-sotsialnoy-zashchite-naseleniya-leningradskoy-oblasti",
+    "name": "Комитет по социальной защите населения Ленинградской области",
+    "shortName": "Леноблкомсоцзащиты",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-sokhraneniyu-kulturnogo-naslediya-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-sokhraneniyu-kulturnogo-naslediya-leningradskoy-oblasti",
+    "name": "Комитет по сохранению культурного наследия Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-kulture-i-turizmu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-kulture-i-turizmu-leningradskoy-oblasti",
+    "name": "Комитет по культуре и туризму Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-arkhivnoe-upravlenie-leningradskoy-oblasti": {
+    "id": "ru-47-arkhivnoe-upravlenie-leningradskoy-oblasti",
+    "name": "Архивное управление Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-zhilishchno-kommunalnomu-khozyaystvu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-zhilishchno-kommunalnomu-khozyaystvu-leningradskoy-oblasti",
+    "name": "Комитет по жилищно-коммунальному хозяйству Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-47-komitet-po-fizicheskoy-kulture-i-sportu-leningradskoy-oblasti": {
+    "id": "ru-47-komitet-po-fizicheskoy-kulture-i-sportu-leningradskoy-oblasti",
+    "name": "Комитет по физической культуре и спорту Ленинградской области",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-51-ministerstvo-regionalnoy-bezopasnosti-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-regionalnoy-bezopasnosti-murmanskoy-oblasti",
+    "name": "Министерство региональной безопасности Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-komitet-molodezhnoy-politiki-murmanskoy-oblasti": {
+    "id": "ru-51-komitet-molodezhnoy-politiki-murmanskoy-oblasti",
+    "name": "Комитет молодежной политики Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-sporta-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-sporta-murmanskoy-oblasti",
+    "name": "Министерство спорта Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-tsifrovogo-razvitiya-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-tsifrovogo-razvitiya-murmanskoy-oblasti",
+    "name": "Министерство цифрового развития Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-razvitiya-arktiki-i-ekonomiki-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-razvitiya-arktiki-i-ekonomiki-murmanskoy-oblasti",
+    "name": "Министерство развития Арктики и экономики Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-imushchestvennykh-otnosheniy-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-imushchestvennykh-otnosheniy-murmanskoy-oblasti",
+    "name": "Министерство имущественных отношений Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-komitet-po-konkurentnoy-politike-murmanskoy-oblasti": {
+    "id": "ru-51-komitet-po-konkurentnoy-politike-murmanskoy-oblasti",
+    "name": "Комитет по конкурентной политике Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-kultury-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-kultury-murmanskoy-oblasti",
+    "name": "Министерство культуры Мурманской области",
+    "shortName": "Минкультуры Мурманской области",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-truda-i-sotsialnogo-razvitiya-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-truda-i-sotsialnogo-razvitiya-murmanskoy-oblasti",
+    "name": "Министерство труда и социального развития Мурманской области",
+    "shortName": "Минтрудсоцразвития Мурманской области",
+    "territoryId": "ru-51"
+  },
+  "ru-51-komitet-po-tarifnomu-regulirovaniyu-murmanskoy-oblasti": {
+    "id": "ru-51-komitet-po-tarifnomu-regulirovaniyu-murmanskoy-oblasti",
+    "name": "Комитет по тарифному регулированию Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-informatsionnoy-politiki-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-informatsionnoy-politiki-murmanskoy-oblasti",
+    "name": "Министерство информационной политики Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-prirodnykh-resursov-i-ekologii-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-prirodnykh-resursov-i-ekologii-murmanskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Мурманской области",
+    "shortName": "Минприроды МО",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-vnutrenney-politiki-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-vnutrenney-politiki-murmanskoy-oblasti",
+    "name": "Министерство внутренней политики Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-stroitelstva-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-stroitelstva-murmanskoy-oblasti",
+    "name": "Министерство строительства Мурманской области",
+    "shortName": "Минстрой МО",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-gradostroitelstva-i-blagoustroystva-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-gradostroitelstva-i-blagoustroystva-murmanskoy-oblasti",
+    "name": "Министерство градостроительства и благоустройства Мурманской области",
+    "shortName": "Минград МО",
+    "territoryId": "ru-51"
+  },
+  "ru-51-pravitelstvo-murmanskoy-oblasti": {
+    "id": "ru-51-pravitelstvo-murmanskoy-oblasti",
+    "name": "Правительство Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-apparat-pravitelstva-murmanskoy-oblasti": {
+    "id": "ru-51-apparat-pravitelstva-murmanskoy-oblasti",
+    "name": "Аппарат Правительства Мурманской области (министерство)",
+    "shortName": "Аппарат Правительства Мурманской области",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-obrazovaniya-i-nauki-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-obrazovaniya-i-nauki-murmanskoy-oblasti",
+    "name": "Министерство образования и науки Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-transporta-i-dorozhnogo-khozyaystva-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-transporta-i-dorozhnogo-khozyaystva-murmanskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Мурманской области",
+    "shortName": "Минтранс Мурманской области",
+    "territoryId": "ru-51"
+  },
+  "ru-51-ministerstvo-yustitsii-murmanskoy-oblasti": {
+    "id": "ru-51-ministerstvo-yustitsii-murmanskoy-oblasti",
+    "name": "Министерство юстиции Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-komitet-po-veterinarii-murmanskoy-oblasti": {
+    "id": "ru-51-komitet-po-veterinarii-murmanskoy-oblasti",
+    "name": "Комитет по ветеринарии Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-51-upravlenie-po-realizatsii-antikorruptsionnoy-politiki-murmanskoy-oblasti": {
+    "id": "ru-51-upravlenie-po-realizatsii-antikorruptsionnoy-politiki-murmanskoy-oblasti",
+    "name": "Управление по реализации антикоррупционной политики Мурманской области",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-83-departament-ekonomicheskogo-razvitiya-promyshlennosti-i-innovatsiy-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-ekonomicheskogo-razvitiya-promyshlennosti-i-innovatsiy-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент экономического развития, промышленности и инноваций Ненецкого автономного округа",
+    "shortName": "ДЭРПИ НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-83-departament-imushchestvennykh-zemelnykh-otnosheniy-i-gradostroitelstva-nenetskogo-avtonomnogo-okruga": {
+    "id": "ru-83-departament-imushchestvennykh-zemelnykh-otnosheniy-i-gradostroitelstva-nenetskogo-avtonomnogo-okruga",
+    "name": "Департамент имущественных, земельных отношений и градостроительства Ненецкого автономного округа",
+    "shortName": "ДИЗОГ НАО",
+    "territoryId": "ru-83"
+  },
+  "ru-60-ministerstvo-ekonomicheskogo-razvitiya-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-ekonomicheskogo-razvitiya-pskovskoy-oblasti",
+    "name": "Министерство экономического развития Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-selskogo-khozyaystva-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-selskogo-khozyaystva-pskovskoy-oblasti",
+    "name": "Министерство сельского хозяйства Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-regionalnogo-kontrolya-i-nadzora-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-regionalnogo-kontrolya-i-nadzora-pskovskoy-oblasti",
+    "name": "Министерство регионального контроля и надзора Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-truda-i-zanyatosti-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-truda-i-zanyatosti-pskovskoy-oblasti",
+    "name": "Министерство труда и занятости Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-prirodnykh-resursov-i-ekologii-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-prirodnykh-resursov-i-ekologii-pskovskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-pskovskoy-oblasti",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-yustitsii-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-yustitsii-pskovskoy-oblasti",
+    "name": "Министерство юстиции Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-obrazovaniya-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-obrazovaniya-pskovskoy-oblasti",
+    "name": "Министерство образования Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-sporta-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-sporta-pskovskoy-oblasti",
+    "name": "Министерство спорта Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-tarifov-i-energetiki-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-tarifov-i-energetiki-pskovskoy-oblasti",
+    "name": "Министерство тарифов и энергетики Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-transporta-i-dorozhnogo-khozyaystva-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-transporta-i-dorozhnogo-khozyaystva-pskovskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-pravitelstvo-pskovskoy-oblasti": {
+    "id": "ru-60-pravitelstvo-pskovskoy-oblasti",
+    "name": "Правительство Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-komitet-po-veterinarii-pskovskoy-oblasti": {
+    "id": "ru-60-komitet-po-veterinarii-pskovskoy-oblasti",
+    "name": "Комитет по ветеринарии Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-kulturnogo-naslediya-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-kulturnogo-naslediya-pskovskoy-oblasti",
+    "name": "Министерство культурного наследия Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-sotsialnoy-zashchity-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-sotsialnoy-zashchity-pskovskoy-oblasti",
+    "name": "Министерство социальной защиты Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-molodezhnoy-politiki-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-molodezhnoy-politiki-pskovskoy-oblasti",
+    "name": "Министерство молодежной политики Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-turizma-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-turizma-pskovskoy-oblasti",
+    "name": "Министерство туризма Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-imushchestvennykh-otnosheniy-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-imushchestvennykh-otnosheniy-pskovskoy-oblasti",
+    "name": "Министерство имущественных отношений Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-60-ministerstvo-konkurentnoy-politiki-pskovskoy-oblasti": {
+    "id": "ru-60-ministerstvo-konkurentnoy-politiki-pskovskoy-oblasti",
+    "name": "Министерство конкурентной политики Псковской области",
+    "shortName": "",
+    "territoryId": "ru-60"
+  },
+  "ru-29-agentstvo-po-delam-molodezhi-arkhangelskoy-oblasti": {
+    "id": "ru-29-agentstvo-po-delam-molodezhi-arkhangelskoy-oblasti",
+    "name": "Агентство по делам молодежи Архангельской области",
+    "shortName": "Архмолодежь",
+    "territoryId": "ru-29"
+  },
+  "ru-29-predstavitelstvo-arkhangelskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii": {
+    "id": "ru-29-predstavitelstvo-arkhangelskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii",
+    "name": "Представительство Архангельской области при Правительстве Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-arkhangelskoy-oblasti": {
+    "id": "ru-29-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-arkhangelskoy-oblasti",
+    "name": "Инспекция по охране объектов культурного наследия Архангельской области",
+    "shortName": "инспекция по памятникам АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-arkhangelskoy-oblasti",
+    "name": "Министерство экономического развития и промышленности Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-finansov-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-finansov-arkhangelskoy-oblasti",
+    "name": "Министерство финансов Архангельской области",
+    "shortName": "минфин Архангельской области",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-imushchestvennykh-otnosheniy-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-imushchestvennykh-otnosheniy-arkhangelskoy-oblasti",
+    "name": "Министерство имущественных отношений Архангельской области",
+    "shortName": "минимущество АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-zdravookhraneniya-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-zdravookhraneniya-arkhangelskoy-oblasti",
+    "name": "Министерство здравоохранения Архангельской области",
+    "shortName": "минздрав АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-kultury-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-kultury-arkhangelskoy-oblasti",
+    "name": "Министерство культуры и туризма Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-truda-zanyatosti-i-sotsialnogo-razvitiya-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-truda-zanyatosti-i-sotsialnogo-razvitiya-arkhangelskoy-oblasti",
+    "name": "Министерство труда, занятости и социального развития Архангельской области",
+    "shortName": "минтрудсоцразвития АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-transporta-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-transporta-arkhangelskoy-oblasti",
+    "name": "Министерство транспорта Архангельской области",
+    "shortName": "минтранс АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-agropromyshlennogo-kompleksa-i-torgovli-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-agropromyshlennogo-kompleksa-i-torgovli-arkhangelskoy-oblasti",
+    "name": "Министерство агропромышленного комплекса и торговли Архангельской области",
+    "shortName": "минагропромторг АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-toplivno-energeticheskogo-kompleksa-i-zhilishchno-kommunalnogo-khozyaystva-arkhangelskoy-oblasti",
+    "name": "Министерство топливно-энергетического комплекса и жилищно-коммунального хозяйства Архангельской области",
+    "shortName": "министерство ТЭК и ЖКХ АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-prirodnykh-resursov-i-lesopromyshlennogo-kompleksa-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-prirodnykh-resursov-i-lesopromyshlennogo-kompleksa-arkhangelskoy-oblasti",
+    "name": "Министерство природных ресурсов и лесопромышленного комплекса Архангельской области",
+    "shortName": "минлеспром АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-agentstvo-po-tarifam-i-tsenam-arkhangelskoy-oblasti": {
+    "id": "ru-29-agentstvo-po-tarifam-i-tsenam-arkhangelskoy-oblasti",
+    "name": "Агентство по тарифам и ценам Архангельской области",
+    "shortName": "агентство по тарифам АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-stroitelstva-i-arkhitektury-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-stroitelstva-i-arkhitektury-arkhangelskoy-oblasti",
+    "name": "Министерство строительства и архитектуры Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-inspektsiya-po-veterinarnomu-nadzoru-arkhangelskoy-oblasti": {
+    "id": "ru-29-inspektsiya-po-veterinarnomu-nadzoru-arkhangelskoy-oblasti",
+    "name": "Инспекция по ветеринарному надзору Архангельской области",
+    "shortName": "инспекция по ветнадзору АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-arkhangelskoy-oblasti": {
+    "id": "ru-29-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-arkhangelskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Архангельской области",
+    "shortName": "инспекция госстройнадзора АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-gosudarstvennaya-zhilishchnaya-inspektsiya-arkhangelskoy-oblasti": {
+    "id": "ru-29-gosudarstvennaya-zhilishchnaya-inspektsiya-arkhangelskoy-oblasti",
+    "name": "Государственная жилищная инспекция Архангельской области",
+    "shortName": "Архгосжилинспекция",
+    "territoryId": "ru-29"
+  },
+  "ru-29-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-arkhangelskoy-oblasti": {
+    "id": "ru-29-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-arkhangelskoy-oblasti",
+    "name": "Агентство записи актов гражданского состояния Архангельской области",
+    "shortName": "агентство ЗАГС АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-obrazovaniya-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-obrazovaniya-arkhangelskoy-oblasti",
+    "name": "Министерство образования Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-pravitelstvo-arkhangelskoy-oblasti": {
+    "id": "ru-29-pravitelstvo-arkhangelskoy-oblasti",
+    "name": "Правительство Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-administratsiya-gubernatora-arkhangelskoy-oblasti-i-pravitelstva-arkhangelskoy-oblasti": {
+    "id": "ru-29-administratsiya-gubernatora-arkhangelskoy-oblasti-i-pravitelstva-arkhangelskoy-oblasti",
+    "name": "Администрация Губернатора Архангельской области и Правительства Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-agentstvo-gosudarstvennoy-protivopozharnoy-sluzhby-i-grazhdanskoy-zashchity-arkhangelskoy-oblasti": {
+    "id": "ru-29-agentstvo-gosudarstvennoy-protivopozharnoy-sluzhby-i-grazhdanskoy-zashchity-arkhangelskoy-oblasti",
+    "name": "Агентство государственной противопожарной службы и гражданской защиты Архангельской области",
+    "shortName": "агентство ГПС и ГЗ АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-agentstvo-po-organizatsionnomu-obespecheniyu-deyatelnosti-mirovykh-sudey-arkhangelskoy-oblasti": {
+    "id": "ru-29-agentstvo-po-organizatsionnomu-obespecheniyu-deyatelnosti-mirovykh-sudey-arkhangelskoy-oblasti",
+    "name": "Агентство по организационному обеспечению деятельности мировых судей Архангельской области",
+    "shortName": "агентство мировых судей АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-ministerstvo-sporta-arkhangelskoy-oblasti": {
+    "id": "ru-29-ministerstvo-sporta-arkhangelskoy-oblasti",
+    "name": "Министерство спорта Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-29-kontrolno-revizionnaya-inspektsiya-arkhangelskoy-oblasti": {
+    "id": "ru-29-kontrolno-revizionnaya-inspektsiya-arkhangelskoy-oblasti",
+    "name": "Контрольно-ревизионная инспекция Архангельской области",
+    "shortName": "ревизионная инспекция АО",
+    "territoryId": "ru-29"
+  },
+  "ru-29-kontraktnoe-agentstvo-arkhangelskoy-oblasti": {
+    "id": "ru-29-kontraktnoe-agentstvo-arkhangelskoy-oblasti",
+    "name": "Контрактное агентство Архангельской области",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-53-komitet-veterinarii-novgorodskoy-oblasti": {
+    "id": "ru-53-komitet-veterinarii-novgorodskoy-oblasti",
+    "name": "Комитет ветеринарии Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-arkhivnyy-komitet-novgorodskoy-oblasti": {
+    "id": "ru-53-arkhivnyy-komitet-novgorodskoy-oblasti",
+    "name": "Архивный комитет Новгородской области",
+    "shortName": "АКНО",
+    "territoryId": "ru-53"
+  },
+  "ru-53-administratsiya-gubernatora-novgorodskoy-oblasti": {
+    "id": "ru-53-administratsiya-gubernatora-novgorodskoy-oblasti",
+    "name": "Администрация Губернатора Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-komitet-zapisi-aktov-grazhdanskogo-sostoyaniya-i-organizatsionnogo-obespecheniya-deyatelnosti-mirovykh-sudey-nov-a59ad8919e": {
+    "id": "ru-53-komitet-zapisi-aktov-grazhdanskogo-sostoyaniya-i-organizatsionnogo-obespecheniya-deyatelnosti-mirovykh-sudey-nov-a59ad8919e",
+    "name": "Комитет записи актов гражданского состояния и организационного обеспечения деятельности мировых судей Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-kultury-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-kultury-novgorodskoy-oblasti",
+    "name": "Министерство культуры и туризма Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-komitet-po-tarifnoy-politike-novgorodskoy-oblasti": {
+    "id": "ru-53-komitet-po-tarifnoy-politike-novgorodskoy-oblasti",
+    "name": "Министерство тарифного регулирования и энергетики Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-novgorodskoy-oblasti": {
+    "id": "ru-53-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-novgorodskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-inspektsiya-gosudarstvennoy-okhrany-kulturnogo-naslediya-novgorodskoy-oblasti": {
+    "id": "ru-53-inspektsiya-gosudarstvennoy-okhrany-kulturnogo-naslediya-novgorodskoy-oblasti",
+    "name": "Инспекция государственной охраны культурного наследия Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-komitet-gosudarstvennogo-zhilishchnogo-nadzora-i-litsenzionnogo-kontrolya-novgorodskoy-oblasti": {
+    "id": "ru-53-komitet-gosudarstvennogo-zhilishchnogo-nadzora-i-litsenzionnogo-kontrolya-novgorodskoy-oblasti",
+    "name": "Инспекция государственного жилищного надзора и лицензионного контроля Новгородской области",
+    "shortName": "Госжилинспекция",
+    "territoryId": "ru-53"
+  },
+  "ru-53-komitet-okhotnichego-khozyaystva-i-rybolovstva-novgorodskoy-oblasti": {
+    "id": "ru-53-komitet-okhotnichego-khozyaystva-i-rybolovstva-novgorodskoy-oblasti",
+    "name": "Комитет охотничьего хозяйства и рыболовства Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-truda-i-sotsialnoy-zashchity-naseleniya-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-truda-i-sotsialnoy-zashchity-naseleniya-novgorodskoy-oblasti",
+    "name": "Министерство труда, семейной и социальной политики Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-komitet-po-natsionalnoy-politike-novgorodskoy-oblasti": {
+    "id": "ru-53-komitet-po-natsionalnoy-politike-novgorodskoy-oblasti",
+    "name": "Комитет по национальной политике Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-komitet-po-molodezhnoy-politike-novgorodskoy-oblasti": {
+    "id": "ru-53-komitet-po-molodezhnoy-politike-novgorodskoy-oblasti",
+    "name": "Комитет по молодежной политике Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-komitet-po-vnutrenney-politike-novgorodskoy-oblasti": {
+    "id": "ru-53-komitet-po-vnutrenney-politike-novgorodskoy-oblasti",
+    "name": "Комитет по внутренней политике Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-finansov-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-finansov-novgorodskoy-oblasti",
+    "name": "Министерство финансов Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-investitsionnoy-politiki-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-investitsionnoy-politiki-novgorodskoy-oblasti",
+    "name": "Министерство инвестиционной политики Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-transporta-i-dorozhnogo-khozyaystva-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-transporta-i-dorozhnogo-khozyaystva-novgorodskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-prirodnykh-resursov-lesnogo-khozyaystva-i-ekologii-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-prirodnykh-resursov-lesnogo-khozyaystva-i-ekologii-novgorodskoy-oblasti",
+    "name": "Министерство природных ресурсов, лесного хозяйства и экологии Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-promyshlennosti-i-torgovli-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-promyshlennosti-i-torgovli-novgorodskoy-oblasti",
+    "name": "Министерство промышленности и торговли Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-zdravookhraneniya-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-zdravookhraneniya-novgorodskoy-oblasti",
+    "name": "Министерство здравоохранения Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-obrazovaniya-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-obrazovaniya-novgorodskoy-oblasti",
+    "name": "Министерство образования Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-sporta-i-molodezhnoy-politiki-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-sporta-i-molodezhnoy-politiki-novgorodskoy-oblasti",
+    "name": "Министерство спорта Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-53-ministerstvo-tsifrovogo-razvitiya-i-informatsionno-kommunikatsionnykh-tekhnologiy-novgorodskoy-oblasti": {
+    "id": "ru-53-ministerstvo-tsifrovogo-razvitiya-i-informatsionno-kommunikatsionnykh-tekhnologiy-novgorodskoy-oblasti",
+    "name": "Министерство цифрового развития и информационно-коммуникационных технологий Новгородской области",
+    "shortName": "",
+    "territoryId": "ru-53"
+  },
+  "ru-35-ministerstvo-vnutrenney-politiki-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-vnutrenney-politiki-vologodskoy-oblasti",
+    "name": "Министерство внутренней политики Вологодской области",
+    "shortName": "Министерство внутренней политики области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-po-profilaktike-korrupcionnyh-pravonarusheniy-administracii-gubernatora-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-po-profilaktike-korrupcionnyh-pravonarusheniy-administracii-gubernatora-vologodskoy-oblasti",
+    "name": "Главное управление по профилактике коррупционных правонарушений Администрации Губернатора Вологодской области",
+    "shortName": "Главное управление по профилактике коррупционных правонарушений Администрации Губернатора области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-delami-finansov-i-materialno-tehnicheskogo-obespecheniya-administracii-gubernatora-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-delami-finansov-i-materialno-tehnicheskogo-obespecheniya-administracii-gubernatora-vologodskoy-oblasti",
+    "name": "Главное управление делами, финансов и материально-технического обеспечения Администрации Губернатора Вологодской области",
+    "shortName": "Главное управление делами, финансов и материально-технического обеспечения Администрации Губернатора области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-transporta-i-dorozhnogo-khozyaystva-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-transporta-i-dorozhnogo-khozyaystva-vologodskoy-oblasti",
+    "name": "Министерство транспорта и дорожного хозяйства Вологодской области",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-imushchestvennykh-otnosheniy-i-gradostroitelnoy-deyatelnosti-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-imushchestvennykh-otnosheniy-i-gradostroitelnoy-deyatelnosti-vologodskoy-oblasti",
+    "name": "Министерство имущественных отношений и градостроительной деятельности Вологодской области",
+    "shortName": "Министерство имущественных отношений и градостроительной деятельности области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-energetiki-kommunalnoy-infrastruktury-i-tarifnogo-regulirovaniya-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-energetiki-kommunalnoy-infrastruktury-i-tarifnogo-regulirovaniya-vologodskoy-oblasti",
+    "name": "Министерство энергетики, коммунальной инфраструктуры и тарифного регулирования Вологодской области",
+    "shortName": "Минэнерго области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-strategicheskoe-upravlenie-administracii-gubernatora-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-strategicheskoe-upravlenie-administracii-gubernatora-vologodskoy-oblasti",
+    "name": "Главное стратегическое управление Администрации Губернатора Вологодской области",
+    "shortName": "Аналитический центр области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-pravovoe-upravlenie-administracii-gubernatora-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-pravovoe-upravlenie-administracii-gubernatora-vologodskoy-oblasti",
+    "name": "Главное правовое управление Администрации Губернатора Вологодской области",
+    "shortName": "Главное правовое управление Администрации Губернатора области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-finansov-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-finansov-vologodskoy-oblasti",
+    "name": "Министерство финансов Вологодской области",
+    "shortName": "Министерство финансов области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-regionalnoy-bezopasnosti-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-regionalnoy-bezopasnosti-vologodskoy-oblasti",
+    "name": "Министерство региональной безопасности Вологодской области",
+    "shortName": "Министерство региональной безопасности области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-gosudarstvennogo-zhilishchnogo-nadzora-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-gosudarstvennogo-zhilishchnogo-nadzora-vologodskoy-oblasti",
+    "name": "Главное управление государственного жилищного надзора Вологодской области",
+    "shortName": "Главное управление государственного жилищного надзора области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-selskogo-khozyaystva-i-prodovolstvennykh-resursov-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-selskogo-khozyaystva-i-prodovolstvennykh-resursov-vologodskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольственных ресурсов Вологодской области",
+    "shortName": "Министерство сельского хозяйства и продовольственных ресурсов области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-konkurentnoy-politiki-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-konkurentnoy-politiki-vologodskoy-oblasti",
+    "name": "Главное управление конкурентной политики Вологодской области",
+    "shortName": "Главное управление конкурентной политики области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-stroitelstva-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-stroitelstva-vologodskoy-oblasti",
+    "name": "Министерство строительства Вологодской области",
+    "shortName": "Министерство строительства области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-sporta-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-sporta-vologodskoy-oblasti",
+    "name": "Министерство спорта Вологодской области",
+    "shortName": "Министерство спорта области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-vologodskoy-oblasti",
+    "name": "Главное управление записи актов гражданского состояния Вологодской области",
+    "shortName": "Главное управление ЗАГС Вологодской области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-predstavitelstvo-vologodskoy-oblasti-v-gorode-sankt-peterburge": {
+    "id": "ru-35-predstavitelstvo-vologodskoy-oblasti-v-gorode-sankt-peterburge",
+    "name": "Представительство Вологодской области в городе Санкт-Петербурге",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-gosudarstvennoy-inspektsii-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drug-c4936af1a6": {
+    "id": "ru-35-glavnoe-upravlenie-gosudarstvennoy-inspektsii-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drug-c4936af1a6",
+    "name": "Главное управление государственной инспекции по надзору за техническим состоянием самоходных машин и других видов техники Вологодской области",
+    "shortName": "Государственная инспекция гостехнадзора Вологодской области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-ministerstvo-ekonomicheskogo-razvitiya-promyshlennosti-i-torgovli-vologodskoy-oblasti": {
+    "id": "ru-35-ministerstvo-ekonomicheskogo-razvitiya-promyshlennosti-i-torgovli-vologodskoy-oblasti",
+    "name": "Министерство экономического развития, промышленности и торговли Вологодской области",
+    "shortName": "Министерство экономического развития, промышленности и торговли области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-okhrany-obektov-kulturnogo-naslediya-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-okhrany-obektov-kulturnogo-naslediya-vologodskoy-oblasti",
+    "name": "Главное управление охраны объектов культурного наследия Вологодской области",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-vologodskoy-oblasti",
+    "name": "Главное управление по обеспечению деятельности мировых судей Вологодской области",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-35-public-employer-inn-3500000678": {
+    "id": "ru-35-public-employer-inn-3500000678",
+    "name": "Администрация Никольского муниципального округа",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-35-pravitelstvo-vologodskoy-oblasti": {
+    "id": "ru-35-pravitelstvo-vologodskoy-oblasti",
+    "name": "Правительство Вологодской области",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-po-okhrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-po-okhrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira-vologodskoy-oblasti",
+    "name": "Главное управление по охране, контролю и регулированию использования объектов животного мира Вологодской области",
+    "shortName": "Главохота области",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-specialnyh-programm-administracii-gubernatora-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-specialnyh-programm-administracii-gubernatora-vologodskoy-oblasti",
+    "name": "Главное управление специальных программ Администрации Губернатора Вологодской области",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-35-glavnoe-upravlenie-specialnoy-dokumentalnoy-svyazi-i-zaschity-gosudarstvennoy-tayny-administracii-gubernatora-vologodskoy-oblasti": {
+    "id": "ru-35-glavnoe-upravlenie-specialnoy-dokumentalnoy-svyazi-i-zaschity-gosudarstvennoy-tayny-administracii-gubernatora-vologodskoy-oblasti",
+    "name": "Главное управление специальной документальной связи и защиты государственной тайны Администрации Губернатора Вологодской области",
+    "shortName": "",
+    "territoryId": "ru-35"
+  },
+  "ru-51-administraciya-goroda-monchegorska": {
+    "id": "ru-51-administraciya-goroda-monchegorska",
+    "name": "Администрация муниципального округа город Мончегорск с подведомственной территорией Мурманской области",
+    "shortName": "Администрация города Мончегорска",
+    "territoryId": "ru-51"
+  },
+  "ru-70-departament-tarifnogo-regulirovaniya-tomskoy-oblasti": {
+    "id": "ru-70-departament-tarifnogo-regulirovaniya-tomskoy-oblasti",
+    "name": "Департамент тарифного регулирования Томской области",
+    "shortName": "",
+    "territoryId": "ru-70"
+  },
+  "ru-05-agentstvo-po-predprinimatelstvu-i-investitsiyam-respubliki-dagestan": {
+    "id": "ru-05-agentstvo-po-predprinimatelstvu-i-investitsiyam-respubliki-dagestan",
+    "name": "Агентство по предпринимательству и инвестициям Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-50-administratsiya-gubernatora-moskovskoy-oblasti": {
+    "id": "ru-50-administratsiya-gubernatora-moskovskoy-oblasti",
+    "name": "Администрация Губернатора Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-76-ministerstvo-transporta-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-transporta-yaroslavskoy-oblasti",
+    "name": "Министерство транспорта Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-51-public-employer-inn-5101000398": {
+    "id": "ru-51-public-employer-inn-5101000398",
+    "name": "АДМИНИСТРАЦИЯ ГОРОДА АПАТИТЫ",
+    "shortName": "",
+    "territoryId": "ru-51"
+  },
+  "ru-76-public-employer-inn-7621003800": {
+    "id": "ru-76-public-employer-inn-7621003800",
+    "name": "АДМИНИСТРАЦИЯ НЕКРАСОВСКОГО МУНИЦИПАЛЬНОГО ОКРУГА",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-76-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-yaroslavskoy-oblasti": {
+    "id": "ru-76-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-yaroslavskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Ярославской области",
+    "shortName": "",
+    "territoryId": "ru-76"
+  },
+  "ru-21-krasnoarmeysky-municipal-district-administration": {
+    "id": "ru-21-krasnoarmeysky-municipal-district-administration",
+    "name": "Администрация Красноармейского муниципального округа Чувашской Республики",
+    "shortName": "",
+    "territoryId": "ru-21"
+  },
+  "ru-47-public-employer-inn-4704063734": {
+    "id": "ru-47-public-employer-inn-4704063734",
+    "name": "АДМИНИСТРАЦИЯ СВЕТОГОРСКОГО ГОРОДСКОГО ПОСЕЛЕНИЯ",
+    "shortName": "",
+    "territoryId": "ru-47"
+  },
+  "ru-29-public-employer-inn-2922001477": {
+    "id": "ru-29-public-employer-inn-2922001477",
+    "name": "АДМИНИСТРАЦИЯ УСТЬЯНСКОГО МУНИЦИПАЛЬНОГО ОКРУГА",
+    "shortName": "",
+    "territoryId": "ru-29"
+  },
+  "ru-58--issuer-inn-5822002659": {
+    "id": "ru-58--issuer-inn-5822002659",
+    "name": "Администрация Малосердобинского района Пензенской области",
+    "shortName": "",
+    "territoryId": "ru-58"
+  },
+  "ru-05-ministerstvo-po-turizmu-i-narodnym-khudozhestvennym-promyslam-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-po-turizmu-i-narodnym-khudozhestvennym-promyslam-respubliki-dagestan",
+    "name": "Министерство по туризму и народным художественным промыслам Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-06-ministerstvo-po-vneshnim-svyazyam-natsionalnoy-politike-pechati-i-informatsii-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-po-vneshnim-svyazyam-natsionalnoy-politike-pechati-i-informatsii-respubliki-ingushetiya",
+    "name": "Министерство по внешним связям, национальной политике, печати и информации Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-05-ministerstvo-promyshlennosti-i-torgovli-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-promyshlennosti-i-torgovli-respubliki-dagestan",
+    "name": "Министерство промышленности и торговли Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-07-ministerstvo-promyshlennosti-energetiki-i-torgovli-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-promyshlennosti-energetiki-i-torgovli-kabardino-balkarskoy-respubliki",
+    "name": "Министерство промышленности, энергетики и торговли Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-zdravookhraneniya-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-zdravookhraneniya-kabardino-balkarskoy-respubliki",
+    "name": "Министерство здравоохранения Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-05-ministerstvo-energetiki-i-tarifov-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-energetiki-i-tarifov-respubliki-dagestan",
+    "name": "Министерство энергетики и тарифов Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-09-moscow-representation": {
+    "id": "ru-09-moscow-representation",
+    "name": "Постоянное представительство Карачаево-Черкесской Республики в г. Москве",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-glavnoe-upravlenie-karachaevo-cherkesskoy-respubliki-po-tarifam-i-tsenam": {
+    "id": "ru-09-glavnoe-upravlenie-karachaevo-cherkesskoy-respubliki-po-tarifam-i-tsenam",
+    "name": "Главное управление Карачаево-Черкесской Республики по тарифам и ценам",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-upravlenie-karachaevo-cherkesskoy-respubliki-po-sokhraneniyu-ispolzovaniyu-populyarizatsii-i-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya": {
+    "id": "ru-09-upravlenie-karachaevo-cherkesskoy-respubliki-po-sokhraneniyu-ispolzovaniyu-populyarizatsii-i-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya",
+    "name": "Управление Карачаево-Черкесской Республики по сохранению, использованию, популяризации и государственной охране объектов культурного наследия",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-obrazovaniya-i-nauki-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-obrazovaniya-i-nauki-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство образования и науки Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-upravlenie-karachaevo-cherkesskoy-respubliki-po-delam-arkhivov": {
+    "id": "ru-09-upravlenie-karachaevo-cherkesskoy-respubliki-po-delam-arkhivov",
+    "name": "Управление Карачаево-Черкесской Республики по делам архивов",
+    "shortName": "Управление КЧР по делам архивов",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство имущественных и земельных отношений Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-selskogo-khozyaystva-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-selskogo-khozyaystva-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство сельского хозяйства Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-upravlenie-veterinarii-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-upravlenie-veterinarii-karachaevo-cherkesskoy-respubliki",
+    "name": "Управление ветеринарии Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-upravlenie-karachaevo-cherkesskoy-respubliki-po-obespecheniyu-meropriyatiy-grazhdanskoy-oborony-preduprezhdeniya-i-likvidatsii-chrezvychaynykh-situatsiy-i-pozharnoy-bezopasnosti": {
+    "id": "ru-09-upravlenie-karachaevo-cherkesskoy-respubliki-po-obespecheniyu-meropriyatiy-grazhdanskoy-oborony-preduprezhdeniya-i-likvidatsii-chrezvychaynykh-situatsiy-i-pozharnoy-bezopasnosti",
+    "name": "Управление Карачаево-Черкесской Республики по обеспечению мероприятий гражданской обороны, предупреждения и ликвидации чрезвычайных ситуаций и пожарной безопасности",
+    "shortName": "Управление КЧР по ГО, ЧС и ПБ",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-finansov-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-finansov-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство финансов Карачаево-Черкесской Республики",
+    "shortName": "Минфин КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-prirodnykh-resursov-i-ekologii-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-prirodnykh-resursov-i-ekologii-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство природных ресурсов и экологии Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-ministerstvo-promyshlennosti-i-energetiki-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-ministerstvo-promyshlennosti-i-energetiki-karachaevo-cherkesskoy-respubliki",
+    "name": "Министерство промышленности и энергетики Карачаево-Черкесской Республики",
+    "shortName": "Минпромэнерго КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-finansovo-khozyaystvennoe-upravlenie-glavy-i-pravitelstva-karachaevo-cherkesskoy-respubliki": {
+    "id": "ru-09-finansovo-khozyaystvennoe-upravlenie-glavy-i-pravitelstva-karachaevo-cherkesskoy-respubliki",
+    "name": "Финансово-хозяйственное управление Главы и Правительства Карачаево-Черкесской Республики",
+    "shortName": "ФХУ Главы и Правительства КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-government": {
+    "id": "ru-09-government",
+    "name": "Правительство Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-nationalities-ministry": {
+    "id": "ru-09-nationalities-ministry",
+    "name": "Министерство Карачаево-Черкесской Республики по делам национальностей, массовым коммуникациям и печати",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-sport-ministry": {
+    "id": "ru-09-sport-ministry",
+    "name": "Министерство физической культуры и спорта Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-tourism-ministry": {
+    "id": "ru-09-tourism-ministry",
+    "name": "Министерство туризма и курортов Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-culture-ministry": {
+    "id": "ru-09-culture-ministry",
+    "name": "Министерство культуры Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-youth-ministry": {
+    "id": "ru-09-youth-ministry",
+    "name": "Министерство по делам молодежи Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-digital-ministry": {
+    "id": "ru-09-digital-ministry",
+    "name": "Министерство цифрового развития Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-transport-ministry": {
+    "id": "ru-09-transport-ministry",
+    "name": "Министерство транспорта и дорожного хозяйства Карачаево-Черкесской Республики",
+    "shortName": "Минтранс КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-employment-directorate": {
+    "id": "ru-09-employment-directorate",
+    "name": "Управление государственной службы занятости населения Карачаево-Черкесской Республики",
+    "shortName": "УГСЗН КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-housing-supervision-directorate": {
+    "id": "ru-09-housing-supervision-directorate",
+    "name": "Управление государственного жилищного надзора Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-procurement-directorate": {
+    "id": "ru-09-procurement-directorate",
+    "name": "Управление Карачаево-Черкесской Республики в сфере закупок",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-09-magistrates-support-directorate": {
+    "id": "ru-09-magistrates-support-directorate",
+    "name": "Управление по обеспечению деятельности мировых судей в Карачаево-Черкесской Республике",
+    "shortName": "УОДМС в КЧР",
+    "territoryId": "ru-09"
+  },
+  "ru-09-head-government-administration": {
+    "id": "ru-09-head-government-administration",
+    "name": "Администрация Главы и Правительства Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-26-ministerstvo-kultury-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-kultury-stavropolskogo-kraya",
+    "name": "Министерство культуры Ставропольского края",
+    "shortName": "минкультуры края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-turizma-i-ozdorovitelnykh-kurortov-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-turizma-i-ozdorovitelnykh-kurortov-stavropolskogo-kraya",
+    "name": "Министерство туризма и оздоровительных курортов Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-obrazovaniya-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-obrazovaniya-stavropolskogo-kraya",
+    "name": "Министерство образования Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-prirodnykh-resursov-i-okhrany-okruzhayushchey-sredy-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-prirodnykh-resursov-i-okhrany-okruzhayushchey-sredy-stavropolskogo-kraya",
+    "name": "Министерство природных ресурсов и охраны окружающей среды Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-fizicheskoy-kultury-i-sporta-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-fizicheskoy-kultury-i-sporta-stavropolskogo-kraya",
+    "name": "Министерство физической культуры и спорта Ставропольского края",
+    "shortName": "минспорта края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-stavropolskogo-kraya-po-natsionalnoy-politike-i-delam-kazachestva": {
+    "id": "ru-26-ministerstvo-stavropolskogo-kraya-po-natsionalnoy-politike-i-delam-kazachestva",
+    "name": "Министерство Ставропольского края по национальной политике и делам казачества",
+    "shortName": "миннац края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-stroitelstva-i-arkhitektury-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-stroitelstva-i-arkhitektury-stavropolskogo-kraya",
+    "name": "Министерство строительства и архитектуры Ставропольского края",
+    "shortName": "минстрой края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-zdravookhraneniya-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-zdravookhraneniya-stavropolskogo-kraya",
+    "name": "Министерство здравоохранения Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-komitet-stavropolskogo-kraya-po-delam-arkhivov": {
+    "id": "ru-26-komitet-stavropolskogo-kraya-po-delam-arkhivov",
+    "name": "Комитет Ставропольского края по делам архивов",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-komitet-stavropolskogo-kraya-po-gosudarstvennym-zakupkam": {
+    "id": "ru-26-komitet-stavropolskogo-kraya-po-gosudarstvennym-zakupkam",
+    "name": "Комитет Ставропольского края по государственным закупкам",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-upravlenie-stavropolskogo-kraya-gosudarstvennaya-zhilishchnaya-inspektsiya": {
+    "id": "ru-26-upravlenie-stavropolskogo-kraya-gosudarstvennaya-zhilishchnaya-inspektsiya",
+    "name": "Управление Ставропольского края - государственная жилищная инспекция",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-stavropolskogo-kraya": {
+    "id": "ru-26-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-stavropolskogo-kraya",
+    "name": "Управление по обеспечению деятельности мировых судей Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-upravlenie-stavropolskogo-kraya-po-sokhraneniyu-i-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya": {
+    "id": "ru-26-upravlenie-stavropolskogo-kraya-po-sokhraneniyu-i-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya",
+    "name": "Управление Ставропольского края по сохранению и государственной охране объектов культурного наследия",
+    "shortName": "Управление СК по охране ОКН",
+    "territoryId": "ru-26"
+  },
+  "ru-26-pravitelstvo-stavropolskogo-kraya": {
+    "id": "ru-26-pravitelstvo-stavropolskogo-kraya",
+    "name": "Правительство Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-stavropolskogo-kraya",
+    "name": "Министерство жилищно-коммунального хозяйства Ставропольского края",
+    "shortName": "МинЖКХ Ставропольского края",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-imushchestvennykh-otnosheniy-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-imushchestvennykh-otnosheniy-stavropolskogo-kraya",
+    "name": "Министерство имущественных отношений Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-26-ministerstvo-dorozhnogo-khozyaystva-i-transporta-stavropolskogo-kraya": {
+    "id": "ru-26-ministerstvo-dorozhnogo-khozyaystva-i-transporta-stavropolskogo-kraya",
+    "name": "Министерство дорожного хозяйства и транспорта Ставропольского края",
+    "shortName": "",
+    "territoryId": "ru-26"
+  },
+  "ru-92-departament-arkhitektury-i-gradostroitelstva-goroda-sevastopolya": {
+    "id": "ru-92-departament-arkhitektury-i-gradostroitelstva-goroda-sevastopolya",
+    "name": "Департамент архитектуры и градостроительства города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-gorodskogo-khozyaystva-goroda-sevastopolya": {
+    "id": "ru-92-departament-gorodskogo-khozyaystva-goroda-sevastopolya",
+    "name": "Департамент городского хозяйства города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-kapitalnogo-stroitelstva-goroda-sevastopolya": {
+    "id": "ru-92-departament-kapitalnogo-stroitelstva-goroda-sevastopolya",
+    "name": "Департамент капитального строительства города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-obrazovaniya-i-nauki-goroda-sevastopolya": {
+    "id": "ru-92-departament-obrazovaniya-i-nauki-goroda-sevastopolya",
+    "name": "Департамент образования и науки города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-selskogo-khozyaystva-i-potrebitelskogo-rynka-goroda-sevastopolya": {
+    "id": "ru-92-departament-selskogo-khozyaystva-i-potrebitelskogo-rynka-goroda-sevastopolya",
+    "name": "Департамент сельского хозяйства и потребительского рынка города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-transporta-i-razvitiya-dorozhno-transportnoy-infrastruktury-goroda-sevastopolya": {
+    "id": "ru-92-departament-transporta-i-razvitiya-dorozhno-transportnoy-infrastruktury-goroda-sevastopolya",
+    "name": "Департамент транспорта и развития дорожно-транспортной инфраструктуры города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-truda-i-sotsialnoy-zashchity-naseleniya-goroda-sevastopolya": {
+    "id": "ru-92-departament-truda-i-sotsialnoy-zashchity-naseleniya-goroda-sevastopolya",
+    "name": "Департамент труда и социальной защиты населения города Севастополя",
+    "shortName": "ДТСЗН Севастополя",
+    "territoryId": "ru-92"
+  },
+  "ru-92-glavnoe-upravlenie-gosudarstvennogo-zhilishchnogo-nadzora-goroda-sevastopolya": {
+    "id": "ru-92-glavnoe-upravlenie-gosudarstvennogo-zhilishchnogo-nadzora-goroda-sevastopolya",
+    "name": "Главное управление государственного жилищного надзора города Севастополя",
+    "shortName": "Госжилнадзор Севастополя",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-okhrany-obektov-kulturnogo-naslediya-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-okhrany-obektov-kulturnogo-naslediya-goroda-sevastopolya",
+    "name": "Управление охраны объектов культурного наследия города Севастополя",
+    "shortName": "Севнаследие",
+    "territoryId": "ru-92"
+  },
+  "ru-92-glavnoe-upravlenie-veterinarii-goroda-sevastopolya": {
+    "id": "ru-92-glavnoe-upravlenie-veterinarii-goroda-sevastopolya",
+    "name": "Главное управление ветеринарии города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-glavnoe-upravlenie-proektnoy-deyatelnosti-goroda-sevastopolya": {
+    "id": "ru-92-glavnoe-upravlenie-proektnoy-deyatelnosti-goroda-sevastopolya",
+    "name": "Главное управление проектной деятельности города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-administrativno-khozyaystvennogo-obespecheniya-ispolnitelnykh-organov-goroda-sevastopolya": {
+    "id": "ru-92-departament-administrativno-khozyaystvennogo-obespecheniya-ispolnitelnykh-organov-goroda-sevastopolya",
+    "name": "Департамент административно-хозяйственного обеспечения исполнительных органов города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-goroda-sevastopolya",
+    "name": "Управление записи актов гражданского состояния города Севастополя",
+    "shortName": "Управление ЗАГС",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-po-delam-molodezhi-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-po-delam-molodezhi-goroda-sevastopolya",
+    "name": "Управление по делам молодежи города Севастополя",
+    "shortName": "УМС",
+    "territoryId": "ru-92"
+  },
+  "ru-92-glavnoe-upravlenie-sporta-goroda-sevastopolya": {
+    "id": "ru-92-glavnoe-upravlenie-sporta-goroda-sevastopolya",
+    "name": "Главное управление спорта города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-informatsionnoy-politiki-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-informatsionnoy-politiki-goroda-sevastopolya",
+    "name": "Управление информационной политики города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-kultury-goroda-sevastopolya": {
+    "id": "ru-92-departament-kultury-goroda-sevastopolya",
+    "name": "Департамент культуры города Севастополя",
+    "shortName": "ДК",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-obshchestvennoy-bezopasnosti-goroda-sevastopolya": {
+    "id": "ru-92-departament-obshchestvennoy-bezopasnosti-goroda-sevastopolya",
+    "name": "Департамент общественной безопасности города Севастополя",
+    "shortName": "ДОБ г. Севастополя",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-prirodnykh-resursov-i-ekologii-goroda-sevastopolya": {
+    "id": "ru-92-departament-prirodnykh-resursov-i-ekologii-goroda-sevastopolya",
+    "name": "Департамент природных ресурсов и экологии города Севастополя",
+    "shortName": "Севприроднадзор",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-i-ekspertizy-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-gosudarstvennogo-stroitelnogo-nadzora-i-ekspertizy-goroda-sevastopolya",
+    "name": "Управление государственного строительного надзора и экспертизы города Севастополя",
+    "shortName": "Севгосстройнадзор",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-po-tarifam-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-po-tarifam-goroda-sevastopolya",
+    "name": "Управление по тарифам города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-finansov-goroda-sevastopolya": {
+    "id": "ru-92-departament-finansov-goroda-sevastopolya",
+    "name": "Департамент финансов города Севастополя",
+    "shortName": "Департамент финансов",
+    "territoryId": "ru-92"
+  },
+  "ru-92-glavnoe-kontrolnoe-upravlenie-goroda-sevastopolya": {
+    "id": "ru-92-glavnoe-kontrolnoe-upravlenie-goroda-sevastopolya",
+    "name": "Главное контрольное управление города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-obespecheniya-deyatelnosti-mirovykh-sudey-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-obespecheniya-deyatelnosti-mirovykh-sudey-goroda-sevastopolya",
+    "name": "Управление обеспечения деятельности мировых судей города Севастополя",
+    "shortName": "УОДМС г. Севастополя",
+    "territoryId": "ru-92"
+  },
+  "ru-92-departament-po-imushchestvennym-i-zemelnym-otnosheniyam-goroda-sevastopolya": {
+    "id": "ru-92-departament-po-imushchestvennym-i-zemelnym-otnosheniyam-goroda-sevastopolya",
+    "name": "Департамент по имущественным и земельным отношениям города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-92-gosudarstvennaya-inspektsiya-truda-goroda-sevastopolya": {
+    "id": "ru-92-gosudarstvennaya-inspektsiya-truda-goroda-sevastopolya",
+    "name": "Государственная инспекция труда города Севастополя",
+    "shortName": "ГИТ г. Севастополя",
+    "territoryId": "ru-92"
+  },
+  "ru-92-upravlenie-mezhdunarodnykh-i-mezhregionalnykh-svyazey-goroda-sevastopolya": {
+    "id": "ru-92-upravlenie-mezhdunarodnykh-i-mezhregionalnykh-svyazey-goroda-sevastopolya",
+    "name": "Управление международных и межрегиональных связей города Севастополя",
+    "shortName": "",
+    "territoryId": "ru-92"
+  },
+  "ru-93-ministerstvo-uglya-i-energetiki-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-uglya-i-energetiki-doneckoy-narodnoy-respubliki",
+    "name": "Министерство угля и энергетики Донецкой Народной Республики",
+    "shortName": "Минугля и энергетики ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-33e7581d": {
+    "id": "ru-93-gosudarstvennaya-inspekciya-po-nadzoru-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehni-33e7581d",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-predstavitelstvo-doneckoy-narodnoy-respubliki-v-gorode-moskve": {
+    "id": "ru-93-predstavitelstvo-doneckoy-narodnoy-respubliki-v-gorode-moskve",
+    "name": "Представительство Донецкой Народной Республики в городе Москве",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-cifrovogo-razvitiya-gosudarstvennogo-upravleniya-informacionnyh-tehnologiy-i-svyazi-doneckoy-1eca603d": {
+    "id": "ru-93-ministerstvo-cifrovogo-razvitiya-gosudarstvennogo-upravleniya-informacionnyh-tehnologiy-i-svyazi-doneckoy-1eca603d",
+    "name": "Министерство цифрового развития государственного управления, информационных технологий и связи Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-kultury-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-kultury-doneckoy-narodnoy-respubliki",
+    "name": "Министерство культуры Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-komitet-po-ohrane-obektov-kulturnogo-naslediya-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-komitet-po-ohrane-obektov-kulturnogo-naslediya-doneckoy-narodnoy-respubliki",
+    "name": "Комитет по охране объектов культурного наследия Донецкой Народной Республики",
+    "shortName": "Комитет ОКН ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-upravlenie-veterinarii-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-upravlenie-veterinarii-doneckoy-narodnoy-respubliki",
+    "name": "Управление ветеринарии Донецкой Народной Республики",
+    "shortName": "УВ ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-predstavitelstvo-doneckoy-narodnoy-respubliki-v-gorode-sankt-peterburge": {
+    "id": "ru-93-predstavitelstvo-doneckoy-narodnoy-respubliki-v-gorode-sankt-peterburge",
+    "name": "Представительство Донецкой Народной Республики в городе Санкт-Петербурге",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-komitet-po-tarifam-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-komitet-po-tarifam-doneckoy-narodnoy-respubliki",
+    "name": "Комитет по тарифам Донецкой Народной Республики",
+    "shortName": "КТ ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-komitet-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situaciyam-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-komitet-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situaciyam-doneckoy-narodnoy-respubliki",
+    "name": "Комитет по делам гражданской обороны и чрезвычайным ситуациям Донецкой Народной Республики",
+    "shortName": "Комитет по ГО и ЧС ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-komitet-po-nauke-i-tehnologiyam-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-komitet-po-nauke-i-tehnologiyam-doneckoy-narodnoy-respubliki",
+    "name": "Комитет по науке и технологиям Донецкой Народной Республики",
+    "shortName": "КНТ ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-komitet-po-arhivnomu-delu-i-dokumentacionnomu-obespecheniyu-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-komitet-po-arhivnomu-delu-i-dokumentacionnomu-obespecheniyu-doneckoy-narodnoy-respubliki",
+    "name": "Комитет по архивному делу и документационному обеспечению Донецкой Народной Республики",
+    "shortName": "КАДДО ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-doneckoy-narodnoy-respubliki",
+    "name": "Министерство имущественных и земельных отношений Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-sporta-i-turizma-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-sporta-i-turizma-doneckoy-narodnoy-respubliki",
+    "name": "Министерство спорта и туризма Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-molodezhnoy-politiki-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-molodezhnoy-politiki-doneckoy-narodnoy-respubliki",
+    "name": "Министерство молодежной политики Донецкой Народной Республики",
+    "shortName": "Минмолполитики ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-prirodnyh-resursov-i-ekologii-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-prirodnyh-resursov-i-ekologii-doneckoy-narodnoy-respubliki",
+    "name": "Министерство природных ресурсов и экологии Донецкой Народной Республики",
+    "shortName": "Минприроды ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-obrazovaniya-i-nauki-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-obrazovaniya-i-nauki-doneckoy-narodnoy-respubliki",
+    "name": "Министерство образования и науки Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-truda-i-socialnoy-zaschity-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-truda-i-socialnoy-zaschity-doneckoy-narodnoy-respubliki",
+    "name": "Министерство труда и социальной защиты Донецкой Народной Республики",
+    "shortName": "Минтруд ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-transporta-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-transporta-doneckoy-narodnoy-respubliki",
+    "name": "Министерство транспорта Донецкой Народной Республики",
+    "shortName": "Минтранс ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-gosudarstvennaya-inspekciya-stroitelnogo-i-zhilischnogo-nadzora-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-gosudarstvennaya-inspekciya-stroitelnogo-i-zhilischnogo-nadzora-doneckoy-narodnoy-respubliki",
+    "name": "Государственная инспекция строительного и жилищного надзора Донецкой Народной Республики",
+    "shortName": "Стройжилнадзор ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-stroitelstva-arhitektury-i-zhilischno-kommunalnogo-hozyaystva-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-stroitelstva-arhitektury-i-zhilischno-kommunalnogo-hozyaystva-doneckoy-narodnoy-respubliki",
+    "name": "Министерство строительства, архитектуры и жилищно-коммунального хозяйства Донецкой Народной Республики",
+    "shortName": "Минстрой ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-civil-registration-directorate": {
+    "id": "ru-93-civil-registration-directorate",
+    "name": "Управление записи актов гражданского состояния Донецкой Народной Республики",
+    "shortName": "Управление ЗАГС ДНР",
+    "territoryId": "ru-93"
+  },
+  "ru-93-pravitelstvo-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-pravitelstvo-doneckoy-narodnoy-respubliki",
+    "name": "Правительство Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-93-ministerstvo-promyshlennosti-i-torgovli-doneckoy-narodnoy-respubliki": {
+    "id": "ru-93-ministerstvo-promyshlennosti-i-torgovli-doneckoy-narodnoy-respubliki",
+    "name": "Министерство промышленности и торговли Донецкой Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-34-komitet-veterinarii-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-veterinarii-volgogradskoy-oblasti",
+    "name": "Комитет ветеринарии Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-volgogradskoy-oblasti",
+    "name": "Комитет государственной охраны объектов культурного наследия Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-zhilishchno-kommunalnogo-khozyaystva-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-zhilishchno-kommunalnogo-khozyaystva-volgogradskoy-oblasti",
+    "name": "Комитет жилищно-коммунального хозяйства Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-informatsionnykh-tekhnologiy-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-informatsionnykh-tekhnologiy-volgogradskoy-oblasti",
+    "name": "Комитет информационных технологий Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-kultury-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-kultury-volgogradskoy-oblasti",
+    "name": "Комитет культуры Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-po-delam-natsionalnostey-i-kazachestva-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-po-delam-natsionalnostey-i-kazachestva-volgogradskoy-oblasti",
+    "name": "Комитет по делам национальностей и казачества Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-po-delam-territorialnykh-obrazovaniy-vnutrenney-i-informatsionnoy-politiki-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-po-delam-territorialnykh-obrazovaniy-vnutrenney-i-informatsionnoy-politiki-volgogradskoy-oblasti",
+    "name": "Комитет по делам территориальных образований, внутренней и информационной политики Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-po-obespecheniyu-bezopasnosti-zhiznedeyatelnosti-naseleniya-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-po-obespecheniyu-bezopasnosti-zhiznedeyatelnosti-naseleniya-volgogradskoy-oblasti",
+    "name": "Комитет по обеспечению безопасности жизнедеятельности населения Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-po-razvitiyu-turizma-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-po-razvitiyu-turizma-volgogradskoy-oblasti",
+    "name": "Комитет по развитию туризма Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-volgogradskoy-oblasti",
+    "name": "Комитет по контролю в сфере закупок Волгоградской области",
+    "shortName": "Облкомконтроль",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-po-trudu-i-zanyatosti-naseleniya-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-po-trudu-i-zanyatosti-naseleniya-volgogradskoy-oblasti",
+    "name": "Комитет по труду и занятости населения Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-po-upravleniyu-gosudarstvennym-imushchestvom-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-po-upravleniyu-gosudarstvennym-imushchestvom-volgogradskoy-oblasti",
+    "name": "Комитет по управлению государственным имуществом Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-prirodnykh-resursov-lesnogo-khozyaystva-i-ekologii-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-prirodnykh-resursov-lesnogo-khozyaystva-i-ekologii-volgogradskoy-oblasti",
+    "name": "Комитет природных ресурсов, лесного хозяйства и экологии Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-promyshlennoy-politiki-torgovli-i-toplivno-energeticheskogo-kompleksa-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-promyshlennoy-politiki-torgovli-i-toplivno-energeticheskogo-kompleksa-volgogradskoy-oblasti",
+    "name": "Комитет промышленной политики, торговли и топливно-энергетического комплекса Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-selskogo-khozyaystva-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-selskogo-khozyaystva-volgogradskoy-oblasti",
+    "name": "Комитет сельского хозяйства Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-sotsialnoy-zashchity-naseleniya-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-sotsialnoy-zashchity-naseleniya-volgogradskoy-oblasti",
+    "name": "Комитет социальной защиты населения Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-stroitelstva-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-stroitelstva-volgogradskoy-oblasti",
+    "name": "Комитет строительства Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-tarifnogo-regulirovaniya-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-tarifnogo-regulirovaniya-volgogradskoy-oblasti",
+    "name": "Комитет тарифного регулирования Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-transporta-i-dorozhnogo-khozyaystva-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-transporta-i-dorozhnogo-khozyaystva-volgogradskoy-oblasti",
+    "name": "Комитет транспорта и дорожного хозяйства Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-fizicheskoy-kultury-i-sporta-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-fizicheskoy-kultury-i-sporta-volgogradskoy-oblasti",
+    "name": "Комитет физической культуры и спорта Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-finansov-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-finansov-volgogradskoy-oblasti",
+    "name": "Комитет финансов Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-yustitsii-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-yustitsii-volgogradskoy-oblasti",
+    "name": "Комитет юстиции Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-volgogradskoy-oblasti": {
+    "id": "ru-34-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-volgogradskoy-oblasti",
+    "name": "Инспекция государственного жилищного надзора Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-volgogradskoy-oblasti": {
+    "id": "ru-34-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-volgogradskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-apparat-gubernatora-volgogradskoy-oblasti": {
+    "id": "ru-34-apparat-gubernatora-volgogradskoy-oblasti",
+    "name": "Аппарат Губернатора Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-upravlenie-delami-administratsii-volgogradskoy-oblasti": {
+    "id": "ru-34-upravlenie-delami-administratsii-volgogradskoy-oblasti",
+    "name": "Управление делами Администрации Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-predstavitelstvo-volgogradskoy-oblasti-v-gorode-moskve": {
+    "id": "ru-34-predstavitelstvo-volgogradskoy-oblasti-v-gorode-moskve",
+    "name": "Представительство Волгоградской области в городе Москве",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-komitet-molodezhnoy-politiki-volgogradskoy-oblasti": {
+    "id": "ru-34-komitet-molodezhnoy-politiki-volgogradskoy-oblasti",
+    "name": "Комитет молодёжной политики Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-administratsiya-volgogradskoy-oblasti": {
+    "id": "ru-34-administratsiya-volgogradskoy-oblasti",
+    "name": "Администрация Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-34-kontrolno-schetnaya-palata-volgogradskoy-oblasti": {
+    "id": "ru-34-kontrolno-schetnaya-palata-volgogradskoy-oblasti",
+    "name": "Контрольно-счётная палата Волгоградской области",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-05-pravitelstvo-respubliki-dagestan": {
+    "id": "ru-05-pravitelstvo-respubliki-dagestan",
+    "name": "Правительство Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-administratsiya-glavy-i-pravitelstva-respubliki-dagestan": {
+    "id": "ru-05-administratsiya-glavy-i-pravitelstva-respubliki-dagestan",
+    "name": "Администрация Главы и Правительства Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-kultury-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-kultury-respubliki-dagestan",
+    "name": "Министерство культуры Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-po-delam-grazhdanskoy-oborony-chrezvychaynym-situatsiyam-i-likvidatsii-posledstviy-stikhiynykh-bedstviy-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-po-delam-grazhdanskoy-oborony-chrezvychaynym-situatsiyam-i-likvidatsii-posledstviy-stikhiynykh-bedstviy-respubliki-dagestan",
+    "name": "Министерство по делам гражданской обороны, чрезвычайным ситуациям и ликвидации последствий стихийных бедствий Республики Дагестан",
+    "shortName": "МЧС Дагестана",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-po-delam-molodezhi-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-po-delam-molodezhi-respubliki-dagestan",
+    "name": "Министерство по делам молодежи Республики Дагестан",
+    "shortName": "Минмолодежи РД",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-po-zemelnym-i-imushchestvennym-otnosheniyam-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-po-zemelnym-i-imushchestvennym-otnosheniyam-respubliki-dagestan",
+    "name": "Министерство по земельным и имущественным отношениям Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-po-natsionalnoy-politike-i-delam-religiy-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-po-natsionalnoy-politike-i-delam-religiy-respubliki-dagestan",
+    "name": "Министерство по национальной политике и делам религий Республики Дагестан",
+    "shortName": "Миннац РД",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-po-fizicheskoy-kulture-i-sportu-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-po-fizicheskoy-kulture-i-sportu-respubliki-dagestan",
+    "name": "Министерство по физической культуре и спорту Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-dagestan",
+    "name": "Министерство природных ресурсов и экологии Республики Дагестан",
+    "shortName": "Минприроды РД",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-dagestan",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-stroitelstva-arkhitektury-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-stroitelstva-arkhitektury-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-dagestan",
+    "name": "Министерство строительства, архитектуры и жилищно-коммунального хозяйства Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-dagestan",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-truda-i-sotsialnogo-razvitiya-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-truda-i-sotsialnogo-razvitiya-respubliki-dagestan",
+    "name": "Министерство труда и социального развития Республики Дагестан",
+    "shortName": "Минтруд РД",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-tsifrovogo-razvitiya-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-tsifrovogo-razvitiya-respubliki-dagestan",
+    "name": "Министерство цифрового развития, информации и печати Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-ministerstvo-yustitsii-respubliki-dagestan": {
+    "id": "ru-05-ministerstvo-yustitsii-respubliki-dagestan",
+    "name": "Министерство юстиции Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-komitet-po-veterinarii-respubliki-dagestan": {
+    "id": "ru-05-komitet-po-veterinarii-respubliki-dagestan",
+    "name": "Комитет по ветеринарии Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-komitet-po-vinogradarstvu-i-alkogolnomu-regulirovaniyu-respubliki-dagestan": {
+    "id": "ru-05-komitet-po-vinogradarstvu-i-alkogolnomu-regulirovaniyu-respubliki-dagestan",
+    "name": "Комитет по виноградарству и алкогольному регулированию Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-komitet-po-gosudarstvennym-zakupkam-respubliki-dagestan": {
+    "id": "ru-05-komitet-po-gosudarstvennym-zakupkam-respubliki-dagestan",
+    "name": "Комитет по государственным закупкам Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-komitet-po-lesnomu-khozyaystvu-respubliki-dagestan": {
+    "id": "ru-05-komitet-po-lesnomu-khozyaystvu-respubliki-dagestan",
+    "name": "Комитет по лесному хозяйству Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-komitet-po-rybnomu-khozyaystvu-respubliki-dagestan": {
+    "id": "ru-05-komitet-po-rybnomu-khozyaystvu-respubliki-dagestan",
+    "name": "Комитет по рыбному хозяйству Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-postoyannoe-predstavitelstvo-respubliki-dagestan-pri-prezidente-rossiyskoy-federatsii": {
+    "id": "ru-05-postoyannoe-predstavitelstvo-respubliki-dagestan-pri-prezidente-rossiyskoy-federatsii",
+    "name": "Постоянное представительство Республики Дагестан при Президенте Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-gosudarstvennaya-zhilishchnaya-inspektsiya-respubliki-dagestan": {
+    "id": "ru-05-gosudarstvennaya-zhilishchnaya-inspektsiya-respubliki-dagestan",
+    "name": "Государственная жилищная инспекция Республики Дагестан",
+    "shortName": "Госжилинспекция РД",
+    "territoryId": "ru-05"
+  },
+  "ru-05-agentstvo-po-okhrane-kulturnogo-naslediya-respubliki-dagestan": {
+    "id": "ru-05-agentstvo-po-okhrane-kulturnogo-naslediya-respubliki-dagestan",
+    "name": "Агентство по охране культурного наследия Республики Дагестан",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-upravlenie-pravitelstva-respubliki-dagestan-po-voprosam-pereseleniya-lakskogo-naseleniya-novolakskogo-rayona-na-novoe-mesto-zhitelstva-i-vosstanovleniya-aukhovskogo-rayona": {
+    "id": "ru-05-upravlenie-pravitelstva-respubliki-dagestan-po-voprosam-pereseleniya-lakskogo-naseleniya-novolakskogo-rayona-na-novoe-mesto-zhitelstva-i-vosstanovleniya-aukhovskogo-rayona",
+    "name": "Управление Правительства Республики Дагестан по вопросам переселения лакского населения Новолакского района на новое место жительства и восстановления Ауховского района",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-05-predstavitelstvo-respubliki-dagestan-v-g-baku-azerbaydzhanskoy-respubliki": {
+    "id": "ru-05-predstavitelstvo-respubliki-dagestan-v-g-baku-azerbaydzhanskoy-respubliki",
+    "name": "Представительство Республики Дагестан в г. Баку Азербайджанской Республики",
+    "shortName": "",
+    "territoryId": "ru-05"
+  },
+  "ru-08-pravitelstvo-respubliki-kalmykiya": {
+    "id": "ru-08-pravitelstvo-respubliki-kalmykiya",
+    "name": "Правительство Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-administratsiya-glavy-respubliki-kalmykiya": {
+    "id": "ru-08-administratsiya-glavy-respubliki-kalmykiya",
+    "name": "Администрация Главы Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-upravlenie-po-protivodeystviyu-korruptsii-pri-glave-respubliki-kalmykiya": {
+    "id": "ru-08-upravlenie-po-protivodeystviyu-korruptsii-pri-glave-respubliki-kalmykiya",
+    "name": "Управление по противодействию коррупции при Главе Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-postoyannoe-predstavitelstvo-respubliki-kalmykiya-pri-prezidente-rossiyskoy-federatsii": {
+    "id": "ru-08-postoyannoe-predstavitelstvo-respubliki-kalmykiya-pri-prezidente-rossiyskoy-federatsii",
+    "name": "Постоянное Представительство Республики Калмыкия при Президенте Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-apparat-pravitelstva-respubliki-kalmykiya": {
+    "id": "ru-08-apparat-pravitelstva-respubliki-kalmykiya",
+    "name": "Аппарат Правительства Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-zdravookhraneniya-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-zdravookhraneniya-respubliki-kalmykiya",
+    "name": "Министерство здравоохранения Республики Калмыкия",
+    "shortName": "Минздрав РК",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-kultury-i-turizma-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-kultury-i-turizma-respubliki-kalmykiya",
+    "name": "Министерство культуры и туризма Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-obrazovaniya-i-nauki-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-obrazovaniya-i-nauki-respubliki-kalmykiya",
+    "name": "Министерство образования и науки Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-po-zemelnym-i-imushchestvennym-otnosheniyam-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-po-zemelnym-i-imushchestvennym-otnosheniyam-respubliki-kalmykiya",
+    "name": "Министерство по земельным и имущественным отношениям Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-po-stroitelstvu-transportu-i-dorozhnomu-khozyaystvu-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-po-stroitelstvu-transportu-i-dorozhnomu-khozyaystvu-respubliki-kalmykiya",
+    "name": "Министерство по строительству, транспорту и дорожному хозяйству Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-prirodnykh-resursov-i-okhrany-okruzhayushchey-sredy-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-prirodnykh-resursov-i-okhrany-okruzhayushchey-sredy-respubliki-kalmykiya",
+    "name": "Министерство природных ресурсов и охраны окружающей среды Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-selskogo-khozyaystva-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-selskogo-khozyaystva-respubliki-kalmykiya",
+    "name": "Министерство сельского хозяйства Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-energetiki-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-energetiki-respubliki-kalmykiya",
+    "name": "Министерство жилищно-коммунального хозяйства и энергетики Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-finansov-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-finansov-respubliki-kalmykiya",
+    "name": "Министерство финансов Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-ekonomiki-i-torgovli-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-ekonomiki-i-torgovli-respubliki-kalmykiya",
+    "name": "Министерство экономики и торговли Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-ministerstvo-sotsialnogo-razvitiya-truda-i-zanyatosti-respubliki-kalmykiya": {
+    "id": "ru-08-ministerstvo-sotsialnogo-razvitiya-truda-i-zanyatosti-respubliki-kalmykiya",
+    "name": "Министерство социального развития, труда и занятости Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-regionalnaya-sluzhba-po-tarifam-respubliki-kalmykiya": {
+    "id": "ru-08-regionalnaya-sluzhba-po-tarifam-respubliki-kalmykiya",
+    "name": "Региональная служба по тарифам Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-respublikanskaya-sluzhba-finansovo-byudzhetnogo-kontrolya": {
+    "id": "ru-08-respublikanskaya-sluzhba-finansovo-byudzhetnogo-kontrolya",
+    "name": "Республиканская служба финансово-бюджетного контроля",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-sluzhba-po-voprosam-mirovoy-yustitsii-respubliki-kalmykiya": {
+    "id": "ru-08-sluzhba-po-voprosam-mirovoy-yustitsii-respubliki-kalmykiya",
+    "name": "Служба по вопросам мировой юстиции Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-upravlenie-veterinarii-respubliki-kalmykiya": {
+    "id": "ru-08-upravlenie-veterinarii-respubliki-kalmykiya",
+    "name": "Управление ветеринарии Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-kalmykiya": {
+    "id": "ru-08-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-kalmykiya",
+    "name": "Управление записи актов гражданского состояния Республики Калмыкия",
+    "shortName": "Управление ЗАГС Республики Калмыкия",
+    "territoryId": "ru-08"
+  },
+  "ru-08-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-respubliki-kalmykiya": {
+    "id": "ru-08-upravlenie-po-okhrane-obektov-kulturnogo-naslediya-respubliki-kalmykiya",
+    "name": "Управление по охране объектов культурного наследия Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-agentstvo-po-delam-molodezhi-respubliki-kalmykiya": {
+    "id": "ru-08-agentstvo-po-delam-molodezhi-respubliki-kalmykiya",
+    "name": "Агентство по делам молодежи Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-respubliki-kalmykiya": {
+    "id": "ru-08-inspektsiya-gosudarstvennogo-zhilishchnogo-nadzora-respubliki-kalmykiya",
+    "name": "Инспекция государственного жилищного надзора Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-08-inspektsiya-administrativno-tekhnicheskogo-nadzora-respubliki-kalmykiya": {
+    "id": "ru-08-inspektsiya-administrativno-tekhnicheskogo-nadzora-respubliki-kalmykiya",
+    "name": "Инспекция административно-технического надзора Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-30-administratsiya-gubernatora-astrakhanskoy-oblasti": {
+    "id": "ru-30-administratsiya-gubernatora-astrakhanskoy-oblasti",
+    "name": "Администрация Губернатора Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-30-sluzhba-po-protivodeystviyu-korruptsii-astrakhanskoy-oblasti": {
+    "id": "ru-30-sluzhba-po-protivodeystviyu-korruptsii-astrakhanskoy-oblasti",
+    "name": "Министерство региональной безопасности Астраханской области",
+    "shortName": "минрегионбезопасности Астраханской области",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-vneshnikh-svyazey-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-vneshnikh-svyazey-astrakhanskoy-oblasti",
+    "name": "Министерство внешних связей Астраханской области",
+    "shortName": "МВС АО",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-gosudarstvennogo-upravleniya-informatsionnykh-tekhnologiy-i-svyazi-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-gosudarstvennogo-upravleniya-informatsionnykh-tekhnologiy-i-svyazi-astrakhanskoy-oblasti",
+    "name": "Министерство государственного управления, информационных технологий и связи Астраханской области",
+    "shortName": "мингосуправления АО",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-imushchestvennykh-i-gradostroitelnykh-otnosheniy-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-imushchestvennykh-i-gradostroitelnykh-otnosheniy-astrakhanskoy-oblasti",
+    "name": "Министерство имущественных и градостроительных отношений Астраханской области",
+    "shortName": "минимущество Астраханской области",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-kultury-i-turizma-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-kultury-i-turizma-astrakhanskoy-oblasti",
+    "name": "Министерство культуры Астраханской области",
+    "shortName": "минкульт Астраханской области",
+    "territoryId": "ru-30"
+  },
+  "ru-30-sluzhba-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-astrakhanskoy-oblasti": {
+    "id": "ru-30-sluzhba-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-astrakhanskoy-oblasti",
+    "name": "Служба государственной охраны объектов культурного наследия Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-promyshlennosti-i-prirodnykh-resursov-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-promyshlennosti-i-prirodnykh-resursov-astrakhanskoy-oblasti",
+    "name": "Министерство промышленности, торговли и энергетики Астраханской области",
+    "shortName": "минпром АО",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-astrakhanskoy-oblasti",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-transporta-i-dorozhnoy-infrastruktury-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-transporta-i-dorozhnoy-infrastruktury-astrakhanskoy-oblasti",
+    "name": "Министерство транспорта и дорожной инфраструктуры Астраханской области",
+    "shortName": "минтранс Астраханской области",
+    "territoryId": "ru-30"
+  },
+  "ru-30-ministerstvo-ekonomicheskogo-razvitiya-astrakhanskoy-oblasti": {
+    "id": "ru-30-ministerstvo-ekonomicheskogo-razvitiya-astrakhanskoy-oblasti",
+    "name": "Министерство экономического развития Астраханской области",
+    "shortName": "минэкономразвития Астраханской области",
+    "territoryId": "ru-30"
+  },
+  "ru-30-sluzhba-zhilishchnogo-nadzora-astrakhanskoy-oblasti": {
+    "id": "ru-30-sluzhba-zhilishchnogo-nadzora-astrakhanskoy-oblasti",
+    "name": "Служба жилищного надзора Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-30-sluzhba-prirodopolzovaniya-i-okhrany-okruzhayushchey-sredy-astrakhanskoy-oblasti": {
+    "id": "ru-30-sluzhba-prirodopolzovaniya-i-okhrany-okruzhayushchey-sredy-astrakhanskoy-oblasti",
+    "name": "Служба природопользования и охраны окружающей среды Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-30-government": {
+    "id": "ru-30-government",
+    "name": "Правительство Астраханской области",
+    "shortName": "",
+    "territoryId": "ru-30"
+  },
+  "ru-15-ministerstvo-gosudarstvennogo-imushchestva-i-zemelnykh-otnosheniy-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-gosudarstvennogo-imushchestva-i-zemelnykh-otnosheniy-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство государственного имущества и земельных отношений Республики Северная Осетия-Алания",
+    "shortName": "Минимущество РСО-Алания",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-topliva-i-energetiki-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-topliva-i-energetiki-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство жилищно-коммунального хозяйства, топлива и энергетики Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-kultury-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-kultury-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство культуры Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-respubliki-severnaya-osetiya-alaniya-po-natsionalnoy-politike-i-vneshnim-svyazyam": {
+    "id": "ru-15-ministerstvo-respubliki-severnaya-osetiya-alaniya-po-natsionalnoy-politike-i-vneshnim-svyazyam",
+    "name": "Министерство Республики Северная Осетия-Алания по национальной политике и внешним связям",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство природных ресурсов и экологии Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-promyshlennosti-i-investitsiy-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-promyshlennosti-i-investitsiy-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство промышленности и инвестиций Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-selskogo-khozyaystva-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-selskogo-khozyaystva-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство сельского хозяйства Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-truda-i-sotsialnogo-razvitiya-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-truda-i-sotsialnogo-razvitiya-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство труда и социального развития Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-fizicheskoy-kultury-i-sporta-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство физической культуры и спорта Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-finansov-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-finansov-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство финансов Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-ministerstvo-ekonomicheskogo-razvitiya-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-ministerstvo-ekonomicheskogo-razvitiya-respubliki-severnaya-osetiya-alaniya",
+    "name": "Министерство экономического развития Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-zanyatosti-naseleniya": {
+    "id": "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-zanyatosti-naseleniya",
+    "name": "Комитет Республики Северная Осетия-Алания по занятости населения",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-delam-molodezhi": {
+    "id": "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-delam-molodezhi",
+    "name": "Комитет Республики Северная Осетия-Алания по делам молодежи",
+    "shortName": "КДМ РСО-Алания",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-po-okhrane-i-ispolzovaniyu-obektov-kulturnogo-naslediya-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-komitet-po-okhrane-i-ispolzovaniyu-obektov-kulturnogo-naslediya-respubliki-severnaya-osetiya-alaniya",
+    "name": "Комитет по охране и использованию объектов культурного наследия Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-po-delam-pechati-i-massovykh-kommunikatsiy-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-komitet-po-delam-pechati-i-massovykh-kommunikatsiy-respubliki-severnaya-osetiya-alaniya",
+    "name": "Комитет по делам печати и массовых коммуникаций Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-dorozhnogo-khozyaystva-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-komitet-dorozhnogo-khozyaystva-respubliki-severnaya-osetiya-alaniya",
+    "name": "Комитет дорожного хозяйства Республики Северная Осетия-Алания",
+    "shortName": "Комавтодор Алания",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-tsifrovogo-razvitiya-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-komitet-tsifrovogo-razvitiya-respubliki-severnaya-osetiya-alaniya",
+    "name": "Комитет цифрового развития Республики Северная Осетия-Алания",
+    "shortName": "Комцифры РСО-Алания",
+    "territoryId": "ru-15"
+  },
+  "ru-15-arkhivnaya-sluzhba-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-arkhivnaya-sluzhba-respubliki-severnaya-osetiya-alaniya",
+    "name": "Архивная служба Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-regionalnaya-sluzhba-po-tarifam-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-regionalnaya-sluzhba-po-tarifam-respubliki-severnaya-osetiya-alaniya",
+    "name": "Региональная служба по тарифам Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-kontrolno-revizionnoe-upravlenie-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-kontrolno-revizionnoe-upravlenie-respubliki-severnaya-osetiya-alaniya",
+    "name": "Контрольно-ревизионное управление Республики Северная Осетия-Алания",
+    "shortName": "КРУ РСО-Алания",
+    "territoryId": "ru-15"
+  },
+  "ru-15-upravlenie-veterinarii-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-upravlenie-veterinarii-respubliki-severnaya-osetiya-alaniya",
+    "name": "Управление ветеринарии Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-severnaya-osetiya-alaniya",
+    "name": "Управление записи актов гражданского состояния Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-upravlenie-respubliki-severnaya-osetiya-alaniya-po-provedeniyu-zakupok-dlya-gosudarstvennykh-nuzhd": {
+    "id": "ru-15-upravlenie-respubliki-severnaya-osetiya-alaniya-po-provedeniyu-zakupok-dlya-gosudarstvennykh-nuzhd",
+    "name": "Управление Республики Северная Осетия-Алания по проведению закупок для государственных нужд",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam": {
+    "id": "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam",
+    "name": "Комитет Республики Северная Осетия-Алания по делам гражданской обороны и чрезвычайным ситуациям",
+    "shortName": "Комитет РСО-Алания по делам ГО и ЧС",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-transportu": {
+    "id": "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-transportu",
+    "name": "Комитет Республики Северная Осетия-Алания по транспорту",
+    "shortName": "Комтранс Алания",
+    "territoryId": "ru-15"
+  },
+  "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-delam-veteranov-boevykh-deystviy-i-uchastnikov-spetsialnoy-voennoy-operatsii": {
+    "id": "ru-15-komitet-respubliki-severnaya-osetiya-alaniya-po-delam-veteranov-boevykh-deystviy-i-uchastnikov-spetsialnoy-voennoy-operatsii",
+    "name": "Комитет Республики Северная Осетия-Алания по делам ветеранов боевых действий и участников специальной военной операции",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-pravitelstvo-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-pravitelstvo-respubliki-severnaya-osetiya-alaniya",
+    "name": "Правительство Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-administratsiya-glavy-i-pravitelstva-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-administratsiya-glavy-i-pravitelstva-respubliki-severnaya-osetiya-alaniya",
+    "name": "Администрация Главы Республики Северная Осетия-Алания и Правительства Республики Северная Осетия-Алания",
+    "shortName": "",
+    "territoryId": "ru-15"
+  },
+  "ru-15-apparat-mirovykh-sudey-respubliki-severnaya-osetiya-alaniya": {
+    "id": "ru-15-apparat-mirovykh-sudey-respubliki-severnaya-osetiya-alaniya",
+    "name": "Аппарат мировых судей Республики Северная Осетия-Алания",
+    "shortName": "Аппарат мировых судей РСО-Алания",
+    "territoryId": "ru-15"
+  },
+  "ru-91-gosudarstvennyy-komitet-molodezhnoy-politiki-respubliki-krym": {
+    "id": "ru-91-gosudarstvennyy-komitet-molodezhnoy-politiki-respubliki-krym",
+    "name": "Государственный комитет молодежной политики Республики Крым",
+    "shortName": "Госкоммолполитики Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-sluzhba-po-mobilizatsionnoy-rabote-i-territorialnoy-oborone-respubliki-krym": {
+    "id": "ru-91-sluzhba-po-mobilizatsionnoy-rabote-i-territorialnoy-oborone-respubliki-krym",
+    "name": "Служба по мобилизационной работе и территориальной обороне Республики Крым",
+    "shortName": "Служба по МР и ТО РК",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-vnutrenney-politiki-informatsii-i-svyazi-respubliki-krym": {
+    "id": "ru-91-ministerstvo-vnutrenney-politiki-informatsii-i-svyazi-respubliki-krym",
+    "name": "Министерство внутренней политики, информации и связи Республики Крым",
+    "shortName": "Мининформ Республики Крым",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-zhilishchnoy-politiki-i-gosudarstvennogo-stroitelnogo-nadzora-respubliki-krym": {
+    "id": "ru-91-ministerstvo-zhilishchnoy-politiki-i-gosudarstvennogo-stroitelnogo-nadzora-respubliki-krym",
+    "name": "Министерство жилищной политики и государственного строительного надзора Республики Крым",
+    "shortName": "Минжилполитики и стройнадзора Республики Крым",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-finansov-respubliki-krym": {
+    "id": "ru-91-ministerstvo-finansov-respubliki-krym",
+    "name": "Министерство финансов Республики Крым",
+    "shortName": "Минфин Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-obrazovaniya-nauki-i-molodezhi-respubliki-krym": {
+    "id": "ru-91-ministerstvo-obrazovaniya-nauki-i-molodezhi-respubliki-krym",
+    "name": "Министерство образования, науки и молодежи Республики Крым",
+    "shortName": "Минобразования Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-zdravookhraneniya-respubliki-krym": {
+    "id": "ru-91-ministerstvo-zdravookhraneniya-respubliki-krym",
+    "name": "Министерство здравоохранения Республики Крым",
+    "shortName": "Минздрав РК",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-sporta-respubliki-krym": {
+    "id": "ru-91-ministerstvo-sporta-respubliki-krym",
+    "name": "Министерство спорта Республики Крым",
+    "shortName": "Минспорт Республики Крым",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-kurortov-i-turizma-respubliki-krym": {
+    "id": "ru-91-ministerstvo-kurortov-i-turizma-respubliki-krym",
+    "name": "Министерство курортов и туризма Республики Крым",
+    "shortName": "Минтуризма Республики Крым",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-kultury-respubliki-krym": {
+    "id": "ru-91-ministerstvo-kultury-respubliki-krym",
+    "name": "Министерство культуры Республики Крым",
+    "shortName": "Минкультуры Республики Крым",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-respubliki-krym": {
+    "id": "ru-91-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-respubliki-krym",
+    "name": "Министерство жилищно-коммунального хозяйства Республики Крым",
+    "shortName": "МинЖКХ Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-promyshlennoy-politiki-respubliki-krym": {
+    "id": "ru-91-ministerstvo-promyshlennoy-politiki-respubliki-krym",
+    "name": "Министерство промышленности и торговли Республики Крым",
+    "shortName": "Минпромторг Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-stroitelstva-i-arkhitektury-respubliki-krym": {
+    "id": "ru-91-ministerstvo-stroitelstva-i-arkhitektury-respubliki-krym",
+    "name": "Министерство строительства и архитектуры Республики Крым",
+    "shortName": "Минстрой Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-transporta-respubliki-krym": {
+    "id": "ru-91-ministerstvo-transporta-respubliki-krym",
+    "name": "Министерство транспорта Республики Крым",
+    "shortName": "Минтранс Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-truda-i-sotsialnoy-zashchity-respubliki-krym": {
+    "id": "ru-91-ministerstvo-truda-i-sotsialnoy-zashchity-respubliki-krym",
+    "name": "Министерство труда и социальной защиты Республики Крым",
+    "shortName": "Минтруд РК",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-topliva-i-energetiki-respubliki-krym": {
+    "id": "ru-91-ministerstvo-topliva-i-energetiki-respubliki-krym",
+    "name": "Министерство топлива и энергетики Республики Крым",
+    "shortName": "Минтопэнерго Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-chrezvychaynykh-situatsiy-respubliki-krym": {
+    "id": "ru-91-ministerstvo-chrezvychaynykh-situatsiy-respubliki-krym",
+    "name": "Министерство чрезвычайных ситуаций Республики Крым",
+    "shortName": "МЧС Республики Крым",
+    "territoryId": "ru-91"
+  },
+  "ru-91-gosudarstvennyy-komitet-veterinarii-respubliki-krym": {
+    "id": "ru-91-gosudarstvennyy-komitet-veterinarii-respubliki-krym",
+    "name": "Государственный комитет ветеринарии Республики Крым",
+    "shortName": "Госкомветеринарии",
+    "territoryId": "ru-91"
+  },
+  "ru-91-gosudarstvennyy-komitet-po-vodnomu-khozyaystvu-i-melioratsii-respubliki-krym": {
+    "id": "ru-91-gosudarstvennyy-komitet-po-vodnomu-khozyaystvu-i-melioratsii-respubliki-krym",
+    "name": "Государственный комитет по водному хозяйству и мелиорации Республики Крым",
+    "shortName": "Госкомводхоз",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-ekologii-i-prirodnykh-resursov-respubliki-krym": {
+    "id": "ru-91-ministerstvo-ekologii-i-prirodnykh-resursov-respubliki-krym",
+    "name": "Министерство экологии и природных ресурсов Республики Крым",
+    "shortName": "Минприроды Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-ekonomicheskogo-razvitiya-respubliki-krym": {
+    "id": "ru-91-ministerstvo-ekonomicheskogo-razvitiya-respubliki-krym",
+    "name": "Министерство экономического развития Республики Крым",
+    "shortName": "Минэкономразвития РК",
+    "territoryId": "ru-91"
+  },
+  "ru-91-gosudarstvennyy-komitet-po-gosudarstvennoy-registratsii-i-kadastru-respubliki-krym": {
+    "id": "ru-91-gosudarstvennyy-komitet-po-gosudarstvennoy-registratsii-i-kadastru-respubliki-krym",
+    "name": "Государственный комитет по государственной регистрации и кадастру Республики Крым",
+    "shortName": "Госкомрегистр",
+    "territoryId": "ru-91"
+  },
+  "ru-91-gosudarstvennyy-komitet-po-tsenam-i-tarifam-respubliki-krym": {
+    "id": "ru-91-gosudarstvennyy-komitet-po-tsenam-i-tarifam-respubliki-krym",
+    "name": "Государственный комитет по ценам и тарифам Республики Крым",
+    "shortName": "ГКЦТ РК",
+    "territoryId": "ru-91"
+  },
+  "ru-91-inspektsiya-po-zhilishchnomu-nadzoru-respubliki-krym": {
+    "id": "ru-91-inspektsiya-po-zhilishchnomu-nadzoru-respubliki-krym",
+    "name": "Инспекция по жилищному надзору Республики Крым",
+    "shortName": "Жилищная инспекция",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-yustitsii-respubliki-krym": {
+    "id": "ru-91-ministerstvo-yustitsii-respubliki-krym",
+    "name": "Министерство юстиции Республики Крым",
+    "shortName": "",
+    "territoryId": "ru-91"
+  },
+  "ru-91-gosudarstvennyy-komitet-po-delam-mezhnatsionalnykh-otnosheniy-i-deportirovannykh-grazhdan-respubliki-krym": {
+    "id": "ru-91-gosudarstvennyy-komitet-po-delam-mezhnatsionalnykh-otnosheniy-i-deportirovannykh-grazhdan-respubliki-krym",
+    "name": "Государственный комитет по делам межнациональных отношений Республики Крым",
+    "shortName": "Госкомнац Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-sluzhba-finansovogo-nadzora-respubliki-krym": {
+    "id": "ru-91-sluzhba-finansovogo-nadzora-respubliki-krym",
+    "name": "Служба финансового надзора Республики Крым",
+    "shortName": "Крымфиннадзор",
+    "territoryId": "ru-91"
+  },
+  "ru-91-inspektsiya-po-trudu-respubliki-krym": {
+    "id": "ru-91-inspektsiya-po-trudu-respubliki-krym",
+    "name": "Инспекция по труду Республики Крым",
+    "shortName": "",
+    "territoryId": "ru-91"
+  },
+  "ru-91-sluzhba-po-ekologicheskomu-i-tekhnologicheskomu-nadzoru-respubliki-krym": {
+    "id": "ru-91-sluzhba-po-ekologicheskomu-i-tekhnologicheskomu-nadzoru-respubliki-krym",
+    "name": "Служба по экологическому и технологическому надзору Республики Крым",
+    "shortName": "Крымтехнадзор",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-selskogo-khozyaystva-respubliki-krym": {
+    "id": "ru-91-ministerstvo-selskogo-khozyaystva-respubliki-krym",
+    "name": "Министерство сельского хозяйства Республики Крым",
+    "shortName": "Минсельхоз Республики Крым",
+    "territoryId": "ru-91"
+  },
+  "ru-91-postoyannoe-predstavitelstvo-respubliki-krym-pri-prezidente-rossiyskoy-federatsii": {
+    "id": "ru-91-postoyannoe-predstavitelstvo-respubliki-krym-pri-prezidente-rossiyskoy-federatsii",
+    "name": "Постоянное Представительство Республики Крым при Президенте Российской Федерации",
+    "shortName": "Представительство РК при Президенте РФ",
+    "territoryId": "ru-91"
+  },
+  "ru-91-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-krym": {
+    "id": "ru-91-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-krym",
+    "name": "Министерство имущественных и земельных отношений Республики Крым",
+    "shortName": "Минимущество Крыма",
+    "territoryId": "ru-91"
+  },
+  "ru-91-sovet-ministrov-respubliki-krym": {
+    "id": "ru-91-sovet-ministrov-respubliki-krym",
+    "name": "Совет министров Республики Крым",
+    "shortName": "",
+    "territoryId": "ru-91"
+  },
+  "ru-91-apparat-soveta-ministrov-respubliki-krym": {
+    "id": "ru-91-apparat-soveta-ministrov-respubliki-krym",
+    "name": "Аппарат Совета министров Республики Крым",
+    "shortName": "",
+    "territoryId": "ru-91"
+  },
+  "ru-20-pravitelstvo-chechenskoy-respubliki": {
+    "id": "ru-20-pravitelstvo-chechenskoy-respubliki",
+    "name": "Правительство Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-truda-zanyatosti-i-sotsialnogo-razvitiya-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-truda-zanyatosti-i-sotsialnogo-razvitiya-chechenskoy-respubliki",
+    "name": "Министерство труда, занятости и социального развития Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-chechenskoy-respubliki",
+    "name": "Министерство имущественных и земельных отношений Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-chechenskoy-respubliki",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-avtomobilnykh-dorog-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-avtomobilnykh-dorog-chechenskoy-respubliki",
+    "name": "Министерство автомобильных дорог Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-transporta-svyazi-i-tsifrovogo-razvitiya-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-transporta-svyazi-i-tsifrovogo-razvitiya-chechenskoy-respubliki",
+    "name": "Министерство транспорта, связи и цифрового развития Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-promyshlennosti-energetiki-i-torgovli-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-promyshlennosti-energetiki-i-torgovli-chechenskoy-respubliki",
+    "name": "Министерство промышленности, торговли, топлива и энергетики Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-kultury-chechenskoy-respubliki": {
+    "id": "ru-20-ministerstvo-kultury-chechenskoy-respubliki",
+    "name": "Министерство культуры Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-chechenskoy-respubliki-po-natsionalnoy-politike-vneshnim-svyazyam-pechati-i-informatsii": {
+    "id": "ru-20-ministerstvo-chechenskoy-respubliki-po-natsionalnoy-politike-vneshnim-svyazyam-pechati-i-informatsii",
+    "name": "Министерство Чеченской Республики по национальной политике, внешним связям, печати и информации",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-chechenskoy-respubliki-po-fizicheskoy-kulture-sportu-i-molodezhnoy-politike": {
+    "id": "ru-20-ministerstvo-chechenskoy-respubliki-po-fizicheskoy-kulture-sportu-i-molodezhnoy-politike",
+    "name": "Министерство Чеченской Республики по физической культуре и спорту",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-chechenskoy-respubliki-po-turizmu": {
+    "id": "ru-20-ministerstvo-chechenskoy-respubliki-po-turizmu",
+    "name": "Министерство Чеченской Республики по туризму",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-gosudarstvennyy-komitet-po-delam-arkhitektury-gradostroitelstva-i-gosudarstvennogo-zhilishchnogo-nadzora-chechenskoy-respubliki": {
+    "id": "ru-20-gosudarstvennyy-komitet-po-delam-arkhitektury-gradostroitelstva-i-gosudarstvennogo-zhilishchnogo-nadzora-chechenskoy-respubliki",
+    "name": "Государственный комитет по делам архитектуры, градостроительства и государственного жилищного надзора Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-komitet-pravitelstva-chechenskoy-respubliki-po-preduprezhdeniyu-i-likvidatsii-posledstviy-chrezvychaynykh-situatsiy": {
+    "id": "ru-20-komitet-pravitelstva-chechenskoy-respubliki-po-preduprezhdeniyu-i-likvidatsii-posledstviy-chrezvychaynykh-situatsiy",
+    "name": "Комитет Правительства Чеченской Республики по предупреждению и ликвидации последствий чрезвычайных ситуаций",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-komitet-pravitelstva-chechenskoy-respubliki-po-zashchite-prav-potrebiteley-i-regulirovaniyu-potrebitelskogo-rynka": {
+    "id": "ru-20-komitet-pravitelstva-chechenskoy-respubliki-po-zashchite-prav-potrebiteley-i-regulirovaniyu-potrebitelskogo-rynka",
+    "name": "Комитет Правительства Чеченской Республики по защите прав потребителей и регулированию потребительского рынка",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-chechenskoy-respubliki": {
+    "id": "ru-20-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-chechenskoy-respubliki",
+    "name": "Управление записи актов гражданского состояния Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-arkhivnoe-upravlenie-pravitelstva-chechenskoy-respubliki": {
+    "id": "ru-20-arkhivnoe-upravlenie-pravitelstva-chechenskoy-respubliki",
+    "name": "Архивное управление Правительства Чеченской Республики",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-sluzhba-obespecheniya-deyatelnosti-mirovykh-sudey-v-chechenskoy-respublike": {
+    "id": "ru-20-sluzhba-obespecheniya-deyatelnosti-mirovykh-sudey-v-chechenskoy-respublike",
+    "name": "Служба обеспечения деятельности мировых судей в Чеченской Республике",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-20-ministerstvo-chechenskoy-respubliki-po-delam-molodezhi": {
+    "id": "ru-20-ministerstvo-chechenskoy-respubliki-po-delam-molodezhi",
+    "name": "Министерство Чеченской Республики по делам молодежи",
+    "shortName": "",
+    "territoryId": "ru-20"
+  },
+  "ru-07-pravitelstvo-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-pravitelstvo-kabardino-balkarskoy-respubliki",
+    "name": "Правительство Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-kabardino-balkarskoy-respubliki",
+    "name": "Министерство земельных и имущественных отношений Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-kultury-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-kultury-kabardino-balkarskoy-respubliki",
+    "name": "Министерство культуры Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-kurortov-i-turizma-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-kurortov-i-turizma-kabardino-balkarskoy-respubliki",
+    "name": "Министерство курортов и туризма Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-po-delam-molodezhi-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-po-delam-molodezhi-kabardino-balkarskoy-respubliki",
+    "name": "Министерство по делам молодежи Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-po-delam-natsionalnostey-i-obshchestvennym-proektam-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-po-delam-natsionalnostey-i-obshchestvennym-proektam-kabardino-balkarskoy-respubliki",
+    "name": "Министерство по делам национальностей и общественным проектам Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-prirodnykh-resursov-i-ekologii-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-prirodnykh-resursov-i-ekologii-kabardino-balkarskoy-respubliki",
+    "name": "Министерство природных ресурсов и экологии Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-selskogo-khozyaystva-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-selskogo-khozyaystva-kabardino-balkarskoy-respubliki",
+    "name": "Министерство сельского хозяйства Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-sporta-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-sporta-kabardino-balkarskoy-respubliki",
+    "name": "Министерство спорта Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-kabardino-balkarskoy-respubliki",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-transporta-i-dorozhnogo-khozyaystva-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-transporta-i-dorozhnogo-khozyaystva-kabardino-balkarskoy-respubliki",
+    "name": "Министерство транспорта и дорожного хозяйства Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-finansov-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-finansov-kabardino-balkarskoy-respubliki",
+    "name": "Министерство финансов Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-ministerstvo-tsifrovogo-razvitiya-svyazi-i-massovykh-kommunikatsiy-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-ministerstvo-tsifrovogo-razvitiya-svyazi-i-massovykh-kommunikatsiy-kabardino-balkarskoy-respubliki",
+    "name": "Министерство цифрового развития, связи и массовых коммуникаций Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-upravlenie-delami-glavy-i-pravitelstva-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-upravlenie-delami-glavy-i-pravitelstva-kabardino-balkarskoy-respubliki",
+    "name": "Управление делами Главы и Правительства Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-gosudarstvennyy-komitet-kabardino-balkarskoy-respubliki-po-tarifam-i-zhilishchnomu-nadzoru": {
+    "id": "ru-07-gosudarstvennyy-komitet-kabardino-balkarskoy-respubliki-po-tarifam-i-zhilishchnomu-nadzoru",
+    "name": "Государственный комитет Кабардино-Балкарской Республики по тарифам и жилищному надзору",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-upravlenie-veterinarii-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-upravlenie-veterinarii-kabardino-balkarskoy-respubliki",
+    "name": "Управление ветеринарии Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kabardino-balkarskoy-respubliki",
+    "name": "Управление записи актов гражданского состояния Кабардино-Балкарской Республики",
+    "shortName": "Управление ЗАГС КБР",
+    "territoryId": "ru-07"
+  },
+  "ru-07-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-kabardino-balkarskoy-respubliki",
+    "name": "Управление по государственной охране объектов культурного наследия Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-arkhivnaya-sluzhba-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-arkhivnaya-sluzhba-kabardino-balkarskoy-respubliki",
+    "name": "Архивная служба Кабардино-Балкарской Республики",
+    "shortName": "АС КБР",
+    "territoryId": "ru-07"
+  },
+  "ru-07-sluzhba-po-obespecheniyu-deyatelnosti-mirovykh-sudey-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-sluzhba-po-obespecheniyu-deyatelnosti-mirovykh-sudey-kabardino-balkarskoy-respubliki",
+    "name": "Служба по обеспечению деятельности мировых судей Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-07-administratsiya-glavy-kabardino-balkarskoy-respubliki": {
+    "id": "ru-07-administratsiya-glavy-kabardino-balkarskoy-respubliki",
+    "name": "Администрация Главы Кабардино-Балкарской Республики",
+    "shortName": "",
+    "territoryId": "ru-07"
+  },
+  "ru-61-pravitelstvo-rostovskoy-oblasti": {
+    "id": "ru-61-pravitelstvo-rostovskoy-oblasti",
+    "name": "Правительство Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-predstavitelstvo-pravitelstva-rostovskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii": {
+    "id": "ru-61-predstavitelstvo-pravitelstva-rostovskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii",
+    "name": "Представительство Правительства Ростовской области при Правительстве Российской Федерации",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-rostovskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-zdravookhraneniya-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-zdravookhraneniya-rostovskoy-oblasti",
+    "name": "Министерство здравоохранения Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-finansovogo-ozdorovleniya-predpriyatiy-organizatsiy-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-finansovogo-ozdorovleniya-predpriyatiy-organizatsiy-rostovskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений, финансового оздоровления предприятий, организаций Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-kultury-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-kultury-rostovskoy-oblasti",
+    "name": "Министерство культуры Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-obrazovaniya-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-obrazovaniya-rostovskoy-oblasti",
+    "name": "Министерство образования Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-prirodnykh-resursov-i-ekologii-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-prirodnykh-resursov-i-ekologii-rostovskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Ростовской области",
+    "shortName": "минприроды Ростовской области",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-po-fizicheskoy-kulture-i-sportu-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-po-fizicheskoy-kulture-i-sportu-rostovskoy-oblasti",
+    "name": "Министерство по физической культуре и спорту Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-promyshlennosti-i-energetiki-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-promyshlennosti-i-energetiki-rostovskoy-oblasti",
+    "name": "Министерство промышленности и энергетики Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-rostovskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольствия Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-stroitelstva-arkhitektury-i-territorialnogo-razvitiya-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-stroitelstva-arkhitektury-i-territorialnogo-razvitiya-rostovskoy-oblasti",
+    "name": "Министерство строительства, архитектуры и территориального развития Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-transporta-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-transporta-rostovskoy-oblasti",
+    "name": "Министерство транспорта Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-truda-i-sotsialnogo-razvitiya-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-truda-i-sotsialnogo-razvitiya-rostovskoy-oblasti",
+    "name": "Министерство труда и социального развития Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-ministerstvo-finansov-rostovskoy-oblasti": {
+    "id": "ru-61-ministerstvo-finansov-rostovskoy-oblasti",
+    "name": "Министерство финансов Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-departament-po-delam-kazachestva-i-kadetskikh-uchebnykh-zavedeniy-rostovskoy-oblasti": {
+    "id": "ru-61-departament-po-delam-kazachestva-i-kadetskikh-uchebnykh-zavedeniy-rostovskoy-oblasti",
+    "name": "Департамент по делам казачества и кадетских учебных заведений Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-departament-po-obespecheniyu-deyatelnosti-mirovykh-sudey-rostovskoy-oblasti": {
+    "id": "ru-61-departament-po-obespecheniyu-deyatelnosti-mirovykh-sudey-rostovskoy-oblasti",
+    "name": "Департамент по обеспечению деятельности мировых судей Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-departament-po-preduprezhdeniyu-i-likvidatsii-chrezvychaynykh-situatsiy-rostovskoy-oblasti": {
+    "id": "ru-61-departament-po-preduprezhdeniyu-i-likvidatsii-chrezvychaynykh-situatsiy-rostovskoy-oblasti",
+    "name": "Департамент по предупреждению и ликвидации чрезвычайных ситуаций Ростовской области",
+    "shortName": "ДПЧС Ростовской области",
+    "territoryId": "ru-61"
+  },
+  "ru-61-departament-potrebitelskogo-rynka-rostovskoy-oblasti": {
+    "id": "ru-61-departament-potrebitelskogo-rynka-rostovskoy-oblasti",
+    "name": "Департамент потребительского рынка Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-regionalnaya-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-rostovskoy-oblasti": {
+    "id": "ru-61-regionalnaya-sluzhba-gosudarstvennogo-stroitelnogo-nadzora-rostovskoy-oblasti",
+    "name": "Региональная служба государственного строительного надзора Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-regionalnaya-sluzhba-po-tarifam-rostovskoy-oblasti": {
+    "id": "ru-61-regionalnaya-sluzhba-po-tarifam-rostovskoy-oblasti",
+    "name": "Региональная служба по тарифам Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-komitet-po-molodezhnoy-politike-rostovskoy-oblasti": {
+    "id": "ru-61-komitet-po-molodezhnoy-politike-rostovskoy-oblasti",
+    "name": "Комитет по молодежной политике Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-komitet-po-okhrane-obektov-kulturnogo-naslediya-rostovskoy-oblasti": {
+    "id": "ru-61-komitet-po-okhrane-obektov-kulturnogo-naslediya-rostovskoy-oblasti",
+    "name": "Комитет по охране объектов культурного наследия Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-komitet-po-upravleniyu-arkhivnym-delom-rostovskoy-oblasti": {
+    "id": "ru-61-komitet-po-upravleniyu-arkhivnym-delom-rostovskoy-oblasti",
+    "name": "Комитет по управлению архивным делом Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-upravlenie-veterinarii-rostovskoy-oblasti": {
+    "id": "ru-61-upravlenie-veterinarii-rostovskoy-oblasti",
+    "name": "Управление ветеринарии Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-upravlenie-gosudarstvennogo-nadzora-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-rostovskoy-oblasti": {
+    "id": "ru-61-upravlenie-gosudarstvennogo-nadzora-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-rostovskoy-oblasti",
+    "name": "Управление государственного надзора за техническим состоянием самоходных машин и других видов техники Ростовской области",
+    "shortName": "Ростовоблгостехнадзор",
+    "territoryId": "ru-61"
+  },
+  "ru-61-upravlenie-gosudarstvennoy-sluzhby-zanyatosti-naseleniya-rostovskoy-oblasti": {
+    "id": "ru-61-upravlenie-gosudarstvennoy-sluzhby-zanyatosti-naseleniya-rostovskoy-oblasti",
+    "name": "Управление государственной службы занятости населения Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-rostovskoy-oblasti": {
+    "id": "ru-61-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-rostovskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-administrativnaya-inspektsiya-rostovskoy-oblasti": {
+    "id": "ru-61-administrativnaya-inspektsiya-rostovskoy-oblasti",
+    "name": "Административная инспекция Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-61-gosudarstvennaya-zhilishchnaya-inspektsiya-rostovskoy-oblasti": {
+    "id": "ru-61-gosudarstvennaya-zhilishchnaya-inspektsiya-rostovskoy-oblasti",
+    "name": "Государственная жилищная инспекция Ростовской области",
+    "shortName": "",
+    "territoryId": "ru-61"
+  },
+  "ru-01-ministerstvo-obrazovaniya-i-nauki-respubliki-adygeya": {
+    "id": "ru-01-ministerstvo-obrazovaniya-i-nauki-respubliki-adygeya",
+    "name": "Министерство образования и науки Республики Адыгея",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-ministerstvo-tsifrovogo-razvitiya-informatsionnykh-i-telekommunikatsionnykh-tekhnologiy-respubliki-adygeya": {
+    "id": "ru-01-ministerstvo-tsifrovogo-razvitiya-informatsionnykh-i-telekommunikatsionnykh-tekhnologiy-respubliki-adygeya",
+    "name": "Министерство цифрового развития, информационных и телекоммуникационных технологий Республики Адыгея",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-komitet-respubliki-adygeya-po-delam-grazhdanskoy-oborony-i-chrezvychaynykh-situatsiy": {
+    "id": "ru-01-komitet-respubliki-adygeya-po-delam-grazhdanskoy-oborony-i-chrezvychaynykh-situatsiy",
+    "name": "Комитет Республики Адыгея по делам гражданской обороны и чрезвычайных ситуаций",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-komitet-respubliki-adygeya-po-delam-molodezhi": {
+    "id": "ru-01-komitet-respubliki-adygeya-po-delam-molodezhi",
+    "name": "Комитет Республики Адыгея по делам молодежи",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-ministerstvo-ekonomicheskogo-razvitiya-i-torgovli-respubliki-adygeya": {
+    "id": "ru-01-ministerstvo-ekonomicheskogo-razvitiya-i-torgovli-respubliki-adygeya",
+    "name": "Министерство экономического развития и торговли Республики Адыгея",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-upravlenie-po-okhrane-okruzhayushchey-sredy-i-prirodnym-resursam-respubliki-adygeya": {
+    "id": "ru-01-upravlenie-po-okhrane-okruzhayushchey-sredy-i-prirodnym-resursam-respubliki-adygeya",
+    "name": "Управление по охране окружающей среды и природным ресурсам Республики Адыгея",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-postoyannoe-predstavitelstvo-respubliki-adygeya-pri-gubernatore-krasnodarskogo-kraya": {
+    "id": "ru-01-postoyannoe-predstavitelstvo-respubliki-adygeya-pri-gubernatore-krasnodarskogo-kraya",
+    "name": "Постоянное представительство Республики Адыгея при Губернаторе Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-cabinet-of-ministers": {
+    "id": "ru-01-cabinet-of-ministers",
+    "name": "Кабинет Министров Республики Адыгея",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-01-administration-head-and-cabinet": {
+    "id": "ru-01-administration-head-and-cabinet",
+    "name": "Администрация Главы Республики Адыгея и Кабинета Министров Республики Адыгея",
+    "shortName": "",
+    "territoryId": "ru-01"
+  },
+  "ru-23-administratsiya-krasnodarskogo-kraya": {
+    "id": "ru-23-administratsiya-krasnodarskogo-kraya",
+    "name": "Администрация Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-zdravookhraneniya-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-zdravookhraneniya-krasnodarskogo-kraya",
+    "name": "Министерство здравоохранения Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-truda-i-sotsialnogo-razvitiya-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-truda-i-sotsialnogo-razvitiya-krasnodarskogo-kraya",
+    "name": "Министерство труда и социального развития Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-obrazovaniya-nauki-i-molodezhnoy-politiki-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-obrazovaniya-nauki-i-molodezhnoy-politiki-krasnodarskogo-kraya",
+    "name": "Министерство образования и науки Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-kultury-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-kultury-krasnodarskogo-kraya",
+    "name": "Министерство культуры Краснодарского края",
+    "shortName": "Минкультуры КК",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-prirodnykh-resursov-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-prirodnykh-resursov-krasnodarskogo-kraya",
+    "name": "Министерство природных ресурсов Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-finansov-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-finansov-krasnodarskogo-kraya",
+    "name": "Министерство финансов Краснодарского края",
+    "shortName": "Минфин КК",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-ekonomiki-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-ekonomiki-krasnodarskogo-kraya",
+    "name": "Министерство экономики Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-ministerstvo-grazhdanskoy-oborony-i-chrezvychaynykh-situatsiy-krasnodarskogo-kraya": {
+    "id": "ru-23-ministerstvo-grazhdanskoy-oborony-i-chrezvychaynykh-situatsiy-krasnodarskogo-kraya",
+    "name": "Министерство гражданской обороны и чрезвычайных ситуаций Краснодарского края",
+    "shortName": "Министерство ГО и ЧС КК",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-informatsionnoy-politiki-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-informatsionnoy-politiki-krasnodarskogo-kraya",
+    "name": "Департамент информационной политики Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-razvitiya-biznesa-i-vneshneekonomicheskoy-deyatelnosti-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-razvitiya-biznesa-i-vneshneekonomicheskoy-deyatelnosti-krasnodarskogo-kraya",
+    "name": "Департамент развития бизнеса и внешнеэкономической деятельности Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-potrebitelskoy-sfery-i-regulirovaniya-rynka-alkogolya-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-potrebitelskoy-sfery-i-regulirovaniya-rynka-alkogolya-krasnodarskogo-kraya",
+    "name": "Департамент потребительской сферы и регулирования рынка алкоголя Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-stroitelstva-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-stroitelstva-krasnodarskogo-kraya",
+    "name": "Департамент строительства Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-po-arkhitekture-i-gradostroitelstvu-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-po-arkhitekture-i-gradostroitelstvu-krasnodarskogo-kraya",
+    "name": "Департамент по архитектуре и градостроительству Краснодарского края",
+    "shortName": "ДАГ КК",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-po-nadzoru-v-stroitelnoy-sfere-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-po-nadzoru-v-stroitelnoy-sfere-krasnodarskogo-kraya",
+    "name": "Департамент по надзору в строительной сфере Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-gosudarstvennogo-regulirovaniya-tarifov-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-gosudarstvennogo-regulirovaniya-tarifov-krasnodarskogo-kraya",
+    "name": "Департамент государственного регулирования тарифов Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-po-delam-kazachestva-voennym-voprosam-i-rabote-s-doprizyvnoy-molodezhyu-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-po-delam-kazachestva-voennym-voprosam-i-rabote-s-doprizyvnoy-molodezhyu-krasnodarskogo-kraya",
+    "name": "Департамент по делам казачества, военным вопросам и работе с допризывной молодежью Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-po-obespecheniyu-deyatelnosti-mirovykh-sudey-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-po-obespecheniyu-deyatelnosti-mirovykh-sudey-krasnodarskogo-kraya",
+    "name": "Департамент по обеспечению деятельности мировых судей Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-veterinarii-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-veterinarii-krasnodarskogo-kraya",
+    "name": "Департамент ветеринарии Краснодарского края",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-23-departament-molodezhnoy-politiki-krasnodarskogo-kraya": {
+    "id": "ru-23-departament-molodezhnoy-politiki-krasnodarskogo-kraya",
+    "name": "Департамент молодежной политики Краснодарского края",
+    "shortName": "ДМПКК",
+    "territoryId": "ru-23"
+  },
+  "ru-06-ministerstvo-zdravookhraneniya-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-zdravookhraneniya-respubliki-ingushetiya",
+    "name": "Министерство здравоохранения Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-respubliki-ingushetiya",
+    "name": "Министерство имущественных и земельных отношений Республики Ингушетия",
+    "shortName": "Минимущество Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-obrazovaniya-i-nauki-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-obrazovaniya-i-nauki-respubliki-ingushetiya",
+    "name": "Министерство образования и науки Республики Ингушетия",
+    "shortName": "Минобрнауки Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-po-fizicheskoy-kulture-i-sportu-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-po-fizicheskoy-kulture-i-sportu-respubliki-ingushetiya",
+    "name": "Министерство по физической культуре и спорту Республики Ингушетия",
+    "shortName": "Минспорта Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-truda-zanyatosti-i-sotsialnogo-razvitiya-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-truda-zanyatosti-i-sotsialnogo-razvitiya-respubliki-ingushetiya",
+    "name": "Министерство труда, занятости и социального развития Республики Ингушетия",
+    "shortName": "Минтруд Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-finansov-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-finansov-respubliki-ingushetiya",
+    "name": "Министерство финансов Республики Ингушетия",
+    "shortName": "Минфин Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-prirodnykh-resursov-i-ekologii-respubliki-ingushetiya",
+    "name": "Министерство природных ресурсов и экологии Республики Ингушетия",
+    "shortName": "Минприроды Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-promyshlennosti-i-tsifrovogo-razvitiya-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-promyshlennosti-i-tsifrovogo-razvitiya-respubliki-ingushetiya",
+    "name": "Министерство промышленности и цифрового развития Республики Ингушетия",
+    "shortName": "Минпромсвязи Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-ministerstvo-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam-respubliki-ingushetiya": {
+    "id": "ru-06-ministerstvo-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam-respubliki-ingushetiya",
+    "name": "Министерство по делам гражданской обороны и чрезвычайным ситуациям Республики Ингушетия",
+    "shortName": "МЧС Республики Ингушетия",
+    "territoryId": "ru-06"
+  },
+  "ru-06-komitet-arkhitektury-i-gradostroitelstva-respubliki-ingushetiya": {
+    "id": "ru-06-komitet-arkhitektury-i-gradostroitelstva-respubliki-ingushetiya",
+    "name": "Комитет архитектуры и градостроительства Республики Ингушетия",
+    "shortName": "Комархстрой Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-komitet-po-delam-molodezhi-respubliki-ingushetiya": {
+    "id": "ru-06-komitet-po-delam-molodezhi-respubliki-ingushetiya",
+    "name": "Комитет по делам молодежи Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-komitet-gosudarstvennogo-zakaza-respubliki-ingushetiya": {
+    "id": "ru-06-komitet-gosudarstvennogo-zakaza-respubliki-ingushetiya",
+    "name": "Комитет государственного заказа Республики Ингушетия",
+    "shortName": "Комитет госзаказа Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-komitet-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-respubliki-ingushetiya": {
+    "id": "ru-06-komitet-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-respubliki-ingushetiya",
+    "name": "Комитет государственной охраны объектов культурного наследия Республики Ингушетия",
+    "shortName": "Комитет культурного наследия Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-gosudarstvennaya-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-ingushetiya": {
+    "id": "ru-06-gosudarstvennaya-sluzhba-zapisi-aktov-grazhdanskogo-sostoyaniya-respubliki-ingushetiya",
+    "name": "Государственная служба записи актов гражданского состояния Республики Ингушетия",
+    "shortName": "ГС ЗАГС Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-gosudarstvennaya-arkhivnaya-sluzhba-respubliki-ingushetiya": {
+    "id": "ru-06-gosudarstvennaya-arkhivnaya-sluzhba-respubliki-ingushetiya",
+    "name": "Государственная архивная служба Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-upravlenie-delami-glavy-i-pravitelstva-respubliki-ingushetiya": {
+    "id": "ru-06-upravlenie-delami-glavy-i-pravitelstva-respubliki-ingushetiya",
+    "name": "Управление делами Главы и Правительства Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-upravlenie-po-organizatsii-deyatelnosti-mirovykh-sudey-respubliki-ingushetiya": {
+    "id": "ru-06-upravlenie-po-organizatsii-deyatelnosti-mirovykh-sudey-respubliki-ingushetiya",
+    "name": "Управление по организации деятельности мировых судей Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-respubliki-ingushetiya": {
+    "id": "ru-06-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-respubliki-ingushetiya",
+    "name": "Инспекция государственного строительного надзора Республики Ингушетия",
+    "shortName": "Госстройнадзор Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-veterinarnoe-upravlenie-respubliki-ingushetiya": {
+    "id": "ru-06-veterinarnoe-upravlenie-respubliki-ingushetiya",
+    "name": "Ветеринарное управление Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-gosudarstvennaya-zhilishchnaya-inspektsiya-respubliki-ingushetiya": {
+    "id": "ru-06-gosudarstvennaya-zhilishchnaya-inspektsiya-respubliki-ingushetiya",
+    "name": "Государственная жилищная инспекция Республики Ингушетия",
+    "shortName": "Госжилинспекция Ингушетии",
+    "territoryId": "ru-06"
+  },
+  "ru-06-komitet-respubliki-ingushetiya-po-tarifam": {
+    "id": "ru-06-komitet-respubliki-ingushetiya-po-tarifam",
+    "name": "Комитет Республики Ингушетия по тарифам",
+    "shortName": "Комитет РИ по тарифам",
+    "territoryId": "ru-06"
+  },
+  "ru-06-pravitelstvo-respubliki-ingushetiya": {
+    "id": "ru-06-pravitelstvo-respubliki-ingushetiya",
+    "name": "Правительство Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-06-administratsiya-glavy-i-pravitelstva-respubliki-ingushetiya": {
+    "id": "ru-06-administratsiya-glavy-i-pravitelstva-respubliki-ingushetiya",
+    "name": "Администрация Главы и Правительства Республики Ингушетия",
+    "shortName": "",
+    "territoryId": "ru-06"
+  },
+  "ru-95-ministerstvo-promyshlennosti-i-torgovli-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-promyshlennosti-i-torgovli-hersonskoy-oblasti",
+    "name": "Министерство промышленности и торговли Херсонской области",
+    "shortName": "Минпромторг Херсонской области",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-toplivno-energeticheskogo-kompleksa-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-toplivno-energeticheskogo-kompleksa-hersonskoy-oblasti",
+    "name": "Министерство топливно-энергетического комплекса Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-sluzhba-cen-i-tarifov-hersonskoy-oblasti": {
+    "id": "ru-95-sluzhba-cen-i-tarifov-hersonskoy-oblasti",
+    "name": "Служба цен и тарифов Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-sluzhba-finansovogo-nadzora-hersonskoy-oblasti": {
+    "id": "ru-95-sluzhba-finansovogo-nadzora-hersonskoy-oblasti",
+    "name": "Служба финансового надзора Херсонской области",
+    "shortName": "СФН Херсонской области",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-prirodnyh-resursov-ekologii-i-rybolovstva-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-prirodnyh-resursov-ekologii-i-rybolovstva-hersonskoy-oblasti",
+    "name": "Министерство природных ресурсов, экологии и рыболовства Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-upravlenie-vnutrenney-politiki-hersonskoy-oblasti": {
+    "id": "ru-95-upravlenie-vnutrenney-politiki-hersonskoy-oblasti",
+    "name": "Управление внутренней политики Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-transporta-i-razvitiya-transportnoy-infrastruktury-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-transporta-i-razvitiya-transportnoy-infrastruktury-hersonskoy-oblasti",
+    "name": "Министерство транспорта и развития транспортной инфраструктуры Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-kurortov-i-turizma-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-kurortov-i-turizma-hersonskoy-oblasti",
+    "name": "Министерство курортов и туризма Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-hersonskoy-oblasti": {
+    "id": "ru-95-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-hersonskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Херсонской области",
+    "shortName": "Управление ЗАГС Херсонской области",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-stroitelstva-arhitektury-i-zhilischno-kommunalnogo-hozyaystva-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-stroitelstva-arhitektury-i-zhilischno-kommunalnogo-hozyaystva-hersonskoy-oblasti",
+    "name": "Министерство строительства, архитектуры и жилищно-коммунального хозяйства Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-kultury-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-kultury-hersonskoy-oblasti",
+    "name": "Министерство культуры Херсонской области",
+    "shortName": "Минкультуры Херсонской области",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-hersonskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-molodezhnoy-politiki-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-molodezhnoy-politiki-hersonskoy-oblasti",
+    "name": "Министерство молодежной политики Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-upravlenie-delami-gubernatora-i-pravitelstva-hersonskoy-oblasti": {
+    "id": "ru-95-upravlenie-delami-gubernatora-i-pravitelstva-hersonskoy-oblasti",
+    "name": "Управление делами Губернатора и Правительства Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-upravlenie-informacionnoy-politiki-hersonskoy-oblasti": {
+    "id": "ru-95-upravlenie-informacionnoy-politiki-hersonskoy-oblasti",
+    "name": "Управление информационной политики Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-zdravoohraneniya-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-zdravoohraneniya-hersonskoy-oblasti",
+    "name": "Министерство здравоохранения Херсонской области",
+    "shortName": "Минздрав Херсонской области",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-obrazovaniya-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-obrazovaniya-hersonskoy-oblasti",
+    "name": "Министерство образования и науки Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-agropromyshlennogo-kompleksa-prodovolstvennoy-politiki-i-rybolovstva-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-agropromyshlennogo-kompleksa-prodovolstvennoy-politiki-i-rybolovstva-hersonskoy-oblasti",
+    "name": "Министерство агропромышленного комплекса, продовольственной политики и рыболовства Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-ministerstvo-sporta-hersonskoy-oblasti": {
+    "id": "ru-95-ministerstvo-sporta-hersonskoy-oblasti",
+    "name": "Министерство спорта Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-sluzhba-zanyatosti-naseleniya-hersonskoy-oblasti": {
+    "id": "ru-95-sluzhba-zanyatosti-naseleniya-hersonskoy-oblasti",
+    "name": "Служба занятости населения Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-upravlenie-veterinarii-hersonskoy-oblasti": {
+    "id": "ru-95-upravlenie-veterinarii-hersonskoy-oblasti",
+    "name": "Управление ветеринарии Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-95-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-hersonskoy-oblasti": {
+    "id": "ru-95-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-hersonskoy-oblasti",
+    "name": "Управление по обеспечению деятельности мировых судей Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-94-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-stroitelstva-i-zhilischno-kommunalnogo-hozyaystva-luganskoy-narodnoy-respubliki",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Луганской Народной Республики",
+    "shortName": "Минстрой ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-obrazovaniya-i-nauki-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-obrazovaniya-i-nauki-luganskoy-narodnoy-respubliki",
+    "name": "Министерство образования и науки Луганской Народной Республики",
+    "shortName": "МОН ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-luganskoy-narodnoy-respubliki",
+    "name": "Министерство имущественных и земельных отношений Луганской Народной Республики",
+    "shortName": "МИЗО ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-arhivnaya-sluzhba-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-arhivnaya-sluzhba-luganskoy-narodnoy-respubliki",
+    "name": "Архивная служба Луганской Народной Республики",
+    "shortName": "Архивная служба ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-komitet-tarifnogo-i-cenovogo-regulirovaniya-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-komitet-tarifnogo-i-cenovogo-regulirovaniya-luganskoy-narodnoy-respubliki",
+    "name": "Комитет тарифного и ценового регулирования Луганской Народной Республики",
+    "shortName": "КТЦР ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-infrastruktury-i-transporta-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-infrastruktury-i-transporta-luganskoy-narodnoy-respubliki",
+    "name": "Министерство инфраструктуры и транспорта Луганской Народной Республики",
+    "shortName": "Минтранс ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-administraciya-glavy-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-administraciya-glavy-luganskoy-narodnoy-respubliki",
+    "name": "Администрация Главы Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-prirodnyh-resursov-i-ekologii-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-prirodnyh-resursov-i-ekologii-luganskoy-narodnoy-respubliki",
+    "name": "Министерство природных ресурсов и экологии Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-sporta-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-sporta-luganskoy-narodnoy-respubliki",
+    "name": "Министерство спорта Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-yusticii-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-yusticii-luganskoy-narodnoy-respubliki",
+    "name": "Министерство юстиции Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-ekonomicheskogo-razvitiya-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-ekonomicheskogo-razvitiya-luganskoy-narodnoy-respubliki",
+    "name": "Министерство экономического развития Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-inspekciya-zhilischnogo-i-stroitelnogo-nadzora-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-inspekciya-zhilischnogo-i-stroitelnogo-nadzora-luganskoy-narodnoy-respubliki",
+    "name": "Инспекция жилищного и строительного надзора Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-government": {
+    "id": "ru-94-government",
+    "name": "Правительство Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-molodezhnoy-politiki-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-molodezhnoy-politiki-luganskoy-narodnoy-respubliki",
+    "name": "Министерство молодежной политики Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-promyshlennosti-i-torgovli-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-promyshlennosti-i-torgovli-luganskoy-narodnoy-respubliki",
+    "name": "Министерство промышленности и торговли Луганской Народной Республики",
+    "shortName": "Минпромторг ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-topliva-energetiki-i-ugolnoy-promyshlennosti-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-topliva-energetiki-i-ugolnoy-promyshlennosti-luganskoy-narodnoy-respubliki",
+    "name": "Министерство топлива, энергетики и угольной промышленности Луганской Народной Республики",
+    "shortName": "Минтопэнерго ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-ministerstvo-finansov-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-ministerstvo-finansov-luganskoy-narodnoy-respubliki",
+    "name": "Министерство финансов Луганской Народной Республики",
+    "shortName": "Минфин ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-komitet-konkurentnoy-politiki-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-komitet-konkurentnoy-politiki-luganskoy-narodnoy-respubliki",
+    "name": "Комитет конкурентной политики Луганской Народной Республики",
+    "shortName": "ККП ЛНР",
+    "territoryId": "ru-94"
+  },
+  "ru-94-sluzhba-finansovo-byudzhetnogo-kontrolya-luganskoy-narodnoy-respubliki": {
+    "id": "ru-94-sluzhba-finansovo-byudzhetnogo-kontrolya-luganskoy-narodnoy-respubliki",
+    "name": "Служба финансово-бюджетного контроля Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-90-gosudarstvennaya-zhilischnaya-inspekciya-zaporozhskoy-oblasti": {
+    "id": "ru-90-gosudarstvennaya-zhilischnaya-inspekciya-zaporozhskoy-oblasti",
+    "name": "Государственная жилищная инспекция Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-komitet-po-regulirovaniyu-kontraktnoy-sistemy-i-cenoobrazovaniyu-zaporozhskoy-oblasti": {
+    "id": "ru-90-komitet-po-regulirovaniyu-kontraktnoy-sistemy-i-cenoobrazovaniyu-zaporozhskoy-oblasti",
+    "name": "Комитет по регулированию контрактной системы и ценообразованию Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-komitet-tarifnogo-regulirovaniya-zaporozhskoy-oblasti": {
+    "id": "ru-90-komitet-tarifnogo-regulirovaniya-zaporozhskoy-oblasti",
+    "name": "Комитет тарифного регулирования Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-fizicheskoy-kultury-i-sporta-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-fizicheskoy-kultury-i-sporta-zaporozhskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-kultury-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-kultury-zaporozhskoy-oblasti",
+    "name": "Министерство культуры Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-prirody-ekologii-i-nedropolzovaniya-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-prirody-ekologii-i-nedropolzovaniya-zaporozhskoy-oblasti",
+    "name": "Министерство природы, экологии и недропользования Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-promyshlennosti-i-torgovli-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-promyshlennosti-i-torgovli-zaporozhskoy-oblasti",
+    "name": "Министерство промышленности и торговли Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-transporta-i-razvitiya-transportnoy-infrastruktury-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-transporta-i-razvitiya-transportnoy-infrastruktury-zaporozhskoy-oblasti",
+    "name": "Министерство транспорта и развития транспортной инфраструктуры Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-truda-i-socialnoy-politiki-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-truda-i-socialnoy-politiki-zaporozhskoy-oblasti",
+    "name": "Министерство труда и социальной политики Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-sluzhba-po-delam-arhivov-i-dokumentacionnogo-obespecheniya-zaporozhskoy-oblasti": {
+    "id": "ru-90-sluzhba-po-delam-arhivov-i-dokumentacionnogo-obespecheniya-zaporozhskoy-oblasti",
+    "name": "Служба по делам архивов и документационного обеспечения Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-upravlenie-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-915537a6": {
+    "id": "ru-90-upravlenie-gosudarstvennogo-nadzora-za-tehnicheskim-sostoyaniem-samohodnyh-mashin-i-drugih-vidov-tehniki-915537a6",
+    "name": "Управление государственного надзора за техническим состоянием самоходных машин и других видов техники Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-zaporozhskoy-oblasti": {
+    "id": "ru-90-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-zaporozhskoy-oblasti",
+    "name": "Управление записи актов гражданского состояния Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-komitet-po-zanyatosti-naseleniya-zaporozhskoy-oblasti": {
+    "id": "ru-90-komitet-po-zanyatosti-naseleniya-zaporozhskoy-oblasti",
+    "name": "Комитет по занятости населения Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-upravlenie-veterinarii-zaporozhskoy-oblasti": {
+    "id": "ru-90-upravlenie-veterinarii-zaporozhskoy-oblasti",
+    "name": "Управление ветеринарии Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-imuschestvennyh-i-zemelnyh-otnosheniy-zaporozhskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90--issuer-inn-9002013428": {
+    "id": "ru-90--issuer-inn-9002013428",
+    "name": "Администрация Токмакского муниципального округа",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-94-markovsky-municipal-district-administration": {
+    "id": "ru-94-markovsky-municipal-district-administration",
+    "name": "Администрация Марковского муниципального округа Луганской Народной Республики",
+    "shortName": "",
+    "territoryId": "ru-94"
+  },
+  "ru-90-ministerstvo-po-molodezhnoy-politike-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-po-molodezhnoy-politike-zaporozhskoy-oblasti",
+    "name": "Министерство по молодежной политике Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-cifrovogo-razvitiya-massovyh-kommunikaciy-i-svyazi-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-cifrovogo-razvitiya-massovyh-kommunikaciy-i-svyazi-zaporozhskoy-oblasti",
+    "name": "Министерство цифрового развития, массовых коммуникаций и связи Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-ministerstvo-stroitelstva-arhitektury-i-zhilischno-kommunalnogo-hozyaystva-zaporozhskoy-oblasti": {
+    "id": "ru-90-ministerstvo-stroitelstva-arhitektury-i-zhilischno-kommunalnogo-hozyaystva-zaporozhskoy-oblasti",
+    "name": "Министерство строительства, архитектуры и жилищно-коммунального хозяйства Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-apparat-upolnomochennyh-po-zaschite-prav-v-zaporozhskoy-oblasti": {
+    "id": "ru-90-apparat-upolnomochennyh-po-zaschite-prav-v-zaporozhskoy-oblasti",
+    "name": "Аппарат уполномоченных по защите прав в Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-glavnoe-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-zaporozhskoy-oblasti": {
+    "id": "ru-90-glavnoe-upravlenie-po-obespecheniyu-deyatelnosti-mirovyh-sudey-zaporozhskoy-oblasti",
+    "name": "Главное управление по обеспечению деятельности мировых судей Запорожской области",
+    "shortName": "",
+    "territoryId": "ru-90"
+  },
+  "ru-90-komitet-po-ohrane-obektov-kulturnogo-naslediya-zaporozhskoy-oblasti": {
+    "id": "ru-90-komitet-po-ohrane-obektov-kulturnogo-naslediya-zaporozhskoy-oblasti",
+    "name": "Комитет по охране объектов культурного наследия Запорожской области",
+    "shortName": "Комитет по охране объектов культурного наследия",
+    "territoryId": "ru-90"
+  },
+  "ru-08-maloderbetovsky-district-administration": {
+    "id": "ru-08-maloderbetovsky-district-administration",
+    "name": "Администрация Малодербетовского районного муниципального образования Республики Калмыкия",
+    "shortName": "",
+    "territoryId": "ru-08"
+  },
+  "ru-09-prikubansky-district-administration": {
+    "id": "ru-09-prikubansky-district-administration",
+    "name": "Администрация Прикубанского муниципального района Карачаево-Черкесской Республики",
+    "shortName": "",
+    "territoryId": "ru-09"
+  },
+  "ru-23-novokubansky-district-administration": {
+    "id": "ru-23-novokubansky-district-administration",
+    "name": "Администрация муниципального образования Новокубанский район",
+    "shortName": "",
+    "territoryId": "ru-23"
+  },
+  "ru-34--issuer-inn-3436102623": {
+    "id": "ru-34--issuer-inn-3436102623",
+    "name": "Администрация городского округа – город Камышин",
+    "shortName": "",
+    "territoryId": "ru-34"
+  },
+  "ru-93--issuer-inn-9306004440": {
+    "id": "ru-93--issuer-inn-9306004440",
+    "name": "Администрация Волновахского муниципального округа",
+    "shortName": "",
+    "territoryId": "ru-93"
+  },
+  "ru-95-administraciya-gubernatora-i-pravitelstva-hersonskoy-oblasti": {
+    "id": "ru-95-administraciya-gubernatora-i-pravitelstva-hersonskoy-oblasti",
+    "name": "Администрация Губернатора и Правительства Херсонской области",
+    "shortName": "",
+    "territoryId": "ru-95"
+  },
+  "ru-64-upravlenie-delami-pravitelstva-saratovskoy-oblasti": {
+    "id": "ru-64-upravlenie-delami-pravitelstva-saratovskoy-oblasti",
+    "name": "Управление делами Правительства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-promyshlennosti-i-energetiki-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-promyshlennosti-i-energetiki-saratovskoy-oblasti",
+    "name": "Министерство промышленности и энергетики Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-apparat-gubernatora-saratovskoy-oblasti": {
+    "id": "ru-64-apparat-gubernatora-saratovskoy-oblasti",
+    "name": "Аппарат Губернатора Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-upravlenie-po-vzaimodeystviyu-s-pravookhranitelnymi-organami-i-protivodeystviyu-korruptsii-pravitelstva-saratovskoy-oblasti": {
+    "id": "ru-64-upravlenie-po-vzaimodeystviyu-s-pravookhranitelnymi-organami-i-protivodeystviyu-korruptsii-pravitelstva-saratovskoy-oblasti",
+    "name": "Управление по взаимодействию с правоохранительными органами и противодействию коррупции Правительства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-ekonomicheskogo-razvitiya-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-ekonomicheskogo-razvitiya-saratovskoy-oblasti",
+    "name": "Министерство экономического развития Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-upravlenie-veterinarii-pravitelstva-saratovskoy-oblasti": {
+    "id": "ru-64-upravlenie-veterinarii-pravitelstva-saratovskoy-oblasti",
+    "name": "Управление ветеринарии Правительства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-selskogo-khozyaystva-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-selskogo-khozyaystva-saratovskoy-oblasti",
+    "name": "Министерство сельского хозяйства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-attraktsionov-saratovskoy-oblasti": {
+    "id": "ru-64-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-attraktsionov-saratovskoy-oblasti",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Саратовской области",
+    "shortName": "Гостехнадзор Саратовской области",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-investitsionnoy-politiki-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-investitsionnoy-politiki-saratovskoy-oblasti",
+    "name": "Министерство инвестиционной политики Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-upravlenie-spetsialnykh-programm-pravitelstva-saratovskoy-oblasti": {
+    "id": "ru-64-upravlenie-spetsialnykh-programm-pravitelstva-saratovskoy-oblasti",
+    "name": "Управление специальных программ Правительства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-gosudarstvennaya-zhilishchnaya-inspektsiya-saratovskoy-oblasti": {
+    "id": "ru-64-gosudarstvennaya-zhilishchnaya-inspektsiya-saratovskoy-oblasti",
+    "name": "Государственная жилищная инспекция Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-po-upravleniyu-imushchestvom-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-po-upravleniyu-imushchestvom-saratovskoy-oblasti",
+    "name": "Комитет по управлению имуществом Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-prirodnykh-resursov-i-ekologii-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-prirodnykh-resursov-i-ekologii-saratovskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-regionalnoy-bezopasnosti-pravitelstva-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-regionalnoy-bezopasnosti-pravitelstva-saratovskoy-oblasti",
+    "name": "Управление региональной безопасности Правительства Саратовской области",
+    "shortName": "Управление региональной безопасности",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-obrazovaniya-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-obrazovaniya-saratovskoy-oblasti",
+    "name": "Министерство образования Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-kultury-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-kultury-saratovskoy-oblasti",
+    "name": "Министерство культуры Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-tsifrovogo-razvitiya-i-svyazi-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-tsifrovogo-razvitiya-i-svyazi-saratovskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-informatsii-i-massovykh-kommunikatsiy-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-informatsii-i-massovykh-kommunikatsiy-saratovskoy-oblasti",
+    "name": "Министерство информации и массовых коммуникаций Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-gosudarstvennogo-stroitelnogo-nadzora-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-gosudarstvennogo-stroitelnogo-nadzora-saratovskoy-oblasti",
+    "name": "Комитет государственного строительного надзора Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-sporta-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-sporta-saratovskoy-oblasti",
+    "name": "Министерство спорта Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-stroitelstva-i-zhilishchno-kommunalnogo-khozyaystva-saratovskoy-oblasti",
+    "name": "Министерство строительства и жилищно-коммунального хозяйства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-transporta-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-transporta-saratovskoy-oblasti",
+    "name": "Министерство транспорта Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-dorozhnogo-khozyaystva-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-dorozhnogo-khozyaystva-saratovskoy-oblasti",
+    "name": "Министерство дорожного хозяйства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-molodezhnoy-politiki-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-molodezhnoy-politiki-saratovskoy-oblasti",
+    "name": "Комитет молодежной политики Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-upravlenie-po-delam-zapisi-aktov-grazhdanskogo-sostoyaniya-pravitelstva-saratovskoy-oblasti": {
+    "id": "ru-64-upravlenie-po-delam-zapisi-aktov-grazhdanskogo-sostoyaniya-pravitelstva-saratovskoy-oblasti",
+    "name": "Управление по делам записи актов гражданского состояния Правительства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-po-obespecheniyu-deyatelnosti-mirovykh-sudey-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-po-obespecheniyu-deyatelnosti-mirovykh-sudey-saratovskoy-oblasti",
+    "name": "Комитет по обеспечению деятельности мировых судей Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-kulturnogo-naslediya-pravitelstva-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-kulturnogo-naslediya-pravitelstva-saratovskoy-oblasti",
+    "name": "Комитет культурного наследия Правительства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-po-realizatsii-investitsionnykh-proektov-v-stroitelstve-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-po-realizatsii-investitsionnykh-proektov-v-stroitelstve-saratovskoy-oblasti",
+    "name": "Комитет по реализации инвестиционных проектов в строительстве Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-okhotnichego-khozyaystva-i-rybolovstva-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-okhotnichego-khozyaystva-i-rybolovstva-saratovskoy-oblasti",
+    "name": "Комитет охотничьего хозяйства и рыболовства Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-komitet-gosudarstvennogo-regulirovaniya-tarifov-saratovskoy-oblasti": {
+    "id": "ru-64-komitet-gosudarstvennogo-regulirovaniya-tarifov-saratovskoy-oblasti",
+    "name": "Комитет государственного регулирования тарифов Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-kontrolno-analiticheskiy-komitet-saratovskoy-oblasti": {
+    "id": "ru-64-kontrolno-analiticheskiy-komitet-saratovskoy-oblasti",
+    "name": "Контрольно-аналитический комитет Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-64-ministerstvo-vnutrenney-regionalnoy-i-munitsipalnoy-politiki-saratovskoy-oblasti": {
+    "id": "ru-64-ministerstvo-vnutrenney-regionalnoy-i-munitsipalnoy-politiki-saratovskoy-oblasti",
+    "name": "Министерство внутренней региональной и муниципальной политики Саратовской области",
+    "shortName": "",
+    "territoryId": "ru-64"
+  },
+  "ru-63-pravitelstvo-samarskoy-oblasti": {
+    "id": "ru-63-pravitelstvo-samarskoy-oblasti",
+    "name": "Правительство Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-vnutrenney-politiki-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-vnutrenney-politiki-samarskoy-oblasti",
+    "name": "Министерство внутренней политики Самарской области",
+    "shortName": "МВП СО",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-zdravookhraneniya-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-zdravookhraneniya-samarskoy-oblasti",
+    "name": "Министерство здравоохранения Самарской области",
+    "shortName": "Минздрав Самарской области",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-imushchestvennykh-otnosheniy-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-imushchestvennykh-otnosheniy-samarskoy-oblasti",
+    "name": "Министерство имущественных отношений Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-kultury-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-kultury-samarskoy-oblasti",
+    "name": "Министерство культуры Самарской области",
+    "shortName": "Минкультуры Самарской области",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-obrazovaniya-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-obrazovaniya-samarskoy-oblasti",
+    "name": "Министерство образования Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-po-regionalnoy-bezopasnosti-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-po-regionalnoy-bezopasnosti-samarskoy-oblasti",
+    "name": "Министерство по региональной безопасности Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-prirodnykh-resursov-i-ekologii-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-prirodnykh-resursov-i-ekologii-samarskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-samarskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольствия Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-sotsialno-demograficheskoy-i-semeynoy-politiki-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-sotsialno-demograficheskoy-i-semeynoy-politiki-samarskoy-oblasti",
+    "name": "Министерство социально-демографической и семейной политики Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-sporta-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-sporta-samarskoy-oblasti",
+    "name": "Министерство спорта Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-stroitelstva-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-stroitelstva-samarskoy-oblasti",
+    "name": "Министерство строительства Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-transporta-i-avtomobilnykh-dorog-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-transporta-i-avtomobilnykh-dorog-samarskoy-oblasti",
+    "name": "Министерство транспорта и автомобильных дорог Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-ekonomicheskogo-razvitiya-i-investitsiy-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-ekonomicheskogo-razvitiya-i-investitsiy-samarskoy-oblasti",
+    "name": "Министерство экономического развития и инвестиций Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-samarskoy-oblasti",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-gosudarstvennaya-zhilishchnaya-inspektsiya-samarskoy-oblasti": {
+    "id": "ru-63-gosudarstvennaya-zhilishchnaya-inspektsiya-samarskoy-oblasti",
+    "name": "Государственная жилищная инспекция Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-gosudarstvennaya-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-samarskoy-oblasti": {
+    "id": "ru-63-gosudarstvennaya-inspektsiya-po-okhrane-obektov-kulturnogo-naslediya-samarskoy-oblasti",
+    "name": "Государственная инспекция по охране объектов культурного наследия Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-gosudarstvennaya-inspektsiya-stroitelnogo-nadzora-samarskoy-oblasti": {
+    "id": "ru-63-gosudarstvennaya-inspektsiya-stroitelnogo-nadzora-samarskoy-oblasti",
+    "name": "Государственная инспекция строительного надзора Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-zapisi-aktov-grazhdanskogo-sostoyaniya-samarskoy-oblasti": {
+    "id": "ru-63-komitet-zapisi-aktov-grazhdanskogo-sostoyaniya-samarskoy-oblasti",
+    "name": "Комитет записи актов гражданского состояния Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-okhoty-i-rybolovstva-samarskoy-oblasti": {
+    "id": "ru-63-komitet-okhoty-i-rybolovstva-samarskoy-oblasti",
+    "name": "Комитет охоты и рыболовства Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-po-finansovomu-kontrolyu-samarskoy-oblasti": {
+    "id": "ru-63-komitet-po-finansovomu-kontrolyu-samarskoy-oblasti",
+    "name": "Комитет по финансовому контролю Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-tsenovogo-i-tarifnogo-regulirovaniya-samarskoy-oblasti": {
+    "id": "ru-63-komitet-tsenovogo-i-tarifnogo-regulirovaniya-samarskoy-oblasti",
+    "name": "Комитет ценового и тарифного регулирования Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-sluzhba-mirovykh-sudey-samarskoy-oblasti": {
+    "id": "ru-63-sluzhba-mirovykh-sudey-samarskoy-oblasti",
+    "name": "Служба мировых судей Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-upravlenie-gosudarstvennoy-arkhivnoy-sluzhby-samarskoy-oblasti": {
+    "id": "ru-63-upravlenie-gosudarstvennoy-arkhivnoy-sluzhby-samarskoy-oblasti",
+    "name": "Управление государственной архивной службы Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-upravlenie-po-zashchite-gosudarstvennoy-tayny-samarskoy-oblasti": {
+    "id": "ru-63-upravlenie-po-zashchite-gosudarstvennoy-tayny-samarskoy-oblasti",
+    "name": "Комитет по защите государственной тайны Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-departament-predstavitelstvo-samarskoy-oblasti-po-vzaimodeystviyu-s-federalnymi-organami-gosudarstvennoy-vlasti": {
+    "id": "ru-63-departament-predstavitelstvo-samarskoy-oblasti-po-vzaimodeystviyu-s-federalnymi-organami-gosudarstvennoy-vlasti",
+    "name": "Департамент (представительство Самарской области) по взаимодействию с федеральными органами государственной власти",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-promyshlennosti-i-torgovli-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-promyshlennosti-i-torgovli-samarskoy-oblasti",
+    "name": "Министерство промышленности и торговли Самарской области",
+    "shortName": "Минпромторг СО",
+    "territoryId": "ru-63"
+  },
+  "ru-63-ministerstvo-tsifrovogo-razvitiya-i-svyazi-samarskoy-oblasti": {
+    "id": "ru-63-ministerstvo-tsifrovogo-razvitiya-i-svyazi-samarskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Самарской области",
+    "shortName": "Минцифры Самарской области",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-veterinarii-samarskoy-oblasti": {
+    "id": "ru-63-komitet-veterinarii-samarskoy-oblasti",
+    "name": "Комитет ветеринарии Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-po-organizatsii-torgov-samarskoy-oblasti": {
+    "id": "ru-63-komitet-po-organizatsii-torgov-samarskoy-oblasti",
+    "name": "Комитет по организации торгов Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-po-mobilizatsionnym-voprosam-samarskoy-oblasti": {
+    "id": "ru-63-komitet-po-mobilizatsionnym-voprosam-samarskoy-oblasti",
+    "name": "Комитет по мобилизационным вопросам Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-upravlenie-delami-gubernatora-samarskoy-oblasti-i-pravitelstva-samarskoy-oblasti": {
+    "id": "ru-63-upravlenie-delami-gubernatora-samarskoy-oblasti-i-pravitelstva-samarskoy-oblasti",
+    "name": "Управление делами Губернатора Самарской области и Правительства Самарской области",
+    "shortName": "",
+    "territoryId": "ru-63"
+  },
+  "ru-63-komitet-po-protivodeystviyu-korruptsii-samarskoy-oblasti": {
+    "id": "ru-63-komitet-po-protivodeystviyu-korruptsii-samarskoy-oblasti",
+    "name": "Комитет по противодействию коррупции Самарской области",
+    "shortName": "КПК",
+    "territoryId": "ru-63"
+  },
+  "ru-43-upravlenie-po-razvitiyu-turizma-i-narodnykh-khudozhestvennykh-promyslov-kirovskoy-oblasti": {
+    "id": "ru-43-upravlenie-po-razvitiyu-turizma-i-narodnykh-khudozhestvennykh-promyslov-kirovskoy-oblasti",
+    "name": "Управление по развитию туризма и народных художественных промыслов Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-regionalnaya-sluzhba-po-tarifam-kirovskoy-oblasti": {
+    "id": "ru-43-regionalnaya-sluzhba-po-tarifam-kirovskoy-oblasti",
+    "name": "Региональная служба по тарифам Кировской области",
+    "shortName": "РСТ Кировской области",
+    "territoryId": "ru-43"
+  },
+  "ru-43-pravitelstvo-kirovskoy-oblasti": {
+    "id": "ru-43-pravitelstvo-kirovskoy-oblasti",
+    "name": "Правительство Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-administratsiya-gubernatora-i-pravitelstva-kirovskoy-oblasti": {
+    "id": "ru-43-administratsiya-gubernatora-i-pravitelstva-kirovskoy-oblasti",
+    "name": "Администрация Губернатора и Правительства Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-transporta-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-transporta-kirovskoy-oblasti",
+    "name": "Министерство транспорта Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-upravlenie-massovykh-kommunikatsiy-kirovskoy-oblasti": {
+    "id": "ru-43-upravlenie-massovykh-kommunikatsiy-kirovskoy-oblasti",
+    "name": "Управление массовых коммуникаций Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-upravlenie-veterinarii-kirovskoy-oblasti": {
+    "id": "ru-43-upravlenie-veterinarii-kirovskoy-oblasti",
+    "name": "Управление ветеринарии Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-upravlenie-truda-i-zanyatosti-kirovskoy-oblasti": {
+    "id": "ru-43-upravlenie-truda-i-zanyatosti-kirovskoy-oblasti",
+    "name": "Управление труда и занятости Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-okhrany-okruzhayushchey-sredy-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-okhrany-okruzhayushchey-sredy-kirovskoy-oblasti",
+    "name": "Министерство охраны окружающей среды Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-gosudarstvennaya-inspektsiya-stroitelnogo-nadzora-kirovskoy-oblasti": {
+    "id": "ru-43-gosudarstvennaya-inspektsiya-stroitelnogo-nadzora-kirovskoy-oblasti",
+    "name": "Государственная инспекция строительного надзора Кировской области",
+    "shortName": "Госстройнадзор Кировской области",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-sporta-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-sporta-kirovskoy-oblasti",
+    "name": "Министерство спорта Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-molodezhnoy-politiki-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-molodezhnoy-politiki-kirovskoy-oblasti",
+    "name": "Министерство молодежной политики Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-gosudarstvennaya-zhilishchnaya-inspektsiya-kirovskoy-oblasti": {
+    "id": "ru-43-gosudarstvennaya-zhilishchnaya-inspektsiya-kirovskoy-oblasti",
+    "name": "Государственная жилищная инспекция Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-zdravookhraneniya-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-zdravookhraneniya-kirovskoy-oblasti",
+    "name": "Министерство здравоохранения Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-vnutrenney-politiki-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-vnutrenney-politiki-kirovskoy-oblasti",
+    "name": "Министерство внутренней политики Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-imushchestvennykh-otnosheniy-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-imushchestvennykh-otnosheniy-kirovskoy-oblasti",
+    "name": "Министерство имущественных отношений Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-yustitsii-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-yustitsii-kirovskoy-oblasti",
+    "name": "Министерство юстиции Кировской области",
+    "shortName": "Минюст Кировской области",
+    "territoryId": "ru-43"
+  },
+  "ru-43-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-kirovskoy-oblasti": {
+    "id": "ru-43-gosudarstvennaya-inspektsiya-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-kirovskoy-oblasti",
+    "name": "Государственная инспекция по надзору за техническим состоянием самоходных машин и других видов техники Кировской области",
+    "shortName": "Государственная инспекция Гостехнадзора Кировской области",
+    "territoryId": "ru-43"
+  },
+  "ru-43-upravlenie-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-kirovskoy-oblasti": {
+    "id": "ru-43-upravlenie-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-kirovskoy-oblasti",
+    "name": "Управление государственной охраны объектов культурного наследия Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-kirovskoy-oblasti",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-stroitelstva-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-stroitelstva-kirovskoy-oblasti",
+    "name": "Министерство строительства Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-informatsionnykh-tekhnologiy-i-svyazi-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-informatsionnykh-tekhnologiy-i-svyazi-kirovskoy-oblasti",
+    "name": "Министерство информационных технологий и связи Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-promyshlennosti-predprinimatelstva-i-torgovli-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-promyshlennosti-predprinimatelstva-i-torgovli-kirovskoy-oblasti",
+    "name": "Министерство промышленности, предпринимательства и торговли Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-ekonomicheskogo-razvitiya-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-ekonomicheskogo-razvitiya-kirovskoy-oblasti",
+    "name": "Министерство экономического развития Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-kultury-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-kultury-kirovskoy-oblasti",
+    "name": "Министерство культуры Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-sotsialnogo-razvitiya-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-sotsialnogo-razvitiya-kirovskoy-oblasti",
+    "name": "Министерство социального развития Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-43-ministerstvo-obrazovaniya-kirovskoy-oblasti": {
+    "id": "ru-43-ministerstvo-obrazovaniya-kirovskoy-oblasti",
+    "name": "Министерство образования Кировской области",
+    "shortName": "",
+    "territoryId": "ru-43"
+  },
+  "ru-73-ministerstvo-zdravookhraneniya-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-zdravookhraneniya-ulyanovskoy-oblasti",
+    "name": "Министерство здравоохранения Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-stroitelstva-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-stroitelstva-ulyanovskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства и строительства Ульяновской области",
+    "shortName": "Министерство ЖКХ и строительства Ульяновской области",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-imushchestvennykh-otnosheniy-i-arkhitektury-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-imushchestvennykh-otnosheniy-i-arkhitektury-ulyanovskoy-oblasti",
+    "name": "Министерство имущественных отношений, градостроительной деятельности и цифрового развития Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-iskusstva-i-kulturnoy-politiki-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-iskusstva-i-kulturnoy-politiki-ulyanovskoy-oblasti",
+    "name": "Министерство искусства и культурной политики Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-molodezhnogo-razvitiya-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-molodezhnogo-razvitiya-ulyanovskoy-oblasti",
+    "name": "Министерство молодёжного развития Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-prirodnykh-resursov-i-ekologii-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-prirodnykh-resursov-i-ekologii-ulyanovskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-sotsialnogo-razvitiya-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-sotsialnogo-razvitiya-ulyanovskoy-oblasti",
+    "name": "Министерство социального развития Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-transporta-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-transporta-ulyanovskoy-oblasti",
+    "name": "Министерство транспорта Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-fizicheskoy-kultury-i-sporta-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-fizicheskoy-kultury-i-sporta-ulyanovskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-finansov-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-finansov-ulyanovskoy-oblasti",
+    "name": "Министерство финансов Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-agentstvo-veterinarii-ulyanovskoy-oblasti": {
+    "id": "ru-73-agentstvo-veterinarii-ulyanovskoy-oblasti",
+    "name": "Агентство ветеринарии Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-ulyanovskoy-oblasti": {
+    "id": "ru-73-agentstvo-zapisi-aktov-grazhdanskogo-sostoyaniya-ulyanovskoy-oblasti",
+    "name": "Агентство записи актов гражданского состояния Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-agentstvo-po-obespecheniyu-deyatelnosti-mirovykh-sudey-ulyanovskoy-oblasti": {
+    "id": "ru-73-agentstvo-po-obespecheniyu-deyatelnosti-mirovykh-sudey-ulyanovskoy-oblasti",
+    "name": "Агентство по обеспечению деятельности мировых судей Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-agentstvo-po-razvitiyu-chelovecheskogo-potentsiala-i-trudovykh-resursov-ulyanovskoy-oblasti": {
+    "id": "ru-73-agentstvo-po-razvitiyu-chelovecheskogo-potentsiala-i-trudovykh-resursov-ulyanovskoy-oblasti",
+    "name": "Агентство по развитию человеческого потенциала и трудовых ресурсов Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-agentstvo-gosudarstvennogo-stroitelnogo-i-zhilishchnogo-nadzora-ulyanovskoy-oblasti": {
+    "id": "ru-73-agentstvo-gosudarstvennogo-stroitelnogo-i-zhilishchnogo-nadzora-ulyanovskoy-oblasti",
+    "name": "Агентство государственного строительного и жилищного надзора Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-agentstvo-po-regulirovaniyu-tsen-i-tarifov-ulyanovskoy-oblasti": {
+    "id": "ru-73-agentstvo-po-regulirovaniyu-tsen-i-tarifov-ulyanovskoy-oblasti",
+    "name": "Агентство по регулированию цен и тарифов Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-agentstvo-gosudarstvennykh-zakupok-ulyanovskoy-oblasti": {
+    "id": "ru-73-agentstvo-gosudarstvennykh-zakupok-ulyanovskoy-oblasti",
+    "name": "Агентство государственных закупок Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-ministerstvo-promyshlennosti-investitsiy-i-nauki-ulyanovskoy-oblasti": {
+    "id": "ru-73-ministerstvo-promyshlennosti-investitsiy-i-nauki-ulyanovskoy-oblasti",
+    "name": "Министерство промышленности, инвестиций и науки Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-73-pravitelstvo-ulyanovskoy-oblasti": {
+    "id": "ru-73-pravitelstvo-ulyanovskoy-oblasti",
+    "name": "Правительство Ульяновской области",
+    "shortName": "",
+    "territoryId": "ru-73"
+  },
+  "ru-12-ministerstvo-yustitsii-i-razvitiya-mestnogo-samoupravleniya-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-yustitsii-i-razvitiya-mestnogo-samoupravleniya-respubliki-mariy-el",
+    "name": "Министерство юстиции Республики Марий Эл",
+    "shortName": "Минюст Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-gosudarstvennogo-imushchestva-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-gosudarstvennogo-imushchestva-respubliki-mariy-el",
+    "name": "Министерство государственного имущества Республики Марий Эл",
+    "shortName": "Мингосимущество Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-sporta-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-sporta-respubliki-mariy-el",
+    "name": "Министерство спорта Республики Марий Эл",
+    "shortName": "",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-promyshlennosti-ekonomicheskogo-razvitiya-i-torgovli-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-promyshlennosti-ekonomicheskogo-razvitiya-i-torgovli-respubliki-mariy-el",
+    "name": "Министерство промышленности, экономического развития и торговли Республики Марий Эл",
+    "shortName": "Минэкономразвития Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-prirodnykh-resursov-ekologii-i-okhrany-okruzhayushchey-sredy-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-prirodnykh-resursov-ekologii-i-okhrany-okruzhayushchey-sredy-respubliki-mariy-el",
+    "name": "Министерство природных ресурсов, экологии и охраны окружающей среды Республики Марий Эл",
+    "shortName": "Минприроды Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-mariy-el",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Марий Эл",
+    "shortName": "Минсельхоз Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-mariy-el",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Марий Эл",
+    "shortName": "Минтранс Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-departament-gosudarstvennogo-zhilishchnogo-nadzora-respubliki-mariy-el": {
+    "id": "ru-12-departament-gosudarstvennogo-zhilishchnogo-nadzora-respubliki-mariy-el",
+    "name": "Департамент государственного жилищного надзора Республики Марий Эл",
+    "shortName": "Департамент госжилнадзора Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-departament-respubliki-mariy-el-po-okhrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira": {
+    "id": "ru-12-departament-respubliki-mariy-el-po-okhrane-kontrolyu-i-regulirovaniyu-ispolzovaniya-obektov-zhivotnogo-mira",
+    "name": "Департамент Республики Марий Эл по охране, контролю и регулированию использования объектов животного мира",
+    "shortName": "Департамент животного мира Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-komitet-grazhdanskoy-oborony-i-zashchity-naseleniya-respubliki-mariy-el": {
+    "id": "ru-12-komitet-grazhdanskoy-oborony-i-zashchity-naseleniya-respubliki-mariy-el",
+    "name": "Комитет гражданской обороны и защиты населения Республики Марий Эл",
+    "shortName": "Комитет ГО и ЗН Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-komitet-molodezhnoy-politiki-respubliki-mariy-el": {
+    "id": "ru-12-komitet-molodezhnoy-politiki-respubliki-mariy-el",
+    "name": "Комитет молодежной политики Республики Марий Эл",
+    "shortName": "",
+    "territoryId": "ru-12"
+  },
+  "ru-12-komitet-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-respubliki-mariy-el": {
+    "id": "ru-12-komitet-po-regulirovaniyu-kontraktnoy-sistemy-v-sfere-zakupok-respubliki-mariy-el",
+    "name": "Комитет по регулированию контрактной системы в сфере закупок Республики Марий Эл",
+    "shortName": "Комитет закупок Республики Марий Эл",
+    "territoryId": "ru-12"
+  },
+  "ru-12-ministerstvo-vnutrenney-politiki-respubliki-mariy-el": {
+    "id": "ru-12-ministerstvo-vnutrenney-politiki-respubliki-mariy-el",
+    "name": "Министерство внутренней политики Республики Марий Эл",
+    "shortName": "",
+    "territoryId": "ru-12"
+  },
+  "ru-12-administratsiya-glavy-respubliki-mariy-el": {
+    "id": "ru-12-administratsiya-glavy-respubliki-mariy-el",
+    "name": "Администрация Главы Республики Марий Эл",
+    "shortName": "",
+    "territoryId": "ru-12"
+  },
+  "ru-59-pravitelstvo-permskogo-kraya": {
+    "id": "ru-59-pravitelstvo-permskogo-kraya",
+    "name": "Правительство Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-59-administratsiya-gubernatora-permskogo-kraya": {
+    "id": "ru-59-administratsiya-gubernatora-permskogo-kraya",
+    "name": "Администрация губернатора Пермского края",
+    "shortName": "",
+    "territoryId": "ru-59"
+  },
+  "ru-58-pravitelstvo-penzenskoy-oblasti": {
+    "id": "ru-58-pravitelstvo-penzenskoy-oblasti",
+    "name": "Правительство Пензенской области",
+    "shortName": "",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-gosudarstvennogo-imushchestva-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-gosudarstvennogo-imushchestva-penzenskoy-oblasti",
+    "name": "Министерство государственного имущества Пензенской области",
+    "shortName": "Мингосимущество Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-gradostroitelstva-i-arkhitektury-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-gradostroitelstva-i-arkhitektury-penzenskoy-oblasti",
+    "name": "Министерство градостроительства и архитектуры Пензенской области",
+    "shortName": "Минград Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-grazhdanskoy-zashchity-naseleniya-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-i-grazhdanskoy-zashchity-naseleniya-penzenskoy-oblasti",
+    "name": "Министерство жилищно-коммунального хозяйства и гражданской защиты населения Пензенской области",
+    "shortName": "Министерство ЖКХ и ГЗН Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-kultury-i-turizma-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-kultury-i-turizma-penzenskoy-oblasti",
+    "name": "Министерство культуры и туризма Пензенской области",
+    "shortName": "Минкультуры Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-lesnogo-okhotnichego-khozyaystva-i-prirodopolzovaniya-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-lesnogo-okhotnichego-khozyaystva-i-prirodopolzovaniya-penzenskoy-oblasti",
+    "name": "Министерство лесного, охотничьего хозяйства и природопользования Пензенской области",
+    "shortName": "Минлесхоз Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-regionalnoy-bezopasnosti-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-regionalnoy-bezopasnosti-penzenskoy-oblasti",
+    "name": "Министерство региональной безопасности Пензенской области",
+    "shortName": "МРБ Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-po-okhrane-pamyatnikov-istorii-i-kultury-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-po-okhrane-pamyatnikov-istorii-i-kultury-penzenskoy-oblasti",
+    "name": "Министерство по охране памятников истории и культуры Пензенской области",
+    "shortName": "Министерство по охране памятников Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-po-tarifnomu-regulirovaniyu-i-gosudarstvennym-zakupkam-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-po-tarifnomu-regulirovaniyu-i-gosudarstvennym-zakupkam-penzenskoy-oblasti",
+    "name": "Министерство по тарифному регулированию и государственным закупкам Пензенской области",
+    "shortName": "Министерство по тарифам и закупкам Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-selskogo-khozyaystva-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-selskogo-khozyaystva-penzenskoy-oblasti",
+    "name": "Министерство сельского хозяйства Пензенской области",
+    "shortName": "Минсельхоз Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-stroitelstva-transporta-i-dorozhnogo-khozyaystva-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-stroitelstva-transporta-i-dorozhnogo-khozyaystva-penzenskoy-oblasti",
+    "name": "Министерство строительства, транспорта и дорожного хозяйства Пензенской области",
+    "shortName": "Минстрой Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-truda-sotsialnoy-zashchity-i-demografii-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-truda-sotsialnoy-zashchity-i-demografii-penzenskoy-oblasti",
+    "name": "Министерство труда, социальной защиты и демографии Пензенской области",
+    "shortName": "Минтруд Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-fizicheskoy-kultury-i-sporta-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-fizicheskoy-kultury-i-sporta-penzenskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Пензенской области",
+    "shortName": "Минспорт Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-tsifrovogo-razvitiya-i-svyazi-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-tsifrovogo-razvitiya-i-svyazi-penzenskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Пензенской области",
+    "shortName": "Минцифры Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-58-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-penzenskoy-oblasti": {
+    "id": "ru-58-ministerstvo-ekonomicheskogo-razvitiya-i-promyshlennosti-penzenskoy-oblasti",
+    "name": "Министерство экономического развития и промышленности Пензенской области",
+    "shortName": "",
+    "territoryId": "ru-58"
+  },
+  "ru-58-predstavitelstvo-pravitelstva-penzenskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii": {
+    "id": "ru-58-predstavitelstvo-pravitelstva-penzenskoy-oblasti-pri-pravitelstve-rossiyskoy-federatsii",
+    "name": "Представительство Правительства Пензенской области при Правительстве Российской Федерации",
+    "shortName": "Представительство Пензенской области",
+    "territoryId": "ru-58"
+  },
+  "ru-21-ministerstvo-obrazovaniya-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-obrazovaniya-chuvashskoy-respubliki",
+    "name": "Министерство образования Чувашской Республики",
+    "shortName": "",
+    "territoryId": "ru-21"
+  },
+  "ru-21-ministerstvo-prirodnykh-resursov-i-ekologii-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-prirodnykh-resursov-i-ekologii-chuvashskoy-respubliki",
+    "name": "Министерство природных ресурсов и экологии Чувашской Республики",
+    "shortName": "Минприроды Чувашии",
+    "territoryId": "ru-21"
+  },
+  "ru-21-ministerstvo-promyshlennosti-i-energetiki-chuvashskoy-respubliki": {
+    "id": "ru-21-ministerstvo-promyshlennosti-i-energetiki-chuvashskoy-respubliki",
+    "name": "Министерство промышленности и энергетики Чувашской Республики",
+    "shortName": "",
+    "territoryId": "ru-21"
+  },
+  "ru-21-ministerstvo-chuvashskoy-respubliki-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam": {
+    "id": "ru-21-ministerstvo-chuvashskoy-respubliki-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam",
+    "name": "Министерство Чувашской Республики по делам гражданской обороны и чрезвычайным ситуациям",
+    "shortName": "МЧС Чувашии",
+    "territoryId": "ru-21"
+  },
+  "ru-21-gosudarstvennaya-sluzhba-chuvashskoy-respubliki-po-delam-yustitsii": {
+    "id": "ru-21-gosudarstvennaya-sluzhba-chuvashskoy-respubliki-po-delam-yustitsii",
+    "name": "Государственная служба Чувашской Республики по делам юстиции",
+    "shortName": "Госслужба Чувашии по делам юстиции",
+    "territoryId": "ru-21"
+  },
+  "ru-21-kabinet-ministrov-chuvashskoy-respubliki": {
+    "id": "ru-21-kabinet-ministrov-chuvashskoy-respubliki",
+    "name": "Кабинет Министров Чувашской Республики",
+    "shortName": "",
+    "territoryId": "ru-21"
+  },
+  "ru-21-administratsiya-glavy-chuvashskoy-respubliki": {
+    "id": "ru-21-administratsiya-glavy-chuvashskoy-respubliki",
+    "name": "Администрация Главы Чувашской Республики",
+    "shortName": "",
+    "territoryId": "ru-21"
+  },
+  "ru-16-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-respubliki-tatarstan",
+    "name": "Министерство земельных и имущественных отношений Республики Татарстан",
+    "shortName": "Минземимущество Республики Татарстан",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-kultury-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-kultury-respubliki-tatarstan",
+    "name": "Министерство культуры Республики Татарстан",
+    "shortName": "Минкульт Татарстана",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-lesnogo-khozyaystva-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-lesnogo-khozyaystva-respubliki-tatarstan",
+    "name": "Министерство лесного хозяйства Республики Татарстан",
+    "shortName": "Минлесхоз Татарстана",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam-respubliki-tatarstan",
+    "name": "Министерство по делам гражданской обороны и чрезвычайным ситуациям Республики Татарстан",
+    "shortName": "МЧС Татарстана",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-po-delam-molodezhi-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-po-delam-molodezhi-respubliki-tatarstan",
+    "name": "Министерство по делам молодежи Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-promyshlennosti-i-torgovli-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-promyshlennosti-i-torgovli-respubliki-tatarstan",
+    "name": "Министерство промышленности и торговли Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-tatarstan",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Татарстан",
+    "shortName": "Минсельхоз Татарстана",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-sporta-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-sporta-respubliki-tatarstan",
+    "name": "Министерство спорта Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-stroitelstva-arkhitektury-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-stroitelstva-arkhitektury-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-tatarstan",
+    "name": "Министерство строительства, архитектуры и жилищно-коммунального хозяйства Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-tatarstan",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-truda-zanyatosti-i-sotsialnoy-zashchity-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-truda-zanyatosti-i-sotsialnoy-zashchity-respubliki-tatarstan",
+    "name": "Министерство труда, занятости и социальной защиты Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-yustitsii-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-yustitsii-respubliki-tatarstan",
+    "name": "Министерство юстиции Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-arkhivnomu-delu": {
+    "id": "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-arkhivnomu-delu",
+    "name": "Государственный комитет Республики Татарстан по архивному делу",
+    "shortName": "Госкомархив РТ",
+    "territoryId": "ru-16"
+  },
+  "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-biologicheskim-resursam": {
+    "id": "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-biologicheskim-resursam",
+    "name": "Государственный комитет Республики Татарстан по биологическим ресурсам",
+    "shortName": "Госкомитет РТ по биоресурсам",
+    "territoryId": "ru-16"
+  },
+  "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-zakupkam": {
+    "id": "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-zakupkam",
+    "name": "Государственный комитет Республики Татарстан по закупкам",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-tarifam": {
+    "id": "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-tarifam",
+    "name": "Государственный комитет Республики Татарстан по тарифам",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-turizmu": {
+    "id": "ru-16-gosudarstvennyy-komitet-respubliki-tatarstan-po-turizmu",
+    "name": "Государственный комитет Республики Татарстан по туризму",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-gosudarstvennaya-zhilishchnaya-inspektsiya-respubliki-tatarstan": {
+    "id": "ru-16-gosudarstvennaya-zhilishchnaya-inspektsiya-respubliki-tatarstan",
+    "name": "Государственная жилищная инспекция Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-kabinet-ministrov-respubliki-tatarstan": {
+    "id": "ru-16-kabinet-ministrov-respubliki-tatarstan",
+    "name": "Кабинет Министров Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-ekologii-i-prirodnykh-resursov-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-ekologii-i-prirodnykh-resursov-respubliki-tatarstan",
+    "name": "Министерство экологии и природных ресурсов Республики Татарстан",
+    "shortName": "Минэкологии Татарстана",
+    "territoryId": "ru-16"
+  },
+  "ru-16-ministerstvo-ekonomiki-respubliki-tatarstan": {
+    "id": "ru-16-ministerstvo-ekonomiki-respubliki-tatarstan",
+    "name": "Министерство экономики Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-agentstvo-investitsionnogo-razvitiya-respubliki-tatarstan": {
+    "id": "ru-16-agentstvo-investitsionnogo-razvitiya-respubliki-tatarstan",
+    "name": "Агентство инвестиционного развития Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-glavnoe-upravlenie-veterinarii-kabineta-ministrov-respubliki-tatarstan": {
+    "id": "ru-16-glavnoe-upravlenie-veterinarii-kabineta-ministrov-respubliki-tatarstan",
+    "name": "Главное управление ветеринарии Кабинета Министров Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-gosudarstvennaya-inspektsiya-respubliki-tatarstan-po-obespecheniyu-gosudarstvennogo-kontrolya-za-proizvodstvom-oborotom-i-kachestvom-etilovogo-spirta-alkogolnoy-produktsii-i-zashchite-prav-potrebiteley": {
+    "id": "ru-16-gosudarstvennaya-inspektsiya-respubliki-tatarstan-po-obespecheniyu-gosudarstvennogo-kontrolya-za-proizvodstvom-oborotom-i-kachestvom-etilovogo-spirta-alkogolnoy-produktsii-i-zashchite-prav-potrebiteley",
+    "name": "Государственная инспекция Республики Татарстан по обеспечению государственного контроля за производством, оборотом и качеством этилового спирта, алкогольной продукции и защите прав потребителей",
+    "shortName": "Госалкогольинспекция Республики Татарстан",
+    "territoryId": "ru-16"
+  },
+  "ru-16-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-respubliki-tatarstan": {
+    "id": "ru-16-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-respubliki-tatarstan",
+    "name": "Инспекция государственного строительного надзора Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-komitet-respubliki-tatarstan-po-okhrane-obektov-kulturnogo-naslediya": {
+    "id": "ru-16-komitet-respubliki-tatarstan-po-okhrane-obektov-kulturnogo-naslediya",
+    "name": "Комитет Республики Татарстан по охране объектов культурного наследия",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-respublikanskoe-agentstvo-po-pechati-i-massovym-kommunikatsiyam-tatmedia": {
+    "id": "ru-16-respublikanskoe-agentstvo-po-pechati-i-massovym-kommunikatsiyam-tatmedia",
+    "name": "Республиканское агентство по печати и массовым коммуникациям «Татмедиа»",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-16-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kabineta-ministrov-respubliki-tatarstan": {
+    "id": "ru-16-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-kabineta-ministrov-respubliki-tatarstan",
+    "name": "Управление записи актов гражданского состояния Кабинета Министров Республики Татарстан",
+    "shortName": "Управление ЗАГС Кабинета Министров Республики Татарстан",
+    "territoryId": "ru-16"
+  },
+  "ru-16-upravlenie-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-respubliki-tatarstan": {
+    "id": "ru-16-upravlenie-po-nadzoru-za-tekhnicheskim-sostoyaniem-samokhodnykh-mashin-i-drugikh-vidov-tekhniki-respubliki-tatarstan",
+    "name": "Управление по надзору за техническим состоянием самоходных машин и других видов техники Республики Татарстан",
+    "shortName": "Управление Гостехнадзора Республики Татарстан",
+    "territoryId": "ru-16"
+  },
+  "ru-16-apparat-kabineta-ministrov-respubliki-tatarstan": {
+    "id": "ru-16-apparat-kabineta-ministrov-respubliki-tatarstan",
+    "name": "Аппарат Кабинета Министров Республики Татарстан",
+    "shortName": "",
+    "territoryId": "ru-16"
+  },
+  "ru-13-pravitelstvo-respubliki-mordoviya": {
+    "id": "ru-13-pravitelstvo-respubliki-mordoviya",
+    "name": "Правительство Республики Мордовия",
+    "shortName": "",
+    "territoryId": "ru-13"
+  },
+  "ru-13-administratsiya-glavy-respubliki-mordoviya-i-pravitelstva-respubliki-mordoviya": {
+    "id": "ru-13-administratsiya-glavy-respubliki-mordoviya-i-pravitelstva-respubliki-mordoviya",
+    "name": "Администрация Главы Республики Мордовия и Правительства Республики Мордовия",
+    "shortName": "",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-respubliki-mordoviya",
+    "name": "Министерство земельных и имущественных отношений Республики Мордовия",
+    "shortName": "Минземимущество Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-kultury-natsionalnoy-politiki-i-arkhivnogo-dela-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-kultury-natsionalnoy-politiki-i-arkhivnogo-dela-respubliki-mordoviya",
+    "name": "Министерство культуры, национальной политики и архивного дела Республики Мордовия",
+    "shortName": "Минкультнац Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-obrazovaniya-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-obrazovaniya-respubliki-mordoviya",
+    "name": "Министерство образования Республики Мордовия",
+    "shortName": "",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-po-delam-grazhdanskoy-oborony-i-chrezvychaynym-situatsiyam-respubliki-mordoviya",
+    "name": "Министерство по делам гражданской обороны и чрезвычайным ситуациям Республики Мордовия",
+    "shortName": "МЧС Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-po-delam-molodezhi-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-po-delam-molodezhi-respubliki-mordoviya",
+    "name": "Министерство по делам молодежи Республики Мордовия",
+    "shortName": "",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-promyshlennosti-nauki-i-novykh-tekhnologiy-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-promyshlennosti-nauki-i-novykh-tekhnologiy-respubliki-mordoviya",
+    "name": "Министерство промышленности, науки и новых технологий Республики Мордовия",
+    "shortName": "Минпромнауки Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-selskogo-khozyaystva-i-prodovolstviya-respubliki-mordoviya",
+    "name": "Министерство сельского хозяйства и продовольствия Республики Мордовия",
+    "shortName": "Минсельхозпрод Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-sotsialnoy-zashchity-truda-i-zanyatosti-naseleniya-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-sotsialnoy-zashchity-truda-i-zanyatosti-naseleniya-respubliki-mordoviya",
+    "name": "Министерство социальной защиты, труда и занятости населения Республики Мордовия",
+    "shortName": "Минсоцтрудзанятости Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-sporta-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-sporta-respubliki-mordoviya",
+    "name": "Министерство спорта Республики Мордовия",
+    "shortName": "Минспорт Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-stroitelstva-i-arkhitektury-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-stroitelstva-i-arkhitektury-respubliki-mordoviya",
+    "name": "Министерство строительства и архитектуры Республики Мордовия",
+    "shortName": "Минстрой Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-mordoviya",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Мордовия",
+    "shortName": "",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-tsifrovogo-razvitiya-i-massovykh-kommunikatsiy-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-tsifrovogo-razvitiya-i-massovykh-kommunikatsiy-respubliki-mordoviya",
+    "name": "Министерство цифрового развития и массовых коммуникаций Республики Мордовия",
+    "shortName": "Минцифры Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-ekologii-i-prirodnykh-resursov-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-ekologii-i-prirodnykh-resursov-respubliki-mordoviya",
+    "name": "Министерство экологии и природных ресурсов Республики Мордовия",
+    "shortName": "Минприроды Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-respubliki-mordoviya",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Республики Мордовия",
+    "shortName": "",
+    "territoryId": "ru-13"
+  },
+  "ru-13-ministerstvo-yustitsii-respubliki-mordoviya": {
+    "id": "ru-13-ministerstvo-yustitsii-respubliki-mordoviya",
+    "name": "Министерство юстиции Республики Мордовия",
+    "shortName": "Минюст Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-gosudarstvennyy-komitet-po-tarifam-respubliki-mordoviya": {
+    "id": "ru-13-gosudarstvennyy-komitet-po-tarifam-respubliki-mordoviya",
+    "name": "Государственный комитет по тарифам Республики Мордовия",
+    "shortName": "ГКТ Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-gosudarstvennyy-komitet-po-veterinarii-respubliki-mordoviya": {
+    "id": "ru-13-gosudarstvennyy-komitet-po-veterinarii-respubliki-mordoviya",
+    "name": "Государственный комитет по ветеринарии Республики Мордовия",
+    "shortName": "Госкомвет Республики Мордовия",
+    "territoryId": "ru-13"
+  },
+  "ru-13-postoyannoe-predstavitelstvo-respubliki-mordoviya-pri-prezidente-rossiyskoy-federatsii": {
+    "id": "ru-13-postoyannoe-predstavitelstvo-respubliki-mordoviya-pri-prezidente-rossiyskoy-federatsii",
+    "name": "Постоянное представительство Республики Мордовия при Президенте Российской Федерации",
+    "shortName": "Постпредство Мордовии",
+    "territoryId": "ru-13"
+  },
+  "ru-02-pravitelstvo-respubliki-bashkortostan": {
+    "id": "ru-02-pravitelstvo-respubliki-bashkortostan",
+    "name": "Правительство Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-vneshneekonomicheskikh-svyazey-i-kongressnoy-deyatelnosti-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-vneshneekonomicheskikh-svyazey-i-kongressnoy-deyatelnosti-respubliki-bashkortostan",
+    "name": "Министерство внешнеэкономических связей и конгрессной деятельности Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-zhilishchno-kommunalnogo-khozyaystva-respubliki-bashkortostan",
+    "name": "Министерство жилищно-коммунального хозяйства Республики Башкортостан",
+    "shortName": "Минжилкомхоз РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-zdravookhraneniya-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-zdravookhraneniya-respubliki-bashkortostan",
+    "name": "Министерство здравоохранения Республики Башкортостан",
+    "shortName": "Минздрав РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-zemelnykh-i-imushchestvennykh-otnosheniy-respubliki-bashkortostan",
+    "name": "Министерство земельных и имущественных отношений Республики Башкортостан",
+    "shortName": "Минземимущество РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-kultury-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-kultury-respubliki-bashkortostan",
+    "name": "Министерство культуры Республики Башкортостан",
+    "shortName": "Минкультуры РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-lesnogo-khozyaystva-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-lesnogo-khozyaystva-respubliki-bashkortostan",
+    "name": "Министерство лесного хозяйства Республики Башкортостан",
+    "shortName": "Минлесхоз РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-molodezhnoy-politiki-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-molodezhnoy-politiki-respubliki-bashkortostan",
+    "name": "Министерство молодежной политики Республики Башкортостан",
+    "shortName": "Минмолодежи РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-predprinimatelstva-i-turizma-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-predprinimatelstva-i-turizma-respubliki-bashkortostan",
+    "name": "Министерство предпринимательства и туризма Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-prirodopolzovaniya-i-ekologii-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-prirodopolzovaniya-i-ekologii-respubliki-bashkortostan",
+    "name": "Министерство природопользования и экологии Республики Башкортостан",
+    "shortName": "Минэкологии РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-promyshlennosti-energetiki-i-innovatsiy-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-promyshlennosti-energetiki-i-innovatsiy-respubliki-bashkortostan",
+    "name": "Министерство промышленности, энергетики и инноваций Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-selskogo-khozyaystva-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-selskogo-khozyaystva-respubliki-bashkortostan",
+    "name": "Министерство сельского хозяйства Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-semi-truda-i-sotsialnoy-zashchity-naseleniya-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-semi-truda-i-sotsialnoy-zashchity-naseleniya-respubliki-bashkortostan",
+    "name": "Министерство семьи, труда и социальной защиты населения Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-sporta-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-sporta-respubliki-bashkortostan",
+    "name": "Министерство спорта Республики Башкортостан",
+    "shortName": "Минспорт РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-stroitelstva-i-arkhitektury-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-stroitelstva-i-arkhitektury-respubliki-bashkortostan",
+    "name": "Министерство строительства и архитектуры Республики Башкортостан",
+    "shortName": "Минстрой РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-torgovli-i-uslug-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-torgovli-i-uslug-respubliki-bashkortostan",
+    "name": "Министерство торговли и услуг Республики Башкортостан",
+    "shortName": "Минторг РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-transporta-i-dorozhnogo-khozyaystva-respubliki-bashkortostan",
+    "name": "Министерство транспорта и дорожного хозяйства Республики Башкортостан",
+    "shortName": "Минтранс РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-finansov-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-finansov-respubliki-bashkortostan",
+    "name": "Министерство финансов Республики Башкортостан",
+    "shortName": "Минфин РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-tsifrovogo-razvitiya-gosudarstvennogo-upravleniya-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-tsifrovogo-razvitiya-gosudarstvennogo-upravleniya-respubliki-bashkortostan",
+    "name": "Министерство цифрового развития государственного управления Республики Башкортостан",
+    "shortName": "Минцифразвития РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-ministerstvo-ekonomicheskogo-razvitiya-i-investitsionnoy-politiki-respubliki-bashkortostan": {
+    "id": "ru-02-ministerstvo-ekonomicheskogo-razvitiya-i-investitsionnoy-politiki-respubliki-bashkortostan",
+    "name": "Министерство экономического развития и инвестиционной политики Республики Башкортостан",
+    "shortName": "Минэкономразвития РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-delam-yustitsii": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-delam-yustitsii",
+    "name": "Государственный комитет Республики Башкортостан по делам юстиции",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-zhilishchnomu-i-stroitelnomu-nadzoru": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-zhilishchnomu-i-stroitelnomu-nadzoru",
+    "name": "Государственный комитет Республики Башкортостан по жилищному и строительному надзору",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-konkurentnoy-politike": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-konkurentnoy-politike",
+    "name": "Государственный комитет Республики Башкортостан по конкурентной политике",
+    "shortName": "ГК РБ по конкурентной политике",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-nauke-i-vysshemu-obrazovaniyu": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-nauke-i-vysshemu-obrazovaniyu",
+    "name": "Государственный комитет Республики Башкортостан по науке и высшему образованию",
+    "shortName": "ГК РБ по науке и высшему образованию",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-tarifam": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-tarifam",
+    "name": "Государственный комитет Республики Башкортостан по тарифам",
+    "shortName": "ГКТ РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-chrezvychaynym-situatsiyam": {
+    "id": "ru-02-gosudarstvennyy-komitet-respubliki-bashkortostan-po-chrezvychaynym-situatsiyam",
+    "name": "Государственный комитет Республики Башкортостан по чрезвычайным ситуациям",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-agentstvo-po-pechati-i-sredstvam-massovoy-informatsii-respubliki-bashkortostan": {
+    "id": "ru-02-agentstvo-po-pechati-i-sredstvam-massovoy-informatsii-respubliki-bashkortostan",
+    "name": "Агентство по печати и средствам массовой информации Республики Башкортостан",
+    "shortName": "Агентство печати РБ",
+    "territoryId": "ru-02"
+  },
+  "ru-02-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-respubliki-bashkortostan": {
+    "id": "ru-02-upravlenie-po-gosudarstvennoy-okhrane-obektov-kulturnogo-naslediya-respubliki-bashkortostan",
+    "name": "Управление по государственной охране объектов культурного наследия Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-upravlenie-po-delam-arkhivov-respubliki-bashkortostan": {
+    "id": "ru-02-upravlenie-po-delam-arkhivov-respubliki-bashkortostan",
+    "name": "Управление по делам архивов Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-02-apparat-pravitelstva-respubliki-bashkortostan": {
+    "id": "ru-02-apparat-pravitelstva-respubliki-bashkortostan",
+    "name": "Аппарат Правительства Республики Башкортостан",
+    "shortName": "",
+    "territoryId": "ru-02"
+  },
+  "ru-52-ministerstvo-nauki-i-vysshego-obrazovaniya-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-nauki-i-vysshego-obrazovaniya-nizhegorodskoy-oblasti",
+    "name": "Министерство науки и высшего образования Нижегородской области",
+    "shortName": "Миннауки Нижегородской области",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-molodezhnoy-politiki-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-molodezhnoy-politiki-nizhegorodskoy-oblasti",
+    "name": "Министерство молодёжной политики Нижегородской области",
+    "shortName": "Минмолодежь",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-mezhdunarodnykh-i-mezhregionalnykh-svyazey-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-mezhdunarodnykh-i-mezhregionalnykh-svyazey-nizhegorodskoy-oblasti",
+    "name": "Министерство международных и межрегиональных связей Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-inspektsiya-gosudarstvennogo-kontrolya-i-nadzora-nizhegorodskoy-oblasti": {
+    "id": "ru-52-inspektsiya-gosudarstvennogo-kontrolya-i-nadzora-nizhegorodskoy-oblasti",
+    "name": "Инспекция государственного контроля и надзора Нижегородской области",
+    "shortName": "Нижгосконтроль",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-lesnogo-khozyaystva-i-okhrany-obektov-zhivotnogo-mira-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-lesnogo-khozyaystva-i-okhrany-obektov-zhivotnogo-mira-nizhegorodskoy-oblasti",
+    "name": "Министерство лесного хозяйства и охраны объектов животного мира Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-imushchestvennykh-i-zemelnykh-otnosheniy-nizhegorodskoy-oblasti",
+    "name": "Министерство имущественных и земельных отношений Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-energetiki-i-zhilishchno-kommunalnogo-khozyaystva-nizhegorodskoy-oblasti",
+    "name": "Министерство энергетики и жилищно-коммунального хозяйства Нижегородской области",
+    "shortName": "Министерство энергетики и ЖКХ Нижегородской области",
+    "territoryId": "ru-52"
+  },
+  "ru-52-komitet-veterinarii-nizhegorodskoy-oblasti": {
+    "id": "ru-52-komitet-veterinarii-nizhegorodskoy-oblasti",
+    "name": "Комитет ветеринарии Нижегородской области",
+    "shortName": "Комитет ветеринарии",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-gradostroitelnoy-deyatelnosti-i-razvitiya-aglomeratsiy-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-gradostroitelnoy-deyatelnosti-i-razvitiya-aglomeratsiy-nizhegorodskoy-oblasti",
+    "name": "Министерство градостроительной деятельности и развития агломераций Нижегородской области",
+    "shortName": "Минград Нижегородской области",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-selskogo-khozyaystva-i-prodovolstvennykh-resursov-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-selskogo-khozyaystva-i-prodovolstvennykh-resursov-nizhegorodskoy-oblasti",
+    "name": "Министерство сельского хозяйства и продовольственных ресурсов Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-zdravookhraneniya-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-zdravookhraneniya-nizhegorodskoy-oblasti",
+    "name": "Министерство здравоохранения Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-stroitelstva-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-stroitelstva-nizhegorodskoy-oblasti",
+    "name": "Министерство строительства Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-transporta-i-avtomobilnykh-dorog-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-transporta-i-avtomobilnykh-dorog-nizhegorodskoy-oblasti",
+    "name": "Министерство транспорта и автомобильных дорог Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-sporta-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-sporta-nizhegorodskoy-oblasti",
+    "name": "Министерство спорта Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-regionalnoy-bezopasnosti-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-regionalnoy-bezopasnosti-nizhegorodskoy-oblasti",
+    "name": "Министерство региональной безопасности Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-upravlenie-zashchity-gosudarstvennoy-tayny-nizhegorodskoy-oblasti": {
+    "id": "ru-52-upravlenie-zashchity-gosudarstvennoy-tayny-nizhegorodskoy-oblasti",
+    "name": "Управление защиты государственной тайны Нижегородской области",
+    "shortName": "Управление ЗГТ НО",
+    "territoryId": "ru-52"
+  },
+  "ru-52-upravlenie-dokumentatsionnogo-obespecheniya-nizhegorodskoy-oblasti": {
+    "id": "ru-52-upravlenie-dokumentatsionnogo-obespecheniya-nizhegorodskoy-oblasti",
+    "name": "Управление документационного обеспечения Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-upravlenie-delami-pravitelstva-nizhegorodskoy-oblasti": {
+    "id": "ru-52-upravlenie-delami-pravitelstva-nizhegorodskoy-oblasti",
+    "name": "Управление делами Правительства Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-promyshlennosti-torgovli-i-predprinimatelstva-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-promyshlennosti-torgovli-i-predprinimatelstva-nizhegorodskoy-oblasti",
+    "name": "Министерство промышленности, торговли и предпринимательства Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-kadrovoy-politiki-pravitelstva-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-kadrovoy-politiki-pravitelstva-nizhegorodskoy-oblasti",
+    "name": "Министерство кадровой политики Правительства Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-obrazovaniya-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-obrazovaniya-nizhegorodskoy-oblasti",
+    "name": "Министерство образования Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-ekologii-i-prirodnykh-resursov-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-ekologii-i-prirodnykh-resursov-nizhegorodskoy-oblasti",
+    "name": "Министерство экологии и природных ресурсов Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-kultury-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-kultury-nizhegorodskoy-oblasti",
+    "name": "Министерство культуры Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-ekonomicheskogo-razvitiya-i-investitsiy-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-ekonomicheskogo-razvitiya-i-investitsiy-nizhegorodskoy-oblasti",
+    "name": "Министерство экономического развития и инвестиций Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-informatsionnoy-politiki-i-vzaimodeystviya-so-sredstvami-massovoy-informatsii-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-informatsionnoy-politiki-i-vzaimodeystviya-so-sredstvami-massovoy-informatsii-nizhegorodskoy-oblasti",
+    "name": "Министерство информационной политики и взаимодействия со средствами массовой информации Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-turizma-i-promyslov-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-turizma-i-promyslov-nizhegorodskoy-oblasti",
+    "name": "Министерство туризма и промыслов Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-gosudarstvenno-pravovoy-departament-nizhegorodskoy-oblasti": {
+    "id": "ru-52-gosudarstvenno-pravovoy-departament-nizhegorodskoy-oblasti",
+    "name": "Государственно-правовой департамент Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-advokatury-i-notariata-nizhegorodskoy-oblasti": {
+    "id": "ru-52-upravlenie-po-obespecheniyu-deyatelnosti-mirovykh-sudey-advokatury-i-notariata-nizhegorodskoy-oblasti",
+    "name": "Управление по обеспечению деятельности мировых судей, адвокатуры и нотариата Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-komitet-po-delam-arkhivov-nizhegorodskoy-oblasti": {
+    "id": "ru-52-komitet-po-delam-arkhivov-nizhegorodskoy-oblasti",
+    "name": "Комитет по делам архивов Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-regionalnaya-sluzhba-po-tarifam-nizhegorodskoy-oblasti": {
+    "id": "ru-52-regionalnaya-sluzhba-po-tarifam-nizhegorodskoy-oblasti",
+    "name": "Региональная служба по тарифам Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-upravlenie-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-nizhegorodskoy-oblasti": {
+    "id": "ru-52-upravlenie-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-nizhegorodskoy-oblasti",
+    "name": "Управление государственной охраны объектов культурного наследия Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-apparat-pravitelstva-nizhegorodskoy-oblasti": {
+    "id": "ru-52-apparat-pravitelstva-nizhegorodskoy-oblasti",
+    "name": "Аппарат Правительства Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-nizhegorodskoy-oblasti": {
+    "id": "ru-52-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-nizhegorodskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-tsifrovogo-razvitiya-i-svyazi-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-tsifrovogo-razvitiya-i-svyazi-nizhegorodskoy-oblasti",
+    "name": "Министерство цифрового развития и связи Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-nizhegorodskoy-oblasti": {
+    "id": "ru-52-glavnoe-upravlenie-zapisi-aktov-grazhdanskogo-sostoyaniya-nizhegorodskoy-oblasti",
+    "name": "Главное управление записи актов гражданского состояния Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-otdel-mobilizatsionnoy-podgotovki-nizhegorodskoy-oblasti": {
+    "id": "ru-52-otdel-mobilizatsionnoy-podgotovki-nizhegorodskoy-oblasti",
+    "name": "Отдел мобилизационной подготовки Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-upravlenie-po-profilaktike-korruptsionnykh-pravonarusheniy-nizhegorodskoy-oblasti": {
+    "id": "ru-52-upravlenie-po-profilaktike-korruptsionnykh-pravonarusheniy-nizhegorodskoy-oblasti",
+    "name": "Управление по профилактике коррупционных правонарушений Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-sotsialnogo-razvitiya-i-semeynoy-politiki-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-sotsialnogo-razvitiya-i-semeynoy-politiki-nizhegorodskoy-oblasti",
+    "name": "Министерство социального развития и семейной политики Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-52-ministerstvo-vnutrenney-regionalnoy-i-munitsipalnoy-politiki-nizhegorodskoy-oblasti": {
+    "id": "ru-52-ministerstvo-vnutrenney-regionalnoy-i-munitsipalnoy-politiki-nizhegorodskoy-oblasti",
+    "name": "Министерство внутренней региональной и муниципальной политики Нижегородской области",
+    "shortName": "",
+    "territoryId": "ru-52"
+  },
+  "ru-56-ministerstvo-zdravookhraneniya-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-zdravookhraneniya-orenburgskoy-oblasti",
+    "name": "Министерство здравоохранения Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-sotsialnogo-razvitiya-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-sotsialnogo-razvitiya-orenburgskoy-oblasti",
+    "name": "Министерство социального развития Оренбургской области",
+    "shortName": "Минсоцразвития Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-kultury-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-kultury-orenburgskoy-oblasti",
+    "name": "Министерство культуры Оренбургской области",
+    "shortName": "Минкультуры Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-fizicheskoy-kultury-i-sporta-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-fizicheskoy-kultury-i-sporta-orenburgskoy-oblasti",
+    "name": "Министерство физической культуры и спорта Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-obrazovaniya-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-obrazovaniya-orenburgskoy-oblasti",
+    "name": "Министерство образования Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-selskogo-khozyaystva-torgovli-pishchevoy-i-pererabatyvayushchey-promyshlennosti-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-selskogo-khozyaystva-torgovli-pishchevoy-i-pererabatyvayushchey-promyshlennosti-orenburgskoy-oblasti",
+    "name": "Министерство сельского хозяйства, торговли, пищевой и перерабатывающей промышленности Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-finansov-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-finansov-orenburgskoy-oblasti",
+    "name": "Министерство финансов Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-truda-i-zanyatosti-naseleniya-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-truda-i-zanyatosti-naseleniya-orenburgskoy-oblasti",
+    "name": "Министерство труда и занятости населения Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-departament-informatsionnoy-politiki-orenburgskoy-oblasti": {
+    "id": "ru-56-departament-informatsionnoy-politiki-orenburgskoy-oblasti",
+    "name": "Департамент информационной политики Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-promyshlennosti-i-energetiki-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-promyshlennosti-i-energetiki-orenburgskoy-oblasti",
+    "name": "Министерство промышленности и энергетики Оренбургской области",
+    "shortName": "Минпромэнерго Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-komitet-po-obespecheniyu-deyatelnosti-mirovykh-sudey-orenburgskoy-oblasti": {
+    "id": "ru-56-komitet-po-obespecheniyu-deyatelnosti-mirovykh-sudey-orenburgskoy-oblasti",
+    "name": "Комитет по обеспечению деятельности мировых судей Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-komitet-po-delam-arkhivov-orenburgskoy-oblasti": {
+    "id": "ru-56-komitet-po-delam-arkhivov-orenburgskoy-oblasti",
+    "name": "Комитет по делам архивов Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-prirodnykh-resursov-ekologii-i-imushchestvennykh-otnosheniy-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-prirodnykh-resursov-ekologii-i-imushchestvennykh-otnosheniy-orenburgskoy-oblasti",
+    "name": "Министерство природных ресурсов, экологии и имущественных отношений Оренбургской области",
+    "shortName": "МПР Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-departament-pozharnoy-bezopasnosti-i-grazhdanskoy-zashchity-orenburgskoy-oblasti": {
+    "id": "ru-56-departament-pozharnoy-bezopasnosti-i-grazhdanskoy-zashchity-orenburgskoy-oblasti",
+    "name": "Департамент пожарной безопасности и гражданской защиты Оренбургской области",
+    "shortName": "Департамент ПБ и ГЗ Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-komitet-vnutrennego-gosudarstvennogo-finansovogo-kontrolya-orenburgskoy-oblasti": {
+    "id": "ru-56-komitet-vnutrennego-gosudarstvennogo-finansovogo-kontrolya-orenburgskoy-oblasti",
+    "name": "Комитет внутреннего государственного финансового контроля Оренбургской области",
+    "shortName": "Комитет финконтроля Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-inspektsiya-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-orenburgskoy-oblasti": {
+    "id": "ru-56-inspektsiya-gosudarstvennoy-okhrany-obektov-kulturnogo-naslediya-orenburgskoy-oblasti",
+    "name": "Инспекция государственной охраны объектов культурного наследия Оренбургской области",
+    "shortName": "ИГО ОКН ОО",
+    "territoryId": "ru-56"
+  },
+  "ru-56-departament-orenburgskoy-oblasti-po-tsenam-i-regulirovaniyu-tarifov": {
+    "id": "ru-56-departament-orenburgskoy-oblasti-po-tsenam-i-regulirovaniyu-tarifov",
+    "name": "Департамент Оренбургской области по ценам и регулированию тарифов",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-gosudarstvennaya-zhilishchnaya-inspektsiya-po-orenburgskoy-oblasti": {
+    "id": "ru-56-gosudarstvennaya-zhilishchnaya-inspektsiya-po-orenburgskoy-oblasti",
+    "name": "Государственная жилищная инспекция по Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-apparat-gubernatora-i-pravitelstva-orenburgskoy-oblasti": {
+    "id": "ru-56-apparat-gubernatora-i-pravitelstva-orenburgskoy-oblasti",
+    "name": "Аппарат Губернатора и Правительства Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-departament-molodezhnoy-politiki-orenburgskoy-oblasti": {
+    "id": "ru-56-departament-molodezhnoy-politiki-orenburgskoy-oblasti",
+    "name": "Департамент молодежной политики Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-komitet-po-voprosam-zapisi-aktov-grazhdanskogo-sostoyaniya-orenburgskoy-oblasti": {
+    "id": "ru-56-komitet-po-voprosam-zapisi-aktov-grazhdanskogo-sostoyaniya-orenburgskoy-oblasti",
+    "name": "Комитет по вопросам записи актов гражданского состояния Оренбургской области",
+    "shortName": "Комитет по вопросам ЗАГС",
+    "territoryId": "ru-56"
+  },
+  "ru-56-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-orenburgskoy-oblasti": {
+    "id": "ru-56-inspektsiya-gosudarstvennogo-stroitelnogo-nadzora-orenburgskoy-oblasti",
+    "name": "Инспекция государственного строительного надзора Оренбургской области",
+    "shortName": "Госстройнадзор Оренбургской области",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-regionalnoy-i-informatsionnoy-politiki-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-regionalnoy-i-informatsionnoy-politiki-orenburgskoy-oblasti",
+    "name": "Министерство региональной политики Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-ministerstvo-stroitelstva-zhilishchno-kommunalnogo-dorozhnogo-khozyaystva-i-transporta-orenburgskoy-oblasti": {
+    "id": "ru-56-ministerstvo-stroitelstva-zhilishchno-kommunalnogo-dorozhnogo-khozyaystva-i-transporta-orenburgskoy-oblasti",
+    "name": "Министерство строительства, жилищно-коммунального, дорожного хозяйства и транспорта Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-56-komitet-po-profilaktike-korruptsionnykh-pravonarusheniy-orenburgskoy-oblasti": {
+    "id": "ru-56-komitet-po-profilaktike-korruptsionnykh-pravonarusheniy-orenburgskoy-oblasti",
+    "name": "Департамент профилактики коррупционных правонарушений и внутреннего государственного финансового контроля Оренбургской области",
+    "shortName": "",
+    "territoryId": "ru-56"
+  },
+  "ru-77-arbat-municipal-administration": {
+    "id": "ru-77-arbat-municipal-administration",
+    "name": "Администрация внутригородского муниципального образования — муниципального округа Арбат в городе Москве",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-tverskoy-municipal-administration": {
+    "id": "ru-77-tverskoy-municipal-administration",
+    "name": "Администрация муниципального округа Тверской в городе Москве",
+    "shortName": "",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-transporta-i-razvitiya-dorozhno-transportnoy-infrastruktury-goroda-moskvy": {
+    "id": "ru-77-departament-transporta-i-razvitiya-dorozhno-transportnoy-infrastruktury-goroda-moskvy",
+    "name": "Департамент транспорта и развития дорожно-транспортной инфраструктуры города Москвы",
+    "shortName": "Дептранс Москвы",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-prirodopolzovaniya-i-okhrany-okruzhayushchey-sredy-goroda-moskvy": {
+    "id": "ru-77-departament-prirodopolzovaniya-i-okhrany-okruzhayushchey-sredy-goroda-moskvy",
+    "name": "Департамент природопользования и охраны окружающей среды города Москвы",
+    "shortName": "ДПиООС",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-kulturnogo-naslediya-goroda-moskvy": {
+    "id": "ru-77-departament-kulturnogo-naslediya-goroda-moskvy",
+    "name": "Департамент культурного наследия города Москвы",
+    "shortName": "ДКН",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-obrazovaniya-i-nauki-goroda-moskvy": {
+    "id": "ru-77-departament-obrazovaniya-i-nauki-goroda-moskvy",
+    "name": "Департамент образования и науки города Москвы",
+    "shortName": "ДОНМ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-obedinenie-administrativno-tekhnicheskikh-inspektsiy-goroda-moskvy": {
+    "id": "ru-77-obedinenie-administrativno-tekhnicheskikh-inspektsiy-goroda-moskvy",
+    "name": "Объединение административно-технических инспекций города Москвы",
+    "shortName": "ОАТИ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-zhilishchno-kommunalnogo-khozyaystva-goroda-moskvy": {
+    "id": "ru-77-departament-zhilishchno-kommunalnogo-khozyaystva-goroda-moskvy",
+    "name": "Департамент жилищно-коммунального хозяйства города Москвы",
+    "shortName": "ДЖКХ",
+    "territoryId": "ru-77"
+  },
+  "ru-77-departament-zdravookhraneniya-goroda-moskvy": {
+    "id": "ru-77-departament-zdravookhraneniya-goroda-moskvy",
+    "name": "Департамент здравоохранения города Москвы",
+    "shortName": "ДЗМ",
+    "territoryId": "ru-77"
+  },
+  "ru-50-ministerstvo-po-soderzhaniyu-territoriy-i-gosudarstvennomu-zhilishchnomu-nadzoru-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-po-soderzhaniyu-territoriy-i-gosudarstvennomu-zhilishchnomu-nadzoru-moskovskoy-oblasti",
+    "name": "Министерство по содержанию территорий и государственному жилищному надзору Московской области",
+    "shortName": "МСТ МО",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-ekologii-i-prirodopolzovaniya-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-ekologii-i-prirodopolzovaniya-moskovskoy-oblasti",
+    "name": "Министерство экологии и природопользования Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-50-ministerstvo-transporta-i-dorozhnoy-infrastruktury-moskovskoy-oblasti": {
+    "id": "ru-50-ministerstvo-transporta-i-dorozhnoy-infrastruktury-moskovskoy-oblasti",
+    "name": "Министерство транспорта и дорожной инфраструктуры Московской области",
+    "shortName": "",
+    "territoryId": "ru-50"
+  },
+  "ru-69-ministerstvo-prirodnykh-resursov-i-ekologii-tverskoy-oblasti": {
+    "id": "ru-69-ministerstvo-prirodnykh-resursov-i-ekologii-tverskoy-oblasti",
+    "name": "Министерство природных ресурсов и экологии Тверской области",
+    "shortName": "Минприроды Тверской области",
+    "territoryId": "ru-69"
   }
 };
 export const ROUTING_AUTHORITY_ALIASES = {

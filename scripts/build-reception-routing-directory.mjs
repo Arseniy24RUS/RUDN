@@ -131,11 +131,14 @@ for (const [id,name,shortName] of caseRoles) put(id, {name,shortName,territoryId
 
 // Reuse one displayed record for each authority with an existing Reception ID.
 const aliases = Object.fromEntries(Object.entries(regionalIds).map(([id, sourceId]) => [sourceId, id]));
-const answerDirectory = Object.fromEntries([...catalogue].map(([id, {name,shortName,territoryIds}]) => [id,{id,name,shortName,territoryId:territoryIds[0] || null}]));
 for (const {id,name,shortName,regionId} of regional.authorities) {
   if (Object.hasOwn(aliases,id)) continue;
   put(id, {name,shortName:shortName || '',territoryIds:regionId?[regionId]:[],emblem:siteEmblem(id)});
 }
+
+// Resolve every selectable regional record and legacy alias before preparing a review.
+const answerDirectory = Object.fromEntries([...catalogue].map(([id, {name,shortName,territoryIds}]) => [id,{id,name,shortName,territoryId:territoryIds[0] || null}]));
+for (const [alias, canonical] of Object.entries(aliases)) answerDirectory[alias] = {...answerDirectory[canonical],id:alias};
 
 const regionData = Object.fromEntries(territories.map(row => {
   const city = cityRegions[row.id];

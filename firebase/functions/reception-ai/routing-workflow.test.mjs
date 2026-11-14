@@ -84,3 +84,12 @@ test('Career choices are valid inputs and aliases preserve the same territorial 
   assert.equal(evaluateRoutingWorkflow('landfill-territory',choose(canonicalTver)).correct,true);
   assert.throws(()=>validateRoutingWorkflowDecision(choose(canonicalTver,'tver-environment')),{code:'invalid_decision'});
 });
+
+test('every allowed recipient, including regional records and aliases, has its review name',()=>{
+  for(const id of ROUTING_AUTHORITY_IDS){
+    assert.ok(Object.hasOwn(ROUTING_AUTHORITIES,id),id);
+    assert.equal(ROUTING_AUTHORITIES[id].id,id);
+    assert.equal(typeof ROUTING_AUTHORITIES[id].name,'string',id);
+    assert.ok(ROUTING_AUTHORITIES[id].name.trim(),id);
+  }
+});
