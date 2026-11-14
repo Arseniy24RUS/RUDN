@@ -59,6 +59,14 @@ try {
       }
       const cases=page.locator('[name="trainingCaseId"]');
       await cases.locator('option[value]').nth(1).waitFor({state:'attached'});
+      const bundledCase=width===390&&height===844&&!baseline;
+      if(bundledCase)await page.route(origin+'/api/reception',async route=>{
+        const response=await route.fetch(),body=await response.json();
+        if(route.request().postDataJSON()?.op==='start'&&body.view?.case?.normativeActs){
+          body.view.case.normativeActs.push({id:'reception-law8559',number:'№ 181-ФЗ',title:'Федеральный закон о социальной защите инвалидов'});
+        }
+        await route.fulfill({response,json:body});
+      });
       await cases.selectOption({index:1});
       await page.locator('[data-action="start"]').click();
       await page.locator('#receptionAI[data-session-status="active"]').waitFor();
@@ -160,6 +168,16 @@ try {
       await reader.locator('[data-source-reader-close]').click();
       assert.equal(await page.locator('.rxa-document-group').count(),2);
       assert.equal(await page.locator('.rxa-top').isVisible(),true);
+      if(bundledCase){
+        // External requests are blocked in this fixture. This act uses a pinned packet on Pages.
+        await page.locator('[data-normative-doc="reception-law8559"]').click();
+        await reader.locator('.ll-paper [data-unit]').first().waitFor();
+        if(locale!=='ru'){
+          await reader.locator('[data-action="toggle-document-original"]').click();
+          await reader.locator('.ll-reader[data-reader-locale="ru"] .ll-paper [data-unit]').first().waitFor();
+        }
+        await reader.locator('[data-source-reader-close]').click();
+      }
       assert.deepEqual(errors,[]);
       report.push({key,reading,geometry,scroll,unit,opened,errors});
       console.log(`PASS ${engine} ${key}: ${Math.round(reading.height/reading.viewport*100)}% law text, ${Math.round(geometry.results.height)}px search results, later match ${unit}`);

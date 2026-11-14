@@ -204,16 +204,24 @@ export function reduceCorrespondence(value, action={}) {
   return draft;
 }
 
+export function correspondenceSourceKey(source){
+  const key=source.kind+':'+source.id;
+  return source.kind==='legal'?key+':'+(source.unitIds||[]).join(','):key;
+}
 function publicSources(sources=[],locale='ru') {
   const result=[],seen=new Set();
   for(const source of Array.isArray(sources)?sources:[]) {
     if(!source || !SOURCE_KINDS.includes(source.kind) || typeof source.id!=='string' || !source.id)continue;
-    const key=source.kind+':'+source.id;if(seen.has(key))continue;seen.add(key);
+    const key=correspondenceSourceKey(source);if(seen.has(key))continue;seen.add(key);
     result.push({...source,key,title:local(source.title,locale)||copy[language(locale)].sourceKinds[source.kind],text:local(source.text,locale),quote:local(source.quote,locale)});
   }
   return result;
 }
-function sourceTitle(citation,sources,t) { return sources.find(source=>source.id===citation.sourceId&&source.kind===citation.kind)?.title||t.sourceKinds[citation.kind]||t.source; }
+function citationSource(citation,sources){
+  return sources.find(source=>source.id===citation.sourceId&&source.kind===citation.kind&&
+    (citation.kind!=='legal'||(source.unitIds||[]).join(',')===(citation.unitIds||[]).join(',')));
+}
+function sourceTitle(citation,sources,t){return citationSource(citation,sources)?.title||t.sourceKinds[citation.kind]||t.source;}
 function recipientLabel(id,recipients,locale) { const row=(recipients||[]).find(recipient=>recipient.id===id);return local(row?.label??row?.name,locale)||copy[language(locale)].noRecipient; }
 function sourcePicker(section,draft,sources,locale,disabled) {
   const t=copy[language(locale)],attached=draft.citations.filter(item=>item.section===section);
@@ -223,7 +231,7 @@ function sourcePicker(section,draft,sources,locale,disabled) {
   }).join('');
   const groups=SOURCE_KINDS.map(kind=>{
     const members=sources.filter(source=>source.kind===kind);
-    return members.length?'<optgroup label="'+esc(t.sourceKinds[kind])+'">'+members.map(source=>'<option value="'+esc(source.key)+'">'+esc(source.title)+'</option>').join('')+'</optgroup>':'';
+    return members.length?'<optgroup label="'+esc(t.sourceKinds[kind])+'">'+members.map(source=>'<option value="'+esc(source.key)+'">'+esc(source.title+(source.locator?' · '+local(source.locator,locale):''))+'</option>').join('')+'</optgroup>':'';
   }).join('');
   return '<details class="rxc-source-drawer" data-details="response-sources-'+section+'"><summary>'+glyph('link')+'<span>'+esc(t.evidence)+'</span><small>'+attached.length+'</small>'+glyph('chevron')+'</summary><div class="rxc-source-drawer-body">'+rows+(sources.length?'<div class="rxc-source-picker"><label class="rxa-field"><span class="rxa-sr">'+esc(t.addSource)+' · '+esc(t.section[section])+'</span><select data-response-source="'+section+'" data-focus="response-source-'+section+'" '+(disabled?'disabled':'')+'><option value="">'+esc(t.sourceChoose)+'</option>'+groups+'</select></label></div><label class="rxa-field rxc-source-quotation"><span>'+esc(t.sourceQuote)+'</span><textarea data-response-source-quote="'+section+'" data-focus="response-source-quote-'+section+'" maxlength="4000" rows="3" placeholder="'+esc(t.quoteHint)+'" '+(disabled?'disabled':'')+'></textarea></label><div class="rxc-source-attach">'+button(t.attach,'attach-source',{icon:'plus',disabled:disabled||draft.citations.length>=20,extra:'data-section="'+section+'"'})+'</div>':'<p class="rxc-muted">'+esc(t.noSources)+'</p>')+'<div class="rxc-source-links">'+button(t.openSources,'sources',{className:'quiet',disabled})+button(t.chat,'conversation',{className:'quiet',disabled})+'</div></div></details>';
 }
@@ -273,7 +281,7 @@ function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],sp
     return '<div class="rxc-letter-block">'+paragraphHTML(d.sections[section])+(markers?'<div class="rxc-letter-citations">'+markers+'</div>':'')+'</div>';
   }).join('');
   const citations=d.citations.length?'<section class="rxc-letter-annex"><h2>'+esc(t.annex)+'</h2><ol>'+d.citations.map((citation,index)=>{
-    const source=available.find(item=>item.id===citation.sourceId&&item.kind===citation.kind),url=safeURL(source?.url);
+    const source=citationSource(citation,available),url=safeURL(source?.url);
     return '<li id="'+esc(citationPrefix)+'-'+(index+1)+'" tabindex="-1"><strong>'+esc(sourceTitle(citation,available,t))+'</strong><span class="rxc-letter-source-section">'+esc(t.section[citation.section])+'</span>'+(source?.locator?'<span class="rxc-letter-unit">'+esc(local(source.locator,locale))+'</span>':'')+(citation.quote?'<blockquote>'+esc(citation.quote)+'</blockquote>':'')+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url)+'</a>':'')+'</li>';
   }).join('')+'</ol></section>':'';
   const orders=d.orders.length?'<section class="rxc-letter-annex"><h2>'+esc(t.orders)+'</h2>'+d.orders.map((order,index)=>{

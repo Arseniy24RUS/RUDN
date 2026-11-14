@@ -369,7 +369,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
           const read=corpus.json.bind(corpus);let packed;
           corpus.json=async(path,expectedSha,options={})=>{
             if(!path.startsWith('content/legal-documents/'+id+'/'))return read(path,expectedSha,options);
-            packed||=read(bundle.url,bundle.sha256,{signal:aborter.signal}).catch(error=>{packed=null;throw error;});
+            packed||=read(bundle.path||bundle.url,bundle.sha256,{signal:aborter.signal}).catch(error=>{packed=null;throw error;});
             const packet=await packed;corpus.assertActive();
             if(options.signal?.aborted)throw new DOMException('Aborted','AbortError');
             const entry=packet.files[path];

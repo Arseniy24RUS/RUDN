@@ -257,6 +257,8 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   const context={
     version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase,locale,caseId:c.id,caseVersion:c.version,datePackId:c.datePackId||null,
     role:local(c.public.role.text,locale),opening:local(c.public.opening,locale),
+    citizenName:local(c.public.citizen?.name,locale),
+    materialTitles:c.documents.filter(doc=>state.releasedDocumentIds?.includes(doc.id)).map(doc=>local(doc.title,locale)),
     // The snapshot and its server-derived worksheet supply events and target
     // dependencies. Use the actual target anchors and computed deadlines;
     // never invent an additional receipt or registration date.

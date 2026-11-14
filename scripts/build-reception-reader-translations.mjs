@@ -57,11 +57,16 @@ async function originalDescriptor(meta,entry){
     const url=meta.bundle.url.match(/^https:\/\/raw\.githubusercontent\.com\/Arseniy24RUS\/RUDN\/([a-f0-9]{40})\/(source-data\/reception\/[A-Za-z0-9-]+\.json\.gz)$/);
     assert.ok(url,`Immutable packet URL for ${meta.id}`);
     let compressed;
-    try{compressed=execFileSync('git',['show',url[1]+':'+url[2]],{cwd:repo,maxBuffer:32*1024**2,stdio:['ignore','pipe','ignore']});}
-    catch{
-      const response=await fetch(meta.bundle.url,{signal:AbortSignal.timeout(30000)});
-      assert.ok(response.ok,`Pinned packet unavailable for ${meta.id}`);
-      compressed=Buffer.from(await response.arrayBuffer());
+    if(meta.bundle.path){
+      assert.equal(meta.bundle.path,`content/legal-documents/bundles/${meta.id}.json.gz`);
+      compressed=await readFile(resolve(root,meta.bundle.path));
+    }else{
+      try{compressed=execFileSync('git',['show',url[1]+':'+url[2]],{cwd:repo,maxBuffer:32*1024**2,stdio:['ignore','pipe','ignore']});}
+      catch{
+        const response=await fetch(meta.bundle.url,{signal:AbortSignal.timeout(30000)});
+        assert.ok(response.ok,`Pinned packet unavailable for ${meta.id}`);
+        compressed=Buffer.from(await response.arrayBuffer());
+      }
     }
     assert.equal(compressed.length,meta.bundle.bytes);
     const bytes=gunzipSync(compressed);

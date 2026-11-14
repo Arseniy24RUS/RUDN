@@ -192,3 +192,14 @@ test('all three locales provide the same writing, preview and control affordance
     assert.ok(!output.includes('undefined'));
   }
 });
+
+
+test('citations of different paragraphs of the same act retain their own locators',()=>{
+  const sources=[11,10].map(article=>({id:'corruption273',kind:'legal',title:'№ 273-ФЗ',
+    locator:'ч. 2 ст. '+article,unitIds:['article-'+article],quote:'Exact paragraph '+article}));
+  let draft=blankCorrespondence();
+  for(const source of sources)draft=reduceCorrespondence(draft,{type:'source-add',section:'legalBasis',source});
+  const preview=correspondencePreviewView({draft,sources});
+  assert.match(preview,/ч\. 2 ст\. 11[^]*?Exact paragraph 11/);
+  assert.match(preview,/ч\. 2 ст\. 10[^]*?Exact paragraph 10/);
+});

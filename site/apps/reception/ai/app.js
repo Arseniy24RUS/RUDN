@@ -4,7 +4,7 @@ import './workspace-copy.js';
 import './correspondence-copy.js';
 import {blankCorrespondence,restoreCorrespondence,reduceCorrespondence,correspondenceEditorView,correspondencePreviewView,
   correspondenceControlView,restoreCorrespondenceControl,reduceCorrespondenceControl,correspondenceControlSubmission,
-  presentCorrespondenceFeedback,printCorrespondence,downloadCorrespondenceHTML} from './response-editor.js';
+  presentCorrespondenceFeedback,correspondenceSourceKey,printCorrespondence,downloadCorrespondenceHTML} from './response-editor.js';
 import {RECEPTION_AUTHORITIES} from './authority-directory.js';
 import {icon} from './cabinet-icons.js';
 import {createReceptionStorage} from './session-storage.js';
@@ -414,7 +414,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const canonical=(protocol?.initial?.citations||protocol?.citations||[]).map(source=>({...source,id:source.sourceId,text:source.quote}));
     const selected=row?[]:selectedReferences.map(reference=>({id:reference.docId,kind:'legal',title:reference.title,text:reference.text,quote:reference.text,unitIds:reference.unitIds,url:reference.url,locator:reference.locator}));
     const sources=[...(row?.correspondenceSources||view?.correspondenceSources||[]),...canonical,...selected];
-    const seen=new Set();return sources.filter(source=>{const key=source.kind+':'+source.id;if(!source.id||seen.has(key))return false;seen.add(key);return true;});
+    const seen=new Set();return sources.filter(source=>{const key=correspondenceSourceKey(source);if(!source.id||seen.has(key))return false;seen.add(key);return true;});
   }
   function responseRecipients(decision=decisionDraft) {
     const ids=new Set([...(decision.workbook?.routing?.recipientIds||[]),...(decision.correspondence?.orders||[]).flatMap(order=>order.recipientIds)]);
@@ -551,7 +551,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const result = view.result;
     if (!result) return `<section class="rxa-complete"><h1>${esc(t('complete'))}</h1><p class="rxa-panel-intro">${esc(t('noResult'))}</p>${button(t('refresh'),'refresh',{primary:true,disabled:busy})}</section>`;
     const journal = result.journalStatus === 'saved' ? 'journalSaved' : ['local','not-applicable'].includes(result.journalStatus) || view.mode === 'training' || view.provider === 'mock' ? 'journalLocal' : 'journalPending';
-    return `<section class="rxa-complete"><div class="rxa-complete-head"><p class="rxa-eyebrow">${esc(t('complete'))}</p><h1 tabindex="-1" data-stage-heading>${esc(t(Number.isInteger(result.seminarPoints)?'seminarTotal':'totalScore'))}</h1><div class="rxa-score"><strong>${esc(result.seminarPoints??result.points)}</strong><span>${esc(t('outOf'))} ${esc(seminar&&view.mode==='training'?1:result.maxPoints ?? 5)}</span></div>${Number.isInteger(result.seminarPoints)?`<p>${esc(t('casePoints',{count:result.points}))}</p>`:''}<p class="rxa-journal" role="status">${esc(t(guest?'guestResult':journal))}</p>${journal==='journalPending'?`<div class="rxa-actions">${button(t('journalRetry'),'refresh',{disabled:busy})}</div>`:''}</div>${Array.isArray(result.cases)&&result.cases.length?`<h2>${esc(t('casesReview'))}</h2>${result.cases.map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${index+1}. ${esc(authoredText(row.title))} · ${esc(view.context==='seminar'?t('casePoints',{count:Math.abs(row.score-100)<1e-8?1:0}):row.score+' / 100')}</summary>${feedbackMarkup(row.feedback,row)}${correspondenceMode()?responseRecord(row,index):''}</details>`).join('')}`:''}${learningReviewView({view,catalog,locale})}${correspondenceMode()?'':workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-actions">${button(t(view.mode==='training'?'oneMore':'newSession'),'new-session',{primary:true,disabled:busy||result.remainingCases===0,glyph:'arrow'})}${options.onExit?button(t('back'),'exit',{}):''}</div>${guest?savedSessions():''}</section>`;
+    return `<section class="rxa-complete"><div class="rxa-complete-head"><p class="rxa-eyebrow">${esc(t('complete'))}</p><h1 tabindex="-1" data-stage-heading>${esc(t(Number.isInteger(result.seminarPoints)?'seminarTotal':'totalScore'))}</h1><div class="rxa-score"><strong>${esc(result.seminarPoints??result.points)}</strong><span>${esc(t('outOf'))} ${esc(seminar&&view.mode==='training'?1:result.maxPoints ?? 5)}</span></div>${Number.isInteger(result.seminarPoints)?`<p>${esc(t('casePoints',{count:result.points}))}</p><p>${esc(t('seminarScoreThreshold'))}</p>`:''}<p class="rxa-journal" role="status">${esc(t(guest?'guestResult':journal))}</p>${journal==='journalPending'?`<div class="rxa-actions">${button(t('journalRetry'),'refresh',{disabled:busy})}</div>`:''}</div>${Array.isArray(result.cases)&&result.cases.length?`<h2>${esc(t('casesReview'))}</h2>${result.cases.map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${index+1}. ${esc(authoredText(row.title))} · ${esc(view.context==='seminar'?t('casePoints',{count:Math.abs(row.score-100)<1e-8?1:0}):row.score+' / 100')}</summary>${feedbackMarkup(row.feedback,row)}${correspondenceMode()?responseRecord(row,index):''}</details>`).join('')}`:''}${learningReviewView({view,catalog,locale})}${correspondenceMode()?'':workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-actions">${button(t(view.mode==='training'?'oneMore':'newSession'),'new-session',{primary:true,disabled:busy||result.remainingCases===0,glyph:'arrow'})}${options.onExit?button(t('back'),'exit',{}):''}</div>${guest?savedSessions():''}</section>`;
   }
   function render({scrollChat=false} = {}) {
     if (disposed) return;
@@ -756,7 +756,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     if(!active())return true;
     if(target.dataset.responseSource!==undefined){
-      const section=target.dataset.responseSource,source=responseSources().find(row=>row.kind+':'+row.id===target.value);
+      const section=target.dataset.responseSource,source=responseSources().find(row=>correspondenceSourceKey(row)===target.value);
       const value=source?.quote||source?.text||'';
       citationSelections[section]={key:target.value,quote:value.length<=4000?value:''};
       const quote=root.querySelector(`[data-response-source-quote="${section}"]`);if(quote)quote.value=citationSelections[section].quote;
@@ -794,7 +794,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(action==='attach-source'||action==='use-source'){
       const section=target.dataset.section||'facts';
       const key=action==='use-source'?target.dataset.sourceKey:root.querySelector(`[data-response-source="${section}"]`)?.value;
-      const source=responseSources().find(row=>row.kind+':'+row.id===key);if(!source)return;
+      const source=responseSources().find(row=>correspondenceSourceKey(row)===key);if(!source)return;
       const candidate=source.quote||source.text||'';
       const quote=action==='use-source'?(candidate.length<=4000?candidate:''):root.querySelector(`[data-response-source-quote="${section}"]`)?.value?.trim();
       if(!quote){citationSelections[section]={key,quote:''};detailOpen.add('response-sources-'+section);notice=t('responseQuoteNeeded');responsePreview=false;goPage('decision');root.querySelector(`[data-response-source-quote="${section}"]`)?.focus();return;}
