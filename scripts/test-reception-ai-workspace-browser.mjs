@@ -444,7 +444,16 @@ try{
   await calendarTarget('referral').waitFor({state:'visible'});
   await calendarTarget('deadline').waitFor({state:'visible'});
   assert.ok(!illustratedCase.case.workbook.events.some(event=>event.id==='recipientRegistered'));
-  assert.match(await page.locator('.rxw-calendar-instruction').innerText(),/7 дней от первоначальной регистрации.*30 дней от рассчитанного срока переадресации/);
+  const assignment=page.locator('[data-calendar-details="assignment"]');
+  const instructions=assignment.locator('.rxw-calendar-instruction');
+  assert.equal(await instructions.isVisible(),false);
+  await assignment.getByText('Задание',{exact:true}).click();
+  assert.equal(await instructions.isVisible(),true);
+  assert.match(await instructions.innerText(),/7 дней от первоначальной регистрации.*30 дней от рассчитанного срока переадресации/);
+  await page.locator('[data-calendar-action="month-next"]').click();
+  assert.equal(await instructions.isVisible(),true);
+  await assignment.getByText('Задание',{exact:true}).click();
+  assert.equal(await instructions.isVisible(),false);
   check('Appeal calendar shows seven-day referral and thirty-day response from the referral deadline');
   await navigate('documents');
   assert.deepEqual(await page.locator('.rxa-document-list [data-action="document"]').evaluateAll(buttons=>buttons.map(button=>button.dataset.id)),initialDocuments);

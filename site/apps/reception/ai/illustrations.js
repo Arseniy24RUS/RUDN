@@ -4,9 +4,9 @@ import {icon} from './cabinet-icons.js';
 import {localized, normalizeLocale} from './copy.js';
 
 const copy = {
-  ru: {gallery:'Иллюстрации к делу', open:'Увеличить изображение', close:'Закрыть изображение'},
-  en: {gallery:'Case illustrations', open:'Enlarge image', close:'Close image'},
-  zh: {gallery:'案例图片', open:'放大图片', close:'关闭图片'},
+  ru: {gallery:'Иллюстрации к делу', open:'Увеличить изображение', close:'Закрыть изображение', synthetic:'Учебная реконструкция. Даты и обстоятельства указаны в тексте материала.'},
+  en: {gallery:'Case illustrations', open:'Enlarge image', close:'Close image', synthetic:'Training reconstruction. See the document text for dates and case facts.'},
+  zh: {gallery:'案例图片', open:'放大图片', close:'关闭图片', synthetic:'教学重现。日期与案情见材料正文。'},
 };
 const escapeAttribute = value => String(value).replace(/[&<>"']/g, character => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[character]));
 const assetURL = path => resourceURL('../' + path, import.meta.url).href;
@@ -59,8 +59,8 @@ export function caseIllustrations(caseId, documents = []) {
   const bank = bankByCase.get(caseId);
   return documents.flatMap(document => {
     const illustrations = bank?.get(document.id);
-    if (illustrations) return illustrations.map(({id, alt}) => ({
-      id, documentId:document.id, title:document.title, alt,
+    if (illustrations) return illustrations.map(({id, alt, synthetic}) => ({
+      id, documentId:document.id, title:document.title, alt, synthetic,
       thumbnail:assetURL(`assets/gfx1/evidence/${id}__w420.webp`),
       full:assetURL(`assets/gfx1/evidence/${id}__w832.webp`),
     }));
@@ -121,6 +121,12 @@ export function createIllustrationViewer(root) {
     image.src = illustration.full;
 
     viewer.append(closeButton, image);
+    if (illustration.synthetic) {
+      const caption = document.createElement('p');
+      caption.className = 'rxa-illustration-caption';
+      caption.textContent = labels.synthetic;
+      viewer.append(caption);
+    }
     viewer.addEventListener('click', event => {
       if (event.target !== viewer) return;
       const box = viewer.getBoundingClientRect();

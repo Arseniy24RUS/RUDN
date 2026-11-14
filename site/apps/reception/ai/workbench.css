@@ -200,7 +200,8 @@
 @media(prefers-reduced-motion:reduce){.rxw-calendar-details>summary svg,.reception-ai-root.rxa-cabinet .rxw-calendar>.rxa-assessment-block>summary>.rxa-fold-arrow,.reception-ai-root.rxa-cabinet .rxa-calendar-task>summary svg:last-child,.reception-ai-root.rxa-cabinet .rxa-calendar-manual>summary svg:last-child{transition:none}}
 /* Manual deadline choices: event colours identify facts, never a suggested answer. */
 .rxw-calendar{--rxw-sent:#8056b6;--rxw-received:#bd751a;--rxw-registered:#16856f}
-.rxw-calendar-instruction{font-size:14px;line-height:1.65;margin:0 0 16px!important;color:var(--rxw-ink)}
+.rxw-calendar-assignment{margin:0 0 16px}
+.rxw-calendar-instruction{font-size:14px;line-height:1.65;margin:0!important;color:var(--rxw-ink)}
 .rxw-calendar-targets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,8.5rem),1fr));gap:9px;margin-bottom:14px}
 .rxw-calendar-target{position:relative;display:flex;min-width:0}
 .rxw-calendar-target>[data-calendar-action=target]{display:flex;flex:1;flex-direction:column;justify-content:space-between;gap:8px;align-items:flex-start;min-width:0;min-height:88px;text-align:left;padding:12px;border:1px solid var(--rxw-line);border-radius:12px;background:#fff;color:var(--rxw-ink);overflow-wrap:anywhere}

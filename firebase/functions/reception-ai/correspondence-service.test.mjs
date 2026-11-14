@@ -63,9 +63,9 @@ const letter=()=>({version:1,kind:'reply',subject:'О восстановлени
     resolution:'Рассмотреть просьбу о ремонте и жалобу раздельно. Запросить документы о выполненных работах и пояснения И-7 для независимой проверки.',
     nextSteps:'Сохранить отдельный контроль по двум вопросам. О результатах проверки сообщить заявительнице. Выполнение ремонта проверить по подтверждающим материалам.',
   },citations:[],orders:[]});
-function explicitReview(context,{initialLevel=4,controlLevel=4}={}){
+function explicitReview(context,{initialLevel=4,nextStepsLevel=initialLevel,controlLevel=4}={}){
   return {version:1,phase:context.phase,criteria:context.criteria.map(row=>{
-    const level=Math.min(context.phase==='initial'?initialLevel:controlLevel,row.maxLevel);
+    const level=Math.min(context.phase==='initial'?(row.id==='nextSteps'?nextStepsLevel:initialLevel):controlLevel,row.maxLevel);
     const section=context.phase==='initial'?row.id:row.id==='status'?'statuses':'control';
     return {id:row.id,level,reason:'Заданный результат локальной проверки.',findings:[
       ...(level?[{type:'supported',section,quote:context.sections[section],sourceIds:[row.eligibleEvidenceIds[0]||'case-author-explanation'],explanation:'Содержательное соответствие в сценарии теста.'}]:[]),
@@ -136,7 +136,7 @@ test('complete real-story workflow: citations, pinned law, initial decision, fre
 });
 
 test('new correspondence preserves the current seminar allocation, sequential referral calendar and one-point completion',async()=>{
-  const contexts=[],h=await harness([context=>explicitReview(context),context=>explicitReview(context)],{
+  const contexts=[],h=await harness([context=>explicitReview(context,{initialLevel:2,nextStepsLevel:1}),context=>explicitReview(context,{controlLevel:4})],{
     requireGameplay:true,assertContext:context=>contexts.push(context),
   });
   let view=(await h.service.handle({op:'start',mode:'independent',context:'seminar',locale:'ru',requestId:'seminar-start',
@@ -162,7 +162,8 @@ test('new correspondence preserves the current seminar allocation, sequential re
   assert.equal(contexts[1].frozenCase.deadline,'2026-12-19');
   const finish={op:'next',sessionId:view.id,requestId:'seminar-finish'};
   view=(await h.service.handle(finish,identity)).view;
-  assert.equal(view.result.total,100);assert.equal(view.result.points,1);
+  assert.equal(view.result.total,70);assert.equal(view.result.points,1);
+  assert.equal(view.result.passScore,70);
   assert.equal(view.result.seminarPoints,1);assert.equal(view.result.remainingCases,0);
   assert.equal(view.result.cases[0].caseInfo.workbook.events.some(event=>event.id==='recipientRegistered'),false);
   assert.equal(view.result.cases[0].caseInfo.workbook.targets.find(target=>target.id==='deadline').anchorId,'referral');

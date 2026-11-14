@@ -3,7 +3,7 @@ import {COPY} from './copy.js';
 const additions = {
   ru: {
     retiredSession:'Платформа обновлена. Начните новый приём; результаты завершённых смен сохранены.',
-    allDocuments:'Все документы', trainingSeminarHint:'Случайное новое дело с разбором решения.', independentSeminarHint:'Случайное новое дело. За верное решение — 1 балл, до 5 за семинар.', caseBankExhausted:'Вы уже получили все дела этого семинара.', legalCitation:'Фрагмент нормативного акта', seminarTotal:'Баллы за семинар', criterionMet:'Выполнено', criterionReview:'Нужно исправить', afterSubmitSeminar:'Результат после решения дела', citationAdded:'Фрагмент добавлен к решению.', casePoints:'Баллы за дело: {count} из 1', chat:'Чат', calendar:'Календарь', reception:'Приёмная', back:'Выйти из приёмной', hero:'Ваш рабочий день',
+    allDocuments:'Все документы', trainingSeminarHint:'Случайное новое дело с разбором решения.', independentSeminarHint:'Случайное новое дело. Зачтённое дело приносит 1 балл, максимум за семинар — 5.', caseBankExhausted:'Вы уже получили все дела этого семинара.', legalCitation:'Фрагмент нормативного акта', seminarTotal:'Баллы за семинар', criterionMet:'Выполнено', criterionReview:'Нужно исправить', afterSubmitSeminar:'Результат после решения дела', citationAdded:'Фрагмент добавлен к решению.', casePoints:'Баллы за дело: {count} из 1', chat:'Чат', calendar:'Календарь', reception:'Приёмная', back:'Выйти из приёмной', hero:'Ваш рабочий день',
     welcome:'Муниципальная приёмная', welcomeHint:'За каждым обращением — человек. Выслушайте, разберитесь в документах и примите обоснованное решение.',
     chooseFormat:'Формат работы', training:'Обучение', independent:'Самостоятельная смена',
     trainingHint:'Один выбранный или случайный кейс. После решения — подробный разбор.',
@@ -40,7 +40,7 @@ const additions = {
   },
   en: {
     retiredSession:'The platform has been updated. Start a new reception; completed shift results are preserved.',
-    allDocuments:'All documents', trainingSeminarHint:'A new random case with feedback.', independentSeminarHint:'A new random case. Earn one point per correct case, up to five for the seminar.', caseBankExhausted:'You have already received every case in this seminar.', legalCitation:'Passage from legislation', seminarTotal:'Seminar points', criterionMet:'Met', criterionReview:'Needs correction', afterSubmitSeminar:'Results after this case', citationAdded:'The passage was added to the decision.', casePoints:'Case points: {count} out of 1', chat:'Chat', calendar:'Calendar', reception:'Reception', back:'Leave reception', hero:'Your working day',
+    allDocuments:'All documents', trainingSeminarHint:'A new random case with feedback.', independentSeminarHint:'A new random case. Each case that meets the pass threshold earns 1 point, up to 5 for the seminar.', caseBankExhausted:'You have already received every case in this seminar.', legalCitation:'Passage from legislation', seminarTotal:'Seminar points', criterionMet:'Met', criterionReview:'Needs correction', afterSubmitSeminar:'Results after this case', citationAdded:'The passage was added to the decision.', casePoints:'Case points: {count} out of 1', chat:'Chat', calendar:'Calendar', reception:'Reception', back:'Leave reception', hero:'Your working day',
     welcome:'Public reception office', welcomeHint:'Every appeal comes from a person. Listen, examine the documents and make a reasoned decision.',
     chooseFormat:'Work format', training:'Training', independent:'Independent shift',
     trainingHint:'One selected or random case, followed by a detailed review.', independentHint:'Eight different situations. Results and review follow the full shift.',
@@ -74,7 +74,7 @@ const additions = {
   },
   zh: {
     retiredSession:'平台已更新。请开始新的接待；已完成班次的成绩已保留。',
-    allDocuments:'全部文档', trainingSeminarHint:'随机分配新案例并提供反馈。', independentSeminarHint:'随机分配新案例。每正确解决一案得1分，研讨课最高5分。', caseBankExhausted:'您已获得本研讨课的所有案例。', legalCitation:'法规引文', seminarTotal:'研讨课得分', criterionMet:'已达成', criterionReview:'需修改', afterSubmitSeminar:'本案结束后显示结果', citationAdded:'引文已添加到处理决定。', casePoints:'本案得分：{count} / 1', chat:'聊天', calendar:'日历', reception:'接待室', back:'离开接待室', hero:'您的工作日', welcome:'公共接待室',
+    allDocuments:'全部文档', trainingSeminarHint:'随机分配新案例并提供反馈。', independentSeminarHint:'随机分配新案例。每个达到及格线的案例计1分，研讨课最高5分。', caseBankExhausted:'您已获得本研讨课的所有案例。', legalCitation:'法规引文', seminarTotal:'研讨课得分', criterionMet:'已达成', criterionReview:'需修改', afterSubmitSeminar:'本案结束后显示结果', citationAdded:'引文已添加到处理决定。', casePoints:'本案得分：{count} / 1', chat:'聊天', calendar:'日历', reception:'接待室', back:'离开接待室', hero:'您的工作日', welcome:'公共接待室',
     welcomeHint:'每一份诉求背后都有一个人。先倾听，再查阅材料，最后作出有依据的决定。',
     chooseFormat:'工作形式', training:'学习训练', independent:'独立值班', trainingHint:'选择一个案例或随机练习，完成后查看详细分析。',
     independentHint:'八种不同情境。完成整轮后查看结果和分析。', independentUnavailable:'请登录课程研讨，在教师设定的时间内开始独立值班。',
@@ -249,7 +249,7 @@ const playtestCopy={
     submitIncomplete:'Отправить с пропусками',
     guestSessions:'Гостевая история', guestOpenResult:'Открыть результат',
     guestResult:'Результат сохранён в гостевой истории этого браузера.',
-    independentSeminarHint:'Для зачёта за дело нужно набрать 100 из 100 по итогам проекта и контроля. Зачтённое дело приносит 1 балл, максимум за семинар — 5.', seminarScoreThreshold:'1 балл за дело начисляется при 100 из 100.',
+    independentSeminarHint:'Итог дела складывается из оценки проекта и контроля исполнения. Зачтённое дело приносит 1 балл, максимум за семинар — 5.', seminarScoreThreshold:'1 балл за дело начисляется за {count} из 100 и выше.',
   },
   en:{
     guestHistory:'Guest history is saved in this browser. To return after signing in, sign out and reopen Reception from Games.',
@@ -273,7 +273,7 @@ const playtestCopy={
     submitIncomplete:'Submit with omissions',
     guestSessions:'Guest history', guestOpenResult:'Open result',
     guestResult:'Your result was saved in this browser’s guest history.',
-    independentSeminarHint:'A case earns 1 seminar point when the draft and follow-through together reach 100 out of 100. Earn up to 5 seminar points.', seminarScoreThreshold:'A score of 100 out of 100 earns 1 point for the case.',
+    independentSeminarHint:'The case score combines the draft and follow-through. Each passing case earns 1 point, up to 5 for the seminar.', seminarScoreThreshold:'A score of {count} out of 100 or higher earns 1 point for the case.',
   },
   zh:{
     guestHistory:'访客记录保存在当前浏览器。登录后如需继续访客游戏，请退出账号，再从「游戏」打开「接待处」。',
@@ -297,7 +297,7 @@ const playtestCopy={
     submitIncomplete:'带遗漏提交',
     guestSessions:'访客记录', guestOpenResult:'查看结果',
     guestResult:'结果已保存在当前浏览器的访客记录中。',
-    independentSeminarHint:'草稿和执行监督合计达到100分，本案才计入1个研讨课积分。研讨课最多计5分。', seminarScoreThreshold:'本案得分达到100分，可计入1个研讨课积分。',
+    independentSeminarHint:'案例总分由草稿和执行监督成绩构成。达到及格线的案例计1分，研讨课最多计5分。', seminarScoreThreshold:'本案得分达到{count}分（满分100分）可计入1个研讨课积分。',
   },
 };
 for(const [locale,labels] of Object.entries(playtestCopy))Object.assign(COPY[locale],labels);

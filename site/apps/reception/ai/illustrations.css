@@ -97,3 +97,10 @@
   color: #142d46;
   cursor: pointer;
 }
+
+.rxa-illustration-caption {
+  margin: 8px 4px 4px;
+  max-inline-size: min(65ch, calc(100vw - 50px));
+  font-size: 13px;
+  line-height: 1.4;
+}

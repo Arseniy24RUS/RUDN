@@ -159,11 +159,12 @@ test('assessed seminar cases accrue one point when solved, cap at five, and surv
     const call=body=>h.service.handle({sessionId:v.id,...body},identity).then(r=>r.view);
     const read=await call({op:'document',documentId:'d1',requestId:'open'});
     assert.deepEqual(read.openedDocumentIds,['d1']);
-    const reviewed=await call({op:'decide',requestId:'decision',decision:{...goodDecision,actionIds:correct?['a1']:[]}});
+    const reviewed=await call({op:'decide',requestId:'decision',decision:{...goodDecision,actionIds:correct?['a1']:['a2']}});
     assert.equal(reviewed.feedback===null,mode==='independent');
     const finish={op:'next',requestId:'finish'};
     const result=await call(finish);
     const replay=await call(finish);
+    assert.equal(result.result.passScore,70);
     assert.equal(result.result.points,correct?1:0);
     assert.deepEqual({...replay.result,journalStatus:result.result.journalStatus},result.result);
     return {v,result,replay};

@@ -30,6 +30,7 @@ const scopeOf = identity => identity.teacher ? `teacher:${identity.uid}`
   : identity.guest ? `guest:${identity.uid}` : `student:${identity.studentKey || identity.uid}`;
 const values = rows => Array.isArray(rows) ? rows : Object.values(rows || {});
 const MAX_SEMINAR_POINTS = 5;
+const SEMINAR_PASS_SCORE = 70;
 const seminarPath = owner => `seminarProgress/${hash(owner)}`;
 const usesLegalCitation = (context,workbookVersion) => Boolean(context) && workbookVersion === WORKBOOK_VERSION;
 function fixedProcedure(c,context) {
@@ -132,7 +133,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       p.correspondence=profile;p.decisionVersion=DECISION_VERSION;
     }
     const result = s.status === 'complete' ? {points: s.result.points, maxPoints: 5, total: s.result.total, cap:s.result.cap||null, attemptId: s.result.attemptId,
-      ...(s.context==='seminar'?s.seminarProgress:{}),
+      ...(s.context==='seminar'?{...s.seminarProgress,passScore:s.result.passScore??100}:{}),
       journalStatus: s.teacher || s.mode === 'training' || provider.name === 'mock' || typeof saveResult !== 'function' ? 'local' : s.journalSaved ? 'saved' : 'pending',
       cases: s.results.map((r, i) => ({caseId: s.caseData[i].id, title: localized(s.caseData[i].public.title, s.locale), score: r.score,
          feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null,
@@ -144,7 +145,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
          ...(s.caseStates[i].control?{control:s.caseStates[i].control}:{})}))} : null;
     return {id: s.id, revision: s.revision, mode: s.mode, locale: s.locale, caseIndex: s.caseIndex, caseCount: s.caseData.length,
       startedAt: s.startedAt, updatedAt: s.updatedAt, ...(s.buildId ? {buildId:s.buildId} : {}), ...(s.context ? {context:s.context} : {}),
-      ...(s.context==='seminar'?{seminarProgress:s.seminarProgress}:{}),
+      ...(s.context==='seminar'?{seminarProgress:s.seminarProgress,seminarPassScore:SEMINAR_PASS_SCORE}:{}),
       ...(correspondence?{decisionVersion:DECISION_VERSION,correspondenceSources:publicCorrespondenceSources(c,state,s.locale,{includeFollowup:s.status!=='active'}),
         draftDecision:state.correspondenceDraft||null,draftControl:state.controlDraft||null,reviewPending:state.reviewPending||null,control:state.control||null}:{}),
       operationInProgress: Boolean(s.lease && s.lease.until > clock()),
@@ -734,9 +735,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           session.status = 'complete'; const raw = session.results.reduce((sum,r)=>sum+r.score,0)/session.results.length;
           const critical=session.results.some(r=>r.authored&&r.criticalIds?.length),bounded=critical?Math.min(raw,60):raw;
           const total=session.results.some(r=>r.authored)?bounded:Math.round(bounded*10)/10;
-          const points = session.context==='seminar' ? Number(Math.abs(bounded-100)<1e-8) : Math.round(total / 20 * 10) / 10;
+          const points = session.context==='seminar' ? Number(total >= SEMINAR_PASS_SCORE) : Math.round(total / 20 * 10) / 10;
           session.result = {points, maxPoints: 5, total, raw, cap:critical?60:null, attemptId: `reception-ai-${session.id}`, caseCount: session.caseData.length,
-            ...(session.context==='seminar'?{completedAt:timestamp}: {})};
+            ...(session.context==='seminar'?{completedAt:timestamp,passScore:SEMINAR_PASS_SCORE}: {})};
         }
       }
     });

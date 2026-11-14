@@ -67,7 +67,7 @@ test('every approved case illustration resolves from its document to existing th
 test('chat gallery needs a matching image and does not duplicate legacy art or show document content',()=>{
   const documents=[
     {id:'photo',title:{en:'Photo <b>title</b>'},text:'Document body',image:'assets/hatch.webp'},
-    {id:'appeal',title:'Appeal text',text:'A separate document'},
+    {id:'unillustrated',title:'Appeal text',text:'A separate document'},
   ];
   const illustrations=caseIllustrations('hatch',documents);
   assert.deepEqual(illustrations.map(entry=>entry.id),['E01__1']);

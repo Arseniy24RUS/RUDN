@@ -138,7 +138,15 @@ try{
   assert.equal(root.querySelector('[data-calendar-workbench], [data-decision="deadline"]'),null);
   await click('[data-deadline-summary] [data-action="page"][data-page="calendar"]');
   assert.equal(root.dataset.page,'calendar');
+  const assignment = '[data-calendar-details="assignment"]';
+  assert.equal(find(assignment).open,false);
+  await click(assignment+' > summary');
+  assert.equal(find(assignment).open,true);
+  assert.equal(find(assignment+' .rxw-calendar-instruction').textContent,'Выберите даты в календаре');
   await click('[data-calendar-action="event-month"]');
+  assert.equal(find(assignment).open,true);
+  await click(assignment+' > summary');
+  assert.equal(find(assignment).open,false);
   assert.equal(find('[data-calendar-details="norms"]').open,false);
   await click('[data-calendar-details="norms"] > summary');
   assert.equal(find('[data-calendar-details="norms"]').open,true);
@@ -254,7 +262,7 @@ try{
     assert.equal(await legacyReader.open(lawURL),true);legacyReader.destroy();assert.equal(document.querySelector('.rx-source-dialog'),null);
     assert.equal(await legacyReader.open(lawURL),false,'A destroyed legacy reader cannot reopen');
   }finally{legacyReader.destroy();legacyHost.remove();}
-  console.log(JSON.stringify({passed:true,checks:['real corpus embedded inside Documents','embedded table of contents and real corpus search','native partial text selection','legal fields and visible citation','reader close after root rerender','manual calendar to deadline','legal reference persist across updates, navigation and remount','page transitions','full draft remount','saved citation returns to Documents for repeat selection','close without attaching','320px calendar and five-tab cabinet CSS cascade','reader cleanup on app unmount','missing deadline redirects and focuses Calendar','Calendar deadline shared with decision confirmation','legacy modal reader open, close and destroy'],fileRequests,apiRequests},null,2));
+  console.log(JSON.stringify({passed:true,checks:['real corpus embedded inside Documents','embedded table of contents and real corpus search','native partial text selection','legal fields and visible citation','reader close after root rerender','manual calendar to deadline','collapsed calendar assignment survives calendar updates','legal reference persist across updates, navigation and remount','page transitions','full draft remount','saved citation returns to Documents for repeat selection','close without attaching','320px calendar and five-tab cabinet CSS cascade','reader cleanup on app unmount','missing deadline redirects and focuses Calendar','Calendar deadline shared with decision confirmation','legacy modal reader open, close and destroy'],fileRequests,apiRequests},null,2));
 }finally{
   await handle();stylesObserver.disconnect();dom.window.close();
 }
