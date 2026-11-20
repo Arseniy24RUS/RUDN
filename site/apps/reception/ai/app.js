@@ -205,9 +205,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const researchText = fragment => (fragment.id === 'material' ? authoredText : text)(fragment.text);
   const active = () => view?.status === 'active';
   const correspondenceMode = () => view?.decisionVersion==='correspondence-v1'||view?.case?.decisionVersion==='correspondence-v1';
-  const canIndependent = () => gameplayContext!=='free' && (config.demo === true || (!backend?.isAdmin?.() && options.context !== 'free'
-    && (typeof options.assessmentAllowed === 'function' ? options.assessmentAllowed() : options.assessmentAllowed !== false)
-    && Boolean(backend?.getProfile?.()?.studentKey || options.studentKey)));
+  const canIndependent = () => {
+    if(gameplayContext==='free'||options.context==='free')return false;
+    if(config.demo===true||seminar&&backend?.user?.uid&&backend.isAdmin?.())return true;
+    return !backend?.isAdmin?.()&&Boolean(backend?.getProfile?.()?.studentKey||options.studentKey)&&
+      (typeof options.assessmentAllowed==='function'?options.assessmentAllowed():options.assessmentAllowed!==false);
+  };
   const button = (label, action, {primary=false, quiet=false, disabled=false, extra='', glyph=''} = {}) =>
     `<button type="button" class="rxa-btn ${primary?'primary':''} ${quiet?'quiet':''}" data-action="${esc(action)}" ${disabled?'disabled':''} ${extra}>${glyph?icon(glyph):''}${esc(label)}</button>`;
   function persist() {
@@ -858,16 +861,23 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function coreMaterials() {
     const editable=active()&&coreInView()==='materials';
-    const acts=view.case.normativeActs||[];
+    const acts=(view.case.normativeActs||[]).map(act=>({act,citation:coreCitationFor(act.id)}));
+    const formatCount=new Intl.NumberFormat(locale);
+    const selectedCount=acts.filter(({citation})=>citation).length;
+    const progress=cl('citationProgress').replace('{count}',formatCount.format(selectedCount)).replace('{total}',formatCount.format(acts.length));
     return `<div class="rxa-desk" id="rxaDesk"><h1 data-core-heading>${esc(cl('sources'))}</h1>
       <div data-source-reader-host></div><div class="rxa-documents-library">
-      ${editable?`<p class="rxa-panel-intro">${esc(cl('materialsHint'))}</p>`:''}${coreLessonHint('materials')}${coreFeedback('materials')}
+      ${editable?`<p class="rxa-panel-intro">${esc(cl('materialsHint'))}</p>`:''}
+      ${acts.length?`<p class="rxt-citation-progress" data-core-citation-progress role="status">
+        <span class="rxa-sr">${esc(cl('citationProgressLabel'))}. </span>${esc(progress)}</p>`:''}
+      ${coreLessonHint('materials')}${coreFeedback('materials')}
       <section class="rxa-document-group rxt-legal-list" data-core-law>
-      ${acts.map(act=>{
-        const citation=coreCitationFor(act.id),reference=selectedReferences.find(row=>row.docId===act.id);
+      ${acts.map(({act,citation})=>{
+        const reference=selectedReferences.find(row=>row.docId===act.id);
         return `<div class="rxt-legal-act ${citation?'has-citation':''}" ${citation?`data-core-citation="${esc(act.id)}"`:''}>
           ${normativeActsView([act],{locale})}${citation?`<details class="rxt-chosen-citation"><summary>${icon('check')}${esc(cl('attached'))}
-            ${reference?`<span>${esc(text(reference.locator))}</span>`:''}</summary><blockquote lang="ru">${esc(citation.quote)}</blockquote></details>`:''}
+            ${reference?`<span>${esc(text(reference.locator))}</span>`:''}</summary><blockquote lang="ru">${esc(citation.quote)}</blockquote></details>`:
+            `<p class="rxt-missing-citation" data-core-citation-missing>${esc(cl(editable?'chooseFragment':'noFragment'))}</p>`}
           </div>`;
       }).join('')}
       </section>

@@ -105,7 +105,17 @@ button.rxt-case-step:hover, .rxt-case-step[aria-current=step] { background: #dee
 .rxt-legal-list { display: grid; gap: 10px; }
 .rxt-legal-act { border: 1px solid var(--rxa-border); border-radius: 12px; overflow: hidden; }
 .rxt-legal-act.has-citation { border-color: #8bb69a; }
-.rxt-legal-act .rxa-source { border: 0; margin: 0; border-radius: 0; }
+.reception-ai-root.rxa-cabinet .rxt-legal-act .rxa-source {
+  border: 0; margin: 0; border-radius: 0; padding: 13px 15px;
+}
+.reception-ai-root .rxt-citation-progress {
+  display: inline-block; margin: 0 0 12px; padding: 4px 9px; border-radius: 6px;
+  background: #e9f1f8; color: #28506c; font-size: .875rem; font-weight: 650;
+}
+.rxt-missing-citation {
+  margin: 0; padding: 9px 15px; border-top: 1px solid var(--rxa-border);
+  background: #f5f8fb; color: #485e71; font-size: .875rem;
+}
 .rxt-chosen-citation { border-top: 1px solid #b9d6bf; background: #eff8f0; color: #214d36; }
 .rxt-chosen-citation summary {
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 13px;
