@@ -22,8 +22,8 @@ const browsers = await import(modulePath ? pathToFileURL(path.resolve(modulePath
 const results = [];
 await mkdir(output,{recursive:true});
 
-// Compare the scene as displayed by the browser, excluding the motion toggle
-// and outer margins. Canvas counters alone cannot prove visible animation.
+// Compare the character as displayed by the browser. Canvas counters alone
+// cannot prove visible animation.
 async function pixelDifference(page, first, second) {
   return page.evaluate(async sources => {
     const pixels = [];
@@ -69,9 +69,12 @@ for(const engine of ['chromium','webkit']){
       const requests = [], errors = [], base = engine+'-'+preference;
       page.on('request', request=>requests.push(new URL(request.url()).pathname));
       page.on('pageerror', error=>errors.push(error.message));
-      const startPaused = ['reduced-motion','save-data'].includes(preference);
       const useNativeImage = preference === 'missing-sheet';
       let allSourcesBlocked = preference === 'retry';
+      const blockedNative = allSourcesBlocked ? page.waitForEvent('requestfailed', {
+        predicate: request => request.url().endsWith('/motion/C03.webp'),
+        timeout: 12000,
+      }) : null;
       if (allSourcesBlocked || useNativeImage) {
         await page.route('**/motion/C03*.webp', route => {
           const sheet = /C03-frames-\d+\.webp$/.test(route.request().url());
@@ -119,7 +122,6 @@ for(const engine of ['chromium','webkit']){
         // The app viewport can scroll independently of the browser window.
         await stage.scrollIntoViewIfNeeded();
         const poster = stage.locator('.rxa-citizen-poster');
-        const toggle = stage.getByRole('button',{name:'Анимация персонажа'});
         const activeLayer = stage.locator('.rxa-citizen-video');
         const ready = page.locator('.rxt-active-reception [data-rxa-actor="C03"][data-rxa-motion-ready]');
         const sheetURLs = ()=>requests.filter(url=>/C03-frames-[1-6]\.webp$/.test(url));
@@ -127,23 +129,22 @@ for(const engine of ['chromium','webkit']){
         const visitorName = fixture.cases[0].public.citizen.name.ru;
         assert.equal(await poster.getAttribute('alt'),visitorName);
         if(fixture.dataKind==='supplied-bank')assert.match(visitorName,/Сергей Петрович/);
-        if(preference==='retry'){
-          const retry = stage.getByRole('button',{name:'Повторить анимацию'});
-          await retry.waitFor();
-          assert.equal(await retry.getAttribute('aria-pressed'),'false');
+        const controls = 'button, [role="button"], video[controls]';
+        assert.equal(await stage.locator(controls).count(),0,'The scene has no playback controls.');
+        let recoveryMs;
+        if(blockedNative){
+          // Both formats are unavailable. Restore the network without an online
+          // event or input, so only the player's own retry can bring it back.
+          await blockedNative;
+          assert.equal(await stage.getAttribute('data-rxa-motion-ready'),null);
           assert.equal(await poster.evaluate(node=>getComputedStyle(node).opacity),'1');
+          const restoredAt = Date.now();
           allSourcesBlocked=false;
-          await retry.tap();
+          await ready.waitFor({timeout:2000});
+          recoveryMs = Date.now() - restoredAt;
+        } else {
+          await ready.waitFor();
         }
-        assert.ok((await toggle.boundingBox()).height>=44);
-        if(startPaused){
-          assert.equal(await toggle.getAttribute('aria-pressed'),'false');
-          assert.equal(sheetURLs().length,0);
-          assert.equal(await poster.evaluate(node=>getComputedStyle(node).opacity),'1');
-          await toggle.tap();
-        }
-        await ready.waitFor();
-        assert.equal(await toggle.getAttribute('aria-pressed'),'true');
         assert.equal(await activeLayer.evaluate(node=>getComputedStyle(node).opacity),'1');
         if(preference==='no-canvas')assert.ok(await activeLayer.evaluate(node=>node.hasAttribute('data-rxa-motion-sprite')));
         if(useNativeImage)assert.ok(await activeLayer.evaluate(node=>node.hasAttribute('data-rxa-motion-image')));
@@ -160,25 +161,18 @@ for(const engine of ['chromium','webkit']){
         assert.ok(!requests.some(url=>url.endsWith('/C03-frames.webp')));
         assert.equal(requests.some(url=>url.endsWith('/motion/C03.webp')),useNativeImage || preference==='retry');
 
-        await toggle.tap();
-        assert.equal(await toggle.getAttribute('aria-pressed'),'false');
-        await ready.waitFor({state:'detached'});
-        const pausedA = await stage.screenshot({path:path.join(output,base+'-poster.png')});
-        await page.waitForTimeout(320);
-        const pausedB = await stage.screenshot();
-        assert.equal(await pixelDifference(page,pausedA,pausedB),0);
-        assert.equal(await poster.evaluate(node=>getComputedStyle(node).opacity),'1');
-
-        await toggle.tap();
-        await ready.waitFor();
         // Cover tab visibility even on engines that keep headless tabs visible.
         await page.evaluate(()=>{
           Object.defineProperty(document,'hidden',{configurable:true,value:true});
           document.dispatchEvent(new Event('visibilitychange'));
         });
         await ready.waitFor({state:'detached'});
-        await page.waitForTimeout(250);
+        const hiddenA = await stage.screenshot({path:path.join(output,base+'-hidden-poster.png')});
+        await page.waitForTimeout(320);
+        const hiddenB = await stage.screenshot();
         assert.equal(await stage.getAttribute('data-rxa-motion-ready'),null);
+        assert.equal(await poster.evaluate(node=>getComputedStyle(node).opacity),'1');
+        assert.equal(await pixelDifference(page,hiddenA,hiddenB),0,'Hidden playback must remain still.');
         await page.evaluate(()=>{
           delete document.hidden;
           document.dispatchEvent(new Event('visibilitychange'));
@@ -187,22 +181,24 @@ for(const engine of ['chromium','webkit']){
 
         await page.locator('.rxa-mobile-nav [data-page="chat"]').tap();
         await stage.waitFor({state:'detached'});
-        const avatar=page.locator('[data-rxa-chat-actor="C03"][data-rxa-motion-ready]');
-        await avatar.waitFor();
+        const avatar = page.locator('[data-rxa-chat-actor="C03"]');
+        const avatarReady = page.locator('[data-rxa-chat-actor="C03"][data-rxa-motion-ready]');
+        await avatarReady.waitFor();
+        assert.equal(await avatar.locator(controls).count(),0,'The chat portrait has no playback controls.');
         const firstPortrait=await avatar.screenshot();
         await page.waitForTimeout(520);
-        const nextPortrait=await avatar.screenshot();
-        assert.ok(await pixelDifference(page,firstPortrait,nextPortrait)>10,'The visible chat portrait must change.');
+        let chatMoving = await pixelDifference(page,firstPortrait,await avatar.screenshot());
+        if(chatMoving<=10){
+          await page.waitForTimeout(420);
+          chatMoving = Math.max(chatMoving,await pixelDifference(page,firstPortrait,await avatar.screenshot()));
+        }
+        assert.ok(chatMoving>10,'The visible chat portrait must change: '+chatMoving);
         if(preference==='default')await page.screenshot({path:path.join(output,base+'-chat.png')});
-        const chatToggle=avatar.getByRole('button',{name:'Анимация персонажа'});
-        await chatToggle.tap();
-        await avatar.waitFor({state:'detached'});
         await page.locator('.rxa-mobile-nav [data-page="reception"]').tap();
+        await avatar.waitFor({state:'detached'});
         await stage.scrollIntoViewIfNeeded();
-        await toggle.waitFor();
-        assert.equal(await toggle.getAttribute('aria-pressed'),'false','Pause in chat must persist when returning to reception.');
-        await toggle.tap();
         await ready.waitFor();
+        assert.equal(await stage.locator(controls).count(),0,'Returning to the scene adds no playback controls.');
         if(await activeLayer.evaluate(node=>node.tagName==='CANVAS'))assert.equal(await activeLayer.evaluate(node=>{
           const context = node.getContext('2d');
           const transparent = context.getImageData(0,0,1,1).data[3]===0;
@@ -210,7 +206,8 @@ for(const engine of ['chromium','webkit']){
           return transparent&&opaque;
         }),true);
         assert.deepEqual(errors,[]);
-        results.push({engine,preference,status:'pass',actor:'C03',movingPixels:moving,sheets:new Set(sheetURLs()).size});
+        results.push({engine,preference,status:'pass',actor:'C03',movingPixels:moving,
+          chatMovingPixels:chatMoving,recoveryMs,sheets:new Set(sheetURLs()).size});
         console.log(JSON.stringify(results.at(-1)));
       }catch(error){
         await page.screenshot({path:path.join(output,base+'-failure.png')}).catch(()=>{});

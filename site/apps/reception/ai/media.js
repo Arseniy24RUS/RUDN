@@ -43,13 +43,8 @@ const C03_FRAMES = Object.freeze({
 });
 const C03_SHEET_TIMEOUT_MS = 15000;
 const C03_LOOP_TIMEOUT_MS = 30000;
-const MOTION_COPY = Object.freeze({
-  ru:['Пауза', 'Включить анимацию', 'Анимация персонажа', 'Повторить анимацию'],
-  en:['Pause', 'Play animation', 'Character motion', 'Retry animation'],
-  zh:['暂停', '播放动画', '角色动画', '重试动画']
-});
 
-function createSergeyMotion(root, view, reducedMotion) {
+function createSergeyMotion(root, view) {
   const document = root.ownerDocument;
   const {width, height, columns, rows, sheets, interval} = C03_FRAMES;
   const framesPerSheet = columns * rows;
@@ -78,25 +73,20 @@ function createSergeyMotion(root, view, reducedMotion) {
     layer.setAttribute('aria-hidden', 'true');
   }
 
-  const toggle = document.createElement('button');
-  toggle.type = 'button';
-  toggle.className = 'rxa-motion-toggle';
-  toggle.dataset.focus = 'citizen-motion';
-  const connection = view.navigator.connection;
-  const reducedData = view.matchMedia?.('(prefers-reduced-data: reduce)');
   const assets = new Map();
-  let stage = null, visible = false, enabled = null;
+  let stage = null, visible = false;
   let layer = canvas, context;
   let usingImage = false, failed = false, imageLoaded = false, spriteLoaded = false;
   let checkedCanvas = false, canvasUnavailable = false;
   let timer = null, imageTimeout = null, frame = 0, nextFrameAt = 0;
+  let retryTimer = null, retryDelay = IMAGE_RETRY_DELAY_MS;
 
-  function canPlay() { return enabled ?? !(reducedMotion.matches || reducedData?.matches || connection?.saveData); }
-  function shouldDraw() { return stage && visible && canPlay() && !failed; }
+  function shouldDraw() { return stage && visible && !failed; }
   function clearReady() { stage?.removeAttribute('data-rxa-motion-ready'); }
   function showFrame() {
-    // These callbacks can complete after the user pauses or leaves the slide.
-    if (shouldDraw()) stage.setAttribute('data-rxa-motion-ready', '');
+    if (!shouldDraw()) return;
+    retryDelay = IMAGE_RETRY_DELAY_MS;
+    stage.setAttribute('data-rxa-motion-ready', '');
   }
   function clearImage() {
     view.clearTimeout(imageTimeout);
@@ -107,6 +97,8 @@ function createSergeyMotion(root, view, reducedMotion) {
   function stop() {
     view.clearTimeout(timer);
     timer = null;
+    view.clearTimeout(retryTimer);
+    retryTimer = null;
     clearReady();
     if (usingImage) clearImage();
   }
@@ -225,14 +217,14 @@ function createSergeyMotion(root, view, reducedMotion) {
     timer = view.setTimeout(tick, Math.max(0, nextFrameAt - view.performance.now()));
   }
   function sync() {
-    if (!stage) return;
-    const lang = (root.lang || document.documentElement.lang).slice(0, 2);
-    const [pauseLabel, playLabel, accessibleName, retryLabel] = MOTION_COPY[lang] || MOTION_COPY.ru;
-    toggle.textContent = failed ? retryLabel : canPlay() ? pauseLabel : playLabel;
-    toggle.setAttribute('aria-label', failed ? retryLabel : accessibleName);
-    toggle.setAttribute('aria-pressed', String(canPlay() && !failed));
-    stage.toggleAttribute('data-rxa-motion-manual', enabled === true);
-    if (!shouldDraw()) { stop(); return; }
+    if (!stage || !visible) { stop(); return; }
+    if (failed) {
+      if (retryTimer === null && view.navigator.onLine !== false) {
+        retryTimer = view.setTimeout(retry, retryDelay);
+        retryDelay = Math.min(retryDelay * 2, C03_LOOP_TIMEOUT_MS);
+      }
+      return;
+    }
     if (usingImage) { startImage(); return; }
     if (timer === null) {
       nextFrameAt = view.performance.now();
@@ -242,12 +234,10 @@ function createSergeyMotion(root, view, reducedMotion) {
   function refresh(next, inView = false) {
     if (next !== stage) {
       stop();
-      stage?.removeAttribute('data-rxa-motion-manual');
       stage = next;
-      if (stage) stage.append(layer, toggle);
+      if (stage) stage.append(layer);
       else {
         layer.remove();
-        toggle.remove();
         resetSheets();
       }
     }
@@ -255,20 +245,12 @@ function createSergeyMotion(root, view, reducedMotion) {
     sync();
   }
   function retry() {
-    if (!failed) return;
+    view.clearTimeout(retryTimer);
+    retryTimer = null;
+    if (!failed || !stage || !visible) return;
     resetSheets();
     failed = usingImage = false;
     setLayer(canvasUnavailable ? sprite : canvas);
-    sync();
-  }
-  function chooseMotion() {
-    if (failed) {
-      enabled = true;
-      retry();
-      return;
-    }
-    enabled = !canPlay();
-    if (!enabled) resetSheets();
     sync();
   }
   function lostContext() {
@@ -278,7 +260,6 @@ function createSergeyMotion(root, view, reducedMotion) {
     setLayer(sprite);
     sync();
   }
-  toggle.addEventListener('click', chooseMotion);
   canvas.addEventListener('contextlost', lostContext);
   spriteImage.addEventListener('load', () => {
     spriteLoaded = true;
@@ -294,17 +275,12 @@ function createSergeyMotion(root, view, reducedMotion) {
     showFrame();
   });
   image.addEventListener('error', imageFailed);
-  connection?.addEventListener?.('change', sync);
-  reducedData?.addEventListener?.('change', sync);
   return {
     refresh, retry,
     destroy() {
       refresh(null);
       clearImage();
-      toggle.removeEventListener('click', chooseMotion);
       canvas.removeEventListener('contextlost', lostContext);
-      connection?.removeEventListener?.('change', sync);
-      reducedData?.removeEventListener?.('change', sync);
     }
   };
 }
@@ -342,7 +318,7 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
   motionImage.decoding = 'async';
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
   const sergeyMotion = lessonFrames
-    ? createSergeyMotion(root, view, reduce)
+    ? createSergeyMotion(root, view)
     : null;
   const failedVideo = new Set(), imageFailures = new Map();
   let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false, imageReady = false;
