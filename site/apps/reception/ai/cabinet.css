@@ -380,10 +380,8 @@
 
 @media (max-width: 360px) {
   .reception-ai-root.rxa-cabinet .rxa-top { padding-left: max(10px,env(safe-area-inset-left)); padding-right: max(6px,env(safe-area-inset-right)); }
-  .reception-ai-root.rxa-cabinet .rxa-brand { gap: 9px; }
-  .reception-ai-root.rxa-cabinet .rxa-brand-mark { width: 34px; flex-basis: 34px; padding-right: 7px; }
-  .reception-ai-root.rxa-cabinet .rxa-brand-mark .rxa-icon { width: 27px; height: 27px; }
-  .reception-ai-root.rxa-cabinet .rxa-brand-copy strong { font-size: 15px; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-mark { display: none; }
+  .reception-ai-root.rxa-cabinet .rxa-brand-copy strong { font-size: 15px; overflow-wrap: anywhere; }
   .reception-ai-root.rxa-cabinet .rxa-brand-copy > span { font-size: 11px; }
   .reception-ai-root.rxa-cabinet .rxa-mobile-nav { padding-inline: 5px; gap: 2px; }
   .reception-ai-root.rxa-cabinet .rxa-mobile-nav button { font-size: 10px; }
