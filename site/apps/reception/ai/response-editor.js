@@ -249,13 +249,18 @@ function orderView(order,index,{draft,recipients=[],sources,locale,disabled}) {
     '<div class="rxc-order-remove">'+button(t.removeOrder,'remove-order',{icon:'close',disabled,extra:'data-order-id="'+id+'"',className:'quiet'})+'</div></div></details>';
 }
 
-export function correspondenceEditorView({draft,caseInfo={},profile={},sources=[],recipients=[],locale='ru',disabled=false,guidedCore=false}={}) {
+export function correspondenceEditorView({draft,caseInfo={},profile={},sources=[],recipients=[],locale='ru',disabled=false,guidedCore=false,sectionLabels={},sectionHints={},showOrders=true}={}) {
   const d=restoreCorrespondence(draft),t=copy[language(locale)],available=publicSources(sources,locale),off=disabled?' disabled':'';
   const blocks=SECTION_IDS.map((section,index)=>{
-    const label=local(profile.sections?.[section]?.label??profile.sections?.[section],locale)||t.section[section];
-    return '<section class="rxc-writing-section" data-response-section="'+section+'"><div class="rxc-writing-heading">'+(guidedCore?'':'<span>'+String(index+1).padStart(2,'0')+'</span>')+'<label for="rxc-section-'+section+'">'+esc(label)+'</label></div><textarea id="rxc-section-'+section+'" data-response-field="sections.'+section+'" data-focus="response-'+section+'" aria-describedby="rxc-hint-'+section+'" maxlength="'+TEXT_LIMIT+'" rows="'+(section==='resolution'?5:4)+'"'+off+'>'+esc(d.sections[section])+'</textarea><p class="rxc-writing-hint" id="rxc-hint-'+section+'">'+esc(local(profile.sectionPrompts?.[section],locale)||t.hint[section])+'</p>'+(!guidedCore||section==='facts'?sourcePicker(section,d,guidedCore?available.filter(source=>source.kind!=='legal'):available,locale,disabled):'')+'</section>';
+    const label=sectionLabels[section]||local(profile.sections?.[section]?.label??profile.sections?.[section],locale)||t.section[section];
+    return '<section class="rxc-writing-section" data-response-section="'+section+'"><div class="rxc-writing-heading">'+(guidedCore?'':'<span>'+String(index+1).padStart(2,'0')+'</span>')+'<label for="rxc-section-'+section+'">'+esc(label)+'</label></div><textarea id="rxc-section-'+section+'" data-response-field="sections.'+section+'" data-focus="response-'+section+'" aria-describedby="rxc-hint-'+section+'" maxlength="'+TEXT_LIMIT+'" rows="'+(section==='resolution'?5:4)+'"'+off+'>'+esc(d.sections[section])+'</textarea><p class="rxc-writing-hint" id="rxc-hint-'+section+'">'+esc(sectionHints[section]||local(profile.sectionPrompts?.[section],locale)||t.hint[section])+'</p>'+(!guidedCore||section==='facts'?sourcePicker(section,d,guidedCore?available.filter(source=>source.kind!=='legal'):available,locale,disabled):'')+'</section>';
   }).join('');
-  return '<section class="rxc-editor" data-correspondence-editor'+(guidedCore?' data-tour-target="draft"':'')+'><div class="rxc-editor-toolbar"><div>'+glyph('paper')+'<strong>'+esc(t.title)+'</strong></div>'+button(t.preview,'preview',{icon:'eye'})+'</div><div class="rxc-document-meta"><label class="rxa-field rxc-kind"><span>'+esc(t.kind)+'</span><select data-response-field="kind" data-focus="response-kind"'+off+'>'+DOCUMENT_KINDS.map(kind=>'<option value="'+kind+'" '+(d.kind===kind?'selected':'')+'>'+esc(t.kinds[kind])+'</option>').join('')+'</select></label><label class="rxa-field rxc-subject"><span>'+esc(t.subject)+'</span><input type="text" data-response-field="subject" data-focus="response-subject" value="'+esc(d.subject)+'" maxlength="240" placeholder="'+esc(t.subjectHint)+'"'+off+'></label></div><div class="rxc-writing-sheet">'+blocks+'</div>'+(guidedCore?'<details class="rxc-orders rxt-optional-orders" data-details="rxt-optional-orders"><summary>'+esc(t.orders)+'</summary>':'<section class="rxc-orders">')+'<div class="rxc-orders-heading"><div>'+glyph('clock')+'<h3>'+esc(t.orders)+'</h3></div>'+button(t.addOrder,'add-order',{icon:'plus',disabled:disabled||d.orders.length>=12})+'</div>'+(d.orders.length?d.orders.map((order,index)=>orderView(order,index,{draft:d,recipients,sources:available,locale,disabled})).join(''):'<p class="rxc-muted rxc-no-orders">'+esc(t.noOrders)+'</p>')+(guidedCore?'</details>':'</section>')+'</section>';
+  const orders=showOrders?
+    (guidedCore?'<details class="rxc-orders rxt-optional-orders" data-details="rxt-optional-orders"><summary>'+esc(t.orders)+'</summary>':'<section class="rxc-orders">')+
+    '<div class="rxc-orders-heading"><div>'+glyph('clock')+'<h3>'+esc(t.orders)+'</h3></div>'+button(t.addOrder,'add-order',{icon:'plus',disabled:disabled||d.orders.length>=12})+'</div>'+
+    (d.orders.length?d.orders.map((order,index)=>orderView(order,index,{draft:d,recipients,sources:available,locale,disabled})).join(''):'<p class="rxc-muted rxc-no-orders">'+esc(t.noOrders)+'</p>')+
+    (guidedCore?'</details>':'</section>'):'';
+  return '<section class="rxc-editor" data-correspondence-editor'+(guidedCore?' data-tour-target="draft"':'')+'><div class="rxc-editor-toolbar"><div>'+glyph('paper')+'<strong>'+esc(t.title)+'</strong></div>'+button(t.preview,'preview',{icon:'eye'})+'</div><div class="rxc-document-meta"><label class="rxa-field rxc-kind"><span>'+esc(t.kind)+'</span><select data-response-field="kind" data-focus="response-kind"'+off+'>'+DOCUMENT_KINDS.map(kind=>'<option value="'+kind+'" '+(d.kind===kind?'selected':'')+'>'+esc(t.kinds[kind])+'</option>').join('')+'</select></label><label class="rxa-field rxc-subject"><span>'+esc(t.subject)+'</span><input type="text" data-response-field="subject" data-focus="response-subject" value="'+esc(d.subject)+'" maxlength="240" placeholder="'+esc(t.subjectHint)+'"'+off+'></label></div><div class="rxc-writing-sheet">'+blocks+'</div>'+orders+'</section>';
 }
 
 function dateLabel(value,locale) {
@@ -264,16 +269,16 @@ function dateLabel(value,locale) {
   if(!Number.isFinite(date.getTime())||date.toISOString().slice(0,10)!==value)return value;
   return new Intl.DateTimeFormat({ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[language(locale)],{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(date);
 }
-function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source'}={}, {showProjectMark=true}={}) {
+function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source',issuerLabel='',citizenReply=false,sectionLabels={}}={}, {showProjectMark=true}={}) {
   const d=restoreCorrespondence(draft),t=copy[language(locale)],available=publicSources(sources,locale);
-  const issuer=local(profile.issuer?.name,locale)||local(profile.origin?.name,locale)||local(caseInfo.workbook?.origin?.name,locale)||t.issuer;
+  const issuer=issuerLabel||local(profile.issuer?.name,locale)||local(profile.origin?.name,locale)||local(caseInfo.workbook?.origin?.name,locale)||t.issuer;
   const citizen=local(caseInfo.citizen?.name,locale);
   const orderRecipientIds=ids(d.orders.filter(order=>order.kind===d.kind).flatMap(order=>order.recipientIds),12);
-  const officialRecipients=['referral','request'].includes(d.kind)
+  const officialRecipients=!citizenReply&&['referral','request'].includes(d.kind)
     ? (recipients||[]).filter(recipient=>!orderRecipientIds.length||orderRecipientIds.includes(recipient.id)).map(recipient=>local(recipient.label??recipient.name,locale)).filter(Boolean)
     : [];
   const address=officialRecipients.length?esc(t.recipients)+': '+esc(officialRecipients.join('; '))
-    : citizen&&['reply','notification','return','special'].includes(d.kind)?esc(t.recipient)+': '+esc(citizen):'';
+    : citizen&&(citizenReply||['reply','notification','return','special'].includes(d.kind))?esc(t.recipient)+': '+esc(citizen):'';
   const citationMarker=index=>'<a href="#'+esc(citationPrefix)+'-'+(index+1)+'" data-response-citation-link aria-label="'+esc(t.source+' '+(index+1))+'">['+(index+1)+']</a>';
   const body=SECTION_IDS.map(section=>{
     if(!d.sections[section].trim())return '';
@@ -282,7 +287,7 @@ function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],sp
   }).join('');
   const citations=d.citations.length?'<section class="rxc-letter-annex"><h2>'+esc(t.annex)+'</h2><ol>'+d.citations.map((citation,index)=>{
     const source=citationSource(citation,available),url=safeURL(source?.url);
-    return '<li id="'+esc(citationPrefix)+'-'+(index+1)+'" tabindex="-1"><strong>'+esc(sourceTitle(citation,available,t))+'</strong><span class="rxc-letter-source-section">'+esc(t.section[citation.section])+'</span>'+(source?.locator?'<span class="rxc-letter-unit">'+esc(local(source.locator,locale))+'</span>':'')+(citation.quote?'<blockquote>'+esc(citation.quote)+'</blockquote>':'')+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url)+'</a>':'')+'</li>';
+    return '<li id="'+esc(citationPrefix)+'-'+(index+1)+'" tabindex="-1"><strong>'+esc(sourceTitle(citation,available,t))+'</strong><span class="rxc-letter-source-section">'+esc(sectionLabels[citation.section]||t.section[citation.section])+'</span>'+(source?.locator?'<span class="rxc-letter-unit">'+esc(local(source.locator,locale))+'</span>':'')+(citation.quote?'<blockquote>'+esc(citation.quote)+'</blockquote>':'')+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url)+'</a>':'')+'</li>';
   }).join('')+'</ol></section>':'';
   const orders=d.orders.length?'<section class="rxc-letter-annex"><h2>'+esc(t.orders)+'</h2>'+d.orders.map((order,index)=>{
     const markers=d.citations.map((citation,n)=>order.citationIds.includes(citation.id)?citationMarker(n):'').filter(Boolean).join(' ');

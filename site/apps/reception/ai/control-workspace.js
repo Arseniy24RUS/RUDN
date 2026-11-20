@@ -158,7 +158,21 @@ export function reduceControlActionDraft(value,action={},workflow){
   else if(action.type==='recipient'&&text(action.recipientId,240))draft.recipientIds=action.selected?ids([...draft.recipientIds,action.recipientId],12):draft.recipientIds.filter(id=>id!==action.recipientId);
   return draft;
 }
-export function controlActionSubmission(value,workflow){return restoreControlActionDraft(value);}
+const RECIPIENT_ACTIONS = new Set(['request_evidence','refer']);
+
+function usesAutomaticRecipient(kind,option) {
+  return RECIPIENT_ACTIONS.has(kind)&&option?.requiresRecipients===false;
+}
+
+function workflowAction(workflow,draft) {
+  return workflow?.issues?.find(issue=>issue.id===draft.issueId)?.availableActions?.find(action=>action.kind===draft.kind);
+}
+
+export function controlActionSubmission(value,workflow){
+  const draft=restoreControlActionDraft(value);
+  if(usesAutomaticRecipient(draft.kind,workflowAction(workflow,draft)))draft.recipientIds=[];
+  return draft;
+}
 
 const ACTION_REQUIRED_FIELDS = {
   request_evidence:['reason','instruction','recipientIds','dueDate','expectedResult','evidenceSourceIds'],
@@ -170,16 +184,18 @@ const ACTION_REQUIRED_FIELDS = {
   reopen:['reason'],
 };
 
-export function missingControlActionFields(value) {
+export function missingControlActionFields(value,workflow) {
   const draft = restoreControlActionDraft(value);
+  const automaticRecipient=usesAutomaticRecipient(draft.kind,workflowAction(workflow,draft));
   return (ACTION_REQUIRED_FIELDS[draft.kind] || []).filter(field => {
+    if(field==='recipientIds'&&automaticRecipient)return false;
     const value=draft[field];
     return typeof value==='string'?!value.trim():!value.length;
   });
 }
 
 function controlActionMissingView(draft, ctx) {
-  const missing = missingControlActionFields(draft);
+  const missing = missingControlActionFields(draft,ctx);
   if(!missing.length)return '';
   const labels={reason:'reason',instruction:'instruction',recipientIds:'recipient',dueDate:'due',
     expectedResult:'expected',evidenceSourceIds:'evidence'};
@@ -277,7 +293,8 @@ function actionComposer(issue,draft,ctx,recipients,disabled,showMissing,actionKi
   if(selected){
     const off=disabled?' disabled':'';
     const instructionKey={request_evidence:'requestInstruction',verify:'verificationInstruction',notify:'notificationInstruction',close:'closureInstruction',keep_open:'continuationInstruction',refer:'referralInstruction',reopen:'reopeningInstruction'}[draft.kind];
-    const needsRecipients=selected.requiresRecipients===true||['request_evidence','refer'].includes(draft.kind)||draft.recipientIds.length>0;
+    const needsRecipients=!usesAutomaticRecipient(draft.kind,selected)&&
+      (RECIPIENT_ACTIONS.has(draft.kind)||selected.requiresRecipients===true||draft.recipientIds.length>0);
     const needsDate=selected.requiresDueDate===true||['request_evidence','keep_open','refer','reopen'].includes(draft.kind)||Boolean(draft.dueDate);
     const needsExpected=needsDate||draft.kind==='notify'||Boolean(draft.expectedResult);
     const recipientMarkup=needsRecipients?'<fieldset class="rxe-action-recipients"><legend>'+esc(ctx.t.recipient)+'</legend>'+(draft.recipientIds.length?'<div class="rxe-recipient-chips">'+draft.recipientIds.map(id=>'<span><span>'+esc(recipientName(id,recipients,ctx))+'</span>'+button(ctx.t.removeRecipient,'remove-recipient',{extra:'data-recipient-id="'+esc(id)+'"',disabled,quiet:true,glyph:'close_panel'})+'</span>').join('')+'</div>':'<p class="rxe-muted">'+esc(ctx.t.recipientEmpty)+'</p>')+button(ctx.t.chooseRecipient,'choose-recipient',{disabled,quiet:true})+'</fieldset>':'';
@@ -289,7 +306,7 @@ function finalEvidence(issueId,selected,ctx,disabled){
   if(!ctx.materials.length)return '<p class="rxe-muted">'+esc(ctx.t.evidenceEmpty)+'</p>';
   return '<div class="rxe-final-evidence">'+ctx.materials.map(material=>'<div class="rxe-evidence-row"><label><input type="checkbox" data-response-status-evidence="'+esc(material.id)+'" data-issue-id="'+esc(issueId)+'" data-focus="response-evidence-'+esc(issueId)+'-'+esc(material.id)+'"'+(selected.some(id=>id===material.id||id==='document:'+material.id)?' checked':'')+(disabled?' disabled':'')+'><span>'+esc(materialTitle(material,ctx))+'</span></label>'+button(ctx.t.openMaterial,'open-material',{extra:'data-material-id="'+esc(material.id)+'"',quiet:true,glyph:'paper'})+'</div>').join('')+'</div>';
 }
-function memorandumView(draft,ctx,disabled,{readOnly=false,submitLabel=ctx.t.submit}={}){
+function memorandumView(draft,ctx,disabled,{readOnly=false,submitLabel=ctx.t.submit,memoHint=ctx.t.memoHint}={}){
   const value=restoreCorrespondenceControl(draft),off=disabled?' disabled':'';
   const rows=ctx.issues.map(issue=>{
     const row=value.statuses.find(status=>status.issueId===issue.id);
@@ -297,11 +314,11 @@ function memorandumView(draft,ctx,disabled,{readOnly=false,submitLabel=ctx.t.sub
     const controls=readOnly?'<dl class="rxe-record-fields"><div><dt>'+esc(ctx.t.yourDisposition)+'</dt><dd>'+esc(ctx.t.final[row?.status]||ctx.t.notChosen)+'</dd></div><div><dt>'+esc(ctx.t.support)+'</dt><dd>'+((evidence.length&&materialLinks(evidence,ctx,{readOnly:true}))||esc(ctx.t.noEvidence))+'</dd></div></dl>':'<label class="rxe-field"><span>'+esc(ctx.t.yourDisposition)+'</span><select data-response-status-field="status" data-issue-id="'+esc(issue.id)+'" data-focus="response-status-'+esc(issue.id)+'"'+off+'><option value="">'+esc(ctx.t.chooseDisposition)+'</option>'+FINAL_STATUSES.map(status=>'<option value="'+status+'"'+(row?.status===status?' selected':'')+'>'+esc(ctx.t.final[status])+'</option>').join('')+'</select></label><details class="rxe-final-sources"'+(evidence.length?' open':'')+'><summary>'+esc(ctx.t.support)+' <span>'+evidence.length+'</span></summary>'+finalEvidence(issue.id,evidence,ctx,disabled)+'</details>';
     return '<article class="rxe-final-issue"><h4>'+esc(issueTitle(issue,ctx))+'</h4>'+(local(issue.scope,ctx.locale)?'<div class="rxe-scope"><strong>'+esc(ctx.t.scope)+'</strong>'+paragraphs(local(issue.scope,ctx.locale))+'</div>':'')+statusMarkup(issue,ctx)+controls+'</article>';
   }).join('');
-  const prose=readOnly?'<div class="rxe-conclusion-text">'+(value.text.trim()?paragraphs(value.text):'<p class="rxe-muted">'+esc(ctx.t.noConclusion)+'</p>')+'</div>':'<label class="rxe-field rxe-memorandum-text"><span>'+esc(ctx.t.memoText)+'</span><textarea data-response-control-field="text" data-focus="response-control-text" maxlength="6000" rows="8"'+off+'>'+esc(value.text)+'</textarea><small>'+esc(ctx.t.memoHint)+'</small></label>';
+  const prose=readOnly?'<div class="rxe-conclusion-text">'+(value.text.trim()?paragraphs(value.text):'<p class="rxe-muted">'+esc(ctx.t.noConclusion)+'</p>')+'</div>':'<label class="rxe-field rxe-memorandum-text"><span>'+esc(ctx.t.memoText)+'</span><textarea data-response-control-field="text" data-focus="response-control-text" maxlength="6000" rows="8"'+off+'>'+esc(value.text)+'</textarea><small>'+esc(memoHint)+'</small></label>';
   return '<section class="rxe-memorandum" data-control-memorandum tabindex="-1"><div class="rxe-section-heading"><div><p class="rxe-eyebrow">'+esc(readOnly?ctx.t.saved:ctx.t.memorandum)+'</p><h3>'+esc(ctx.t.memoText)+'</h3></div>'+(!readOnly?button(ctx.t.back,'back-to-work',{quiet:true,glyph:'arrow'}):'')+'</div>'+(!readOnly?'<p class="rxe-muted">'+esc(ctx.t.memoIntro)+'</p>':'')+'<div class="rxe-final-issues">'+rows+'</div>'+prose+(!readOnly?'<div class="rxe-memorandum-footer"><button type="submit" class="rxa-btn primary rxe-button" data-control-submit'+off+'>'+icon('close')+'<span>'+esc(submitLabel)+'</span></button></div>':'')+'</section>';
 }
 
-export function controlWorkspaceView({workflow,draft,actionDraft,ui,caseInfo={},sources=[],recipients=[],locale='ru',disabled=false,showMissing=false,submitLabel,actionKinds}={}){
+export function controlWorkspaceView({workflow,draft,actionDraft,ui,caseInfo={},sources=[],recipients=[],locale='ru',disabled=false,showMissing=false,submitLabel,actionKinds,memoHint}={}){
   const ctx=publicView(workflow,locale),view=restoreControlWorkspaceUI(ui),action=restoreControlActionDraft(actionDraft);
   const issue=ctx.issues.find(row=>row.id===view.issueId)||ctx.issues[0];
   const material=ctx.materials.find(row=>row.id===view.materialId);
@@ -309,7 +326,7 @@ export function controlWorkspaceView({workflow,draft,actionDraft,ui,caseInfo={},
   const selectedMaterials=ctx.materials.filter(row=>ids(row.issueIds).includes(issue.id)||ids(issue.materialIds,200).includes(row.id));
   const issueCards=ctx.issues.map(row=>'<button type="button" class="rxe-issue'+(row.id===issue.id?' rxe-issue-current':'')+'" data-control-action="select-issue" data-issue-id="'+esc(row.id)+'" aria-current="'+(row.id===issue.id?'true':'false')+'"><strong>'+esc(issueTitle(row,ctx))+'</strong><span>'+esc(ctx.t.stage[row.status]||ctx.t.stage.open)+'</span></button>').join('');
   const work='<div class="rxe-work-grid"><aside class="rxe-issues"><h3>'+esc(ctx.t.matters)+'</h3><nav aria-label="'+esc(ctx.t.matters)+'">'+issueCards+'</nav>'+button(ctx.t.prepare,'prepare-memorandum',{quiet:true,glyph:'paper'})+'</aside><div class="rxe-work-main"><section class="rxe-current-issue"><p class="rxe-eyebrow">'+esc(ctx.t.current)+'</p><h3>'+esc(issueTitle(issue,ctx))+'</h3>'+(local(issue.scope,ctx.locale)?'<div class="rxe-scope"><strong>'+esc(ctx.t.scope)+'</strong>'+paragraphs(local(issue.scope,ctx.locale))+'</div>':'')+statusMarkup(issue,ctx)+'</section>'+plannedView(ctx,recipients,issue.id)+'<section class="rxe-materials"><div class="rxe-section-heading"><h3>'+esc(ctx.t.materials)+'</h3><span class="rxe-count">'+selectedMaterials.length+'</span></div>'+(selectedMaterials.length?'<div class="rxe-material-list">'+selectedMaterials.map(item=>button(materialTitle(item,ctx),'open-material',{extra:'data-material-id="'+esc(item.id)+'"',quiet:true,glyph:'paper'})).join('')+'</div>':'<p class="rxe-muted">'+esc(ctx.t.noMaterials)+'</p>')+'</section>'+journalView(ctx,issue.id,view,recipients)+actionComposer(issue,action,ctx,recipients,disabled,showMissing,actionKinds)+'<section class="rxe-prepare"><div><h3>'+esc(ctx.t.memorandum)+'</h3><p>'+esc(ctx.t.prepareHint)+'</p></div>'+button(ctx.t.prepare,'prepare-memorandum',{primary:true,glyph:'paper'})+'</section></div></div>';
-  return '<div class="rxe-workspace" data-control-workspace data-control-revision="'+esc(Number.isInteger(workflow?.revision)?workflow.revision:0)+'"><p class="rxe-workspace-intro">'+esc(ctx.t.intro)+'</p>'+(material?materialView(material,ctx):'')+(view.pane==='memorandum'?memorandumView(draft,ctx,disabled,{submitLabel}):work)+'</div>';
+  return '<div class="rxe-workspace" data-control-workspace data-control-revision="'+esc(Number.isInteger(workflow?.revision)?workflow.revision:0)+'"><p class="rxe-workspace-intro">'+esc(ctx.t.intro)+'</p>'+(material?materialView(material,ctx):'')+(view.pane==='memorandum'?memorandumView(draft,ctx,disabled,{submitLabel,memoHint}):work)+'</div>';
 }
 
 export function controlRecordView({workflow,control,caseInfo={},sources=[],recipients=[],locale='ru'}={}){

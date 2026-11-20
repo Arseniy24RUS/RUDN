@@ -1,11 +1,11 @@
-import {RECEPTION_AUTHORITIES, RECEPTION_TERRITORIES} from './authority-directory.js';
+import {RECEPTION_AUTHORITIES, RECEPTION_EMBLEM_CREDITS, RECEPTION_MFC_AUTHORITY_IDS, RECEPTION_TERRITORIES} from './authority-directory.js';
 import {RECEPTION_AUTHORITY_NAMES} from './authority-names.js';
 import {resourceURL} from '../../../assets/js/release-resources.js';
 
 const labels = {
-  ru:{origin:'Адрес для ответа',unknown:'Адрес для ответа не указан',site:'Место события',title:'Кто рассмотрит вопрос или подготовит ответ?',search:'Поиск органа или подразделения',territory:'Территория органа',all:'Все территории',selected:'Выбрано',empty:'Органы не найдены. Измените запрос или территорию.',more:'Уточните поиск или выберите территорию, чтобы увидеть другие органы.'},
-  en:{origin:'Correspondence address',unknown:'No correspondence address given',site:'Location of the incident',title:'Who should review the matter or prepare the reply?',search:'Find an authority or office',territory:'Authority’s jurisdiction',all:'All regions',selected:'Selected',empty:'No matching authorities. Change the search or region.',more:'Refine the search or select a region to see more authorities.'},
-  zh:{origin:'回复地址',unknown:'未提供回复地址',site:'事件地点',title:'哪个机构应处理事项或起草回复？',search:'查找机构或部门',territory:'机构管辖地区',all:'所有地区',selected:'已选择',empty:'未找到相关机构。请修改搜索条件或地区。',more:'请缩小搜索范围或选择地区以查看更多机构。'},
+  ru:{mfcTitle:'Кому МФЦ передаст материалы дела?',origin:'Адрес для ответа',unknown:'Адрес для ответа не указан',site:'Место события',title:'Кто рассмотрит вопрос или подготовит ответ?',search:'Поиск органа или подразделения',territory:'Территория органа',all:'Все территории',selected:'Выбрано',empty:'Органы не найдены. Измените запрос или территорию.',more:'Уточните поиск или выберите территорию, чтобы увидеть другие органы.'},
+  en:{mfcTitle:'Where should the MFC send the case file?',origin:'Correspondence address',unknown:'No correspondence address given',site:'Location of the incident',title:'Who should review the matter or prepare the reply?',search:'Find an authority or office',territory:'Authority’s jurisdiction',all:'All regions',selected:'Selected',empty:'No matching authorities. Change the search or region.',more:'Refine the search or select a region to see more authorities.'},
+  zh:{mfcTitle:'多功能政务服务中心应将本案材料转交给哪个机构？',origin:'回复地址',unknown:'未提供回复地址',site:'事件地点',title:'哪个机构应处理事项或起草回复？',search:'查找机构或部门',territory:'机构管辖地区',all:'所有地区',selected:'已选择',empty:'未找到相关机构。请修改搜索条件或地区。',more:'请缩小搜索范围或选择地区以查看更多机构。'},
 };
 const MAX_VISIBLE_AUTHORITIES = 80;
 const authoritiesById=new Map(RECEPTION_AUTHORITIES.flatMap(row=>[[row.id,row],...(row.careerId?[[row.careerId,row]]:[])]));
@@ -16,7 +16,8 @@ const normalize = value => String(value ?? '').toLocaleLowerCase('ru').replaceAl
 
 export function localizedAuthorityName(authority,locale='ru'){
   const names=RECEPTION_AUTHORITY_NAMES[authority?.id]||RECEPTION_AUTHORITY_NAMES[authoritiesById.get(authority?.id)?.id];
-  return names?.[locale==='en'?0:locale==='zh'?1:-1]||display(authority?.name,locale);
+  const addedName = locale === 'en' ? authority?.nameEn : locale === 'zh' ? authority?.nameZh : '';
+  return addedName || names?.[locale==='en'?0:locale==='zh'?1:-1]||display(authority?.name,locale);
 }
 
 export function routingOriginView(workflow, {locale='ru'} = {}) {
@@ -26,10 +27,11 @@ export function routingOriginView(workflow, {locale='ru'} = {}) {
   return place.length?`<dl class="rxa-routing-origin"><div><dt>${esc(copy.site)}</dt><dd>${esc([...new Set(place)].join(', '))}</dd></div></dl>`:'';
 }
 
-export function filterAuthorities({search='',territoryId='',locale='ru',recipientIds=[]}={}) {
+export function filterAuthorities({search='',territoryId='',locale='ru',recipientIds=[],mfcOnly=false}={}) {
   const words = normalize(search).split(/\s+/).filter(Boolean);
   const collator=new Intl.Collator(locale);
   return RECEPTION_AUTHORITIES.filter(authority => {
+    if (mfcOnly && !RECEPTION_MFC_AUTHORITY_IDS.has(authority.id)) return false;
     if (recipientIds.includes(authority.id)) return true;
     if (territoryId && authority.territoryIds.length && !authority.territoryIds.includes(territoryId)) return false;
     const regionNames = authority.territoryIds.map(id => RECEPTION_TERRITORIES[id]?.name);
@@ -47,18 +49,19 @@ export function authorityPickerView(value, {locale='ru',workflow,search='',terri
   const copy = labels[locale] || labels.ru;
   const recipientIds = Array.isArray(value?.recipientIds) ? value.recipientIds : [];
   const limit = workflow.recipientLimit === 2 ? 2 : 1;
-  const offices = filterAuthorities({search,territoryId,locale,recipientIds});
+  const offices = filterAuthorities({search,territoryId,locale,recipientIds,mfcOnly:workflow.routingPolicy?.allowInternal===false});
   const regions = Object.entries(RECEPTION_TERRITORIES).sort(([,a],[,b])=>display(a.name,locale).localeCompare(display(b.name,locale),locale));
   const items = offices.slice(0,MAX_VISIBLE_AUTHORITIES).map(authority=>{
     const selected = recipientIds.includes(authority.id);
     const locked = disabled || (limit > 1 && recipientIds.length >= limit && !selected);
     const region = authority.territoryIds.map(id=>display(RECEPTION_TERRITORIES[id]?.name,locale)).filter(Boolean).join(' · ');
-    const emblem = authority.emblem ? `<img width="30" height="30" loading="lazy" decoding="async" src="${esc(resourceURL(authority.emblem,siteRoot).href)}" alt="">` : '';
+    const credit = RECEPTION_EMBLEM_CREDITS[authority.emblem];
+    const emblem = authority.emblem ? `<img width="30" height="30" loading="lazy" decoding="async" src="${esc(resourceURL(authority.emblem,siteRoot).href)}" alt=""${credit?` title="${esc(credit)}"`:''}>` : '';
     const short = authority.shortName && authority.shortName !== authority.name ? ` <small>${esc(authority.shortName)}</small>` : '';
     const name = esc(localizedAuthorityName(authority,locale));
     return `<label class="rxa-routing-authority"><input type="checkbox" data-routing-recipient data-focus="routing-recipient-${esc(authority.id)}" value="${esc(authority.id)}" ${selected?'checked':''} ${locked?'disabled':''}>${emblem}<span>${name}${short}${region?`<small class="rxa-routing-jurisdiction">${esc(region)}</small>`:''}</span></label>`;
   }).join('');
-  return `<fieldset class="rxa-fieldset rxa-routing-picker"><legend>${esc(copy.title)}</legend><div class="rxa-routing-filters"><label>${esc(copy.search)}<input type="search" data-routing-search data-focus="routing-search" autocomplete="off" maxlength="120" value="${esc(search)}" ${disabled?'disabled':''}></label><label>${esc(copy.territory)}<select data-routing-territory data-focus="routing-territory" ${disabled?'disabled':''}><option value="">${esc(copy.all)}</option>${regions.map(([id,row])=>`<option value="${esc(id)}" ${id===territoryId?'selected':''}>${esc(display(row.name,locale))}</option>`).join('')}</select></label></div><p class="rxa-routing-count" aria-live="polite">${esc(copy.selected)} ${recipientIds.length}/${limit}</p><div class="rxa-routing-options" data-routing-options>${items||`<p>${esc(copy.empty)}</p>`}</div>${offices.length>MAX_VISIBLE_AUTHORITIES?`<p class="rxa-routing-count">${esc(copy.more)}</p>`:''}</fieldset>`;
+  return `<fieldset class="rxa-fieldset rxa-routing-picker"><legend>${esc(workflow.routingPolicy?.allowInternal===false?copy.mfcTitle:copy.title)}</legend><div class="rxa-routing-filters"><label>${esc(copy.search)}<input type="search" data-routing-search data-focus="routing-search" autocomplete="off" maxlength="120" value="${esc(search)}" ${disabled?'disabled':''}></label><label>${esc(copy.territory)}<select data-routing-territory data-focus="routing-territory" ${disabled?'disabled':''}><option value="">${esc(copy.all)}</option>${regions.map(([id,row])=>`<option value="${esc(id)}" ${id===territoryId?'selected':''}>${esc(display(row.name,locale))}</option>`).join('')}</select></label></div><p class="rxa-routing-count" aria-live="polite">${esc(copy.selected)} ${recipientIds.length}/${limit}</p><div class="rxa-routing-options" data-routing-options>${items||`<p>${esc(copy.empty)}</p>`}</div>${offices.length>MAX_VISIBLE_AUTHORITIES?`<p class="rxa-routing-count">${esc(copy.more)}</p>`:''}</fieldset>`;
 }
 
 export function authoritySelectionLabel(value,{locale='ru'}={}){return (value?.recipientIds||[]).map(id=>authoritiesById.get(id)).filter(Boolean).map(row=>localizedAuthorityName(row,locale)).join('; ');}

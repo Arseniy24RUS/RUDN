@@ -19,6 +19,7 @@ import {normativeActsForCase,requiredSeminarActs,validateLegalCitation,hasApplic
 import {JOURNEY_STAGES, SEMINAR_EXAMPLE, SEMINAR_GRADING_VERSION, isTutorial, exactCaseScore, seminarPointsAt,
   seminarExample, tutorialGuide, publicTutorialGuide, tutorialOperational, tutorialExecutionAction, validatedTutorialMemo, mentorFinding, tutorialExecutionKinds, tutorialExecutionProgress, walkthroughControlProfile} from './seminar-journey.mjs';
 import {SEMINAR_CORE_VERSION,CORE_STEP_FIELDS,publicCoreSteps,inspectCoreStep,saveCoreStep,assertCoreDecision} from './seminar-core.mjs';
+import {MFC_SEMINAR_VERSION,mfcRole,mfcUsesSharedReply,mfcSharedReplyInstruction} from './mfc-seminar.mjs';
 
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxReviewInputAllowance:320000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
@@ -27,8 +28,8 @@ const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance:
   guestDailyBudgetMicros:750_000,guestMonthlyBudgetMicros:5_000_000,guestMaxConcurrent:2,
   guestMaxDailyStartsPerUid:3,guestMaxDailyStarts:12};
 const allowed = {
-  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
-  recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage'],
+  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage','coreStepsVersion'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
+  recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage','coreStepsVersion'],
   message: ['op', 'sessionId', 'text', 'requestId', 'expectedRevision'], document: ['op', 'sessionId', 'documentId', 'requestId'],
   decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'],
   'control-action':['op','sessionId','requestId','expectedRevision','action'],
@@ -45,6 +46,19 @@ const MAX_SEMINAR_POINTS = 5;
 const SEMINAR_PASS_SCORE = 70;
 const seminarPath = owner => `seminarProgress/${hash(owner)}`;
 const usesLegalCitation = (context,workbookVersion) => Boolean(context) && workbookVersion === WORKBOOK_VERSION;
+const journeyLedger = version => version===MFC_SEMINAR_VERSION?'mfcJourney':version===SEMINAR_CORE_VERSION?'guidedJourney':'journey';
+const workbookOptions = ({context,coreStepsVersion}) => ({gameplay:Boolean(context),coreStepsVersion});
+const hasWorkbook = s => [LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion);
+const workbookFor = (c,s) => hasWorkbook(s)?publicWorkbook(c,s.workbookVersion,workbookOptions(s)):null;
+const roleFor = (c,s,workbook) => s.coreStepsVersion===MFC_SEMINAR_VERSION?
+  mfcRole(c.public.role,s.locale,mfcUsesSharedReply(s.coreStepsVersion,workbook||workbookFor(c,s))):localized(c.public.role,s.locale);
+function controlCommand(action,workflow) {
+  if(!workflow.sharedReply||!['request_evidence','refer'].includes(action?.kind))return action;
+  const spec=workflow.definition.issues.find(issue=>issue.id===action.issueId);
+  const receipt=action.kind==='refer'&&Array.isArray(action.evidenceSourceIds)&&workflow.materials.find(material=>
+    material.issueIds.includes(action.issueId)&&material.verification==='delivery'&&action.evidenceSourceIds.includes(material.id));
+  return {...action,recipientIds:receipt?.recipientIds?.length?receipt.recipientIds:spec?.acceptedRecipientSets?.[0]||[]};
+}
 function fixedProcedure(c,context) {
   if (!context || !c.rubric.authored || !['registration59','review59','referral59'].includes(calendarNormId(c))) return null;
   const [procedure] = c.rubric.procedureIds;
@@ -142,12 +156,18 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     identifier(id); const s = normalizeSession(await store.get(`sessions/${id}`)); own(s, identity); return s;
   }
   function guideFor(s,c,profile){
-    return tutorialGuide(c,profile,s.locale,{execution:s.controlVersion==='execution-v1',core:Boolean(s.coreStepsVersion)});
+    return tutorialGuide(c,profile,s.locale,{execution:s.controlVersion==='execution-v1',core:Boolean(s.coreStepsVersion),coreStepsVersion:s.coreStepsVersion});
   }
   function view(session) {
     const s = normalizeSession(copy(session)), c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex];
     const p = localized(c.public, s.locale);
     p.opening=participantOpening(c,s.locale);
+    const workbook=localized(workbookFor(c,s),s.locale);
+    const mfc=s.coreStepsVersion===MFC_SEMINAR_VERSION;
+    if(mfc){
+      p.role=roleFor(c,s,workbook);
+      p.deadlinePrompt=workbook.instructions;
+    }
     if(s.context){
       p.procedureRequired=!fixedProcedure(c,s.context);
       if(!p.procedureRequired)p.procedures=[];
@@ -163,7 +183,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(correspondence){
       // Work-product sessions never publish the old multiple-choice answer menu.
       delete p.assessment;p.actions=[];p.procedures=[];p.routes=[];p.procedureRequired=false;
-      p.correspondence=profile;p.decisionVersion=DECISION_VERSION;
+      p.correspondence=mfc&&profile?{...profile,role:{title:p.role.title},
+        ...(mfcUsesSharedReply(s.coreStepsVersion,workbook)?{task:localized(mfcSharedReplyInstruction,s.locale)}:{})}:profile;
+      p.decisionVersion=DECISION_VERSION;
     }
     const result = s.status === 'complete' ? {...(guide?{}:{points:s.result.points,maxPoints:5}), total: s.result.total, cap:s.result.cap||null, attemptId: s.result.attemptId,
       ...(s.context==='seminar'?{...s.seminarProgress,...(guide?{}:{passScore:s.result.passScore??100})}:{}),
@@ -172,8 +194,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       cases: s.results.map((r, i) => ({caseId: s.caseData[i].id, title: localized(s.caseData[i].public.title, s.locale), score: r.score,
          feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null,
          ...(correspondence?{caseInfo:localized({id:s.caseData[i].id,title:s.caseData[i].public.title,citizen:s.caseData[i].public.citizen,
-           date:s.caseData[i].public.date,role:s.caseData[i].public.role,
-           ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:publicWorkbook(s.caseData[i],s.workbookVersion,{gameplay:Boolean(s.context)})}:{})},s.locale),
+           date:s.caseData[i].public.date,role:roleFor(s.caseData[i],s),
+           ...(hasWorkbook(s)?{workbook:workbookFor(s.caseData[i],s)}:{})},s.locale),
            correspondenceProfile:correspondenceProfiles.public(s.caseData[i],s.locale),
            correspondenceSources:publicCorrespondenceSources(s.caseData[i],s.caseStates[i],s.locale,{includeFollowup:true})}:{}),
          ...(s.caseStates[i].control?{control:s.caseStates[i].control}:{}),
@@ -192,7 +214,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         controlValidation:state.controlValidation?localized({valid:false,requestId:state.controlValidation.requestId,
           findings:values(state.controlValidation.findings)},s.locale):null}:{}),
       operationInProgress: Boolean(s.lease && s.lease.until > clock()),
-      status: s.status, case: {id: c.id, ...publicMetadata(c), ...p, ...([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?{workbook:localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale)}:{})}, messages: state.messages,
+      status: s.status, case: {id: c.id, ...publicMetadata(c), ...p, ...(hasWorkbook(s)?{workbook}:{})}, messages: state.messages,
       documents: c.documents.filter(d => state.releasedDocumentIds.includes(d.id)).map(d => localized({id: d.id, title: d.title, type: d.type, text: d.text, chatAttachment:!s.context&&!d.initial,
         ...(d.image?{image:d.image}:{}),...(d.url?{url:d.url}:{}),...(d.sensitive!==undefined?{sensitive:d.sensitive}:{})}, s.locale)),
       openedDocumentIds: state.openedDocumentIds, decision: state.decision || null,
@@ -267,27 +289,33 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       && (!body.decisionVersion || entry.decisionVersion===body.decisionVersion)
       && (!body.workbookVersion || entry.workbookVersion===body.workbookVersion)
       && (body.context==='seminar' || !body.buildId || entry.buildId===body.buildId);
-    const guided=guidedSeminarCore&&Boolean(body.journeyStage);
-    const wanted = entry => matches(entry)&&(!guided||entry.coreStepsVersion===SEMINAR_CORE_VERSION);
+    const version=body.coreStepsVersion|| (guidedSeminarCore&&body.journeyStage?SEMINAR_CORE_VERSION:undefined);
+    const wanted = entry => matches(entry)&&entry.coreStepsVersion===version;
     let legacySessionId;
+    const legacySessions=[];
     if(body.journeyStage){
       const ledger=await store.get(seminarPath(owner));
-      if(guided){
-        const old=ledger?.journey?.[body.journeyStage];
-        if(old&&!old.completed){
-          const saved=normalizeSession(await store.get(`sessions/${old.sessionId}`));
-          if(saved&&matches(saved)){own(saved,identity);legacySessionId=saved.id;}
-        }
+      const previous=version===MFC_SEMINAR_VERSION?['guidedJourney','journey']:version===SEMINAR_CORE_VERSION?['journey']:[];
+      const legacyStages=version===MFC_SEMINAR_VERSION?JOURNEY_STAGES:[body.journeyStage];
+      for(const stage of legacyStages)for(const key of previous){
+        const old=ledger?.[key]?.[stage];
+        if(!old||old.completed||legacySessions.some(row=>row.id===old.sessionId))continue;
+        const saved=await store.get(`sessions/${old.sessionId}`);
+        if(!saved||saved.status==='complete'||saved.context!=='seminar')continue;
+        own(saved,identity);
+        legacySessions.push({id:saved.id,journeyStage:stage});
+        if(matches(saved))legacySessionId??=saved.id;
       }
-      const pointer=(guided?ledger?.guidedJourney:ledger?.journey)?.[body.journeyStage];
+      const pointer=ledger?.[journeyLedger(version)]?.[body.journeyStage];
+      const historical={...(legacySessionId?{legacySessionId}:{}),...(legacySessions.length&&version===MFC_SEMINAR_VERSION?{legacySessions}:{})};
       if(pointer&&(!pointer.completed||body.journeyStage==='independent')){
         const saved=normalizeSession(await store.get(`sessions/${pointer.sessionId}`));
-        if(saved&&wanted(saved)){own(saved,identity);return {...await response(saved),...(legacySessionId?{legacySessionId}:{})};}
+        if(saved&&wanted(saved)){own(saved,identity);return {...await response(saved),...historical};}
         if(saved?.status==='complete'&&(!pointer.completed||!saved.journalSaved)){
           own(saved,identity);await deliverResult(saved);await remember(saved);
         }
         // An interrupted session allocation can be completed using its original start request.
-        if(!saved&&pointer.startRequest)return {...await start(JSON.parse(pointer.startRequest),identity),...(legacySessionId?{legacySessionId}:{})};
+        if(!saved&&pointer.startRequest)return {...await start(JSON.parse(pointer.startRequest),identity),...historical};
       }
     }
     async function indexed() {
@@ -300,7 +328,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         if (!s) { await store.transaction(`${path}/entries/${entry.id}`, () => null); continue; }
         own(s, identity);
         if (!matches(s)) { await remember(s); continue; }
-        if(!wanted(s)){legacySessionId??=s.id;continue;}
+        if(!wanted(s)){
+          if(s.coreStepsVersion!==MFC_SEMINAR_VERSION)legacySessionId??=s.id;
+          continue;
+        }
         return response(s);
       }
       return null;
@@ -310,8 +341,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       await migrateLegacyIndex(identity); recovered = await indexed();
     }
     if(legacySessionId)recovered={...(recovered||{ok:true,view:null,seminarProgress:await seminarProgress(owner,body)}),legacySessionId};
-    return recovered || {ok:true,view:null,
-      ...(body.context==='seminar'?{seminarProgress:await seminarProgress(owner,body)}:{})};
+    return {...(recovered||{ok:true,view:null,
+      ...(body.context==='seminar'?{seminarProgress:await seminarProgress(owner,body)}:{})}),
+      ...(legacySessions.length&&version===MFC_SEMINAR_VERSION?{legacySessions}:{})};
   }
   function initialState(c, language, timestamp, context) {
     return {messages: [{id: `opening-${c.id}`, role: 'assistant', text: participantOpening(c,language), at: timestamp}],
@@ -365,22 +397,26 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return available.filter(c => !Object.hasOwn(progress.assigned || {}, c.id)).length;
   }
   function journeyCompleted(progress,stage){
-    const current=progress.guidedJourney?.[stage];
-    return progress.journey?.[stage]?.completed===true||current?.completed===true||current?.everCompleted===true;
+    return ['journey','guidedJourney','mfcJourney'].some(key=>{
+      const current=progress[key]?.[stage];
+      return current?.completed===true||current?.everCompleted===true;
+    });
   }
   async function seminarProgress(owner, options) {
     const progress=await store.get(seminarPath(owner))||{};
     const available=(await seminarAvailable(options)).filter(c=>!options.journeyStage||c.id!==SEMINAR_EXAMPLE.caseId);
     const showPoints=!options.id||options.mode==='independent';
-    const active=stage=>Boolean(progress.guidedJourney?.[stage]&&!progress.guidedJourney[stage].completed);
+    const stages=progress[journeyLedger(options.coreStepsVersion===MFC_SEMINAR_VERSION?MFC_SEMINAR_VERSION:SEMINAR_CORE_VERSION)];
+    const active=stage=>Boolean(stages?.[stage]&&!stages[stage].completed);
     return {exampleCompleted:journeyCompleted(progress,'example'),mentorCompleted:journeyCompleted(progress,'mentor'),
-      ...(guidedSeminarCore?{exampleActive:active('example'),mentorActive:active('mentor'),independentActive:active('independent')}:{}),
+      ...(guidedSeminarCore||options.coreStepsVersion===MFC_SEMINAR_VERSION?{exampleActive:active('example'),mentorActive:active('mentor'),independentActive:active('independent')}:{}),
       ...(showPoints?{seminarPoints:Math.max(progress.points||0,progress.bestPoints||0)}:{}),
       remainingCases:remainingSeminarCases(available,progress)};
   }
   async function reserveSeminarCase(owner, id, signature, available, body) {
-    const stage=body.journeyStage, guided=guidedSeminarCore&&Boolean(stage);
-    const journeyKey=guided?'guidedJourney':'journey', repeatable=guided&&isTutorial(body);
+    const stage=body.journeyStage;
+    const version=body.coreStepsVersion||(guidedSeminarCore&&stage?SEMINAR_CORE_VERSION:undefined);
+    const guided=Boolean(version), journeyKey=journeyLedger(version), repeatable=guided&&isTutorial(body);
     const example=stage==='example'?seminarExample(available):null;
     const seed = randomUUID(), ordered = [...available].filter(c=>!stage||c.id!==SEMINAR_EXAMPLE.caseId)
       .sort((a,b) => hash(`${seed}:${a.id}`).localeCompare(hash(`${seed}:${b.id}`)));
@@ -415,7 +451,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       }
       if (!selected) return undefined;
       const attempt={caseId:selected.id, signature,...(stage?{journeyStage:stage}:{}),
-        ...(guided?{coreStepsVersion:SEMINAR_CORE_VERSION}:{})};
+        ...(version?{coreStepsVersion:version}:{})};
       if(!repeatable)progress.attempts[id]=attempt;
       if(!example&&!repeatable)progress.assigned[selected.id]=id;
       if(stage)progress[journeyKey][stage]={sessionId:id,startRequest:JSON.stringify(body),completed:false,
@@ -589,7 +625,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const available=(await seminarAvailable(s)).filter(c=>!s.journeyStage||c.id!==SEMINAR_EXAMPLE.caseId);
     const repeatable=s.coreStepsVersion&&isTutorial(s);
     const recorded = await store.transaction(seminarPath(s.owner), progress => {
-      const stage=(s.coreStepsVersion?progress?.guidedJourney:progress?.journey)?.[s.journeyStage];
+      const stage=progress?.[journeyLedger(s.coreStepsVersion)]?.[s.journeyStage];
       if(repeatable&&stage?.sessionId!==s.id){
         // This session can race a completed response and another browser's
         // next start. The newer pointer proves the prior practice was closed.
@@ -612,7 +648,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       return progress;
     });
     if (!recorded.committed) fail('result_conflict',409);
-    const attempt=repeatable?recorded.value.guidedJourney[s.journeyStage]:recorded.value.attempts[s.id];
+    const attempt=repeatable?recorded.value[journeyLedger(s.coreStepsVersion)][s.journeyStage]:recorded.value.attempts[s.id];
     const seminarProgress = {remainingCases:repeatable?remainingSeminarCases(available,recorded.value):attempt.remainingCases,
       ...(s.mode==='independent'?{seminarPoints:attempt.seminarPoints}:{})};
     await store.transaction(`sessions/${s.id}`, old => old?.status==='complete'
@@ -679,7 +715,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         generate=signal=>provider.answerMentor({...input,signal});
       }else{
         const dossier = actorCase(c, s.locale);
-        if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)){const facts=localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale);dossier.correspondenceAddress=facts?.origin||null;dossier.eventLocation=facts?.site||null;}
+        if(hasWorkbook(s)){
+          const facts=localized(workbookFor(c,s),s.locale);
+          dossier.correspondenceAddress=facts?.origin||null;dossier.eventLocation=facts?.site||null;
+          if(s.coreStepsVersion===MFC_SEMINAR_VERSION)dossier.receptionScene={
+            context:facts?.routingPolicy?.context||null,
+            events:facts?.events.filter(event=>['intakeReceived','intakeRegistered'].includes(event.id))||[]
+          };
+        }
         dossier.releasedDocumentIds = dossier.documents.filter(document => state.releasedDocumentIds.includes(document.id)).map(document => document.id);
         if(s.context)dossier.documentsAvailableUpfront=true;
         estimate=estimateReservation({actorCase:dossier,messages:state.messages,text,locale:s.locale,
@@ -723,12 +766,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       throw error instanceof ReceptionError ? error : new ReceptionError('unavailable', 503);
     } finally { if (reservation) await settle(reservation, usage); }
   }
-  function correspondenceOperational(c,decision,workbookVersion,context) {
+  function correspondenceOperational(c,decision,session) {
     const base={score:0,criteria:[
       {id:'route',earned:0,max:CORRESPONDENCE_WEIGHTS.initial.route},
       {id:'calendar',earned:0,max:CORRESPONDENCE_WEIGHTS.initial.calendar},
     ],cap:null,explanation:''};
-    if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(workbookVersion))return evaluateWorkbook(c,decision,base,workbookVersion,{gameplay:Boolean(context)});
+    if(hasWorkbook(session))return evaluateWorkbook(c,decision,base,session.workbookVersion,workbookOptions(session));
     base.criteria[0].earned=c.rubric.routeIds.includes(decision.routeId)?base.criteria[0].max:0;
     base.criteria[1].earned=decision.deadline===c.rubric.deadline?base.criteria[1].max:0;
     base.score=base.criteria.reduce((sum,row)=>sum+row.earned,0);
@@ -749,7 +792,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
             .slice(0,20).map(material=>material.id)}));
         const context=buildCorrespondenceReview(c,{...state,controlWorkflow:workflow},state.decision,language,{
           profile,phase:'control',control:{text:'\u0001'.repeat(6000),statuses},resolvedCitations:state.correspondenceEvidence||[],
-          workbook:[LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(session.workbookVersion)?localized(publicWorkbook(c,session.workbookVersion,{gameplay:Boolean(session.context)}),language):null,
+          workbook:localized(workbookFor(c,session),language),coreStepsVersion:session.coreStepsVersion,
         });
         // Reserve a margin for different status labels and small review metadata.
         if(Buffer.byteLength(JSON.stringify(context),'utf8')+4096>240000||estimateReviewReservation({context}).perCallInputTokens+4096>limits.maxReviewInputAllowance)fail('control_context_limit',413);
@@ -783,11 +826,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           if(state.decision)fail('not_active',409);
           const raw=copy(body.decision);let workbook;
           if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)){
-            workbook=validateWorkbookDecision(raw?.workbook,s.workbookVersion);delete raw.workbook;
+            workbook=validateWorkbookDecision(raw?.workbook,s.workbookVersion,workbookOptions(s));delete raw.workbook;
           }
           const decision=validateDecision(raw,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:s.locale});
           if(workbook)decision.workbook=workbook;
           if(s.coreStepsVersion)assertCoreDecision(state,decision);
+          if(s.coreStepsVersion===MFC_SEMINAR_VERSION&&!decision.correspondence.sections.resolution)fail('invalid_correspondence');
           state.correspondenceDraft=decision;
         }else{
           if(body.choiceId!==undefined||!state.decision||state.control)fail('invalid_control');
@@ -823,15 +867,16 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const decision=phase==='initial'?state.correspondenceDraft:state.decision;
       const evidence=phase==='initial'?await resolveCorrespondenceCitations(c,state,decision.correspondence,s.locale,{resolveLegalCitation,signal:controller.signal}):
         copy(state.correspondenceEvidence||[]);
-      const operational=phase==='initial'?correspondenceOperational(c,decision,s.workbookVersion,s.context):null;
+      const operational=phase==='initial'?correspondenceOperational(c,decision,s):null;
       let preparedControl;
       if(phase==='initial'&&s.controlVersion==='execution-v1'&&c.followup){
-        preparedControl=createControlWorkflow({caseData:c,profile,decision,initialFeedback:operational,locale:s.locale,timestamp});
+        preparedControl=createControlWorkflow({caseData:c,profile,decision,initialFeedback:operational,locale:s.locale,timestamp,
+          sharedReply:mfcUsesSharedReply(s.coreStepsVersion,workbookFor(c,s))});
         assertExecutionReviewCapacity(s,c,{...state,decision,correspondenceEvidence:evidence,correspondenceInitialFeedback:operational},profile,preparedControl);
       }
       const context=buildCorrespondenceReview(c,state,decision,s.locale,{
         profile,resolvedCitations:evidence,phase,control:phase==='control'?state.controlDraft:null,operational,
-        workbook:[LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale):null,
+        workbook:localized(workbookFor(c,s),s.locale),coreStepsVersion:s.coreStepsVersion,
       });
       const inputLimit=s.controlVersion==='execution-v1'?limits.maxReviewInputAllowance:limits.maxInputAllowance;
       const remaining=Math.min(inputLimit-estimateReviewReservation({context}).perCallInputTokens,
@@ -927,21 +972,21 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return guide;
   }
 
-  const tutorCorrespondence = (raw,c,state,language) => {
+  const tutorCorrespondence = (raw,c,state,language,coreStepsVersion) => {
     const {workbook,...decision}=raw||{};
     return {...validateDecision(decision,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:language}),
-      workbook:validateWorkbookDecision(workbook,WORKBOOK_VERSION)};
+      workbook:validateWorkbookDecision(workbook,WORKBOOK_VERSION,{coreStepsVersion})};
   };
 
-  async function inspectMentorDraft(raw,c,state,profile,language,{core=false}={}) {
+  async function inspectMentorDraft(raw,c,state,profile,language,coreStepsVersion) {
     let decision,evidence;
     try{
-      decision=tutorCorrespondence(raw,c,state,language);
-      if(core)assertCoreDecision(state,decision);
+      decision=tutorCorrespondence(raw,c,state,language,coreStepsVersion);
+      if(coreStepsVersion)assertCoreDecision(state,decision);
       const {sections,subject,citations}=decision.correspondence;
       if(!subject||Object.values(sections).some(text=>!text))return {finding:'emptyDraft',decision};
       if(!profile.acceptedKinds.includes(decision.correspondence.kind))return {finding:'kind',decision};
-      const {routing,calendar}=tutorialOperational(c,decision).workbook;
+      const {routing,calendar}=tutorialOperational(c,decision,coreStepsVersion).workbook;
       if(!routing?.correct)return {finding:'route',decision};
       if(Object.values(calendar.correct).some(correct=>!correct))return {finding:'calendar',decision};
       if(!citations.some(row=>row.section==='facts'&&['document','dialogue'].includes(row.kind)))return {finding:'evidence',decision};
@@ -951,7 +996,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const supported=legal.some(row=>applicability
         ? hasApplicableLegalCitation(c,{docId:row.sourceId,unitIds:row.unitIds,text:row.quote})
         : !sourceIds.size||sourceIds.has(row.sourceId));
-      if(!core&&!supported)return {finding:'legal',decision};
+      if(!coreStepsVersion&&!supported)return {finding:'legal',decision};
       evidence=await resolveCorrespondenceCitations(c,state,decision.correspondence,language,{resolveLegalCitation});
     }catch(error){
       if(error instanceof ReceptionError&&error.status<500){
@@ -1004,7 +1049,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(session.lease?.until>clock())fail('busy',409);
     assertCoreStepAllowed(session,body);
     const c=session.caseData[session.caseIndex],state=session.caseStates[session.caseIndex];
-    const inspected=await inspectCoreStep(body,c,state,session.locale,{resolveLegalCitation,guide:isTutorial(session)});
+    const inspected=await inspectCoreStep(body,c,state,session.locale,{resolveLegalCitation,guide:isTutorial(session),coreStepsVersion:session.coreStepsVersion});
     return response(await mutate(body,identity,s=>{
       assertCoreStepAllowed(s,body);
       const current=s.caseStates[s.caseIndex];
@@ -1041,7 +1086,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         const c=session.caseData[session.caseIndex], profile=correspondenceProfiles.private(c,session.locale);
         const guide=guideFor(session,c,profile);
         if(guide.steps[state.tutorialStepIndex]?.id===body.stepId){
-          inspected=draft?await inspectMentorDraft(body.decision,c,state,profile,session.locale,{core:Boolean(session.coreStepsVersion)}):
+          inspected=draft?await inspectMentorDraft(body.decision,c,state,profile,session.locale,session.coreStepsVersion):
             inspectMentorControl(body.control,c,state,profile,session.locale);
           if(!inspected.finding&&session.journeyStage==='mentor')return reviewMentorProduct(body,identity,inspected);
         }
@@ -1193,12 +1238,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         state.correspondenceEvidence=inspected.evidence;
       }else{
         openTutorialDocuments(c,state,guide.decision.correspondence.citations.map(citation=>citation.sourceId));
-        state.decision=tutorCorrespondence(guide.decision,c,state,s.locale);
+        state.decision=tutorCorrespondence(guide.decision,c,state,s.locale,s.coreStepsVersion);
       }
       if(c.followup){
         if(s.controlVersion==='execution-v1')state.controlWorkflow=createControlWorkflow({caseData:c,
           profile:s.journeyStage==='example'?walkthroughControlProfile(c,profile):profile,decision:state.decision,
-          initialFeedback:tutorialOperational(c,state.decision),locale:s.locale,timestamp});
+          initialFeedback:tutorialOperational(c,state.decision,s.coreStepsVersion),locale:s.locale,timestamp,sharedReply:guide.sharedReply});
         s.status='followup';
       }
     }
@@ -1222,6 +1267,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (body.context!==undefined && !['seminar','free'].includes(body.context)) fail('invalid_context');
     if (body.journeyStage!==undefined && (!JOURNEY_STAGES.includes(body.journeyStage) || body.context!=='seminar' ||
       body.mode!==(body.journeyStage==='independent'?'independent':'training'))) fail('invalid_journey_stage');
+    if(body.coreStepsVersion!==undefined&&(body.coreStepsVersion!==MFC_SEMINAR_VERSION||!body.journeyStage))fail('invalid_request');
     if(body.workbookVersion!==undefined&&![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(body.workbookVersion))fail('invalid_workbook');
     if(body.decisionVersion!==undefined&&body.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
     if(body.controlVersion!==undefined&&(body.controlVersion!=='execution-v1'||body.decisionVersion!==DECISION_VERSION))fail('invalid_control_version');
@@ -1262,7 +1308,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         const guided=isTutorial(s);
         const step=guided?guideFor(s,c,profile).steps[state.tutorialStepIndex]:null;
         if(guided&&!tutorialExecutionKinds(step?.id)?.includes(body.action?.kind))fail('tutorial_step_required',409);
-        const workflow=applyControlAction(state.controlWorkflow,null,body.action,{
+        const workflow=applyControlAction(state.controlWorkflow,null,controlCommand(body.action,state.controlWorkflow),{
           caseData:c,locale:s.locale,timestamp,requestId:body.requestId,expectedRevision:state.controlWorkflow.revision,
         });
         if(guided){

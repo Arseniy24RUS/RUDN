@@ -8,6 +8,10 @@ import {exactCaseScore, seminarPointsAt, tutorialGuide, validatedTutorialMemo, S
 import {resolveLegalCitation} from './correspondence-legal-sources.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
+import {explicitQAReview} from '../../../scripts/reception-correspondence-qa-cases.mjs';
+import {MFC_SEMINAR_VERSION} from './mfc-seminar.mjs';
+import {calculateWorkbookDeadline} from './workbook-calendar.mjs';
+import {buildCorrespondenceReviewInstructions} from './provider.mjs';
 
 const learner={uid:'journey-test-12345',studentKey:'12345'};
 const other={uid:'journey-test-22222',studentKey:'22222'};
@@ -19,8 +23,8 @@ const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
 const journal='rudn-platform/v1/grades/'+learner.studentKey+'/seminar-5';
 const attemptPath=id=>'rudn-platform/v1/attempts/'+learner.studentKey+'/'+id;
 
-function fixture({store=createMemoryStore(),caseIds,reviews=[],guidedSeminarCore=false}={}) {
-  const cases=createSyntheticReceptionCases().filter(c=>!caseIds||caseIds.includes(c.id));
+function fixture({store=createMemoryStore(),caseIds,reviews=[],guidedSeminarCore=false,reviewDecision,extraCases=[]}={}) {
+  const cases=[...createSyntheticReceptionCases(),...extraCases].filter(c=>!caseIds||caseIds.includes(c.id));
   const example=cases.find(c=>c.id==='complaint-routing');
   example.datePackId='a';
   example.rubric.authored.knowledge={...example.rubric.authored.knowledge,number:'59',actDate:'2006-05-02',articles:['8']};
@@ -30,7 +34,7 @@ function fixture({store=createMemoryStore(),caseIds,reviews=[],guidedSeminarCore
   const provider={
     name:'scripted-journey',
     generate(){throw Error('The automated walkthrough must not need the actor');},
-    reviewDecision(){throw Error('A tutorial must not call the reviewer');},
+    reviewDecision:reviewDecision||(()=>{throw Error('A tutorial must not call the reviewer');}),
     async answerMentor(input){calls.push(input);return {reply:'Уточните компетенцию по материалам дела.',usage:{inputTokens:10,outputTokens:5}};},
     async reviewMentorWork(input){
       reviewCalls.push(input);
@@ -56,7 +60,7 @@ function fixture({store=createMemoryStore(),caseIds,reviews=[],guidedSeminarCore
   };
   async function guide(view){
     const c=(await store.get('sessions/'+view.id)).caseData[0];
-    return tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true,core:Boolean(view.coreStepsVersion)});
+    return tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true,core:Boolean(view.coreStepsVersion),coreStepsVersion:view.coreStepsVersion});
   }
   return {store,handle,start,send,recover,finish,answer,guide,calls,reviewCalls};
 }
@@ -375,6 +379,141 @@ const coreCalendar = decision => ({deadline:decision.deadline,referralDeadline:d
 const coreCitations = decision => decision.correspondence.citations.filter(row=>row.kind==='legal');
 const coreSend = (h,view,stepId,data,requestId='core-'+view.revision) => h.send(view,{
   op:view.journeyStage==='independent'?'core-step':'tutorial-step',stepId,requestId,...data
+});
+const mfcStart=(h,stage,requestId)=>h.handle({...startBody(stage,requestId),coreStepsVersion:MFC_SEMINAR_VERSION},learner);
+const mfcRecover=(h,stage)=>h.handle({...options,op:'recover',journeyStage:stage,mode:stage==='independent'?'independent':'training',
+  coreStepsVersion:MFC_SEMINAR_VERSION},learner);
+
+test('MFC sample uses separate deadlines, a real recipient and a substantive draft while preserving a legacy attempt',async()=>{
+  const h=fixture({guidedSeminarCore:true});
+  const legacy=(await h.start('example','before-mfc')).view;
+  assert.equal(legacy.coreStepsVersion,'guided-core-v1');
+  const legacySnapshot=await h.store.get('sessions/'+legacy.id);
+  let {view}=await mfcStart(h,'example','mfc-sample');
+  assert.notEqual(view.id,legacy.id);
+  assert.equal(view.coreStepsVersion,MFC_SEMINAR_VERSION);
+  assert.match(view.case.role.title,/МФЦ/);
+  assert.equal(view.case.role.authorityContext.title,legacy.case.role.title);
+  assert.equal(view.messages[0].text,legacy.messages[0].text);
+  assert.equal(view.case.workbook.routingPolicy.allowInternal,false);
+  assert.deepEqual(view.case.workbook.targets.map(row=>[row.id,row.anchorId]),[['referral','intakeRegistered'],['deadline','recipientRegistered']]);
+  const dates=Object.fromEntries(view.case.workbook.events.map(row=>[row.id,row.date]));
+  assert.notEqual(dates.intakeRegistered,dates.recipientRegistered);
+  const recovered=await mfcRecover(h,'example');
+  assert.equal(recovered.view.id,view.id);
+  assert.deepEqual(recovered.legacySessions,[{id:legacy.id,journeyStage:'example'}]);
+  assert.equal((await h.recover('example')).view.id,legacy.id);
+  const resumed=await h.handle({context:options.context,workbookVersion:options.workbookVersion,decisionVersion:options.decisionVersion,
+    op:'resume',sessionId:legacy.id},learner);
+  assert.equal(resumed.view.coreStepsVersion,'guided-core-v1');
+  assert.deepEqual(await h.store.get('sessions/'+legacy.id),legacySnapshot);
+
+  view=(await h.answer(view,'reception','role')).view;
+  const {decision}=view.guidance;
+  for(const target of view.case.workbook.targets){
+    const expected=calculateWorkbookDeadline({anchorDate:dates[target.anchorId],ruleId:target.ruleId,...target.counting});
+    assert.equal(target.id==='referral'?decision.workbook.referralDeadline:decision.deadline,expected);
+  }
+  assert.equal(decision.workbook.routing.disposition,'forward');
+  assert.ok(decision.workbook.routing.recipientIds.length);
+  assert.notDeepEqual(decision.workbook.routing.recipientIds,['independent-review']);
+  assert.match(decision.correspondence.sections.resolution,/сопостав|документ/);
+  assert.match(decision.correspondence.sections.nextSteps,/МФЦ/);
+  view=(await coreSend(h,view,'materials',{citations:coreCitations(decision)})).view;
+  await assert.rejects(coreSend(h,view,'calendar',{calendar:{...coreCalendar(decision),referralDeadline:''}}),err('core_calendar_required'));
+  view=(await coreSend(h,view,'calendar',{calendar:coreCalendar(decision)})).view;
+  await assert.rejects(coreSend(h,view,'route',{routing:{disposition:'internal',recipientIds:[]}}),error=>['core_route_required','invalid_decision'].includes(error.code));
+  view=(await coreSend(h,view,'route',{routing:decision.workbook.routing})).view;
+  for(const documentId of view.guidance.steps.find(step=>step.id==='materials').documentIds)
+    view=(await h.handle({op:'document',sessionId:view.id,requestId:'mfc-open-'+documentId,documentId},learner)).view;
+  view=(await coreSend(h,view,'draft',{decision})).view;
+  assert.equal(view.status,'followup');
+  assert.equal((await h.store.get('sessions/'+view.id)).caseStates[0].controlWorkflow.initialRouting.correct,true);
+});
+
+test('several issues use one MFC reply and a referral-only draft cannot pass with full points on other criteria',async()=>{
+  const sample=createSyntheticReceptionCases().find(c=>c.id==='ads-consent');
+  sample.id='several-issues';
+  let received,controlContext;
+  const h=fixture({guidedSeminarCore:true,caseIds:['complaint-routing','several-issues'],extraCases:[sample],reviewDecision:async({context})=>{
+    const review=explicitQAReview(context);
+    if(context.phase==='initial'){
+      received=context;
+      const resolution=review.criteria.find(row=>row.id==='resolution');
+      resolution.level=0;
+      resolution.findings=[{type:'missing',section:'resolution',quote:'',sourceIds:['case-author-explanation'],
+        explanation:'Нет вывода по вопросам транспорта и обработки данных.'}];
+    }else controlContext=context;
+    return {review,verified:true,usage:{inputTokens:0,outputTokens:0}};
+  }});
+  await h.store.transaction(ledger,()=>({bestPoints:4,guidedJourney:{example:{completed:true},mentor:{completed:true}}}));
+  let {view}=await mfcStart(h,'independent','mfc-assessment');
+  assert.equal(view.seminarProgress.seminarPoints,4);
+  assert.equal(view.guidance,undefined);
+  const guide=await h.guide(view), decision=structuredClone(guide.decision);
+  assert.equal(guide.sharedReply,true);
+  assert.equal(decision.workbook.routing.recipientIds.length,2);
+  assert.deepEqual(decision.correspondence.orders,[]);
+  assert.match(decision.correspondence.sections.resolution,/транспортного обращения.+персональные данные/);
+  const citations=coreCitations(decision);
+  for(const evidence of decision.correspondence.citations.filter(row=>row.kind==='document'))
+    view=(await h.handle({op:'document',sessionId:view.id,requestId:'mfc-open-'+evidence.sourceId,documentId:evidence.sourceId},learner)).view;
+  decision.correspondence.orders=[];
+  view=(await coreSend(h,view,'materials',{citations})).view;
+  view=(await coreSend(h,view,'calendar',{calendar:coreCalendar(decision)})).view;
+  view=(await coreSend(h,view,'route',{routing:decision.workbook.routing})).view;
+  const blank=structuredClone(decision);
+  blank.correspondence.sections.resolution='';
+  await assert.rejects(h.send(view,{op:'decide',requestId:'blank-resolution',decision:blank}),err('invalid_correspondence'));
+  assert.equal(received,undefined);
+  decision.correspondence.sections.resolution='Направим материалы по компетенции.';
+  view=(await h.send(view,{op:'decide',requestId:'mfc-draft',decision})).view;
+  assert.equal(view.status,'followup');
+  assert.equal(view.controlWorkflow.sharedReply,true);
+  assert.match(received.role,/МФЦ/);
+  assert.equal(received.mfcReception.sharedReply,true);
+  assert.equal(received.profile.criteria.resolution.expectedActionIds.includes('scope'),false);
+  assert.equal(received.acceptablePlans.some(plan=>plan.actions.some(action=>['scope','protect','route'].includes(action.id))),false);
+  assert.match(buildCorrespondenceReviewInstructions(received),/never require or award points for allocating individual questions/);
+  assert.equal(received.mfcReception.authorityContext.title,view.case.role.authorityContext.title);
+  assert.equal(received.sections.resolution,decision.correspondence.sections.resolution);
+  assert.equal(received.operational.workbook.routing.correct,true);
+  assert.deepEqual(received.operational.workbook.calendar.correct,{referral:true,deadline:true,registrationTimely:true});
+  const saved=await h.store.get('sessions/'+view.id);
+  const score=saved.caseStates[0].correspondenceInitialFeedback;
+  assert.equal(score.criteria.find(row=>row.id==='resolution').earned,0);
+  assert.equal(score.correspondence.rawScore,80);
+  assert.equal(score.score,60);
+  assert.match(score.correspondence.capExplanation.ru,/решение по существу/);
+  assert.equal((await mfcRecover(h,'independent')).view.id,view.id);
+
+  const specs=saved.caseStates[0].controlWorkflow.definition.issues;
+  const action=(kind,issueId,params)=>h.send(view,{op:'control-action',requestId:'mfc-control-'+view.revision,
+    action:{kind,issueId,reason:'Проверить подтверждение результата именно по указанному вопросу.',...params}});
+  for(const spec of specs){
+    const issue=view.controlWorkflow.issues.find(row=>row.id===spec.id);
+    assert.equal(issue.availableActions.find(row=>row.kind==='request_evidence').requiresRecipients,false);
+    assert.equal(issue.availableActions.some(row=>row.kind==='notify'),false);
+    view=(await action('request_evidence',issue.id,{recipientIds:[],dueDate:decision.deadline,
+      instruction:'Представить мотивированное заключение по проверке.',expectedResult:'Подтверждение результата проверки.',
+      evidenceSourceIds:[issue.materialIds[0]]})).view;
+    assert.equal(view.controlWorkflow.journal.at(-1).outcome,'request_received');
+    const evidenceSourceIds=[spec.responseMaterialId];
+    view=(await action('verify',issue.id,{evidenceSourceIds})).view;
+    view=(await action('close',issue.id,{evidenceSourceIds})).view;
+    assert.equal(view.controlWorkflow.journal.at(-1).outcome,'closed');
+  }
+  assert.equal(view.controlWorkflow.journal.some(row=>row.kind==='notify'),false);
+  const current=await h.store.get('sessions/'+view.id);
+  const control=validatedTutorialMemo(current.caseStates[0].controlWorkflow,executionQAProfiles.private(current.caseData[0]),guide,'ru');
+  view=(await h.send(view,{op:'followup',requestId:'mfc-final-control',control})).view;
+  assert.equal(view.status,'review');
+  assert.ok(controlContext.execution.issues.every(issue=>!Object.hasOwn(issue,'acceptedRecipientSets')));
+  view=(await h.finish(view)).view;
+  assert.equal(view.result.cases[0].feedback.correspondence.controlScore,100);
+  assert.equal(view.result.total,68);
+  assert.equal(view.result.points,0);
+  assert.equal(view.seminarProgress.seminarPoints,4);
 });
 
 test('new example requires the selected legal provision, real dates and a considered internal route',async()=>{

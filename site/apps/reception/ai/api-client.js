@@ -9,7 +9,7 @@ export const newRequestId = () => globalThis.crypto?.randomUUID?.()
   || `rxai-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
 export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: fetcher = globalThis.fetch,
-  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, decisionVersion, controlVersion, context} = {}) {
+  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, decisionVersion, controlVersion, coreStepsVersion, context} = {}) {
   const resolveEndpoint = () => {
     if (!endpoint) throw new ReceptionAPIError('not-configured');
     let url;
@@ -27,6 +27,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
     async request(body, {signal, withProgress = false} = {}) {
       if(context && (['start','recover','resume'].includes(body.op)||context==='free'&&body.op==='catalog')) body={...body,context};
       if(buildId && ['start','recover','resume'].includes(body.op)) body={...body,buildId};
+      if(context==='seminar'&&coreStepsVersion&&body.op==='recover'&&body.journeyStage)body={...body,coreStepsVersion};
       if(workbookVersion&&['start','catalog','recover','resume'].includes(body.op))body={...body,workbookVersion};
       // A resumed session retains its own assessment contract.
       if(decisionVersion==='correspondence-v1'&&['start','catalog','recover'].includes(body.op))body={...body,decisionVersion};
@@ -75,7 +76,9 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
           const view = packet.view;
           const withRecoveryProgress = withProgress && body.op === 'recover';
           const recovery = () => ({view, seminarProgress:packet.seminarProgress || view?.seminarProgress || null,
-            ...(typeof packet.legacySessionId==='string'&&packet.legacySessionId ? {legacySessionId:packet.legacySessionId} : {})});
+            ...(typeof packet.legacySessionId==='string'&&packet.legacySessionId ? {legacySessionId:packet.legacySessionId} : {}),
+            ...(Array.isArray(packet.legacySessions)?{legacySessions:packet.legacySessions.slice(0,12).filter(row=>
+              /^[a-f0-9]{40}$/.test(row?.id||'')&&['example','mentor','independent'].includes(row.journeyStage))}:{})});
           if (body.op === 'recover' && view === null) return withRecoveryProgress ? recovery() : null;
           if (!view || typeof view.id !== 'string' || !Number.isInteger(view.revision)
             || !['active', 'followup', 'review', 'complete'].includes(view.status) || !Array.isArray(view.messages)) {

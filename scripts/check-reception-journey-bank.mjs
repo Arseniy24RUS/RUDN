@@ -4,6 +4,8 @@ import {readFile, readdir} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {createReceptionService} from '../firebase/functions/reception-ai/service.mjs';
 import {createMemoryStore} from '../firebase/functions/reception-ai/store.mjs';
+import {MFC_ROUTING_AUTHORITY_IDS} from '../firebase/functions/reception-ai/routing-directory.mjs';
+import {calculateWorkbookDeadline} from '../firebase/functions/reception-ai/workbook-calendar.mjs';
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
 import {SEMINAR_EXAMPLE, tutorialGuide, tutorialExecutionAction, validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
@@ -12,11 +14,13 @@ import {createScriptedCorrespondenceReviewer} from './reception-correspondence-t
 
 const bank = process.argv[2];
 if (!bank) throw Error('Supply a frozen case directory');
-const limit = Number(process.argv[3] || Infinity);
+const limit = Number(process.argv.slice(3).find(arg=>!arg.startsWith('--')) || Infinity);
+const legacy = process.argv.includes('--legacy');
+const coreStepsVersion = legacy ? 'guided-core-v1' : 'mfc-referral-v2';
 const identity = {uid:'offline-practice', studentKey:'99990001'};
 const progressPath = 'seminarProgress/'+hash('student:'+identity.studentKey);
 const options = {context:'seminar', workbookVersion:2, decisionVersion:'correspondence-v1', controlVersion:'execution-v1'};
-const counts = {examples:0, mentoredCases:0, scoredCases:0, citations:0, internalRoutes:0, forwardingRoutes:0};
+const counts = {doubleDeadlines:0, multipleRecipients:0, examples:0, mentoredCases:0, scoredCases:0, citations:0, internalRoutes:0, forwardingRoutes:0};
 const failures = [];
 const controlSteps = ['control-request', 'control-evidence', 'control-status'];
 
@@ -39,13 +43,31 @@ async function checkCase(c, locale, stage) {
     catch(error){error.operation=[body.op,body.stepId].filter(Boolean).join('/');throw error;}
   };
   let view = await handle({...options, op:'start', mode:scored?'independent':'training',
-    journeyStage:stage, locale, requestId:'start'});
+    ...(legacy ? {} : {coreStepsVersion}), journeyStage:stage, locale, requestId:'start'});
   assert.equal(view.case.id,c.id);
-  assert.equal(view.coreStepsVersion,'guided-core-v1');
+  assert.equal(view.coreStepsVersion,coreStepsVersion);
   if(scored) assert.ok(!view.guidance && !view.mentorMessages);
   const profile = privateCorrespondenceProfile(c,locale);
-  const guide = tutorialGuide(c,profile,locale,{execution:true,core:true});
+  const guide = tutorialGuide(c,profile,locale,{execution:true,core:true,coreStepsVersion});
   const {decision} = guide;
+  if (!legacy) {
+    const wb = view.case.workbook;
+    assert.equal(wb.routingPolicy.allowInternal,false);
+    assert.deepEqual(Object.keys(decision.workbook.routing).sort(),['disposition','recipientIds']);
+    assert.equal(decision.workbook.routing.disposition,'forward');
+    if (decision.workbook.routing.recipientIds.length>1) counts.multipleRecipients++;
+    assert.ok(decision.workbook.routing.recipientIds.every(id=>MFC_ROUTING_AUTHORITY_IDS.has(id)));
+    assert.deepEqual(wb.targets.map(target=>target.id),['referral','deadline']);
+    const events = new Map(wb.events.map(event=>[event.id,event.date]));
+    assert.equal(wb.targets[0].anchorId,'intakeRegistered');
+    for (const target of wb.targets) {
+      const anchorDate = events.get(target.anchorId);
+      assert.ok(anchorDate,target.anchorId);
+      const expected = calculateWorkbookDeadline({anchorDate,ruleId:target.ruleId,...target.counting});
+      assert.equal(target.id==='referral' ? decision.workbook.referralDeadline : decision.deadline,expected,target.id);
+    }
+    counts.doubleDeadlines++;
+  }
   const citations = decision.correspondence.citations.filter(row=>row.kind==='legal');
   assert.ok(citations.length);
   assert.deepEqual(citations.map(row=>row.sourceId).sort(),view.case.normativeActs.map(row=>row.id).sort());
@@ -99,7 +121,7 @@ async function checkCase(c, locale, stage) {
   assert.equal(writes,scored?1:0);
   if(scored) counts.scoredCases++;
   else {
-    assert.ok((await store.get(progressPath)).guidedJourney[stage].completed);
+    assert.ok((await store.get(progressPath))[legacy?'guidedJourney':'mfcJourney'][stage].completed);
     if(stage==='example') counts.examples++;
     else counts.mentoredCases++;
   }
@@ -121,5 +143,5 @@ for(const file of files){
     }
   }
 }
-console.log(JSON.stringify({counts,failures}));
+console.log(JSON.stringify({coreStepsVersion,counts,failures}));
 if(failures.length)process.exitCode=1;

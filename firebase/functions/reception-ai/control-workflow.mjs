@@ -222,7 +222,7 @@ function refresh(s){
   return s;
 }
 
-export function createControlWorkflow({caseData,profile,decision,initialFeedback,locale='ru',timestamp,reviewBudgetBytes=L.reviewContributionBytes}={}){
+export function createControlWorkflow({caseData,profile,decision,initialFeedback,locale='ru',timestamp,sharedReply=false,reviewBudgetBytes=L.reviewContributionBytes}={}){
   if(!object(caseData)||!caseData.id)invalidDefinition();
   if(!Number.isSafeInteger(reviewBudgetBytes)||reviewBudgetBytes<2048||reviewBudgetBytes>L.reviewContributionBytes)error('invalid_control_capacity',503);
   const definition=definitionFrom(profile,caseData);at(timestamp);
@@ -230,6 +230,7 @@ export function createControlWorkflow({caseData,profile,decision,initialFeedback
     correct:typeof initialFeedback?.workbook?.routing?.correct==='boolean'?initialFeedback.workbook.routing.correct:null,
     expectedRecipientIds:(initialFeedback?.workbook?.routing?.expectedRecipients||[]).map(row=>row.id).filter(Boolean)};
   const s={version:CONTROL_WORKFLOW_VERSION,revision:1,caseId:caseData.id,caseVersion:caseData.version||'',datePackId:caseData.datePackId||'',
+    ...(sharedReply?{sharedReply:true}:{}),
     definition,definitionHash:digest(definition),initialRouting,budget:{newProseBytes:L.newProseBytes,reviewContributionBytes:reviewBudgetBytes},
     issues:definition.issues.map(issue=>({id:issue.id,title:clone(issue.title),resultType:clone(issue.resultType),scope:clone(issue.scope),
       status:'open',substantiveStatus:['resolved','referred'].includes(issue.initialStatus)?issue.initialStatus:'pending',
@@ -265,6 +266,7 @@ function recipientResult(s,issue,action,{caseData,recipientCheck,initialFeedback
 /** Returns a NEW private workflow state. The input and its journal are never mutated. */
 export function applyControlAction(workflow,profile,command,{caseData,locale='ru',timestamp,requestId,expectedRevision,recipientCheck}={}){
   const s=assertState(workflow),action=actionInput(command),request=id(requestId,120),requestDigest=digest(action);
+  if(s.sharedReply&&action.kind==='notify')error('invalid_control_action');
   if(own(s.receipts,request)){
     if(s.receipts[request].digest!==requestDigest)error('request_conflict',409);
     return s;
@@ -320,7 +322,7 @@ export function applyControlAction(workflow,profile,command,{caseData,locale='ru
     if(issue.status==='closed')outcome='already_closed';
     else if(!action.reason||!selected.length)outcome='closure_reason_required';
     else if(!onlyRelevant||!issue.verifiedEvidenceIds.some(id=>action.evidenceSourceIds.includes(id)))outcome='closure_evidence_required';
-    else if(spec.deliveryRequired&&(!issue.notified||!issue.verifiedEvidenceIds.some(id=>action.evidenceSourceIds.includes(id)&&issue.notificationEvidenceIds.includes(id))))outcome='closure_notice_required';
+    else if(!s.sharedReply&&spec.deliveryRequired&&(!issue.notified||!issue.verifiedEvidenceIds.some(id=>action.evidenceSourceIds.includes(id)&&issue.notificationEvidenceIds.includes(id))))outcome='closure_notice_required';
     else{issue.status='closed';issue.substantiveStatus='resolved';outcome='closed';}
   }else if(action.kind==='keep_open'){
     if(!action.reason||!action.instruction)outcome='next_action_required';
@@ -350,16 +352,16 @@ function materialView(material,locale){
     provenanceLabel:local(PROVENANCE[material.provenance.kind],locale),
     ...(material.factsDoNotEstablish?{factsDoNotEstablish:local(material.factsDoNotEstablish,locale)}:{})};
 }
-function actionsFor(issue,locale){
+function actionsFor(issue,locale,sharedReply){
   const kinds=issue.status==='closed'||issue.status==='referred'?['verify','notify','reopen']:CONTROL_ACTION_KINDS.filter(kind=>kind!=='reopen');
-  return kinds.map(kind=>({kind,label:local(LABELS[kind],locale),requiresInstruction:['request_evidence','notify','keep_open','refer'].includes(kind),
-    requiresRecipients:['request_evidence','refer'].includes(kind),requiresDueDate:kind==='request_evidence'}));
+  return kinds.filter(kind=>!sharedReply||kind!=='notify').map(kind=>({kind,label:local(LABELS[kind],locale),requiresInstruction:['request_evidence','notify','keep_open','refer'].includes(kind),
+    requiresRecipients:!sharedReply&&['request_evidence','refer'].includes(kind),requiresDueDate:kind==='request_evidence'}));
 }
 export function publicControlWorkflow(workflow,profile=null,locale='ru'){
   const s=assertState(workflow);
-  return {version:s.version,revision:s.revision,caseId:s.caseId,status:s.status,
+  return {version:s.version,revision:s.revision,caseId:s.caseId,status:s.status,...(s.sharedReply?{sharedReply:true}:{}),
     issues:s.issues.map(issue=>({id:issue.id,title:local(issue.title,locale),scope:local(issue.scope,locale),resultType:local(issue.resultType,locale),status:issue.status,
-      substantiveStatus:issue.substantiveStatus,materialIds:clone(issue.materialIds),verifiedEvidenceIds:clone(issue.verifiedEvidenceIds),notified:issue.notified,availableActions:actionsFor(issue,locale)})),
+      substantiveStatus:issue.substantiveStatus,materialIds:clone(issue.materialIds),verifiedEvidenceIds:clone(issue.verifiedEvidenceIds),notified:issue.notified,availableActions:actionsFor(issue,locale,s.sharedReply)})),
     materials:s.materials.map(material=>materialView(material,locale)),plannedOrders:clone(s.plannedOrders),
     journal:s.journal.map(({hash,previousHash,...event})=>({...clone(event),label:local(event.label,locale),message:local(event.message,locale)}))};
 }

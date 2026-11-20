@@ -2,6 +2,8 @@ import {parseDateOnly} from './authored.mjs';
 import {resolveCorrespondenceCitations,validateCorrespondenceCitation} from './correspondence.mjs';
 import {hasApplicableLegalCitation,requiredSeminarProvisions} from './normative-acts.mjs';
 import {evaluateRoutingWorkflow,validateRoutingWorkflowDecision} from './routing-workflow.mjs';
+import {evaluateMfcRouting,validateMfcRoutingDecision} from './mfc-routing.mjs';
+import {MFC_SEMINAR_VERSION} from './mfc-seminar.mjs';
 import {ReceptionError,copy,fail,fields,hash} from './schema.mjs';
 import {tutorialOperational} from './seminar-journey.mjs';
 import {WORKBOOK_VERSION,publicWorkbook} from './workbook.mjs';
@@ -18,9 +20,9 @@ export function publicCoreSteps(state,stepId=null) {
     ...(state.coreStepReceipt?{receipt:state.coreStepReceipt}:{})};
 }
 
-function validateCalendar(c,raw) {
+function validateCalendar(c,raw,coreStepsVersion) {
   const {deadline,referralDeadline,registrationTimely}=fields(raw,['deadline','referralDeadline','registrationTimely']);
-  const workbook=publicWorkbook(c,WORKBOOK_VERSION,{gameplay:true});
+  const workbook=publicWorkbook(c,WORKBOOK_VERSION,{gameplay:true,coreStepsVersion});
   const referral=workbook.targets.some(target=>target.id==='referral');
   const dates=referral?[deadline,referralDeadline]:[deadline];
   if(dates.some(date=>!date||parseDateOnly(date)!==date)||
@@ -31,7 +33,7 @@ function validateCalendar(c,raw) {
   return {deadline,referralDeadline,registrationTimely};
 }
 
-export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,guide}) {
+export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,guide,coreStepsVersion}) {
   const field=CORE_STEP_FIELDS[body.stepId];
   if(!field||!Object.hasOwn(body,field)||
     [...Object.values(CORE_STEP_FIELDS),'decision','control','choiceId','useExample','confirmOwn']
@@ -59,17 +61,18 @@ export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,
     return {field,value};
   }
   if(field==='calendar'){
-    const value=validateCalendar(c,raw);
+    const value=validateCalendar(c,raw,coreStepsVersion);
     if(guide){
       const decision={deadline:value.deadline,workbook:{referralDeadline:value.referralDeadline,
         registrationTimely:value.registrationTimely,routing:{recipientIds:[]}}};
-      if(Object.values(tutorialOperational(c,decision).workbook.calendar.correct).some(correct=>!correct))return {finding:'calendar'};
+      if(Object.values(tutorialOperational(c,decision,coreStepsVersion).workbook.calendar.correct).some(correct=>!correct))return {finding:'calendar'};
     }
     return {field,value};
   }
-  const value=validateRoutingWorkflowDecision(raw);
-  if(!value.disposition)fail('core_route_required');
-  if(guide&&!evaluateRoutingWorkflow(c.id,value)?.correct)return {finding:'route'};
+  const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
+  const value=(mfc?validateMfcRoutingDecision:validateRoutingWorkflowDecision)(raw);
+  if(mfc?value.disposition!=='forward':!value.disposition)fail('core_route_required');
+  if(guide&&!(mfc?evaluateMfcRouting:evaluateRoutingWorkflow)(c.id,value)?.correct)return {finding:'route'};
   return {field,value};
 }
 

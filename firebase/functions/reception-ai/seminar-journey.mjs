@@ -2,6 +2,8 @@ import {readFileSync} from 'node:fs';
 import {copy, fail, localized} from './schema.mjs';
 import {evaluateWorkbook, WORKBOOK_VERSION} from './workbook.mjs';
 import {evaluateRoutingWorkflow,isInternalRoutingPath} from './routing-workflow.mjs';
+import {mfcRoutingAlternatives,publicMfcRouting} from './mfc-routing.mjs';
+import {MFC_SEMINAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedReplyInstruction,mfcSharedMerits} from './mfc-seminar.mjs';
 import {CORRESPONDENCE_WEIGHTS} from './correspondence.mjs';
 import {applyControlAction, validateControlSubmission} from './control-workflow.mjs';
 import {acceptableLegalProvisions, applicableLegalUnits, requiredSeminarExamples} from './normative-acts.mjs';
@@ -35,15 +37,18 @@ export function seminarExample(available) {
   return out;
 }
 
-export function tutorialOperational(c, decision) {
+export function tutorialOperational(c, decision,coreStepsVersion) {
   const base = {score:0, criteria:[
     {id:'route', earned:0, max:CORRESPONDENCE_WEIGHTS.initial.route},
     {id:'calendar', earned:0, max:CORRESPONDENCE_WEIGHTS.initial.calendar}
   ], cap:null, explanation:''};
-  return evaluateWorkbook(c, decision, base, WORKBOOK_VERSION, {gameplay:true});
+  return evaluateWorkbook(c, decision, base, WORKBOOK_VERSION, {gameplay:true,coreStepsVersion});
 }
 
 const T = (ru, en, zh) => ({ru,en,zh});
+const jointControl=T('Сопоставьте новое сообщение с материалами дела. Зафиксируйте в одном итоговом заключении, какие результаты подтверждены и какие вопросы остаются открытыми.',
+  'Compare the new information with the case records. Record which outcomes are confirmed and which questions remain open in one final memorandum.',
+  '将新消息与案件材料核对，在一份结论中记录已确认的结果及仍待处理的问题。');
 const copyText = {
   reception:T('Приёмная','Reception','受理'),
   receptionPrompt:T('С чего начать работу в приёмной?','Where do you start at reception?','在受理页面应先做什么？'),
@@ -152,40 +157,61 @@ function walkthroughReply(c, deadline, language, compact) {
   return {kind:'reply',subject:localized(subject,language),sections:localized(compact?concise:sections,language)};
 }
 
-function presentation(c, profile, language, core) {
+function presentation(c, profile, language, core,coreStepsVersion) {
+  const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
   const local = value => localized(value, language) || '';
   const refs = (c.rubric.evidenceGroups || []).flat();
   const docs = [...new Set(refs)].map(id => c.documents.find(doc => doc.id === id)).filter(Boolean);
   if (!docs.length && c.documents.length) docs.push(c.documents[0]);
   const legal = profile.criteria?.legalBasis;
   const ruling = local(c.rubric.explanation) || local(profile.primaryFinding);
-  const facts = c.facts.filter(fact => c.rubric.requiredFactIds.includes(fact.id)).map(fact => local(fact.text));
-  const actions = (profile.expectedActions || []).map(action => local(action.text)).filter(Boolean);
-  const recipients = evaluateRoutingWorkflow(c.id,{recipientIds:[]}).expectedRecipients;
+  const mfcRouting=mfc?publicMfcRouting(c.id):null;
+  const sharedReply=mfcUsesSharedReply(coreStepsVersion,mfcRouting);
+  const legacyDispatch=sharedReply?mfcLegacyDispatchActions(c.id):new Set();
+  const facts = c.facts.filter(fact => c.rubric.requiredFactIds.includes(fact.id)&&
+    !(sharedReply&&c.id==='several-minimum-attachments'&&fact.id==='q1')).map(fact => local(fact.text));
+  const plan=mfc?profile.acceptablePlans?.[0]:null;
+  const actionText=action=>mfc?(local(c.public.actions.find(row=>row.id===action?.id)?.label)||local(action?.text)):local(action?.text);
+  const actions = (profile.expectedActions || []).filter(action=>(!plan||plan.requiredActionIds.includes(action.id))&&!legacyDispatch.has(action.id))
+    .map(actionText).filter(Boolean);
+  const recipients = mfc?mfcRoutingAlternatives(c.id)?.[0]:evaluateRoutingWorkflow(c.id,{recipientIds:[]}).expectedRecipients;
+  if(!recipients?.length)fail('invalid_case',503);
   const recipientIds = recipients.map(recipient => recipient.id);
-  const recipientText = c.id===SEMINAR_EXAMPLE.caseId
+  const recipientNames=recipients.map(recipient=>mfc?mfcAuthorityName(recipient,language):local(recipient.name));
+  const recipientText = !mfc&&c.id===SEMINAR_EXAMPLE.caseId
     ? local(T('Руководитель или независимое уполномоченное подразделение','Director or independent authorised unit','负责人或独立授权部门'))
-    : recipients.length?recipients.map(recipient=>local(recipient.name)).join(' / ')
-      : local(T('Рассмотрите обращение внутри органа.','Review the appeal within the authority.','由本机关内部审查来信。'));
-  const workbook = {referralDeadline:'', registrationTimely:false, routing:{recipientIds}};
-  const calculation=tutorialOperational(c,{deadline:'',workbook}).workbook.calendar;
+    : mfc?new Intl.ListFormat(language,{type:'conjunction'}).format(recipientNames):recipientNames.join(' / ');
+  const workbook = {referralDeadline:'', registrationTimely:false, routing:{recipientIds,...(mfc?{disposition:'forward'}:{})}};
+  const calculation=tutorialOperational(c,{deadline:'',workbook},coreStepsVersion).workbook.calendar;
   const {expected}=calculation;
   workbook.referralDeadline = expected.referral || '';
   workbook.registrationTimely = expected.registrationTimely ?? false;
   const calendarExplanation = local(calculation.instructions);
-  const deadlineText = T(`Крайний срок ответа — ${expected.deadline}.`,`Response deadline: ${expected.deadline}.`,`答复截止日期为 ${expected.deadline}。`);
+  const deadlineText = mfc?`${local(calculation.targets.find(target=>target.id==='deadline').label)} — ${expected.deadline}.`
+    :T(`Крайний срок ответа — ${expected.deadline}.`,`Response deadline: ${expected.deadline}.`,`答复截止日期为 ${expected.deadline}。`);
   const referralText = expected.referral ? T(`Крайний срок передачи — ${expected.referral}.`,`Referral deadline: ${expected.referral}.`,`转送截止日期为 ${expected.referral}。`) : '';
   const registrationText = Object.hasOwn(expected,'registrationTimely') ? local(expected.registrationTimely
     ? T('Регистрация своевременна.','Registration was timely.','登记及时。')
     : T('Срок регистрации нарушен.','Registration was late.','登记超期。')) : '';
   const timetable = [local(referralText),local(deadlineText),registrationText].filter(Boolean).join(' ');
-  const legalExplanation = [local(legal?.explanation),local(legal?.expectedApplication)].filter(Boolean).join(' ') || ruling;
+  const authored=c.rubric.authored;
+  const knowledge=c.public.assessment?.knowledge?.options.find(row=>row.id===authored?.knowledge?.correct);
+  const jointConclusion=sharedReply?local(mfcSharedMerits[c.id]):'';
+  const legalExplanation = jointConclusion||(mfc&&local(knowledge?.label))||[local(legal?.explanation),local(legal?.expectedApplication)].filter(Boolean).join(' ') || ruling;
+  const findings=mfc?(c.public.assessment?.fact?.options||[]).filter(row=>authored?.factIds?.includes(row.id)).map(row=>local(row.label)) : [];
+  const routingPolicy=mfcRouting?.routingPolicy;
+  const boundary=local(routingPolicy?.boundary),routingContext=local(routingPolicy?.context);
+  const transfer=mfc?local(recipientIds.length>1?
+    T(`Адресаты одного обращения — ${recipientText}.`,`Recipients of this appeal: ${recipientText}.`,`此件来信的接收方：${recipientText}。`):
+    T(`Адресат передачи из МФЦ — ${recipientText}.`,`MFC referral recipient: ${recipientText}.`,`MFC 转交的接收方：${recipientText}。`)):'';
   const sections = {
-    facts:(core&&facts.length?facts:[...facts,ruling]).filter(Boolean).join('\n\n'),
+    facts:(mfc?[...facts,routingContext]:core&&facts.length?facts:[...facts,ruling]).filter(Boolean).join('\n\n'),
     legalBasis:legalExplanation,
-    resolution:[recipientText,...(core?actions.slice(0,2):actions)].filter(Boolean).join('\n'),
-    nextSteps:[timetable,local(profile.criteria?.nextSteps?.rightsAction?.text),
-      ...(profile.criteria?.nextSteps?.monitoringActions || []).map(action=>local(action.text))].filter(Boolean).join('\n')
+    resolution:(mfc?[...(jointConclusion?[jointConclusion]:findings),...actions]:
+      [recipientText,...(core?actions.slice(0,2):actions)]).filter(Boolean).join('\n'),
+    nextSteps:[transfer,boundary,timetable,sharedReply?local(mfcSharedReplyInstruction):'',
+      ...[profile.criteria?.nextSteps?.rightsAction,...(profile.criteria?.nextSteps?.monitoringActions||[])]
+        .filter(action=>!legacyDispatch.has(action?.id)).map(actionText)].filter(Boolean).join('\n')
   };
   const citations = docs.slice(0,8).map((doc,index) => ({id:`evidence-${index+1}`,section:'facts',kind:'document',sourceId:doc.id,
     quote:local(doc.text).trim().slice(0,4000)})).filter(citation=>citation.quote);
@@ -200,11 +226,25 @@ function presentation(c, profile, language, core) {
     expectedResult:local(T('Мотивированное решение руководителя по каждому доводу и подтверждение отправки ответа заявителю.','A reasoned decision by the director on each point and proof that a reply was sent to the applicant.','由负责人就各项理由作出有根据的决定，并保留给申请人发送答复的凭证。')),
     citationIds:citations.map(citation=>citation.id)
   }]:[];
-  const reply=c.id===SEMINAR_EXAMPLE.caseId ? walkthroughReply(c,expected.deadline,language,core) : {
+  const reply=c.id===SEMINAR_EXAMPLE.caseId ? walkthroughReply(c,expected.deadline,language,core&&!mfc) : {
     kind:profile.acceptedKinds?.[0]||'reply',subject:local(c.public.title).slice(0,240),sections
   };
+  if(mfc&&c.id===SEMINAR_EXAMPLE.caseId){
+    reply.sections.facts=local(T(
+      'В МФЦ поступили материалы жалобы. Заявитель сообщает, что начальник отдела оставил его прежние доводы без рассмотрения. Он просит проверить действия начальника и разъяснить, кто рассмотрит жалобу.',
+      'The MFC has received the complaint file. The applicant reports that the division head overlooked the points in an earlier appeal. The applicant asks for a review of the division head’s conduct and an explanation of who will handle the complaint.',
+      'MFC 已收到投诉材料。申请人称处长未审查其此前来信中的理由，请求核查处长的处理情况并说明由谁处理投诉。'));
+    reply.sections.resolution+=' '+local(T(
+      'Если нерассмотренные доводы подтвердятся, руководитель обеспечит их рассмотрение и даст мотивированный ответ по каждому из них. Если материалы подтвердят, что доводы уже рассмотрены, руководитель приведёт конкретные основания этого вывода.',
+      'If the record shows that any point was overlooked, the director will ensure that it is considered and give a reasoned reply on each point. If the record shows that the points were addressed, the director will cite the evidence for that finding.',
+      '如材料证实存在遗漏，负责人将确保审查遗漏的理由并逐项作出有理由的答复。如材料证实此前已审查相关理由，负责人将说明该结论的具体依据。'));
+    reply.sections.nextSteps=[transfer,boundary,timetable,local(T(
+      'МФЦ сообщает заявителю, куда переданы материалы. Руководитель департамента готовит письменный ответ с выводом по каждому доводу и направляет его по адресу для переписки.',
+      'The MFC informs the applicant where the file was referred. The department director prepares a written reply with a finding on each point and sends it to the correspondence address.',
+      'MFC 告知申请人材料的转交去向。部门负责人逐项作出结论，并按通信地址寄送书面答复。'))].filter(Boolean).join('\n');
+  }
   const decision = {deadline:expected.deadline,workbook,correspondence:{version:1,...reply,citations,orders}};
-  return {decision,docs,facts,timetable,calendarExplanation,legalExplanation:reply.sections.legalBasis,recipientText};
+  return {decision,docs,facts,timetable,calendarExplanation,legalExplanation:reply.sections.legalBasis,recipientText,boundary,routingContext,sharedReply};
 }
 
 export function walkthroughControlProfile(c, profile) {
@@ -223,11 +263,13 @@ export function walkthroughControlProfile(c, profile) {
   return prepared;
 }
 
-export function tutorialGuide(c, profile, language, {execution=false,core=false}={}) {
+export function tutorialGuide(c, profile, language, {execution=false,core=false,coreStepsVersion}={}) {
   const text = key => localized(copyText[key],language);
   const local = value => localized(value,language) || '';
-  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText} = presentation(c,profile,language,core);
-  const roleExplanation=c.id===SEMINAR_EXAMPLE.caseId
+  const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
+  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText,boundary,routingContext,sharedReply} = presentation(c,profile,language,core,coreStepsVersion);
+  const role=mfc?mfcRole(c.public.role,language,sharedReply):null;
+  const roleExplanation=mfc?role.text:c.id===SEMINAR_EXAMPLE.caseId
     ? local(T('Вы готовите материалы для руководителя департамента. Жалоба касается начальника отдела. В карточке выделите предмет жалобы и проверьте, кто вправе её рассматривать. Затем решите, кому направить материалы.',
       'You prepare the file for the department director. The complaint concerns the division head. Identify the subject of the complaint and check who has authority to review it. Then decide who should receive the records.',
       '你负责为部门负责人准备材料。投诉涉及处长。先在事项卡片中确定投诉对象和内容，核对谁有权审查，再决定将材料交给谁。'))
@@ -235,7 +277,7 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false}
       'Read the appeal and check your authority in the case card. Identify what you need to find out before you choose how to proceed.',
       '在事项卡片中阅读来信并核对自身职权。先确定还需查明哪些情况，再选择下一步。'))].join('. ');
   const routeOptions = c.public.routes;
-  const initialControl = c.followup ? local(c.followup.explanation) : text('reviewExplanation');
+  const initialControl = sharedReply?local(jointControl):c.followup ? local(c.followup.explanation) : text('reviewExplanation');
   const steps = [
     {id:'reception',panel:'reception',action:'read',title:text('reception'),prompt:text('receptionPrompt'),
       explanation:roleExplanation,choices:choose(['assume','role'],'role',[text('immediateReply'),text('verifyRole')])},
@@ -252,8 +294,9 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false}
       choices:routeOptions.length > 1 ? routeOptions.map(option=>({id:option.id,label:local(option.label),correct:c.rubric.routeIds.includes(option.id)}))
         : choose(['route','guess'],'route',[text('useWorkbook'),text('guessRecipient')])},
     ...(c.followup ? [{id:'control',panel:'decision',action:execution?'read':'control',title:text('control'),prompt:text('controlPrompt'),
-      explanation:initialControl,choices:c.followup.options.map(option=>({id:option.id,label:local(option.label),correct:option.id===c.followup.correct}))}] : []),
-    ...(c.followup && execution ? executionSteps(language) : []),
+      explanation:initialControl,choices:c.followup.options.map(option=>({id:option.id,
+        label:sharedReply&&option.id===c.followup.correct?local(jointControl):local(option.label),correct:option.id===c.followup.correct}))}] : []),
+    ...(c.followup && execution ? executionSteps(language,sharedReply) : []),
     {id:'review',panel:'decision',action:'review',title:text('review'),prompt:text('reviewPrompt'),
       explanation:text('reviewExplanation'),choices:choose(['draft-only','verified'],'verified',[text('justDraft'),text('reviewResult')])}
   ];
@@ -267,29 +310,35 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false}
     materials.prompt=local(T('Откройте правовой источник и выделите фрагмент статьи или пункта.','Open the legal source and select a passage from an article or clause.','打开法规来源并选中具体条款。'));
     materials.choices=[];
     const calendar=steps.find(step=>step.id==='calendar');
-    calendar.prompt=local(T('Выберите рассчитанные даты в календаре.','Select the calculated dates in the calendar.','在日历中选择计算出的日期。'));
+    calendar.prompt=local(mfc?T('Укажите две даты: срок передачи из МФЦ и срок рассмотрения у адресата.','Enter the MFC referral deadline and the recipient’s review deadline.','填写 MFC 转交截止日与主管接收方审查截止日。'):
+      T('Выберите рассчитанные даты в календаре.','Select the calculated dates in the calendar.','在日历中选择计算出的日期。'));
     calendar.choices=[];
     const routing=decision.workbook.routing;
-    decision.workbook.routing=routing.recipientIds.every(id=>isInternalRoutingPath(c.id,id))
+    if(!mfc)decision.workbook.routing=routing.recipientIds.every(id=>isInternalRoutingPath(c.id,id))
       ? {recipientIds:[],disposition:'internal'} : {...routing,disposition:'forward'};
     const draft=steps.find(step=>step.id==='draft');
-    draft.prompt=local(T('Кратко изложите факты, правовое основание, решение и следующий шаг.','Briefly state the facts, legal grounds, decision and next step.','简述事实、法律依据、处理决定和下一步。'));
+    draft.prompt=local(mfc?T('Изложите факты и правовое основание. Сформулируйте решение, которое может принять адресат, и укажите, как МФЦ сообщит о передаче.','Set out the facts and legal grounds. Draft the recipient’s substantive decision and explain how the MFC will communicate the referral.','陈述事实与法律依据，拟写主管接收方可作出的实质处理决定，并说明 MFC 如何告知转交情况。'):
+      T('Кратко изложите факты, правовое основание, решение и следующий шаг.','Briefly state the facts, legal grounds, decision and next step.','简述事实、法律依据、处理决定和下一步。'));
+    if(sharedReply)draft.prompt=local(mfcSharedReplyInstruction);
     draft.choices=[];
     steps.splice(steps.indexOf(draft),0,{id:'route',panel:'route',action:'route',
       title:local(T('Маршрут','Route','办理路径')),
-      prompt:local(T('Выберите рассмотрение внутри органа или укажите адресата пересылки.','Choose internal review or select the referral recipient.','选择内部审查或确定转送对象。')),
-      explanation:recipientText,choices:[]});
+      prompt:local(sharedReply?T('Отметьте всех адресатов одного обращения.','Select all recipients of this single appeal.','选择此一件来信的全部接收方。'):mfc?T('Укажите, кому МФЦ должен передать материалы.','Select the recipient for the MFC referral.','选择 MFC 转交材料的接收方。'):
+        T('Выберите рассмотрение внутри органа или укажите адресата пересылки.','Choose internal review or select the referral recipient.','选择内部审查或确定转送对象。')),
+      explanation:[recipientText,routingContext,boundary].filter(Boolean).join('\n'),choices:[]});
   }
   const statuses = profile.control?.expectedStatuses || [];
   const control = {text:initialControl,
     statuses:statuses.map(row=>({issueId:row.issueId,status:row.allowedStatuses[0],evidenceSourceIds:['followup']}))};
-  return {caseTitle:local(c.public.title),role:local(c.public.role.text),steps,decision,control};
+  return {caseTitle:local(c.public.title),role:role?.text||local(c.public.role.text),steps,decision,control,
+    ...(mfc?{coreStepsVersion,authorityContext:role.authorityContext,routingContext,routingBoundary:boundary,sharedReply}:{})};
 }
 
 export function publicTutorialGuide(guide, session) {
   const state = session.caseStates[session.caseIndex], example = session.journeyStage==='example';
   const stepIndex = state.tutorialStepIndex || 0;
-  const actions=example&&!session.coreStepsVersion?null:tutorialExecutionKinds(guide.steps[stepIndex]?.id);
+  const allowed=example&&!session.coreStepsVersion?null:tutorialExecutionKinds(guide.steps[stepIndex]?.id);
+  const actions=guide.sharedReply?allowed?.filter(kind=>kind!=='notify'):allowed;
   return {stepIndex,...(actions?{allowedControlActions:actions}:{}),steps:guide.steps.map(({choices,explanation,...step},index)=>{
     const visited = index <= stepIndex;
     const correctChoiceId = choices.find(choice=>choice.correct)?.id;
@@ -334,8 +383,21 @@ const executionCopy = [
     why:T('Укажите статус, доказательство и следующий шаг по каждому вопросу. В образце ссылки ведут к материалам в журнале исполнения.','State each issue’s status, evidence and next action. The sample points to the records in the follow-through log.','逐项说明状态、证据与后续步骤。示例引用办理日志中的材料。')
   }
 ];
-function executionSteps(language) {
-  return executionCopy.map(({id,action,title,prompt,correct,wrong,why},index)=>{
+const sharedExecutionCopy={
+  'control-request':{
+    prompt:T('Какой материал подтвердит результат?','What would establish the outcome?','什么材料能证明结果？'),
+    correct:T('Запросить относимое подтверждение','Request relevant evidence','请求相关证明'),
+    wrong:T('Запросить письмо без уточнения результата','Request a letter without specifying the outcome','索要未指定结果的信件'),
+    why:T('Укажите, какой материал подтвердит результат. Ответ появится в деле.','Specify what would establish the result. The reply will enter the case records.','说明何种材料能证明结果。回复将进入案件记录。')
+  },
+  'control-status':{
+    correct:T('Завершить подтверждённые вопросы, остальные оставить на контроле','Close the evidenced issues and keep the others open','结束已有证明的事项，其余继续监督'),
+    why:T('Завершите то, что подтверждено, и сохраните открытые вопросы. Все выводы войдут в одно заключение.','Close what the evidence confirms. Keep the remaining issues open and include all findings in one memorandum.','结束证据已确认的事项，保留其余事项，并在一份结论中写明全部结果。')
+  }
+};
+function executionSteps(language,sharedReply) {
+  return executionCopy.map((entry,index)=>{
+    const {id,action,title,prompt,correct,wrong,why}={...entry,...(sharedReply?sharedExecutionCopy[entry.id]:null)};
     const options = choose(['apply','skip'],'apply',[localized(correct,language),localized(wrong,language)]);
     return {id,action,panel:'decision',title:localized(title,language),prompt:localized(prompt,language),
       explanation:localized(why,language),choices:index%2?options.reverse():options};
@@ -403,7 +465,7 @@ export function tutorialExecutionAction(workflow, stepId, guide, {caseData,local
       const verified=issue.verifiedEvidenceIds[0];
       if(verified){
         const notice={reason:hints.verify,instruction:hints.notify,expectedResult:hints.notify,evidenceSourceIds:[verified]};
-        if(spec.deliveryRequired&&!issue.notificationEvidenceIds.includes(verified))apply(spec.id,'notify',notice);
+        if(!current.sharedReply&&spec.deliveryRequired&&!issue.notificationEvidenceIds.includes(verified))apply(spec.id,'notify',notice);
         apply(spec.id,'close',{reason:hints.verify,evidenceSourceIds:[verified]});
       }else if(!actionRecorded(current,issue.id,['kept_open'])){
         apply(spec.id,'keep_open',{reason:guide.control.text,instruction:hints.keep});
@@ -428,7 +490,9 @@ export function controlMemo(workflow, guide, locale) {
       ? T('Подтверждён результат именно по этому вопросу. Завершение отражено в журнале.','The outcome of this issue was verified. The log records closure.','已核实本事项结果，办结情况已记录在日志中。')
       : referred ? T('Надлежащий адресат подтвердил приём этого вопроса. Проверяйте дальнейшее рассмотрение.','The competent recipient acknowledged this issue. Follow its substantive review.','主管接收方已确认收到该事项。继续跟进实质审理。')
       : T('Результат ещё не подтверждён. Оставить вопрос на контроле и проверить относимый документ при поступлении.','There is no confirmed result yet. Keep this issue open and check relevant evidence when received.','结果尚未确认。继续监督并在收到相关材料后核查。');
-    paragraphs.push([title,localized(conclusion,locale),reference].filter(Boolean).join(' — '));
+    const support=guide.coreStepsVersion===MFC_SEMINAR_VERSION&&(resolved||referred)&&evidence
+      ? localized(evidence.text,locale).slice(0,480):'';
+    paragraphs.push([title,localized(conclusion,locale),reference,support].filter(Boolean).join(' — '));
   }
   return {text:[guide.control.text,...paragraphs].filter(Boolean).join('\n\n').slice(0,6000),statuses};
 }

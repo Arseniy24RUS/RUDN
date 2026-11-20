@@ -4,12 +4,13 @@ import {fileURLToPath} from 'node:url';
 
 const root = new URL('../', import.meta.url);
 const load = async path => JSON.parse(await readFile(new URL(path, root), 'utf8'));
-const [federal, regional, territories, symbols, courseSymbols] = await Promise.all([
+const [federal, regional, territories, symbols, regionEmblems, mfc] = await Promise.all([
   load('site/apps/career/data/authorities.json'),
   load('site/apps/career/data/territorial-authorities.json'),
   load('site/apps/career/data/territories.json'),
   load('site/apps/career/data/authority-symbols.json'),
-  load('site/data/symbol_manifest.json'),
+  load('site/apps/reception/assets/territory-emblems/sources.json'),
+  load('firebase/functions/reception-ai/mfc-authorities.json'),
 ]);
 const career = new Map([...federal, ...regional.authorities].map(row => [row.id, row]));
 const federalSource = {
@@ -41,7 +42,8 @@ const regionalIds = {
 const regionalShort = {'mos-transit':'Дептранс Москвы','mos-heritage':'Мосгорнаследие','mos-education':'ДОНМ','mos-streets':'ОАТИ Москвы','mos-utilities':'ДЖКХ Москвы','mos-health':'ДЗМ','mo-silence':'МСТ МО','tver-environment':'Минприроды Тверской области'};
 const regionalSources = {'mos-environment':'https://www.mos.ru/eco/','mos-heritage':'https://www.mos.ru/dkn/','mos-education':'https://www.mos.ru/donm/','mos-streets':'https://www.mos.ru/oati/','mos-utilities':'https://www.mos.ru/dgkh/','mos-health':'https://www.mos.ru/dzdrav/','mo-silence':'https://mstg.mosreg.ru/','tver-environment':'https://mfc-tver.ru/services/detail.php?ELEMENT_ID=54262&subserviceid=0&targetid=0'};
 const siteEmblem = id => symbols.symbols[id] ? posix.normalize('apps/career/' + symbols.symbols[id].src) : null;
-const localityEmblem = {'ru-77':courseSymbols.moscow_government.local_file,'ru-16':courseSymbols.tatarstan_cabinet.local_file};
+const localityEmblem = Object.fromEntries(Object.entries(regionEmblems).map(([id,row])=>[id,row.asset]));
+for (const {id} of territories) if (!localityEmblem[id]) throw Error('Missing territory emblem: '+id);
 const catalogue = new Map();
 function put(id, row) {
   if (catalogue.has(id)) throw Error(`Duplicate authority ${id}`);
@@ -129,11 +131,17 @@ const caseRoles = [
 ];
 for (const [id,name,shortName] of caseRoles) put(id, {name,shortName,territoryIds:[],emblem:null,source:null});
 
+for (const {id,name,nameEn,nameZh,shortName,territoryIds,parentId,source} of mfc.added) {
+  const emblem = id === 'bank-of-russia' ? 'apps/reception/assets/authority-emblems/bank-of-russia.webp'
+    : siteEmblem(id) || (parentId && siteEmblem(parentId)) || localityEmblem[territoryIds[0]];
+  put(id,{name,nameEn,nameZh,shortName,territoryIds,emblem,source,...(parentId?{parentId}:{})});
+}
+
 // Reuse one displayed record for each authority with an existing Reception ID.
 const aliases = Object.fromEntries(Object.entries(regionalIds).map(([id, sourceId]) => [sourceId, id]));
 for (const {id,name,shortName,regionId} of regional.authorities) {
   if (Object.hasOwn(aliases,id)) continue;
-  put(id, {name,shortName:shortName || '',territoryIds:regionId?[regionId]:[],emblem:siteEmblem(id)});
+  put(id, {name,shortName:shortName || '',territoryIds:regionId?[regionId]:[],emblem:siteEmblem(id) || localityEmblem[regionId] || null});
 }
 
 // Resolve every selectable regional record and legacy alias before preparing a review.
@@ -146,9 +154,30 @@ const regionData = Object.fromEntries(territories.map(row => {
 }));
 const correspondenceRegions = Object.fromEntries(Object.entries(regionData).filter(([,row]) => row.city));
 const asRows = rows => '[\n  ' + rows.map(row => JSON.stringify(row)).join(',\n  ') + '\n]';
+// Legacy workflow roles and corporations without MFC tasks stay in the historical picker.
+const officesWithoutNamedJurisdiction = [
+  'rpn-at-site','rkn-at-site','fas-at-site','rpn-consumer-at-site','git-employer','fssp-office',
+  'fssp-superior','sfr-office','registry-office','fire-oversight','guard-oversight','police-at-site',
+  'phyto-office','tax-office','customs-office',
+];
+const excluded = new Set([
+  ...caseRoles.map(([id])=>id), ...officesWithoutNamedJurisdiction,
+  ...regional.authorities.filter(row=>!row.regionId).map(row=>row.id),
+]);
+for (const id of mfc.existingIds) {
+  if (!catalogue.has(id)) throw Error('Unknown MFC destination: '+id);
+  excluded.delete(id);
+}
+for (const [id,row] of catalogue) {
+  if (!excluded.has(id) && !row.emblem) throw Error('Missing emblem: '+id);
+}
+const excludedIds = JSON.stringify([...excluded].sort());
+const emblemCredits = Object.fromEntries(Object.values(regionEmblems).filter(row=>row.attribution).map(row=>[
+  row.asset,[row.attribution,row.license,row.licenseUrl,row.source,row.modification].filter(Boolean).join(' · '),
+]));
 const files = [
-  ['site/apps/reception/ai/authority-directory.js',`export const RECEPTION_TERRITORIES = ${JSON.stringify(regionData, null, 2)};\nexport const RECEPTION_AUTHORITIES = ${asRows([...catalogue.values()])};\n`],
-  ['firebase/functions/reception-ai/routing-directory.mjs',`export const ROUTING_TERRITORIES = ${JSON.stringify(correspondenceRegions, null, 2)};\nexport const ROUTING_AUTHORITIES = ${JSON.stringify(answerDirectory, null, 2)};\nexport const ROUTING_AUTHORITY_ALIASES = ${JSON.stringify(aliases, null, 2)};\nexport const ROUTING_AUTHORITY_IDS = new Set(${asRows([...catalogue.keys(), ...Object.keys(aliases)])});\n`],
+  ['site/apps/reception/ai/authority-directory.js',`export const RECEPTION_EMBLEM_CREDITS = ${JSON.stringify(emblemCredits, null, 2)};\nexport const RECEPTION_TERRITORIES = ${JSON.stringify(regionData, null, 2)};\nexport const RECEPTION_AUTHORITIES = ${asRows([...catalogue.values()])};\nconst excludedMfcIds = new Set(${excludedIds});\nexport const RECEPTION_MFC_AUTHORITY_IDS = new Set(RECEPTION_AUTHORITIES.filter(row=>!excludedMfcIds.has(row.id)).map(row=>row.id));\n`],
+  ['firebase/functions/reception-ai/routing-directory.mjs',`export const ROUTING_TERRITORIES = ${JSON.stringify(correspondenceRegions, null, 2)};\nexport const ROUTING_AUTHORITIES = ${JSON.stringify(answerDirectory, null, 2)};\nexport const ROUTING_AUTHORITY_ALIASES = ${JSON.stringify(aliases, null, 2)};\nexport const ROUTING_AUTHORITY_IDS = new Set(Object.keys(ROUTING_AUTHORITIES));\nconst excludedMfcIds = new Set(${excludedIds});\nexport const MFC_ROUTING_AUTHORITY_IDS = new Set([...ROUTING_AUTHORITY_IDS].filter(id=>!excludedMfcIds.has(id)));\n`],
 ];
 const check = process.argv.includes('--check');
 for (const [path,data] of files) {

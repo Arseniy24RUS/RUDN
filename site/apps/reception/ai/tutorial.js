@@ -1,6 +1,6 @@
 import {icon} from './cabinet-icons.js';
 import {localized} from './copy.js';
-import {CORE_VERSION, coreLabel} from './core-steps.js';
+import {coreLabel, isCoreJourney, isMfcJourney} from './core-steps.js';
 
 const copy = {
   ru: {
@@ -117,7 +117,7 @@ const pages = {
 const startLabels = {example:'startExample', mentor:'startMentor', independent:'startIndependent'};
 const lessonStages = ['example', 'mentor'];
 export function availableMentorActions(view) {
-  return isLesson(view?.journeyStage)&&(view.journeyStage==='mentor'||view.coreStepsVersion===CORE_VERSION) ? view.guidance?.allowedControlActions : undefined;
+  return isLesson(view?.journeyStage)&&(view.journeyStage==='mentor'||isCoreJourney(view)) ? view.guidance?.allowedControlActions : undefined;
 }
 
 export function lessonLabel(locale, key) {
@@ -134,10 +134,10 @@ export function nextJourneyStage(progress = {}) {
 
 export function lessonStep(view) {
   const step = view?.guidance?.steps?.[view.guidance.stepIndex];
-  return step ? {...step, page:view.coreStepsVersion===CORE_VERSION&&step.id==='route'?'route':pages[step.panel] || pages[step.action] || 'decision'} : null;
+  return step ? {...step, page:isCoreJourney(view)&&step.id==='route'?'route':pages[step.panel] || pages[step.action] || 'decision'} : null;
 }
 
-export function journeyPathView({locale, progress = {}, locked, canIndependent, button}) {
+export function journeyPathView({locale, progress = {}, locked, canIndependent, button, mfc=false}) {
   const t = key => lessonLabel(locale, key);
   const current = nextJourneyStage(progress);
   const stages = [['example','sources'], ['mentor','talk'], ['independent','decision']];
@@ -150,7 +150,7 @@ export function journeyPathView({locale, progress = {}, locked, canIndependent, 
         completed?coreLabel(locale,id==='example'?'replayExample':'repeatMentor'):t(startLabels[id]);
       return `<li class="rxt-route-stage" data-journey-card="${id}" ${current===id?'aria-current="step"':''}>
         <span class="rxt-stage-icon" aria-hidden="true">${icon(completed?'check':glyph)}</span>
-        <div><h3>${esc(t(id))}</h3><p>${esc(t(id+'Hint'))}</p>
+        <div><h3>${esc(t(id))}</h3><p>${esc(mfc?coreLabel(locale,id+'Hint',true):t(id+'Hint'))}</p>
         ${id==='independent'?`<p class="rxt-grade-scale">${esc(t('scale'))}</p>`:''}
         ${completed?`<span class="rxt-stage-state">${esc(t('finished'))}</span>`:!available&&current!==id?`<span class="rxt-stage-state">${esc(t('locked'))}</span>`:''}
         ${available?button(label,'start-journey',{primary:current===id,quiet:current!==id,disabled:locked,extra:`data-stage="${id}"`,glyph:'arrow'}):''}</div>
@@ -175,7 +175,7 @@ export function guidanceView({view, page, locale, localePage, button, locked, sa
   const sampleKey = {draft:'showDraft', control:'showControl', calendar:'viewSample'}[step.action];
   const sample = sampleKey && (step.action==='control' ? view.guidance.control : view.guidance.decisionByLocale?.[locale] || view.guidance.decision);
   const actionStep = Boolean(availableMentorActions(view)?.length);
-  const core=view.coreStepsVersion===CORE_VERSION;
+  const core=isCoreJourney(view);
   const productStep = (!example||core) && (actionStep || ['draft','control-memo'].includes(step.id));
   const showChoices = inPlace && materialsReady && !productStep && (!example || !sample || sampleReady) && (!executionMaterial || materialSeen);
   const choices = Array.isArray(step.choices) ? step.choices : [];
@@ -213,7 +213,7 @@ export function mentorView({view, locale, button, draft, busy, locked}) {
     return `<article class="rxt-mentor-message ${user?'rxt-mentor-user':''}"><strong>${esc(t(user?'you':'mentor'))}</strong><p>${esc(text(message.text))}</p></article>`;
   }).join('');
   return `<section class="rxt-mentor" aria-labelledby="rxtMentorTitle"><div class="rxt-mentor-top"><h2 id="rxtMentorTitle" tabindex="-1">${esc(t('ask'))}</h2>${button(t('close'),'mentor-toggle',{quiet:true})}</div>
-    <p>${esc(t('mentorIntro'))}</p><div class="rxt-mentor-log" data-mentor-log role="log" aria-live="polite">${messages}</div>
+    <p>${esc(isMfcJourney(view)?coreLabel(locale,'mentorHint',true):t('mentorIntro'))}</p><div class="rxt-mentor-log" data-mentor-log role="log" aria-live="polite">${messages}</div>
     ${busy?`<p role="status">${esc(t('thinking'))}</p>`:''}
     <form data-mentor-form><label class="rxa-field"><span>${esc(t('question'))}</span><textarea data-mentor-draft data-focus="mentor-question" maxlength="2000" rows="2" placeholder="${esc(t('questionExample'))}">${esc(draft)}</textarea></label>
     <button class="rxa-btn primary" type="submit" ${locked?'disabled':''}>${icon('send')}${esc(t('send'))}</button></form></section>`;

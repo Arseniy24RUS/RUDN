@@ -90,6 +90,36 @@ const phrases = {
   },
 };
 
+const mfcPhrases = {
+  ru: {
+    reception:['Примите обращение в МФЦ','Прочитайте просьбу заявителя. В материалах выясните, что надо передать ведомству и на какие вопросы предстоит ответить.'],
+    calendarKind:['Рассчитайте оба срока','Для передачи и ответа ведомства сравните отправные события и правила над календарём.'],
+    recipient:['Выберите ведомство','Найдите компетентное ведомство на указанной территории. При необходимости отметьте несколько адресатов одного обращения.'],
+    draft:['Подготовьте ответ по существу','Подготовьте один ответ заявителю. Примените норму к фактам и объясните вывод по существу. В следующих шагах укажите маршрут и сроки.'],
+    request:['Запросите подтверждение','Укажите, какое подтверждение нужно получить для проверки результата.'],
+    draftSubmit:['Проверьте вывод и сроки','Перечитайте свой ответ. Убедитесь, что ответ содержит вывод по существу, его основание и дальнейшие действия.'],
+    record:['Обоснуйте результат контроля','Укажите, какой результат по существу подтверждён и чем. Если вопрос остаётся открытым, запишите, что требуется дальше.'],
+  },
+  en: {
+    reception:['Receive the appeal at the MFC','Read what the applicant wants. Check the records to identify what to refer and which questions the authority needs to answer.'],
+    calendarKind:['Calculate both deadlines','Compare the starting events and counting rules above the calendar for the MFC referral and the authority’s reply.'],
+    recipient:['Choose the competent authority','Find the competent authority in the relevant territory. If this appeal needs more than one recipient, select them in the same list.'],
+    draft:['Draft a reply on the merits','Write one reply to the applicant. Apply the law to the facts and explain your conclusion on the merits. Record the referral and deadlines under next steps.'],
+    request:['Request supporting material','Specify the record you need to verify the result.'],
+    draftSubmit:['Check the conclusion and dates','Reread your reply. Make sure your reply explains the outcome on the merits, the reasons and what happens next.'],
+    record:['Explain the follow-through result','State what was resolved on the merits and what confirms it. If an issue stays open, record the next action.'],
+  },
+  zh: {
+    reception:['在政务服务中心受理诉求','阅读申请人的要求。查阅材料，确定需要转送的事项以及主管机关应当答复的问题。'],
+    calendarKind:['计算两项期限','对照日历上方的说明，分别查明转送期限与主管机关答复期限的起算事件和计算规则。'],
+    recipient:['选择主管机关','找到有关地区的主管机关。如需为同一份诉求选择多个接收方，请在同一列表中勾选。'],
+    draft:['撰写实质性答复','为申请人撰写一份答复，结合法律和事实说明实质性结论。在后续步骤中注明转送路径和期限。'],
+    request:['调取证明材料','说明需要哪份材料来核实办理结果。'],
+    draftSubmit:['核对结论和日期','重读答复，确保其中清楚说明实质性结论、理由和下一步行动。'],
+    record:['说明办理核查结果','写明哪些实质性结果得到了证明以及依据是什么。对尚未解决的事项，请记下下一步行动。'],
+  },
+};
+
 const marked = name => `[data-tour-target="${name}"]`;
 const advance = marked('advance');
 const guide = '[data-tutorial-step]';
@@ -188,6 +218,10 @@ function nextTarget(root, state, memory) {
   if (stepId === 'materials') return legalTarget(root, find, memory);
   if (stepId === 'calendar') return deadlineTarget(find, memory);
   if (stepId === 'route') {
+    if (state.mfc) {
+      const next = find('[data-step="route"]'+advance);
+      return next ? ['advance', next] : ['recipient', find('[data-routing-search]')];
+    }
     const checked = find('[data-core-disposition]:checked');
     if (checked?.value==='forward' && !find('[data-routing-recipient]:checked')) {
       return ['recipient', find('[data-routing-search]')];
@@ -410,7 +444,7 @@ export function createReceptionTour(root) {
     if (!target) {resetCard();describe(null,'');return;}
     if (inlineAnchor && (current!==target || !root.contains(card))) resetCard();
     if (!inlineAnchor) card.hidden=true;
-    const note=words[key];
+    const note=(state.mfc && (mfcPhrases[state.locale] || mfcPhrases.ru)[key]) || words[key];
     const stageNumber=root.querySelector('.rxt-case-steps') ? coreStage[state.step.id]||6 : null;
     const progressText=stageNumber ? words.progress(stageNumber,6)
       : Number.isInteger(state.stepIndex) && state.stepTotal>0 ? words.progress(state.stepIndex+1,state.stepTotal) : '';

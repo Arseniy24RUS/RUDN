@@ -1,0 +1,456 @@
+{
+  "ru-01": {
+    "asset": "apps/reception/assets/territory-emblems/ru-01.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Adygea.svg",
+    "license": "Public domain"
+  },
+  "ru-02": {
+    "asset": "apps/reception/assets/territory-emblems/ru-02.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Bashkortostan.svg",
+    "license": "Public domain"
+  },
+  "ru-03": {
+    "asset": "apps/reception/assets/territory-emblems/ru-03.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Buryatia.svg",
+    "license": "Public domain"
+  },
+  "ru-04": {
+    "asset": "apps/reception/assets/territory-emblems/ru-04.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Altai_Republic.svg",
+    "license": "Public domain"
+  },
+  "ru-05": {
+    "asset": "apps/reception/assets/territory-emblems/ru-05.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Dagestan.svg",
+    "license": "Public domain"
+  },
+  "ru-06": {
+    "asset": "apps/reception/assets/territory-emblems/ru-06.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Ingushetia.svg",
+    "license": "Public domain"
+  },
+  "ru-07": {
+    "asset": "apps/reception/assets/territory-emblems/ru-07.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Kabardino-Balkaria.svg",
+    "license": "Public domain"
+  },
+  "ru-08": {
+    "asset": "apps/reception/assets/territory-emblems/ru-08.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Kalmykia.svg",
+    "license": "Public domain"
+  },
+  "ru-09": {
+    "asset": "apps/reception/assets/territory-emblems/ru-09.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Karachay-Cherkessia.svg",
+    "license": "Public domain"
+  },
+  "ru-10": {
+    "asset": "apps/reception/assets/territory-emblems/ru-10.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_the_Republic_of_Karelia.svg",
+    "license": "Public domain"
+  },
+  "ru-11": {
+    "asset": "apps/reception/assets/territory-emblems/ru-11.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_the_Komi_Republic.svg",
+    "license": "Public domain"
+  },
+  "ru-12": {
+    "asset": "apps/reception/assets/territory-emblems/ru-12.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Mari_El.svg",
+    "license": "Public domain"
+  },
+  "ru-13": {
+    "asset": "apps/reception/assets/territory-emblems/ru-13.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Mordovia.svg",
+    "license": "Public domain"
+  },
+  "ru-14": {
+    "asset": "apps/reception/assets/territory-emblems/ru-14.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Sakha_(Yakutia).svg",
+    "license": "Public domain"
+  },
+  "ru-15": {
+    "asset": "apps/reception/assets/territory-emblems/ru-15.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Emblem_of_North_Ossetia.svg",
+    "license": "Public domain"
+  },
+  "ru-16": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/tatarstan.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Tatarstan.svg",
+    "license": "Public domain"
+  },
+  "ru-17": {
+    "asset": "apps/reception/assets/territory-emblems/ru-17.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Tuva.svg",
+    "license": "Public domain"
+  },
+  "ru-18": {
+    "asset": "apps/reception/assets/territory-emblems/ru-18.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Udmurtia.svg",
+    "license": "Public domain"
+  },
+  "ru-19": {
+    "asset": "apps/reception/assets/territory-emblems/ru-19.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Khakassia.svg",
+    "license": "Public domain"
+  },
+  "ru-20": {
+    "asset": "apps/reception/assets/territory-emblems/ru-20.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Chechnya_clean_version.svg",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "attribution": "Nadia.kashuba",
+    "modification": "Resized and converted to WebP."
+  },
+  "ru-21": {
+    "asset": "apps/reception/assets/territory-emblems/ru-21.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Chuvashia.svg",
+    "license": "Public domain"
+  },
+  "ru-22": {
+    "asset": "apps/reception/assets/territory-emblems/ru-22.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Altai_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-23": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/krasnodar_krai.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Krasnodar_Krai.svg",
+    "license": "CC BY 4.0"
+  },
+  "ru-24": {
+    "asset": "apps/reception/assets/territory-emblems/ru-24.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Krasnoyarsk_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-25": {
+    "asset": "apps/reception/assets/territory-emblems/ru-25.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Primorsky_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-26": {
+    "asset": "apps/reception/assets/territory-emblems/ru-26.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Stavropol_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-27": {
+    "asset": "apps/reception/assets/territory-emblems/ru-27.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Khabarovsk_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-28": {
+    "asset": "apps/reception/assets/territory-emblems/ru-28.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Amur_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-29": {
+    "asset": "apps/reception/assets/territory-emblems/ru-29.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Arkhangelsk_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-30": {
+    "asset": "apps/reception/assets/territory-emblems/ru-30.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Astrakhan_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-31": {
+    "asset": "apps/reception/assets/territory-emblems/ru-31.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Belgorod_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-32": {
+    "asset": "apps/reception/assets/territory-emblems/ru-32.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Bryansk_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-33": {
+    "asset": "apps/reception/assets/territory-emblems/ru-33.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Vladimiri_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-34": {
+    "asset": "apps/reception/assets/territory-emblems/ru-34.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Volgograd_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-35": {
+    "asset": "apps/reception/assets/territory-emblems/ru-35.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Vologda_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-36": {
+    "asset": "apps/reception/assets/territory-emblems/ru-36.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Voronezh_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-37": {
+    "asset": "apps/reception/assets/territory-emblems/ru-37.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Ivanovo_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-38": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/irkutsk_oblast.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Irkutsk_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-39": {
+    "asset": "apps/reception/assets/territory-emblems/ru-39.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Kaliningrad_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-40": {
+    "asset": "apps/reception/assets/territory-emblems/ru-40.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Kaluga_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-41": {
+    "asset": "apps/reception/assets/territory-emblems/ru-41.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Kamchatka_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-42": {
+    "asset": "apps/reception/assets/territory-emblems/ru-42.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Kemerovo_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-43": {
+    "asset": "apps/reception/assets/territory-emblems/ru-43.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Kirov_Region.svg",
+    "license": "Public domain"
+  },
+  "ru-44": {
+    "asset": "apps/reception/assets/territory-emblems/ru-44.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Kostroma_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-45": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/kurgan_oblast.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Kurgan_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-46": {
+    "asset": "apps/reception/assets/territory-emblems/ru-46.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Kursk_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-47": {
+    "asset": "apps/reception/assets/territory-emblems/ru-47.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Leningrad_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-48": {
+    "asset": "apps/reception/assets/territory-emblems/ru-48.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Lipetsk_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-49": {
+    "asset": "apps/reception/assets/territory-emblems/ru-49.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Magadan_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-50": {
+    "asset": "apps/reception/assets/territory-emblems/ru-50.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Moscow_Oblast_(large).svg",
+    "license": "Public domain"
+  },
+  "ru-51": {
+    "asset": "apps/reception/assets/territory-emblems/ru-51.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:%D0%93%D0%B5%D1%80%D0%B1_%D0%9C%D1%83%D1%80%D0%BC%D0%B0%D0%BD%D1%81%D0%BA%D0%BE%D0%B9_%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D0%B8.svg",
+    "license": "Public domain"
+  },
+  "ru-52": {
+    "asset": "apps/reception/assets/territory-emblems/ru-52.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Nizhny_Novgorod_Region.svg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "attribution": "Евгений Катышев",
+    "modification": "Resized and converted to WebP."
+  },
+  "ru-53": {
+    "asset": "apps/reception/assets/territory-emblems/ru-53.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Novgorod_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-54": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/novosibirsk_oblast.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Novosibirsk_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-55": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/omsk_oblast.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Omsk_Oblast.svg",
+    "license": "Public domain / PD-RU-exempt"
+  },
+  "ru-56": {
+    "asset": "apps/reception/assets/territory-emblems/ru-56.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Orenburg_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-57": {
+    "asset": "apps/reception/assets/territory-emblems/ru-57.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Oryol_Oblast_(large).svg",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "attribution": "Hellerick",
+    "modification": "Resized and converted to WebP."
+  },
+  "ru-58": {
+    "asset": "apps/reception/assets/territory-emblems/ru-58.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Penza_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-59": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/perm_krai.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Perm_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-60": {
+    "asset": "apps/reception/assets/territory-emblems/ru-60.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Pskov_Oblast_(2018).svg",
+    "license": "Public domain"
+  },
+  "ru-61": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/rostov_oblast.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Rostov_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-62": {
+    "asset": "apps/reception/assets/territory-emblems/ru-62.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Ryazan_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-63": {
+    "asset": "apps/reception/assets/territory-emblems/ru-63.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Samara_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-64": {
+    "asset": "apps/reception/assets/territory-emblems/ru-64.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Saratov_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-65": {
+    "asset": "apps/reception/assets/territory-emblems/ru-65.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Sakhalin_Oblast_Coat_of_Arms.svg",
+    "license": "Public domain"
+  },
+  "ru-66": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/sverdlovsk_oblast.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Sverdlovsk_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-67": {
+    "asset": "apps/reception/assets/territory-emblems/ru-67.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Smolensk_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-68": {
+    "asset": "apps/reception/assets/territory-emblems/ru-68.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Tambov_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-69": {
+    "asset": "apps/reception/assets/territory-emblems/ru-69.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Tver_oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-70": {
+    "asset": "apps/reception/assets/territory-emblems/ru-70.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Tomsk_Oblast,_Russia.svg",
+    "license": "Public domain"
+  },
+  "ru-71": {
+    "asset": "apps/reception/assets/territory-emblems/ru-71.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Tula_oblast.png",
+    "license": "Public domain"
+  },
+  "ru-72": {
+    "asset": "apps/reception/assets/territory-emblems/ru-72.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Tyumen_Oblast_(large).svg",
+    "license": "Public domain"
+  },
+  "ru-73": {
+    "asset": "apps/reception/assets/territory-emblems/ru-73.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:%D0%93%D0%B5%D1%80%D0%B1_%D0%A3%D0%BB%D1%8C%D1%8F%D0%BD%D0%BE%D0%B2%D1%81%D0%BA%D0%BE%D0%B9_%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D0%B8_(2013).svg",
+    "license": "Public domain"
+  },
+  "ru-74": {
+    "asset": "assets/course/quiz_media/branches_levels/symbols-v071/chelyabinsk_oblast.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Chelyabinsk_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-75": {
+    "asset": "apps/reception/assets/territory-emblems/ru-75.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Zabaykalsky_Krai.svg",
+    "license": "Public domain"
+  },
+  "ru-76": {
+    "asset": "apps/reception/assets/territory-emblems/ru-76.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Yaroslavl_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-77": {
+    "asset": "apps/reception/assets/territory-emblems/ru-77.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Moscow.svg",
+    "license": "Public domain"
+  },
+  "ru-78": {
+    "asset": "apps/reception/assets/territory-emblems/ru-78.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Saint_Petersburg_(2003).svg",
+    "license": "Public domain"
+  },
+  "ru-79": {
+    "asset": "apps/reception/assets/territory-emblems/ru-79.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_the_Jewish_Autonomous_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-83": {
+    "asset": "apps/reception/assets/territory-emblems/ru-83.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Nenets_Autonomous_Okrug.svg",
+    "license": "Public domain"
+  },
+  "ru-86": {
+    "asset": "apps/reception/assets/territory-emblems/ru-86.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Yugra_(Khanty-Mansia).svg",
+    "license": "Public domain"
+  },
+  "ru-87": {
+    "asset": "apps/reception/assets/territory-emblems/ru-87.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Chukotka.svg",
+    "license": "Public domain"
+  },
+  "ru-89": {
+    "asset": "apps/reception/assets/territory-emblems/ru-89.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Yamal_Nenetsia.svg",
+    "license": "Public domain"
+  },
+  "ru-90": {
+    "asset": "apps/reception/assets/territory-emblems/ru-90.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_the_Russian_administered_Zaporizhzhia_Oblast.svg",
+    "license": "Public domain"
+  },
+  "ru-91": {
+    "asset": "apps/reception/assets/territory-emblems/ru-91.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Crimea.svg",
+    "license": "Public domain"
+  },
+  "ru-92": {
+    "asset": "apps/reception/assets/territory-emblems/ru-92.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:COA_of_Sevastopol.svg",
+    "license": "Public domain"
+  },
+  "ru-93": {
+    "asset": "apps/reception/assets/territory-emblems/ru-93.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_the_Donetsk_People%27s_Republic.svg",
+    "license": "Public domain"
+  },
+  "ru-94": {
+    "asset": "apps/reception/assets/territory-emblems/ru-94.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_Arms_of_Lugansk_People%27s_Republic.svg",
+    "license": "Public domain"
+  },
+  "ru-95": {
+    "asset": "apps/reception/assets/territory-emblems/ru-95.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Coat_of_arms_of_Kherson_Oblast_(Russia,_Big_size).svg",
+    "license": "Public domain"
+  }
+}

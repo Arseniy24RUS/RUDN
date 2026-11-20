@@ -12,7 +12,7 @@ const here=path.dirname(fileURLToPath(import.meta.url));
 const defaultRepo=path.resolve(here,'..');
 const arg=(name,fallback)=>{const i=process.argv.indexOf(name);return i<0?fallback:process.argv[i+1];};
 
-export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider,decisionVersion='legacy',controlVersion='legacy',serviceOptions={},studentName=''}={}){
+export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider,decisionVersion='legacy',controlVersion='legacy',serviceOptions={},studentName='',coreStepsVersion=null,teacher=false,caseIds=null}={}){
   if(!casesDirectory)throw Error('Provide --cases /absolute/path/private-data/cases or RECEPTION_AI_CASES_DIR.');
   repo=await realpath(repo);
   const site=await realpath(path.join(repo,'site'));
@@ -20,9 +20,11 @@ export async function createReceptionFixture({repo=defaultRepo,casesDirectory=pr
     import(pathToFileURL(path.join(repo,'firebase/functions/reception-ai/service.mjs'))),
     import(pathToFileURL(path.join(repo,'firebase/functions/reception-ai/store.mjs'))),
   ]);
-  const cases=await Promise.all((await readdir(casesDirectory)).filter(name=>name.endsWith('.json')).sort().map(name=>readFile(path.join(casesDirectory,name),'utf8').then(JSON.parse)));
+  const bank=await Promise.all((await readdir(casesDirectory)).filter(name=>name.endsWith('.json')).sort().map(name=>readFile(path.join(casesDirectory,name),'utf8').then(JSON.parse)));
+  const cases=caseIds?bank.filter(item=>caseIds.includes(item.id)):bank;
+  if(caseIds&&cases.length!==caseIds.length)throw Error('The bank does not include all selected QA cases.');
   const dataKind=cases.every(item=>item.version==='synthetic-reception-ui-qa-v1')?'synthetic':'supplied-bank';
-  const identity={uid:'reception-repair-qa',studentKey:'reception-repair-qa',teacher:false};
+  const identity={uid:'reception-repair-qa',studentKey:'reception-repair-qa',teacher};
   const store=createMemoryStore();
   const localized=(value,locale)=>typeof value==='string'?value:value?.[locale]||value?.ru||'';
   const provider=providedProvider||{name:'mock',async generate({actorCase,locale}){
@@ -45,8 +47,9 @@ async function enter(){
   const requestedContext=parameters.get('context');
   const gameplayContext=['free','seminar'].includes(requestedContext)?requestedContext:undefined;
   const fullName=${JSON.stringify(studentName)};
-  const backend=fullName?{user:{uid:'reception-repair-qa'},getProfile:()=>({studentKey:'reception-repair-qa',fullName})}:undefined;
-  handle=await mountReceptionAI(document.getElementById('receptionAI'),{backend,locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:true,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:true,workbookVersion:2,gameplayContext,decisionVersion:${JSON.stringify(decisionVersion)},controlVersion:${JSON.stringify(controlVersion)}});
+  const teacher=${JSON.stringify(teacher)};
+  const backend=fullName||teacher?{user:{uid:'reception-repair-qa'},isAdmin:()=>teacher,getProfile:()=>({studentKey:'reception-repair-qa',fullName})}:undefined;
+  handle=await mountReceptionAI(document.getElementById('receptionAI'),{backend,getIdToken:teacher?async()=> 'local-reception-qa-token':undefined,locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:!teacher,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:!teacher,workbookVersion:2,gameplayContext,decisionVersion:${JSON.stringify(decisionVersion)},controlVersion:${JSON.stringify(controlVersion)},coreStepsVersion:${JSON.stringify(coreStepsVersion)}});
   window.__qaReception={provider:'mock',handle};
 }
 async function leave(){

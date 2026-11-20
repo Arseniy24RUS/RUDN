@@ -1,0 +1,8 @@
+{
+  "bank-of-russia": {
+    "source": "https://www.cbr.ru/favicon.ico",
+    "asset": "apps/reception/assets/authority-emblems/bank-of-russia.webp",
+    "attribution": "Банк России",
+    "modification": "Converted to WebP."
+  }
+}

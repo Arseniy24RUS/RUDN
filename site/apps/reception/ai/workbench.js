@@ -79,10 +79,15 @@ function calendarContent(options){
   }).join('');
   const instructions=localText(options.task?.instructions,locale)||t.intro;
   const norms=options.task?.norms||[{label:locale==='ru'?'Федеральный закон от 02.05.2006 № 59-ФЗ «О порядке рассмотрения обращений граждан Российской Федерации»':'59-ФЗ · '+t.norms,text:t.rules.join('\n'),url:'https://mintrud.gov.ru/docs/laws/108'}];
-  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header><details class="rxw-calendar-details rxw-calendar-assignment" data-calendar-details="assignment" data-details="calendar-assignment" ${options.assignmentOpen?'open':''}>
+  const visibleInstructions=options.task?.visibleInstructionsLabel;
+  return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header>
+    ${visibleInstructions?`<section class="rxt-calendar-rules" aria-labelledby="rxtCalendarRules">
+      <h4 id="rxtCalendarRules">${esc(visibleInstructions)}</h4>
+      ${instructions.split('\n').filter(Boolean).map(line=>`<p>${highlightDurations(line,locale)}</p>`).join('')}
+    </section>`:`<details class="rxw-calendar-details rxw-calendar-assignment" data-calendar-details="assignment" data-details="calendar-assignment" ${options.assignmentOpen?'open':''}>
       <summary><span><strong>${t.task}</strong></span>${arrow(1)}</summary>
       <div class="rxw-calendar-details-content"><p class="rxw-calendar-instruction">${esc(instructions)}</p></div>
-    </details>
+    </details>`}
     ${options.task?.hideEventList?'':`<div class="rxw-calendar-events">${events.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
     <div class="rxw-calendar-targets" role="group" aria-label="${t.targets}">${targets.map(target=>{
       const date=s.selectedDates[target.id],displayDate=date&&formatDateOnly(date);

@@ -4,6 +4,7 @@ import {ReceptionError} from './schema.mjs';
 import {ROUTING_AUTHORITY_IDS,ROUTING_AUTHORITIES} from './routing-directory.mjs';
 import {correspondenceIssueTitle} from './correspondence-profiles.mjs';
 import {controlWorkflowSources,controlReviewContext,publicControlWorkflow} from './control-workflow.mjs';
+import {MFC_SEMINAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedMerits} from './mfc-seminar.mjs';
 
 export const DECISION_VERSION = 'correspondence-v1';
 export const CORRESPONDENCE_RUBRIC_VERSION = 'correspondence-rubric-1';
@@ -14,6 +15,11 @@ export const CORRESPONDENCE_WEIGHTS = Object.freeze({
   criticalCap:60,
 });
 export const CORRESPONDENCE_SECTIONS = Object.freeze(['facts','legalBasis','resolution','nextSteps']);
+const missingMfcResolution = {
+  ru:'Оценка проекта ограничена 60 баллами. Для зачёта требуется обоснованное решение по существу или конкретный промежуточный шаг компетентного адресата.',
+  en:'The draft score is capped at 60. Passing requires a reasoned substantive decision or a specific interim action by the competent recipient.',
+  zh:'草稿评分上限为60分。通过须给出有依据的实质决定，或主管接收方应采取的明确阶段性措施。'
+};
 const ORDER_KINDS = new Set(['request','referral','execution','review','notification','control']);
 const STATUS = new Set(['pending','resolved','referred']);
 const REVIEW_LABELS={
@@ -228,8 +234,18 @@ export function addReviewDialogue(context,messages,availableBytes) {
 }
 
 /** The frozen session dossier outranks generic profiles, particularly every date variant. */
-export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null}={}) {
+export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null,coreStepsVersion}={}) {
+  const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
+  const sharedReply=mfcUsesSharedReply(coreStepsVersion,workbook);
+  const legacyDispatch=sharedReply?mfcLegacyDispatchActions(c.id):new Set();
+  const keepAction=id=>!legacyDispatch.has(id);
+  const reception=mfc?mfcRole(c.public.role,locale,sharedReply):null;
   const execution=phase==='control'&&state.controlWorkflow?controlReviewContext(state.controlWorkflow,profile,locale):null;
+  if(sharedReply&&execution)for(const issue of execution.issues){
+    delete issue.acceptedRecipientSets;
+    delete issue.recipientNames;
+    delete issue.recipientBasis;
+  }
   const accessible=publicCorrespondenceSources(c,state,locale,{includeFollowup:phase==='control',review:Boolean(execution)});
   const observed=observedFacts(c,state);
   const sources=accessible.map(source=>{
@@ -243,17 +259,43 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   for(const citation of resolvedCitations)sources.push({id:'citation:'+citation.id,kind:citation.kind,title:citation.title,text:citation.text,available:true,url:citation.url,locator:citation.locator});
   const calendar=operational?.workbook?.calendar||state.correspondenceInitialFeedback?.workbook?.calendar;
   const profileCriteria=clone(profile?.criteria);
+  if(sharedReply&&profileCriteria?.resolution){
+    const rule=profileCriteria.resolution;
+    rule.expectedActionIds=(rule.expectedActionIds||[]).filter(keepAction);
+    rule.partialOrder=(rule.partialOrder||[]).filter(pair=>pair.every(keepAction));
+    delete rule.correctRoutes;
+    if(profileCriteria.legalBasis&&mfcSharedMerits[c.id]){
+      const merits=local(mfcSharedMerits[c.id],locale);
+      profileCriteria.legalBasis.expectedApplication=merits;
+      profileCriteria.legalBasis.explanation=merits;
+      delete profileCriteria.legalBasis.researchExplanation;
+    }
+    const next=profileCriteria.nextSteps;
+    if(next){
+      if(next.rightsAction&&!keepAction(next.rightsAction.id))next.rightsAction=null;
+      next.monitoringActions=(next.monitoringActions||[]).filter(action=>keepAction(action.id));
+    }
+  }
   if(profileCriteria?.nextSteps?.calendar && workbook && calendar?.expected){
     profileCriteria.nextSteps.calendar={events:clone(workbook.events),targets:clone(workbook.targets),
       counting:clone(workbook.counting),expected:clone(calendar.expected)};
   }
   if(workbook)sources.push({id:'workbook-calendar',kind:'case-calendar',title:'Calendar and assignment shown to the student',
     text:JSON.stringify({events:workbook.events,targets:workbook.targets,counting:workbook.counting}),available:true});
+  if(mfc&&workbook?.routingPolicy?.context)sources.push({id:'reception-case-context',kind:'case-context',
+    title:reception.authorityContext.label,text:workbook.routingPolicy.context,available:true});
   sources.push({id:'case-author-explanation',kind:'authored-explanation',text:local(c.rubric.explanation,locale),available:false,
-    ...(execution?{scope:'Historical initial decision only. Current execution duties and recipients are defined by execution-rule sources.'}:{})});
+    ...(execution?{scope:'Historical initial decision only. Current execution duties are defined by execution-rule sources.'}:
+      sharedReply?{scope:'Case merits and original authority context only. Any original instructions to partition questions, answers or attachments do not apply in this version.'}:{})});
   if(phase==='control'&&c.followup)sources.push({id:'control-author-explanation',kind:'authored-explanation',text:local(c.followup.explanation,locale),available:false,
     ...(execution?{scope:'Initial follow-up event only. Later released execution materials may establish a subsequent, narrower result. Use the frozen execution state for the current disposition.'}:{})});
   const rules=criticalRules(c,state,profile,phase,locale);
+  const noPrematureClosure=sharedReply&&c.id==='several-minimum-attachments'?local({
+    ru:'Закрыть вопрос об обработке персональных данных без относимого подтверждения результата.',
+    en:'Close the personal-data issue without evidence of the outcome.',
+    zh:'在没有结果证明的情况下结束个人数据事项。'
+  },locale):null;
+  if(noPrematureClosure&&phase==='initial')for(const rule of rules)if(rule.id==='b1')rule.text=noPrematureClosure;
   for(const rule of rules)sources.push({id:'critical-rule:'+rule.id,kind:'critical-rule',text:rule.text,available:false});
   if(execution)for(const issue of execution.issues)sources.push({id:'execution-rule:'+issue.id,kind:'authored-execution-rule',available:false,
     title:issue.title,text:JSON.stringify({scope:issue.scope,closureScope:issue.closureScope,continuation:issue.continuation,
@@ -268,7 +310,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
     sections.orders=decision.correspondence.orders.map(order=>{
       const values=[
         order.issue,display.orders[ORDER_INDEX.indexOf(order.kind)],
-        order.recipientIds.map(id=>local(ROUTING_AUTHORITIES[id].name,locale)).join(', '),
+        order.recipientIds.map(id=>mfc?mfcAuthorityName(ROUTING_AUTHORITIES[id],locale):local(ROUTING_AUTHORITIES[id].name,locale)).join(', '),
         order.instruction,order.dueDate,order.expectedResult,
       ];
       return values.flatMap((value,index)=>value?[display.fields[index]+': '+value]:[]).join('\n');
@@ -294,7 +336,11 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   });
   const context={
     version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase,locale,caseId:c.id,caseVersion:c.version,datePackId:c.datePackId||null,
-    role:local(c.public.role.text,locale),opening:participantOpening(c,locale),
+    role:reception?.text||local(c.public.role.text,locale),opening:participantOpening(c,locale),
+    ...(reception?{mfcReception:{authorityContext:reception.authorityContext,sharedReply,
+      routingBoundary:workbook?.routingPolicy?.boundary||null,
+      routingContext:workbook?.routingPolicy?.context||null,
+      selectedRecipients:(decision.workbook?.routing?.recipientIds||[]).map(id=>mfcAuthorityName(ROUTING_AUTHORITIES[id],locale))}}:{}),
     citizenName:local(c.public.citizen?.name,locale),
     materialTitles:c.documents.filter(doc=>state.releasedDocumentIds?.includes(doc.id)).map(doc=>local(doc.title,locale)),
     // The snapshot and its server-derived worksheet supply events and target
@@ -306,17 +352,23 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
       correspondenceOrigin:clone(workbook?.origin||null),site:clone(workbook?.site||null),
       facts:c.facts.map(fact=>({id:fact.id,text:local(fact.text,locale),uncertain:fact.knowledge==='uncertain',
         knowledge:fact.knowledge||null,documentIds:clone(fact.documentIds||[])})),
-      explanation:local(c.rubric.explanation,locale),...(execution?{explanationScope:'Historical initial decision, not the current execution stage.'}:{})},
+      explanation:local(c.rubric.explanation,locale),...(execution?{explanationScope:'Historical initial decision, not the current execution stage.'}:
+        sharedReply?{explanationScope:'Substantive case context. Legacy instructions to partition the application do not apply.'}:{})},
     profile:profile?(execution?{issues:issues.map(({id,title,scope,resultType})=>({id,title,scope,resultType})),
-      control:{version:'execution-v1',assessmentSource:'execution',instruction:'Use current scoped execution rules and recipients; the initial decision has already been assessed.'}}:clone({issues:profile.issues,acceptedKinds:profile.acceptedKinds,acceptablePlans:profile.acceptablePlans,
-      constraints:profile.constraints,routing:profile.routing,response:profile.response,criteria:profileCriteria,
+      control:{version:'execution-v1',assessmentSource:'execution',instruction:sharedReply?
+        'Use current evidence, issue states and one shared conclusion. The simulator supplies control contacts.':
+        'Use current scoped execution rules and recipients; the initial decision has already been assessed.'}}:clone({issues:profile.issues,acceptedKinds:profile.acceptedKinds,
+      ...(sharedReply?{}:{acceptablePlans:profile.acceptablePlans,routing:profile.routing}), constraints:profile.constraints,response:profile.response,criteria:profileCriteria,
       control:phase==='control'?Object.fromEntries(Object.entries(profile.control||{}).filter(([key])=>key!=='workflow')):undefined})):null,
     acceptablePlans:(execution?[]:profile?.acceptablePlans?.length?profile.acceptablePlans:
       c.rubric.authored?.decisionPlans?.length?c.rubric.authored.decisionPlans:[{id:'default',requiredActions:c.rubric.requiredActionIds}])
-      .map(plan=>({id:plan.id,routeIds:clone(plan.routeIds||[]),partialOrder:clone(plan.partialOrder||[]),
-        actions:(plan.requiredActionIds||plan.requiredActions||[]).map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)}))})),
-    planPolicy:'Each acceptable plan is a separate lawful alternative. Common requirements apply to every plan; branch-specific requirements apply only within the selected lawful branch. Never require the union of mutually alternative plans.',
-    forbiddenActions:execution?[]:c.rubric.forbiddenActionIds.map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)})),
+      .map(plan=>({id:plan.id,routeIds:sharedReply?[]:clone(plan.routeIds||[]),partialOrder:clone((plan.partialOrder||[]).filter(pair=>pair.every(keepAction))),
+        actions:(plan.requiredActionIds||plan.requiredActions||[]).filter(keepAction).map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)}))})),
+    planPolicy:sharedReply?
+      'The shared-response MFC assignment supersedes any legacy partition of questions, answers or attachments. Apply the original plans for the merits and protect confidential information. Accept one lawful substantive plan.' :
+      'Each acceptable plan is a separate lawful alternative. Common requirements apply to every plan; branch-specific requirements apply only within the selected lawful branch. Never require the union of mutually alternative plans.',
+    forbiddenActions:execution?[]:c.rubric.forbiddenActionIds.map(id=>({id,
+      text:noPrematureClosure&&id==='b1'?noPrematureClosure:local(c.public.actions.find(action=>action.id===id)?.label,locale)})),
     criticalRules:rules,operational,
     submission:phase==='initial'?clone(decision.correspondence):{
       text:control.text,statuses:control.statuses.map(row=>({...row,
@@ -419,13 +471,18 @@ export function scoreCorrespondenceReview(rawReview,context) {
     if(!['route','calendar'].includes(row.id)||!Number.isFinite(row.earned)||row.earned<0||row.earned>row.max)throw new ReceptionError('review_invalid',503);
     criteria.push({...row,label:labels[row.id]});
   }
-  const raw=criteria.reduce((sum,row)=>sum+row.earned,0),cap=review.criticalErrors.length?CORRESPONDENCE_WEIGHTS.criticalCap:null;
+  const lacksResolution=context.mfcReception&&context.phase==='initial'&&review.criteria.find(row=>row.id==='resolution').level<=1;
+  // Under the 80/20 split, 60 on the initial draft and a perfect follow-through
+  // yield 68. Routing and execution therefore cannot compensate for no merits.
+  const cap=review.criticalErrors.length||lacksResolution?CORRESPONDENCE_WEIGHTS.criticalCap:null;
+  const raw=criteria.reduce((sum,row)=>sum+row.earned,0);
   const score=Math.round(Math.min(cap??100,raw)*10)/10;
   return {
     score,criteria,explanation:review.summary,missingFacts:[],cap,authored:false,
     criticalIds:review.criticalErrors.map(row=>row.ruleId),
     ...(context.operational?.workbook?{workbook:clone(context.operational.workbook)}:{}),
     correspondence:{version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase:context.phase,displayFormat:1,rawScore:raw,score,cap,
+      ...(lacksResolution&&!review.criticalErrors.length?{capExplanation:missingMfcResolution}:{}),
       criteria:clone(criteria),criticalErrors:review.criticalErrors,summary:review.summary,
       citations:context.resolvedCitations.map(({id,kind,sourceId,title,url,locator,quote,contentSha256,unitIds,language})=>({
         id,kind,sourceId,title,url:url||'',locator:locator||'',quote,contentSha256:contentSha256||'',...(unitIds?{unitIds}:{}),

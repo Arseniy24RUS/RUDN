@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {access, readFile} from 'node:fs/promises';
 import {authorityPickerView, filterAuthorities, routingOriginView} from '../site/apps/reception/ai/authority-picker.js';
-import {RECEPTION_AUTHORITIES, RECEPTION_TERRITORIES} from '../site/apps/reception/ai/authority-directory.js';
+import {RECEPTION_AUTHORITIES, RECEPTION_MFC_AUTHORITY_IDS, RECEPTION_TERRITORIES} from '../site/apps/reception/ai/authority-directory.js';
 import {publicRoutingWorkflow} from '../firebase/functions/reception-ai/routing-workflow.mjs';
 
 test('authority search recognises abbreviations and distinguishes Moscow from Moscow Oblast', () => {
@@ -62,4 +62,29 @@ test('localized authority names retain the same scored IDs and can be found in e
     assert.match(chooser,locale==='en'?/Authorized unit of the authority/:/收到来信机关的主管部门/);
     assert.match(chooser,/value="reception-unit" checked/);
   }
+});
+
+
+test('every MFC destination has an emblem and only eligible recipients appear in the route picker', async () => {
+  const {MFC_ROUTING_AUTHORITY_IDS,ROUTING_AUTHORITY_ALIASES} = await import('../firebase/functions/reception-ai/routing-directory.mjs');
+  const ids = [...MFC_ROUTING_AUTHORITY_IDS].map(id=>ROUTING_AUTHORITY_ALIASES[id] || id);
+  assert.deepEqual(new Set(ids), RECEPTION_MFC_AUTHORITY_IDS);
+  const all = filterAuthorities({mfcOnly:true});
+  assert.deepEqual(new Set(all.map(row=>row.id)), RECEPTION_MFC_AUTHORITY_IDS);
+  assert.ok(all.every(row=>row.emblem));
+  assert.ok(!all.some(row=>row.id==='reception-unit'));
+  const manifest = JSON.parse(await readFile(new URL('../site/apps/reception/assets/territory-emblems/sources.json',import.meta.url)));
+  assert.deepEqual(new Set(Object.keys(manifest)),new Set(Object.keys(RECEPTION_TERRITORIES)));
+  assert.equal(new Set(Object.values(manifest).map(row=>row.asset)).size,Object.keys(manifest).length);
+  for (const [region,{asset,source}] of Object.entries(manifest)) {
+    assert.ok(source.startsWith('https://'));
+    assert.ok(all.some(row=>row.territoryIds.includes(region) && row.emblem===asset),region);
+    const bytes = await readFile(new URL('../site/'+asset,import.meta.url));
+    assert.equal(bytes.toString('ascii',8,12),'WEBP',region);
+  }
+  for (const [locale,search] of [['en','bank of russia'],['zh','俄罗斯中央银行']]) {
+    assert.deepEqual(filterAuthorities({mfcOnly:true,search,locale}).map(row=>row.id),['bank-of-russia']);
+  }
+  const route = authorityPickerView({}, {workflow:{routingPolicy:{allowInternal:false}},search:'Профильное подразделение'});
+  assert.doesNotMatch(route,/value="reception-unit"/);
 });

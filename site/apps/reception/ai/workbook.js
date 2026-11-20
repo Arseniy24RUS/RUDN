@@ -30,7 +30,8 @@ export function caseTimelineView(workbook,{locale='ru'}={}){
  const kind=event=>standardEvents.includes(event.kind)?event.kind:standardEvents.includes(event.id)?event.id:'other';
  const ordered=[...standardEvents,'other'].flatMap(category=>events.filter(event=>kind(event)===category));
  return `<dl class="rxa-case-timeline" aria-label="${esc(t.dates)}">${ordered.map(event=>{
-   const category=kind(event),label=category==='other'?display(event.label,locale):t[category];
+   const category=kind(event);
+   const label=workbook.routingPolicy?.allowInternal===false||category==='other'?display(event.label,locale)||t[category]:t[category];
    return `<div class="event-${category}"><dt>${esc(label)}</dt><dd><time datetime="${esc(event.date)}">${date(event.date)}</time></dd></div>`;
  }).join('')}</dl>`;
 }

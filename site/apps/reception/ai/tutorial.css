@@ -15,6 +15,22 @@
 .rxt-route-stage .rxa-btn { margin-top: 10px; }
 .rxt-stage-state { display: block; margin-top: 6px; color: #3f617b; font-size: .8125rem; font-weight: 640; }
 .rxt-recover { margin-top: 12px; }
+.rxt-mfc-intro,
+.rxt-calendar-rules {
+  padding: 12px 14px;
+  border-inline-start: 3px solid #398dbd;
+  border-radius: 8px;
+  background: #eff7fe;
+  color: var(--rxa-ink);
+}
+.rxt-mfc-intro { margin: 0 0 14px; }
+.rxt-calendar-rules { margin-bottom: 12px; }
+.rxt-mfc-intro h2,
+.rxt-calendar-rules h4 { margin: 0; font-size: 1rem; }
+.rxt-mfc-intro p,
+.rxt-calendar-rules p,
+.rxt-route-note { margin: 5px 0 0; font-size: .9rem; line-height: 1.45; }
+.rxt-route-note:last-of-type { margin-bottom: 12px; }
 .rxt-guide, .rxt-mentor { background: #eff7fe; border: 1px solid #afd4ee; border-radius: 14px; margin: 16px 26px 0; padding: 14px 17px; }
 .rxt-guide h2, .rxt-mentor h2 { margin: 0; font-size: 1.0625rem; }
 .rxt-guide p, .rxt-mentor p { margin: 5px 0 0; font-size: .9rem; }
@@ -44,6 +60,7 @@
 .reception-ai-root.rxa-cabinet .rxt-journey-start .rxa-welcome { margin-bottom: 16px; }
 .reception-ai-root.rxa-cabinet .rxt-active-reception { align-items: start; }
 @media (max-width: 760px) {
+  .rxt-mfc-intro { margin-inline: 15px; }
   .rxt-guide, .rxt-mentor { margin: 10px 12px 0; padding: 12px; }
   .rxt-route-stage { grid-template-columns: 32px minmax(0,1fr); gap: 9px; padding: 12px; }
   .rxt-stage-icon { width: 32px; height: 32px; }
