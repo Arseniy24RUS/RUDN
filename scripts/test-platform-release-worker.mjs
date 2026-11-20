@@ -53,5 +53,8 @@ test('current-only navigation leaves cached retired HTML and opens the published
   assert.equal(response.status,302);assert.equal(response.headers.get('location'),scope.replace(/\/$/,'')+b.target.entryURL.slice('/RUDN'.length)+'?language=zh');
   assert.ok(!old.requests.slice(start).some(name=>name.includes('/_releases/'+a.target.buildId+'/')));
   assert.equal(await (await old.request(b.target.entryURL,{mode:'navigate',resultingClientId:'new-session'})).text(),'<html>new</html>');
-  old.offline=true;assert.equal(await (await old.request(b.target.entryURL,{mode:'navigate',resultingClientId:'offline-session'})).text(),'<html>new</html>');
+  old.offline=true;
+  assert.equal(await (await old.request(b.target.entryURL,{mode:'navigate',resultingClientId:'offline-session'})).text(),'<html>new</html>');
+  assert.equal(await (await old.request(a.target.entryURL,{mode:'navigate',resultingClientId:'offline-old'})).text(),'<html>old</html>');
+  assert.equal((await old.request('release.json')).headers.get('X-RUDN-Release-Source'),'worker-fallback');
 });

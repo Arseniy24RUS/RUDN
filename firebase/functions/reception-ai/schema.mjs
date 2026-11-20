@@ -145,12 +145,12 @@ function validateDossier(input,isVariant,allowSeminarStory=false) {
   } catch (error) { throw new ReceptionError('invalid_case', 503); }
 }
 
-export function validateDecision(input, c, opened, {knowledgeQuiz=true,decisionVersion,state,locale:language='ru'}={}) {
+export function validateDecision(input, c, opened, {knowledgeQuiz=true,decisionVersion,state,locale:language='ru',fixedKind}={}) {
   if(decisionVersion===DECISION_VERSION){
     const d=fields(input,['procedureId','routeId','actionIds','law','deadline','basisDocumentIds','reasoning','assessment','correspondence']);
     if(typeof d.deadline!=='string'||d.deadline!==''&&!parseDateOnly(d.deadline))fail('invalid_decision');
     return {procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:parseDateOnly(d.deadline)||'',
-      basisDocumentIds:[],reasoning:'',correspondence:validateCorrespondence(d.correspondence,c,state||{openedDocumentIds:opened,messages:[]},language)};
+      basisDocumentIds:[],reasoning:'',correspondence:validateCorrespondence(d.correspondence,c,state||{openedDocumentIds:opened,messages:[]},language,{fixedKind})};
   }
   if(decisionVersion!==undefined)fail('invalid_decision_version');
   const d = fields(input, ['procedureId', 'routeId', 'actionIds', 'law', 'deadline', 'basisDocumentIds', 'reasoning','assessment']);

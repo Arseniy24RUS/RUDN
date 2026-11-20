@@ -77,7 +77,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
           const withRecoveryProgress = withProgress && body.op === 'recover';
           const recovery = () => ({view, seminarProgress:packet.seminarProgress || view?.seminarProgress || null,
             ...(typeof packet.legacySessionId==='string'&&packet.legacySessionId ? {legacySessionId:packet.legacySessionId} : {}),
-            ...(Array.isArray(packet.legacySessions)?{legacySessions:packet.legacySessions.slice(0,12).filter(row=>
+            ...(Array.isArray(packet.legacySessions)?{legacySessions:packet.legacySessions.filter(row=>
               /^[a-f0-9]{40}$/.test(row?.id||'')&&['example','mentor','independent'].includes(row.journeyStage))}:{})});
           if (body.op === 'recover' && view === null) return withRecoveryProgress ? recovery() : null;
           if (!view || typeof view.id !== 'string' || !Number.isInteger(view.revision)

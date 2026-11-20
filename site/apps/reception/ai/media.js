@@ -36,13 +36,149 @@ export function characterMedia(caseId, portrait) {
   });
 }
 
+// 120 authored 12 fps frames decoded from C03.webp, sampled at 224 × 305.
+const C03_FRAMES = Object.freeze({width:224, height:305, columns:12, count:120, interval:1000/12});
+const MOTION_COPY = Object.freeze({
+  ru:['Анимация', 'Анимация персонажа'],
+  en:['Motion', 'Character motion'],
+  zh:['动画', '角色动画']
+});
+
+function createSergeyMotion(root, view, reducedMotion) {
+  const document = root.ownerDocument;
+  const canvas = document.createElement('canvas');
+  let context;
+  const {width,height,columns,count,interval} = C03_FRAMES;
+  canvas.width = width;
+  canvas.height = height;
+  canvas.className = 'rxa-citizen-video';
+  canvas.setAttribute('data-rxa-motion-canvas', '');
+  canvas.setAttribute('aria-hidden', 'true');
+
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'rxa-motion-toggle';
+  toggle.dataset.focus = 'citizen-motion';
+  const connection = view.navigator.connection;
+  const reducedData = view.matchMedia?.('(prefers-reduced-data: reduce)');
+  let stage = null, visible = false, enabled = null, atlas = null, loading = null, failed = false;
+  let timer = null, frame = -1, nextFrameAt = 0;
+
+  function canPlay() { return enabled ?? !(reducedMotion.matches || reducedData?.matches || connection?.saveData); }
+  function shouldDraw() { return stage && visible && canPlay(); }
+
+  function stop() {
+    if (timer !== null) view.clearTimeout(timer);
+    timer = null;
+    stage?.removeAttribute('data-rxa-motion-ready');
+  }
+
+  function tick() {
+    timer = null;
+    if (!shouldDraw() || !atlas) return;
+    const at = view.performance.now();
+    if (at >= nextFrameAt) {
+      const advance = 1 + Math.floor((at-nextFrameAt)/interval);
+      frame = (frame+advance)%count;
+      const x = frame%columns*width, y = Math.floor(frame/columns)*height;
+      context.clearRect(0,0,width,height);
+      context.drawImage(atlas,x,y,width,height,0,0,width,height);
+      stage.setAttribute('data-rxa-motion-ready', '');
+      nextFrameAt += advance*interval;
+    }
+    timer = view.setTimeout(tick,Math.max(0,nextFrameAt-view.performance.now()));
+  }
+
+  function loadFrames() {
+    if (loading || failed) return;
+    const source = new view.Image();
+    loading = source;
+    source.decoding = 'async';
+    source.onload = async () => {
+      try {
+        await source.decode?.();
+        if (loading !== source) return;
+        if (source.naturalWidth !== columns*width || source.naturalHeight !== count/columns*height) {
+          throw new Error('Unexpected C03 frame atlas dimensions');
+        }
+        atlas = source;
+        loading = null;
+        sync();
+      } catch { loadFailed(); }
+    };
+    function loadFailed() {
+      if (loading !== source) return;
+      loading = null;
+      failed = true;
+    }
+    source.onerror = loadFailed;
+    source.src = url('assets/gfx1/motion/C03-frames.webp');
+  }
+
+  function sync() {
+    if (!stage) return;
+    const lang = (root.lang || document.documentElement.lang).slice(0,2);
+    const [label, accessibleName] = MOTION_COPY[lang] || MOTION_COPY.ru;
+    toggle.textContent = label;
+    toggle.setAttribute('aria-label', accessibleName);
+    toggle.setAttribute('aria-pressed', String(canPlay()));
+    stage.toggleAttribute('data-rxa-motion-manual', enabled===true);
+    if (!shouldDraw()) { stop(); return; }
+    context ??= canvas.getContext('2d');
+    if (!context) { toggle.disabled = true; return; }
+    if (!atlas) { loadFrames(); return; }
+    if (timer === null) {
+      nextFrameAt = view.performance.now();
+      tick();
+    }
+  }
+
+  function refresh(next, inView = false) {
+    if (next !== stage) {
+      stop();
+      stage?.removeAttribute('data-rxa-motion-manual');
+      if (next && !stage) failed = false;
+      stage = next;
+      if (stage) stage.append(canvas,toggle);
+      else { canvas.remove(); toggle.remove(); }
+    }
+    visible = inView;
+    sync();
+  }
+
+  function retry() { failed = false; sync(); }
+  function chooseMotion() {
+    enabled = !canPlay();
+    retry();
+  }
+  toggle.addEventListener('click', chooseMotion);
+  connection?.addEventListener?.('change', sync);
+  reducedData?.addEventListener?.('change', sync);
+  return {
+    refresh, retry,
+    destroy() {
+      refresh(null);
+      if (loading) {
+        loading.onload = loading.onerror = null;
+        loading.removeAttribute('src');
+        loading = null;
+      }
+      atlas = null;
+      toggle.removeEventListener('click', chooseMotion);
+      connection?.removeEventListener?.('change', sync);
+      reducedData?.removeEventListener?.('change', sync);
+    }
+  };
+}
+
 /** Retained media nodes survive rerenders without restarting their sources.
  * Animated WebP, converted from the same authored loop, covers browsers without
  * transparent VP9 or video autoplay. An image animation has no pause API: leaving
  * the visible reception clears its src, restores the poster and releases the loop;
- * returning begins the loop again. Reduced motion never fetches either format.
+ * returning begins the loop again. C03 uses the same frames drawn from a static
+ * atlas so mobile autoplay and animated-image policies cannot freeze the loop.
  */
-export function createMessengerMedia(root, {signal} = {}) {
+export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) {
   const document = root.ownerDocument, view = document?.defaultView;
   const empty = {refresh() {}, destroy() {}};
   if (!view || signal?.aborted) return empty;
@@ -67,6 +203,9 @@ export function createMessengerMedia(root, {signal} = {}) {
   motionImage.alt = '';
   motionImage.decoding = 'async';
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
+  const sergeyMotion = lessonFrames && view.CanvasRenderingContext2D
+    ? createSergeyMotion(root, view, reduce)
+    : null;
   const failedVideo = new Set(), imageFailures = new Map();
   let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false, imageReady = false;
   let watchdog, imageRetry, lastVideoTime = 0, lastProgressAt = 0, sourceVersion = 0;
@@ -155,6 +294,7 @@ export function createMessengerMedia(root, {signal} = {}) {
     imagePlayback();
   }
   function networkRestored() {
+    sergeyMotion?.retry();
     if (!imageFailures.delete(actor)) return;
     clearImage(); playback();
   }
@@ -180,6 +320,11 @@ export function createMessengerMedia(root, {signal} = {}) {
   }
   function error() { if (actor) failedVideo.add(actor); clearSource(); video.remove(); imagePlayback(); }
   function playback() {
+    if (actor === 'C03' && sergeyMotion) {
+      sergeyMotion.refresh(stage, visible && !document.hidden);
+      return;
+    }
+    sergeyMotion?.refresh(null);
     if (!shouldPlay()) {
       pause();
       if (motionImage.hasAttribute('src') || imageRetry !== undefined) { clearImage(); portrait(); }
@@ -207,15 +352,16 @@ export function createMessengerMedia(root, {signal} = {}) {
 
   function refresh() {
     if (destroyed) return;
-    const candidate = reduce.matches ? null : root.querySelector('[data-rxa-actor]');
-    const next = ACTOR.test(candidate?.dataset.rxaActor || '') ? candidate : null;
+    const candidate = root.querySelector('[data-rxa-actor]');
+    const nextActor = candidate?.dataset.rxaActor || '';
+    const next = ACTOR.test(nextActor) && (!reduce.matches || nextActor === 'C03' && sergeyMotion) ? candidate : null;
     if (next === stage) { playback(); return; }
     const returning = !stage;
     if (stage) { cancelFrame(); observer?.unobserve(stage); stage.removeAttribute('data-rxa-motion-ready'); }
     stage = next;
     if (!stage) {
       if (reduce.matches) clearSource(); else pause();
-      clearImage(); video.remove(); return;
+      clearImage(); video.remove(); sergeyMotion?.refresh(null); return;
     }
     if (stage.dataset.rxaActor !== actor) {
       clearSource(); clearImage(); actor = stage.dataset.rxaActor;
@@ -238,7 +384,7 @@ export function createMessengerMedia(root, {signal} = {}) {
     signal?.removeEventListener('abort', destroy);
     video.removeEventListener('playing', playing); video.removeEventListener('error', error);
     motionImage.removeEventListener('load', imageLoaded); motionImage.removeEventListener('error', imageError);
-    clearSource(); clearImage(); video.remove(); stage = null;
+    clearSource(); clearImage(); video.remove(); sergeyMotion?.destroy(); stage = null;
   }
   document.addEventListener('visibilitychange', playback);
   view.addEventListener?.('online', networkRestored);

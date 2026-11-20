@@ -79,14 +79,20 @@ async function readManifest(target,{signal}={}){
 }
 export async function checkRelease({signal}={}){
   const response=await fetch(new URL('release.json',siteRoot),{cache:'no-store',credentials:'same-origin',signal});
-  if(!response.ok)throw failure('release/pointer-unavailable');const pointer=await response.json();abort(signal);
+  if(!response.ok||response.headers.get('X-RUDN-Release-Source')==='worker-fallback')throw failure('release/pointer-unavailable');const pointer=await response.json();abort(signal);
   if(pointer.schema!==SCHEMA)throw failure('release/invalid-pointer');validateTarget(pointer.current);if(pointer.previous)validateTarget(pointer.previous);
   if(pointer.retention==='current-only'&&pointer.previous)throw failure('release/invalid-retention');
   return {...pointer.current,previous:pointer.previous||null,...(pointer.retention==='current-only'?{retention:pointer.retention}:{})};
 }
-export async function prepareRelease(target,{module,resources=[],signal}={}){
+function entryForLocation(context){
+  const here=new URL(location.href),root=new URL(context.siteRoot);
+  let logical=here.pathname.slice(root.pathname.length).replace(/^_releases\/[a-f0-9]{32}\//,'');
+  if(!logical||logical.endsWith('/'))logical+='index.html';
+  return context.publicEntries?.includes(logical)?logical:'index.html';
+}
+export async function prepareRelease(target,{module,resources=[],entryOnly=false,signal}={}){
   const context=await readManifest(target,{signal});
-  const names=[...new Set([...context.packs.shell,...(context.packs[module]||[]),...resources])];
+  const names=entryOnly?[entryForLocation(context)]:[...new Set([...context.packs.shell,...(context.packs[module]||[]),...resources])];
   if(names.some(path=>!context.resources[path]))throw failure('release/unknown-resource');
   let cache=null;try{cache=await globalThis.caches?.open(`rudn-gmu-pages:${encodeURIComponent(siteRoot)}:release-${context.buildId}`);}catch{}
   const queue=[...names],verifiedNames=[];
@@ -109,16 +115,22 @@ export function activatePreparedRelease(target,{resumeToken}={}){
   validateTarget(target);const receipt=receipts.get(target.buildId);if(!receipt?.ready)throw failure('release/not-prepared');
   const marker={schema:1,buildId:target.buildId,manifestURL:target.manifestURL,manifestSha256:target.manifestSha256,entryURL:target.entryURL,resumeToken:typeof resumeToken==='string'?resumeToken:null,createdAt:Date.now()};
   try{sessionStorage.setItem(RESUME_KEY,JSON.stringify(marker));}catch{throw failure('release/transition-storage-unavailable');}
-  const context=getReleaseContext(),current=context&&new URL(location.href).pathname;
-  const logical=current?.startsWith(new URL(context.runtimeRoot).pathname)?current.slice(new URL(context.runtimeRoot).pathname.length):'index.html';
-  const alternative=receipt.context.resources[logical];
-  const url=inside(alternative?.kind==='runtime'&&logical.endsWith('.html')?alternative.url:target.entryURL);url.search=location.search;url.hash=location.hash;if(resumeToken){if(!/^[a-zA-Z0-9_-]{1,128}$/.test(resumeToken))throw failure('release/invalid-resume-token');url.searchParams.set('rudnResume',resumeToken);}location.replace(url.href);
+  const alternative=receipt.context.resources[entryForLocation(receipt.context)];
+  const url=inside(alternative?.kind==='runtime'?alternative.url:target.entryURL);
+  url.search=location.search;url.hash=location.hash;
+  if(resumeToken){
+    if(!/^[a-zA-Z0-9_-]{1,128}$/.test(resumeToken))throw failure('release/invalid-resume-token');
+    const parameters=url.search?url.search.slice(1).split('&').filter(part=>!new URLSearchParams(part).has('rudnResume')):[];
+    url.search=[...parameters,'rudnResume='+resumeToken].join('&');
+  }
+  location.replace(url.href);
 }
 export function rollbackRelease(target,options){
   if(currentOnlyBoot||getReleaseContext()?.retention==='current-only')throw failure('release/rollback-unavailable');
   return activatePreparedRelease(target,options);
 }
 async function latestPublishedRelease(expected){
+  if(navigator.onLine===false)return null;
   const signal=AbortSignal.timeout(5000);
   let target;
   try{target=await checkRelease({signal});}catch{return null;}
@@ -127,10 +139,10 @@ async function latestPublishedRelease(expected){
   if(expected===target.buildId)return target;
   // Verify the latest manifest before replacing an old exact route. Preserve
   // search and hash so the learner returns to the same screen in the new app.
-  const context=await readManifest(target,{signal});
-  const here=new URL(location.href),oldRoot=new URL(`_releases/${expected}/`,siteRoot).pathname;
-  const logical=here.pathname.startsWith(oldRoot)?here.pathname.slice(oldRoot.length):'index.html';
-  const entry=context.publicEntries?.includes(logical)?context.resources[logical]:null;
+  let context;
+  try{context=await readManifest(target,{signal});}catch{return null;}
+  const here=new URL(location.href);
+  const entry=context.resources[entryForLocation(context)];
   const url=inside(entry?.kind==='runtime'?entry.url:target.entryURL);
   url.search=here.search;url.hash=here.hash;
   location.replace(url.href);

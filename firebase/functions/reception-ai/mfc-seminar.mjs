@@ -1,4 +1,5 @@
 export const MFC_SEMINAR_VERSION = 'mfc-referral-v2';
+export const MFC_REPLY_KIND = 'reply';
 export const MFC_CALENDAR_VERSION = 'mfc-7-plus-30-v2';
 export const MFC_DATES_ONLY_CALENDAR_VERSION = 'mfc-7-plus-30-v1';
 export const LEGACY_MFC_CALENDAR_VERSION = 'mfc-calendar-original-v1';
@@ -32,6 +33,12 @@ export const mfcSharedReplyInstruction = {
   zh:'在 MFC 受理台为同一件来信选出全部主管接收方，并起草一份统一答复。逐项说明实质结论，并保护保密信息。'
 };
 
+export const mfcInternalRecordInstruction = {
+  ru:'Подготовьте один служебный документ. Зафиксируйте поступившие сведения, объясните, куда передать сообщение, и укажите, какие меры нужны. Индивидуальный ответ не направляется.',
+  en:'Prepare one internal record. Summarise the information received, explain where to refer it and identify any necessary action. No individual reply is sent.',
+  zh:'拟写一份内部记录，记明收到的信息、应转交的机关及需要采取的措施。无需向个人发送答复。'
+};
+
 export const mfcScene = {
   title:{ru:'Сотрудник приёмной МФЦ',en:'MFC reception officer',zh:'多功能政务服务中心受理人员'},
   text:{
@@ -42,9 +49,11 @@ export const mfcScene = {
   authorityLabel:{ru:'Контекст исходного дела',en:'Context from the original case',zh:'原案背景'}
 };
 
-export function mfcRole(role,locale,sharedReply=false) {
+export function mfcRole(role,locale,sharedReply=false,fixedKind) {
   const text=value=>value?.[locale]||value?.ru||value||'';
-  return {title:text(mfcScene.title),text:text(sharedReply?mfcSharedReplyInstruction:mfcScene.text),
+  const task=fixedKind==='internal'?mfcInternalRecordInstruction:
+    sharedReply||fixedKind===MFC_REPLY_KIND?mfcSharedReplyInstruction:mfcScene.text;
+  return {title:text(mfcScene.title),text:text(task),
     authorityContext:{label:text(mfcScene.authorityLabel),title:text(role.title),text:text(role.text)}};
 }
 

@@ -6,7 +6,9 @@ import { ReceptionError } from './schema.mjs';
 import { mfcScene } from './mfc-seminar.mjs';
 import { mfcRoutingAlternatives } from './mfc-routing.mjs';
 
-export const SEMINAR_STORY_VERSION = 'mfc-stories-v1';
+export const LEGACY_SEMINAR_STORY_VERSION = 'mfc-stories-v1';
+export const SEMINAR_STORY_VERSION = 'mfc-stories-v2';
+export const SEMINAR_STORY_PROGRESS_KEY = 'storyJourneyV2';
 const stories = { ...storiesA, ...storiesB };
 const languages = ['ru', 'en', 'zh'];
 const material = { ru:'Материал дела', en:'Case record', zh:'事项材料' };

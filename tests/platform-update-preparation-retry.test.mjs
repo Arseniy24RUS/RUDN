@@ -11,7 +11,7 @@ async function advance(t,ms){t.mock.timers.tick(ms);await settled()}
 
 // Use the actual coordinator with simulated platform boundaries. Only the clock,
 // resource API, storage and DOM event sources are controlled by these tests.
-function harness(t,{autoStart=false}={}){
+function harness(t,{autoStart=false,canonicalRoute}={}){
   t.mock.timers.enable({apis:['setTimeout','setInterval','Date'],now:0});
   let owner='synthetic:a',route='#activity/test',module='test',descriptor=target(B),input='initial',gate=null;
   let prepare=async()=>{throw failure('release/integrity')};
@@ -35,7 +35,7 @@ function harness(t,{autoStart=false}={}){
     activatePreparedRelease:()=>{counts.activated++}
   };
   const ready=value=>({ready:true,buildId:value.buildId,context:{contracts:CONTRACTS}});
-  const create=()=>bootstrapUpdateCoordinator({getAdapters:()=>list,getOwner:()=>owner,getRoute:()=>route,module:()=>module,release,store,storage,persistentStorage:storage,window:win,document:doc,autoStart,diagnostics:{record:()=>counts.diagnostic++}});
+  const create=()=>bootstrapUpdateCoordinator({getAdapters:()=>list,getOwner:()=>owner,getRoute:()=>route,canonicalRoute,module:()=>module,release,store,storage,persistentStorage:storage,window:win,document:doc,autoStart,diagnostics:{record:()=>counts.diagnostic++}});
   const coordinator=create();
   t.after(()=>coordinator.destroy());
   return {
@@ -125,6 +125,36 @@ for(const event of ['rudn:module-ready','pageshow','visibilitychange','online'])
   const h=harness(t);await h.coordinator.check();const before=h.counts.pointer;
   h.setTarget(target(C));h.recover();h.emit(event,event==='visibilitychange'?h.doc:h.win);await advance(t,800);
   assert.equal(h.counts.pointer,before+1);assert.equal(h.counts.prepared,2);assert.equal(h.counts.activated,1);
+});
+
+for(const event of ['pageshow','visibilitychange','online'])test(`${event} prepares only the current entry and checkpoints before switching`,async t=>{
+  const h=harness(t);
+  h.setTarget({...target(B),previous:null,retention:'current-only'});
+  h.setPrepare(async (value,options)=>{
+    assert.equal(options.entryOnly,true);
+    assert.equal(h.counts.checkpoint,0);
+    return h.ready(value);
+  });
+  h.win.navigator.onLine=false;
+  assert.equal((await h.coordinator.check()).status,'defer');
+  assert.equal(h.counts.pointer,0);
+  h.win.navigator.onLine=true;
+  h.emit(event,event==='visibilitychange'?h.doc:h.win);await advance(t,800);
+  assert.equal(h.counts.checkpoint,1);
+  assert.equal(h.counts.activated,1);
+});
+
+test('a checkpoint from the retired Reception bookmark settles on the canonical sign-in screen',async t=>{
+  const alias='#games/reception',course='#activity/seminar-5';
+  const h=harness(t,{canonicalRoute:hash=>hash===alias?course:hash});
+  const token='test-reception-route';
+  h.setRoute(course);h.setAdapters([{module:'platform'}]);
+  h.release.getReleaseContext=()=>({buildId:B,retention:'current-only'});
+  h.storage.setItem(UPDATE_PENDING_KEY,JSON.stringify({token,owner:'synthetic:a',sourceBuild:A,targetBuild:B,phase:'switching'}));
+  h.snapshots.set(token,{owner:'synthetic:a',route:alias,sourceBuild:A,adapters:[{module:'reception',resumeToken:'old-draft'}]});
+  assert.equal((await h.coordinator.restorePending()).status,'retired');
+  assert.equal(h.storage.getItem(UPDATE_PENDING_KEY),null);
+  assert.ok(h.snapshots.has(token));
 });
 
 for(const event of ['rudn:module-ready','pageshow','visibilitychange'])test(`${event} checks the pointer without retrying unchanged bad bytes`,async t=>{

@@ -17,7 +17,7 @@ function compatibleContracts(current,target,list){
 
 // A coordinator is scoped to one document/tab. Accepted work stays in the normal
 // draft/outbox stores; this envelope contains only local recovery references.
-export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnostics,module='platform',getOwner=()=>'',getRoute=()=>globalThis.location?.hash||'',restoreRoute,release=releaseAPI,store=updateSnapshotStore(),storage=safeStorage('sessionStorage'),persistentStorage=safeStorage('localStorage'),window:win=globalThis.window,document:doc=globalThis.document,now=Date.now,autoStart=true}={}){
+export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnostics,module='platform',getOwner=()=>'',getRoute=()=>globalThis.location?.hash||'',canonicalRoute=route=>route,restoreRoute,release=releaseAPI,store=updateSnapshotStore(),storage=safeStorage('sessionStorage'),persistentStorage=safeStorage('localStorage'),window:win=globalThis.window,document:doc=globalThis.document,now=Date.now,autoStart=true}={}){
   let disposed=false,running=null,restoring=null,rollbackTask=null,rollbackToken=null,rollbackController=null,contextEpoch=0,revision=0,blocked=null,preparationBlocked=null,online=win?.navigator?.onLine,transition=null,restoration=null,timer=null,debounce=null,overlay=null,switched=false;
   const context=()=>release.getReleaseContext?.();
   const moduleName=()=>typeof module==='function'?module():module;
@@ -28,7 +28,16 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     return token&&/^[a-zA-Z0-9-]{12,80}$/.test(token)?JSON.parse(persistentStorage?.getItem(UPDATE_PENDING_KEY+':'+token)||'null'):null;
   }catch{return null}};
   const writePending=value=>{const json=JSON.stringify(value);storage.setItem(UPDATE_PENDING_KEY,json);if(storage.getItem(UPDATE_PENDING_KEY)!==json)throw fail('update/marker-not-durable');if(persistentStorage){const key=UPDATE_PENDING_KEY+':'+value.token;persistentStorage.setItem(key,json);if(persistentStorage.getItem(key)!==json)throw fail('update/marker-not-durable')}};
-  const clearPending=token=>{storage?.removeItem(UPDATE_PENDING_KEY);persistentStorage?.removeItem(UPDATE_PENDING_KEY+':'+token);if(win?.location?.href){const url=new URL(win.location.href);if(url.searchParams.get('rudnResume')===token){url.searchParams.delete('rudnResume');win.history?.replaceState?.(null,'',url.href)}}};
+  const clearPending=token=>{
+    storage?.removeItem(UPDATE_PENDING_KEY);
+    persistentStorage?.removeItem(UPDATE_PENDING_KEY+':'+token);
+    if(!win?.location?.href)return;
+    const url=new URL(win.location.href);
+    if(url.searchParams.get('rudnResume')!==token)return;
+    const parameters=url.search.slice(1).split('&');
+    url.search=parameters.filter(part=>new URLSearchParams(part).get('rudnResume')!==token).join('&');
+    win.history?.replaceState?.(null,'',url.href);
+  };
   const adapters=()=>{const value=getAdapters();return Array.isArray(value)?value:[value]};
   const show=(recovery=false)=>{
     if(!doc?.body)return;
@@ -47,7 +56,7 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
   async function cancel(list,{discard=true}={}){await Promise.allSettled(list.filter(Boolean).map(a=>a.cancelPreparation?.({discard})));if(pending()?.phase!=='blocked')hide()}
   const stable=(owner,route,list)=>!disposed&&owner===getOwner()&&route===getRoute()&&list.length===adapters().length&&list.every((a,i)=>adapters()[i]===a);
   async function runCheck(reason){
-    if(disposed||switched||doc?.visibilityState==='hidden'||pending())return {status:'defer',code:'inactive-or-restoring'};
+    if(disposed||switched||doc?.visibilityState==='hidden'||win?.navigator?.onLine===false||pending())return {status:'defer',code:'inactive-or-restoring'};
     const current=context();if(!current?.buildId)return {status:'defer',code:'unversioned'};
     const controller=new AbortController();transition=controller;
     const epoch=contextEpoch,owner=getOwner(),route=getRoute(),operation=moduleName();
@@ -72,7 +81,7 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       }
       record('update-state',{stage:'prepare-release',operation,code:reason});
       preparingRelease=true;
-      const receipt=await release.prepareRelease(target,{module:operation,signal:controller.signal});
+      const receipt=await release.prepareRelease(target,{module:operation,entryOnly:target.retention==='current-only',signal:controller.signal});
       if(controller.signal.aborted||!sameContext(false))return {status:'defer',code:'context-changed'};
       if(!receipt?.ready||receipt.buildId!==target.buildId)throw fail('update/release-not-verified');
       if(!compatibleContracts(current.contracts,receipt.context?.contracts,list)){if(sameContext())blockPreparation('incompatible-contract');record('update-state',{stage:'contract',code:'invalid',success:false});return {status:'defer',code:'incompatible-contract'}}
@@ -171,12 +180,20 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
     if(disposed||controller.signal.aborted||initialOwner!==getOwner()||initialRoute!==getRoute())return {status:'defer',code:'context-changed'};
     if(!envelope)return rollback(marker,null,'update/recovery-missing');
     if(envelope.owner!==getOwner())return {status:'defer',code:'owner-not-ready'};
-    if(envelope.route!==getRoute()){
-      await restoreRoute?.(envelope.route);return {status:'defer',code:'route-restoring'};
+    const route=canonicalRoute(envelope.route);
+    if(route!==getRoute()){
+      await restoreRoute?.(route);return {status:'defer',code:'route-restoring'};
     }
     const list=adapters();
+    // A retired game entry can now require sign-in or point to a scheduled seminar.
+    // Its drafts stay in their normal stores even when this screen only mounts the shell.
+    if(route!==envelope.route&&current.retention==='current-only'&&envelope.sourceBuild!==current.buildId&&
+       envelope.adapters.length===1&&isGameUpdateAdapter(envelope.adapters[0].module)&&
+       list.length===1&&list[0]?.module==='platform'){
+      clearPending(marker.token);release.markReleaseRestored?.();hide();return {status:'retired'};
+    }
     if(list.length!==envelope.adapters.length||list.some((a,i)=>!a?.resumeAfterUpdate||(a.module||moduleName())!==envelope.adapters[i].module)){
-      await restoreRoute?.(envelope.route,envelope);return {status:'defer',code:'module-not-ready'};
+      await restoreRoute?.(route,envelope);return {status:'defer',code:'module-not-ready'};
     }
     show();writePending({...marker,phase:marker.phase==='rollback'?'rollback':'restoring'});
     let timeout;
@@ -185,7 +202,7 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       for(let i=0;i<list.length;i++){
         if(current.retention==='current-only'&&envelope.sourceBuild!==current.buildId&&isGameUpdateAdapter(envelope.adapters[i].module))continue;
         const result=await Promise.race([list[i].resumeAfterUpdate({resumeToken:envelope.adapters[i].resumeToken,signal:controller.signal}),new Promise((_,reject)=>controller.signal.addEventListener('abort',()=>reject(fail('update/restore-timeout')),{once:true}))]);
-        if(!stable(envelope.owner,envelope.route,list)||controller.signal.aborted)return {status:'defer',code:'context-changed'};
+        if(!stable(envelope.owner,route,list)||controller.signal.aborted)return {status:'defer',code:'context-changed'};
         if(result?.status!=='restored')return rollback(marker,envelope,result?.code||'update/restore-incomplete');
       }
       if(marker.phase==='rollback'&&marker.failedBuild&&!recordFailedRelease({buildId:marker.failedBuild,sourceBuild:marker.sourceBuild,code:'restore-failed'},{storage:persistentStorage})){
@@ -198,7 +215,7 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
       clearPending(marker.token);blocked=null;
       for(const item of envelope.adapters)await store.remove(item.resumeToken);
       await store.remove(envelope.token);hide();if(interruptedSwitch)notifyStateChanged();return {status:'restored'};
-    }catch(error){return stable(envelope.owner,envelope.route,list)?rollback(marker,envelope,error?.code||'update/restore-failed'):{status:'defer',code:'context-changed'}}
+    }catch(error){return stable(envelope.owner,route,list)?rollback(marker,envelope,error?.code||'update/restore-failed'):{status:'defer',code:'context-changed'}}
     finally{clearTimeout(timeout);if(restoration===controller)restoration=null;if(!switched)await cancel(list)}
   }
   function restorePending(){if(restoring)return restoring;restoring=runRestore().finally(()=>{restoring=null});return restoring}

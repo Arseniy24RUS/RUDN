@@ -2,7 +2,7 @@ import {bootstrapUpdateCoordinator} from '../../../assets/js/platform-update-coo
 import {getSharedPlatformDiagnostics} from '../../../assets/js/diagnostics.js';
 import {backend as sharedBackend} from '../../../assets/js/backend.js?v=1.3.10';
 import {attemptOwner} from '../../../assets/js/attempt-session.js?v=1.3.10';
-import {resourceURL} from '../../../assets/js/release-resources.js';
+import {getReleaseContext,resourceURL} from '../../../assets/js/release-resources.js';
 import {mountReception} from '../ai/entry.js';
 import {RECEPTION_AI_CONFIG} from '../ai/config.js';
 const root=document.getElementById('receptionApp');
@@ -18,6 +18,11 @@ const diagnostics={record:(...args)=>diagnosticScope.record(...args),error:(...a
 const rebindDiagnostics=()=>{diagnosticScope.destroy();diagnosticScope=diagnosticService.forModule('reception');};
 async function mount(options){const handle=await mountReception(root,{...options,diagnostics});const coordinator=bootstrapUpdateCoordinator({getAdapters:()=>[handle],backend:sharedBackend,diagnostics,module:'reception',getOwner:()=>preview&&!RECEPTION_AI_CONFIG.enabled?'preview':attemptOwner(),getRoute:()=>String(preview)+location.hash});await coordinator.restorePending();}
 async function boot(){
+ if(RECEPTION_AI_CONFIG.enabled){
+  const home=new URL('index.html',getReleaseContext()?.siteRoot||new URL('../../',location.href));
+  home.search=location.search;home.searchParams.delete('preview');home.hash='activity/seminar-5';
+  location.replace(home.href);return;
+ }
  if(preview&&!RECEPTION_AI_CONFIG.enabled){void sharedBackend.ensureDiagnosticIdentity().then(rebindDiagnostics).catch(()=>{});await mount({profileLabel:'Автономная тренировка',assessmentAllowed:false,onExit:()=>{location.href='?preview=1';}});return;}
  try{
   const {backend}=await import('../../../assets/js/backend.js?v=1.3.10');

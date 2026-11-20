@@ -185,6 +185,11 @@ function route(){
   const [name,...parts]=raw.split('/');
   return {name:name||'dashboard',parts};
 }
+function receptionEntry(hash){
+  if(!/^#games\/reception\/?$/.test(hash))return hash;
+  const topic=data.course&&seminarTopic(data.course,'reception');
+  return topic?'#activity/'+topic.seminar.slug:hash;
+}
 function freeGameForRoute({name,parts}){return name==='puzzle'?'maps':name==='games'?parts[0]:null;}
 function formatDate(value){
   if(!value) return '—';
@@ -288,6 +293,8 @@ function externalCard(title,description,url,button=ui('openNewTab')){
 async function render(){
   if(!dataReady)return;
   if(renderRunning){renderAgain=true;return}
+  const entry=receptionEntry(location.hash);
+  if(entry!==location.hash)history.replaceState(history.state,'',entry);
   const nextKey=`${location.hash}:${attemptOwner()}`;
   const currentRoute=route();
   const freeGame=freeGameForRoute(currentRoute);
@@ -703,24 +710,21 @@ function isModuleRoute(module,context='course'){
 }
 function renderGamesRoute(module){
   if(module==='settlements'){renderSettlements('free');return;}
-  if(module==='reception'||module==='career'){
+  if(module==='career'){
     const topic=seminarTopic(data.course,module);
-    if(module==='reception')renderReception(topic,{context:'free'});
-    else{
-      navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
-      renderSeminar6(topic,{context:'free'});
-    }
+    navigator.serviceWorker?.controller?.postMessage({type:'PREPARE_MODULE',module});
+    renderSeminar6(topic,{context:'free'});
     return;
   }
   const games=GAMES.filter(game=>gameAccessGate(game.id,backend,data.course)?.open!==false);
   const lead=backend.getProfile()&&!backend.isAdmin()?GAMES_STUDENT_LEAD[getLocale()]||GAMES_STUDENT_LEAD.ru:gamesText('lead');
   app.innerHTML=contentPage(gamesText('title'),lead,`<div class="games-grid">${games.map(game=>`<article class="panel game-card" data-game="${game.id}"><span class="game-icon" aria-hidden="true">${game.icon}</span><div><h2>${esc(loc(game,'title'))}</h2><p class="muted">${esc(loc(game,'description'))}</p></div><a class="btn btn-primary" href="${esc(game.href.startsWith('#')?game.href:resourceURL(game.href,new URL('../../',import.meta.url)).href)}" aria-label="${esc(`${gamesText('play')}: ${loc(game,'title')}`)}">${gamesText('play')}</a></article>`).join('')}</div><p class="muted games-guest-note">${esc(gamesText('guest'))}</p>`);
 }
-function renderReception(topic,{context='course'}={}){
-  const free=context==='free';
+function renderReception(topic){
+  const context='course';
   const guest=attemptOwner()==='guest';
-  if(!free&&guest){
-    app.innerHTML=contentPage(loc(topic.seminar,'title'),ui('signInToContinue'),`<section class="panel"><div class="page-actions"><button type="button" class="btn btn-primary" id="receptionLogin">${ui('login')}</button><a class="btn btn-neutral" href="#games/reception">${esc(gamesText('free'))}</a></div></section>`);
+  if(guest){
+    app.innerHTML=contentPage(loc(topic.seminar,'title'),ui('signInToContinue'),`<section class="panel"><div class="page-actions"><button type="button" class="btn btn-primary" id="receptionLogin">${ui('login')}</button></div></section>`);
     app.querySelector('#receptionLogin').addEventListener('click',openAuthDialog);
     return;
   }
@@ -740,7 +744,7 @@ function renderReception(topic,{context='course'}={}){
   const active=()=>!controller.signal.aborted&&mount.isConnected&&owner===attemptOwner()&&isModuleRoute('reception',context);
   cleanup.refreshLocale=()=>{
     const access=accessSnapshot(),gate=topicGate(topic.number,access.overrides,access.now);
-    if(!free&&!accessAllowed(gate)){
+    if(!accessAllowed(gate)){
       cleanup();currentCleanup=null;
       lockedAccessPage(loc(topic.seminar,'title'),gate);
       return;
@@ -752,14 +756,12 @@ function renderReception(topic,{context='course'}={}){
     try{
       const {mountReception}=await import('../../apps/reception/ai/entry.js?v=6.0.0');
       if(!active())return;
-      const guestUid=guest?await backend.ensureReceptionGuest():null;
-      if(!active())return;
       mountStarted=true;
       mountedCleanup=await mountReception(mount,{
-        backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,guest,guestUid,
+        backend,diagnostics:scope,locale,getLocale,signal:controller.signal,context,
         period:String(accessSnapshot().context.startYear)+'-'+String(accessSnapshot().context.endYear),
-        assessmentAllowed:()=>{if(free)return false;const access=accessSnapshot();return topicGate(topic.number,access.overrides,access.now).open;},
-        onExit:()=>{location.hash=free?'games':'dashboard'}
+        assessmentAllowed:()=>{const access=accessSnapshot();return topicGate(topic.number,access.overrides,access.now).open;},
+        onExit:()=>{location.hash='dashboard'}
       });
       if(!active())return;
       mount.setAttribute('aria-busy','false');
@@ -1355,7 +1357,7 @@ window.addEventListener('rudn:identitychange',()=>{
 });
 
 function connectPageRelease(){
-  updateCoordinator=bootstrapUpdateCoordinator({backend,diagnostics,getOwner:attemptOwner,getAdapters:updateAdapters,
+  updateCoordinator=bootstrapUpdateCoordinator({backend,diagnostics,getOwner:attemptOwner,getAdapters:updateAdapters,canonicalRoute:receptionEntry,
     module:()=>currentCleanup?.module==='maps'?'puzzle':currentCleanup?.module?.startsWith('quiz')?'quiz':currentCleanup?.module||'platform',
     restoreRoute:async(hash,envelope)=>{
       if(location.hash!==hash){location.hash=hash;return}

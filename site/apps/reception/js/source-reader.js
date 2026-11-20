@@ -269,7 +269,8 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     const control=dialog.querySelector('[data-action="toggle-document-original"]');
     const focus=control===dialog.ownerDocument.activeElement;
     const status=dialog.querySelector('[data-source-reader-status]');
-    switching=true;dialog.dataset.languageSwitching='true';if(control)control.disabled=true;status.textContent=cabinetLabels().loading;renderSelection();
+    switching=true;dialog.dataset.languageSwitching='true';owner.root.inert=true;
+    if(control)control.disabled=true;status.textContent=cabinetLabels().loading;renderSelection();
     let changed=false;
     try{
       await owner.corpus.readerDocument(doc.id,original?'ru':lang);
@@ -278,7 +279,6 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       changed=true;renderDocument();await attachReader(owner,position);
       if(ticket!==generation)return;
       status.textContent='';
-      if(focus)dialog.querySelector('[data-action="toggle-document-original"]')?.focus({preventScroll:true});
     }catch(error){
       if(ticket!==generation)return;
       owner.locale=oldLocale;rs.original=oldOriginal;rs.uiLocale=oldLocale;
@@ -289,7 +289,12 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       if(ticket!==generation)return;
       if(error?.name!=='AbortError')status.textContent=readerCopy().switchFailed;
     }finally{
-      if(ticket===generation){switching=false;delete dialog.dataset.languageSwitching;if(control?.isConnected)control.disabled=false;renderSelection();}
+      if(ticket===generation){
+        switching=false;delete dialog.dataset.languageSwitching;owner.root.inert=false;
+        if(control?.isConnected)control.disabled=false;
+        renderSelection();
+        if(focus&&!status.textContent)dialog.querySelector('[data-action="toggle-document-original"]')?.focus({preventScroll:true});
+      }
     }
   }
   async function search(page=0){
@@ -391,6 +396,8 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       await corpus.readerDocument(id,rs.original?'ru':lang);
       if(ticket!==generation||closed){corpus.destroy();return false;}
       current=doc;app={root:dialog.querySelector('.rx-source-reader-content'),corpus,locale:lang,locales,state:{reader:readerState},unitIndexes:new WeakMap(),isLocked:()=>false,applyPresence:()=>{},fail};
+      // The search field renders before the virtual document and its submit listener are ready.
+      app.root.inert=true;
       renderDocument();await attachReader(app,positions[id]);
       if(ticket!==generation)return false;
       dialog.querySelector('[data-source-reader-status]').textContent='';
@@ -402,6 +409,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
         renderSelection();
       }
       app.root.addEventListener('submit',event=>{if(event.target.matches('[data-search-form="reader"]')){event.preventDefault();void search();}},{signal:aborter.signal});
+      app.root.inert=false;
       dialog.querySelector('[data-source-reader-close]').focus({preventScroll:true});
       return true;
     }catch(error){if(ticket===generation)fail(error);return false;}

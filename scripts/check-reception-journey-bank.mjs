@@ -7,7 +7,7 @@ import {createMemoryStore} from '../firebase/functions/reception-ai/store.mjs';
 import {calculateWorkbookDeadline} from '../firebase/functions/reception-ai/workbook-calendar.mjs';
 import {MFC_ROUTING_AUTHORITY_IDS} from '../firebase/functions/reception-ai/routing-directory.mjs';
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
-import {withSeminarStory, SEMINAR_STORY_VERSION} from '../firebase/functions/reception-ai/seminar-stories.mjs';
+import {withSeminarStory, SEMINAR_STORY_VERSION, SEMINAR_STORY_PROGRESS_KEY} from '../firebase/functions/reception-ai/seminar-stories.mjs';
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
 import {SEMINAR_EXAMPLE, tutorialGuide, tutorialExecutionAction, validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
 import {explicitQAReview} from './reception-correspondence-qa-cases.mjs';
@@ -24,6 +24,7 @@ const identity = {uid:'offline-practice', studentKey:'99990001'};
 const progressPath = 'seminarProgress/'+hash('student:'+identity.studentKey);
 const options = {context:'seminar', workbookVersion:2, decisionVersion:'correspondence-v1', controlVersion:'execution-v1'};
 const counts = {doubleDeadlines:0, multipleRecipients:0, examples:0, mentoredCases:0, scoredCases:0, citations:0, internalRoutes:0, forwardingRoutes:0};
+const documentKinds = {reply:0,internal:0};
 const failures = [];
 const controlSteps = ['control-request', 'control-evidence', 'control-status'];
 
@@ -31,7 +32,7 @@ async function checkCase(c, locale, stage) {
   const store = createMemoryStore();
   const scored = stage === 'independent';
   if (stage !== 'example') {
-    await store.transaction(progressPath, () => ({[story?'storyJourney':'journey']:{
+    await store.transaction(progressPath, () => ({[story?SEMINAR_STORY_PROGRESS_KEY:'journey']:{
       example:{completed:true}, ...(scored ? {mentor:{completed:true}} : {})
     }}));
   }
@@ -40,7 +41,7 @@ async function checkCase(c, locale, stage) {
     name:'offline-scripted', ready:true, async reviewMentorWork(){return {ready:true,feedback:'Fixture review',usage:{inputTokens:0,outputTokens:0}};},
     async generate(){assert.fail('No freeform generation is needed for this audit');}};
   const service = createReceptionService({store, cases:[c], provider, guidedSeminarCore:true,
-    requireGameplay:true, canStartAssessment:async()=>true, saveResult:async()=>{writes++;}});
+    requireGameplay:true, requireCurrentSeminarTraining:story, canStartAssessment:async()=>true, saveResult:async()=>{writes++;}});
   const handle = async body => {
     try { return (await service.handle(body,identity)).view; }
     catch(error){error.operation=[body.op,body.stepId].filter(Boolean).join('/');throw error;}
@@ -56,7 +57,13 @@ async function checkCase(c, locale, stage) {
   }
   const profile = privateCorrespondenceProfile(c,locale);
   const guide = tutorialGuide(c,profile,locale,{execution:true,core:true,coreStepsVersion});
-  const {decision} = guide;
+  const fixedKind=view.case.correspondence?.fixedKind;
+  if(story){
+    assert.equal(fixedKind,c.id==='anonymous-danger'?'internal':'reply');
+    assert.ok(profile.acceptedKinds.includes(fixedKind));
+    documentKinds[fixedKind]++;
+  }
+  const decision=story?{...guide.decision,correspondence:{...guide.decision.correspondence,kind:fixedKind}}:guide.decision;
   if (!legacy) {
     const wb = view.case.workbook;
     assert.equal(wb.routingPolicy.allowInternal,false);
@@ -112,6 +119,7 @@ async function checkCase(c, locale, stage) {
   else {assert.ok(decision.workbook.routing.recipientIds.length);counts.forwardingRoutes++;}
   if(scored)await send('decide',{decision});
   else await step('draft',{decision});
+  if(story)assert.equal(view.decision?.correspondence?.kind,fixedKind);
   const confirmGuidedChoice = async id => {
     const current=view.guidance?.steps[view.guidance.stepIndex];
     if(current?.id!==id)return;
@@ -140,7 +148,7 @@ async function checkCase(c, locale, stage) {
   assert.equal(writes,scored?1:0);
   if(scored) counts.scoredCases++;
   else {
-    assert.ok((await store.get(progressPath))[story?'storyJourney':legacy?'guidedJourney':'mfcJourney'][stage].completed);
+    assert.ok((await store.get(progressPath))[story?SEMINAR_STORY_PROGRESS_KEY:legacy?'guidedJourney':'mfcJourney'][stage].completed);
     if(stage==='example') counts.examples++;
     else counts.mentoredCases++;
   }
@@ -162,5 +170,5 @@ for(const file of files){
     }
   }
 }
-console.log(JSON.stringify({coreStepsVersion,...(story?{seminarStoryVersion:SEMINAR_STORY_VERSION}:{}),counts,failures}));
+console.log(JSON.stringify({coreStepsVersion,...(story?{seminarStoryVersion:SEMINAR_STORY_VERSION,documentKinds}:{}),counts,failures}));
 if(failures.length)process.exitCode=1;

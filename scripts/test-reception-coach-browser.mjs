@@ -16,23 +16,27 @@ import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/c
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
 import {MFC_CALENDAR_VERSION,MFC_CALENDAR_WITHOUT_REGISTRATION} from '../site/apps/reception/ai/core-steps.js';
 import {SEMINAR_EXAMPLE,seminarPointsAt,tutorialGuide,tutorialExecutionAction,validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
+import {SEMINAR_STORY_VERSION,SEMINAR_STORY_PROGRESS_KEY} from '../firebase/functions/reception-ai/seminar-stories.mjs';
+import {createReceptionService} from '../firebase/functions/reception-ai/service.mjs';
 
 const arg=(key, fallback)=>process.argv.includes(key)?process.argv[process.argv.indexOf(key)+1]:fallback;
 const engine=arg('--browser','chromium');
 const legacy=process.argv.includes('--legacy');
 const stories=process.argv.includes('--stories');
-const seminarStoryVersion=stories?'mfc-stories-v1':null;
+const seminarStoryVersion=stories?SEMINAR_STORY_VERSION:null;
 const scored=process.argv.includes('--scored')||process.argv.includes('--teacher');
+const anonymous=process.argv.includes('--anonymous');
 const teacherExample=process.argv.includes('--teacher-example');
 const teacherAccepted=process.argv.includes('--teacher-accepted');
 const teacher=process.argv.includes('--teacher')||teacherExample||teacherAccepted;
 assert.ok([legacy,scored,teacherExample,teacherAccepted].filter(Boolean).length<=1,'Select just one browser scenario.');
 assert.ok(!stories||!legacy&&!teacher,'Stories require the current student seminar.');
+assert.ok(!anonymous||stories&&scored,'The anonymous case requires --stories --scored.');
 const coreStepsVersion=legacy?null:'mfc-referral-v2';
 assert.ok(['chromium','webkit'].includes(engine));
 const modulePath=arg('--playwright-module',process.env.RECEPTION_PLAYWRIGHT_MODULE);
 const {[engine]:launcher}=await import(modulePath?pathToFileURL(path.resolve(modulePath)).href:'playwright');
-const out=path.resolve(arg('--out',path.join(os.tmpdir(),'reception-coach-browser')),engine,stories&&scored?'independent':'.');
+const out=path.resolve(arg('--out',path.join(os.tmpdir(),'reception-coach-browser')),engine,anonymous?'anonymous':stories&&scored?'independent':'.');
 const sizes=[
   {width:1440,height:900,locale:'ru',full:true},
   {width:390,height:844,locale:'en',full:false},
@@ -43,6 +47,8 @@ const sizes=[
 assert.ok(sizes.length,'Use --viewport 1440, 390, 430, 320 or 844.');
 const normative=JSON.parse(await readFile(new URL('../firebase/functions/reception-ai/normative-provisions.json',import.meta.url),'utf8'));
 const labelByLocale={ru:'Пошаговая подсказка',en:'Step-by-step guide',zh:'分步提示'};
+const replyByLocale={ru:'Ответ заявителю',en:'Reply to the applicant',zh:'答复申请人'};
+const internalByLocale={ru:'Служебный документ',en:'Internal document',zh:'内部文书'};
 const mentorAnswer={ru:'Отсчитайте срок ответа от крайней даты передачи.',en:'Count the reply period from the referral deadline.',zh:'从转送截止日期开始计算答复期限。'};
 const retainedDraft={ru:'Сохранённый вывод по обращению.',en:'A saved conclusion on the appeal.',zh:'已保存的诉求结论。'};
 const independentText={
@@ -78,29 +84,33 @@ async function run({width,height,locale,full}) {
   const row={key,status:'running',sessionId:null,checks:[],screenshots:[],errors:[]};
   report.push(row);
   let journalWrites=0;
+  const provider={...createScriptedCorrespondenceReviewer({reviews:[explicitQAReview,explicitQAReview]}),name:'mock',
+    async generate(){throw Error('The practice tests use the prepared case records.');},
+    async answerMentor(){return {reply:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
+    async reviewMentorWork(){return {ready:true,feedback:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
+  };
   const fixture=await createReceptionFixture({
     casesDirectory:arg('--cases',process.env.RECEPTION_AI_CASES_DIR),
-    provider:{...createScriptedCorrespondenceReviewer({reviews:[explicitQAReview,explicitQAReview]}),name:'mock',
-      async generate(){throw Error('The practice tests use the prepared case records.');},
-      async answerMentor(){return {reply:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
-      async reviewMentorWork(){return {ready:true,feedback:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
-    },
+    provider,
     decisionVersion:'correspondence-v1',controlVersion:'execution-v1',coreStepsVersion,seminarStoryVersion,teacher,
-    caseIds:stories||scored||full&&!legacy?[SEMINAR_EXAMPLE.caseId,'several-issues']:null,
-    serviceOptions:{requireGameplay:true,requireSeminarJourney:true,guidedSeminarCore:true,
+    caseIds:stories||scored||full&&!legacy?[SEMINAR_EXAMPLE.caseId,anonymous?'anonymous-danger':'several-issues']:null,
+    serviceOptions:{requireGameplay:true,requireSeminarJourney:true,guidedSeminarCore:true,requireCurrentSeminarTraining:stories,
       canStartAssessment:async()=>!teacher,saveResult:async()=>{journalWrites++;}},
   });
   if(scored){
     const owner=teacher?'teacher:'+fixture.identity.uid:'student:'+fixture.identity.studentKey;
     // Test setup only. Every action in the new independent attempt comes from rendered controls.
     await fixture.store.transaction('seminarProgress/'+hash(owner),()=>({
-      [stories?'storyJourney':'mfcJourney']:{example:{completed:true},mentor:{completed:true}},
+      [stories?SEMINAR_STORY_PROGRESS_KEY:'mfcJourney']:{example:{completed:true},mentor:{completed:true}},
     }));
   }
   const checkLegacyResume=!legacy&&!scored&&!teacher&&width===390;
-  const older=checkLegacyResume?(await fixture.service.handle({op:'start',context:'seminar',mode:'training',locale,
+  const priorService=stories&&checkLegacyResume?createReceptionService({store:fixture.store,cases:fixture.cases,provider,
+    requireGameplay:true,guidedSeminarCore:true}):fixture.service;
+  const older=checkLegacyResume?(await priorService.handle({op:'start',context:'seminar',mode:'training',locale,
     journeyStage:'example',workbookVersion:2,decisionVersion:'correspondence-v1',controlVersion:'execution-v1',
     requestId:'save-previous-example'},fixture.identity)).view:null;
+  const olderSnapshot=older&&await fixture.store.get('sessions/'+older.id);
   await new Promise((resolve,reject)=>{fixture.server.once('error',reject);fixture.server.listen(0,'127.0.0.1',resolve);});
   const origin=`http://127.0.0.1:${fixture.server.address().port}`;
   row.origin=origin;
@@ -133,6 +143,9 @@ async function run({width,height,locale,full}) {
     const response=await pending;
     const body=await response.json();
     assert.ok(response.ok(),JSON.stringify(body.error));
+    const request=response.request().postDataJSON();
+    if(stories&&(op==='decide'||op==='tutorial-step'&&request.stepId==='draft')&&request.decision?.correspondence)
+      assert.equal(request.decision.correspondence.kind,anonymous?'internal':'reply');
     await page.locator('#receptionAI[aria-busy="false"]').waitFor();
     return body.view;
   };
@@ -209,7 +222,7 @@ async function run({width,height,locale,full}) {
     const act=page.locator(`[data-core-law] [data-normative-doc="${citation.sourceId}"]`).first();
     await act.click();
     const reader=page.locator('.rx-source-embedded');
-    const search=reader.locator('[data-input="reader-query"]');
+    const search=reader.locator('.rx-source-reader-content:not([inert]) [data-input="reader-query"]');
     await search.waitFor();
     const unitId=citation.unitIds[0];
     // The model's worked example supplies the cited provision. The browser uses
@@ -442,18 +455,31 @@ async function run({width,height,locale,full}) {
     const current=await fixture.store.get('sessions/'+view.id);
     return {caseData:current.caseData[current.caseIndex],workflow:current.caseStates[current.caseIndex].controlWorkflow};
   }
-  async function fillIndependentReply(model,{omitConclusion=false}={}) {
+  async function checkDocumentKind(kind,applicant){
+    const field=root.locator('[data-response-field="kind"]');
+    if(!stories){await field.selectOption(kind);return;}
+    assert.equal(await field.count(),0);
+    await root.locator('[data-response-action="preview"]').click();
+    const letter=root.locator('[data-correspondence-preview] .rxc-letter-meta');
+    await letter.waitFor();
+    const metadata=letter.locator('span');
+    assert.equal(await metadata.first().textContent(),anonymous?internalByLocale[locale]:replyByLocale[locale]);
+    if(anonymous){assert.equal(await metadata.count(),1);await shot('anonymous-internal-document');}
+    else assert.ok((await letter.innerText()).includes(applicant));
+    await root.locator('[data-response-action="edit"]').click();
+  }
+  async function fillIndependentReply(model,{omitConclusion=false,applicant}={}) {
     const {facts,legalBasis,resolution,nextSteps}=independentText[locale];
     const draft=root.locator('[data-correspondence-editor]');
     await draft.waitFor();
     const recipients=model.workbook.routing.recipientIds.map(id=>
       localizedAuthorityName(RECEPTION_AUTHORITIES.find(authority=>authority.id===id),locale)).join(' / ');
-    await draft.locator('[data-response-field="kind"]').selectOption(model.correspondence.kind);
     await draft.locator('[data-response-field="subject"]').fill(model.correspondence.subject);
     const sections={facts,legalBasis,nextSteps:nextSteps(recipients,model.workbook.referralDeadline,model.deadline),
       ...(!omitConclusion?{resolution}:{})};
     for(const [id,value] of Object.entries(sections))await draft.locator(`[data-response-field="sections.${id}"]`).fill(value);
     for(const citation of model.correspondence.citations.filter(item=>item.kind==='document'))await addFactCitation(citation);
+    await checkDocumentKind(model.correspondence.kind,applicant);
   }
   async function exerciseFollowThrough(view,guide,caseData,{guided=false}={}) {
     let automaticRecipients=0;
@@ -501,11 +527,11 @@ async function run({width,height,locale,full}) {
     row.sessionId=view.id;
     row.coreStepsVersion=view.coreStepsVersion;
     assert.equal(view.coreStepsVersion,coreStepsVersion);
-    assert.equal(view.case.id,'several-issues');
+    assert.equal(view.case.id,anonymous?'anonymous-danger':'several-issues');
     assert.equal(view.guidance,undefined);
     if(stories){
       assert.equal(view.seminarStoryVersion,seminarStoryVersion);
-      assert.match(view.case.opening,/автобус в Москве|my Moscow bus|莫斯科公交/);
+      if(!anonymous)assert.match(view.case.opening,/автобус в Москве|my Moscow bus|莫斯科公交/);
       assert.equal(view.mentorMessages,undefined);
       assert.equal(await root.locator('.rxa-mobile-nav [data-page="chat"]').isEnabled(),true);
       assert.equal(await root.locator('[data-chat-form], [data-action="example-question"]').count(),0);
@@ -548,13 +574,30 @@ async function run({width,height,locale,full}) {
     const extraRouteFields=root.locator('.rxt-route-choice :is(input,select,textarea):not([data-routing-search],[data-routing-territory],[data-routing-recipient])');
     assert.equal(await extraRouteFields.count(),0);
     const expectedIds=model.workbook.routing.recipientIds;
-    assert.equal(expectedIds.length,2);
+    if(anonymous)assert.ok(expectedIds.length);
+    else assert.equal(expectedIds.length,2);
     await setRecipients(expectedIds);
     await shot('independent-two-authorities');
     view=await operation('core-step',root.locator('[data-action="core-step"][data-step="route"]'));
     assert.deepEqual(view.coreSteps.values.routing.recipientIds,expectedIds);
     const submit=root.locator('[data-decision-form] [type="submit"]');
-    await fillIndependentReply(model,{omitConclusion:true});
+    if(anonymous){
+      assert.equal(view.case.correspondence.fixedKind,'internal');
+      assert.equal(view.case.correspondence.individualReplyRequired,false);
+      const draft=root.locator('[data-correspondence-editor]');
+      await draft.locator('[data-response-field="subject"]').fill(answer.subject);
+      for(const [key,value] of Object.entries(answer.sections))await draft.locator(`[data-response-field="sections.${key}"]`).fill(value);
+      for(const citation of records)await addFactCitation(citation);
+      await checkDocumentKind(answer.kind);
+      view=await operation('decide',submit);
+      assert.equal(view.decision.correspondence.kind,'internal');
+      row.documentKind=view.decision.correspondence.kind;
+      row.caseId=view.case.id;
+      assert.deepEqual(row.errors,[]);
+      row.status='pass';
+      return;
+    }
+    await fillIndependentReply(model,{omitConclusion:true,applicant:view.case.citizen.name});
     assert.equal(await root.locator('[data-decision-form]').count(),1);
     assert.equal(await root.locator('[data-response-action="add-order"]').count(),0);
     await submit.click();
@@ -601,12 +644,24 @@ async function run({width,height,locale,full}) {
     assert.match(await page.title(),/Приёмная/);
     await root.locator('[data-journey-card="example"]').waitFor();
     if(scored){await runIndependent();return;}
+    if(stories){
+      assert.equal(await root.locator('[data-action="start-journey"][data-stage="mentor"]').count(),0);
+      assert.equal(await root.locator('[data-action="start-journey"][data-stage="independent"]').count(),0);
+      row.trainingInitiallyLocked=true;
+    }
     if(older){
+      if(stories)await root.locator('details[data-details="archive"] > summary').click();
       const resumed=await operation('resume',root.locator(`.rxt-recover [data-action="resume-session"][data-id="${older.id}"]`));
       assert.equal(resumed.coreStepsVersion,'guided-core-v1');
       assert.equal(resumed.id,older.id);
       assert.equal(await root.locator('.rxt-mfc-intro').count(),0);
-      await root.locator('[data-action="choose-case"]').click();
+      if(stories){
+        assert.equal(resumed.historical,true);
+        await root.locator('[data-historical-session]').waitFor();
+        await shot('archive-read-only');
+        await root.locator('[data-action="close-archive"], [data-act="close-archive"]').click();
+        assert.deepEqual(await fixture.store.get('sessions/'+older.id),olderSnapshot);
+      }else await root.locator('[data-action="choose-case"]').click();
       row.legacySessionId=older.id;
     }
     let view=await operation('start',root.locator('[data-action="start-journey"][data-stage="example"]'));
@@ -767,7 +822,7 @@ async function run({width,height,locale,full}) {
     for(const [id,text] of Object.entries(answer.sections)){
       await root.locator(`[data-response-field="sections.${id}"]`).fill(text);
     }
-    await root.locator('[data-response-field="kind"]').selectOption(answer.kind);
+    await checkDocumentKind(answer.kind,view.case.citizen.name);
     const caseSource=answer.citations.find(row=>row.kind==='document'||row.kind==='dialogue');
     assert.ok(caseSource);
     await addFactCitation(caseSource);
@@ -850,6 +905,10 @@ async function run({width,height,locale,full}) {
       assert.equal(view.status,'complete');
       assert.equal(view.result.points,undefined);
       assert.ok(view.seminarProgress.exampleCompleted);
+      if(stories){
+        assert.equal(await root.locator('[data-action="start-journey"][data-stage="independent"]').count(),0);
+        row.assessmentLockedAfterExample=true;
+      }
       await toggle.waitFor({state:'detached'});
       view=await operation('start',root.locator('[data-action="start-journey"][data-stage="mentor"]'));
       assert.equal(view.journeyStage,'mentor');
@@ -894,7 +953,7 @@ async function run({width,height,locale,full}) {
         assert.equal(await root.locator('[data-core-disposition]').count(),0);
         await setRecipients(practice.workbook.routing.recipientIds);
         await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="route"]'));
-        await fillIndependentReply(practice);
+        await fillIndependentReply(practice,{applicant:view.case.citizen.name});
         view=await operation('tutorial-step',root.locator('[data-tour-target="draft-submit"]'));
         assert.equal(view.status,'followup',JSON.stringify(view.guidance.finding));
         assert.equal(view.decision.correspondence.sections.resolution,independentText[locale].resolution);
@@ -929,6 +988,11 @@ async function run({width,height,locale,full}) {
           assert.equal(journalWrites,0);
           row.mentorComplete={status:view.status,graded:false,journalWrites};
           await shot('mentor-complete');
+          const independent=await operation('start',root.locator('[data-action="start-journey"][data-stage="independent"]'));
+          assert.equal(independent.journeyStage,'independent');
+          assert.ok(independent.seminarProgress.exampleCompleted&&independent.seminarProgress.mentorCompleted);
+          assert.equal(independent.guidance,undefined);
+          row.unlockedIndependent=independent.id;
         }
       }
 
@@ -958,7 +1022,7 @@ try {
   for (const size of sizes)await run(size);
 }finally {
   await browser.close();
-  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherAccepted?'teacher-accepted':teacherExample?'teacher-example':teacher?'teacher':stories&&scored?'stories-independent':scored?'independent':stories?'stories':'mfc',browserPath:'Playwright; Browser plugin not available',report},null,2)+'\n');
+  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherAccepted?'teacher-accepted':teacherExample?'teacher-example':teacher?'teacher':anonymous?'anonymous':stories&&scored?'stories-independent':scored?'independent':stories?'stories':'mfc',browserPath:'Bundled Playwright engine matrix after interactive Browser smoke',report},null,2)+'\n');
 }
 for (const result of report)console.log(result.key,result.status,result.error||`${result.checks.length} rendered hints`);
 if(report.some(result=>result.status!=='pass'))process.exitCode=1;

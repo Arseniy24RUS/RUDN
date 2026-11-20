@@ -253,6 +253,10 @@ jobs:
             ))}
           if os.environ['RECEPTION_AI_RELEASE'] == 'true':
             allowed.update({
+              'site/assets/js/games-catalog.js', 'site/assets/js/platform-update-coordinator.js',
+              'site/assets/js/release-bootstrap.js', 'site/assets/js/release-recovery.js',
+              'scripts/test-platform-release-browser.mjs', 'scripts/test-platform-release-worker.mjs',
+              'tests/platform-update-preparation-retry.test.mjs', 'scripts/test-reception-actor-browser.mjs',
               'scripts/build-reception-correspondence-corpus.mjs',
               'scripts/build-reception-reader-translations.mjs',
               'scripts/translate-reception-reader.py',
@@ -796,6 +800,7 @@ jobs:
       - name: Verify Reception chat contracts
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |
+          node --test tests/platform-update-preparation-retry.test.mjs scripts/test-platform-release-worker.mjs
           node scripts/reception-ai-catalog-metadata.mjs --check
           node scripts/build-reception-routing-directory.mjs --check
           node scripts/reception-ai-learning-review.mjs --check
@@ -818,6 +823,7 @@ jobs:
           python -m playwright install --with-deps chromium webkit
           export RECEPTION_PLAYWRIGHT_MODULE="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/reception-ai-qa-cases.mjs --out "${{ runner.temp }}/reception-synthetic-cases"
+          node scripts/test-reception-actor-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --out "${{ runner.temp }}/reception-workspace-qa/c03"
           node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/chromium"
           node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/webkit"
           node scripts/test-reception-source-search-browser.mjs --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/source-search-chromium"

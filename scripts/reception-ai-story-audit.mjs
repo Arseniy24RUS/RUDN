@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { validateCase, localized, actorCase, hash } from '../firebase/functions/reception-ai/schema.mjs';
-import { withSeminarStory, SEMINAR_STORY_VERSION } from '../firebase/functions/reception-ai/seminar-stories.mjs';
+import { withSeminarStory, SEMINAR_STORY_VERSION, SEMINAR_STORY_PROGRESS_KEY } from '../firebase/functions/reception-ai/seminar-stories.mjs';
 import { storiesA } from '../firebase/functions/reception-ai/semstory-a.mjs';
 import { storiesB } from '../firebase/functions/reception-ai/semstory-b.mjs';
 import { MFC_SEMINAR_VERSION } from '../firebase/functions/reception-ai/mfc-seminar.mjs';
@@ -49,10 +49,10 @@ async function firstScreen(c) {
   const identity = {uid:'read-only-fixture',studentKey:'99000042'};
   const example = c.id === 'complaint-routing';
   if (!example) await store.transaction('seminarProgress/' + hash('student:'+identity.studentKey),
-    () => ({storyJourney:{example:{completed:true},mentor:{completed:true}}}));
+    () => ({[SEMINAR_STORY_PROGRESS_KEY]:{example:{completed:true},mentor:{completed:true}}}));
   const fixedPack = {...c};
   delete fixedPack.dateVariants;
-  const service = createReceptionService({store,cases:[fixedPack],guidedSeminarCore:true,requireGameplay:true,
+  const service = createReceptionService({store,cases:[fixedPack],guidedSeminarCore:true,requireGameplay:true,requireCurrentSeminarTraining:true,
     canStartAssessment:async()=>true, provider:{name:'offline',ready:true,generate(){assert.fail('Unexpected chat')},reviewDecision(){assert.fail('Unexpected review')}}});
   const {view} = await service.handle({op:'start',requestId:'read-initial',locale:'ru',context:'seminar',
     journeyStage:example?'example':'independent',mode:example?'training':'independent',

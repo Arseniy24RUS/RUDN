@@ -728,18 +728,18 @@ async function platformFind(id){
   const response=await fetchWithDeadline(new Request(new URL(`_releases/${id}/release.json`,SCOPE),{cache:'reload'}));
   if(response.ok){const target=await response.json();if(target.buildId===id)return platformManifest(target);}throw new Error('release/unknown-build');
 }
-async function platformNavigationTarget(){
-  if(PLATFORM_RELEASE.retention!=='current-only')return PLATFORM_RELEASE.current;
+async function platformPublishedTarget(){
   try{
     const response=await fetchWithDeadline(new Request(new URL('release.json',SCOPE),{cache:'no-store'}),1800);
     if(response.ok){
       const pointer=await response.json();
       if(pointer.schema===1&&pointer.retention==='current-only'&&!pointer.previous){
         lastPublishedNavigationTarget=platformTarget(pointer.current);
+        return lastPublishedNavigationTarget;
       }
     }
   }catch{}
-  return lastPublishedNavigationTarget||PLATFORM_RELEASE.current;
+  return null;
 }
 async function platformPrepare(target,module,extras=[]){
   const manifest=await platformManifest(target),queue=[...new Set([...manifest.packs.shell,...(manifest.packs[module]||[]),...extras])];
@@ -770,23 +770,26 @@ async function platformServe(event){
   try{
     if(logical==='release.json'){
       try{const response=await fetchWithDeadline(new Request(url,{cache:'no-store'}));if(response.ok)return response;}catch{}
-      return new Response(JSON.stringify(PLATFORM_RELEASE),{headers:{'content-type':'application/json'}});
+      return new Response(JSON.stringify(PLATFORM_RELEASE),{headers:{'content-type':'application/json','X-RUDN-Release-Source':'worker-fallback'}});
     }
     const physical=/^_releases\/([a-f0-9]{32})\/(.*)$/.exec(logical);
-    const navigationTarget=navigation?await platformNavigationTarget():null;
+    const published=navigation?await platformPublishedTarget():null;
+    const navigationTarget=published||lastPublishedNavigationTarget||PLATFORM_RELEASE.current;
     if(physical){
-      if(navigationTarget&&PLATFORM_RELEASE.retention==='current-only'&&physical[1]!==navigationTarget.buildId){
-        const manifest=await platformManifest(navigationTarget);
-        const entry=manifest.publicEntries?.includes(physical[2])?manifest.resources[physical[2]]:null;
-        const target=platformURL(entry?.kind==='runtime'?entry.url:navigationTarget.entryURL);
+      const name=physical[2].endsWith('/')||!physical[2]?physical[2]+'index.html':physical[2];
+      if(published&&physical[1]!==published.buildId&&name.endsWith('.html')){
+        const manifest=await platformManifest(published);
+        const entry=manifest.publicEntries?.includes(name)?manifest.resources[name]:null;
+        const target=platformURL(entry?.kind==='runtime'?entry.url:published.entryURL);
         target.search=new URL(event.request.url).search;
         return Response.redirect(target.href,302);
       }
-      const manifest=navigationTarget?.buildId===physical[1]?await platformManifest(navigationTarget):await platformFind(physical[1]);
+      const manifest=navigation&&navigationTarget.buildId===physical[1]?await platformManifest(navigationTarget):await platformFind(physical[1]);
       if(physical[2]==='release.json')return new Response(JSON.stringify(manifest.target),{headers:{'content-type':'application/json'}});
       if(physical[2]==='manifest.json')return platformChecked(manifest.target.manifestURL,manifest.target.manifestSha256,platformCache(manifest.buildId));
-      const item=manifest.byURL.get(url.href);if(!item)throw new Error('release/unknown-resource');
-      if(navigation)await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(url,item.sha256,platformCache(manifest.buildId));
+      const item=manifest.byURL.get(url.href)||(navigation&&manifest.publicEntries?.includes(name)?manifest.resources[name]:null);
+      if(!item)throw new Error('release/unknown-resource');
+      if(navigation)await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(item.url,item.sha256,platformCache(manifest.buildId));
     }
     const bound=await clientRelease(event.clientId),build=/release-([a-f0-9]{32})$/.exec(bound||'')?.[1];
     if(navigation){const manifest=await platformManifest(navigationTarget),name=logical.endsWith('/')?logical+'index.html':logical||'index.html',item=manifest.resources[name];if(item?.kind==='runtime'){await bindClient(event.resultingClientId,platformCache(manifest.buildId));return platformChecked(item.url,item.sha256,platformCache(manifest.buildId));}}
@@ -806,7 +809,7 @@ async function platformServe(event){
     // A cold navigation can reference an evicted generation. Only the host's
     // real 404 HTML may recover that entry; a corrupt successful response must
     // never be accepted as a substitute for verified runtime bytes.
-    if(navigation&&/^_releases\/[a-f0-9]{32}\/.+\.html$/.test(logical)&&error?.message!=='release/integrity'){
+    if(navigation&&/^_releases\/[a-f0-9]{32}\/(?:.*\/|.*\.html)?$/.test(logical)&&error?.message!=='release/integrity'){
       try{const response=await fetchWithDeadline(event.request);if(response.status===404&&/text\/html/i.test(response.headers.get('content-type')||''))return response;}catch{}
     }
     event.source?.postMessage?.({type:'RELEASE_RESOURCE_UNAVAILABLE'});return unavailableRelease(event.clientId);

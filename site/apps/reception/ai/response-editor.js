@@ -249,7 +249,7 @@ function orderView(order,index,{draft,recipients=[],sources,locale,disabled}) {
     '<div class="rxc-order-remove">'+button(t.removeOrder,'remove-order',{icon:'close',disabled,extra:'data-order-id="'+id+'"',className:'quiet'})+'</div></div></details>';
 }
 
-export function correspondenceEditorView({draft,caseInfo={},profile={},sources=[],recipients=[],locale='ru',disabled=false,guidedCore=false,sectionLabels={},sectionHints={},showOrders=true}={}) {
+export function correspondenceEditorView({draft,caseInfo={},profile={},sources=[],recipients=[],locale='ru',disabled=false,guidedCore=false,fixedKind=null,sectionLabels={},sectionHints={},showOrders=true}={}) {
   const d=restoreCorrespondence(draft),t=copy[language(locale)],available=publicSources(sources,locale),off=disabled?' disabled':'';
   const blocks=SECTION_IDS.map((section,index)=>{
     const label=sectionLabels[section]||local(profile.sections?.[section]?.label??profile.sections?.[section],locale)||t.section[section];
@@ -260,7 +260,8 @@ export function correspondenceEditorView({draft,caseInfo={},profile={},sources=[
     '<div class="rxc-orders-heading"><div>'+glyph('clock')+'<h3>'+esc(t.orders)+'</h3></div>'+button(t.addOrder,'add-order',{icon:'plus',disabled:disabled||d.orders.length>=12})+'</div>'+
     (d.orders.length?d.orders.map((order,index)=>orderView(order,index,{draft:d,recipients,sources:available,locale,disabled})).join(''):'<p class="rxc-muted rxc-no-orders">'+esc(t.noOrders)+'</p>')+
     (guidedCore?'</details>':'</section>'):'';
-  return '<section class="rxc-editor" data-correspondence-editor'+(guidedCore?' data-tour-target="draft"':'')+'><div class="rxc-editor-toolbar"><div>'+glyph('paper')+'<strong>'+esc(t.title)+'</strong></div>'+button(t.preview,'preview',{icon:'eye'})+'</div><div class="rxc-document-meta"><label class="rxa-field rxc-kind"><span>'+esc(t.kind)+'</span><select data-response-field="kind" data-focus="response-kind"'+off+'>'+DOCUMENT_KINDS.map(kind=>'<option value="'+kind+'" '+(d.kind===kind?'selected':'')+'>'+esc(t.kinds[kind])+'</option>').join('')+'</select></label><label class="rxa-field rxc-subject"><span>'+esc(t.subject)+'</span><input type="text" data-response-field="subject" data-focus="response-subject" value="'+esc(d.subject)+'" maxlength="240" placeholder="'+esc(t.subjectHint)+'"'+off+'></label></div><div class="rxc-writing-sheet">'+blocks+'</div>'+orders+'</section>';
+  const kindField=fixedKind?'':'<label class="rxa-field rxc-kind"><span>'+esc(t.kind)+'</span><select data-response-field="kind" data-focus="response-kind"'+off+'>'+DOCUMENT_KINDS.map(kind=>'<option value="'+kind+'" '+(d.kind===kind?'selected':'')+'>'+esc(t.kinds[kind])+'</option>').join('')+'</select></label>';
+  return '<section class="rxc-editor" data-correspondence-editor'+(guidedCore?' data-tour-target="draft"':'')+'><div class="rxc-editor-toolbar"><div>'+glyph('paper')+'<strong>'+esc(fixedKind==='internal'?t.kinds.internal:t.title)+'</strong></div>'+button(t.preview,'preview',{icon:'eye'})+'</div><div class="rxc-document-meta">'+kindField+'<label class="rxa-field rxc-subject"><span>'+esc(t.subject)+'</span><input type="text" data-response-field="subject" data-focus="response-subject" value="'+esc(d.subject)+'" maxlength="240" placeholder="'+esc(t.subjectHint)+'"'+off+'></label></div><div class="rxc-writing-sheet">'+blocks+'</div>'+orders+'</section>';
 }
 
 function dateLabel(value,locale) {
@@ -269,8 +270,9 @@ function dateLabel(value,locale) {
   if(!Number.isFinite(date.getTime())||date.toISOString().slice(0,10)!==value)return value;
   return new Intl.DateTimeFormat({ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[language(locale)],{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(date);
 }
-function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source',issuerLabel='',citizenReply=false,sectionLabels={}}={}, {showProjectMark=true}={}) {
+function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source',issuerLabel='',citizenReply=false,fixedKind=null,sectionLabels={}}={}, {showProjectMark=true}={}) {
   const d=restoreCorrespondence(draft),t=copy[language(locale)],available=publicSources(sources,locale);
+  if(DOCUMENT_KINDS.includes(fixedKind))d.kind=fixedKind;
   const issuer=issuerLabel||local(profile.issuer?.name,locale)||local(profile.origin?.name,locale)||local(caseInfo.workbook?.origin?.name,locale)||t.issuer;
   const citizen=local(caseInfo.citizen?.name,locale);
   const orderRecipientIds=ids(d.orders.filter(order=>order.kind===d.kind).flatMap(order=>order.recipientIds),12);

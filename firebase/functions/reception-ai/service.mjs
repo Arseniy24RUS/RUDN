@@ -4,6 +4,7 @@ import {buildConflictContractMaterials} from './contract-materials.mjs';
 import {randomUUID} from 'node:crypto';
 import {ReceptionError, fail, fields, identifier, string, locale, localized, copy, hash, validateCase, validateDecision, evaluateDecision, actorCase,MAX_CATALOG_CASES} from './schema.mjs';
 import {validateActorTurn, estimateReservation, estimateReviewReservation, costMicros, reviewCostMicros, estimateMentorReservation, estimateMentorWorkReservation} from './provider.mjs';
+import {groundedMentorFallback,mentorEvidence} from './mentor-evidence.mjs';
 import {selectShiftCases} from './selection.mjs';
 import {CATALOG_METADATA} from './catalog-metadata.mjs';
 import {legacySessionIds, LEGACY_RECOVERY_LIMITS} from './store.mjs';
@@ -19,8 +20,8 @@ import {normativeActsForCase,requiredSeminarActs,validateLegalCitation,hasApplic
 import {JOURNEY_STAGES, SEMINAR_EXAMPLE, SEMINAR_GRADING_VERSION, isTutorial, exactCaseScore, seminarPointsAt,
   seminarExample, tutorialGuide, publicTutorialGuide, tutorialOperational, tutorialExecutionAction, validatedTutorialMemo, mentorFinding, tutorialExecutionKinds, tutorialExecutionProgress, walkthroughControlProfile} from './seminar-journey.mjs';
 import {SEMINAR_CORE_VERSION,CORE_STEP_FIELDS,publicCoreSteps,inspectCoreStep,saveCoreStep,assertCoreDecision} from './seminar-core.mjs';
-import {SEMINAR_STORY_VERSION,withSeminarStory} from './seminar-stories.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION,mfcRole,mfcUsesSharedReply,mfcSharedReplyInstruction} from './mfc-seminar.mjs';
+import {LEGACY_SEMINAR_STORY_VERSION,SEMINAR_STORY_VERSION,SEMINAR_STORY_PROGRESS_KEY,withSeminarStory} from './seminar-stories.mjs';
+import {MFC_SEMINAR_VERSION,MFC_REPLY_KIND,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION,mfcRole,mfcUsesSharedReply,mfcSharedReplyInstruction} from './mfc-seminar.mjs';
 
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxReviewInputAllowance:320000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
@@ -48,9 +49,18 @@ const MAX_SEMINAR_POINTS = 5;
 const SEMINAR_PASS_SCORE = 70;
 const seminarPath = owner => `seminarProgress/${hash(owner)}`;
 const usesLegalCitation = (context,workbookVersion) => Boolean(context) && workbookVersion === WORKBOOK_VERSION;
-const isStoryJourney = s => s.seminarStoryVersion === SEMINAR_STORY_VERSION;
-const journeyLedger = (version,s) => isStoryJourney(s)?'storyJourney': version===MFC_SEMINAR_VERSION?'mfcJourney':version===SEMINAR_CORE_VERSION?'guidedJourney':'journey';
-const caseHistory = (progress,s) => isStoryJourney(s)?(progress.storyCases ||= {}):progress;
+const isCurrentStoryJourney = s => s.seminarStoryVersion === SEMINAR_STORY_VERSION;
+const isStoryJourney = s => isCurrentStoryJourney(s)||s.seminarStoryVersion===LEGACY_SEMINAR_STORY_VERSION;
+const journeyLedger = (version,s) => isCurrentStoryJourney(s)?SEMINAR_STORY_PROGRESS_KEY:s.seminarStoryVersion===LEGACY_SEMINAR_STORY_VERSION?
+  'storyJourney':version===MFC_SEMINAR_VERSION?'mfcJourney':version===SEMINAR_CORE_VERSION?'guidedJourney':'journey';
+const caseHistory = (progress,s) => isCurrentStoryJourney(s)?(progress.storyCasesV2 ||= {}):
+  s.seminarStoryVersion===LEGACY_SEMINAR_STORY_VERSION?(progress.storyCases ||= {}):progress;
+const currentSeminarContract = s => s.context==='seminar'&&isCurrentStoryJourney(s)&&s.coreStepsVersion===MFC_SEMINAR_VERSION&&
+  s.workbookVersion===WORKBOOK_VERSION&&s.decisionVersion===DECISION_VERSION&&s.controlVersion==='execution-v1'&&
+  JOURNEY_STAGES.includes(s.journeyStage)&&s.mode===(s.journeyStage==='independent'?'independent':'training');
+const fixedKindFor = (s,profile) => currentSeminarContract(s)
+  ? (profile?.acceptedKinds?.includes(MFC_REPLY_KIND) ? MFC_REPLY_KIND : profile?.acceptedKinds?.[0])
+  : undefined;
 const exampleDialogue = (s,c) => isStoryJourney(s)&&s.journeyStage==='example'?c?.seminarStory?.exampleDialogue:null;
 const calendarVersionFor = s => s.coreStepsVersion===MFC_SEMINAR_VERSION?(s.mfcCalendarVersion||LEGACY_MFC_CALENDAR_VERSION):undefined;
 const workbookOptions = s => ({gameplay:Boolean(s.context),coreStepsVersion:s.coreStepsVersion,mfcCalendarVersion:calendarVersionFor(s)});
@@ -68,8 +78,8 @@ function registrationPracticeWorkbook(c,s,state) {
   return {...current,calendarVersion:MFC_DATES_ONLY_CALENDAR_VERSION,registrationPreviouslyUnasked:true,
     ...(state.registrationPractice?{registrationPractice:state.registrationPractice}:{})};
 }
-const roleFor = (c,s,workbook) => s.coreStepsVersion===MFC_SEMINAR_VERSION?
-  mfcRole(c.public.role,s.locale,mfcUsesSharedReply(s.coreStepsVersion,workbook||workbookFor(c,s))):localized(c.public.role,s.locale);
+const roleFor = (c,s,workbook,fixedKind) => s.coreStepsVersion===MFC_SEMINAR_VERSION?
+  mfcRole(c.public.role,s.locale,mfcUsesSharedReply(s.coreStepsVersion,workbook||workbookFor(c,s)),fixedKind):localized(c.public.role,s.locale);
 function controlCommand(action,workflow) {
   if(!workflow.sharedReply||!['request_evidence','refer'].includes(action?.kind))return action;
   const spec=workflow.definition.issues.find(issue=>issue.id===action.issueId);
@@ -116,7 +126,8 @@ const normalizeSession = s => {
 };
 
 export function createReceptionService({store, cases, provider, clock = Date.now, config = {}, canStartAssessment = null, saveResult = null, requireGameplay = false,
-  guestEnabled = true, requireSeminarJourney = requireGameplay, guidedSeminarCore = false, resolveLegalCitation=defaultLegalCitationResolver,
+  guestEnabled = true, requireSeminarJourney = requireGameplay, guidedSeminarCore = false, requireCurrentSeminarTraining = false,
+  resolveLegalCitation=defaultLegalCitationResolver,
   correspondenceProfiles={private:privateCorrespondenceProfile,public:publicCorrespondenceProfile}} = {}) {
   if (!store?.transaction || !store?.get || !provider?.generate) throw new TypeError('Reception adapters are required');
   const limits = {enforceMonetaryBudgets:true, ...DEFAULTS, ...config};
@@ -170,8 +181,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (session.owner !== scopeOf(identity) || Boolean(session.guest) !== Boolean(identity.guest)) fail('forbidden', 403);
     if (identity.guest && (session.context !== 'free' || session.mode !== 'training' || session.studentKey || session.teacher)) fail('forbidden', 403);
   }
+  const historicalSession = s => requireCurrentSeminarTraining&&(s.context!=='free'||s.mode==='independent')&&!currentSeminarContract(s);
+  function assertWritable(s) {
+    if(historicalSession(s))fail('outdated_session',409);
+  }
   async function upgradeMfcCalendar(s) {
-    if(!canUpgradeMfcCalendar(s))return s;
+    if(historicalSession(s)||!canUpgradeMfcCalendar(s))return s;
     // The revision invalidates an in-flight submission from the previous
     // calendar. A concurrently confirmed worksheet keeps its original rules.
     const saved=await store.transaction(`sessions/${s.id}`,current=>{
@@ -187,12 +202,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(!saved.value)fail('not_found',404);
     return normalizeSession(saved.value);
   }
-  async function get(id, identity) {
-    identifier(id); const s = normalizeSession(await store.get(`sessions/${id}`)); own(s, identity); return upgradeMfcCalendar(s);
+  async function get(id, identity, {readOnly=false}={}) {
+    identifier(id); const s = normalizeSession(await store.get(`sessions/${id}`)); own(s, identity);
+    if(!readOnly)assertWritable(s);
+    return upgradeMfcCalendar(s);
   }
   function guideFor(s,c,profile){
     return tutorialGuide(c,profile,s.locale,{execution:s.controlVersion==='execution-v1',core:Boolean(s.coreStepsVersion),
-      coreStepsVersion:s.coreStepsVersion,mfcCalendarVersion:calendarVersionFor(s)});
+      coreStepsVersion:s.coreStepsVersion,mfcCalendarVersion:calendarVersionFor(s),fixedKind:fixedKindFor(s,profile)});
   }
   function view(session) {
     const s = normalizeSession(copy(session)), c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex];
@@ -200,8 +217,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     p.opening=participantOpening(c,s.locale);
     const workbook=localized(showRegistrationPractice(s,state)?registrationPracticeWorkbook(c,s,state):workbookFor(c,s),s.locale);
     const mfc=s.coreStepsVersion===MFC_SEMINAR_VERSION;
+    const privateProfile=isTutorial(s)||currentSeminarContract(s)?correspondenceProfiles.private(c,s.locale):null;
+    const fixedKind=fixedKindFor(s,privateProfile);
     if(mfc){
-      p.role=roleFor(c,s,workbook);
+      p.role=roleFor(c,s,workbook,fixedKind);
       p.deadlinePrompt=workbook.instructions;
     }
     if(s.context){
@@ -215,12 +234,13 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }
     const correspondence=s.decisionVersion===DECISION_VERSION;
     const profile=correspondence?correspondenceProfiles.public(c,s.locale):null;
-    const guide=isTutorial(s)?publicTutorialGuide(guideFor(s,c,correspondenceProfiles.private(c,s.locale)),s):null;
+    const guide=isTutorial(s)?publicTutorialGuide(guideFor(s,c,privateProfile),s):null;
     if(correspondence){
       // Work-product sessions never publish the old multiple-choice answer menu.
       delete p.assessment;p.actions=[];p.procedures=[];p.routes=[];p.procedureRequired=false;
       p.correspondence=mfc&&profile?{...profile,role:{title:p.role.title},
-        ...(mfcUsesSharedReply(s.coreStepsVersion,workbook)?{task:localized(mfcSharedReplyInstruction,s.locale)}:{})}:profile;
+        ...(fixedKind?{kind:fixedKind,fixedKind,task:p.role.text}:
+          mfcUsesSharedReply(s.coreStepsVersion,workbook)?{task:localized(mfcSharedReplyInstruction,s.locale)}:{})}:profile;
       p.decisionVersion=DECISION_VERSION;
     }
     const result = s.status === 'complete' ? {...(guide?{}:{points:s.result.points,maxPoints:5}), total: s.result.total, cap:s.result.cap||null, attemptId: s.result.attemptId,
@@ -230,13 +250,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       cases: s.results.map((r, i) => ({caseId: s.caseData[i].id, title: localized(s.caseData[i].public.title, s.locale), score: r.score,
          feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null,
          ...(correspondence?{caseInfo:localized({id:s.caseData[i].id,title:s.caseData[i].public.title,citizen:s.caseData[i].public.citizen,
-           date:s.caseData[i].public.date,role:roleFor(s.caseData[i],s),
+           date:s.caseData[i].public.date,role:roleFor(s.caseData[i],s,null,fixedKind),
            ...(hasWorkbook(s)?{workbook:workbookFor(s.caseData[i],s)}:{})},s.locale),
            correspondenceProfile:correspondenceProfiles.public(s.caseData[i],s.locale),
            correspondenceSources:publicCorrespondenceSources(s.caseData[i],s.caseStates[i],s.locale,{includeFollowup:true})}:{}),
          ...(s.caseStates[i].control?{control:s.caseStates[i].control}:{}),
          ...(s.caseStates[i].controlWorkflow?{controlWorkflow:publicControlWorkflow(s.caseStates[i].controlWorkflow,null,s.locale)}:{})}))} : null;
     return {id: s.id, revision: s.revision, mode: s.mode, locale: s.locale, caseIndex: s.caseIndex, caseCount: s.caseData.length,
+      ...(historicalSession(s)?{historical:true}:{}),
       startedAt: s.startedAt, updatedAt: s.updatedAt, ...(s.buildId ? {buildId:s.buildId} : {}), ...(s.context ? {context:s.context} : {}),
       ...(s.context==='seminar'?{journeyStage:s.journeyStage||(s.mode==='independent'?'independent':null),
         seminarProgress:s.seminarProgress,seminarPassScore:SEMINAR_PASS_SCORE}:{}),
@@ -283,6 +304,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       ...(session.buildId ? {buildId:session.buildId} : {}), ...(session.context ? {context:session.context} : {})};
   }
   async function response(s) {
+    if(historicalSession(s))return {ok:true,view:view(s)};
     s=await upgradeMfcCalendar(s);
     await deliverResult(s);
     await remember(s);
@@ -320,11 +342,11 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }
     await legacyMigrations.get(ownerKey);
   }
-  async function recover(body, identity) {
+  async function recover(body, identity, cachedIndex=null) {
     if (!['training', 'independent'].includes(body.mode)) fail('invalid_mode');
     if (body.studentKey && body.studentKey !== identity.studentKey && !identity.teacher) fail('forbidden', 403);
     const owner = scopeOf(identity), path = `sessionIndex/${hash(owner)}`;
-    const matches = entry => entry.mode===body.mode && entry.context===body.context && entry.status!=='complete'
+    const matches = entry => !historicalSession(entry) && entry.mode===body.mode && entry.context===body.context && entry.status!=='complete'
       && (body.journeyStage==='independent' ? !entry.journeyStage||entry.journeyStage==='independent' : entry.journeyStage===body.journeyStage)
       && (!body.decisionVersion || entry.decisionVersion===body.decisionVersion)
       && (!body.workbookVersion || entry.workbookVersion===body.workbookVersion)
@@ -335,7 +357,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const legacySessions=[];
     if(body.journeyStage){
       const ledger=await store.get(seminarPath(owner));
-      const previous=isStoryJourney(body)?['mfcJourney','guidedJourney','journey']:version===MFC_SEMINAR_VERSION?['guidedJourney','journey']:version===SEMINAR_CORE_VERSION?['journey']:[];
+      const previous=requireCurrentSeminarTraining?[]:isStoryJourney(body)?['mfcJourney','guidedJourney','journey']:
+        version===MFC_SEMINAR_VERSION?['guidedJourney','journey']:version===SEMINAR_CORE_VERSION?['journey']:[];
       const legacyStages=version===MFC_SEMINAR_VERSION?JOURNEY_STAGES:[body.journeyStage];
       for(const stage of legacyStages)for(const key of previous){
         const old=ledger?.[key]?.[stage];
@@ -359,7 +382,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       }
     }
     async function indexed() {
-      const index = await store.get(`${path}/entries`);
+      const index = await (cachedIndex||store.get(`${path}/entries`));
       const candidates = Object.values(index || {}).filter(entry => matches(entry) && (isStoryJourney(body)||!isStoryJourney(entry)) && /^[a-f0-9]{40}$/.test(entry.id))
         .sort((a, b) => b.updatedAt - a.updatedAt || b.startedAt - a.startedAt || b.id.localeCompare(a.id));
       for (let i = 0; i < candidates.length; i++) {
@@ -384,6 +407,33 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return {...(recovered||{ok:true,view:null,
       ...(body.context==='seminar'?{seminarProgress:await seminarProgress(owner,body)}:{})}),
       ...(legacySessions.length&&version===MFC_SEMINAR_VERSION?{legacySessions}:{})};
+  }
+  async function recoverCurrentSeminar(body, identity) {
+    if (!['training','independent'].includes(body.mode))fail('invalid_mode');
+    if (body.studentKey&&body.studentKey!==identity.studentKey&&!identity.teacher)fail('forbidden',403);
+    const owner=scopeOf(identity), current={...body,context:'seminar',seminarStoryVersion:SEMINAR_STORY_VERSION,
+      journeyStage:body.journeyStage||(body.mode==='independent'?'independent':'example'),
+      coreStepsVersion:MFC_SEMINAR_VERSION,workbookVersion:WORKBOOK_VERSION,decisionVersion:DECISION_VERSION,controlVersion:'execution-v1'};
+    const indexRead=migrateLegacyIndex(identity).catch(error=>{
+      if(error.code!=='recovery_index_required')throw error;
+    }).then(()=>store.get(`sessionIndex/${hash(owner)}/entries`));
+    const [recovered, progress, entries]=await Promise.all([
+      isCurrentStoryJourney(body)?recover(current,identity,indexRead):null,
+      store.get(seminarPath(owner)),indexRead,
+    ]);
+    const history=new Map();
+    for(const entry of Object.values(entries||{}).sort((a,b)=>b.updatedAt-a.updatedAt)){
+      if(!historicalSession(entry))continue;
+      const stage=entry.journeyStage||(entry.mode==='independent'?'independent':'example');
+      history.set(entry.id,{id:entry.id,journeyStage:stage,...(entry.status==='complete'?{completed:true}:{})});
+    }
+    for(const key of ['storyJourney','mfcJourney','guidedJourney','journey'])for(const stage of JOURNEY_STAGES){
+      const item=progress?.[key]?.[stage];
+      if(item?.sessionId&&!history.has(item.sessionId))history.set(item.sessionId,{id:item.sessionId,journeyStage:stage,
+        ...(item.completed?{completed:true}:{})});
+    }
+    return {ok:true,view:recovered?.view||null,seminarProgress:recovered?.seminarProgress||await seminarProgress(owner,current),
+      ...(history.size?{legacySessions:[...history.values()]}:{})};
   }
   function initialState(c, language, timestamp, context) {
     return {messages: [{id: `opening-${c.id}`, role: 'assistant', text: participantOpening(c,language), at: timestamp}],
@@ -437,7 +487,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return available.filter(c => !Object.hasOwn(progress.assigned || {}, c.id)).length;
   }
   function journeyCompleted(progress,stage,s){
-    const ledgers=isStoryJourney(s)?['storyJourney']:['journey','guidedJourney','mfcJourney'];
+    const ledgers=isStoryJourney(s)?[journeyLedger(s.coreStepsVersion,s)]:['journey','guidedJourney','mfcJourney'];
     return ledgers.some(key=>{
       const current=progress[key]?.[stage];
       return current?.completed===true||current?.everCompleted===true;
@@ -479,12 +529,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       progress.attempts ||= {};
       const history=caseHistory(progress,body);
       history.assigned ||= {};
-      if (progress.attempts[id]) return progress;
       if(stage){
         progress[journeyKey] ||= {};
         if((stage!=='example'&&!journeyCompleted(progress,'example',body))||(stage==='independent'&&!journeyCompleted(progress,'mentor',body))){
           rejection='journey_stage_locked';return undefined;
         }
+      }
+      if (progress.attempts[id]) return progress;
+      if(stage){
         const current=progress[journeyKey][stage];
         if(current&&(current.sessionId===id||!current.completed||!guided&&stage!=='independent'))return progress;
       }
@@ -548,10 +600,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (!['training', 'independent'].includes(mode)) fail('invalid_mode');
     if (context==='free' && mode!=='training') fail('invalid_mode');
     if (body.studentKey && body.studentKey !== identity.studentKey && !identity.teacher) fail('forbidden', 403);
+    if(historicalSession(body))fail('seminar_training_update_required',409);
     const tutorial=isTutorial(body);
     if (!tutorial && provider.ready === false) fail('not_configured', 503);
     if(!tutorial && body.decisionVersion===DECISION_VERSION&&typeof provider.reviewDecision!=='function')fail('reviewer_unavailable',503);
-    const owner = scopeOf(identity), requestScope = context ? `${owner}:${context}` : owner;
+    const owner = scopeOf(identity), requestScope = isCurrentStoryJourney(body)?`${owner}:${context}:${SEMINAR_STORY_VERSION}`:
+      context?`${owner}:${context}`:owner;
     const id = hash(`${requestScope}:${body.requestId}`).slice(0, 40), signature = hash(body);
     const existing = normalizeSession(await store.get(`sessions/${id}`));
     if (existing) { own(existing, identity); if (existing.startSignature !== signature) fail('request_conflict', 409); return response(existing); }
@@ -674,7 +728,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     let failure;
     const result = await store.transaction(`sessions/${identifier(body.sessionId)}`, old => {
       const s = normalizeSession(old); try {
-        own(s, identity);
+        own(s, identity);assertWritable(s);
         if (s.lease && s.lease.until > timestamp) fail('busy', 409);
         const request = Object.hasOwn(s.requests, requestId) ? s.requests[requestId] : null;
         if (request) { if (request.digest !== digest) fail('request_conflict', 409); if (request.status !== 'done') fail('request_failed', 409); return s; }
@@ -769,7 +823,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     let failure, duplicate = false;
     const acquired = await store.transaction(`sessions/${identifier(body.sessionId)}`, old => {
       const s = normalizeSession(old); try {
-        own(s, identity); const prior = Object.hasOwn(s.requests, requestId) ? s.requests[requestId] : null;
+        own(s, identity); assertWritable(s);
+        const prior = Object.hasOwn(s.requests, requestId) ? s.requests[requestId] : null;
         if (prior) {
           if (prior.digest !== digest) fail('request_conflict', 409);
           if (prior.status === 'done') { duplicate = true; return s; }
@@ -795,15 +850,22 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (duplicate) return response(s);
     const c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex]; let reservation, usage;
     try {
-      if (provider.ready === false) fail('not_configured', 503);
+      if (!mentor && provider.ready === false) fail('not_configured', 503);
       let estimate, generate;
+      let mentorInput;
       if(mentor){
-        if(typeof provider.answerMentor!=='function')fail('mentor_unavailable',503);
         const guide=mentorContext(s,c,state,body.issueId);
+        const workbook=showRegistrationPractice(s,state)?registrationPracticeWorkbook(c,s,state):workbookFor(c,s);
+        guide.evidence=mentorEvidence(c,state,s.locale,guide,localized(workbook,s.locale),s.status);
+        guide.decision.correspondence.citations=[];
         const history=state.mentorMessages.slice(-12).map(({role,text})=>({role,text}));
-        const input={guide,history,text,locale:s.locale};
-        estimate=estimateMentorReservation(input);
-        generate=signal=>provider.answerMentor({...input,signal});
+        mentorInput={guide,history,text,locale:s.locale};
+        estimate=estimateMentorReservation(mentorInput);
+        generate=signal=>{
+          if(provider.ready===false)fail('not_configured',503);
+          if(typeof provider.answerMentor!=='function')fail('mentor_unavailable',503);
+          return provider.answerMentor({...mentorInput,signal});
+        };
       }else{
         const dossier = actorCase(c, s.locale);
         if(hasWorkbook(s)){
@@ -820,13 +882,21 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           maxOutputTokens:Math.max(limits.maxOutputTokens,provider.maxOutputTokens||0),maxCalls:provider.maxCalls||1});
         generate=signal=>provider.generate({actorCase:dossier,messages:copy(state.messages),text,locale:s.locale,signal});
       }
-      if (estimate.perCallInputTokens > limits.maxInputAllowance) fail('context_limit', 413);
-      reservation = await reserve(s, requestId, estimate.micros);
-      const controller = new AbortController(); let timeout;
-      const deadline = new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new ReceptionError('provider_unavailable', 503)); }, limits.providerTimeoutMs); });
       let generated;
-      try { generated = await Promise.race([generate(controller.signal),deadline]); }
-      finally { clearTimeout(timeout); }
+      let timeout;
+      try {
+        if (estimate.perCallInputTokens > limits.maxInputAllowance) fail('context_limit', 413);
+        if (!mentor || provider.ready !== false && typeof provider.answerMentor==='function')
+          reservation = await reserve(s, requestId, estimate.micros);
+        const controller = new AbortController();
+        const deadline = new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new ReceptionError('provider_unavailable', 503)); }, limits.providerTimeoutMs); });
+        generated = await Promise.race([generate(controller.signal),deadline]);
+      } catch (error) {
+        const recoverable = ['not_configured','mentor_unavailable','provider_busy','provider_unavailable','provider_invalid'];
+        const reply = mentorInput && recoverable.includes(error.code) && groundedMentorFallback(mentorInput);
+        if(!reply)throw error;
+        generated={reply};
+      } finally { clearTimeout(timeout); }
       usage = generated?.usage;
       const turn=mentor?{reply:string(generated?.reply,3200)}:validateActorTurn(generated,c,state,s.locale);
       const finished = await store.transaction(`sessions/${s.id}`, old => {
@@ -889,7 +959,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
             .slice(0,20).map(material=>material.id)}));
         const context=buildCorrespondenceReview(c,{...state,controlWorkflow:workflow},state.decision,language,{
           profile,phase:'control',control:{text:'\u0001'.repeat(6000),statuses},resolvedCitations:state.correspondenceEvidence||[],
-          workbook:localized(workbookFor(c,session),language),coreStepsVersion:session.coreStepsVersion,
+          workbook:localized(workbookFor(c,session),language),coreStepsVersion:session.coreStepsVersion,fixedKind:fixedKindFor(session,profile),
         });
         // Reserve a margin for different status labels and small review metadata.
         if(Buffer.byteLength(JSON.stringify(context),'utf8')+4096>240000||estimateReviewReservation({context}).perCallInputTokens+4096>limits.maxReviewInputAllowance)fail('control_context_limit',413);
@@ -907,7 +977,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const acquired=await store.transaction('sessions/'+identifier(body.sessionId),old=>{
       const s=normalizeSession(old);
       try{
-        own(s,identity);if(s.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
+        own(s,identity);assertWritable(s);
+        if(s.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
         const prior=Object.hasOwn(s.requests,requestId)?s.requests[requestId]:null;
         if(prior){
           if(prior.digest!==requestDigest)fail('request_conflict',409);
@@ -925,7 +996,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)){
             workbook=validateWorkbookDecision(raw?.workbook,s.workbookVersion,workbookOptions(s));delete raw.workbook;
           }
-          const decision=validateDecision(raw,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:s.locale});
+          const decision=validateDecision(raw,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:s.locale,
+            fixedKind:fixedKindFor(s,profile)});
           if(workbook)decision.workbook=workbook;
           if(s.coreStepsVersion)assertCoreDecision(state,decision);
           if(s.coreStepsVersion===MFC_SEMINAR_VERSION&&!decision.correspondence.sections.resolution)fail('invalid_correspondence');
@@ -973,7 +1045,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       }
       const context=buildCorrespondenceReview(c,state,decision,s.locale,{
         profile,resolvedCitations:evidence,phase,control:phase==='control'?state.controlDraft:null,operational,
-        workbook:localized(workbookFor(c,s),s.locale),coreStepsVersion:s.coreStepsVersion,
+        workbook:localized(workbookFor(c,s),s.locale),coreStepsVersion:s.coreStepsVersion,fixedKind:fixedKindFor(s,profile),
       });
       const inputLimit=s.controlVersion==='execution-v1'?limits.maxReviewInputAllowance:limits.maxInputAllowance;
       const remaining=Math.min(inputLimit-estimateReviewReservation({context}).perCallInputTokens,
@@ -1065,17 +1137,19 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const related=selectedIssueId ? shown.materials.filter(row=>row.issueIds.includes(selectedIssueId)).slice(-6) : [];
       const materials=[...new Map([...related,...shown.materials.slice(-6)].map(row=>[row.id,row])).values()].slice(0,6);
       guide.currentExecution={
-        issues:shown.issues.slice(0,8).map(({id,title,status,verifiedEvidenceIds})=>({id,title,status,verifiedEvidenceIds})),
-        materials:materials.map(({id,title,text})=>({id,title,text:text.slice(0,800)})),
+        issues:shown.issues.slice(0,8).map(({id,title,scope,status,verifiedEvidenceIds,availableActions})=>
+          ({id,title,scope,status,verifiedEvidenceIds,availableActions:availableActions.map(({kind,label})=>({kind,label}))})),
+        materials:materials.map(({id,title,text,issueIds,provenanceLabel})=>({id,title,text:text.slice(0,800),issueIds,provenanceLabel})),
         latestAction:{issueId:latest?.issueId,kind:latest?.kind,outcome:latest?.outcome,message:latest?.message}
       };
     }
     return guide;
   }
 
-  const tutorCorrespondence = (raw,c,state,language,session) => {
+  const tutorCorrespondence = (raw,c,state,language,session,profile) => {
     const {workbook,...decision}=raw||{};
-    return {...validateDecision(decision,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:language}),
+    return {...validateDecision(decision,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:language,
+      fixedKind:fixedKindFor(session,profile)}),
       workbook:validateWorkbookDecision(workbook,WORKBOOK_VERSION,workbookOptions(session))};
   };
 
@@ -1083,11 +1157,11 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const {coreStepsVersion}=session;
     let decision,evidence;
     try{
-      decision=tutorCorrespondence(raw,c,state,language,session);
+      decision=tutorCorrespondence(raw,c,state,language,session,profile);
       if(coreStepsVersion)assertCoreDecision(state,decision);
       const {sections,subject,citations}=decision.correspondence;
       if(!subject||Object.values(sections).some(text=>!text))return {finding:'emptyDraft',decision};
-      if(!profile.acceptedKinds.includes(decision.correspondence.kind))return {finding:'kind',decision};
+      if(!fixedKindFor(session,profile)&&!profile.acceptedKinds.includes(decision.correspondence.kind))return {finding:'kind',decision};
       const {routing,calendar}=tutorialOperational(c,decision,coreStepsVersion,calendarVersionFor(session)).workbook;
       if(!routing?.correct)return {finding:'route',decision};
       if(Object.values(calendar.correct).some(correct=>!correct))return {finding:'calendar',decision};
@@ -1204,7 +1278,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const acquired=await store.transaction('sessions/'+sessionId,old=>{
       const s=normalizeSession(old);
       try{
-        own(s,identity);
+        own(s,identity);assertWritable(s);
         const prior=s.requests[requestId];
         if(prior?.digest&&prior.digest!==digest)fail('request_conflict',409);
         if(prior?.status==='done')return s;
@@ -1341,7 +1415,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         state.correspondenceEvidence=inspected.evidence;
       }else{
         openTutorialDocuments(c,state,guide.decision.correspondence.citations.map(citation=>citation.sourceId));
-        state.decision=tutorCorrespondence(guide.decision,c,state,s.locale,s);
+        state.decision=tutorCorrespondence(guide.decision,c,state,s.locale,s,profile);
       }
       if(c.followup){
         if(s.controlVersion==='execution-v1')state.controlWorkflow=createControlWorkflow({caseData:c,
@@ -1370,8 +1444,11 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (body.context!==undefined && !['seminar','free'].includes(body.context)) fail('invalid_context');
     if (body.journeyStage!==undefined && (!JOURNEY_STAGES.includes(body.journeyStage) || body.context!=='seminar' ||
       body.mode!==(body.journeyStage==='independent'?'independent':'training'))) fail('invalid_journey_stage');
+    const knownStoryVersion=isCurrentStoryJourney(body)||body.seminarStoryVersion===LEGACY_SEMINAR_STORY_VERSION&&
+      (body.op==='recover'||requireCurrentSeminarTraining);
     if(body.seminarStoryVersion!==undefined&&
-      (!isStoryJourney(body)||body.context!=='seminar'||body.coreStepsVersion!==MFC_SEMINAR_VERSION||!body.journeyStage))fail('invalid_story_version');
+      (!knownStoryVersion||
+        body.context!=='seminar'||body.coreStepsVersion!==MFC_SEMINAR_VERSION||!body.journeyStage))fail('invalid_story_version');
     if(body.coreStepsVersion!==undefined&&(body.coreStepsVersion!==MFC_SEMINAR_VERSION||!body.journeyStage))fail('invalid_request');
     if(body.workbookVersion!==undefined&&![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(body.workbookVersion))fail('invalid_workbook');
     if(body.decisionVersion!==undefined&&body.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
@@ -1389,15 +1466,17 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       (!body.controlVersion||correspondenceProfiles.private(c)?.control?.workflow?.version===body.controlVersion)).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
     if (body.op === 'start') return start(body, identity);
     if (body.op === 'resume') {
-      const session=await get(body.sessionId, identity);
-      const historicalResult = session.status==='complete' && !session.context;
+      const session=await get(body.sessionId, identity,{readOnly:true});
+      const historical=historicalSession(session);
+      const historicalResult = !session.context&&(session.status==='complete'||historical);
       if(body.context && session.context!==body.context && !historicalResult)fail('outdated_session',409);
       if((body.buildId && session.context!=='seminar' && session.buildId!==body.buildId||
-        body.workbookVersion&&session.workbookVersion!==body.workbookVersion) && session.status!=='complete') fail('outdated_session',409);
-      if(body.decisionVersion&&session.decisionVersion!==body.decisionVersion&&session.status!=='complete')fail('outdated_session',409);
+        body.workbookVersion&&session.workbookVersion!==body.workbookVersion) && session.status!=='complete'&&!historical) fail('outdated_session',409);
+      if(body.decisionVersion&&session.decisionVersion!==body.decisionVersion&&session.status!=='complete'&&!historical)fail('outdated_session',409);
       return response(session);
     }
-    if (body.op === 'recover') return recover(body, identity);
+    if (body.op === 'recover') return requireCurrentSeminarTraining&&(body.context!=='free'||body.mode==='independent')?
+      recoverCurrentSeminar(body,identity):recover(body,identity);
     if (body.op==='message'||body.op==='mentor-question')return message(body,identity);
     if (body.op==='tutorial-step')return tutorialStep(body,identity);
     if (body.op==='core-step')return coreStep(body,identity);
@@ -1449,7 +1528,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (body.op === 'locale') {
       const language = locale(body.locale); let failure;
       const r = await store.transaction(`sessions/${identifier(body.sessionId)}`, old => {
-        const s = normalizeSession(old); try { own(s, identity); if (s.lease && s.lease.until > clock()) fail('busy', 409); s.locale = language; s.revision++; s.updatedAt = clock(); return s; }
+        const s = normalizeSession(old); try { own(s, identity); assertWritable(s); if (s.lease && s.lease.until > clock()) fail('busy', 409); s.locale = language; s.revision++; s.updatedAt = clock(); return s; }
         catch (error) { failure = error; return undefined; }
       });
       if (!r.committed) throw failure; return response(r.value);

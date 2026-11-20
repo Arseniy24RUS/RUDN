@@ -184,7 +184,7 @@ function lightingComplaintReply(c,language,timetable) {
   return {kind:'reply',subject:localized(subject,language),sections:localized(sections,language)};
 }
 
-function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVersion) {
+function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVersion,fixedKind) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
   const currentCalendar=mfc&&isMfcChainedCalendar(mfcCalendarVersion);
   const local = value => localized(value, language) || '';
@@ -264,7 +264,7 @@ function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVer
   const lightingExample=mfc&&c.id===SEMINAR_EXAMPLE.caseId&&c.seminarStory;
   const reply=lightingExample?lightingComplaintReply(c,language,timetable):c.id===SEMINAR_EXAMPLE.caseId?
     walkthroughReply(c,expected.deadline,language,core&&!mfc):{
-    kind:profile.acceptedKinds?.[0]||'reply',subject:local(c.public.title).slice(0,240),sections
+    kind:fixedKind||profile.acceptedKinds?.[0]||'reply',subject:local(c.public.title).slice(0,240),sections
   };
   if(mfc&&c.id===SEMINAR_EXAMPLE.caseId&&!lightingExample){
     reply.sections.facts=local(T(
@@ -304,12 +304,12 @@ export function walkthroughControlProfile(c, profile) {
   return prepared;
 }
 
-export function tutorialGuide(c, profile, language, {execution=false,core=false,coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION}={}) {
+export function tutorialGuide(c, profile, language, {execution=false,core=false,coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION,fixedKind}={}) {
   const text = key => localized(copyText[key],language);
   const local = value => localized(value,language) || '';
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
-  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText,boundary,routingContext,sharedReply} = presentation(c,profile,language,core,coreStepsVersion,mfcCalendarVersion);
-  const role=mfc?mfcRole(c.public.role,language,sharedReply):null;
+  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText,boundary,routingContext,sharedReply} = presentation(c,profile,language,core,coreStepsVersion,mfcCalendarVersion,fixedKind);
+  const role=mfc?mfcRole(c.public.role,language,sharedReply,fixedKind):null;
   const roleExplanation=c.seminarStory?.exampleDialogue?local(T(
     'Сначала уточните, о каких фонарях писал Сергей Петрович и чей ответ он обжалует. Затем сопоставьте жалобу, первое письмо и подписанный ответ.',
     'First clarify which lights Sergey Petrovich wrote about and whose reply he is challenging. Then compare the complaint, the original letter and the signed reply.',
@@ -367,7 +367,8 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false,
     const draft=steps.find(step=>step.id==='draft');
     draft.prompt=local(mfc?T('Изложите факты и правовое основание. Сформулируйте решение, которое может принять адресат, и укажите, как МФЦ сообщит о передаче.','Set out the facts and legal grounds. Draft the recipient’s substantive decision and explain how the MFC will communicate the referral.','陈述事实与法律依据，拟写主管接收方可作出的实质处理决定，并说明 MFC 如何告知转交情况。'):
       T('Кратко изложите факты, правовое основание, решение и следующий шаг.','Briefly state the facts, legal grounds, decision and next step.','简述事实、法律依据、处理决定和下一步。'));
-    if(sharedReply)draft.prompt=local(mfcSharedReplyInstruction);
+    if(fixedKind)draft.prompt=role.text;
+    else if(sharedReply)draft.prompt=local(mfcSharedReplyInstruction);
     draft.choices=[];
     steps.splice(steps.indexOf(draft),0,{id:'route',panel:'route',action:'route',
       title:local(T('Маршрут','Route','办理路径')),
@@ -378,7 +379,7 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false,
   const statuses = profile.control?.expectedStatuses || [];
   const control = {text:initialControl,
     statuses:statuses.map(row=>({issueId:row.issueId,status:row.allowedStatuses[0],evidenceSourceIds:['followup']}))};
-  return {caseTitle:local(c.public.title),role:role?.text||local(c.public.role.text),steps,decision,control,
+  return {caseTitle:local(c.public.title),role:role?.text||local(c.public.role.text),steps,decision,control,...(fixedKind?{fixedKind}:{}),
     ...(mfc?{coreStepsVersion,mfcCalendarVersion,authorityContext:role.authorityContext,routingContext,routingBoundary:boundary,sharedReply}:{})};
 }
 

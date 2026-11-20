@@ -174,7 +174,13 @@ try{for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(
     markStage('standalone-A-navigation');await standalonePage.goto(origin+`/RUDN/_releases/${a.buildId}/standalone.html#question-3`);markStage('standalone-A-ready');await standalonePage.locator('#app').filter({hasText:'A A none'}).waitFor();await context.addCookies([{name:'fixture-login',value:'preserved',url:origin}]);await page.evaluate(()=>localStorage.setItem('fixture-completed-results','[{"attempt":"completed-A","score":100}]'));
     if(sw==='allow'){markStage('main-A-controller');await page.waitForFunction(()=>navigator.serviceWorker.controller!==null);}
     live=b.out;markStage('main-B-update-click');await page.locator('#update').click();markStage('main-B-ready');await page.locator('#app').filter({hasText:'B B question-7'}).waitFor();assert.equal(await page.locator('#app').getAttribute('data-build'),b.buildId);assert.equal(new URL(page.url()).hash,'#activity/fixture');assert.equal(new URL(page.url()).searchParams.get('language'),'en');assert.equal(new URL(page.url()).searchParams.get('rudnResume'),'fixture-token');assert.ok((await context.cookies()).some(x=>x.name==='fixture-login'&&x.value==='preserved'));
-    markStage('other-current-reopen');await other.goto(origin+a.target.entryURL);await other.locator('#app').filter({hasText:'B B none'}).waitFor();assert.equal(new URL(other.url()).pathname,new URL(origin+b.target.entryURL).pathname);await other.locator('#lazy').click();await other.locator('#lazy-result').filter({hasText:'B'}).waitFor();
+    markStage('other-current-reopen');await other.goto(origin+a.target.entryURL+'?language=zh&x=a%20b&x=%2b#games/reception');
+    await other.locator('#app').filter({hasText:'B B none'}).waitFor();
+    const reopened=new URL(other.url());
+    assert.equal(reopened.pathname,new URL(origin+b.target.entryURL).pathname);
+    assert.equal(reopened.hash,'#games/reception');
+    assert.equal(reopened.search,'?language=zh&x=a%20b&x=%2b');
+    await other.locator('#lazy').click();await other.locator('#lazy-result').filter({hasText:'B'}).waitFor();
     markStage('standalone-B-update-click');await standalonePage.locator('#update').click();markStage('standalone-B-ready');await standalonePage.locator('#app').filter({hasText:'B B question-7'}).waitFor();assert.equal(new URL(standalonePage.url()).pathname,`/RUDN/_releases/${b.buildId}/standalone.html`);assert.equal(new URL(standalonePage.url()).hash,'#question-3');
     if(sw==='allow'){markStage('offline-controller');await page.waitForFunction(()=>navigator.serviceWorker.controller!==null);networkDown=true;markStage('offline-reload');await page.reload();markStage('offline-B-ready');await page.locator('#app').filter({hasText:'B B question-7'}).waitFor();networkDown=false;}
     markStage('update-assertions');

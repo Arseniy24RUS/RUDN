@@ -4,7 +4,7 @@ import {createReceptionService} from './service.mjs';
 import {createMemoryStore} from './store.mjs';
 import {hash} from './schema.mjs';
 import {MFC_SEMINAR_VERSION} from './mfc-seminar.mjs';
-import {SEMINAR_STORY_VERSION} from './seminar-stories.mjs';
+import {LEGACY_SEMINAR_STORY_VERSION,SEMINAR_STORY_VERSION,SEMINAR_STORY_PROGRESS_KEY} from './seminar-stories.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
 
@@ -30,10 +30,10 @@ function fixture(providerOptions={}){
   const store=createMemoryStore();
   const provider={name:'mock',generate(){assert.fail('The suggested question should never call the live actor');},
     reviewDecision(){assert.fail('The review cannot start without a learner submission');},...providerOptions};
-  const build=()=>createReceptionService({store,provider,cases:[source,ads],correspondenceProfiles:executionQAProfiles,requireGameplay:true});
+  const build=(options={})=>createReceptionService({store,provider,cases:[source,ads],correspondenceProfiles:executionQAProfiles,requireGameplay:true,...options});
   const use=body=>build().handle(body,learner);
   const start=(contract,requestId)=>use({...contract,op:'start',requestId,locale:'ru'});
-  return {use,start,store,source};
+  return {use,start,store,source,build};
 }
 
 test('the version handshake starts a separate tutorial and preserves the prior dossier, attempts and grade',async()=>{
@@ -121,7 +121,7 @@ test('only a grounded response to an editable question completes the chat requir
 test('new independent work opens the projected dossier with no tutorial question or route hint',async()=>{
   const {use,start,store}=fixture();
   const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
-  await store.transaction(ledger,()=>({storyJourney:{example:{completed:true},mentor:{completed:true}}}));
+  await store.transaction(ledger,()=>({[SEMINAR_STORY_PROGRESS_KEY]:{example:{completed:true},mentor:{completed:true}}}));
   const view=(await start({...storyStage,journeyStage:'independent',mode:'independent'},'independent')).view;
   assert.equal(view.case.id,'ads-consent');
   assert.match(view.case.opening,/скидками/);
@@ -133,4 +133,95 @@ test('new independent work opens the projected dossier with no tutorial question
   assert.equal(view.coreSteps.stepId,'materials');
   await assert.rejects(use(messages(view,{op:'message',requestId:'invalid-suggestion',suggestionId:'example-question',text:'Вопрос'})),
     {code:'tutorial_step_required'});
+});
+
+test('the production contract archives legacy work and gates assessment on current example and mentor receipts',async()=>{
+  const {start,store,build}=fixture();
+  const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
+  await store.transaction(ledger,()=>({bestPoints:4,mfcJourney:{example:{completed:true},mentor:{completed:true}}}));
+  const legacyBody={...stage,mode:'independent',journeyStage:'independent'};
+  const {view:legacy}=await start(legacyBody,'existing-attempt');
+  const legacyPath='sessions/'+legacy.id;
+  const historicalStory={...await store.get(legacyPath),seminarStoryVersion:LEGACY_SEMINAR_STORY_VERSION};
+  await store.transaction(legacyPath,()=>historicalStory);
+  await store.transaction(ledger,progress=>({...progress,storyJourney:{example:{completed:true},mentor:{completed:true},
+    independent:{sessionId:legacy.id,completed:false}}}));
+  const previousGrade={points:4,sourceAttemptId:'old-completed-attempt'};
+  const journal='rudn-platform/v1/grades/'+learner.studentKey+'/seminar-5';
+  await store.transaction(journal,()=>previousGrade);
+  const ownerKey=hash('student:'+learner.studentKey), contextlessId='a'.repeat(40), contextlessPracticeId='b'.repeat(40);
+  const {context,seminarStoryVersion,journeyStage,coreStepsVersion,...oldShift}=historicalStory;
+  const oldCompleted={...oldShift,id:contextlessId,status:'complete',results:[{score:80,criteria:[]}],
+    result:{points:4,total:80,attemptId:previousGrade.sourceAttemptId},journalSaved:true};
+  const oldPractice={...oldShift,id:contextlessPracticeId,mode:'training'};
+  await store.transaction('sessions/'+contextlessId,()=>oldCompleted);
+  await store.transaction('sessions/'+contextlessPracticeId,()=>oldPractice);
+  // A pre-index scored session only exists in the original start ledger.
+  await store.transaction('sessionIndex/'+ownerKey+'/legacyMigrated',()=>null);
+  await store.transaction('starts/2026-11-13/'+ownerKey,()=>({ids:{[contextlessId]:true,[contextlessPracticeId]:true}}));
+  const otherDevice={...learner,uid:'second-device-same-student'};
+  const production=identity=>body=>build({requireCurrentSeminarTraining:true,guidedSeminarCore:true}).handle(body,identity);
+  const call=production(learner), again=production(otherDevice);
+  const scored={...storyStage,mode:'independent',journeyStage:'independent'};
+  const mentor={...storyStage,journeyStage:'mentor'};
+  const startBody=(contract,requestId)=>({...contract,op:'start',requestId,locale:'ru'});
+  const historical=await again({op:'resume',sessionId:legacy.id,context:'seminar'});
+  assert.equal(historical.view.historical,true);
+  assert.equal(historical.view.seminarStoryVersion,LEGACY_SEMINAR_STORY_VERSION);
+  const oldScore=(await again({op:'resume',sessionId:contextlessId,context:'seminar'})).view;
+  assert.equal(oldScore.historical,true);
+  assert.equal(oldScore.result.points,4);
+  assert.equal((await again({op:'resume',sessionId:contextlessPracticeId,context:'seminar'})).view.historical,true);
+  await assert.rejects(call({op:'next',sessionId:contextlessPracticeId,requestId:'old-contextless'}),{code:'outdated_session'});
+  const free=(await call(startBody({context:'free',mode:'training',workbookVersion:2,caseId:'complaint-routing'},'free-practice'))).view;
+  assert.equal(free.context,'free');
+  assert.equal(free.historical,undefined);
+  for(const op of ['locale','message','core-step','document','decide','followup','next']){
+    await assert.rejects(call({op,sessionId:legacy.id,...(op==='locale'?{locale:'en'}:{requestId:'old-'+op}),
+      ...(op==='message'?{text:'Можно продолжить?',expectedRevision:legacy.revision}:{}),
+      ...(op==='core-step'?{stepId:'materials'}:{})}),{code:'outdated_session'});
+  }
+  await assert.rejects(call(startBody(legacyBody,'existing-attempt')),{code:'seminar_training_update_required'});
+  await assert.rejects(call(startBody({...legacyBody,seminarStoryVersion:LEGACY_SEMINAR_STORY_VERSION},'same-version')),
+    {code:'seminar_training_update_required'});
+  await assert.rejects(call(startBody({mode:'independent'},'no-context')),{code:'seminar_training_update_required'});
+  for(const contract of [legacyBody,scored,{mode:'independent'}]){
+    const recovered=await again({...contract,op:'recover'});
+    assert.equal(recovered.view,null);
+    assert.equal(recovered.seminarProgress.exampleCompleted,false);
+    assert.equal(recovered.seminarProgress.mentorCompleted,false);
+    assert.equal(recovered.seminarProgress.seminarPoints,4);
+    assert.ok(recovered.legacySessions.some(row=>row.id===legacy.id));
+    assert.ok(recovered.legacySessions.some(row=>row.id===contextlessId&&row.completed));
+    assert.ok(recovered.legacySessions.some(row=>row.id===contextlessPracticeId&&row.journeyStage==='example'));
+  }
+  await assert.rejects(call(startBody(scored,'existing-attempt')),{code:'journey_stage_locked'});
+  await assert.rejects(call(startBody(mentor,'mentor-before-example')),{code:'journey_stage_locked'});
+
+  // The teaching sequence has its own tests. Exercise the real `next` operation
+  // and finalization transaction from the persisted review boundary here.
+  const reviewed=async view=>store.transaction('sessions/'+view.id,s=>({...s,status:'review',results:[{explanation:'fixture',criteria:[]}]}));
+  const finish=async view=>again({op:'next',sessionId:view.id,requestId:'finish'});
+  const {view:example}=await call(startBody(storyStage,'current-example'));
+  assert.equal((await again({...storyStage,op:'recover'})).view.id,example.id);
+  await assert.rejects(call(startBody(scored,'existing-attempt')),{code:'journey_stage_locked'});
+  await reviewed(example);
+  assert.equal((await finish(example)).seminarProgress.exampleCompleted,true);
+  assert.equal((await finish(example)).seminarProgress.mentorCompleted,false);
+  const [practice,duplicate]=await Promise.all([call(startBody(mentor,'first-practice')),again(startBody(mentor,'other-device-practice'))]);
+  assert.equal(practice.view.id,duplicate.view.id);
+  await assert.rejects(call(startBody(scored,'existing-attempt')),{code:'journey_stage_locked'});
+  await reviewed(practice.view);
+  assert.equal((await finish(practice.view)).seminarProgress.mentorCompleted,true);
+  const assessment=await call(startBody(scored,'existing-attempt'));
+  assert.notEqual(assessment.view.id,legacy.id);
+  assert.equal((await again({...scored,op:'recover'})).view.id,assessment.view.id);
+  assert.equal((await again(startBody(scored,'existing-attempt'))).view.id,assessment.view.id);
+  const more=await call(startBody(mentor,'more-practice'));
+  assert.notEqual(more.view.id,practice.view.id);
+  assert.equal(more.seminarProgress.mentorCompleted,true);
+  assert.deepEqual(await store.get(legacyPath),historicalStory);
+  assert.deepEqual(await store.get('sessions/'+contextlessId),oldCompleted);
+  assert.deepEqual(await store.get('sessions/'+contextlessPracticeId),oldPractice);
+  assert.deepEqual(await store.get(journal),previousGrade);
 });

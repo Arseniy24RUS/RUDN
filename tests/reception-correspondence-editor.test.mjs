@@ -68,6 +68,27 @@ test('preview is composed from the student’s text without leaking assessment p
   assert.ok(html.includes('И.О. Фамилия'),'the authorised signer is not invented');
 });
 
+test('the current seminar handles a citizen reply without a document type selection',()=>{
+  const draft=blankCorrespondence({kind:'referral'});
+  draft.subject='Проверка вывоза мусора';
+  for(const [locale,label] of [['ru','Ответ заявителю'],['en','Reply'],['zh','答复']]){
+    const options={draft,locale,fixedKind:'reply',citizenReply:true,caseInfo:{citizen:{name:'Сергей Петрович'}}};
+    const editor=correspondenceEditorView(options);
+    assert.ok(!editor.includes('data-response-field="kind"'));
+    assert.ok(editor.includes('data-response-field="subject"'));
+    const letter=correspondencePreviewView(options);
+    assert.ok(letter.toLowerCase().includes(label.toLowerCase()),locale);
+    assert.ok(letter.includes(draft.subject)&&letter.includes('Сергей Петрович'));
+  }
+  const anonymous={draft,fixedKind:'internal',citizenReply:false,caseInfo:{citizen:{name:'Неизвестный'}}};
+  assert.ok(!correspondenceEditorView(anonymous).includes('data-response-field="kind"'));
+  const internal=correspondencePreviewView(anonymous);
+  assert.ok(internal.includes('Служебный документ'));
+  assert.ok(!internal.includes('Заявителю: Неизвестный'));
+  assert.equal(draft.kind,'referral');
+  assert.ok(correspondenceEditorView({draft}).includes('data-response-field="kind"'));
+});
+
 test('internal documents do not fabricate an external addressee',()=>{
   const draft=blankCorrespondence({kind:'internal'});
   draft.sections.resolution='Направить сведения по компетенции.';

@@ -7,6 +7,7 @@
 .reception-ai-root .rxc-editor-toolbar strong{font-size:18px;font-weight:650}
 .reception-ai-root .rxc-editor-toolbar>div>.rxc-icon,.reception-ai-root .rxc-orders-heading>div>.rxc-icon{color:var(--rxa-blue)}
 .reception-ai-root .rxc-document-meta{display:grid;grid-template-columns:minmax(190px,.8fr) minmax(220px,1.4fr);gap:16px;padding:22px 0}
+.reception-ai-root .rxc-document-meta .rxc-subject:only-child{grid-column:1/-1}
 .reception-ai-root .rxc-editor select,.reception-ai-root .rxc-control select{width:100%;min-width:0;min-height:44px;border:1px solid #c7d7e5;border-radius:9px;background:#fff;color:var(--rxa-ink);padding:10px 34px 10px 12px;font-size:14px}
 .reception-ai-root .rxc-writing-sheet{border:1px solid var(--rxa-border);background:#fff;border-radius:12px;overflow:hidden}
 .reception-ai-root .rxc-writing-section{padding:24px 26px;border-bottom:1px solid var(--rxa-border)}

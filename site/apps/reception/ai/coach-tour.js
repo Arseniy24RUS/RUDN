@@ -524,7 +524,8 @@ export function createReceptionTour(root) {
     card.style.width=Math.floor(Math.min(310,bounds.right-bounds.left))+'px';
     card.hidden=false;
     const clipCache=new Map();
-    const obstacles=[...root.querySelectorAll(noCover)].filter(node=>node!==target && !target.contains(node) &&
+    const protectedAreas=state.page==='reception'&&state.step.id==='reception'?noCover+', .rxt-active-reception .rxa-citizen-stage':noCover;
+    const obstacles=[...root.querySelectorAll(protectedAreas)].filter(node=>node!==target && !target.contains(node) &&
       !node.closest('[aria-hidden=true]') && node.getClientRects().length).map(node=>visibleTarget(node,viewport,win,clipCache))
       .filter(rect=>rect.width>0 && rect.height>0);
     let size={width:card.offsetWidth,height:card.offsetHeight};

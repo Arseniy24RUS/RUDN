@@ -116,10 +116,10 @@ export function validateCorrespondenceCitation(citation) {
 }
 
 /** Only syntax and bounds. No character counts, keywords or prose similarity earn points. */
-export function validateCorrespondence(value,c,state,locale='ru') {
+export function validateCorrespondence(value,c,state,locale='ru',{fixedKind}={}) {
   keys(value,['version','kind','subject','sections','citations','orders']);
   if(value.version!==1)reject('invalid_decision_version');
-  const out={version:1,kind:id(value.kind,80),subject:boundedText(value.subject,240),sections:{},citations:[],orders:[]};
+  const out={version:1,kind:fixedKind||id(value.kind,80),subject:boundedText(value.subject,240),sections:{},citations:[],orders:[]};
   keys(value.sections,CORRESPONDENCE_SECTIONS);
   for(const section of CORRESPONDENCE_SECTIONS)out.sections[section]=boundedText(value.sections[section],6000);
   if(Object.values(out.sections).join('').length>24000)reject();
@@ -234,14 +234,14 @@ export function addReviewDialogue(context,messages,availableBytes) {
 }
 
 /** The frozen session dossier outranks generic profiles, particularly every date variant. */
-export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null,coreStepsVersion}={}) {
+export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null,coreStepsVersion,fixedKind}={}) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
   const currentCalendar=mfc&&isMfcChainedCalendar(workbook?.calendarVersion);
   const sharedReply=mfcUsesSharedReply(coreStepsVersion,workbook);
   const legacyDispatch=sharedReply?mfcLegacyDispatchActions(c.id):new Set();
   const calendarAction=id=>currentCalendar?mfcCalendarAction(c.id,id,locale):undefined;
   const keepAction=id=>!legacyDispatch.has(id)&&calendarAction(id)!==null;
-  const reception=mfc?mfcRole(c.public.role,locale,sharedReply):null;
+  const reception=mfc?mfcRole(c.public.role,locale,sharedReply,fixedKind):null;
   const execution=phase==='control'&&state.controlWorkflow?controlReviewContext(state.controlWorkflow,profile,locale):null;
   if(sharedReply&&execution)for(const issue of execution.issues){
     delete issue.acceptedRecipientSets;
@@ -311,7 +311,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   const sections=phase==='control'?{control:control.text}:clone(decision.correspondence.sections);
   if(phase==='initial'){
     sections.subject=decision.correspondence.subject;
-    sections.kind=display.kinds[DOCUMENT_KINDS.indexOf(decision.correspondence.kind)]||'';
+    if(!fixedKind)sections.kind=display.kinds[DOCUMENT_KINDS.indexOf(decision.correspondence.kind)]||'';
     sections.orders=decision.correspondence.orders.map(order=>{
       const values=[
         order.issue,display.orders[ORDER_INDEX.indexOf(order.kind)],
@@ -345,7 +345,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
     ...(c.seminarStory?{evidencePolicy:{version:c.seminarStory.version,
       routeEvidenceDocumentId:c.seminarStory.routeDocumentId,
       instruction:'The opening, available case records and applicable law suffice without an interview. Accept the same fact established in a cited record even if its dialogue fact ID is unobserved. Do not deduct for skipping chat or failing to repeat the model wording. Treat first-person statements as testimony; require evidence before confirming that work was completed.'}}:{}),
-    ...(reception?{mfcReception:{authorityContext:reception.authorityContext,sharedReply,
+    ...(reception?{mfcReception:{authorityContext:reception.authorityContext,sharedReply,...(fixedKind?{fixedKind}:{}),
       ...(currentCalendar?{calendarVersion:workbook.calendarVersion}:{}),
       routingBoundary:workbook?.routingPolicy?.boundary||null,
       routingContext:workbook?.routingPolicy?.context||null,
@@ -367,8 +367,10 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
     profile:profile?(execution?{issues:issues.map(({id,title,scope,resultType})=>({id,title,scope,resultType})),
       control:{version:'execution-v1',assessmentSource:'execution',instruction:sharedReply?
         'Use current evidence, issue states and one shared conclusion. The simulator supplies control contacts.':
-        'Use current scoped execution rules and recipients; the initial decision has already been assessed.'}}:clone({issues:profile.issues,acceptedKinds:profile.acceptedKinds,
-      ...(sharedReply?{}:{...(currentCalendar?{}:{acceptablePlans:profile.acceptablePlans}),routing:profile.routing}), constraints:profile.constraints,response:profile.response,criteria:profileCriteria,
+        'Use current scoped execution rules and recipients; the initial decision has already been assessed.'}}:clone({issues:profile.issues,
+      ...(fixedKind?{}:{acceptedKinds:profile.acceptedKinds}),
+      ...(sharedReply?{}:{...(currentCalendar?{}:{acceptablePlans:profile.acceptablePlans}),routing:profile.routing}), constraints:profile.constraints,
+      response:fixedKind?Object.fromEntries(Object.entries(profile.response||{}).filter(([key])=>key!=='kind')):profile.response,criteria:profileCriteria,
       control:phase==='control'?Object.fromEntries(Object.entries(profile.control||{}).filter(([key])=>key!=='workflow')):undefined})):null,
     acceptablePlans:(execution?[]:profile?.acceptablePlans?.length?profile.acceptablePlans:
       c.rubric.authored?.decisionPlans?.length?c.rubric.authored.decisionPlans:[{id:'default',requiredActions:c.rubric.requiredActionIds}])
