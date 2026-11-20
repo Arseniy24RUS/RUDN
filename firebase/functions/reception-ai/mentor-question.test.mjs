@@ -190,6 +190,21 @@ test('a free mentor question uses the workspace titles and computed dates and a 
   assert.equal(current.mentorMessages.length,4);
 });
 
+test('mentor chat receives the selected workspace tab without changing the step or visitor conversation',async()=>{
+  let practiceGuide;
+  const {view,send}=await fixture(async({guide})=>{
+    practiceGuide=guide;
+    return {reply:'Откройте календарь.',usage:{inputTokens:10,outputTokens:4}};
+  });
+  const body={op:'mentor-question',requestId:'calendar-tab',text:'Что здесь выбрать?'};
+  await assert.rejects(send(view,{...body,workspacePage:'unrecognized'}),error=>error.code==='invalid_request');
+  const {view:next}=await send(view,{...body,workspacePage:'calendar'});
+  assert.equal(practiceGuide.workspacePage,'calendar');
+  assert.notEqual(practiceGuide.currentStep,'calendar');
+  assert.deepEqual(next.messages,view.messages);
+  assert.deepEqual(next.mentorMessages.map(({text})=>text),[body.text,'Откройте календарь.']);
+});
+
 test('provider outages answer explicit workspace lookups and surface failures for unresolved questions',async()=>{
   const {view,ask}=await fixture(async()=>{throw new ReceptionError('provider_unavailable',503);});
   const lookedUp=(await ask(view,'Какие документы я могу открыть?','show-documents')).view;

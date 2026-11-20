@@ -4,7 +4,7 @@ import './workspace-copy.js';
 import './correspondence-copy.js';
 import {createReceptionTour} from './coach-tour.js';
 import {MFC_VERSION, MFC_CALENDAR_VERSION, MFC_CALENDAR_WITHOUT_REGISTRATION, isCoreJourney, isMfcJourney, CORE_ACTIONS, CORE_PAGES, coreStepId, coreLabel, coreDatePayload} from './core-steps.js';
-import {availableMentorActions, guidanceView, isLesson, journeyPathView, lessonLabel, lessonStep, mentorView, mentorWorkFeedbackView, nextJourneyStage} from './tutorial.js';
+import {availableMentorActions, guidanceView, isLesson, journeyPathView, lessonLabel, lessonStep, mentorWorkFeedbackView, nextJourneyStage} from './tutorial.js';
 import {blankCorrespondence,restoreCorrespondence,reduceCorrespondence,insertLegalPassage,legalPassageMessage,correspondenceEditorView,correspondencePreviewView,
   correspondenceControlView,restoreCorrespondenceControl,reduceCorrespondenceControl,correspondenceControlSubmission,
   presentCorrespondenceFeedback,correspondenceSourceKey,printCorrespondence,downloadCorrespondenceHTML} from './response-editor.js';
@@ -110,7 +110,9 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let responsePreview=false,controlDraft=restoreCorrespondenceControl(),citationSelections={},recipientOrderId='';
   let executionActionDraft=restoreControlActionDraft(),controlWorkspaceUI=restoreControlWorkspaceUI(),controlRecipientPicker=false;
   let calendar, exampleDraftSeed=null;
-  let seminarProgress={}, mentorOpen=false, mentorDraft='', examplePreviewed=false, controlSampleOpened=false, sampleComparison=false;
+  let seminarProgress={}, mentorDraft='', examplePreviewed=false, controlSampleOpened=false, sampleComparison=false;
+  let chatDialog='citizen', mentorReturnPage='reception', mentorWelcomeSeen=false;
+  let mentorChatScroll={top:0,bottom:true};
   let controlMaterialSeen='', controlMissing=false, coreEdit='', choosingCase=false;
   const legacySessionIds=new Map();
   let archiveEntry=null;
@@ -168,6 +170,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     detailOpen=new Set(Array.isArray(saved.detailOpen)?saved.detailOpen.filter(x=>typeof x==='string'):[]);
     mentorDraft=typeof saved.mentorDraft==='string'?saved.mentorDraft.slice(0,2000):'';
+    chatDialog=saved.chatDialog==='mentor'?'mentor':'citizen';
+    if(workspacePages.includes(saved.mentorReturnPage)&&saved.mentorReturnPage!=='chat')mentorReturnPage=saved.mentorReturnPage;
+    mentorWelcomeSeen=saved.mentorWelcomeSeen===true;
+    if(Number.isFinite(saved.mentorChatScroll?.top))mentorChatScroll={top:saved.mentorChatScroll.top,bottom:saved.mentorChatScroll.bottom===true};
     examplePreviewed=saved.examplePreviewed===true;
     exampleDraftSeed=saved.exampleDraftSeed||null;
     controlSampleOpened=saved.controlSampleOpened===true;
@@ -223,6 +229,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   // The assessment's material fragment describes the case; its other fragments can quote laws.
   const researchText = fragment => (fragment.id === 'material' ? authoredText : text)(fragment.text);
   const active = () => view?.status === 'active';
+  const mentorAvailable = () => seminar && view?.journeyStage==='mentor' && ['active','followup'].includes(view.status);
+  const inMentorChat = () => page==='chat' && chatDialog==='mentor' && mentorAvailable();
   const correspondenceMode = () => view?.decisionVersion==='correspondence-v1'||view?.case?.decisionVersion==='correspondence-v1';
   const canIndependent = () => {
     if(gameplayContext==='free'||options.context==='free')return false;
@@ -232,15 +240,20 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   };
   const button = (label, action, {primary=false, quiet=false, disabled=false, extra='', glyph=''} = {}) =>
     `<button type="button" class="rxa-btn ${primary?'primary':''} ${quiet?'quiet':''}" data-action="${esc(action)}" ${disabled?'disabled':''} ${extra}>${glyph?icon(glyph):''}${esc(label)}</button>`;
-  function persist() {
+  function captureChatScroll() {
     const log=root.querySelector('.rxa-messages');
-    if(log?.clientHeight>0&&log.dataset.caseId===view?.case?.id)chatScroll={top:log.scrollTop,bottom:log.scrollHeight-log.scrollTop-log.clientHeight<50};
+    if(!view || !log?.clientHeight || log.dataset.caseId!==view.case?.id || root.dataset.sessionId!==view.id)return;
+    const position={top:log.scrollTop,bottom:log.scrollHeight-log.scrollTop-log.clientHeight<50};
+    if(log.hasAttribute('data-mentor-messages'))mentorChatScroll=position;else chatScroll=position;
+  }
+  function persist() {
+    captureChatScroll();
     const content=root.querySelector('.rxa-page-content');
     if(content?.dataset.page===page&&!stageFocus)pageScroll[page]=content.scrollTop;
     storageOkay=drafts.save({version:VERSION,owner,seminarStoryVersion:view?.seminarStoryVersion||initial?.seminarStoryVersion||seminarStoryVersion,sessionId:view?.id||initial?.sessionId||'',caseId:view?.case?.id||savedCaseId,
       caseTitle:view?.case?.title||initial?.caseTitle||'',status:view?.status||initial?.status||'',
       mode:view?.mode||mode,locale,draftMessage,decisionDraft,followupDraft,controlDraft,executionActionDraft,controlWorkspaceUI,controlRecipientPicker,responsePreview,citationSelections,detailOpen:[...detailOpen],tab,selectedDoc,pending,pendingAt,mobilePane,chatScroll,
-      page,calendarState,calendarVersion:calendarDraftVersion,registrationReviewOffered,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,exampleDraftSeed,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
+      page,calendarState,calendarVersion:calendarDraftVersion,registrationReviewOffered,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,chatDialog,mentorReturnPage,mentorWelcomeSeen,mentorChatScroll,exampleDraftSeed,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
     return storageOkay;
   }
   function incomingMessages() {
@@ -248,10 +261,17 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     return messages.length?messages.filter(m=>m.role==='assistant'):view?.case?.opening?[{id:'opening'}]:[];
   }
   function unreadCount() {return incomingMessages().filter(m=>!readMessageIds.has(m.id)).length;}
-  function markChatRead() {if(page==='chat'&&!document.hidden)for(const message of incomingMessages())readMessageIds.add(message.id);}
-  function goPage(next) {
+  function markChatRead() {if(page==='chat'&&!inMentorChat()&&!document.hidden)for(const message of incomingMessages())readMessageIds.add(message.id);}
+  function goPage(next,{dialog}={}) {
     if(!workspacePages.includes(next)||next!=='reception'&&!view)return;
-    illustrationViewer.destroy();persist();if(next!=='documents')reader.close();page=next;mobilePane=page==='chat'?'chat':'desk';confirmation=false;
+    illustrationViewer.destroy();persist();
+    if(next==='chat'&&mentorAvailable()){
+      if(page!=='chat')mentorReturnPage=page;
+      if(dialog==='mentor'&&mentorAvailable()){
+        chatDialog='mentor';mentorWelcomeSeen=true;
+      }else if(dialog==='citizen'||page!=='chat')chatDialog='citizen';
+    }
+    if(next!=='documents')reader.close();page=next;mobilePane=page==='chat'?'chat':'desk';confirmation=false;
     if(page==='decision')tab='decision';else if(page==='documents'&&tab==='decision')tab='documents';
     markChatRead();persist();render();
   }
@@ -276,9 +296,13 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(decisionDraft.assessment)decisionDraft.assessment.actDate=patch.actDate||'';
     detailOpen.add('assessment-law');confirmation=false;persist();
   }
+  function resetMentorChat() {
+    mentorDraft='';chatDialog='citizen';mentorReturnPage='reception';mentorWelcomeSeen=false;
+    mentorChatScroll={top:0,bottom:true};
+  }
   function clearSessionDraft() {
     exampleDraftSeed=null;
-    coreEdit='';choosingCase=false;mentorOpen=false;mentorDraft='';examplePreviewed=false;controlSampleOpened=false;sampleComparison=false;controlMaterialSeen='';controlMissing=false;
+    coreEdit='';choosingCase=false;resetMentorChat();examplePreviewed=false;controlSampleOpened=false;sampleComparison=false;controlMaterialSeen='';controlMissing=false;
     responsePreview=false;controlDraft=restoreCorrespondenceControl();citationSelections={};recipientOrderId='';
     executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;
     deferredDocuments.clear();failedOperation='';routingSearch='';routingTerritory=undefined;view=null;initial=null;pending=null;error=null;notice='';needsResume=false;draftMessage='';decisionDraft=blankDecision();followupDraft='';
@@ -383,9 +407,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function header() {
     const settings=config.demo||options.showLanguageSelector?`<details class="rxa-cabinet-settings" data-details="cabinet-settings"><summary aria-label="${esc(t('settings'))}" title="${esc(t('settings'))}">${icon('menu')}</summary><div class="rxa-settings-panel"><label><span>${esc(t('language'))}</span><select class="rxa-locale" data-language data-focus="language" aria-label="${esc(t('language'))}">${[['ru','RU'],['en','EN'],['zh','中文']].map(([id,label])=>`<option value="${id}" ${locale===id?'selected':''}>${label}</option>`).join('')}</select></label></div></details>`:'';
-    return `<header class="rxa-top"><div class="rxa-brand"><span class="rxa-brand-mark">${icon('reception')}</span><div class="rxa-brand-copy"><strong>${esc(t('cabinet'))}</strong></div></div><div class="rxa-top-actions">${settings}${seminar&&view&&!choosingCase?`<button type="button" class="rxa-btn quiet rxt-choose-case" data-action="choose-case" ${busy||pending?'disabled':''}>${icon('sources')}<span>${esc(cl('path'))}</span></button>`:''}${view?.journeyStage==='mentor'&&['active','followup'].includes(view.status)?button(l(mentorOpen?'close':'ask'),'mentor-toggle',{quiet:true,extra:`aria-expanded="${mentorOpen}"`}):''}${options.onExit?`<button class="rxa-back" type="button" data-action="exit" aria-label="${esc(t('back'))}" title="${esc(t('back'))}">${icon('exit')}</button>`:''}</div></header>`;
+    return `<header class="rxa-top"><div class="rxa-brand"><span class="rxa-brand-mark">${icon('reception')}</span><div class="rxa-brand-copy"><strong>${esc(t('cabinet'))}</strong></div></div><div class="rxa-top-actions">${settings}${seminar&&view&&!choosingCase?`<button type="button" class="rxa-btn quiet rxt-choose-case" data-action="choose-case" ${busy||pending?'disabled':''}>${icon('sources')}<span>${esc(cl('path'))}</span></button>`:''}${options.onExit?`<button class="rxa-back" type="button" data-action="exit" aria-label="${esc(t('back'))}" title="${esc(t('back'))}">${icon('exit')}</button>`:''}</div></header>`;
   }
   const atAction=(op)=>(
+    op==='mentor-question'&&inMentorChat()||
     op==='start'&&(choosingCase||page==='reception'&&(!view||view.status!=='complete')||seminar&&view?.status==='complete')||
     op==='decide'&&page==='decision'&&active()&&correspondenceMode()||
     op==='followup'&&page==='decision'&&view?.status==='followup'&&correspondenceMode()||
@@ -573,7 +598,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     </section>`;
     const caseRole=view.seminarStoryVersion?'':mfc?(roleContext?`<div><strong>${esc(text(roleContext.label))}</strong><p>${esc(text(roleContext.title))}</p>
       <p>${esc(text(roleContext.text))}</p></div>`:''):`<strong>${esc(roleTitle)}</strong><p>${esc(roleText)}</p>`;
-    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}
+    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}${mentorWelcome()}
       <div class="rxa-foyer-grid rxt-active-reception${mfc?' rxt-mfc-reception':''}">${mfcIntro}${withPortrait}${info}</div>
       <details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary>
         <div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3>
@@ -596,6 +621,64 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const status=pendingMessage?(busy?t('sendingMessage'):t('awaitingDelivery')):t('sent');
     const opening=message.role==='assistant'&&message.id===`opening-${view.case?.id}`;
     return `<article class="rxa-message ${outgoing?'user':'assistant'} ${fresh?'rxa-message-enter':''} ${pendingMessage?'rxa-message-pending':''}" data-message-id="${esc(message.id)}" ${pendingMessage?'data-pending-message':''}><span class="rxa-sr">${esc(outgoing?t('you'):text(view.case?.citizen?.name)||t('citizen'))}</span><div class="rxa-bubble"><p>${esc(opening ? authoredText(message.text) : text(message.text))}</p><footer class="rxa-message-meta">${messageTime(message.at)}${outgoing?`<span class="rxa-delivery" data-delivery-state="${pendingMessage?'pending':'sent'}" aria-label="${esc(status)}" title="${esc(status)}">${pendingMessage?`<span class="rxa-delivery-clock" aria-hidden="true"></span><span>${esc(status)}</span>`:icon('checks')}</span>`:''}</footer>${!outgoing&&!pendingMessage&&correspondenceMode()&&active()?`<button type="button" class="rxa-btn quiet rxc-chat-source" data-response-action="use-source" data-source-key="dialogue:${esc(message.id)}" ${busy||pending||paused?'disabled':''}>${esc(t('responseUse'))}</button>`:''}</div></article>`;
+  }
+  const mentorAvatar = () => resourceURL('../assets/gfx1/avatars/S02.webp',import.meta.url).href;
+  const mentorPortrait = () => `<img class="rxa-avatar rxa-mentor-chat-avatar" src="${esc(mentorAvatar())}" alt="">`;
+  function mentorWelcome() {
+    if(!mentorAvailable()||mentorWelcomeSeen)return '';
+    return `<section class="rxt-mentor-welcome" data-mentor-welcome aria-labelledby="rxaMentorWelcomeTitle">
+      ${mentorPortrait()}<div><h2 id="rxaMentorWelcomeTitle">${esc(l('mentorPerson'))} · ${esc(l('mentorRole'))}</h2>
+      <p>${esc(l('mentorWelcome'))}</p><div class="rxa-actions">
+        ${button(l('mentorOpenChat'),'mentor-open-chat',{primary:true,glyph:'talk'})}
+        ${button(l('mentorDismissWelcome'),'mentor-dismiss-welcome',{quiet:true})}
+      </div></div></section>`;
+  }
+  function mentorMessage(message,{greeting=false,waiting=false}={}) {
+    const outgoing=message.role==='user';
+    const delivery=busy?t('sendingMessage'):t('awaitingDelivery');
+    return `<article class="rxa-message ${outgoing?'user':'assistant'}${waiting?' rxa-message-pending':''}"
+      data-mentor-message="${esc(message.id)}" ${greeting?'data-mentor-greeting':''} ${waiting?'data-mentor-pending':''}>
+      <span class="rxa-sr">${esc(outgoing?l('you'):l('mentorPerson'))}</span><div class="rxa-bubble">
+        <p>${esc(text(message.text))}</p>${message.at||waiting?`<footer class="rxa-message-meta">${messageTime(message.at)}${waiting?`<span class="rxa-delivery" data-delivery-state="pending">${esc(delivery)}</span>`:''}</footer>`:''}
+      </div></article>`;
+  }
+  function mentorConversation() {
+    const messages=view.mentorMessages||[];
+    const waiting=pending?.op==='mentor-question'&&pending.sessionId===view.id&&!messages.some(message=>message.id===`${pending.requestId}-user`);
+    const thinking=busy&&operation==='mentor-question';
+    const locked=busy||Boolean(pending)||paused||needsResume;
+    const status=!thinking&&failedOperation==='mentor-question'&&error&&needsResume&&!pending&&mentorDraft.trim()
+      ? `<div class="rxa-alert rxa-operation-status" role="alert"><p>${esc(errorText(error))}</p>${button(t('retry'),'mentor-retry-question',{quiet:true})}</div>`
+      : thinking?'':actionStatus('mentor-question');
+    return `<section class="rxa-conversation rxa-mentor-conversation" data-mentor-conversation aria-labelledby="rxaMentorHeading">
+      <header class="rxa-person"><div class="rxa-person-info"><div class="rxa-person-heading">
+        ${mentorPortrait()}<div><h2 class="rxa-mentor-chat-heading" id="rxaMentorHeading" tabindex="-1">${esc(l('mentorPerson'))}</h2>
+        <p class="rxa-presence">${esc(l('mentorRole'))}</p></div></div></div>
+        ${button(l('mentorReturnCase'),'mentor-return',{quiet:true,glyph:'reception'})}
+      </header>
+      <div class="rxa-messages rxa-mentor-chat-log" data-mentor-messages data-case-id="${esc(view.case.id)}" role="log" aria-label="${esc(l('mentorRole'))}" aria-live="polite" aria-relevant="additions text">
+        ${mentorMessage({id:'greeting',role:'assistant',text:l('mentorGreeting')},{greeting:true})}
+        ${messages.map(message=>mentorMessage(message)).join('')}
+        ${waiting?mentorMessage({id:`pending-${pending.requestId}`,role:'user',text:pending.text,at:pendingAt},{waiting:true}):''}
+        ${thinking?`<div class="rxa-typing" role="status"><span class="rxa-dots" aria-hidden="true"><i></i><i></i><i></i></span><span data-op-wait="mentor-question">${esc(l('thinking'))}</span></div>`:''}
+      </div>${status}
+      <form class="rxa-compose rxa-mentor-chat-compose" data-mentor-form>
+        <div class="rxa-composer-box"><label class="rxa-sr" for="rxaMentorQuestion">${esc(l('question'))}</label>
+          <textarea id="rxaMentorQuestion" data-mentor-draft data-focus="mentor-question" maxlength="2000" rows="1" placeholder="${esc(l('questionExample'))}" ${paused?'disabled':''}>${esc(mentorDraft)}</textarea>
+          <button class="rxa-send" type="submit" aria-label="${esc(l('send'))}" title="${esc(l('send'))}" ${locked?'disabled':''}>${icon('send')}</button>
+        </div><div class="rxa-compose-actions"><small>${esc(t('enterHint'))}</small><small data-message-count aria-hidden="true"></small></div>
+      </form></section>`;
+  }
+  function chatWorkspace() {
+    if(!mentorAvailable())return conversation();
+    const citizen=view.case.citizen;
+    const appearance=characterMedia(view.case.id,citizen?.portrait);
+    const dialog=(id,label,role,avatar)=>`<button type="button" class="rxa-btn quiet" data-action="chat-dialog"
+      data-chat-dialog="${id}" data-focus="chat-dialog-${id}" aria-pressed="${chatDialog===id}" aria-label="${esc(label+' · '+role)}">
+      <img src="${esc(avatar)}" alt=""><span><strong>${esc(label)}</strong><small>${esc(role)}</small></span></button>`;
+    return `<div class="rxa-chat-workspace"><div class="rxa-chat-dialogs" data-chat-dialogs role="group" aria-label="${esc(l('chatDialogs'))}">
+      ${dialog('citizen',text(citizen?.name)||t('citizen'),t('citizen'),appearance.avatar)}${dialog('mentor',l('mentorPerson'),l('mentorRole'),mentorAvatar())}</div>
+      ${inMentorChat()?mentorConversation():conversation()}</div>`;
   }
   function conversation() {
     const c=view.case||{}, citizen=c.citizen||{}, messages=Array.isArray(view.messages)?view.messages:[];
@@ -1030,7 +1113,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(page==='decision'&&tutorial()&&view.status==='followup')return `<div class="rxa-decision-page"><div class="rxa-desk" id="rxaDesk">${lessonControl()}</div></div>`;
     if(view.status==='complete'&&['reception','decision'].includes(page))return complete();
     if(page==='reception')return reception();
-    if(page==='chat')return `<div class="rxa-chat-page">${conversation()}</div>`;
+    if(page==='chat')return `<div class="rxa-chat-page">${chatWorkspace()}</div>`;
     if(page==='documents')return `<div class="rxa-documents-page">${documentsPage()}</div>`;
     if(page==='route')return `<div class="rxa-decision-page"><div class="rxa-desk" id="rxaDesk">${active()&&coreInView()==='route'?coreRouting():coreRouteRecord()}</div></div>`;
     if(page==='calendar')return `<div class="rxa-calendar-page"><div class="rxa-desk" id="rxaDesk">${calendarPage()}</div></div>`;
@@ -1107,9 +1190,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const focused = !stageFocus && root.contains(document.activeElement) ? document.activeElement : null;
     const focusKey = focused?.dataset?.focus;
     const selection = focused && 'selectionStart' in focused ? [focused.selectionStart,focused.selectionEnd] : null;
-    const log = root.querySelector('.rxa-messages');
-    if(log && log.clientHeight>0 && log.dataset.caseId===view?.case?.id)chatScroll={top:log.scrollTop,bottom:log.scrollHeight-log.scrollTop-log.clientHeight<50};
-    const scroll=chatScroll;
+    captureChatScroll();
+    const scroll=inMentorChat()?mentorChatScroll:chatScroll;
     if(root.dataset.caseId===(view?.case?.id||''))for(const el of root.querySelectorAll('details[data-details]')){if(el.open)detailOpen.add(el.dataset.details);else detailOpen.delete(el.dataset.details);}
     const sameRenderedCase=root.dataset.sessionId===(view?.id||'')&&root.dataset.caseId===(view?.case?.id||'');
     const resetReceptionScroll=Boolean(view&&!sameRenderedCase&&page==='reception');
@@ -1121,23 +1203,21 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     markChatRead();
     const guide=currentGuide();
     const comparison=sampleComparison&&!(hasCore()&&active())?tutorialComparison():'';
-    const mentor=!choosingCase&&mentorOpen&&view?.journeyStage==='mentor'?mentorView({view,locale,button,draft:mentorDraft,
-      busy:busy&&operation==='mentor-question',locked:busy||!!pending||paused}):'';
-    root.innerHTML = header() + navigation() + `<main class="rxa-page-content" data-page="${page}">`+alerts()+coreJourney()+mentor+(page==='reception'||choosingCase?'':guide+comparison) + (restoring?`<div class="rxa-loading" role="status"><div class="rxa-spinner" aria-hidden="true"></div>${esc(t('loading'))}</div>`:!view||choosingCase?landing():workspace())+'</main>';
+    const mentorIntro=!choosingCase&&!restoring&&page!=='reception'&&page!=='chat'?mentorWelcome():'';
+    root.innerHTML = header() + navigation() + `<main class="rxa-page-content" data-page="${page}">`+alerts()+coreJourney()+mentorIntro+(page==='reception'||choosingCase||inMentorChat()?'':guide+comparison) + (restoring?`<div class="rxa-loading" role="status"><div class="rxa-spinner" aria-hidden="true"></div>${esc(t('loading'))}</div>`:!view||choosingCase?landing():workspace())+'</main>';
     for(const section of ['facts','legalBasis','resolution','nextSteps']){
       const saved=citationSelections[section];if(!saved)continue;
       const select=root.querySelector(`[data-response-source="${section}"]`),quote=root.querySelector(`[data-response-source-quote="${section}"]`);
       if(select)select.value=saved.key;if(quote)quote.value=saved.quote;
     }
     const content=root.querySelector('.rxa-page-content');if(content)content.scrollTop=Number(pageScroll[page])||0;
-    const mentorLog=root.querySelector('[data-mentor-log]');if(mentorLog)mentorLog.scrollTop=mentorLog.scrollHeight;
     calendar.update({state:calendarState,task:calendarTask(),rulesMarkup:calendarRulesMarkup(),events:view?.case?.assessment?.calendar?.events||[],date:view?.case?.date,locale,disabled:!active()||paused||pending?.op==='decide'||busy&&operation==='decide'||hasCore()&&(busy||!!pending||(coreInView()!=='calendar'||registrationPractice()))});
     reader.refresh?.();media.refresh();
     tour.update({stage:view?.journeyStage,sessionId:view?.id,step:lessonStep(view),page,locale,
       stepIndex:view?.guidance?.stepIndex,stepTotal:view?.guidance?.steps?.length,mfc:mfcJourney(),question:guidedQuestion(),
       registrationFirst:view?.case?.workbook?.calendarVersion===MFC_CALENDAR_VERSION,
       filledExample:view?.journeyStage==='example'&&!!exampleDraftSeed,examplePreviewed,replyOnly:replyOnly(),
-      paused:busy||!!pending||paused||mentorOpen||choosingCase||confirmation||page==='calendar'&&registrationPractice()});
+      paused:busy||!!pending||paused||inMentorChat()||choosingCase||confirmation||page==='calendar'&&registrationPractice()});
     updateViewport();
     if(stageFocus){
       const heading=root.querySelector('[data-stage-heading], [data-core-heading]');
@@ -1161,7 +1241,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const nextLog = root.querySelector('.rxa-messages');
     if (nextLog && page==='chat') {
       nextLog.scrollTop = scrollChat || scroll.bottom ? nextLog.scrollHeight : scroll.top;
-      if(scrollChat)chatScroll={top:nextLog.scrollTop,bottom:true};
+      if(scrollChat){
+        const position={top:nextLog.scrollTop,bottom:true};
+        if(inMentorChat())mentorChatScroll=position;else chatScroll=position;
+      }
     }
   }
   function updateViewport() {
@@ -1173,9 +1256,9 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     root.dataset.compactViewport=String(height<620);root.dataset.keyboardOpen=String(keyboard);
   }
   function resizeComposer() {
-    const field=root.querySelector('[data-message-draft]');if(!field)return;
+    const field=root.querySelector('[data-message-draft], [data-mentor-draft]');if(!field)return;
     field.style.height='auto';field.style.height=Math.min(144,Math.max(46,field.scrollHeight))+'px';
-    const counter=root.querySelector('[data-message-count]');if(counter)counter.textContent=draftMessage.length?`${draftMessage.length} / 2000`:'';
+    const counter=root.querySelector('[data-message-count]');if(counter)counter.textContent=field.value.length?`${field.value.length} / 2000`:'';
   }
   function fillExampleDraft(next) {
     const supplied=next.guidance?.prefilledDecision?.correspondence;
@@ -1241,10 +1324,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(next.seminarProgress&&currentJourney)seminarProgress=next.seminarProgress;
     if(next.status==='complete'&&isLesson(next.journeyStage)&&currentJourney){
       seminarProgress={...seminarProgress,exampleCompleted:true,...(next.journeyStage==='mentor'?{mentorCompleted:true}:{})};
-      mentorOpen=false;
+      chatDialog='citizen';
     }
     if(!sameCase||stepChanged)sampleComparison=false;
-    if(!sameCase){mentorOpen=false;mentorDraft='';exampleDraftSeed=null;examplePreviewed=false;controlSampleOpened=false;controlMaterialSeen='';controlMissing=false;}
+    if(!sameCase){resetMentorChat();exampleDraftSeed=null;examplePreviewed=false;controlSampleOpened=false;controlMaterialSeen='';controlMissing=false;}
     if(!sameCase){responsePreview=false;controlDraft=restoreCorrespondenceControl();citationSelections={};recipientOrderId='';
       executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;}
     if (!sameCase) { deferredDocuments.clear();illustrationViewer.destroy();routingSearch='';routingTerritory=undefined;decisionDraft = blankDecision(); followupDraft='';detailOpen=new Set();draftMessage = ''; selectedDoc = ''; tab = 'documents'; mobilePane='desk';page='reception';chatScroll={top:0,bottom:true};calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
@@ -1364,7 +1447,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const mutation = mutationOps.includes(body.op);
     if (pending && mutation && !retry) return;
     if (mutation) {if(pending?.requestId!==body.requestId)pendingAt=Date.now();pending = clone(body);}
-    busy = true; operation = body.op; error = null; failedOperation=''; persist(); render({scrollChat:body.op==='message'});
+    const chatOperation=()=>body.op==='message'&&!inMentorChat()||body.op==='mentor-question'&&inMentorChat();
+    busy = true; operation = body.op; error = null; failedOperation=''; persist(); render({scrollChat:chatOperation()});
     waitingTimer=setTimeout(()=>{
       for(const node of root.querySelectorAll('[data-op-wait]'))node.textContent=t('operationStillWaiting');
     },15000);
@@ -1415,7 +1499,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         if (mutation && !retryReview && !ambiguous && (/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|busy|revision|conflict|stale|budget|limit|quota|auth|token|forbidden|not-found|not-configured|unsafe-endpoint|local-demo|profile-required|invalid-|core-.*-required|closed|completed|locked|validation|not-active|not-reviewed|pilot-incomplete|outdated-session/.test(code)
           && !/invalid-response/.test(code))) { pending = null; if(body.op==='message'&&!draftMessage)draftMessage=body.text;if(body.op==='mentor-question'&&!mentorDraft)mentorDraft=body.text; }
       } finally {
-        clearTimeout(waitingTimer);busy = false; operation = ''; restoring = false; persist(); render({scrollChat:body.op==='message'});
+        clearTimeout(waitingTimer);busy = false; operation = ''; restoring = false; persist(); render({scrollChat:chatOperation()});
       }
       if(!error&&deferredDocuments.size)await registerDocuments();
       if (requestedLocale && !pending && !disposed) {
@@ -1594,7 +1678,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(handleControlIntent(event.target))return;
     if(handleResponseInput(event.target))return;
     if(event.target.matches('[data-routing-search]')&&(active()||controlRecipientPicker)){routingSearch=event.target.value.slice(0,120);render();return;}
-    if(event.target.matches('[data-mentor-draft]')){mentorDraft=event.target.value;persist();return;}
+    if(event.target.matches('[data-mentor-draft]')){mentorDraft=event.target.value;persist();resizeComposer();return;}
     if (event.target.matches('[data-message-draft]')) {draftMessage=event.target.value;resizeComposer();updateDraftStatus();}
     else if(event.target.matches('[data-decision]')&&!['checkbox','radio'].includes(event.target.type))editDecision(event.target);
     else if(event.target.matches('[name=caseSearch]')){caseSearch=event.target.value.slice(0,120);trainingCaseId='';persist();render();}
@@ -1684,16 +1768,18 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const focus=root.querySelector('[data-core-heading], #rxtGuideTitle');
     focus?.focus({preventScroll:true});focus?.scrollIntoView({block:'nearest',behavior:'instant'});
   }
+  async function sendMentorQuestion() {
+    if(!inMentorChat()||busy||pending||paused||needsResume)return;
+    const question=mentorDraft.trim();
+    if(!question)return;
+    const issues=view.controlWorkflow?.issues||[];
+    const issue=mentorReturnPage==='decision'?issues.find(item=>item.id===controlWorkspaceUI.issueId):null;
+    mentorDraft='';
+    await perform({op:'mentor-question',sessionId:view.id,requestId:newRequestId(),expectedRevision:view.revision,text:question,
+      workspacePage:mentorReturnPage,...(issue?{issueId:issue.id}:{})});
+  }
   const submit = event => {
-    if(event.target.matches('[data-mentor-form]')){
-      event.preventDefault();
-      if(!mentorDraft.trim()||view?.journeyStage!=='mentor'||busy||pending||paused)return;
-      const text=mentorDraft.trim(), issues=view.controlWorkflow?.issues||[];
-      const currentIssue=page==='decision'&&issues.find(issue=>issue.id===controlWorkspaceUI.issueId);
-      mentorDraft='';
-      void perform({op:'mentor-question',sessionId:view.id,requestId:newRequestId(),expectedRevision:view.revision,text,
-        ...(currentIssue?{issueId:currentIssue.id}:{})});
-    }
+    if(event.target.matches('[data-mentor-form]')){event.preventDefault();void sendMentorQuestion();return;}
     if(event.target.matches('[data-chat-form]')){event.preventDefault();void sendMessage();}
     if(event.target.matches('[data-decision-form]')){
       event.preventDefault();if(busy||pending||paused||!active())return;
@@ -1730,6 +1816,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
   };
   const keydown = event => {
+    if(event.target.matches('[data-mentor-draft]')&&event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();void sendMentorQuestion();return;}
     if(event.target.matches('[data-message-draft]')&&event.key==='Enter'&&!event.shiftKey&&!event.isComposing){event.preventDefault();void sendMessage();}
     if(event.target.matches('[role=tab]')&&['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) {
       event.preventDefault();const tabs=['documents','sources'];let index=tabs.indexOf(tab);
@@ -1752,10 +1839,24 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(responseTarget&&root.contains(responseTarget)&&!responseTarget.disabled&&!disposed){handleResponseAction(responseTarget);return;}
     const target=event.target.closest('[data-action]');if(!target||!root.contains(target)||target.disabled||disposed)return;
     const action=target.dataset.action;
-    if(action==='mentor-toggle'&&view?.journeyStage==='mentor'){mentorOpen=!mentorOpen;render();
-      if(mentorOpen)root.querySelector('#rxtMentorTitle')?.focus();
-      else root.querySelector('.rxa-top [data-action="mentor-toggle"]')?.focus();
+    if(action==='mentor-open-chat'&&mentorAvailable()){
+      goPage('chat',{dialog:'mentor'});root.querySelector('#rxaMentorHeading')?.focus({preventScroll:true});return;
+    }
+    if(action==='mentor-dismiss-welcome'&&mentorAvailable()){
+      mentorWelcomeSeen=true;persist();render();root.querySelector(`[data-focus="nav-${page}"]`)?.focus({preventScroll:true});return;
+    }
+    if(action==='chat-dialog'&&mentorAvailable()&&page==='chat'){
+      const dialog=target.dataset.chatDialog;
+      if(['citizen','mentor'].includes(dialog)&&dialog!==chatDialog)goPage('chat',{dialog});
       return;
+    }
+    if(action==='mentor-return'&&inMentorChat()){
+      const destination=mentorReturnPage;goPage(destination);
+      root.querySelector(`[data-focus="nav-${destination}"]`)?.focus({preventScroll:true});return;
+    }
+    if(action==='mentor-retry-question'&&inMentorChat()&&!busy&&!pending){
+      await perform({op:'resume',sessionId:view.id});
+      if(!error)await sendMentorQuestion();return;
     }
     if(action==='guide-jump'){
       const heading=root.querySelector('#rxtGuideTitle');
@@ -1782,7 +1883,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const illustration=caseIllustrations(view.case.id,view.documents||[]).find(item=>item.id===target.dataset.id);
       illustrationViewer.open(illustration,{locale,trigger:target});return;
     }
-    if(action==='choose-case'&&seminar){reader.close();choosingCase=true;mentorOpen=false;persist();render();return;}
+    if(action==='choose-case'&&seminar){reader.close();choosingCase=true;persist();render();return;}
     if(action==='close-case-picker'){choosingCase=false;persist();render();return;}
     if(action==='core-go'&&hasCore()){goCore(target.dataset.step);return;}
     if(action==='core-records'&&hasCore()){scrollToCoreRecords();return;}
@@ -1827,7 +1928,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         if(requestedStep&&active()&&(requestedStep===coreCurrent()||coreIsEditable(requestedStep))){
           goCore(requestedStep);return;
         }
-        if(requestedPage!==CORE_PAGES[coreEdit])leaveCoreEdit();
+        if(requestedPage!==CORE_PAGES[coreEdit]&&(requestedPage!=='chat'||!mentorAvailable()))leaveCoreEdit();
       }
       goPage(requestedPage);return;
     }
@@ -1953,9 +2054,19 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   updateAdapter = createUpdateAdapter({module:'reception',root,signal:lifetime.signal,diagnostics:options.diagnostics,
     getIdentity:()=>({owner,attemptId:view?.id||'reception-ai-start'}),isBusy:()=>busy||recoverBusy||!!pending||reader.isOpen(),
     pause:async value=>{paused=value;await work;},
-    capture:()=>({version:VERSION,locale,tab,selectedDoc,mobilePane,page,view:captureUpdateView(root)}),
+    capture:()=>({version:VERSION,locale,tab,selectedDoc,mobilePane,page,chatDialog,view:captureUpdateView(root)}),
     checkpoint:async()=>{await work;if(!persist())throw Error('update/not-durable');return {durable:true,revision:view?.revision||0,checkpointRef:{id:view?.id||'reception-ai-start',revision:view?.revision||0,version:VERSION}};},
-    restore:async({state:saved,checkpointRef},{signal}={})=>{if(saved.version!==VERSION||checkpointRef.id!==(view?.id||'reception-ai-start'))return {status:'blocked',code:'incompatible'};tab=saved.tab;selectedDoc=saved.selectedDoc;page=workspacePages.includes(saved.page)?saved.page:'reception';mobilePane=page==='chat'?'chat':'desk';render();await restoreUpdateView(root,saved.view,{signal});return {status:'restored',code:'ok'};},
+    restore:async({state:saved,checkpointRef},{signal}={})=>{
+      if(saved.version!==VERSION||checkpointRef.id!==(view?.id||'reception-ai-start'))return {status:'blocked',code:'incompatible'};
+      tab=saved.tab;
+      selectedDoc=saved.selectedDoc;
+      page=workspacePages.includes(saved.page)?saved.page:'reception';
+      if(saved.chatDialog==='mentor'||saved.chatDialog==='citizen')chatDialog=saved.chatDialog;
+      mobilePane=page==='chat'?'chat':'desk';
+      render();
+      await restoreUpdateView(root,saved.view,{signal});
+      return {status:'restored',code:'ok'};
+    },
   });
   const cleanup = () => {
     if(disposed)return Promise.resolve();persist();disposed=true;clearTimeout(waitingTimer);updateAdapter?.destroy();tour.destroy();reader.destroy();calendar.destroy();media.destroy();illustrationViewer.destroy();lifetime.abort();options.signal?.removeEventListener('abort',stop);

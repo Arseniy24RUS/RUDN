@@ -617,7 +617,7 @@ async function run({width,height,locale,full}) {
       assert.equal(await root.locator('.rxa-mobile-nav [data-page="chat"]').isEnabled(),true);
       assert.equal(await root.locator('[data-chat-form], [data-action="example-question"]').count(),0);
     }
-    assert.equal(await root.locator('[data-action="mentor-toggle"],.rxa-tour-toggle').count(),0);
+    assert.equal(await root.locator('[data-chat-dialog="mentor"],[data-mentor-welcome],.rxa-tour-toggle').count(),0);
     await root.locator('.rxt-mfc-intro').waitFor();
     await checkReception(view);
     const {caseData}=await readSession(view);
@@ -1057,13 +1057,13 @@ async function run({width,height,locale,full}) {
       if(!legacy){
         assert.equal(view.coreStepsVersion,coreStepsVersion);
         await root.locator('.rxt-mfc-intro').waitFor();
-        await root.locator('.rxa-top [data-action="mentor-toggle"]').click();
+        await root.locator('[data-mentor-welcome] [data-action="mentor-open-chat"]').click();
         const question={ru:'Как определить срок передачи?',en:'How do I calculate the referral deadline?',zh:'怎样计算转送期限？'}[locale];
         await root.locator('[data-mentor-draft]').fill(question);
         view=await operation('mentor-question',root.locator('[data-mentor-form] button[type="submit"]'));
         assert.deepEqual(view.mentorMessages.map(row=>row.text),[question,mentorAnswer[locale]]);
         await shot('mentor-practice');
-        await root.locator('.rxt-mentor-top [data-action="mentor-toggle"]').click();
+        await root.locator('[data-action="mentor-return"]').click();
         row.mentorSessionId=view.id;
         if(stories){
           assert.equal(view.seminarStoryVersion,seminarStoryVersion);

@@ -1,6 +1,6 @@
 import {icon} from './cabinet-icons.js';
 import {localized} from './copy.js';
-import {coreLabel, isCoreJourney, isMfcJourney} from './core-steps.js';
+import {coreLabel, isCoreJourney} from './core-steps.js';
 
 const copy = {
   ru: {
@@ -23,8 +23,11 @@ const copy = {
     tryAgain: 'Сверьтесь с объяснением и попробуйте ещё раз. Баллы не изменятся.',
     viewSample: 'Заполнить по образцу', showDraft: 'Открыть полный образец ответа', showControl: 'Показать, как заполнить контроль',
     docsFirst: 'Сначала откройте указанный документ в списке ниже.',
-    ask: 'Спросить наставника', close: 'Закрыть наставника', mentorIntro: 'Задайте любой вопрос по этому делу. Можно спросить, куда нажать, какую дату выбрать, что написать в ответе или как оформить контроль.',
-    question: 'Ваш вопрос наставнику', questionExample: 'Например: какой следующий шаг и почему?', send: 'Отправить вопрос', thinking: 'Наставник готовит ответ…',
+    mentorPerson: 'Елена Андреевна', mentorRole: 'Наставник', chatDialogs: 'Собеседники',
+    mentorWelcome: 'Здравствуйте! Задайте любой вопрос по делу. Если застряли, дам прямой ответ с объяснением.',
+    mentorGreeting: 'С чего хотите начать? Можем сверить документы и сроки, подобрать адресата или разобрать текст ответа. Если хотите, я сразу предложу ответ с объяснением.',
+    mentorOpenChat: 'Написать наставнику', mentorReturnCase: 'К делу', mentorDismissWelcome: 'Позже',
+    question: 'Ваш вопрос наставнику', questionExample: 'Напишите вопрос…', send: 'Отправить вопрос', thinking: 'Наставник готовит ответ…',
     you: 'Вы', finishExample: 'Завершить разбор', finishMentor: 'Завершить практику',
     grade: 'Оценка за семинар', caseGrade: 'За это дело', bestGrade: 'Лучшая оценка в журнале', quality: 'Результат дела', threshold: 'Для 3 баллов нужно не менее 70%.',
     zeroPoints: 'За эту работу — 0 баллов.', getGrade: 'Завершить дело и получить оценку',
@@ -63,8 +66,11 @@ const copy = {
     tryAgain: 'Read the explanation and try again. Your grade is unaffected.',
     viewSample: 'Fill in from the example', showDraft: 'Open the complete sample response', showControl: 'Show how to record follow-through',
     docsFirst: 'Open the indicated document in the list below first.',
-    ask: 'Ask the mentor', close: 'Close mentor', mentorIntro: 'Ask anything about this case, including where to click, which date to choose, what to write, or how to record follow-through.',
-    question: 'Your question for the mentor', questionExample: 'For example: what should I do next, and why?', send: 'Send question', thinking: 'The mentor is preparing a reply…',
+    mentorPerson: 'Elena Andreyevna', mentorRole: 'Mentor', chatDialogs: 'Conversations',
+    mentorWelcome: 'Hello! Ask me any question about the case. If you get stuck, I can give you a direct answer and explain why.',
+    mentorGreeting: 'Where would you like to start? We can check the documents and deadlines, find the right recipient, or work through your reply. I can suggest an answer and explain my reasoning.',
+    mentorOpenChat: 'Open mentor chat', mentorReturnCase: 'Back to case', mentorDismissWelcome: 'Later',
+    question: 'Your question for the mentor', questionExample: 'Type your question…', send: 'Send question', thinking: 'The mentor is preparing a reply…',
     you: 'You', finishExample: 'Finish the example', finishMentor: 'Finish the practice case',
     grade: 'Seminar grade', caseGrade: 'Grade for this case', bestGrade: 'Best grade in the gradebook', quality: 'Case score', threshold: 'A score of at least 70% earns 3 points.',
     zeroPoints: 'This case earned 0 points.', getGrade: 'Finish the case and get the grade',
@@ -103,8 +109,11 @@ const copy = {
     tryAgain: '请根据解释重试。成绩不受影响。',
     viewSample: '按示范填入', showDraft: '打开完整答复示例', showControl: '查看如何填写执行监督记录',
     docsFirst: '请先打开下方列表中指定的文档。',
-    ask: '向导师提问', close: '关闭导师', mentorIntro: '您可以询问本案例中的任何问题，例如点击哪里、选择哪个日期、如何撰写答复或登记执行情况。',
-    question: '您向导师提出的问题', questionExample: '例如：下一步应该做什么，为什么？', send: '发送问题', thinking: '导师正在准备答复…',
+    mentorPerson: '叶莲娜·安德烈耶芙娜', mentorRole: '导师', chatDialogs: '对话',
+    mentorWelcome: '您好！关于本案，有任何问题都可以问我。遇到困难时，我可以直接给出答案，并解释原因。',
+    mentorGreeting: '您想从哪里开始？我们可以一起核对材料和期限，确定由谁受理，或讨论答复该怎么写。如果需要，我可以直接给出建议并说明理由。',
+    mentorOpenChat: '打开导师对话', mentorReturnCase: '返回案例', mentorDismissWelcome: '稍后',
+    question: '您向导师提出的问题', questionExample: '请输入您的问题…', send: '发送问题', thinking: '导师正在准备答复…',
     you: '您', finishExample: '完成示范案例', finishMentor: '完成练习案例',
     grade: '研讨课成绩', caseGrade: '本次案例成绩', bestGrade: '成绩册中的最高成绩', quality: '案例分数', threshold: '案例得分至少达到 70% 才能获得 3 分。',
     zeroPoints: '本次作业得 0 分。', getGrade: '完成案例并查看成绩',
@@ -225,17 +234,4 @@ export function guidanceView({view, page, locale, localePage, button, locked, sa
         glyph:choice.id===right?'check':'',
       })).join('')}</div>`:''}`}
   </aside>`;
-}
-
-export function mentorView({view, locale, button, draft, busy, locked}) {
-  const t = key => lessonLabel(locale,key), text = value => localized(value,locale);
-  const messages = (view.mentorMessages || []).map(message => {
-    const user = message.role === 'user';
-    return `<article class="rxt-mentor-message ${user?'rxt-mentor-user':''}"><strong>${esc(t(user?'you':'mentor'))}</strong><p>${esc(text(message.text))}</p></article>`;
-  }).join('');
-  return `<section class="rxt-mentor" aria-labelledby="rxtMentorTitle"><div class="rxt-mentor-top"><h2 id="rxtMentorTitle" tabindex="-1">${esc(t('ask'))}</h2>${button(t('close'),'mentor-toggle',{quiet:true})}</div>
-    <p>${esc(isMfcJourney(view)?coreLabel(locale,'mentorHint',true):t('mentorIntro'))}</p><div class="rxt-mentor-log" data-mentor-log role="log" aria-live="polite">${messages}</div>
-    ${busy?`<p role="status">${esc(t('thinking'))}</p>`:''}
-    <form data-mentor-form><label class="rxa-field"><span>${esc(t('question'))}</span><textarea data-mentor-draft data-focus="mentor-question" maxlength="2000" rows="2" placeholder="${esc(t('questionExample'))}">${esc(draft)}</textarea></label>
-    <button class="rxa-btn primary" type="submit" ${locked?'disabled':''}>${icon('send')}${esc(t('send'))}</button></form></section>`;
 }

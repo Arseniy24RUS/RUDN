@@ -38,7 +38,7 @@ const allowed = {
   'tutorial-step':['op','sessionId','requestId','expectedRevision','stepId','choiceId','decision','control','useExample','confirmOwn','citations','calendar','routing'],
   'core-step':['op','sessionId','requestId','expectedRevision','stepId','citations','calendar','routing'],
   'registration-check':['op','sessionId','requestId','expectedRevision','registrationTimely'],
-  'mentor-question':['op','sessionId','requestId','expectedRevision','text','issueId'],
+  'mentor-question':['op','sessionId','requestId','expectedRevision','text','issueId','workspacePage'],
   next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion','controlVersion','context']
 };
 const dayOf = n => new Date(n).toISOString().slice(0, 10), monthOf = n => dayOf(n).slice(0, 7);
@@ -919,6 +919,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       let mentorInput;
       if(mentor){
         const guide=mentorContext(s,c,state,body.issueId);
+        if(body.workspacePage)guide.workspacePage=body.workspacePage;
         const workbook=showRegistrationPractice(s,state)?registrationPracticeWorkbook(c,s,state):workbookFor(c,s);
         guide.evidence=mentorEvidence(c,state,s.locale,guide,localized(workbook,s.locale),s.status);
         guide.decision.correspondence.citations=[];
@@ -1509,6 +1510,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
 
   async function handle(body, identity) {
     checkIdentity(identity); if (!body || !Object.hasOwn(allowed, body.op)) fail('invalid_operation'); fields(body, allowed[body.op]);
+    if (body.workspacePage!==undefined && !['reception','chat','documents','calendar','route','decision'].includes(body.workspacePage)) fail('invalid_request');
     if (body.context!==undefined && !['seminar','free'].includes(body.context)) fail('invalid_context');
     if (body.journeyStage!==undefined && (!JOURNEY_STAGES.includes(body.journeyStage) || body.context!=='seminar' ||
       body.mode!==(body.journeyStage==='independent'?'independent':'training'))) fail('invalid_journey_stage');

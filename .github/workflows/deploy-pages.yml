@@ -824,6 +824,7 @@ jobs:
           export RECEPTION_PLAYWRIGHT_MODULE="$(python -c 'import pathlib,playwright; print(pathlib.Path(playwright.__file__).parent / "driver" / "package" / "index.mjs")')"
           node scripts/reception-ai-qa-cases.mjs --out "${{ runner.temp }}/reception-synthetic-cases"
           node scripts/test-reception-actor-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --out "${{ runner.temp }}/reception-workspace-qa/c03"
+          node scripts/test-reception-ai-mentor-chat-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --out "${{ runner.temp }}/reception-workspace-qa/mentor-chat"
           node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/chromium"
           node scripts/test-reception-ai-workspace-browser.mjs --cases "${{ runner.temp }}/reception-synthetic-cases" --browser webkit --out "${{ runner.temp }}/reception-workspace-qa/webkit"
           node scripts/test-reception-source-search-browser.mjs --browser chromium --out "${{ runner.temp }}/reception-workspace-qa/source-search-chromium"

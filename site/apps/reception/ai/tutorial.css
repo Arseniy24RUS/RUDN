@@ -1,6 +1,5 @@
 .reception-ai-root.rxa-cabinet .rxt-route,
-.reception-ai-root.rxa-cabinet .rxt-guide,
-.reception-ai-root.rxa-cabinet .rxt-mentor {
+.reception-ai-root.rxa-cabinet .rxt-guide {
   min-width: 0;
   overflow-wrap: anywhere;
 }
@@ -31,9 +30,9 @@
 .rxt-calendar-rules p,
 .rxt-route-note { margin: 5px 0 0; font-size: .9rem; line-height: 1.45; }
 .rxt-route-note:last-of-type { margin-bottom: 12px; }
-.rxt-guide, .rxt-mentor { background: #eff7fe; border: 1px solid #afd4ee; border-radius: 14px; margin: 16px 26px 0; padding: 14px 17px; }
-.rxt-guide h2, .rxt-mentor h2 { margin: 0; font-size: 1.0625rem; }
-.rxt-guide p, .rxt-mentor p { margin: 5px 0 0; font-size: .9rem; }
+.rxt-guide { background: #eff7fe; border: 1px solid #afd4ee; border-radius: 14px; margin: 16px 26px 0; padding: 14px 17px; }
+.rxt-guide h2 { margin: 0; font-size: 1.0625rem; }
+.rxt-guide p { margin: 5px 0 0; font-size: .9rem; }
 .rxt-guide .rxt-guide-progress { margin: 0 0 4px; color: #285d83; font-size: .8125rem; font-weight: 650; }
 .rxt-guide-progress span { margin: 0 2px; }
 .rxt-guide .rxt-prompt { font-weight: 650; }
@@ -41,15 +40,6 @@
 .rxt-guide .rxa-btn { margin-top: 9px; text-align: start; white-space: normal; }
 .rxt-choices { display: flex; flex-wrap: wrap; gap: 0 8px; }
 .rxt-choices .rxa-btn { max-width: 100%; }
-.rxt-mentor-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-.rxt-mentor-log:not(:empty) { display: grid; gap: 7px; max-height: 16rem; overflow-y: auto; margin: 10px 0; padding: 2px; }
-.rxt-mentor-message { justify-self: start; width: fit-content; max-width: 92%; border: 1px solid #d0e1ed; border-radius: 10px; background: #fff; padding: 8px 11px; min-width: min(135px, 45%); }
-.rxt-mentor-message strong { font-size: .8125rem; color: #265773; }
-.rxt-mentor-message p { white-space: pre-wrap; }
-.rxt-mentor-user { justify-self: end; background: #dfedfc; }
-.rxt-mentor form { display: flex; align-items: end; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.rxt-mentor form label { flex: 1 1 250px; }
-.rxt-mentor form textarea { min-height: 62px; resize: vertical; }
 .rxt-opening { margin: 12px 0 14px; padding: 12px 14px; background: #edf6fd; border: 1px solid #c2dced; border-radius: 12px; }
 .rxt-opening h2 { margin: 0 0 4px; font-size: .875rem; }
 .rxt-opening blockquote { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 1rem; color: var(--rxa-ink); }
@@ -74,7 +64,7 @@
   .reception-ai-root.rxa-cabinet .rxt-mfc-visitor .rxa-citizen-video { height: clamp(198px, 57vw, 272px); width: auto; }
 }
 @media (max-width: 760px) {
-  .rxt-guide, .rxt-mentor { margin: 10px 12px 0; padding: 12px; }
+  .rxt-guide { margin: 10px 12px 0; padding: 12px; }
   .rxt-route-stage { grid-template-columns: 32px minmax(0,1fr); gap: 9px; padding: 12px; }
   .rxt-stage-icon { width: 32px; height: 32px; }
   .reception-ai-root.rxa-cabinet .rxt-journey-start .rxa-foyer-grid > .rxa-foyer-scene { display: none; }
@@ -191,4 +181,188 @@ button.rxt-case-step:hover, .rxt-case-step[aria-current=step] { background: #dee
   .reception-ai-root.rxa-cabinet[data-core=true] .rxa-mobile-nav .rxt-nav-short { display: inline; white-space: nowrap; }
   .reception-ai-root.rxa-cabinet[data-core=true] .rxa-mobile-nav .rxa-nav-icon { height: 20px; }
   .reception-ai-root.rxa-cabinet[data-core=true] .rxa-mobile-nav button { gap: 2px; padding-block: 2px; }
+}
+
+/* The mentor and the visitor share the chat workspace. */
+.reception-ai-root .rxa-chat-workspace {
+  display: grid;
+  grid-template-columns: minmax(160px, 206px) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+  min-width: 0;
+}
+.reception-ai-root .rxa-chat-dialogs {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 6px;
+  border: 1px solid #d0dfe8;
+  border-radius: 12px;
+  background: #f7fafc;
+}
+.reception-ai-root .rxa-chat-dialogs > button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 6px 8px;
+  border: 1px solid transparent;
+  border-inline-start-width: 3px;
+  border-radius: 8px;
+  background: transparent;
+  color: #214159;
+  text-align: start;
+  font-size: .875rem;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.reception-ai-root .rxa-chat-dialogs > button:is([aria-pressed=true], [aria-selected=true], [aria-current=true], [aria-current=page]) {
+  border-color: #c1d8e5;
+  border-inline-start-color: #1d688c;
+  background: #e7f2f9;
+  color: #173e57;
+  font-weight: 700;
+}
+.reception-ai-root .rxa-chat-dialogs > button:focus-visible,
+.reception-ai-root .rxa-mentor-conversation [data-action=mentor-return]:focus-visible {
+  outline: 2px solid #205e84;
+  outline-offset: 1px;
+}
+.reception-ai-root .rxa-chat-dialogs > button > img {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #dfeaed;
+}
+.reception-ai-root .rxa-chat-dialogs > button > span { min-width: 0; }
+.reception-ai-root .rxa-chat-dialogs > button strong { display: block; }
+.reception-ai-root .rxa-chat-dialogs > button small {
+  display: block;
+  margin-top: 3px;
+  color: #415c6b;
+  font-size: .75rem;
+}
+.reception-ai-root.rxa-cabinet .rxa-mentor-conversation .rxa-messages {
+  background: #eaf4f0;
+}
+.reception-ai-root.rxa-cabinet .rxa-mentor-conversation .rxa-person {
+  border-bottom-color: #c9ddd5;
+}
+.reception-ai-root .rxa-mentor-chat-heading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.reception-ai-root.rxa-cabinet .rxa-mentor-chat-avatar {
+  display: block;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  border: 1px solid #bdd9cf;
+  border-radius: 50%;
+  background: #dfefe9;
+  object-fit: cover;
+}
+.reception-ai-root .rxa-mentor-conversation [data-action=mentor-return] {
+  min-height: 44px;
+  max-width: 40%;
+  flex: 0 0 auto;
+  text-align: start;
+  white-space: normal;
+}
+.reception-ai-root .rxa-mentor-conversation [data-mentor-greeting],
+.reception-ai-root .rxa-mentor-conversation .rxa-message {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.reception-ai-root .rxa-mentor-conversation [data-mentor-greeting] .rxa-bubble {
+  border: 1px solid #c3dbd1;
+}
+.reception-ai-root.rxa-cabinet .rxt-mentor-welcome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: 10px 14px;
+  min-width: 0;
+  margin: 12px 26px 0;
+  padding: 12px 15px;
+  border: 1px solid #c2dacd;
+  border-radius: 12px;
+  background: #edf7f1;
+  overflow-wrap: anywhere;
+}
+.reception-ai-root.rxa-cabinet .rxt-mentor-welcome .rxa-mentor-chat-avatar { width: 44px; height: 44px; }
+.reception-ai-root .rxt-mentor-welcome > div { flex: 1 1 180px; min-width: 0; }
+.reception-ai-root .rxt-mentor-welcome h2 {
+  margin: 0;
+  color: #234e44;
+  font-size: 1rem;
+}
+.reception-ai-root .rxt-mentor-welcome p {
+  margin: 3px 0 0;
+  color: #33594d;
+  font-size: .875rem;
+  line-height: 1.45;
+}
+.reception-ai-root .rxt-mentor-welcome .rxa-actions {
+  margin: 7px 0 0;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.reception-ai-root .rxt-mentor-welcome .rxa-btn {
+  min-height: 44px;
+  white-space: normal;
+}
+@media (max-width: 820px) {
+  .reception-ai-root .rxa-chat-workspace {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    min-height: 0;
+  }
+  .reception-ai-root .rxa-chat-dialogs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    flex: 0 0 auto;
+    gap: 4px;
+    padding: 4px;
+    border: 0;
+    border-bottom: 1px solid #d0dfe8;
+    border-radius: 0;
+  }
+  .reception-ai-root .rxa-chat-dialogs > button { min-height: 44px; }
+  .reception-ai-root.rxa-cabinet .rxa-mentor-conversation .rxa-person {
+    min-height: 0;
+    padding: 8px 10px;
+  }
+  .reception-ai-root.rxa-cabinet .rxa-mentor-chat-avatar { width: 40px; height: 40px; }
+  .reception-ai-root .rxa-mentor-conversation [data-action=mentor-return] {
+    padding-inline: 7px;
+    font-size: .8125rem;
+    line-height: 1.2;
+  }
+  .reception-ai-root.rxa-cabinet .rxt-mentor-welcome {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 5px 9px;
+    margin: 8px 12px 0;
+    padding: 9px 11px;
+  }
+  .reception-ai-root.rxa-cabinet .rxt-mentor-welcome .rxa-mentor-chat-avatar { width: 38px; height: 38px; }
+  .reception-ai-root .rxt-mentor-welcome > div { display: contents; }
+  .reception-ai-root .rxt-mentor-welcome h2 { align-self: center; }
+  .reception-ai-root .rxt-mentor-welcome :is(p, .rxa-actions) { grid-column: 1 / -1; margin: 0; }
+  .reception-ai-root .rxt-mentor-welcome .rxa-btn { padding-inline: 9px; }
+  .reception-ai-root[data-keyboard-open=true] .rxa-chat-dialogs { display: none; }
+  .reception-ai-root[data-keyboard-open=true]:has([data-mentor-conversation]) .rxt-case-steps { display: none; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-mentor-conversation .rxa-person { padding-block: 5px; }
+  .reception-ai-root.rxa-cabinet[data-keyboard-open=true] .rxa-mentor-chat-compose textarea { max-height: 72px; }
+}
+@media (max-width: 360px) {
+  .reception-ai-root .rxa-chat-dialogs > button { gap: 5px; padding-inline: 5px; }
+  .reception-ai-root .rxa-chat-dialogs > button > img { width: 27px; height: 27px; flex-basis: 27px; }
 }
