@@ -9,7 +9,7 @@ export const newRequestId = () => globalThis.crypto?.randomUUID?.()
   || `rxai-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
 export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: fetcher = globalThis.fetch,
-  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, decisionVersion, controlVersion, coreStepsVersion, context} = {}) {
+  signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, decisionVersion, controlVersion, coreStepsVersion, seminarStoryVersion, context} = {}) {
   const resolveEndpoint = () => {
     if (!endpoint) throw new ReceptionAPIError('not-configured');
     let url;
@@ -27,7 +27,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
     async request(body, {signal, withProgress = false} = {}) {
       if(context && (['start','recover','resume'].includes(body.op)||context==='free'&&body.op==='catalog')) body={...body,context};
       if(buildId && ['start','recover','resume'].includes(body.op)) body={...body,buildId};
-      if(context==='seminar'&&coreStepsVersion&&body.op==='recover'&&body.journeyStage)body={...body,coreStepsVersion};
+      if(context==='seminar'&&coreStepsVersion&&body.op==='recover'&&body.journeyStage)body={...body,coreStepsVersion,...(seminarStoryVersion?{seminarStoryVersion}:{})};
       if(workbookVersion&&['start','catalog','recover','resume'].includes(body.op))body={...body,workbookVersion};
       // A resumed session retains its own assessment contract.
       if(decisionVersion==='correspondence-v1'&&['start','catalog','recover'].includes(body.op))body={...body,decisionVersion};

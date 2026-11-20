@@ -93,6 +93,9 @@ const phrases = {
 const mfcPhrases = {
   ru: {
     reception:['Прочитайте обращение','Уточните просьбу заявителя. Затем откройте материалы дела.'],
+    visitorChat:['Поговорите с заявителем','Задайте вопрос о том, что произошло.'],
+    visitorQuestion:['Задайте вопрос','Напишите свой вопрос или подставьте предложенный. Отправьте его и прочитайте ответ.'],
+    routeDocument:['Откройте материал дела','Сопоставьте сведения о событии с поручением или полномочиями адресата.'],
     calendarKind:['Рассчитайте оба срока','Сверьтесь с правилами отсчёта сроков передачи и ответа над календарём.'],
     recipient:['Выберите ведомство','Найдите компетентное ведомство на указанной территории. При необходимости отметьте несколько адресатов одного обращения.'],
     draft:['Подготовьте ответ по существу','Подготовьте один ответ заявителю. Примените норму к фактам и объясните вывод по существу. В следующих шагах укажите маршрут и сроки.'],
@@ -102,6 +105,9 @@ const mfcPhrases = {
   },
   en: {
     reception:['Read the appeal','See what the applicant is asking for. Then open the case records.'],
+    visitorChat:['Talk to the visitor','Ask what happened.'],
+    visitorQuestion:['Ask a question','Write your own question or insert the suggestion. Send it and read the reply.'],
+    routeDocument:['Open the case record','Compare the account of the event with the instruction or the recipient’s authority.'],
     calendarKind:['Calculate both deadlines','Use the referral and reply counting rules above the calendar.'],
     recipient:['Choose the competent authority','Find the competent authority in the relevant territory. If this appeal needs more than one recipient, select them in the same list.'],
     draft:['Draft a reply on the merits','Write one reply to the applicant. Apply the law to the facts and explain your conclusion on the merits. Record the referral and deadlines under next steps.'],
@@ -111,6 +117,9 @@ const mfcPhrases = {
   },
   zh: {
     reception:['阅读诉求','了解申请人的请求，然后查看案件材料。'],
+    visitorChat:['与来访人交谈','询问发生了什么。'],
+    visitorQuestion:['提出问题','输入自己的问题或填入建议，发送后阅读回复。'],
+    routeDocument:['打开案件材料','将事件记录与批示或接收方的职权进行核对。'],
     calendarKind:['计算两项期限','根据日历上方的说明计算转送和答复期限。'],
     recipient:['选择主管机关','找到有关地区的主管机关。如需为同一份诉求选择多个接收方，请在同一列表中勾选。'],
     draft:['撰写实质性答复','为申请人撰写一份答复，结合法律和事实说明实质性结论。在后续步骤中注明转送路径和期限。'],
@@ -204,6 +213,13 @@ function nextTarget(root, state, memory) {
     if (close) return ['materialRead', close];
     if (sources) return ['sources', sources];
   }
+  if(step.id==='reception'&&state.question){
+    if(state.page==='chat')return state.question.completed?['advance',find(advance)]:['visitorQuestion',find('[data-message-draft]')];
+    const chat=find(marked('visitor-chat'));
+    if(chat)return ['visitorChat',chat];
+  }
+  // Let the learner read the signed record before directing them back to routing.
+  if (step.id === 'route' && state.page === 'reception' && find('[data-core-records] [data-action="core-go"][data-step="route"]')) return [null, null];
   if (stepPage && state.page !== stepPage) {
     const button = [...root.querySelectorAll('.rxa-mobile-nav [data-page]')].find(item=>item.dataset.page===stepPage);
     return ['nav', available(button) ? button : find(guide+' [data-action="page"]')];
@@ -221,6 +237,8 @@ function nextTarget(root, state, memory) {
   if (stepId === 'calendar') return deadlineTarget(find, memory, state.registrationFirst);
   if (stepId === 'route') {
     if (state.mfc) {
+      const record=find(marked('route-document'));
+      if(record)return ['routeDocument',record];
       const next = find('[data-step="route"]'+advance);
       return next ? ['advance', next] : ['recipient', find('[data-routing-search]')];
     }
@@ -486,7 +504,8 @@ export function createReceptionTour(root) {
       highlight.dataset.target=key;
     }
     drawHighlight(targetRect);
-    if (keyboard) return;
+    // The example chat already gives the current instruction above its composer.
+    if (keyboard||state.page==='chat'&&state.question) return;
 
     progress.textContent=progressText;
     progress.hidden=!progressText;

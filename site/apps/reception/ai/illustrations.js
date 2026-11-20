@@ -50,7 +50,7 @@ const translatedAlt = {
 
 export function illustratedDocumentText(caseId, document, locale) {
   const language = normalizeLocale(locale), text = localized(document.text, language);
-  if (!bankByCase.get(caseId)?.has(document.id)) return text;
+  if (document.useCaseIllustrations === false || !bankByCase.get(caseId)?.has(document.id)) return text;
   const edit = photoTextEdits.get(`${caseId}/${document.id}`)?.[language];
   return edit ? text.replace(...edit) : text;
 }
@@ -58,7 +58,7 @@ export function illustratedDocumentText(caseId, document, locale) {
 export function caseIllustrations(caseId, documents = []) {
   const bank = bankByCase.get(caseId);
   return documents.flatMap(document => {
-    const illustrations = bank?.get(document.id);
+    const illustrations = document.useCaseIllustrations === false ? null : bank?.get(document.id);
     if (illustrations) return illustrations.map(({id, alt, synthetic}) => ({
       id, documentId:document.id, title:document.title, alt, synthetic,
       thumbnail:assetURL(`assets/gfx1/evidence/${id}__w420.webp`),

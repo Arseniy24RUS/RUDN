@@ -25,6 +25,13 @@ export function buildParticipantContext(c, locale = 'ru') {
     return typeof label === 'string' && label.trim() ? [{id: event.id, label, date: event.date}] : [];
   }) : [];
   const result = {currentAppeal: {scope: 'current_appeal', events}};
+  if (c?.seminarStory?.participant) {
+    const personal = c.seminarStory.participant;
+    result.conversationalBackground = {version:c.seminarStory.version, evidentiary:false,
+      service:text(personal.service, language), purpose:text(personal.purpose, language),
+      priorContact:text(personal.priorContact, language), limits:LIMITS[language]};
+    return result;
+  }
   const background = Object.hasOwn(backgrounds.cases,c?.id) ? backgrounds.cases[c.id] : undefined;
   const sourceMatches = !c?.provenance?.sourceSHA256 || c.provenance.sourceSHA256 === background?.sourceSHA256;
   if (background && sourceMatches) {
@@ -43,7 +50,7 @@ export function buildParticipantContext(c, locale = 'ru') {
 // stating it. Surface the same optional personal subject in the scene and chat.
 export function participantOpening(c,locale='ru') {
   const original=text(c?.public?.opening,locale)||'';
-  if(!['repeat-other-authority','repeat-routing-only'].includes(c?.id))return original;
+  if(c?.seminarStory || !['repeat-other-authority','repeat-routing-only'].includes(c?.id))return original;
   const subject=buildParticipantContext(c,locale).conversationalBackground?.service;
   return subject ? subject+' '+original : original;
 }

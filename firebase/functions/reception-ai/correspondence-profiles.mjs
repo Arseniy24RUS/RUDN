@@ -64,6 +64,11 @@ function bindFrozenDossier(profile,c,locale){
     result.control.expectedOutcomes=[localized(choice?.label,locale),localized(c.followup.explanation,locale)].filter(Boolean);
     result.control.forbiddenOutcomes=(c.followup.options||[]).filter(option=>option.id!==c.followup.correct).map(option=>({id:option.id,text:localized(option.label,locale)}));
   }
+  if(c.seminarStory?.legalApplication) {
+    const application=localized(c.seminarStory.legalApplication,locale);
+    result.criteria.legalBasis.expectedApplication=application;
+    result.criteria.legalBasis.explanation=application;
+  }
   result.provenance.frozenSourceMatched=!!provenance;
   result.dateBinding={datePackId:c.datePackId||null,usesFrozenDossier:true,unresolvedTokenKeys:[...unresolved],concreteDatesMustComeFromFrozenDossier:true};
   return result;

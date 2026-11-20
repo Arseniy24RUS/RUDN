@@ -241,7 +241,7 @@ function publicCaseWorkbook(c,gameplay,mfc,mfcCalendarVersion){
   ...(task.calendarVersion?{calendarVersion:task.calendarVersion}:{}),
   ...(task.registrationCounting?{registrationCounting:task.registrationCounting}:{}),
   instructions:mfc?mfcCalendarInstructions(c,task):calendarInstructions(c,task),counting:task.counting,calendarSnapshotId:task.calendarSnapshotId,
-  norms:task.calendarVersion?[]:calendarNorms(c,mfc?{registrationCheck:false}:task),...(mfc?publicMfcRouting(c.id):publicRoutingWorkflow(c.id,{gameplay}))};
+  norms:task.calendarVersion?[]:calendarNorms(c,mfc?{registrationCheck:false}:task),...(mfc?publicMfcRouting(c):publicRoutingWorkflow(c.id,{gameplay}))};
 }
 function evaluateCaseWorkbook(c,decision,feedback,gameplay,mfc,mfcCalendarVersion){
  if(!supportsWorkbook(c,WORKBOOK_VERSION))fail('invalid_case',503);
@@ -262,7 +262,7 @@ function evaluateCaseWorkbook(c,decision,feedback,gameplay,mfc,mfcCalendarVersio
  }
  const checkPoints=task.registrationCheck?4:0,datePoints=(20-checkPoints)/task.targets.length;
  const earned=task.targets.reduce((sum,target)=>sum+(correct[target.id]?datePoints:0),0)+(correct.registrationTimely?checkPoints:0);
- const routing=(mfc?evaluateMfcRouting:evaluateRoutingWorkflow)(c.id,decision.workbook.routing),result=copy(feedback);
+ const routing=mfc?evaluateMfcRouting(c,decision.workbook.routing):evaluateRoutingWorkflow(c.id,decision.workbook.routing),result=copy(feedback);
  for(const criterion of result.criteria){
   if(['calendar','deadline'].includes(criterion.id))criterion.earned=criterion.max*earned/20;
   if(criterion.id==='routing')criterion.earned=(c.rubric.procedureIds.includes(decision.procedureId)?7:0)+(routing?.correct?8:0);

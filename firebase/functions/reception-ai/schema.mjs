@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import {MFC_ROUTING_AUTHORITY_IDS} from './routing-directory.mjs';
 import {buildParticipantContext} from './participant-context.mjs';
 import {validateAuthoredContract,validateAuthoredDecision,evaluateAuthoredDecision,parseDateOnly} from './authored.mjs';
 import {DECISION_VERSION,validateCorrespondence} from './correspondence.mjs';
@@ -50,13 +51,13 @@ function references(values, allowed, required = false) {
   if (!Array.isArray(values) || required && !values.length || new Set(values).size !== values.length || values.some(id => !allowed.has(id))) fail('invalid_case', 503);
 }
 export const MAX_CATALOG_CASES = 512;
-export function validateCase(input) {
-  return validateDossier(input,false);
+export function validateCase(input,{allowSeminarStory=false}={}) {
+  return validateDossier(input,false,allowSeminarStory);
 }
-function validateDossier(input,isVariant) {
+function validateDossier(input,isVariant,allowSeminarStory=false) {
   try {
     const c = copy(input);
-    fields(c, ['id', 'version', 'public', 'actor', 'facts', 'documents', 'rubric','familyId','datePackId','dateVariants','provenance','followup']);
+    fields(c, ['id', 'version', 'public', 'actor', 'facts', 'documents', 'rubric','familyId','datePackId','dateVariants','provenance','followup',...(allowSeminarStory?['seminarStory']:[])]);
     identifier(c.id); string(c.version, 100);
     if(c.familyId!==undefined)identifier(c.familyId);
     if(c.datePackId!==undefined)identifier(c.datePackId);
@@ -103,6 +104,30 @@ function validateDossier(input,isVariant) {
       if(doc.url!==undefined&&(typeof doc.url!=='string'||!/^https:\/\//.test(doc.url)))fail('invalid_case');
       if(doc.sensitive!==undefined&&typeof doc.sensitive!=='boolean')fail('invalid_case');
       references(doc.factIds, facts);
+    }
+    if(c.seminarStory!==undefined){
+      const story=fields(c.seminarStory,['version','participant','exampleDialogue','routeDocumentId','recipients','authoritySources','textOnlyDocumentIds','legalApplication']);
+      if(story.legalApplication!==undefined)text(story.legalApplication,true);
+      identifier(story.version);
+      references([story.routeDocumentId],documents,true);
+      if(story.textOnlyDocumentIds!==undefined)references(story.textOnlyDocumentIds,documents);
+      const participant=fields(story.participant,['service','purpose','priorContact']);
+      for(const field of ['service','purpose','priorContact'])text(participant[field],true);
+      if(story.exampleDialogue!==undefined){
+        const dialogue=fields(story.exampleDialogue,['prompt','reply','factId','documentId']);
+        text(dialogue.prompt,true);text(dialogue.reply,true);
+        references([dialogue.factId],facts,true);references([dialogue.documentId],documents,true);
+        if(c.facts.find(fact=>fact.id===dialogue.factId).knowledge!=='direct')fail('invalid_case');
+      }
+      if(story.recipients!==undefined){
+        if(!Array.isArray(story.recipients)||!story.recipients.length)fail('invalid_case');
+        for(const group of story.recipients){
+          if(!Array.isArray(group)||!group.length||group.length>2||new Set(group).size!==group.length||
+            group.some(id=>!MFC_ROUTING_AUTHORITY_IDS.has(id)))fail('invalid_case');
+        }
+      }
+      if(story.authoritySources!==undefined&&(!Array.isArray(story.authoritySources)||
+        story.authoritySources.some(url=>typeof url!=='string'||!/^https:\/\//.test(url))))fail('invalid_case');
     }
     const r = fields(c.rubric, ['procedureIds', 'routeIds', 'requiredActionIds', 'forbiddenActionIds', 'criticalActionIds', 'requiredFactIds', 'evidenceGroups', 'legal', 'deadline', 'explanation','authored']);
     references(r.procedureIds, procedures, true); references(r.routeIds, routes, true);

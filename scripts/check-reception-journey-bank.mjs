@@ -7,6 +7,7 @@ import {createMemoryStore} from '../firebase/functions/reception-ai/store.mjs';
 import {calculateWorkbookDeadline} from '../firebase/functions/reception-ai/workbook-calendar.mjs';
 import {MFC_ROUTING_AUTHORITY_IDS} from '../firebase/functions/reception-ai/routing-directory.mjs';
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
+import {withSeminarStory, SEMINAR_STORY_VERSION} from '../firebase/functions/reception-ai/seminar-stories.mjs';
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
 import {SEMINAR_EXAMPLE, tutorialGuide, tutorialExecutionAction, validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
 import {explicitQAReview} from './reception-correspondence-qa-cases.mjs';
@@ -16,6 +17,8 @@ const bank = process.argv[2];
 if (!bank) throw Error('Supply a frozen case directory');
 const limit = Number(process.argv.slice(3).find(arg=>!arg.startsWith('--')) || Infinity);
 const legacy = process.argv.includes('--legacy');
+const story = process.argv.includes('--stories');
+if (story && legacy) throw Error('Select one journey version');
 const coreStepsVersion = legacy ? 'guided-core-v1' : 'mfc-referral-v2';
 const identity = {uid:'offline-practice', studentKey:'99990001'};
 const progressPath = 'seminarProgress/'+hash('student:'+identity.studentKey);
@@ -28,7 +31,7 @@ async function checkCase(c, locale, stage) {
   const store = createMemoryStore();
   const scored = stage === 'independent';
   if (stage !== 'example') {
-    await store.transaction(progressPath, () => ({journey:{
+    await store.transaction(progressPath, () => ({[story?'storyJourney':'journey']:{
       example:{completed:true}, ...(scored ? {mentor:{completed:true}} : {})
     }}));
   }
@@ -43,10 +46,14 @@ async function checkCase(c, locale, stage) {
     catch(error){error.operation=[body.op,body.stepId].filter(Boolean).join('/');throw error;}
   };
   let view = await handle({...options, op:'start', mode:scored?'independent':'training',
-    ...(legacy ? {} : {coreStepsVersion}), journeyStage:stage, locale, requestId:'start'});
+    ...(legacy ? {} : {coreStepsVersion}), ...(story ? {seminarStoryVersion:SEMINAR_STORY_VERSION} : {}), journeyStage:stage, locale, requestId:'start'});
   assert.equal(view.case.id,c.id);
   assert.equal(view.coreStepsVersion,coreStepsVersion);
   if(scored) assert.ok(!view.guidance && !view.mentorMessages);
+  if (story) {
+    assert.equal(view.seminarStoryVersion,SEMINAR_STORY_VERSION);
+    c=withSeminarStory(c);
+  }
   const profile = privateCorrespondenceProfile(c,locale);
   const guide = tutorialGuide(c,profile,locale,{execution:true,core:true,coreStepsVersion});
   const {decision} = guide;
@@ -88,6 +95,11 @@ async function checkCase(c, locale, stage) {
   for(const doc of decision.correspondence.citations.filter(row=>row.kind==='document')){
     if(!view.openedDocumentIds.includes(doc.sourceId))await send('document',{documentId:doc.sourceId});
   }
+  if (story && stage==='example') {
+    await assert.rejects(()=>step('reception',{choiceId:'role'}),{code:'tutorial_question_required'});
+    await send('message',{text:c.seminarStory.exampleDialogue.prompt[locale],suggestionId:'example-question'});
+    assert.equal(view.messages.at(-1).text,c.seminarStory.exampleDialogue.reply[locale]);
+  }
   if(!scored) await step('reception',{choiceId:'role'});
   await step('materials',{citations});
   assert.deepEqual(view.coreSteps.completed,['materials']);
@@ -128,7 +140,7 @@ async function checkCase(c, locale, stage) {
   assert.equal(writes,scored?1:0);
   if(scored) counts.scoredCases++;
   else {
-    assert.ok((await store.get(progressPath))[legacy?'guidedJourney':'mfcJourney'][stage].completed);
+    assert.ok((await store.get(progressPath))[story?'storyJourney':legacy?'guidedJourney':'mfcJourney'][stage].completed);
     if(stage==='example') counts.examples++;
     else counts.mentoredCases++;
   }
@@ -150,5 +162,5 @@ for(const file of files){
     }
   }
 }
-console.log(JSON.stringify({coreStepsVersion,counts,failures}));
+console.log(JSON.stringify({coreStepsVersion,...(story?{seminarStoryVersion:SEMINAR_STORY_VERSION}:{}),counts,failures}));
 if(failures.length)process.exitCode=1;

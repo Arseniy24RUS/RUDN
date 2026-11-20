@@ -73,7 +73,7 @@ export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
   const value=(mfc?validateMfcRoutingDecision:validateRoutingWorkflowDecision)(raw);
   if(mfc?value.disposition!=='forward':!value.disposition)fail('core_route_required');
-  if(guide&&!(mfc?evaluateMfcRouting:evaluateRoutingWorkflow)(c.id,value)?.correct)return {finding:'route'};
+  if(guide&&!(mfc?evaluateMfcRouting(c,value):evaluateRoutingWorkflow(c.id,value))?.correct)return {finding:'route'};
   return {field,value};
 }
 

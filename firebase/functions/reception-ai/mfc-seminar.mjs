@@ -19,7 +19,7 @@ const legacyDispatchActions = {
 };
 
 export function mfcUsesSharedReply(coreStepsVersion,workbook) {
-  return coreStepsVersion===MFC_SEMINAR_VERSION&&workbook?.recipientLimit>1;
+  return coreStepsVersion===MFC_SEMINAR_VERSION && (workbook?.sharedReply ?? (workbook?.recipientLimit > 1));
 }
 
 export function mfcLegacyDispatchActions(caseId) {

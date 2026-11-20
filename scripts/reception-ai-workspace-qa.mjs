@@ -12,7 +12,7 @@ const here=path.dirname(fileURLToPath(import.meta.url));
 const defaultRepo=path.resolve(here,'..');
 const arg=(name,fallback)=>{const i=process.argv.indexOf(name);return i<0?fallback:process.argv[i+1];};
 
-export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider,decisionVersion='legacy',controlVersion='legacy',serviceOptions={},studentName='',coreStepsVersion=null,teacher=false,caseIds=null}={}){
+export async function createReceptionFixture({repo=defaultRepo,casesDirectory=process.env.RECEPTION_AI_CASES_DIR,provider:providedProvider,decisionVersion='legacy',controlVersion='legacy',serviceOptions={},studentName='',coreStepsVersion=null,seminarStoryVersion=null,teacher=false,caseIds=null}={}){
   if(!casesDirectory)throw Error('Provide --cases /absolute/path/private-data/cases or RECEPTION_AI_CASES_DIR.');
   repo=await realpath(repo);
   const site=await realpath(path.join(repo,'site'));
@@ -49,7 +49,7 @@ async function enter(){
   const fullName=${JSON.stringify(studentName)};
   const teacher=${JSON.stringify(teacher)};
   const backend=fullName||teacher?{user:{uid:'reception-repair-qa'},isAdmin:()=>teacher,getProfile:()=>({studentKey:'reception-repair-qa',fullName})}:undefined;
-  handle=await mountReceptionAI(document.getElementById('receptionAI'),{backend,getIdToken:teacher?async()=> 'local-reception-qa-token':undefined,locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:!teacher,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:!teacher,workbookVersion:2,gameplayContext,decisionVersion:${JSON.stringify(decisionVersion)},controlVersion:${JSON.stringify(controlVersion)},coreStepsVersion:${JSON.stringify(coreStepsVersion)}});
+  handle=await mountReceptionAI(document.getElementById('receptionAI'),{backend,getIdToken:teacher?async()=> 'local-reception-qa-token':undefined,locale:parameters.get('lang')||'ru',studentKey:'reception-repair-qa',context:gameplayContext||'course',period:'2026-2027',assessmentAllowed:!teacher,showLanguageSelector:true,onExit:leave},{endpoint:'/api/reception',demo:!teacher,workbookVersion:2,gameplayContext,decisionVersion:${JSON.stringify(decisionVersion)},controlVersion:${JSON.stringify(controlVersion)},coreStepsVersion:${JSON.stringify(coreStepsVersion)},seminarStoryVersion:${JSON.stringify(seminarStoryVersion)}});
   window.__qaReception={provider:'mock',handle};
 }
 async function leave(){

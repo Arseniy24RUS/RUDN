@@ -159,16 +159,42 @@ function walkthroughReply(c, deadline, language, compact) {
   return {kind:'reply',subject:localized(subject,language),sections:localized(compact?concise:sections,language)};
 }
 
+function lightingComplaintReply(c,language,timetable) {
+  const name=localized(c.public.citizen.name,language);
+  const subject=T('О проверке ответа по освещению у остановки «Сосновый сквер»',
+    'Review of the lighting reply for the Sosnovy Skver stop','关于核查松树小广场公交站照明答复');
+  const sections={
+    facts:T(
+      `Уважаемый ${name}! Вы сообщили, что на подходе к переходу у остановки «Сосновый сквер» не горят фонари на опорах № 17 и 18. В прежнем письме вы приложили схему участка. Подписанный начальником управления ответ описывает освещение соседнего сквера и не упоминает эти опоры.`,
+      `Dear ${name}, you reported that lamps on poles 17 and 18 were out on the approach to the crossing by the Sosnovy Skver stop. You included a map with your previous letter. The reply signed by the division head describes lighting in the neighbouring square and does not mention those poles.`,
+      `尊敬的${name}：您反映松树小广场公交站通往人行横道处17、18号灯杆的路灯不亮，并在此前来信中附上了路段示意图。处长签署的答复写的是相邻广场的照明，未提及这两根灯杆。`),
+    legalBasis:T(
+      'По ч. 6 ст. 8 Федерального закона № 59-ФЗ начальник управления не может рассматривать жалобу на собственные действия. Руководитель Департамента ЖКХ Москвы проведёт независимую проверку. По ст. 10 того же закона можно запросить документы и объяснения, необходимые для рассмотрения.',
+      'Article 8(6) of Federal Law No. 59-FZ bars the division head from deciding a complaint about his own conduct. The director of the Moscow Department of Housing and Communal Services will conduct the review independently. Article 10 allows the director to obtain the records and explanations needed for it.',
+      '根据第59-FZ号联邦法律第8条第6款，处长不得处理针对本人行为的投诉。莫斯科市住房和公用事业局负责人将独立审查，并可依据该法第10条调取所需记录和说明。'),
+    resolution:T(
+      'Руководитель сопоставит первое письмо, схему, подписанный ответ и объяснение начальника управления. Департамент запросит осмотр опор № 17 и 18 по схеме. Если осмотр подтвердит неисправность, департамент определит меры и передаст вопрос о ремонте ответственному исполнителю. Итог проверки жалобы — мотивированный вывод о том, как рассмотрены доводы, и решение по каждому из них. Состояние фонарей и выполнение ремонта требуют отдельных подтверждений.',
+      'The director will compare your original letter and map with the signed reply and the division head’s explanation. The department will request an inspection of poles 17 and 18 at the locations marked on the map. If a fault is confirmed, the department will determine the required action and refer repairs to the responsible team. The complaint review will produce a reasoned finding on how your earlier letter was handled and a decision on each point. The condition of the lamps and any completed repairs require separate evidence.',
+      '负责人将把首次来信和示意图与签署的答复及处长的说明逐一比对，并要求按图检查17、18号灯杆。如确认故障，主管部门将确定处理措施，把维修事项交给负责单位。投诉审查将说明原来信如何办理，并对各项理由分别作出决定。路灯状况和维修完成情况须分别取得证明。'),
+    nextSteps:T(
+      `МФЦ передаст материалы в Департамент ЖКХ Москвы и сообщит вам о передаче. Руководитель департамента подпишет мотивированный ответ и направит его по вашему адресу для переписки. ${timetable}`,
+      `The MFC will refer the file to the Moscow Department of Housing and Communal Services and tell you where it was sent. The department director will sign a reasoned reply and send it to your correspondence address. ${timetable}`,
+      `MFC将材料转交莫斯科市住房和公用事业局并告知您去向。局负责人将签署有理由的答复并寄到您的通信地址。${timetable}`)
+  };
+  return {kind:'reply',subject:localized(subject,language),sections:localized(sections,language)};
+}
+
 function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVersion) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
   const currentCalendar=mfc&&isMfcChainedCalendar(mfcCalendarVersion);
   const local = value => localized(value, language) || '';
   const refs = (c.rubric.evidenceGroups || []).flat();
+  if(c.id===SEMINAR_EXAMPLE.caseId&&c.seminarStory)refs.push('lighting-original-letter','lighting-signed-reply');
   const docs = [...new Set(refs)].map(id => c.documents.find(doc => doc.id === id)).filter(Boolean);
   if (!docs.length && c.documents.length) docs.push(c.documents[0]);
   const legal = profile.criteria?.legalBasis;
   const ruling = local(c.rubric.explanation) || local(profile.primaryFinding);
-  const mfcRouting=mfc?publicMfcRouting(c.id):null;
+  const mfcRouting=mfc?publicMfcRouting(c):null;
   const sharedReply=mfcUsesSharedReply(coreStepsVersion,mfcRouting);
   const legacyDispatch=sharedReply?mfcLegacyDispatchActions(c.id):new Set();
   const facts = c.facts.filter(fact => c.rubric.requiredFactIds.includes(fact.id)&&
@@ -181,7 +207,7 @@ function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVer
   };
   const actions = (profile.expectedActions || []).filter(action=>(!plan||plan.requiredActionIds.includes(action.id))&&!legacyDispatch.has(action.id))
     .map(actionText).filter(Boolean);
-  const recipients = mfc?mfcRoutingAlternatives(c.id)?.[0]:evaluateRoutingWorkflow(c.id,{recipientIds:[]}).expectedRecipients;
+  const recipients = mfc?mfcRoutingAlternatives(c)?.[0]:evaluateRoutingWorkflow(c.id,{recipientIds:[]}).expectedRecipients;
   if(!recipients?.length)fail('invalid_case',503);
   const recipientIds = recipients.map(recipient => recipient.id);
   const recipientNames=recipients.map(recipient=>mfc?mfcAuthorityName(recipient,language):local(recipient.name));
@@ -235,10 +261,12 @@ function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVer
     expectedResult:local(T('Мотивированное решение руководителя по каждому доводу и подтверждение отправки ответа заявителю.','A reasoned decision by the director on each point and proof that a reply was sent to the applicant.','由负责人就各项理由作出有根据的决定，并保留给申请人发送答复的凭证。')),
     citationIds:citations.map(citation=>citation.id)
   }]:[];
-  const reply=c.id===SEMINAR_EXAMPLE.caseId ? walkthroughReply(c,expected.deadline,language,core&&!mfc) : {
+  const lightingExample=mfc&&c.id===SEMINAR_EXAMPLE.caseId&&c.seminarStory;
+  const reply=lightingExample?lightingComplaintReply(c,language,timetable):c.id===SEMINAR_EXAMPLE.caseId?
+    walkthroughReply(c,expected.deadline,language,core&&!mfc):{
     kind:profile.acceptedKinds?.[0]||'reply',subject:local(c.public.title).slice(0,240),sections
   };
-  if(mfc&&c.id===SEMINAR_EXAMPLE.caseId){
+  if(mfc&&c.id===SEMINAR_EXAMPLE.caseId&&!lightingExample){
     reply.sections.facts=local(T(
       'В МФЦ поступили материалы жалобы. Заявитель сообщает, что начальник отдела оставил его прежние доводы без рассмотрения. Он просит проверить действия начальника и разъяснить, кто рассмотрит жалобу.',
       'The MFC has received the complaint file. The applicant reports that the division head overlooked the points in an earlier appeal. The applicant asks for a review of the division head’s conduct and an explanation of who will handle the complaint.',
@@ -269,6 +297,10 @@ export function walkthroughControlProfile(c, profile) {
   record.text=T(record.text.ru,
     'The director considered the issues independently, using the documents and the division head’s explanation. The decision remains with the director. The division head’s explanation was collected as evidence for the review.',
     '部门负责人根据文件和处长的说明独立审查了各项理由。最终决定由部门负责人作出。处长的说明作为审查材料收集。');
+  if(c.seminarStory)record.text=T(
+    'Подписанный ответ руководителя Департамента ЖКХ Москвы. Схема из первого письма отмечает опоры № 17 и 18 у остановки «Сосновый сквер». Ответ начальника управления описывал соседний сквер. Руководитель признал, что довод о двух опорах остался без рассмотрения, и запросил осмотр участка по схеме. Результат осмотра и исполнение ремонта этим ответом не подтверждены.',
+    'Signed reply by the director of the Moscow Department of Housing and Communal Services. The map from the original letter identifies poles 17 and 18 by the Sosnovy Skver stop. The division head’s reply described the neighbouring square. The director found that the point about the two poles had been missed and requested an inspection at the marked location. This reply does not confirm the result of the inspection or any repairs.',
+    '莫斯科市住房和公用事业局负责人签署的答复。首次来信的示意图标出了松树小广场公交站旁17、18号灯杆。处长的答复描述的是相邻广场。负责人认定原答复遗漏了关于两根灯杆的问题，并要求按图检查该路段。本答复未确认检查结果或维修情况。');
   return prepared;
 }
 
@@ -278,7 +310,10 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false,
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
   const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText,boundary,routingContext,sharedReply} = presentation(c,profile,language,core,coreStepsVersion,mfcCalendarVersion);
   const role=mfc?mfcRole(c.public.role,language,sharedReply):null;
-  const roleExplanation=mfc?role.text:c.id===SEMINAR_EXAMPLE.caseId
+  const roleExplanation=c.seminarStory?.exampleDialogue?local(T(
+    'Сначала уточните, о каких фонарях писал Сергей Петрович и чей ответ он обжалует. Затем сопоставьте жалобу, первое письмо и подписанный ответ.',
+    'First clarify which lights Sergey Petrovich wrote about and whose reply he is challenging. Then compare the complaint, the original letter and the signed reply.',
+    '先问清谢尔盖·彼得罗维奇反映的是哪些路灯、投诉的是谁的答复，再将投诉、首次来信及签署的答复进行比对。')):mfc?role.text:c.id===SEMINAR_EXAMPLE.caseId
     ? local(T('Вы готовите материалы для руководителя департамента. Жалоба касается начальника отдела. В карточке выделите предмет жалобы и проверьте, кто вправе её рассматривать. Затем решите, кому направить материалы.',
       'You prepare the file for the department director. The complaint concerns the division head. Identify the subject of the complaint and check who has authority to review it. Then decide who should receive the records.',
       '你负责为部门负责人准备材料。投诉涉及处长。先在事项卡片中确定投诉对象和内容，核对谁有权审查，再决定将材料交给谁。'))
@@ -313,6 +348,8 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false,
     const reception=steps[0];
     reception.prompt=local(T('Прочитайте обращение и свои полномочия.','Read the appeal and check your authority.','阅读来信并核对自身职权。'));
     reception.choices=reception.choices.filter(choice=>choice.id==='role');
+    if(c.seminarStory?.exampleDialogue)reception.prompt=local(T(
+      'Уточните обстоятельства у заявителя в переписке.','Ask the visitor a question in the chat.','在聊天中向来访人询问情况。'));
     steps.splice(1,1);
     const materials=steps.find(step=>step.id==='materials');
     materials.action='legal';
@@ -350,12 +387,18 @@ export function publicTutorialGuide(guide, session) {
   const stepIndex = state.tutorialStepIndex || 0;
   const allowed=example&&!session.coreStepsVersion?null:tutorialExecutionKinds(guide.steps[stepIndex]?.id);
   const actions=guide.sharedReply?allowed?.filter(kind=>kind!=='notify'):allowed;
-  return {stepIndex,...(actions?{allowedControlActions:actions}:{}),steps:guide.steps.map(({choices,explanation,...step},index)=>{
+  const story=session.caseData?.[session.caseIndex]?.seminarStory;
+  const question=example&&story?.exampleDialogue;
+  const questionCompleted=state.exampleQuestionCompleted===true;
+  return {stepIndex,
+    ...(story?.routeDocumentId?{routeDocumentId:story.routeDocumentId}:{}),
+    ...(question?{question:{id:'example-question',prompt:localized(question.prompt,session.locale),completed:questionCompleted}}:{}),
+    ...(actions?{allowedControlActions:actions}:{}),steps:guide.steps.map(({choices,explanation,...step},index)=>{
     const visited = index <= stepIndex;
     const correctChoiceId = choices.find(choice=>choice.correct)?.id;
     return {...step,
       ...(visited && choices.length ? {choices:choices.map(({id,label})=>({id,label}))} : {}),
-      ...(visited && (example || index < stepIndex) ? {explanation,correctChoiceId} : {})};
+      ...(visited && (example || index < stepIndex) && !(story&&step.id==='route') ? {explanation,correctChoiceId} : {})};
   }), ...(state.tutorialFinding ? {finding:state.tutorialFinding} : {}),
     ...(state.tutorialWorkFeedback ? {workFeedback:state.tutorialWorkFeedback} : {}),
   ...(stepIndex>=(session.coreStepsVersion?1:2) ? {decision:guide.decision} : {}),

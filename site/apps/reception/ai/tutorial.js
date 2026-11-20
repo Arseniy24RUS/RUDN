@@ -4,6 +4,10 @@ import {coreLabel, isCoreJourney, isMfcJourney} from './core-steps.js';
 
 const copy = {
   ru: {
+    askVisitor: 'Задать вопрос посетителю', askVisitorPrompt: 'Задайте вопрос о том, что произошло или кто указан в жалобе.',
+    askVisitorAgain: 'Уточните конкретное обстоятельство, чтобы посетитель мог ответить по делу.',
+    useSuggestedQuestion: 'Подставить вопрос', routeDocumentPrompt: 'Откройте документ и сопоставьте предмет обращения с полномочиями адресата.',
+    historicalResult: 'Открыть прежний результат', backToRoute: 'Вернуться к маршруту',
     mentorHintLabel: 'Подсказка к шагу', route: 'Учебный маршрут', opening: 'Обращение посетителя', example: 'Разобранный пример',
     mentor: 'Дело с наставником', independent: 'Самостоятельное дело', finished: 'Пройдено', locked: 'После предыдущего этапа',
     exampleHint: 'Разберите обращение, выберите норму, сроки и адресата, затем подготовьте ответ и проверьте исполнение.',
@@ -37,6 +41,10 @@ const copy = {
     openOwnDraft: 'Перейти к моему проекту', openOwnControl: 'Открыть моё заключение', goGuide: 'Перейти к шагу разбора',
   },
   en: {
+    askVisitor: 'Ask the visitor', askVisitorPrompt: 'Ask what happened or who is named in the complaint.',
+    askVisitorAgain: 'Ask about a specific detail so the visitor can answer about the case.',
+    useSuggestedQuestion: 'Use suggested question', routeDocumentPrompt: 'Open the document and check the subject of the appeal against the recipient’s authority.',
+    historicalResult: 'Open previous result', backToRoute: 'Back to routing',
     mentorHintLabel: 'Step hint', route: 'Learning path', opening: 'Visitor’s request', example: 'Worked example',
     mentor: 'Case with a mentor', independent: 'Independent case', finished: 'Completed', locked: 'After the previous stage',
     exampleHint: 'Read an appeal, choose the provision, dates and recipient, then write a response and check what was done.',
@@ -70,6 +78,10 @@ const copy = {
     openOwnDraft: 'Go to my draft', openOwnControl: 'Open my memorandum', goGuide: 'Go to the current step',
   },
   zh: {
+    askVisitor: '询问来访人', askVisitorPrompt: '询问发生了什么，或投诉中提到了谁。',
+    askVisitorAgain: '请询问具体情况，以便来访人针对本案作答。',
+    useSuggestedQuestion: '填入建议问题', routeDocumentPrompt: '打开材料，将来信事项与接收方的职权核对。',
+    historicalResult: '查看以往结果', backToRoute: '返回转交路径',
     mentorHintLabel: '步骤提示', route: '学习路径', opening: '来访者的诉求', example: '示范案例',
     mentor: '导师指导案例', independent: '独立案例', finished: '已完成', locked: '完成上一阶段后解锁',
     exampleHint: '阅读来信，选择法律条款、期限与接收方，再撰写答复并核查办理结果。',

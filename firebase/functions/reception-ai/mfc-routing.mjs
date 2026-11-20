@@ -201,10 +201,16 @@ const territoryOverrides = {
   'seedlings-outside-zone':'ru-50',
 };
 
-export function publicMfcRouting(caseId) {
+function routingCase(value) {
+  const caseId = typeof value === 'string' ? value : value.id;
+  const story = typeof value === 'object' ? value.seminarStory : null;
+  return {caseId, story, choices:story?.recipients || mfcRecipients[caseId]};
+}
+
+export function publicMfcRouting(value) {
+  const {caseId, story, choices} = routingCase(value);
   if (!Object.hasOwn(mfcRecipients,caseId)) return null;
   const workflow = publicRoutingWorkflow(caseId);
-  const choices = mfcRecipients[caseId];
   const routedTerritory = choices[0].map(id => ROUTING_AUTHORITIES[id].territoryId).find(Boolean);
   const territoryId = workflow.site?.territoryId || territoryOverrides[caseId] || routedTerritory;
   const region = ROUTING_TERRITORIES[territoryId];
@@ -213,10 +219,12 @@ export function publicMfcRouting(caseId) {
     ...workflow,
     ...(region ? {site:{territoryId,territory:region.name,city,detail:workflow.site?.detail || null}} : {}),
     recipientLimit:Math.max(...choices.map(ids => ids.length)),
+    // Optional co-referrals do not change the substantive response expected in the original case.
+    ...(story ? {sharedReply:mfcRecipients[caseId].some(ids => ids.length > 1)} : {}),
     routingPolicy:{
       allowInternal:false,
-      ...(caseContext[caseId] ? {context:caseContext[caseId]} : {}),
-      ...(caseBoundaries[caseId] ? {boundary:caseBoundaries[caseId]} : {}),
+      ...(!story && caseContext[caseId] ? {context:caseContext[caseId]} : {}),
+      ...(!story && caseBoundaries[caseId] ? {boundary:caseBoundaries[caseId]} : {}),
     },
   };
 }
@@ -230,9 +238,10 @@ export function validateMfcRoutingDecision(value) {
   return {recipientIds:canonicalIds,disposition};
 }
 
-export function mfcRoutingAlternatives(caseId) {
+export function mfcRoutingAlternatives(value) {
+  const {caseId, choices} = routingCase(value);
   if (!Object.hasOwn(mfcRecipients,caseId)) return null;
-  return mfcRecipients[caseId].map(ids => ids.map(id => ROUTING_AUTHORITIES[id]));
+  return choices.map(ids => ids.map(id => ROUTING_AUTHORITIES[id]));
 }
 
 export function evaluateMfcRouting(caseId,value) {

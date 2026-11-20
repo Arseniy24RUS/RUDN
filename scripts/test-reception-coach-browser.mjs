@@ -20,16 +20,19 @@ import {SEMINAR_EXAMPLE,seminarPointsAt,tutorialGuide,tutorialExecutionAction,va
 const arg=(key, fallback)=>process.argv.includes(key)?process.argv[process.argv.indexOf(key)+1]:fallback;
 const engine=arg('--browser','chromium');
 const legacy=process.argv.includes('--legacy');
+const stories=process.argv.includes('--stories');
+const seminarStoryVersion=stories?'mfc-stories-v1':null;
 const scored=process.argv.includes('--scored')||process.argv.includes('--teacher');
 const teacherExample=process.argv.includes('--teacher-example');
 const teacherAccepted=process.argv.includes('--teacher-accepted');
 const teacher=process.argv.includes('--teacher')||teacherExample||teacherAccepted;
 assert.ok([legacy,scored,teacherExample,teacherAccepted].filter(Boolean).length<=1,'Select just one browser scenario.');
+assert.ok(!stories||!legacy&&!teacher,'Stories require the current student seminar.');
 const coreStepsVersion=legacy?null:'mfc-referral-v2';
 assert.ok(['chromium','webkit'].includes(engine));
 const modulePath=arg('--playwright-module',process.env.RECEPTION_PLAYWRIGHT_MODULE);
 const {[engine]:launcher}=await import(modulePath?pathToFileURL(path.resolve(modulePath)).href:'playwright');
-const out=path.resolve(arg('--out',path.join(os.tmpdir(),'reception-coach-browser')),engine);
+const out=path.resolve(arg('--out',path.join(os.tmpdir(),'reception-coach-browser')),engine,stories&&scored?'independent':'.');
 const sizes=[
   {width:1440,height:900,locale:'ru',full:true},
   {width:390,height:844,locale:'en',full:false},
@@ -82,8 +85,8 @@ async function run({width,height,locale,full}) {
       async answerMentor(){return {reply:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
       async reviewMentorWork(){return {ready:true,feedback:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
     },
-    decisionVersion:'correspondence-v1',controlVersion:'execution-v1',coreStepsVersion,teacher,
-    caseIds:scored||full&&!legacy?[SEMINAR_EXAMPLE.caseId,'several-issues']:null,
+    decisionVersion:'correspondence-v1',controlVersion:'execution-v1',coreStepsVersion,seminarStoryVersion,teacher,
+    caseIds:stories||scored||full&&!legacy?[SEMINAR_EXAMPLE.caseId,'several-issues']:null,
     serviceOptions:{requireGameplay:true,requireSeminarJourney:true,guidedSeminarCore:true,
       canStartAssessment:async()=>!teacher,saveResult:async()=>{journalWrites++;}},
   });
@@ -91,7 +94,7 @@ async function run({width,height,locale,full}) {
     const owner=teacher?'teacher:'+fixture.identity.uid:'student:'+fixture.identity.studentKey;
     // Test setup only. Every action in the new independent attempt comes from rendered controls.
     await fixture.store.transaction('seminarProgress/'+hash(owner),()=>({
-      mfcJourney:{example:{completed:true},mentor:{completed:true}},
+      [stories?'storyJourney':'mfcJourney']:{example:{completed:true},mentor:{completed:true}},
     }));
   }
   const checkLegacyResume=!legacy&&!scored&&!teacher&&width===390;
@@ -105,6 +108,16 @@ async function run({width,height,locale,full}) {
   const page=await context.newPage();
   await page.route('**/*',route=>route.request().url().startsWith(origin)?route.continue():route.abort());
   page.setDefaultTimeout(8000);
+  let visitorMessages=0;
+  await page.exposeFunction('qaVisitedVisitorChat',()=>{row.visitedVisitorChat=true;});
+  await page.addInitScript(()=>{
+    new MutationObserver(()=>{
+      if(document.querySelector('#receptionAI[data-page="chat"]'))void window.qaVisitedVisitorChat();
+    }).observe(document,{subtree:true,childList:true,attributes:true,attributeFilter:['data-page']});
+  });
+  page.on('request',request=>{
+    if(request.url()===origin+'/api/reception'&&request.postDataJSON()?.op==='message')visitorMessages++;
+  });
   page.on('pageerror',error=>row.errors.push(error.message));
   page.on('console',message=>{if(message.type()==='error')row.errors.push(message.text());});
   const root=page.locator('#receptionAI');
@@ -442,6 +455,47 @@ async function run({width,height,locale,full}) {
     for(const [id,value] of Object.entries(sections))await draft.locator(`[data-response-field="sections.${id}"]`).fill(value);
     for(const citation of model.correspondence.citations.filter(item=>item.kind==='document'))await addFactCitation(citation);
   }
+  async function exerciseFollowThrough(view,guide,caseData,{guided=false}={}) {
+    let automaticRecipients=0;
+    for(const step of ['control-request','control-evidence','control-status']){
+      assert.ok(view.controlWorkflow.issues.every(issue=>!issue.availableActions.some(action=>action.kind==='notify')));
+      if(guided){
+        assert.equal(currentStep(view)?.id,step);
+        await root.locator('[data-action="mentor-open-work"]').click();
+      }
+      const {workflow}=await readSession(view);
+      const sample=tutorialExecutionAction(workflow,step,guide,{caseData,locale,timestamp:Date.now()});
+      for(const event of sample.journal.slice(workflow.journal.length)){
+        const {issueId,kind,reason,instruction,recipientIds,dueDate,expectedResult,evidenceSourceIds}=event;
+        await root.locator(`[data-control-action="select-issue"][data-issue-id="${issueId}"]`).click();
+        await root.locator(`[data-control-action="select-kind"][data-kind="${kind}"]`).click();
+        await root.locator('[data-control-field="reason"]').fill(reason||guide.control.text);
+        await root.locator('[data-control-field="instruction"]').fill(instruction||guide.control.text);
+        if(dueDate)await root.locator('[data-control-field="dueDate"]').fill(dueDate);
+        if(expectedResult)await root.locator('[data-control-field="expectedResult"]').fill(expectedResult);
+        for(const evidenceId of evidenceSourceIds){
+          const marker=root.locator(`[data-control-field="evidenceSourceIds"][data-source-id="${evidenceId}"]`);
+          await marker.locator('../..').locator('[data-control-action="open-material"]').click();
+          await root.locator('[data-control-material] [data-control-action="close-material"]').click();
+          await marker.check();
+        }
+        const chooser=root.locator('[data-control-action="choose-recipient"]');
+        const rule=view.controlWorkflow.issues.find(issue=>issue.id===issueId)?.availableActions.find(action=>action.kind===kind);
+        if(rule?.requiresRecipients===false&&['request_evidence','refer'].includes(kind)){
+          assert.equal(await chooser.count(),0);
+          automaticRecipients++;
+        }else if(recipientIds.length){
+          await chooser.click();
+          await setRecipients(recipientIds);
+          await root.locator('[data-action="control-recipient-done"]').click();
+        }
+        view=await operation('control-action',root.locator('[data-control-action="execute"]'));
+        assert.ok(view.controlWorkflow.journal.at(-1).accepted,view.controlWorkflow.journal.at(-1).outcome);
+      }
+      if(guided)view=await operation('tutorial-step',root.locator('[data-action="mentor-check-action"]'));
+    }
+    return {view,automaticRecipients};
+  }
   async function runIndependent() {
     let view=await operation('start',root.locator('[data-action="start-journey"][data-stage="independent"]'));
     row.sessionId=view.id;
@@ -449,6 +503,13 @@ async function run({width,height,locale,full}) {
     assert.equal(view.coreStepsVersion,coreStepsVersion);
     assert.equal(view.case.id,'several-issues');
     assert.equal(view.guidance,undefined);
+    if(stories){
+      assert.equal(view.seminarStoryVersion,seminarStoryVersion);
+      assert.match(view.case.opening,/автобус в Москве|my Moscow bus|莫斯科公交/);
+      assert.equal(view.mentorMessages,undefined);
+      assert.equal(await root.locator('.rxa-mobile-nav [data-page="chat"]').isEnabled(),true);
+      assert.equal(await root.locator('[data-chat-form], [data-action="example-question"]').count(),0);
+    }
     assert.equal(await root.locator('[data-action="mentor-toggle"],.rxa-tour-toggle').count(),0);
     await root.locator('.rxt-mfc-intro').waitFor();
     await checkReception(view);
@@ -504,39 +565,9 @@ async function run({width,height,locale,full}) {
     view=await operation('decide',submit);
     assert.equal(view.status,'followup');
     assert.equal(view.decision.correspondence.sections.resolution,resolution);
-    let automaticRecipients=0;
-    for(const step of ['control-request','control-evidence','control-status']){
-      assert.ok(view.controlWorkflow.issues.every(issue=>!issue.availableActions.some(action=>action.kind==='notify')));
-      const {workflow}=await readSession(view);
-      const sample=tutorialExecutionAction(workflow,step,guide,{caseData,locale,timestamp:Date.now()});
-      for(const event of sample.journal.slice(workflow.journal.length)){
-        const {issueId,kind,reason,instruction,recipientIds,dueDate,expectedResult,evidenceSourceIds}=event;
-        await root.locator(`[data-control-action="select-issue"][data-issue-id="${issueId}"]`).click();
-        await root.locator(`[data-control-action="select-kind"][data-kind="${kind}"]`).click();
-        await root.locator('[data-control-field="reason"]').fill(reason||guide.control.text);
-        await root.locator('[data-control-field="instruction"]').fill(instruction||guide.control.text);
-        if(dueDate)await root.locator('[data-control-field="dueDate"]').fill(dueDate);
-        if(expectedResult)await root.locator('[data-control-field="expectedResult"]').fill(expectedResult);
-        for(const evidenceId of evidenceSourceIds){
-          const marker=root.locator(`[data-control-field="evidenceSourceIds"][data-source-id="${evidenceId}"]`);
-          await marker.locator('../..').locator('[data-control-action="open-material"]').click();
-          await root.locator('[data-control-material] [data-control-action="close-material"]').click();
-          await marker.check();
-        }
-        const chooser=root.locator('[data-control-action="choose-recipient"]');
-        const rule=view.controlWorkflow.issues.find(issue=>issue.id===issueId)?.availableActions.find(action=>action.kind===kind);
-        if(rule?.requiresRecipients===false&&['request_evidence','refer'].includes(kind)){
-          assert.equal(await chooser.count(),0);
-          automaticRecipients++;
-        }else if(recipientIds.length){
-          await chooser.click();
-          await setRecipients(recipientIds);
-          await root.locator('[data-action="control-recipient-done"]').click();
-        }
-        view=await operation('control-action',root.locator('[data-control-action="execute"]'));
-        assert.ok(view.controlWorkflow.journal.at(-1).accepted,view.controlWorkflow.journal.at(-1).outcome);
-      }
-    }
+    const execution=await exerciseFollowThrough(view,guide,caseData);
+    view=execution.view;
+    const {automaticRecipients}=execution;
     assert.ok(automaticRecipients>0,'The shared reply must not require a second selection of authorities during follow-through.');
     row.automaticRecipients=automaticRecipients;
     assert.equal(view.controlWorkflow.journal.some(event=>event.kind==='notify'),false);
@@ -554,6 +585,9 @@ async function run({width,height,locale,full}) {
     assert.equal(view.result.journalStatus,'local');
     assert.equal(journalWrites,0);
     row.caseId=view.case.id;
+    assert.equal(visitorMessages,0);
+    assert.equal(Boolean(row.visitedVisitorChat),false);
+    row.visitorMessages=visitorMessages;
     row.grade={points:view.result.points,score:view.result.total,journalStatus:view.result.journalStatus,journalWrites};
     row.checks.push('Both deadlines survive a reload. One appeal has two verified recipient cards and one substantive reply. No routing allocation or assignment form is present.');
     await shot('independent-grade');
@@ -583,11 +617,36 @@ async function run({width,height,locale,full}) {
     assert.equal(await root.getAttribute('lang'),locale);
     assert.equal(await toggle.getAttribute('aria-pressed'),'true');
     if(!legacy)await checkReception(view);
-    await inspectHint('reception','opening',{bubble:true});
+    await inspectHint(stories?'visitorChat':'reception','opening',{bubble:true});
     await toggle.click();
     await ring.waitFor({state:'hidden'});
     await toggle.press('Space');
     await ring.waitFor();
+    if(stories){
+      assert.equal(view.seminarStoryVersion,seminarStoryVersion);
+      assert.equal(view.messages.length,1);
+      const question=view.guidance.question;
+      assert.equal(question.completed,false);
+      await root.locator('[data-tour-target="visitor-chat"]').click();
+      await inspectHint('visitorQuestion','question');
+      assert.equal(await root.locator('[data-action="core-opening"]').count(),0);
+      await root.locator('[data-action="example-question"]').click();
+      const composer=root.locator('[data-message-draft]');
+      assert.equal(await composer.inputValue(),question.prompt);
+      await composer.fill(question.prompt+'…');
+      assert.equal(await composer.inputValue(),question.prompt+'…');
+      await root.locator('[data-action="example-question"]').click();
+      view=await operation('message',root.locator('[data-chat-form] [type="submit"]'));
+      assert.equal(view.guidance.question.completed,true);
+      assert.equal(view.messages.length,3);
+      assert.equal(view.messages[1].text,question.prompt);
+      assert.match(view.messages[2].text,/17/);
+      await shot('authored-visitor-response');
+      view=await reloadCase(view,'chat');
+      assert.equal(view.guidance.question.completed,true);
+      assert.equal(view.messages.length,3);
+      await inspectHint('advance','chat-completed');
+    }
     const opening=root.locator('[data-action="core-opening"]');
     view=await operation('tutorial-step',opening);
     assert.equal(currentStep(view)?.id,'materials');
@@ -597,6 +656,8 @@ async function run({width,height,locale,full}) {
       await inspectHint('materials','case-material');
       view=await operation('document',record);
       assert.ok(view.openedDocumentIds.includes(documentId));
+      if(stories&&view.documents.find(row=>row.id===documentId)?.useCaseIllustrations===false)
+        assert.equal(await root.locator('[data-core-records] [data-action="illustration-open"]').count(),0);
       await root.locator('[data-core-records] [data-action="documents-list"]').click();
     }
     const sources=root.locator('[data-action="core-sources"]');
@@ -656,6 +717,25 @@ async function run({width,height,locale,full}) {
       assert.equal(routing.disposition,'forward');
       assert.ok(routing.recipientIds.length);
     }
+    if(stories){
+      const docId=view.guidance.routeDocumentId;
+      assert.ok(view.documents.some(doc=>doc.id===docId));
+      const documentButton=root.locator(`.rxt-route-choice [data-action="document"][data-id="${docId}"]`);
+      await documentButton.waitFor();
+      if(view.openedDocumentIds.includes(docId))await documentButton.click();
+      else view=await operation('document',documentButton);
+      assert.equal(await root.getAttribute('data-page'),'reception');
+      const heading=root.locator('[data-core-records] .rxa-document h3');
+      assert.equal(await heading.innerText(),view.documents.find(doc=>doc.id===docId).title);
+      await page.waitForFunction(()=>{
+        const h=document.querySelector('[data-core-records] .rxa-document h3');
+        const bounds=h?.getBoundingClientRect();
+        return bounds && bounds.top>=0 && bounds.bottom<=innerHeight;
+      });
+      await shot('route-document');
+      await root.locator('[data-core-records] [data-action="core-go"][data-step="route"]').click();
+      assert.equal(await root.getAttribute('data-page'),'route');
+    }
     await inspectHint('recipient','recipient-search');
     if(routing.disposition==='forward')await setRecipients(routing.recipientIds);
     else await root.locator('[data-core-disposition][value="internal"]').check();
@@ -696,7 +776,12 @@ async function run({width,height,locale,full}) {
     assert.equal(view.status,'followup',view.guidance.finding?.explanation);
     assert.equal(view.decision.correspondence.sections.nextSteps,answer.sections.nextSteps);
     assert.equal(view.decision.correspondence.sections.legalBasis,answer.sections.legalBasis);
-    if(full)await checkControl(view);
+    if(full||stories)await checkControl(view);
+    if(stories){
+      assert.equal(visitorMessages,1);
+      assert.equal(row.visitedVisitorChat,true);
+      row.visitorMessages=visitorMessages;
+    }
     assert.deepEqual(row.errors,[]);
     row.status='pass';
 
@@ -785,6 +870,13 @@ async function run({width,height,locale,full}) {
         await shot('mentor-practice');
         await root.locator('.rxt-mentor-top [data-action="mentor-toggle"]').click();
         row.mentorSessionId=view.id;
+        if(stories){
+          assert.equal(view.seminarStoryVersion,seminarStoryVersion);
+          assert.equal(view.case.id,'several-issues');
+          assert.match(view.case.opening,/автобус в Москве|my Moscow bus|莫斯科公交/);
+          assert.equal(view.guidance.question,undefined);
+          assert.equal(view.messages.length,1);
+        }
         view=await operation('tutorial-step',root.locator('[data-action="core-opening"]'));
         const practice=view.guidance.decision;
         for(const documentId of currentStep(view).documentIds||[]){
@@ -808,6 +900,36 @@ async function run({width,height,locale,full}) {
         assert.equal(view.decision.correspondence.sections.resolution,independentText[locale].resolution);
         assert.equal(view.result,null);
         await shot('mentor-substantive-reply');
+        if(stories){
+          const {caseData}=await readSession(view);
+          const profile=privateCorrespondenceProfile(caseData,locale);
+          const guide=tutorialGuide(caseData,profile,locale,{execution:true,core:true,coreStepsVersion,mfcCalendarVersion:MFC_CALENDAR_VERSION});
+          const chooseMentoredAnswer=async stepId=>{
+            const choice=guide.steps.find(step=>step.id===stepId).choices.find(choice=>choice.correct);
+            assert.ok(choice,`No authored choice for ${stepId}`);
+            const selection=root.locator(`[data-tutorial-step="${stepId}"] [data-action="tutorial-choice"][data-choice="${choice.id}"]`);
+            await selection.waitFor();
+            return operation('tutorial-step',selection);
+          };
+          if(currentStep(view)?.id==='control')view=await chooseMentoredAnswer('control');
+          const execution=await exerciseFollowThrough(view,guide,caseData,{guided:true});
+          view=execution.view;
+          assert.equal(currentStep(view)?.id,'control-memo');
+          await root.locator('[data-action="mentor-open-work"]').click();
+          const {workflow}=await readSession(view);
+          const memo=validatedTutorialMemo(workflow,profile,guide,locale);
+          await fillMemo(memo);
+          view=await operation('tutorial-step',root.locator('[data-control-submit]'));
+          assert.equal(view.control.text,memo.text);
+          while(currentStep(view))view=await chooseMentoredAnswer(currentStep(view).id);
+          view=await operation('next',root.locator('[data-action="next"]'));
+          assert.equal(view.status,'complete');
+          assert.equal(view.result.points,undefined);
+          assert.ok(view.seminarProgress.mentorCompleted);
+          assert.equal(journalWrites,0);
+          row.mentorComplete={status:view.status,graded:false,journalWrites};
+          await shot('mentor-complete');
+        }
       }
 
       async function execute(kind, evidenceId) {
@@ -836,7 +958,7 @@ try {
   for (const size of sizes)await run(size);
 }finally {
   await browser.close();
-  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherAccepted?'teacher-accepted':teacherExample?'teacher-example':teacher?'teacher':scored?'independent':'mfc',report},null,2)+'\n');
+  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherAccepted?'teacher-accepted':teacherExample?'teacher-example':teacher?'teacher':stories&&scored?'stories-independent':scored?'independent':stories?'stories':'mfc',browserPath:'Playwright; Browser plugin not available',report},null,2)+'\n');
 }
 for (const result of report)console.log(result.key,result.status,result.error||`${result.checks.length} rendered hints`);
 if(report.some(result=>result.status!=='pass'))process.exitCode=1;
