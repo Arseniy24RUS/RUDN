@@ -156,17 +156,12 @@ try{
   assert.deepEqual(await page.locator('.rxa-mobile-nav [data-action="page"]').evaluateAll(buttons=>buttons.map(button=>button.dataset.page)),['reception','chat','documents','calendar','decision']);
   await page.locator('[data-rxa-actor]').waitFor({state:'visible'});
   await page.waitForFunction(()=>{const image=document.querySelector('.rxa-citizen-poster');return image?.complete&&image.naturalWidth>0;});
-  const video=page.locator('video[data-rxa-motion]');
-  let videoStatus='poster fallback';
-  if(await video.count()){
-    try{await page.waitForFunction(()=>{const v=document.querySelector('video[data-rxa-motion]');return v&&!v.paused&&v.currentTime>0&&v.videoWidth>0;},null,{timeout:8000});videoStatus='decoded video playing';}
-    catch{videoStatus='video exists; playback not confirmed';}
-  }
-  if(await page.locator('[data-rxa-motion-image]').count()){
-    await page.waitForFunction(()=>{const img=document.querySelector('[data-rxa-motion-image]');return img?.complete&&img.naturalWidth>0;});
-    videoStatus='animated WebP resource loaded';
-  }
-  check('Reception actor and initial unread badge',{videoStatus,animationClaim:videoStatus==='decoded video playing'});
+  const actorScene=page.locator('[data-rxa-actor][data-rxa-motion-ready] canvas');
+  await actorScene.waitFor({state:'visible'});
+  const initialFrame=await actorScene.screenshot({animations:'allow'});
+  await page.waitForTimeout(420);
+  assert.ok(!initialFrame.equals(await actorScene.screenshot({animations:'allow'})),'The reception actor must visibly move');
+  check('Reception actor moves on entry and the chat has one unread badge');
   await screenshot('02-phone-reception.png');await noOverflow('reception 390');
   await screenshot('02b-phone-case-context.png');
   stage='chat-and-navigation';
@@ -338,11 +333,16 @@ try{
   await noOverflow('short viewport 390×460');await phoneComposerVisible('short viewport 390×460');await screenshot('08-short-viewport-chat.png');
   await page.setViewportSize({width:390,height:844});
   await page.emulateMedia({reducedMotion:'reduce'});await navigate('reception');
-  assert.equal(await page.locator('video[data-rxa-motion]').evaluateAll(videos=>videos.every(v=>v.paused)),true);
-  check('Reduced motion pauses decorative video');
+  await actorScene.waitFor({state:'visible'});
+  const reducedFrame=await actorScene.screenshot({animations:'allow'});
+  await page.waitForTimeout(420);
+  assert.ok(!reducedFrame.equals(await actorScene.screenshot({animations:'allow'})));
+  check('Authored scene frames advance automatically in the mobile reduced-motion configuration');
   stage='video-startup-recovery';
   await page.emulateMedia({reducedMotion:'no-preference'});
   await page.addInitScript(()=>{
+    // Exercise the alternative video/image transport in an embedded browser missing Image().
+    Object.defineProperty(window,'Image',{value:undefined,configurable:true});
     const original=HTMLMediaElement.prototype.canPlayType;
     HTMLMediaElement.prototype.canPlayType=function(type){return String(type).includes('vp9')?'probably':original.call(this,type);};
     HTMLVideoElement.prototype.requestVideoFrameCallback=()=>1;
@@ -379,10 +379,10 @@ try{
   await page.waitForTimeout(420);assert.ok(!firstFallbackFrame.equals(await fallbackImage.screenshot({animations:'allow'})),'Fallback animation frames must visibly change');
   check('Unsupported VP9 displays the transparent original animation',{...fallback,framePlaybackObserved:true});
   await screenshot('09-phone-webp-fallback.png');
-  await navigate('chat');assert.equal(await page.locator('[data-rxa-motion-image][src]').count(),0);
-  await navigate('reception');await page.emulateMedia({reducedMotion:'reduce'});
-  await page.waitForFunction(()=>!document.querySelector('[data-rxa-motion-image][src]'));
-  check('Leaving reception and reduced motion release the image animation');
+  await navigate('chat');await page.locator('[data-rxa-chat-actor][data-rxa-motion-ready] [data-rxa-motion-image]').waitFor({state:'visible'});
+  await navigate('documents');assert.equal(await page.locator('[data-rxa-motion-image][src]').count(),0);
+  await navigate('reception');await recoveryImage.waitFor({state:'visible'});
+  check('The alternative image transport follows the actor into chat and resumes after leaving documents');
   stage='retired-unfinished-session';
   await page.evaluate(()=>sessionStorage.setItem('qa.reception.release','b'.repeat(32)));
   await page.reload({waitUntil:'networkidle'});await idle();

@@ -38,15 +38,15 @@ export function characterMedia(caseId, portrait) {
 
 // The 120 authored frames are grouped in small still images. Keep only the
 // current and next sheet so a phone does not need to decode a 31 MiB atlas.
-const C03_FRAMES = Object.freeze({
+const ACTOR_FRAMES = Object.freeze({
   width:224, height:305, columns:4, rows:5, sheets:6, interval:1000 / 12
 });
-const C03_SHEET_TIMEOUT_MS = 15000;
-const C03_LOOP_TIMEOUT_MS = 30000;
+const SHEET_TIMEOUT_MS = 15000;
+const LOOP_TIMEOUT_MS = 30000;
 
-function createSergeyMotion(root, view) {
+function createActorMotion(root, view, actorId) {
   const document = root.ownerDocument;
-  const {width, height, columns, rows, sheets, interval} = C03_FRAMES;
+  const {width, height, columns, rows, sheets, interval} = ACTOR_FRAMES;
   const framesPerSheet = columns * rows;
   const canvas = document.createElement('canvas');
   canvas.width = width;
@@ -137,8 +137,8 @@ function createSergeyMotion(root, view) {
   function startImage() {
     if (imageLoaded) showFrame();
     if (image.hasAttribute('src')) return;
-    image.src = url('assets/gfx1/motion/C03.webp');
-    imageTimeout = view.setTimeout(imageFailed, C03_LOOP_TIMEOUT_MS);
+    image.src = url(`assets/gfx1/motion/${actorId}.webp`);
+    imageTimeout = view.setTimeout(imageFailed, LOOP_TIMEOUT_MS);
   }
   function startSheet(index) {
     if (assets.has(index)) return assets.get(index);
@@ -163,8 +163,8 @@ function createSergeyMotion(root, view) {
       if (index === Math.floor(frame / framesPerSheet)) sync();
     };
     element.onerror = fail;
-    sheet.timeout = view.setTimeout(fail, C03_SHEET_TIMEOUT_MS);
-    element.src = url(`assets/gfx1/motion/C03-frames-${index + 1}.webp`);
+    sheet.timeout = view.setTimeout(fail, SHEET_TIMEOUT_MS);
+    element.src = url(`assets/gfx1/motion/${actorId}-frames-${index + 1}.webp`);
     return sheet;
   }
   function drawStill(sheet, x, y) {
@@ -175,7 +175,7 @@ function createSergeyMotion(root, view) {
         context.clearRect(0, 0, width, height);
         context.drawImage(sheet.element, x, y, width, height, 0, 0, width, height);
         if (!checkedCanvas) {
-          // Every authored C03 frame has an opaque torso at this interior point.
+          // Every authored actor frame has an opaque torso at this interior point.
           if (!context.getImageData(width / 2, height / 2, 1, 1).data[3]) throw new Error('canvas rendered no frame');
           checkedCanvas = true;
         }
@@ -221,7 +221,7 @@ function createSergeyMotion(root, view) {
     if (failed) {
       if (retryTimer === null && view.navigator.onLine !== false) {
         retryTimer = view.setTimeout(retry, retryDelay);
-        retryDelay = Math.min(retryDelay * 2, C03_LOOP_TIMEOUT_MS);
+        retryDelay = Math.min(retryDelay * 2, LOOP_TIMEOUT_MS);
       }
       return;
     }
@@ -285,17 +285,59 @@ function createSergeyMotion(root, view) {
   };
 }
 
-/** Retained media nodes survive rerenders without restarting their sources.
- * Animated WebP, converted from the same authored loop, covers browsers without
- * transparent VP9 or video autoplay. An image animation has no pause API: leaving
- * the visible reception clears its src, restores the poster and releases the loop;
- * returning begins the loop again. C03 uses the same frames drawn from a static
- * atlas so playback also works when browser autoplay is unavailable.
- */
-export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) {
+/** The active case owns one player. Moving between reception and chat reuses it. */
+export function createMessengerMedia(root, {signal} = {}) {
   const document = root.ownerDocument, view = document?.defaultView;
-  const empty = {refresh() {}, destroy() {}};
-  if (!view || signal?.aborted) return empty;
+  if (!view || signal?.aborted) return {refresh() {}, destroy() {}};
+  if (!view.Image || !document.createElementNS) return createVideoMedia(root, view, signal);
+
+  let actor = '', player = null, stage = null, visible = false, destroyed = false;
+  const render = () => player?.refresh(stage, visible && !document.hidden);
+  const retry = () => player?.retry();
+  const observer = typeof view.IntersectionObserver === 'function' ? new view.IntersectionObserver(entries => {
+    for (const entry of entries) if (entry.target === stage) {
+      visible = entry.isIntersecting;
+      render();
+    }
+  }) : null;
+  function refresh() {
+    if (destroyed) return;
+    const target = root.querySelector('[data-rxa-actor], [data-rxa-chat-actor]');
+    const nextActor = target?.dataset.rxaActor || target?.dataset.rxaChatActor || '';
+    const next = ACTOR.test(nextActor) ? target : null;
+    if (next === stage && (!next || actor === nextActor)) { render(); return; }
+    if (stage) observer?.unobserve(stage);
+    stage = next;
+    if (!stage) { visible = false; render(); return; }
+    if (actor !== nextActor) {
+      player?.destroy();
+      actor = nextActor;
+      player = createActorMotion(root, view, actor);
+    }
+    const bounds = stage.getBoundingClientRect();
+    visible = !observer || bounds.width > 0 && bounds.height > 0 && bounds.bottom > 0 && bounds.top < view.innerHeight;
+    observer?.observe(stage);
+    render();
+  }
+  function destroy() {
+    if (destroyed) return;
+    destroyed = true;
+    observer?.disconnect();
+    document.removeEventListener('visibilitychange', render);
+    view.removeEventListener('online', retry);
+    signal?.removeEventListener('abort', destroy);
+    player?.destroy();
+    player = stage = null;
+  }
+  document.addEventListener('visibilitychange', render);
+  view.addEventListener('online', retry);
+  signal?.addEventListener('abort', destroy, {once:true});
+  return {refresh, destroy};
+}
+
+// Older embedded browsers can still use the original transparent video or animated image.
+function createVideoMedia(root, view, signal) {
+  const document = root.ownerDocument;
   const video = document.createElement('video');
   const supportsVideo = Boolean(video.canPlayType?.('video/webm; codecs="vp9"'));
   video.className = 'rxa-citizen-video';
@@ -317,9 +359,6 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
   motionImage.alt = '';
   motionImage.decoding = 'async';
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
-  const sergeyMotion = lessonFrames
-    ? createSergeyMotion(root, view)
-    : null;
   const failedVideo = new Set(), imageFailures = new Map();
   let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false, imageReady = false;
   let watchdog, imageRetry, lastVideoTime = 0, lastProgressAt = 0, sourceVersion = 0;
@@ -408,7 +447,6 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
     imagePlayback();
   }
   function networkRestored() {
-    sergeyMotion?.retry();
     if (!imageFailures.delete(actor)) return;
     clearImage(); playback();
   }
@@ -434,11 +472,6 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
   }
   function error() { if (actor) failedVideo.add(actor); clearSource(); video.remove(); imagePlayback(); }
   function playback() {
-    if (actor === 'C03' && sergeyMotion) {
-      sergeyMotion.refresh(stage, visible && !document.hidden);
-      return;
-    }
-    sergeyMotion?.refresh(null);
     if (!shouldPlay()) {
       pause();
       if (motionImage.hasAttribute('src') || imageRetry !== undefined) { clearImage(); portrait(); }
@@ -466,18 +499,16 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
 
   function refresh() {
     if (destroyed) return;
-    const candidate = root.querySelector(sergeyMotion
-      ? '[data-rxa-actor], [data-rxa-chat-actor="C03"]'
-      : '[data-rxa-actor]');
+    const candidate = root.querySelector('[data-rxa-actor]') || root.querySelector('[data-rxa-chat-actor]');
     const nextActor = candidate?.dataset.rxaActor || candidate?.dataset.rxaChatActor || '';
-    const next = ACTOR.test(nextActor) && (!reduce.matches || nextActor === 'C03' && sergeyMotion) ? candidate : null;
+    const next = ACTOR.test(nextActor) && !reduce.matches ? candidate : null;
     if (next === stage) { playback(); return; }
     const returning = !stage;
     if (stage) { cancelFrame(); observer?.unobserve(stage); stage.removeAttribute('data-rxa-motion-ready'); }
     stage = next;
     if (!stage) {
       if (reduce.matches) clearSource(); else pause();
-      clearImage(); video.remove(); sergeyMotion?.refresh(null); return;
+      clearImage(); video.remove(); return;
     }
     if (nextActor !== actor) {
       clearSource(); clearImage(); actor = nextActor;
@@ -500,7 +531,7 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
     signal?.removeEventListener('abort', destroy);
     video.removeEventListener('playing', playing); video.removeEventListener('error', error);
     motionImage.removeEventListener('load', imageLoaded); motionImage.removeEventListener('error', imageError);
-    clearSource(); clearImage(); video.remove(); sergeyMotion?.destroy(); stage = null;
+    clearSource(); clearImage(); video.remove(); stage = null;
   }
   document.addEventListener('visibilitychange', playback);
   view.addEventListener?.('online', networkRestored);

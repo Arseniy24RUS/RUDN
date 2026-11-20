@@ -426,7 +426,7 @@
 .rxa-cabinet .rxa-omissions .rxa-btn{text-align:start}
 .rxa-cabinet .rxc-assessed-routing{margin-bottom:16px}
 .rxa-cabinet .rxc-assessed-routing h2{margin:0 0 8px}
-/* Frame Sergey's face in the chat header from the same performance as the reception scene. */
+/* Frame each actor's face in the chat header from the same performance as the reception scene. */
 .reception-ai-root.rxa-cabinet .rxa-chat-portrait {
   position: relative;
   display: inline-block;
