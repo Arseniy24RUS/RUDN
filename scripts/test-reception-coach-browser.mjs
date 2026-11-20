@@ -15,7 +15,7 @@ import {localizedAuthorityName} from '../site/apps/reception/ai/authority-picker
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
 import {MFC_CALENDAR_VERSION,MFC_CALENDAR_WITHOUT_REGISTRATION} from '../site/apps/reception/ai/core-steps.js';
-import {SEMINAR_EXAMPLE,seminarPointsAt,tutorialGuide,tutorialExecutionAction,validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
+import {SEMINAR_EXAMPLE,exactCaseScore,seminarPointsAt,tutorialGuide,tutorialExecutionAction,validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
 import {SEMINAR_STORY_VERSION,SEMINAR_STORY_PROGRESS_KEY} from '../firebase/functions/reception-ai/seminar-stories.mjs';
 import {createReceptionService} from '../firebase/functions/reception-ai/service.mjs';
 
@@ -51,6 +51,8 @@ const replyByLocale={ru:'Ответ заявителю',en:'Reply to the applica
 const internalByLocale={ru:'Служебный документ',en:'Internal document',zh:'内部文书'};
 const mentorAnswer={ru:'Отсчитайте срок ответа от крайней даты передачи.',en:'Count the reply period from the referral deadline.',zh:'从转送截止日期开始计算答复期限。'};
 const retainedDraft={ru:'Сохранённый вывод по обращению.',en:'A saved conclusion on the appeal.',zh:'已保存的诉求结论。'};
+const draftSectionIds=['facts','legalBasis','resolution','nextSteps'];
+const learnerAddition={ru:'Проверил номера опор по схеме из первого письма.',en:'I checked the pole numbers against the map in the first letter.',zh:'我已根据首次来信的示意图核对灯杆编号。'};
 const independentText={
   ru:{
     facts:'В одном письме заявитель просит проверить сокращение движения автобуса и публикацию его телефона и сведений о здоровье. Именно эти два вопроса зафиксированы в материале дела.',
@@ -441,6 +443,89 @@ async function run({width,height,locale,full}) {
     await root.locator('[data-response-source-quote="facts"]').fill(caseSource.quote);
     await root.locator('[data-response-action="attach-source"][data-section="facts"]').click();
   }
+  const draftField=key=>root.locator(`[data-correspondence-editor] [data-response-field="${key}"]`);
+  async function readDraft() {
+    const subject=await draftField('subject').inputValue();
+    const sections=Object.fromEntries(await Promise.all(draftSectionIds.map(async key=>[key,await draftField('sections.'+key).inputValue()])));
+    return {subject,sections};
+  }
+  async function verifyExamplePrefill(view) {
+    const model=view.guidance.prefilledDecision?.correspondence;
+    assert.ok(model,'The example must expose its editable prefilled draft at the decision step');
+    const actual=await readDraft();
+    assert.equal(actual.subject,model.subject);
+    assert.deepEqual(actual.sections,model.sections);
+    assert.ok(actual.subject.trim().length>=5);
+    for(const [key,value] of Object.entries(actual.sections))assert.ok(value.trim().length>=24,`${key} must contain a substantive example`);
+    for(const citation of view.coreSteps.values.citations){
+      assert.ok(model.citations.some(item=>item.kind==='legal'&&item.section==='legalBasis'&&item.sourceId===citation.sourceId&&
+        item.quote===citation.quote&&item.unitIds.join(',')===citation.unitIds.join(',')),'The prefill must carry the selected legal provision');
+      assert.equal(await root.locator(`[data-response-action="insert-provision"][data-citation-id="${citation.id}"]`).count(),1);
+    }
+    await shot('example-prefilled');
+    row.prefilledExample={fields:1+draftSectionIds.length,selectedLegalCitations:view.coreSteps.values.citations.length};
+    if(width===1440){
+      row.prefilledExample.withoutTyping=true;
+      return {view,draft:actual};
+    }
+    const facts=actual.sections.facts+'\n\n'+learnerAddition[locale];
+    await draftField('sections.facts').fill(facts);
+    await go('calendar');
+    await go('decision');
+    const updated={...actual,sections:{...actual.sections,facts}};
+    assert.deepEqual(await readDraft(),updated);
+    view=await reloadCase(view,'decision');
+    assert.deepEqual(await readDraft(),updated);
+    row.prefilledExample.learnerEditPreserved=true;
+    await shot('example-edited-after-reload');
+    return {view,draft:updated};
+  }
+  async function verifyEmptyDraft() {
+    assert.deepEqual(await readDraft(),{subject:'',sections:Object.fromEntries(draftSectionIds.map(key=>[key,'']))});
+  }
+  async function verifyNoControl(view,{draft=false}={}) {
+    assert.equal(view.case.correspondence.initialOnly,true);
+    assert.ok(!view.control&&!view.controlWorkflow&&!view.followup);
+    const forbidden='[data-page="control"], [data-step="control"], [data-tutorial-step="control"], [data-control-action], [data-control-submit], [data-response-action="add-order"], .rxc-letter-order';
+    assert.equal(await root.locator(forbidden).count(),0);
+    if(draft){
+      assert.equal(await root.locator('.rxt-case-steps ol > li').count(),5);
+      assert.equal(await draftField('kind').count(),0);
+    }
+  }
+  async function verifyLinkedProvision(citation,{followLink=false}={}) {
+    const preview=root.locator('[data-correspondence-preview]');
+    await preview.waitFor();
+    const excerpt=preview.locator('li').filter({has:page.getByText(citation.quote,{exact:true})});
+    assert.equal(await excerpt.count(),1,'The official preview must list the inserted provision exactly once');
+    const target=await excerpt.getAttribute('id');
+    const link=preview.locator(`[data-response-citation-link][href="#${target}"]`);
+    assert.equal(await link.count(),1,'The provision must have a matching link in the document body');
+    if(followLink){
+      await link.click();
+      assert.equal(await excerpt.evaluate(node=>document.activeElement===node),true);
+    }
+  }
+  async function verifyLegalInsertion(view) {
+    const [citation]=view.coreSteps.values.citations;
+    const passages=root.locator('[data-details="response-legal-passages"]');
+    const insert=passages.locator(`[data-response-action="insert-provision"][data-citation-id="${citation.id}"]`);
+    if(!await passages.evaluate(node=>node.open))await passages.locator('summary').click();
+    const before=await readDraft();
+    assert.ok(before.sections.legalBasis.trim()&&!before.sections.legalBasis.includes(citation.quote));
+    await insert.click();
+    const after=await readDraft();
+    assert.ok(after.sections.legalBasis.startsWith(before.sections.legalBasis));
+    assert.equal(after.sections.legalBasis.split(citation.quote).length,2);
+    assert.deepEqual({...after,sections:{...after.sections,legalBasis:before.sections.legalBasis}},before);
+    if(await insert.count()&&await insert.isEnabled())await insert.click();
+    assert.deepEqual(await readDraft(),after);
+    await root.locator('[data-response-action="preview"]').click();
+    await verifyLinkedProvision(citation,{followLink:true});
+    await shot(`${view.journeyStage}-linked-provision`);
+    await root.locator('[data-response-action="edit"]').click();
+    return citation;
+  }
   async function fillMemo(memo) {
     for(const {issueId,status,evidenceSourceIds} of memo.statuses) {
       const field=page.locator(`[data-response-status-field][data-issue-id="${issueId}"]`);
@@ -455,7 +540,7 @@ async function run({width,height,locale,full}) {
     const current=await fixture.store.get('sessions/'+view.id);
     return {caseData:current.caseData[current.caseIndex],workflow:current.caseStates[current.caseIndex].controlWorkflow};
   }
-  async function checkDocumentKind(kind,applicant){
+  async function checkDocumentKind(kind,applicant,{leavePreview=false}={}){
     const field=root.locator('[data-response-field="kind"]');
     if(!stories){await field.selectOption(kind);return;}
     assert.equal(await field.count(),0);
@@ -466,7 +551,7 @@ async function run({width,height,locale,full}) {
     assert.equal(await metadata.first().textContent(),anonymous?internalByLocale[locale]:replyByLocale[locale]);
     if(anonymous){assert.equal(await metadata.count(),1);await shot('anonymous-internal-document');}
     else assert.ok((await letter.innerText()).includes(applicant));
-    await root.locator('[data-response-action="edit"]').click();
+    if(!leavePreview)await root.locator('[data-response-action="edit"]').click();
   }
   async function fillIndependentReply(model,{omitConclusion=false,applicant}={}) {
     const {facts,legalBasis,resolution,nextSteps}=independentText[locale];
@@ -481,14 +566,10 @@ async function run({width,height,locale,full}) {
     for(const citation of model.correspondence.citations.filter(item=>item.kind==='document'))await addFactCitation(citation);
     await checkDocumentKind(model.correspondence.kind,applicant);
   }
-  async function exerciseFollowThrough(view,guide,caseData,{guided=false}={}) {
+  async function exerciseFollowThrough(view,guide,caseData) {
     let automaticRecipients=0;
     for(const step of ['control-request','control-evidence','control-status']){
       assert.ok(view.controlWorkflow.issues.every(issue=>!issue.availableActions.some(action=>action.kind==='notify')));
-      if(guided){
-        assert.equal(currentStep(view)?.id,step);
-        await root.locator('[data-action="mentor-open-work"]').click();
-      }
       const {workflow}=await readSession(view);
       const sample=tutorialExecutionAction(workflow,step,guide,{caseData,locale,timestamp:Date.now()});
       for(const event of sample.journal.slice(workflow.journal.length)){
@@ -518,7 +599,6 @@ async function run({width,height,locale,full}) {
         view=await operation('control-action',root.locator('[data-control-action="execute"]'));
         assert.ok(view.controlWorkflow.journal.at(-1).accepted,view.controlWorkflow.journal.at(-1).outcome);
       }
-      if(guided)view=await operation('tutorial-step',root.locator('[data-action="mentor-check-action"]'));
     }
     return {view,automaticRecipients};
   }
@@ -530,6 +610,7 @@ async function run({width,height,locale,full}) {
     assert.equal(view.case.id,anonymous?'anonymous-danger':'several-issues');
     assert.equal(view.guidance,undefined);
     if(stories){
+      await verifyNoControl(view);
       assert.equal(view.seminarStoryVersion,seminarStoryVersion);
       if(!anonymous)assert.match(view.case.opening,/автобус в Москве|my Moscow bus|莫斯科公交/);
       assert.equal(view.mentorMessages,undefined);
@@ -581,6 +662,7 @@ async function run({width,height,locale,full}) {
     view=await operation('core-step',root.locator('[data-action="core-step"][data-step="route"]'));
     assert.deepEqual(view.coreSteps.values.routing.recipientIds,expectedIds);
     const submit=root.locator('[data-decision-form] [type="submit"]');
+    if(stories){await verifyNoControl(view,{draft:true});await verifyEmptyDraft();}
     if(anonymous){
       assert.equal(view.case.correspondence.fixedKind,'internal');
       assert.equal(view.case.correspondence.individualReplyRequired,false);
@@ -590,6 +672,8 @@ async function run({width,height,locale,full}) {
       for(const citation of records)await addFactCitation(citation);
       await checkDocumentKind(answer.kind);
       view=await operation('decide',submit);
+      await verifyNoControl(view);
+      assert.equal(view.status,'complete');
       assert.equal(view.decision.correspondence.kind,'internal');
       row.documentKind=view.decision.correspondence.kind;
       row.caseId=view.case.id;
@@ -598,6 +682,7 @@ async function run({width,height,locale,full}) {
       return;
     }
     await fillIndependentReply(model,{omitConclusion:true,applicant:view.case.citizen.name});
+    const inserted=stories?await verifyLegalInsertion(view):null;
     assert.equal(await root.locator('[data-decision-form]').count(),1);
     assert.equal(await root.locator('[data-response-action="add-order"]').count(),0);
     await submit.click();
@@ -606,8 +691,29 @@ async function run({width,height,locale,full}) {
     await resolutionField.fill(resolution);
     await shot('independent-substantive-reply');
     view=await operation('decide',submit);
-    assert.equal(view.status,'followup');
     assert.equal(view.decision.correspondence.sections.resolution,resolution);
+    if(inserted){
+      assert.equal(view.decision.correspondence.citations.filter(item=>item.id===inserted.id).length,1);
+      assert.ok(view.decision.correspondence.sections.legalBasis.includes(inserted.quote));
+      row.independentDraft={blankOnFirstOpen:true,insertedLegalCitation:inserted.id};
+    }
+    if(stories){
+      await verifyNoControl(view);
+      assert.equal(view.status,'complete');
+      const initial=view.result.cases[0].feedback;
+      assert.equal(initial.correspondence.phase,'initial');
+      assert.equal(view.result.total,exactCaseScore(initial));
+      assert.equal(view.result.points,seminarPointsAt(view.result.total));
+      assert.equal(view.result.journalStatus,'local');
+      assert.equal(journalWrites,0);
+      row.caseId=view.case.id;
+      row.grade={points:view.result.points,score:view.result.total,initialOnly:true,journalStatus:view.result.journalStatus,journalWrites};
+      await shot('independent-grade');
+      assert.deepEqual(row.errors,[]);
+      row.status='pass';
+      return;
+    }
+    assert.equal(view.status,'followup');
     const execution=await exerciseFollowThrough(view,guide,caseData);
     view=execution.view;
     const {automaticRecipients}=execution;
@@ -806,32 +912,45 @@ async function run({width,height,locale,full}) {
     await go('decision');
     if(teacherAccepted)view=await recordPreviousRegistration(view);
     if(teacherExample)assert.equal(await root.locator('[data-response-field="sections.resolution"]').inputValue(),retainedDraft[locale]);
-    await inspectHint('draft','draft-start');
+    if(stories){await verifyNoControl(view,{draft:true});await inspectHint('exampleLetter','draft-start');}
+    else await inspectHint('draft','draft-start');
     const answer=view.guidance.decision.correspondence;
+    let expected;
     const writeSubject=root.locator('[data-response-field="subject"]');
-    await writeSubject.fill(answer.subject);
+    if(stories){
+      const prefill=await verifyExamplePrefill(view);
+      view=prefill.view;
+      expected=prefill.draft;
+    }else{
+      await writeSubject.fill(answer.subject);
+      expected=answer;
+    }
     if(width<500){
       await page.setViewportSize({width,height:Math.min(height,350)});
       await writeSubject.focus();
       await writeSubject.scrollIntoViewIfNeeded();
-      await inspectHint('draft','draft-focused-compact');
+      if(!stories)await inspectHint('draft','draft-focused-compact');
       assert.equal(await writeSubject.evaluate(node=>node===document.activeElement),true);
-      assert.equal(await writeSubject.inputValue(),answer.subject);
+      assert.equal(await writeSubject.inputValue(),expected.subject);
       await page.setViewportSize({width,height});
     }
-    for(const [id,text] of Object.entries(answer.sections)){
-      await root.locator(`[data-response-field="sections.${id}"]`).fill(text);
+    if(!stories){
+      for(const [id,text] of Object.entries(answer.sections))await draftField('sections.'+id).fill(text);
+      const caseSource=answer.citations.find(row=>row.kind==='document'||row.kind==='dialogue');
+      assert.ok(caseSource);
+      await addFactCitation(caseSource);
     }
-    await checkDocumentKind(answer.kind,view.case.citizen.name);
-    const caseSource=answer.citations.find(row=>row.kind==='document'||row.kind==='dialogue');
-    assert.ok(caseSource);
-    await addFactCitation(caseSource);
+    await checkDocumentKind(answer.kind,view.case.citizen.name,{leavePreview:stories});
+    if(stories)for(const citation of view.coreSteps.values.citations)await verifyLinkedProvision(citation);
     await inspectHint('draftSubmit','draft-filled');
     view=await operation('tutorial-step',root.locator('[data-tour-target="draft-submit"]'));
-    assert.equal(view.status,'followup',view.guidance.finding?.explanation);
-    assert.equal(view.decision.correspondence.sections.nextSteps,answer.sections.nextSteps);
-    assert.equal(view.decision.correspondence.sections.legalBasis,answer.sections.legalBasis);
-    if(full||stories)await checkControl(view);
+    assert.equal(view.status,stories?'complete':'followup',view.guidance.finding?.explanation);
+    assert.equal(view.decision.correspondence.subject,expected.subject);
+    assert.deepEqual(view.decision.correspondence.sections,expected.sections);
+    if(stories){
+      await verifyNoControl(view);
+      await checkMentor(view);
+    }else if(full)await checkControl(view);
     if(stories){
       assert.equal(visitorMessages,1);
       assert.equal(row.visitedVisitorChat,true);
@@ -905,6 +1024,23 @@ async function run({width,height,locale,full}) {
       assert.equal(view.status,'complete');
       assert.equal(view.result.points,undefined);
       assert.ok(view.seminarProgress.exampleCompleted);
+      await checkMentor(view);
+
+      async function execute(kind, evidenceId) {
+        const tool=root.locator(`[data-control-action="select-kind"][data-kind="${kind}"]`).first();
+        await tool.click();
+        await root.locator('[data-control-field="reason"]').fill('Сопоставлено относимое подтверждение и установлен результат по конкретному вопросу.');
+        await root.locator('[data-control-field="instruction"]').fill('Отразить подтверждённый результат по вопросу в материалах дела.');
+        const expected=root.locator('[data-control-field="expectedResult"]');
+        if(await expected.count())await expected.fill('Зафиксировать документальное подтверждение установленного результата.');
+        await root.locator(`[data-control-field="evidenceSourceIds"][data-source-id="${evidenceId}"]`).check();
+        view=await operation('control-action',root.locator('[data-control-action="execute"]'));
+        assert.ok(view.controlWorkflow.journal.at(-1).accepted,view.controlWorkflow.journal.at(-1).outcome);
+      }
+    }
+    async function checkMentor(view) {
+      assert.equal(view.result.points,undefined);
+      assert.ok(view.seminarProgress.exampleCompleted);
       if(stories){
         assert.equal(await root.locator('[data-action="start-journey"][data-stage="independent"]').count(),0);
         row.assessmentLockedAfterExample=true;
@@ -952,37 +1088,22 @@ async function run({width,height,locale,full}) {
         await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="calendar"]'));
         assert.equal(await root.locator('[data-core-disposition]').count(),0);
         await setRecipients(practice.workbook.routing.recipientIds);
-        await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="route"]'));
+        view=await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="route"]'));
+        if(stories){await verifyNoControl(view,{draft:true});await verifyEmptyDraft();}
         await fillIndependentReply(practice,{applicant:view.case.citizen.name});
+        const inserted=stories?await verifyLegalInsertion(view):null;
         view=await operation('tutorial-step',root.locator('[data-tour-target="draft-submit"]'));
-        assert.equal(view.status,'followup',JSON.stringify(view.guidance.finding));
+        assert.equal(view.status,stories?'complete':'followup',JSON.stringify(view.guidance.finding));
         assert.equal(view.decision.correspondence.sections.resolution,independentText[locale].resolution);
-        assert.equal(view.result,null);
+        if(!stories)assert.equal(view.result,null);
+        if(inserted){
+          assert.equal(view.decision.correspondence.citations.filter(item=>item.id===inserted.id).length,1);
+          assert.ok(view.decision.correspondence.sections.legalBasis.includes(inserted.quote));
+          row.mentorDraft={blankOnFirstOpen:true,insertedLegalCitation:inserted.id,freeQuestionAnswered:true};
+        }
         await shot('mentor-substantive-reply');
         if(stories){
-          const {caseData}=await readSession(view);
-          const profile=privateCorrespondenceProfile(caseData,locale);
-          const guide=tutorialGuide(caseData,profile,locale,{execution:true,core:true,coreStepsVersion,mfcCalendarVersion:MFC_CALENDAR_VERSION});
-          const chooseMentoredAnswer=async stepId=>{
-            const choice=guide.steps.find(step=>step.id===stepId).choices.find(choice=>choice.correct);
-            assert.ok(choice,`No authored choice for ${stepId}`);
-            const selection=root.locator(`[data-tutorial-step="${stepId}"] [data-action="tutorial-choice"][data-choice="${choice.id}"]`);
-            await selection.waitFor();
-            return operation('tutorial-step',selection);
-          };
-          if(currentStep(view)?.id==='control')view=await chooseMentoredAnswer('control');
-          const execution=await exerciseFollowThrough(view,guide,caseData,{guided:true});
-          view=execution.view;
-          assert.equal(currentStep(view)?.id,'control-memo');
-          await root.locator('[data-action="mentor-open-work"]').click();
-          const {workflow}=await readSession(view);
-          const memo=validatedTutorialMemo(workflow,profile,guide,locale);
-          await fillMemo(memo);
-          view=await operation('tutorial-step',root.locator('[data-control-submit]'));
-          assert.equal(view.control.text,memo.text);
-          while(currentStep(view))view=await chooseMentoredAnswer(currentStep(view).id);
-          view=await operation('next',root.locator('[data-action="next"]'));
-          assert.equal(view.status,'complete');
+          await verifyNoControl(view);
           assert.equal(view.result.points,undefined);
           assert.ok(view.seminarProgress.mentorCompleted);
           assert.equal(journalWrites,0);
@@ -994,18 +1115,6 @@ async function run({width,height,locale,full}) {
           assert.equal(independent.guidance,undefined);
           row.unlockedIndependent=independent.id;
         }
-      }
-
-      async function execute(kind, evidenceId) {
-        const tool=root.locator(`[data-control-action="select-kind"][data-kind="${kind}"]`).first();
-        await tool.click();
-        await root.locator('[data-control-field="reason"]').fill('Сопоставлено относимое подтверждение и установлен результат по конкретному вопросу.');
-        await root.locator('[data-control-field="instruction"]').fill('Отразить подтверждённый результат по вопросу в материалах дела.');
-        const expected=root.locator('[data-control-field="expectedResult"]');
-        if(await expected.count())await expected.fill('Зафиксировать документальное подтверждение установленного результата.');
-        await root.locator(`[data-control-field="evidenceSourceIds"][data-source-id="${evidenceId}"]`).check();
-        view=await operation('control-action',root.locator('[data-control-action="execute"]'));
-        assert.ok(view.controlWorkflow.journal.at(-1).accepted,view.controlWorkflow.journal.at(-1).outcome);
       }
     }
   }catch(error){

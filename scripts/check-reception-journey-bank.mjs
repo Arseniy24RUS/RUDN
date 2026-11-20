@@ -9,7 +9,7 @@ import {MFC_ROUTING_AUTHORITY_IDS} from '../firebase/functions/reception-ai/rout
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
 import {withSeminarStory, SEMINAR_STORY_VERSION, SEMINAR_STORY_PROGRESS_KEY} from '../firebase/functions/reception-ai/seminar-stories.mjs';
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
-import {SEMINAR_EXAMPLE, tutorialGuide, tutorialExecutionAction, validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
+import {SEMINAR_EXAMPLE, exactCaseScore, seminarPointsAt, tutorialGuide, tutorialExecutionAction, validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
 import {explicitQAReview} from './reception-correspondence-qa-cases.mjs';
 import {createScriptedCorrespondenceReviewer} from './reception-correspondence-test-reviewer.mjs';
 
@@ -53,6 +53,8 @@ async function checkCase(c, locale, stage) {
   if(scored) assert.ok(!view.guidance && !view.mentorMessages);
   if (story) {
     assert.equal(view.seminarStoryVersion,SEMINAR_STORY_VERSION);
+    assert.equal(view.case.correspondence.initialOnly,true);
+    assert.ok(!view.guidance?.steps.some(step=>['control','control-request','control-evidence','control-status','control-memo','review'].includes(step.id)));
     c=withSeminarStory(c);
   }
   const profile = privateCorrespondenceProfile(c,locale);
@@ -63,7 +65,7 @@ async function checkCase(c, locale, stage) {
     assert.ok(profile.acceptedKinds.includes(fixedKind));
     documentKinds[fixedKind]++;
   }
-  const decision=story?{...guide.decision,correspondence:{...guide.decision.correspondence,kind:fixedKind}}:guide.decision;
+  const decision=story?{...guide.decision,correspondence:{...guide.decision.correspondence,kind:fixedKind,orders:[]}}:guide.decision;
   if (!legacy) {
     const wb = view.case.workbook;
     assert.equal(wb.routingPolicy.allowInternal,false);
@@ -117,9 +119,36 @@ async function checkCase(c, locale, stage) {
   counts.citations+=citations.length;
   if(decision.workbook.routing.disposition==='internal') counts.internalRoutes++;
   else {assert.ok(decision.workbook.routing.recipientIds.length);counts.forwardingRoutes++;}
+  if(story){
+    const draft=stage==='example'?view.guidance.prefilledDecision:decision;
+    assert.ok(draft?.correspondence.subject);
+    assert.equal(Object.keys(draft.correspondence.sections).length,4);
+    assert.ok(Object.values(draft.correspondence.sections).every(text=>text.trim()));
+    if(stage==='example')for(const citation of view.coreSteps.values.citations)
+      assert.ok(draft.correspondence.citations.some(item=>item.id===citation.id&&item.quote===citation.quote));
+    if(scored)await send('decide',{decision:draft});
+    else await step('draft',{decision:draft});
+    assert.equal(view.status,'complete');
+    assert.equal(view.decision.correspondence.kind,fixedKind);
+    assert.deepEqual(view.decision.correspondence.orders,[]);
+    assert.ok(!view.control&&!view.controlWorkflow&&!view.followup);
+    assert.equal(writes,scored?1:0);
+    if(scored){
+      const feedback=view.result.cases[0].feedback;
+      assert.equal(feedback.correspondence.phase,'initial');
+      assert.equal(view.result.total,exactCaseScore(feedback));
+      assert.equal(view.result.points,seminarPointsAt(view.result.total));
+      counts.scoredCases++;
+    }else{
+      assert.equal(view.result.points,undefined);
+      assert.ok((await store.get(progressPath))[SEMINAR_STORY_PROGRESS_KEY][stage].completed);
+      if(stage==='example')counts.examples++;
+      else counts.mentoredCases++;
+    }
+    return;
+  }
   if(scored)await send('decide',{decision});
   else await step('draft',{decision});
-  if(story)assert.equal(view.decision?.correspondence?.kind,fixedKind);
   const confirmGuidedChoice = async id => {
     const current=view.guidance?.steps[view.guidance.stepIndex];
     if(current?.id!==id)return;
@@ -148,7 +177,7 @@ async function checkCase(c, locale, stage) {
   assert.equal(writes,scored?1:0);
   if(scored) counts.scoredCases++;
   else {
-    assert.ok((await store.get(progressPath))[story?SEMINAR_STORY_PROGRESS_KEY:legacy?'guidedJourney':'mfcJourney'][stage].completed);
+    assert.ok((await store.get(progressPath))[legacy?'guidedJourney':'mfcJourney'][stage].completed);
     if(stage==='example') counts.examples++;
     else counts.mentoredCases++;
   }

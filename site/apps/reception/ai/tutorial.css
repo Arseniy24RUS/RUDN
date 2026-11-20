@@ -116,7 +116,8 @@
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 .rxt-case-steps { width: min(100% - 44px, 976px); margin: 14px auto 0; }
-.rxt-case-steps ol { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.rxt-case-steps ol { display: grid; grid-template-columns: repeat(var(--rxt-steps, 6), minmax(0, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.rxt-case-steps[data-reply-only] { --rxt-steps: 5; }
 .rxt-case-step {
   display: flex; align-items: center; gap: 6px; width: 100%; min-height: 42px; padding: 4px 6px;
   background: transparent; border: 0; border-radius: 8px; color: #465d70; text-align: start; font: inherit; font-size: .8125rem;

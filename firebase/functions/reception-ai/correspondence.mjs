@@ -116,7 +116,7 @@ export function validateCorrespondenceCitation(citation) {
 }
 
 /** Only syntax and bounds. No character counts, keywords or prose similarity earn points. */
-export function validateCorrespondence(value,c,state,locale='ru',{fixedKind}={}) {
+export function validateCorrespondence(value,c,state,locale='ru',{fixedKind,initialOnly=false}={}) {
   keys(value,['version','kind','subject','sections','citations','orders']);
   if(value.version!==1)reject('invalid_decision_version');
   const out={version:1,kind:fixedKind||id(value.kind,80),subject:boundedText(value.subject,240),sections:{},citations:[],orders:[]};
@@ -130,7 +130,7 @@ export function validateCorrespondence(value,c,state,locale='ru',{fixedKind}={})
   }
   if(!unique(out.citations.map(citation=>citation.id)))reject('invalid_citation');
   const citationIds=new Set(out.citations.map(citation=>citation.id));
-  for(const order of array(value.orders,12)){
+  for(const order of initialOnly?[]:array(value.orders,12)){
     keys(order,['id','issue','kind','recipientIds','instruction','dueDate','expectedResult','citationIds']);
     if(!ORDER_KINDS.has(order.kind))reject();
     const recipients=array(order.recipientIds,4).map(value=>id(value));
@@ -234,7 +234,7 @@ export function addReviewDialogue(context,messages,availableBytes) {
 }
 
 /** The frozen session dossier outranks generic profiles, particularly every date variant. */
-export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null,coreStepsVersion,fixedKind}={}) {
+export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null,coreStepsVersion,fixedKind,initialOnly=false}={}) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
   const currentCalendar=mfc&&isMfcChainedCalendar(workbook?.calendarVersion);
   const sharedReply=mfcUsesSharedReply(coreStepsVersion,workbook);
@@ -312,7 +312,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   if(phase==='initial'){
     sections.subject=decision.correspondence.subject;
     if(!fixedKind)sections.kind=display.kinds[DOCUMENT_KINDS.indexOf(decision.correspondence.kind)]||'';
-    sections.orders=decision.correspondence.orders.map(order=>{
+    if(!initialOnly)sections.orders=decision.correspondence.orders.map(order=>{
       const values=[
         order.issue,display.orders[ORDER_INDEX.indexOf(order.kind)],
         order.recipientIds.map(id=>mfc?mfcAuthorityName(ROUTING_AUTHORITIES[id],locale):local(ROUTING_AUTHORITIES[id].name,locale)).join(', '),
@@ -345,7 +345,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
     ...(c.seminarStory?{evidencePolicy:{version:c.seminarStory.version,
       routeEvidenceDocumentId:c.seminarStory.routeDocumentId,
       instruction:'The opening, available case records and applicable law suffice without an interview. Accept the same fact established in a cited record even if its dialogue fact ID is unobserved. Do not deduct for skipping chat or failing to repeat the model wording. Treat first-person statements as testimony; require evidence before confirming that work was completed.'}}:{}),
-    ...(reception?{mfcReception:{authorityContext:reception.authorityContext,sharedReply,...(fixedKind?{fixedKind}:{}),
+    ...(reception?{mfcReception:{authorityContext:reception.authorityContext,sharedReply,...(fixedKind?{fixedKind}:{}),...(initialOnly?{initialOnly}:{}),
       ...(currentCalendar?{calendarVersion:workbook.calendarVersion}:{}),
       routingBoundary:workbook?.routingPolicy?.boundary||null,
       routingContext:workbook?.routingPolicy?.context||null,

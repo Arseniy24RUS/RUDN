@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {createReceptionService} from './service.mjs';
 import {createMemoryStore} from './store.mjs';
 import {hash} from './schema.mjs';
@@ -116,6 +117,66 @@ test('only a grounded response to an editable question completes the chat requir
   assert.equal(view.messages.at(-2).text,text);
   assert.equal(view.guidance.question.completed,true);
   assert.equal((await use(reception(view,'asked'))).view.guidance.stepIndex,1);
+});
+
+test('the worked example offers a ready draft with the exact saved provision and requires explicit confirmation in all three languages',async()=>{
+  const provisions=JSON.parse(readFileSync(new URL('./normative-provisions.json',import.meta.url)));
+  const partSeven=provisions['reception-law59999']['8'].find(([id])=>id==='law59999-u53');
+  for(const [locale,article,identity] of [['ru',/часть 7 статьи 8/i,/Сосновый сквер/],
+    ['en',/Article 8\(7\)/,/Sosnovy Skver/],['zh',/第8条第7款/,/松树小广场/]]){
+    const {use}=fixture({ready:false});
+    let view=(await use({...storyStage,op:'start',requestId:'worked-example',locale})).view;
+    assert.equal(view.guidance.prefilledDecision,undefined);
+    let sequence=0;
+    const send=async body=>{
+      view=(await use({sessionId:view.id,requestId:'example-'+(++sequence),
+        ...(body.op==='document'?{}:{expectedRevision:view.revision}),...body})).view;
+    };
+    const step=(stepId,input)=>send({op:'tutorial-step',stepId,...input});
+    await send({op:'message',text:view.guidance.question.prompt,suggestionId:view.guidance.question.id});
+    await step('reception',{choiceId:'role'});
+    const model=view.guidance.decision;
+    for(const row of model.correspondence.citations.filter(row=>row.kind==='document'))
+      await send({op:'document',documentId:row.sourceId});
+    const selected={id:'selected-by-learner',kind:'legal',section:'legalBasis',sourceId:'reception-law59999',
+      unitIds:[partSeven[0]],quote:partSeven[1]};
+    await step('materials',{citations:[selected]});
+    await step('calendar',{calendar:{deadline:model.deadline,referralDeadline:model.workbook.referralDeadline,
+      registrationTimely:model.workbook.registrationTimely}});
+    assert.equal(view.guidance.prefilledDecision,undefined);
+    await step('route',{routing:model.workbook.routing});
+    assert.equal(view.guidance.steps[view.guidance.stepIndex].id,'draft');
+    assert.equal(view.status,'active');
+    assert.equal(view.decision,null);
+    assert.equal(view.draftDecision,null);
+    const draft=view.guidance.prefilledDecision;
+    assert.match(draft.correspondence.subject,identity);
+    assert.equal(draft.correspondence.kind,'reply');
+    assert.equal(Object.values(draft.correspondence.sections).filter(text=>text.trim()).length,4);
+    assert.match(draft.correspondence.sections.legalBasis,article);
+    assert.deepEqual(draft.correspondence.citations.filter(row=>row.kind==='legal'),[selected]);
+    assert.ok(draft.correspondence.citations.some(row=>row.sourceId==='lighting-signed-reply'));
+    assert.deepEqual(draft.workbook.routing,view.coreSteps.values.routing);
+    assert.equal(draft.deadline,view.coreSteps.values.calendar.deadline);
+    assert.deepEqual((await use({op:'resume',sessionId:view.id,context:'seminar'})).view.guidance.prefilledDecision,draft);
+
+    if(locale==='en'){
+      const edited=structuredClone(draft);
+      edited.correspondence.subject='My edited subject';
+      edited.correspondence.sections.resolution='';
+      await step('draft',{decision:edited});
+      assert.equal(view.guidance.steps[view.guidance.stepIndex].id,'draft');
+      assert.equal(view.guidance.prefilledDecision,undefined);
+      const resumed=(await use({op:'resume',sessionId:view.id,context:'seminar'})).view;
+      assert.equal(resumed.draftDecision.correspondence.subject,'My edited subject');
+    }
+    await step('draft',{decision:draft});
+    assert.equal(view.status,'complete',view.guidance.finding?.explanation);
+    assert.deepEqual(view.decision.correspondence,draft.correspondence);
+    assert.equal(view.initialOnly,true);
+    assert.equal(view.seminarProgress.exampleCompleted,true);
+    assert.equal(view.guidance.prefilledDecision,undefined);
+  }
 });
 
 test('new independent work opens the projected dossier with no tutorial question or route hint',async()=>{

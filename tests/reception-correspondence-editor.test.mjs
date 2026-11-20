@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  blankCorrespondence, restoreCorrespondence, reduceCorrespondence,
+  blankCorrespondence, restoreCorrespondence, reduceCorrespondence, insertLegalPassage, legalPassageMessage,
   correspondenceEditorView, correspondencePreviewView, correspondencePrintHTML,
   restoreCorrespondenceControl, reduceCorrespondenceControl, correspondenceControlView,
   correspondenceControlOmissions, correspondenceControlSubmission, presentCorrespondenceFeedback,
@@ -240,4 +240,84 @@ test('citations of different paragraphs of the same act retain their own locator
   const preview=correspondencePreviewView({draft,sources});
   assert.match(preview,/ч\. 2 ст\. 11[^]*?Exact paragraph 11/);
   assert.match(preview,/ч\. 2 ст\. 10[^]*?Exact paragraph 10/);
+});
+
+test('marked provisions append their exact passages once and retain the original source links after reload',()=>{
+  const sources=[
+    {id:'law-one',kind:'legal',title:'Первый закон',locator:'Статья 4, часть 1',unitIds:['a4-1'],quote:'Первый абзац.\nУточнение первого абзаца.'},
+    {id:'law-two',kind:'legal',title:'Второй закон',locator:'Статья 8, часть 2',unitIds:['a8-2'],quote:'Второй абзац.'},
+  ];
+  const typed='  Сопоставил обстоятельства обращения с нормой.  ';
+  let draft=reduceCorrespondence(blankCorrespondence(),{type:'field',field:'sections.legalBasis',value:typed});
+  for(const source of sources)draft=reduceCorrespondence(draft,{type:'source-add',section:'legalBasis',source});
+  const original=restoreCorrespondence(draft);
+  const [one,two]=draft.citations.map(citation=>citation.id);
+  const first=insertLegalPassage(draft,one);
+  assert.equal(first.status,'inserted');
+  assert.equal(first.draft.sections.legalBasis,typed+'\n\n'+sources[0].quote);
+  const saved=restoreCorrespondence(JSON.parse(JSON.stringify(first.draft)));
+  assert.deepEqual(insertLegalPassage(saved,one),{status:'already-inserted',draft:saved});
+  const second=insertLegalPassage(saved,two);
+  assert.equal(second.status,'inserted');
+  assert.equal(second.draft.sections.legalBasis,typed+'\n\n'+sources.map(source=>source.quote).join('\n\n'));
+  assert.deepEqual(second.draft.citations,original.citations);
+  assert.deepEqual(draft,original);
+  const letter=correspondencePreviewView({draft:second.draft,sources});
+  assert.match(letter,/data-response-citation-link[^>]*>\[1\]/);
+  assert.match(letter,/data-response-citation-link[^>]*>\[2\]/);
+  assert.match(letter,/Статья 4, часть 1[\s\S]*Первый абзац/);
+  assert.match(letter,/Статья 8, часть 2[\s\S]*Второй абзац/);
+});
+
+test('provision insertion rejects unrelated citations and never truncates the legal basis to make room',()=>{
+  const legal={id:'law',kind:'legal',unitIds:['art-8'],quote:'Сохранённая норма.'};
+  const add=(draft,section,source)=>reduceCorrespondence(draft,{type:'source-add',section,source});
+  let draft=add(blankCorrespondence(),'legalBasis',legal);
+  draft=add(draft,'facts',legal);
+  draft=add(draft,'legalBasis',{id:'record',kind:'document',quote:'Служебная записка.'});
+  assert.deepEqual(insertLegalPassage(draft,'citation-2'),{status:'unavailable',draft});
+  assert.deepEqual(insertLegalPassage(draft,'citation-3'),{status:'unavailable',draft});
+  assert.deepEqual(insertLegalPassage(draft,'missing'),{status:'unavailable',draft});
+  const typed=reduceCorrespondence(draft,{type:'field',field:'sections.legalBasis',value:'я'.repeat(5999)});
+  assert.deepEqual(insertLegalPassage(typed,'citation-1'),{status:'too-long',draft:typed});
+  const handwritten=reduceCorrespondence(draft,{type:'field',field:'sections.legalBasis',value:'Цитата: «Сохранённая\nнорма.»'});
+  assert.deepEqual(insertLegalPassage(handwritten,'citation-1'),{status:'already-inserted',draft:handwritten});
+});
+
+test('the guided editor offers marked fragments inside the legal basis in all three languages',()=>{
+  const selected={id:'selected',kind:'legal',quote:'Текст <ноты> & абзаца.',locator:'§ 8',unitIds:['a8']};
+  const unselected={id:'unselected',kind:'legal',title:'Unused candidate',quote:'Unavailable quote.',unitIds:['a2']};
+  const caseInfo={normativeActs:[{id:selected.id,title:{ru:'Выбранный акт',en:'Selected act',zh:'已选法规'}}]};
+  const draft=reduceCorrespondence(blankCorrespondence(),{type:'source-add',section:'legalBasis',source:selected});
+  for(const [locale,label,title] of [['ru','Вставить отмеченный фрагмент','Выбранный акт'],['en','Insert a marked passage','Selected act'],['zh','插入已选法规片段','已选法规']]){
+    const options={draft,guidedCore:true,caseInfo,sources:[selected,unselected],locale};
+    const html=correspondenceEditorView(options);
+    const block=html.split('data-response-section="legalBasis"')[1].split('</section>')[0];
+    assert.ok(block.includes(label)&&block.includes(title));
+    assert.match(block,/data-response-action="insert-provision"[^>]*data-citation-id="citation-1"/);
+    assert.match(block,/Текст &lt;ноты&gt; &amp; абзаца\./);
+    assert.ok(!block.includes('Unused candidate'));
+    assert.match(correspondenceEditorView({...options,disabled:true}),/data-response-action="insert-provision" disabled /);
+    assert.ok(legalPassageMessage('inserted',locale));
+    assert.notEqual(legalPassageMessage('inserted',locale),legalPassageMessage('too-long',locale));
+  }
+  assert.doesNotMatch(correspondenceEditorView({draft}),/data-response-action="insert-provision"/);
+  assert.doesNotMatch(correspondenceEditorView({guidedCore:true}),/data-response-action="insert-provision"/);
+});
+
+test('the current seminar hides saved assignment fields and annex while old letters retain them',()=>{
+  let draft=reduceCorrespondence(blankCorrespondence(),{type:'field',field:'sections.resolution',value:'Единый текст решения.'});
+  draft=reduceCorrespondence(draft,{type:'order-add'});
+  draft=reduceCorrespondence(draft,{type:'order-field',field:'issue',value:'Старое поручение',id:draft.orders[0].id});
+  const current={draft,seminar:true,fixedKind:'reply',guidedCore:true,showOrders:false};
+  const editor=correspondenceEditorView(current);
+  const letter=correspondencePreviewView(current);
+  assert.doesNotMatch(editor,/rxc-orders|data-response-action="add-order"/);
+  assert.doesNotMatch(letter,/rxc-letter-order|Старое поручение/);
+  assert.match(letter,/Единый текст решения\./);
+  assert.match(letter,/Дата: __\.__\.____/);
+  assert.match(correspondencePreviewView({draft,seminar:true,disabled:true}),/Старое поручение/);
+  assert.match(correspondencePrintHTML({draft}),/Старое поручение/);
+  assert.doesNotMatch(correspondencePrintHTML(current),/Старое поручение/);
+  assert.equal(draft.orders.length,1);
 });

@@ -1,5 +1,5 @@
 import {hash, ReceptionError} from './schema.mjs';
-import {SEMINAR_GRADING_VERSION, seminarPointsAt} from './seminar-journey.mjs';
+import {isThresholdGradingVersion, seminarPointsAt} from './seminar-journey.mjs';
 
 export const PRIVATE_ROOT = 'rudn-platform/v1/receptionAI';
 
@@ -75,7 +75,7 @@ export function createFirebaseResultWriter(db) {
     // journal retry; new-bank attempts identify their actual dossier version.
     const fullBank=cases.some(c=>c.version?.startsWith('reception-ai-bank-'));
     const contentVersion=fullBank?[...new Set(cases.map(c=>c.version))].sort().join('|'):'reception-ai-pilot-v1';
-    const thresholdGrade = result.gradingVersion===SEMINAR_GRADING_VERSION;
+    const thresholdGrade = isThresholdGradingVersion(result.gradingVersion);
     if(thresholdGrade && (!Number.isFinite(result.total)||result.points!==seminarPointsAt(result.total)))
       throw new ReceptionError('result_conflict',409);
     const cumulative = !thresholdGrade && Number.isInteger(result.seminarPoints);
@@ -85,7 +85,7 @@ export function createFirebaseResultWriter(db) {
       points, maxPoints: 5, recordGrade: true, reviewStatus: 'server-scored', sourceSessionId: sessionId,
       contentVersion, summary: {total: result.total, points, maxPoints: 5, caseCount: cases.length, complete: true,
         ...(cumulative ? {casePoints:result.points} : {}),
-        ...(thresholdGrade ? {gradingVersion:SEMINAR_GRADING_VERSION} : {})},
+        ...(thresholdGrade ? {gradingVersion:result.gradingVersion} : {})},
       cases, decisions};
     const signature = hash(attempt);
     const saved = await db.ref(`${base}/attempts/${studentKey}/${id}`).transaction(old => old || {...attempt, serverSignature: signature});

@@ -98,6 +98,7 @@ const mfcPhrases = {
     routeDocument:['Откройте материал дела','Сопоставьте сведения о событии с поручением или полномочиями адресата.'],
     calendarKind:['Рассчитайте оба срока','Сверьтесь с правилами отсчёта сроков передачи и ответа над календарём.'],
     recipient:['Выберите ведомство','Найдите компетентное ведомство на указанной территории. При необходимости отметьте несколько адресатов одного обращения.'],
+    exampleLetter:['Прочитайте готовый ответ','Откройте предпросмотр. Сопоставьте жалобу, выбранную норму и вывод в письме.'],
     draft:['Подготовьте ответ по существу','Подготовьте один ответ заявителю. Примените норму к фактам и объясните вывод по существу. В следующих шагах укажите маршрут и сроки.'],
     request:['Запросите подтверждение','Укажите, какое подтверждение нужно получить для проверки результата.'],
     draftSubmit:['Проверьте вывод и сроки','Перечитайте свой ответ. Убедитесь, что ответ содержит вывод по существу, его основание и дальнейшие действия.'],
@@ -110,6 +111,7 @@ const mfcPhrases = {
     routeDocument:['Open the case record','Compare the account of the event with the instruction or the recipient’s authority.'],
     calendarKind:['Calculate both deadlines','Use the referral and reply counting rules above the calendar.'],
     recipient:['Choose the competent authority','Find the competent authority in the relevant territory. If this appeal needs more than one recipient, select them in the same list.'],
+    exampleLetter:['Read the completed reply','Open the preview. Compare the complaint, the selected provision and the conclusion in the letter.'],
     draft:['Draft a reply on the merits','Write one reply to the applicant. Apply the law to the facts and explain your conclusion on the merits. Record the referral and deadlines under next steps.'],
     request:['Request supporting material','Specify the record you need to verify the result.'],
     draftSubmit:['Check the conclusion and dates','Reread your reply. Make sure your reply explains the outcome on the merits, the reasons and what happens next.'],
@@ -122,6 +124,7 @@ const mfcPhrases = {
     routeDocument:['打开案件材料','将事件记录与批示或接收方的职权进行核对。'],
     calendarKind:['计算两项期限','根据日历上方的说明计算转送和答复期限。'],
     recipient:['选择主管机关','找到有关地区的主管机关。如需为同一份诉求选择多个接收方，请在同一列表中勾选。'],
+    exampleLetter:['阅读完整答复','打开预览，对照投诉内容、所选条款和信中的处理结论。'],
     draft:['撰写实质性答复','为申请人撰写一份答复，结合法律和事实说明实质性结论。在后续步骤中注明转送路径和期限。'],
     request:['调取证明材料','说明需要哪份材料来核实办理结果。'],
     draftSubmit:['核对结论和日期','重读答复，确保其中清楚说明实质性结论、理由和下一步行动。'],
@@ -251,6 +254,10 @@ function nextTarget(root, state, memory) {
       : ['routing',selector?.closest('fieldset') || selector];
   }
   if (stepId === 'draft') {
+    if(state.filledExample&&!state.examplePreviewed){
+      const preview=find('[data-correspondence-editor] [data-response-action="preview"]');
+      if(preview)return ['exampleLetter',preview];
+    }
     if (find('[data-correspondence-preview]')) return ['draftSubmit',find(marked('draft-submit'), '[data-response-action="edit"]')];
     const fields = [...root.querySelectorAll('[data-correspondence-editor] [data-response-field]')].filter(field=>available(field) && field.matches('textarea,input[type="text"],input:not([type])'));
     const focused = fields.find(field=>field === root.ownerDocument.activeElement);
@@ -473,7 +480,7 @@ export function createReceptionTour(root) {
     if (!inlineAnchor) card.hidden=true;
     const note=(state.mfc && (mfcPhrases[state.locale] || mfcPhrases.ru)[key]) || words[key];
     const stageNumber=root.querySelector('.rxt-case-steps') ? coreStage[state.step.id]||6 : null;
-    const progressText=stageNumber ? words.progress(stageNumber,6)
+    const progressText=stageNumber ? words.progress(stageNumber,state.replyOnly?5:6)
       : Number.isInteger(state.stepIndex) && state.stepTotal>0 ? words.progress(state.stepIndex+1,state.stepTotal) : '';
     describe(target,[progressText,...note].filter(Boolean).join('. '));
     const viewport=visibleViewport(win);

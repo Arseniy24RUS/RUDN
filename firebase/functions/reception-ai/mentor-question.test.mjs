@@ -9,8 +9,10 @@ import {SEMINAR_STORY_VERSION, SEMINAR_STORY_PROGRESS_KEY} from './seminar-stori
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
 import {explicitQAReview} from '../../../scripts/reception-correspondence-qa-cases.mjs';
+import {createFirebaseResultWriter} from './firebase.mjs';
+import {SEMINAR_REPLY_GRADING_VERSION} from './seminar-journey.mjs';
 
-async function fixture(answerMentor, {locale='ru',ready=true,acceptedKinds,reviewMentorWork,reviewDecision,stage='mentor'}={}) {
+async function fixture(answerMentor, {locale='ru',ready=true,acceptedKinds,reviewMentorWork,reviewDecision,stage='mentor',writeJournal=false}={}) {
   const identity={uid:'mentor-question-fixture',studentKey:'99990001'};
   const ads=createSyntheticReceptionCases().find(c=>c.id==='ads-consent');
   ads.rubric.authored.knowledge={...ads.rubric.authored.knowledge,number:'38',actDate:'2006-03-13',articles:['18']};
@@ -22,7 +24,13 @@ async function fixture(answerMentor, {locale='ru',ready=true,acceptedKinds,revie
   const profiles=acceptedKinds?{...executionQAProfiles,private(c,language){
     return {...executionQAProfiles.private(c,language),acceptedKinds};
   }}:executionQAProfiles;
-  const service=createReceptionService({store,cases:[ads],correspondenceProfiles:profiles,requireGameplay:true,
+  const saveResult=writeJournal?createFirebaseResultWriter({ref:path=>({
+    async transaction(update){
+      const result=await store.transaction(path,update);
+      return {snapshot:{val:()=>result.value}};
+    }
+  })}):undefined;
+  const service=createReceptionService({store,cases:[ads],correspondenceProfiles:profiles,requireGameplay:true,saveResult,
     guidedSeminarCore:true,provider:{name:'mentor-test',ready,answerMentor,reviewMentorWork,reviewDecision,
       generate(){assert.fail('A mentor question must not call the visitor.');}}});
   const {view}=await service.handle({op:'start',context:'seminar',mode:stage==='mentor'?'training':'independent',journeyStage:stage,
@@ -31,7 +39,7 @@ async function fixture(answerMentor, {locale='ru',ready=true,acceptedKinds,revie
   const send=(view,body)=>service.handle({...body,sessionId:view.id,
     ...(body.op==='document'?{}:{expectedRevision:view.revision})},identity);
   const ask=(view,text,requestId)=>send(view,{op:'mentor-question',text,requestId});
-  return {view,send,ask};
+  return {view,send,ask,store,handle:body=>service.handle(body,identity)};
 }
 
 test('current mentor drafts default to the accepted reply or internal form without a selector',async()=>{
@@ -60,6 +68,9 @@ test('current mentor drafts default to the accepted reply or internal form witho
     assert.equal(input.guide.fixedKind,expected);
     assert.equal(input.work.decision.correspondence.kind,expected);
     assert.equal(current.decision.correspondence.kind,expected);
+    assert.equal(current.status,'complete');
+    assert.equal(current.seminarProgress.mentorCompleted,true);
+    assert.equal(current.controlWorkflow,undefined);
   }
 });
 
@@ -68,8 +79,9 @@ test('current assessment normalizes a persisted legacy form and gives the review
   const {view:{guidance:{decision}}}=await mentor.send(mentor.view,{op:'tutorial-step',stepId:'reception',
     choiceId:'role',requestId:'finish-reception'});
   const acceptedKinds=['special','reply'];
-  let reviewed;
-  const assessed=await fixture(undefined,{acceptedKinds,stage:'independent',reviewDecision({context}){
+  let reviewed, calls=0;
+  const assessed=await fixture(undefined,{acceptedKinds,stage:'independent',writeJournal:true,reviewDecision({context}){
+    calls++;
     reviewed=context;
     return {review:explicitQAReview(context),verified:true,usage:{inputTokens:10,outputTokens:10}};
   }});
@@ -82,13 +94,67 @@ test('current assessment normalizes a persisted legacy form and gives the review
     registrationTimely:decision.workbook.registrationTimely}});
   await perform({op:'core-step',stepId:'route',routing:decision.workbook.routing});
   decision.correspondence.kind='special';
-  await perform({op:'decide',decision});
+  decision.correspondence.orders=[{stale:'from the earlier form'}];
+  const finalInput={op:'decide',decision,requestId:'confirm-once'};
+  const draft=current;
+  current=(await assessed.send(draft,finalInput)).view;
   assert.equal(current.decision.correspondence.kind,'reply');
+  assert.deepEqual(current.decision.correspondence.orders,[]);
+  assert.equal(current.status,'complete');
+  assert.equal(current.result.gradingVersion,SEMINAR_REPLY_GRADING_VERSION);
+  assert.equal(current.result.points,5);
+  assert.equal(current.result.journalStatus,'saved');
+  assert.equal(current.controlWorkflow,undefined);
+  assert.equal(current.followup,null);
   assert.equal(reviewed.mfcReception.fixedKind,'reply');
+  assert.equal(reviewed.mfcReception.initialOnly,true);
+  assert.equal(reviewed.sections.orders,undefined);
+  assert.equal(reviewed.execution,undefined);
   assert.equal(reviewed.profile.acceptedKinds,undefined);
   assert.equal(reviewed.profile.response.kind,undefined);
   assert.equal(reviewed.sections.kind,undefined);
   assert.equal(reviewed.sections.resolution,decision.correspondence.sections.resolution);
+  assert.deepEqual((await assessed.send(draft,finalInput)).view.result,current.result);
+  assert.equal(calls,1);
+  const receipt=await assessed.store.get('rudn-platform/v1/attempts/99990001/'+current.result.attemptId);
+  assert.equal(receipt.summary.gradingVersion,SEMINAR_REPLY_GRADING_VERSION);
+  assert.equal(receipt.points,5);
+});
+
+test('pending v2 controls finish using saved initial feedback and leave completed receipts intact',async()=>{
+  for(const status of ['followup','review']){
+    const {view,store,handle}=await fixture(undefined,{stage:'independent',writeJournal:true,
+      reviewDecision:()=>assert.fail('Resuming previously reviewed work must not call a model.')});
+    const sessionPath='sessions/'+view.id;
+    const initial={score:84.5,criteria:[],explanation:'Первичная проверка',correspondence:{phase:'initial',rawScore:84.5,cap:null}};
+    await store.transaction(sessionPath,s=>{
+      s.status=status;
+      s.caseStates[0].decision={correspondence:{kind:'reply',orders:[{id:'preserved-previous-order'}]}};
+      s.caseStates[0].correspondenceInitialFeedback=initial;
+      if(status==='followup')s.lease={id:'outdated-control-review',until:Date.now()+60_000};
+      if(status==='review')s.results=[{score:69,criteria:[],explanation:'Старый промежуточный расчёт'}];
+      return s;
+    });
+    const open=()=>handle({op:'resume',sessionId:view.id,context:'seminar'});
+    const [first,second]=await Promise.all([open(),open()]);
+    for(const {view:completed} of [first,second]){
+      assert.equal(completed.status,'complete');
+      assert.equal(completed.result.total,84.5);
+      assert.equal(completed.result.points,4);
+      assert.equal(completed.controlWorkflow,undefined);
+      assert.deepEqual(completed.decision.correspondence.orders,[]);
+    }
+    const receipt=first.view.result.attemptId;
+    const rows=await store.get('rudn-platform/v1/attempts/99990001');
+    assert.deepEqual(Object.keys(rows),[receipt]);
+    assert.equal(rows[receipt].summary.gradingVersion,SEMINAR_REPLY_GRADING_VERSION);
+    const preserved=await store.get(sessionPath);
+    assert.equal(preserved.lease,null);
+    assert.equal(preserved.caseStates[0].decision.correspondence.orders[0].id,'preserved-previous-order');
+    assert.equal((await open()).view.result.attemptId,receipt);
+    assert.deepEqual(await store.get(sessionPath),preserved);
+    assert.equal(await store.get('budget'),null);
+  }
 });
 
 test('a free mentor question uses the workspace titles and computed dates and a follow-up receives the actual preceding turn',async()=>{

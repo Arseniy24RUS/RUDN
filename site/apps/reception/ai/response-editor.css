@@ -26,6 +26,14 @@
 .reception-ai-root .rxc-source-drawer>summary>.rxc-icon:last-child,.reception-ai-root .rxc-control-sources>summary>.rxc-icon:last-child{margin-left:auto;width:16px;height:16px;transition:transform .15s}
 .reception-ai-root .rxc-source-drawer[open]>summary>.rxc-icon:last-child,.reception-ai-root .rxc-control-sources[open]>summary>.rxc-icon:last-child,.reception-ai-root .rxc-order[open]>summary>.rxc-icon:last-child{transform:rotate(180deg)}
 .reception-ai-root .rxc-source-drawer-body{padding:0 12px 12px}
+.reception-ai-root .rxc-legal-passages>summary{font-size:14px;color:#07567e}
+.reception-ai-root .rxc-legal-passages>ul{list-style:none;margin:0;padding:0 12px 10px}
+.reception-ai-root .rxc-legal-passage{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:start;padding:12px 0;border-top:1px solid #dce7ef}
+.reception-ai-root .rxc-legal-passage>div{flex:1 1 15rem;min-width:0;overflow-wrap:anywhere}
+.reception-ai-root .rxc-legal-passage strong,.reception-ai-root .rxc-legal-passage>div>span{display:block;font-size:13px}
+.reception-ai-root .rxc-legal-passage>div>span{margin-top:3px;color:var(--rxa-muted)}
+.reception-ai-root .rxc-legal-passage blockquote{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;margin:7px 0 0;padding-left:9px;border-left:2px solid #aacde3;font-size:13px;line-height:1.55;white-space:pre-wrap}
+.reception-ai-root .rxc-legal-passage .rxa-btn{min-height:44px;padding:8px 10px;max-width:100%;white-space:normal}
 .reception-ai-root .rxc-source-picker{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;align-items:end;margin-top:9px}
 .reception-ai-root .rxc-source-picker .rxa-btn{font-size:12px}
 .reception-ai-root .rxc-source-quotation{margin-top:12px}

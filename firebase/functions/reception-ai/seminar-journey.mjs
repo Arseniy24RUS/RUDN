@@ -11,6 +11,8 @@ import {acceptableLegalProvisions, applicableLegalUnits, requiredSeminarExamples
 export const JOURNEY_STAGES = Object.freeze(['example', 'mentor', 'independent']);
 export const SEMINAR_EXAMPLE = Object.freeze({caseId:'complaint-routing', datePackId:'a'});
 export const SEMINAR_GRADING_VERSION = 'seminar-thresholds-v1';
+export const SEMINAR_REPLY_GRADING_VERSION = 'seminar-reply-thresholds-v1';
+export const isThresholdGradingVersion = version => [SEMINAR_GRADING_VERSION,SEMINAR_REPLY_GRADING_VERSION].includes(version);
 export const isTutorial = session => ['example', 'mentor'].includes(session?.journeyStage);
 
 export function seminarPointsAt(score) {
@@ -304,7 +306,7 @@ export function walkthroughControlProfile(c, profile) {
   return prepared;
 }
 
-export function tutorialGuide(c, profile, language, {execution=false,core=false,coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION,fixedKind}={}) {
+export function tutorialGuide(c, profile, language, {execution=false,core=false,coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION,fixedKind,initialOnly=false}={}) {
   const text = key => localized(copyText[key],language);
   const local = value => localized(value,language) || '';
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
@@ -379,8 +381,41 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false,
   const statuses = profile.control?.expectedStatuses || [];
   const control = {text:initialControl,
     statuses:statuses.map(row=>({issueId:row.issueId,status:row.allowedStatuses[0],evidenceSourceIds:['followup']}))};
-  return {caseTitle:local(c.public.title),role:role?.text||local(c.public.role.text),steps,decision,control,...(fixedKind?{fixedKind}:{}),
+  if(initialOnly)decision.correspondence.orders=[];
+  return {caseTitle:local(c.public.title),role:role?.text||local(c.public.role.text),
+    steps:initialOnly?steps.filter(step=>!step.id.startsWith('control')&&step.id!=='review'):steps,
+    decision,...(initialOnly?{initialOnly}: {control}),...(fixedKind?{fixedKind}:{}),
     ...(mfc?{coreStepsVersion,mfcCalendarVersion,authorityContext:role.authorityContext,routingContext,routingBoundary:boundary,sharedReply}:{})};
+}
+
+function prefilledExampleDecision(guide,state,language) {
+  const {citations:legal, calendar, routing}=state.coreStepsValues||{};
+  if(!legal?.length||!calendar||!routing)return null;
+  const decision=copy(guide.decision), draft=decision.correspondence;
+  const opened=new Set(state.openedDocumentIds);
+  const usedIds=new Set(legal.map(row=>row.id));
+  const records=draft.citations.filter(row=>row.kind==='document'&&opened.has(row.sourceId));
+  if(!records.length){
+    const opening=state.messages[0];
+    if(opening?.role==='assistant'&&opening.text?.trim())
+      records.push({id:'example-statement',section:'facts',kind:'dialogue',sourceId:opening.id,quote:opening.text.trim().slice(0,4000)});
+  }
+  for(const row of records){
+    while(usedIds.has(row.id))row.id='example-'+row.id;
+    usedIds.add(row.id);
+  }
+  draft.citations=[...records,...copy(legal)];
+  if(legal.some(row=>row.sourceId==='reception-law59999'&&row.unitIds.includes('law59999-u53')))
+    draft.sections.legalBasis+=' '+localized(T(
+      'Часть 7 статьи 8 предусматривает возврат жалобы с разъяснением судебного порядка, когда её нельзя передать компетентному лицу. Здесь жалобу может рассмотреть руководитель департамента.',
+      'Article 8(7) provides for returning a complaint with an explanation of how to apply to court when it cannot be referred to a competent official. In this case, the department director can consider it.',
+      '第8条第7款规定，无法向有权处理的人员转交投诉时，应退回投诉并说明司法申诉途径。本案可由局负责人审查。'),language);
+  decision.deadline=calendar.deadline;
+  decision.workbook={referralDeadline:calendar.referralDeadline,
+    ...(Object.hasOwn(calendar,'registrationTimely')?{registrationTimely:calendar.registrationTimely}:{}),routing:copy(routing)};
+  draft.orders=draft.orders.map(order=>({...order,recipientIds:copy(routing.recipientIds),dueDate:calendar.deadline,
+    citationIds:draft.citations.map(row=>row.id)}));
+  return decision;
 }
 
 export function publicTutorialGuide(guide, session) {
@@ -391,6 +426,8 @@ export function publicTutorialGuide(guide, session) {
   const story=session.caseData?.[session.caseIndex]?.seminarStory;
   const question=example&&story?.exampleDialogue;
   const questionCompleted=state.exampleQuestionCompleted===true;
+  const prefilled=question&&guide.fixedKind&&session.status==='active'&&guide.steps[stepIndex]?.id==='draft'&&
+    !state.correspondenceDraft ? prefilledExampleDecision(guide,state,session.locale) : null;
   return {stepIndex,
     ...(story?.routeDocumentId?{routeDocumentId:story.routeDocumentId}:{}),
     ...(question?{question:{id:'example-question',prompt:localized(question.prompt,session.locale),completed:questionCompleted}}:{}),
@@ -403,6 +440,7 @@ export function publicTutorialGuide(guide, session) {
   }), ...(state.tutorialFinding ? {finding:state.tutorialFinding} : {}),
     ...(state.tutorialWorkFeedback ? {workFeedback:state.tutorialWorkFeedback} : {}),
   ...(stepIndex>=(session.coreStepsVersion?1:2) ? {decision:guide.decision} : {}),
+    ...(prefilled?{prefilledDecision:prefilled}:{}),
     ...(guide.steps.some((step,index)=>step.action==='control'&&index<=stepIndex)&&session.status!=='active'
       ? {control:state.control||(state.controlWorkflow?controlMemo(state.controlWorkflow,guide,session.locale):guide.control)} : {})};
 }

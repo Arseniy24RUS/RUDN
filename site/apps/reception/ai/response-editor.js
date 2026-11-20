@@ -14,7 +14,7 @@
  *   preview, edit, print, download, add-order, remove-order (data-order-id),
  *   attach-source (data-section; read select[data-response-source="<section>"]
  *     and textarea[data-response-source-quote="<section>"]),
- *   remove-source (data-citation-id), choose-recipient (data-order-id),
+ *   remove-source and insert-provision (data-citation-id), choose-recipient (data-order-id),
  *   calendar (data-order-id), sources, conversation.
  *
  * Sources are public records {id,kind,title,text?,quote?,unitIds?,url?}.
@@ -58,6 +58,10 @@ const copy = {
     hint:{facts:'Изложите установленные обстоятельства и существенные расхождения.', legalBasis:'Обоснуйте применение конкретных норм к обстоятельствам обращения.', resolution:'Сформулируйте решение по каждому существенному вопросу.', nextSteps:'Укажите дальнейшие действия, информирование заявителя и контроль результата.'},
     kinds:{reply:'Ответ заявителю', notification:'Уведомление', referral:'Направление по компетенции', request:'Запрос материалов', return:'Возврат с разъяснением', internal:'Служебный документ', special:'Проект решения / постановления'},
     orderKinds:{request:'Запросить материалы',referral:'Направить по компетенции',execution:'Организовать исполнение',review:'Провести проверку',notification:'Уведомить',control:'Проверить результат'},
+    chosenProvisions:'Вставить отмеченный фрагмент', insertProvision:'Вставить в текст',
+    noProvisions:'Отметьте нужный фрагмент на шаге «Нормы».',
+    provisionStatus:{inserted:'Фрагмент добавлен в правовое основание.', 'already-inserted':'Этот фрагмент уже есть в тексте.',
+      'too-long':'Для фрагмента не хватает места. Сократите текст правового основания.', unavailable:'Фрагмент больше не отмечен на шаге «Нормы».'},
     sourceKinds:{document:'Материалы дела',dialogue:'Разговор',legal:'Нормативные источники'},
     event:'Новое сообщение по делу', controlFields:{status:'состояние вопроса',evidence:'подтверждающие материалы',source:'материал дела',rule:'правило проверки',reason:'критерий оценки',answer:'проект ответа',section:'раздел проекта',order:'поручение',next:'дальнейшие действия'},
     statuses:{pending:'Оставить на контроле',resolved:'Исполнение подтверждено',referred:'Передано по компетенции'},
@@ -84,6 +88,10 @@ const copy = {
     hint:{facts:'State the established circumstances and material inconsistencies.',legalBasis:'Explain how specific provisions apply to this appeal.',resolution:'State your decision on each material issue.',nextSteps:'Explain further action, communication with the applicant and how the result will be checked.'},
     kinds:{reply:'Reply to the applicant',notification:'Notice',referral:'Referral to a competent body',request:'Request for materials',return:'Return with explanation',internal:'Internal document',special:'Draft decision / order'},
     orderKinds:{request:'Request materials',referral:'Refer to the competent body',execution:'Arrange implementation',review:'Conduct a review',notification:'Notify',control:'Check the result'},
+    chosenProvisions:'Insert a marked passage', insertProvision:'Insert into text',
+    noProvisions:'Select a passage on the Sources tab.',
+    provisionStatus:{inserted:'Passage added to the legal basis.', 'already-inserted':'This passage is already in the text.',
+      'too-long':'There is not enough room for this passage. Shorten the legal basis.', unavailable:'This passage is no longer marked in Legal sources.'},
     sourceKinds:{document:'Case materials',dialogue:'Conversation',legal:'Legal sources'},
     event:'New case information', controlFields:{status:'issue status',evidence:'supporting evidence',source:'case material',rule:'review requirement',reason:'assessment criterion',answer:'draft response',section:'draft section',order:'assignment',next:'next steps'},
     statuses:{pending:'Keep under review',resolved:'Completion confirmed',referred:'Referred to a competent body'},
@@ -110,6 +118,10 @@ const copy = {
     hint:{facts:'说明已查明的情况和重要矛盾。',legalBasis:'说明具体法律规定如何适用于本来信。',resolution:'就每个重要问题作出决定。',nextSteps:'说明后续行动、申请人通知方式及结果核查办法。'},
     kinds:{reply:'答复申请人',notification:'通知',referral:'按职权转送',request:'材料请求',return:'退回并说明',internal:'内部文书',special:'决定 / 命令草案'},
     orderKinds:{request:'请求材料',referral:'按职权转送',execution:'组织执行',review:'开展核查',notification:'通知',control:'核查结果'},
+    chosenProvisions:'插入已选法规片段', insertProvision:'插入正文',
+    noProvisions:'请在「依据」选项卡中选取所需片段。',
+    provisionStatus:{inserted:'已将片段插入法律依据。', 'already-inserted':'正文中已有此片段。',
+      'too-long':'剩余空间不足，请缩短法律依据的内容。', unavailable:'此片段已从所选法规中移除。'},
     sourceKinds:{document:'案件材料',dialogue:'对话',legal:'法规来源'},
     event:'案件新信息', controlFields:{status:'问题状态',evidence:'证明材料',source:'案件材料',rule:'评审要求',reason:'评分标准',answer:'答复草稿',section:'草稿章节',order:'任务',next:'后续行动'},
     statuses:{pending:'继续监督',resolved:'已确认执行',referred:'已按职权转送'},
@@ -161,6 +173,29 @@ export function restoreCorrespondence(value) {
     draft.orders.push({id,issue:string(entry.issue,500),kind:ORDER_KINDS.includes(entry.kind)?entry.kind:'request',recipientIds:ids(entry.recipientIds,12),instruction:string(entry.instruction,2000),dueDate:/^\d{4}-\d{2}-\d{2}$/.test(entry.dueDate||'')?entry.dueDate:'',expectedResult:string(entry.expectedResult,1000),citationIds:ids(entry.citationIds).filter(id=>citationIds.has(id))});
   }
   return draft;
+}
+
+function markedLegalPassage(citation) {
+  return citation.section==='legalBasis' && citation.kind==='legal' && citation.unitIds?.length>0;
+}
+
+/** Insert the exact quotation attached at the Legal sources step. */
+export function insertLegalPassage(value, citationId) {
+  const draft = restoreCorrespondence(value);
+  const citation = draft.citations.find(item=>item.id===citationId && markedLegalPassage(item));
+  if(!citation)return {draft,status:'unavailable'};
+  const current = draft.sections.legalBasis;
+  const quote = citation.quote.trim();
+  const normalize = text=>text.trim().replace(/\s+/gu,' ');
+  if(normalize(current).includes(normalize(quote)))return {draft,status:'already-inserted'};
+  const next = current + (current.trim()?'\n\n':'') + quote;
+  if(next.length>TEXT_LIMIT)return {draft,status:'too-long'};
+  draft.sections.legalBasis = next;
+  return {draft,status:'inserted'};
+}
+
+export function legalPassageMessage(status, locale) {
+  return copy[language(locale)].provisionStatus[status] || '';
 }
 
 /** Pure updates; the host persists and renders after structural changes. */
@@ -235,6 +270,24 @@ function sourcePicker(section,draft,sources,locale,disabled) {
   }).join('');
   return '<details class="rxc-source-drawer" data-details="response-sources-'+section+'"><summary>'+glyph('link')+'<span>'+esc(t.evidence)+'</span><small>'+attached.length+'</small>'+glyph('chevron')+'</summary><div class="rxc-source-drawer-body">'+rows+(sources.length?'<div class="rxc-source-picker"><label class="rxa-field"><span class="rxa-sr">'+esc(t.addSource)+' · '+esc(t.section[section])+'</span><select data-response-source="'+section+'" data-focus="response-source-'+section+'" '+(disabled?'disabled':'')+'><option value="">'+esc(t.sourceChoose)+'</option>'+groups+'</select></label></div><label class="rxa-field rxc-source-quotation"><span>'+esc(t.sourceQuote)+'</span><textarea data-response-source-quote="'+section+'" data-focus="response-source-quote-'+section+'" maxlength="4000" rows="3" placeholder="'+esc(t.quoteHint)+'" '+(disabled?'disabled':'')+'></textarea></label><div class="rxc-source-attach">'+button(t.attach,'attach-source',{icon:'plus',disabled:disabled||draft.citations.length>=20,extra:'data-section="'+section+'"'})+'</div>':'<p class="rxc-muted">'+esc(t.noSources)+'</p>')+'<div class="rxc-source-links">'+button(t.openSources,'sources',{className:'quiet',disabled})+button(t.chat,'conversation',{className:'quiet',disabled})+'</div></div></details>';
 }
+function legalPassagePicker(draft,sources,acts,locale,disabled) {
+  const t = copy[language(locale)];
+  const marked = draft.citations.filter(markedLegalPassage);
+  if(!marked.length)return '<p class="rxc-writing-hint">'+esc(t.noProvisions)+'</p>';
+  const rows = marked.map(citation=>{
+    const source = citationSource(citation,sources);
+    const act = acts?.find(item=>item.id===citation.sourceId);
+    const title = local(act?.title,locale) || source?.title || t.sourceKinds.legal;
+    const locator = local(source?.locator,locale);
+    return '<li class="rxc-legal-passage"><div><strong>'+esc(title)+'</strong>'+
+      (locator?'<span>'+esc(locator)+'</span>':'')+'<blockquote lang="ru">'+esc(citation.quote)+'</blockquote></div>'+
+      button(t.insertProvision,'insert-provision',{icon:'plus',disabled,extra:'data-citation-id="'+esc(citation.id)+
+        '" data-focus="insert-provision-'+esc(citation.id)+'" aria-label="'+esc([t.insertProvision,title,locator].filter(Boolean).join(' · '))+'"'})+'</li>';
+  }).join('');
+  return '<details class="rxc-source-drawer rxc-legal-passages" data-details="response-legal-passages"><summary>'+
+    glyph('link')+'<span>'+esc(t.chosenProvisions)+'</span>'+glyph('chevron')+'</summary><ul>'+rows+'</ul></details>';
+}
+
 function orderView(order,index,{draft,recipients=[],sources,locale,disabled}) {
   const t=copy[language(locale)],off=disabled?' disabled':'',id=esc(order.id);
   const field=(name,label,value,{type='text',max=500,placeholder=''}={})=>'<label class="rxa-field"><span>'+esc(label)+'</span><input type="'+type+'" data-response-order-field="'+name+'" data-order-id="'+id+'" data-focus="response-order-'+id+'-'+name+'" value="'+esc(value)+'" maxlength="'+max+'" placeholder="'+esc(placeholder)+'"'+off+'></label>';
@@ -253,7 +306,13 @@ export function correspondenceEditorView({draft,caseInfo={},profile={},sources=[
   const d=restoreCorrespondence(draft),t=copy[language(locale)],available=publicSources(sources,locale),off=disabled?' disabled':'';
   const blocks=SECTION_IDS.map((section,index)=>{
     const label=sectionLabels[section]||local(profile.sections?.[section]?.label??profile.sections?.[section],locale)||t.section[section];
-    return '<section class="rxc-writing-section" data-response-section="'+section+'"><div class="rxc-writing-heading">'+(guidedCore?'':'<span>'+String(index+1).padStart(2,'0')+'</span>')+'<label for="rxc-section-'+section+'">'+esc(label)+'</label></div><textarea id="rxc-section-'+section+'" data-response-field="sections.'+section+'" data-focus="response-'+section+'" aria-describedby="rxc-hint-'+section+'" maxlength="'+TEXT_LIMIT+'" rows="'+(section==='resolution'?5:4)+'"'+off+'>'+esc(d.sections[section])+'</textarea><p class="rxc-writing-hint" id="rxc-hint-'+section+'">'+esc(sectionHints[section]||local(profile.sectionPrompts?.[section],locale)||t.hint[section])+'</p>'+(!guidedCore||section==='facts'?sourcePicker(section,d,guidedCore?available.filter(source=>source.kind!=='legal'):available,locale,disabled):'')+'</section>';
+    let sourcesForSection = '';
+    if(guidedCore&&section==='legalBasis'){
+      sourcesForSection = legalPassagePicker(d,available,caseInfo.normativeActs,locale,disabled);
+    }else if(!guidedCore||section==='facts'){
+      sourcesForSection = sourcePicker(section,d,guidedCore?available.filter(source=>source.kind!=='legal'):available,locale,disabled);
+    }
+    return '<section class="rxc-writing-section" data-response-section="'+section+'"><div class="rxc-writing-heading">'+(guidedCore?'':'<span>'+String(index+1).padStart(2,'0')+'</span>')+'<label for="rxc-section-'+section+'">'+esc(label)+'</label></div><textarea id="rxc-section-'+section+'" data-response-field="sections.'+section+'" data-focus="response-'+section+'" aria-describedby="rxc-hint-'+section+'" maxlength="'+TEXT_LIMIT+'" rows="'+(section==='resolution'?5:4)+'"'+off+'>'+esc(d.sections[section])+'</textarea><p class="rxc-writing-hint" id="rxc-hint-'+section+'">'+esc(sectionHints[section]||local(profile.sectionPrompts?.[section],locale)||t.hint[section])+'</p>'+sourcesForSection+'</section>';
   }).join('');
   const orders=showOrders?
     (guidedCore?'<details class="rxc-orders rxt-optional-orders" data-details="rxt-optional-orders"><summary>'+esc(t.orders)+'</summary>':'<section class="rxc-orders">')+
@@ -270,12 +329,13 @@ function dateLabel(value,locale) {
   if(!Number.isFinite(date.getTime())||date.toISOString().slice(0,10)!==value)return value;
   return new Intl.DateTimeFormat({ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[language(locale)],{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(date);
 }
-function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source',issuerLabel='',citizenReply=false,fixedKind=null,sectionLabels={}}={}, {showProjectMark=true}={}) {
+function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source',issuerLabel='',citizenReply=false,fixedKind=null,sectionLabels={},showOrders=true}={}, {showProjectMark=true}={}) {
   const d=restoreCorrespondence(draft),t=copy[language(locale)],available=publicSources(sources,locale);
   if(DOCUMENT_KINDS.includes(fixedKind))d.kind=fixedKind;
   const issuer=issuerLabel||local(profile.issuer?.name,locale)||local(profile.origin?.name,locale)||local(caseInfo.workbook?.origin?.name,locale)||t.issuer;
   const citizen=local(caseInfo.citizen?.name,locale);
-  const orderRecipientIds=ids(d.orders.filter(order=>order.kind===d.kind).flatMap(order=>order.recipientIds),12);
+  const visibleOrders=showOrders?d.orders:[];
+  const orderRecipientIds=ids(visibleOrders.filter(order=>order.kind===d.kind).flatMap(order=>order.recipientIds),12);
   const officialRecipients=!citizenReply&&['referral','request'].includes(d.kind)
     ? (recipients||[]).filter(recipient=>!orderRecipientIds.length||orderRecipientIds.includes(recipient.id)).map(recipient=>local(recipient.label??recipient.name,locale)).filter(Boolean)
     : [];
@@ -291,7 +351,7 @@ function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],sp
     const source=citationSource(citation,available),url=safeURL(source?.url);
     return '<li id="'+esc(citationPrefix)+'-'+(index+1)+'" tabindex="-1"><strong>'+esc(sourceTitle(citation,available,t))+'</strong><span class="rxc-letter-source-section">'+esc(sectionLabels[citation.section]||t.section[citation.section])+'</span>'+(source?.locator?'<span class="rxc-letter-unit">'+esc(local(source.locator,locale))+'</span>':'')+(citation.quote?'<blockquote>'+esc(citation.quote)+'</blockquote>':'')+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(url)+'</a>':'')+'</li>';
   }).join('')+'</ol></section>':'';
-  const orders=d.orders.length?'<section class="rxc-letter-annex"><h2>'+esc(t.orders)+'</h2>'+d.orders.map((order,index)=>{
+  const orders=visibleOrders.length?'<section class="rxc-letter-annex"><h2>'+esc(t.orders)+'</h2>'+visibleOrders.map((order,index)=>{
     const markers=d.citations.map((citation,n)=>order.citationIds.includes(citation.id)?citationMarker(n):'').filter(Boolean).join(' ');
     return '<article class="rxc-letter-order"><h3>'+String(index+1)+'. '+esc(order.issue||t.order)+'</h3><dl><div><dt>'+esc(t.operation)+'</dt><dd>'+esc(t.orderKinds[order.kind])+'</dd></div>'+(order.recipientIds.length?'<div><dt>'+esc(t.recipients)+'</dt><dd>'+esc(order.recipientIds.map(id=>recipientLabel(id,recipients,locale)).join('; '))+'</dd></div>':'')+(order.dueDate?'<div><dt>'+esc(t.due)+'</dt><dd>'+esc(dateLabel(order.dueDate,locale))+'</dd></div>':'')+(markers?'<div><dt>'+esc(t.orderEvidence)+'</dt><dd>'+markers+'</dd></div>':'')+'</dl>'+paragraphHTML(order.instruction)+(order.expectedResult?'<p><strong>'+esc(t.expected)+': </strong>'+esc(order.expectedResult)+'</p>':'')+'</article>';
   }).join('')+'</section>':'';

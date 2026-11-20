@@ -5,7 +5,7 @@ import './correspondence-copy.js';
 import {createReceptionTour} from './coach-tour.js';
 import {MFC_VERSION, MFC_CALENDAR_VERSION, MFC_CALENDAR_WITHOUT_REGISTRATION, isCoreJourney, isMfcJourney, CORE_ACTIONS, CORE_PAGES, coreStepId, coreLabel, coreDatePayload} from './core-steps.js';
 import {availableMentorActions, guidanceView, isLesson, journeyPathView, lessonLabel, lessonStep, mentorView, mentorWorkFeedbackView, nextJourneyStage} from './tutorial.js';
-import {blankCorrespondence,restoreCorrespondence,reduceCorrespondence,correspondenceEditorView,correspondencePreviewView,
+import {blankCorrespondence,restoreCorrespondence,reduceCorrespondence,insertLegalPassage,legalPassageMessage,correspondenceEditorView,correspondencePreviewView,
   correspondenceControlView,restoreCorrespondenceControl,reduceCorrespondenceControl,correspondenceControlSubmission,
   presentCorrespondenceFeedback,correspondenceSourceKey,printCorrespondence,downloadCorrespondenceHTML} from './response-editor.js';
 import {controlWorkspaceView,controlRecordView,restoreControlActionDraft,reduceControlActionDraft,
@@ -109,7 +109,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let failedOperation='', waitingTimer, stageFocus=false;
   let responsePreview=false,controlDraft=restoreCorrespondenceControl(),citationSelections={},recipientOrderId='';
   let executionActionDraft=restoreControlActionDraft(),controlWorkspaceUI=restoreControlWorkspaceUI(),controlRecipientPicker=false;
-  let calendar;
+  let calendar, exampleDraftSeed=null;
   let seminarProgress={}, mentorOpen=false, mentorDraft='', examplePreviewed=false, controlSampleOpened=false, sampleComparison=false;
   let controlMaterialSeen='', controlMissing=false, coreEdit='', choosingCase=false;
   const legacySessionIds=new Map();
@@ -124,6 +124,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const registrationPractice = () => view?.case?.workbook?.registrationPreviouslyUnasked===true;
   const registrationWritable = () => active()&&registrationPractice()&&!view.case.workbook.registrationPractice&&!busy&&!pending&&!paused;
   const coreCurrent = () => coreStepId(view);
+  const replyOnly = () => view?.case?.correspondence?.initialOnly===true;
   const coreIsEditable = id => view?.journeyStage==='independent'&&view.coreSteps?.completed?.includes(id);
   const coreInView = () => coreEdit || coreCurrent();
   const cl = key => coreLabel(locale,key,mfcJourney());
@@ -168,6 +169,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     detailOpen=new Set(Array.isArray(saved.detailOpen)?saved.detailOpen.filter(x=>typeof x==='string'):[]);
     mentorDraft=typeof saved.mentorDraft==='string'?saved.mentorDraft.slice(0,2000):'';
     examplePreviewed=saved.examplePreviewed===true;
+    exampleDraftSeed=saved.exampleDraftSeed||null;
     controlSampleOpened=saved.controlSampleOpened===true;
     controlMaterialSeen=typeof saved.controlMaterialSeen==='string'?saved.controlMaterialSeen:'';
     coreEdit=CORE_ACTIONS.includes(saved.coreEdit)?saved.coreEdit:'';
@@ -238,7 +240,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     storageOkay=drafts.save({version:VERSION,owner,seminarStoryVersion:view?.seminarStoryVersion||initial?.seminarStoryVersion||seminarStoryVersion,sessionId:view?.id||initial?.sessionId||'',caseId:view?.case?.id||savedCaseId,
       caseTitle:view?.case?.title||initial?.caseTitle||'',status:view?.status||initial?.status||'',
       mode:view?.mode||mode,locale,draftMessage,decisionDraft,followupDraft,controlDraft,executionActionDraft,controlWorkspaceUI,controlRecipientPicker,responsePreview,citationSelections,detailOpen:[...detailOpen],tab,selectedDoc,pending,pendingAt,mobilePane,chatScroll,
-      page,calendarState,calendarVersion:calendarDraftVersion,registrationReviewOffered,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
+      page,calendarState,calendarVersion:calendarDraftVersion,registrationReviewOffered,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,exampleDraftSeed,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
     return storageOkay;
   }
   function incomingMessages() {
@@ -275,6 +277,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     detailOpen.add('assessment-law');confirmation=false;persist();
   }
   function clearSessionDraft() {
+    exampleDraftSeed=null;
     coreEdit='';choosingCase=false;mentorOpen=false;mentorDraft='';examplePreviewed=false;controlSampleOpened=false;sampleComparison=false;controlMaterialSeen='';controlMissing=false;
     responsePreview=false;controlDraft=restoreCorrespondenceControl();citationSelections={};recipientOrderId='';
     executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;
@@ -444,9 +447,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function coreJourney() {
     if(!hasCore()||choosingCase||view.status==='complete')return '';
     const current=coreCurrent(), activeId=coreInView()==='review'?'control':coreInView();
-    const steps=['reception','materials','calendar','route','draft','control'];
+    const steps=['reception','materials','calendar','route','draft'];
+    if(!replyOnly())steps.push('control');
     const doneUntil=current==='review'?steps.length:steps.indexOf(current);
-    return `<nav class="rxt-case-steps" aria-label="${esc(cl('journey'))}"><ol>${steps.map((id,index)=>{
+    return `<nav class="rxt-case-steps" ${replyOnly()?'data-reply-only':''} aria-label="${esc(cl('journey'))}"><ol>${steps.map((id,index)=>{
       const visited=index<doneUntil, isHere=activeId===id;
       const label=esc(cl(id));
       const link=index===0||id===current||active()&&coreIsEditable(id);
@@ -742,7 +746,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const mfc=row?caseInfo.workbook?.routingPolicy?.allowInternal===false:mfcJourney();
     const routing=decision.workbook?.routing;
     const issuer=mfc&&routing?.recipientIds.length===1?authoritySelectionLabel(routing,{locale}):'';
-    return {draft:decision.correspondence,caseInfo,profile,fixedKind:currentDocumentKind(),
+    return {draft:decision.correspondence,caseInfo,profile,fixedKind:currentDocumentKind(),showOrders:!replyOnly(),
       ...(mfc?{issuerLabel:issuer||coreLabel(locale,'draftIssuer',true),citizenReply:currentDocumentKind()!=='internal',
         sectionLabels:{resolution:coreLabel(locale,'draftResolution',true)},
         sectionHints:{resolution:coreLabel(locale,'draftResolutionHint',true),nextSteps:currentDocumentKind()==='internal'?l('internalNext'):coreLabel(locale,'draftNextStepsHint',true)} }:{}),
@@ -828,18 +832,19 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const model=mentorDraft&&lessonAnswer();
     const commonReply=mfcJourney() && (view.case.workbook.sharedReply ?? (view.case.workbook.recipientLimit > 1));
     const internal=currentDocumentKind()==='internal';
+    const filled=view.journeyStage==='example'&&!!exampleDraftSeed;
     return `<section class="rxa-panel rxc-workspace"><h1 data-core-heading>${esc(internal?l('internalTitle'):cl('draft'))}</h1>
-      <p class="rxa-panel-intro">${esc(internal?l('internalNext'):cl('draftHint'))}</p>
+      <p class="rxa-panel-intro">${esc(filled?l('filledDraftHint'):internal?l('internalNext'):cl('draftHint'))}</p>
       <p class="rxa-draft-status">${icon('cloud')}<span data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</span></p>
       ${coreFeedback('draft')}${mentorWorkFeedbackView(view,locale)}
-      ${mentorDraft?`<p class="rxa-panel-intro">${esc(cl('evidence'))}</p>`:''}
+      ${mentorDraft&&!filled?`<p class="rxa-panel-intro">${esc(cl('evidence'))}</p>`:''}
       <div class="rxa-actions rxt-draft-links">${button(cl('toSources'),'core-sources',{quiet:true,glyph:'sources'})}
-        ${model?button(l('compare'),'tutorial-sample',{quiet:true}):''}</div>
+        ${model&&!filled?button(l('compare'),'tutorial-sample',{quiet:true}):''}</div>
       ${sampleComparison?tutorialComparison():''}
       <form id="rxaDecisionForm" data-decision-form>
-        ${responsePreview?correspondencePreviewView(responseOptions()):correspondenceEditorView({...responseOptions(),guidedCore:true,showOrders:!commonReply})}
+        ${responsePreview?correspondencePreviewView(responseOptions()):correspondenceEditorView({...responseOptions(),guidedCore:true,showOrders:!currentDocumentKind()&&!commonReply})}
         <div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit" data-tour-target="draft-submit" ${locked?'disabled':''}>
-          ${icon('decision')}${esc(l(mentorDraft?'checkOwnDraft':'submitProject'))}</button></div>
+          ${icon('decision')}${esc(l(filled?'confirmExample':mentorDraft?'checkOwnDraft':'submitProject'))}</button></div>
         ${actionStatus('decide')}
       </form>
     </section>`;
@@ -1061,7 +1066,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       ${Number.isInteger(result.seminarPoints)?`<p data-best-grade><strong>${esc(l('bestGrade'))}</strong> · ${esc(grade)} / 5</p>`:''}
       <p class="rxa-journal" role="status">${esc(t(journal))}</p>
       ${previous?button(t('journalRetry'),'refresh',{disabled:busy}):''}
-      </div>${(result.cases||[]).map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${esc(authoredText(row.title))}</summary>${feedbackMarkup(row.feedback,row)}${responseRecord(row,index)}${executionRecord(row)}</details>`).join('')}
+      </div>${(result.cases||[]).map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${esc(authoredText(row.title))}</summary>${feedbackMarkup(row.feedback,row)}${responseRecord(row,index)}${replyOnly()?'':executionRecord(row)}</details>`).join('')}
       ${pathSetup()}${options.onExit?`<div class="rxa-actions">${button(t('back'),'exit',{})}</div>`:''}</section>`;
   }
   function complete() {
@@ -1069,11 +1074,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const example=view.journeyStage==='example';
       return `<section class="rxa-complete rxt-lesson-complete"><div class="rxa-complete-head">
         <div class="rxa-review-icon">${icon('check')}</div><h1 tabindex="-1" data-stage-heading>${esc(l(example?'exampleDone':'mentorDone'))}</h1>
-        <p>${esc(l('noPoints'))}</p></div>${responseRecord()}${lessonControlRecord()}${pathSetup()}</section>`;
+        <p>${esc(l('noPoints'))}</p></div>${responseRecord()}${replyOnly()?'':lessonControlRecord()}${pathSetup()}</section>`;
     }
     const result = view.result;
     if (!result) return `<section class="rxa-complete"><h1>${esc(t('complete'))}</h1><p class="rxa-panel-intro">${esc(t('noResult'))}</p>${button(t('refresh'),'refresh',{primary:true,disabled:busy})}</section>`;
-    if(result.gradingVersion==='seminar-thresholds-v1')return journeyResult(result);
+    if(result.gradingVersion==='seminar-thresholds-v1'||replyOnly()&&view.journeyStage==='independent')return journeyResult(result);
     const journal = result.journalStatus === 'saved' ? 'journalSaved' : ['local','not-applicable'].includes(result.journalStatus) || view.mode === 'training' || view.provider === 'mock' ? 'journalLocal' : 'journalPending';
     return `<section class="rxa-complete"><div class="rxa-complete-head"><p class="rxa-eyebrow">${esc(t('complete'))}</p><h1 tabindex="-1" data-stage-heading>${esc(t(Number.isInteger(result.seminarPoints)?'seminarTotal':'totalScore'))}</h1><div class="rxa-score"><strong>${esc(result.seminarPoints??result.points)}</strong><span>${esc(t('outOf'))} ${esc(seminar&&view.mode==='training'?1:result.maxPoints ?? 5)}</span></div>${Number.isInteger(result.seminarPoints)?`<p>${esc(t('casePoints',{count:result.points}))}</p><p>${esc(t('seminarScoreThreshold',{count:result.passScore??100}))}</p>`:''}<p class="rxa-journal" role="status">${esc(t(guest?'guestResult':journal))}</p>${journal==='journalPending'?`<div class="rxa-actions">${button(t('journalRetry'),'refresh',{disabled:busy})}</div>`:''}</div>${Array.isArray(result.cases)&&result.cases.length?`<h2>${esc(t('casesReview'))}</h2>${result.cases.map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${index+1}. ${esc(authoredText(row.title))} · ${esc(view.context==='seminar'?t('casePoints',{count:result.points}):row.score+' / 100')}</summary>${feedbackMarkup(row.feedback,row)}${correspondenceMode()?responseRecord(row,index):''}${row.controlWorkflow?executionRecord(row):''}</details>`).join('')}`:''}${learningReviewView({view,catalog,locale})}${correspondenceMode()?'':workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-actions">${button(t(view.mode==='training'?'oneMore':'newSession'),'new-session',{primary:true,disabled:busy||result.remainingCases===0,glyph:'arrow'})}${options.onExit?button(t('back'),'exit',{}):''}</div>${guest?savedSessions():''}</section>`;
   }
@@ -1130,6 +1135,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     tour.update({stage:view?.journeyStage,sessionId:view?.id,step:lessonStep(view),page,locale,
       stepIndex:view?.guidance?.stepIndex,stepTotal:view?.guidance?.steps?.length,mfc:mfcJourney(),question:guidedQuestion(),
       registrationFirst:view?.case?.workbook?.calendarVersion===MFC_CALENDAR_VERSION,
+      filledExample:view?.journeyStage==='example'&&!!exampleDraftSeed,examplePreviewed,replyOnly:replyOnly(),
       paused:busy||!!pending||paused||mentorOpen||choosingCase||confirmation||page==='calendar'&&registrationPractice()});
     updateViewport();
     if(stageFocus){
@@ -1169,6 +1175,27 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const field=root.querySelector('[data-message-draft]');if(!field)return;
     field.style.height='auto';field.style.height=Math.min(144,Math.max(46,field.scrollHeight))+'px';
     const counter=root.querySelector('[data-message-count]');if(counter)counter.textContent=draftMessage.length?`${draftMessage.length} / 2000`:'';
+  }
+  function fillExampleDraft(next) {
+    const supplied=next.guidance?.prefilledDecision?.correspondence;
+    const draft=decisionDraft.correspondence;
+    if(next.journeyStage!=='example'||next.status!=='active'||!supplied||!draft)return;
+    // Keep deliberate edits (including erased fields) across visits and language changes.
+    const language=next.locale;
+    if(exampleDraftSeed?.locale===language)return;
+    const sample=restoreCorrespondence(supplied);
+    if(exampleDraftSeed?draft.subject===exampleDraftSeed.subject:!draft.subject)draft.subject=sample.subject;
+    for(const key of Object.keys(sample.sections)){
+      if(exampleDraftSeed?draft.sections[key]===exampleDraftSeed.sections?.[key]:!draft.sections[key])draft.sections[key]=sample.sections[key];
+    }
+    if(!exampleDraftSeed){
+      for(const citation of sample.citations){
+        const existing=draft.citations.find(item=>item.id===citation.id||
+          item.section===citation.section&&item.kind===citation.kind&&item.sourceId===citation.sourceId&&item.quote===citation.quote);
+        if(!existing&&draft.citations.length<20)draft.citations.push(citation);
+      }
+    }
+    exampleDraftSeed={locale:language,subject:sample.subject,sections:sample.sections};
   }
   function syncCoreValues(next, {applySaved=false,applyCalendar=false}={}) {
     if(!hasCore())return;
@@ -1216,7 +1243,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       mentorOpen=false;
     }
     if(!sameCase||stepChanged)sampleComparison=false;
-    if(!sameCase){mentorOpen=false;mentorDraft='';examplePreviewed=false;controlSampleOpened=false;controlMaterialSeen='';controlMissing=false;}
+    if(!sameCase){mentorOpen=false;mentorDraft='';exampleDraftSeed=null;examplePreviewed=false;controlSampleOpened=false;controlMaterialSeen='';controlMissing=false;}
     if(!sameCase){responsePreview=false;controlDraft=restoreCorrespondenceControl();citationSelections={};recipientOrderId='';
       executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;}
     if (!sameCase) { deferredDocuments.clear();illustrationViewer.destroy();routingSearch='';routingTerritory=undefined;decisionDraft = blankDecision(); followupDraft='';detailOpen=new Set();draftMessage = ''; selectedDoc = ''; tab = 'documents'; mobilePane='desk';page='reception';chatScroll={top:0,bottom:true};calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
@@ -1280,6 +1307,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       delete decisionDraft.workbook;
       calendarDraftVersion='';
     }
+    fillExampleDraft(next);
     const current=coreCurrent();
     if(hasCore()&&(coreAcknowledged||stepChanged&&current!==previousCore)){
       coreEdit='';selectedDoc='';notice='';tab=current==='materials'?'documents':'decision';
@@ -1506,7 +1534,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     if(action==='preview'||action==='edit'){
       if(!active())return;
-      responsePreview=action==='preview';recipientOrderId='';persist();render();return;
+      responsePreview=action==='preview';if(responsePreview&&exampleDraftSeed)examplePreviewed=true;recipientOrderId='';persist();render();return;
     }
     if(action==='sources'||action==='conversation'){
       if(hasCore()&&action==='sources')scrollToCoreRecords();
@@ -1514,6 +1542,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       return;
     }
     if(busy||pending||paused||!active())return;
+    if(action==='insert-provision'&&hasCore()){
+      const result=insertLegalPassage(decisionDraft.correspondence,target.dataset.citationId);
+      decisionDraft.correspondence=result.draft;notice=legalPassageMessage(result.status,locale);
+      responsePreview=false;confirmation=false;error=null;detailOpen.add('response-legal-passages');
+      persist();render();return;
+    }
     if(action==='choose-recipient'){recipientOrderId=target.dataset.orderId;routingSearch='';persist();render();return;}
     if(action==='recipient-done'){recipientOrderId='';persist();render();return;}
     if(action==='calendar'){goPage('calendar');return;}
