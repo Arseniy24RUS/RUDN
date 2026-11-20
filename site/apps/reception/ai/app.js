@@ -2,6 +2,8 @@ import {createReceptionAPI, newRequestId, ReceptionAPIError} from './api-client.
 import {localized, normalizeLocale, translator} from './copy.js';
 import './workspace-copy.js';
 import './correspondence-copy.js';
+import {createReceptionTour} from './coach-tour.js';
+import {CORE_VERSION, CORE_ACTIONS, CORE_PAGES, coreStepId, coreLabel, coreDatePayload} from './core-steps.js';
 import {availableMentorActions, guidanceView, isLesson, journeyPathView, lessonLabel, lessonStep, mentorView, mentorWorkFeedbackView, nextJourneyStage} from './tutorial.js';
 import {blankCorrespondence,restoreCorrespondence,reduceCorrespondence,correspondenceEditorView,correspondencePreviewView,
   correspondenceControlView,restoreCorrespondenceControl,reduceCorrespondenceControl,correspondenceControlSubmission,
@@ -26,8 +28,8 @@ const VERSION = 'reception-ai-ui-v1';
 const presentationOwners = new WeakMap();
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const clone = value => JSON.parse(JSON.stringify(value));
-const workspacePages = ['reception','chat','documents','calendar','decision'];
-const mutationOps = ['start','message','document','decide','followup','control-action','next','tutorial-step','mentor-question'];
+const workspacePages = ['reception','chat','documents','calendar','route','decision'];
+const mutationOps = ['start','message','document','decide','followup','control-action','next','tutorial-step','mentor-question','core-step'];
 const blankWorkbook = () => ({referralDeadline:'',registrationTimely:false,routing:{recipientIds:[]}});
 const blankDecision = () => ({workbook:blankWorkbook(),procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:'',basisDocumentIds:[],reasoning:''});
 const blankAssessment = () => ({factId:'',applicationId:'',trapId:'',actDate:'',calendar:{anchor:'',rule:'',start:'',shift:''},research:{recordId:'',fragmentId:'',extracted:'',finding:''}});
@@ -42,6 +44,7 @@ function restoreDecision(value, authored=false) {
     for(const group of ['calendar','research'])for(const key of Object.keys(a[group]))if(typeof saved[group]?.[key]==='string')a[group][key]=saved[group][key];
   }
   if(source.workbook&&typeof source.workbook==='object'){base.workbook={referralDeadline:typeof source.workbook.referralDeadline==='string'?source.workbook.referralDeadline:'',registrationTimely:source.workbook.registrationTimely===true,routing:{recipientIds:Array.isArray(source.workbook.routing?.recipientIds)?source.workbook.routing.recipientIds.filter(id=>typeof id==='string').slice(0,2):[]}};}
+  if(['internal','forward'].includes(source.workbook?.routing?.disposition))base.workbook.routing.disposition=source.workbook.routing.disposition;
   if(source.correspondence)base.correspondence=restoreCorrespondence(source.correspondence);
   return base;
 }
@@ -77,6 +80,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const gameplayContext = config.gameplayContext ?? (config.demo ? undefined : options.context === 'free' ? 'free' : 'seminar');
   const seminar = gameplayContext === 'seminar';
   const illustrationViewer = createIllustrationViewer(root);
+  const tour=createReceptionTour(root);
   const guest = options.guest === true && gameplayContext === 'free';
   const ownerNow = () => {
     const studentKey=backend?.getProfile?.()?.studentKey;
@@ -103,11 +107,17 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let executionActionDraft=restoreControlActionDraft(),controlWorkspaceUI=restoreControlWorkspaceUI(),controlRecipientPicker=false;
   let calendar;
   let seminarProgress={}, mentorOpen=false, mentorDraft='', examplePreviewed=false, controlSampleOpened=false, sampleComparison=false;
-  let controlMaterialSeen='', controlMissing=false;
+  let controlMaterialSeen='', controlMissing=false, coreEdit='', choosingCase=false;
+  const legacySessionIds=new Map();
+  const hasCore = () => view?.coreStepsVersion===CORE_VERSION;
+  const coreCurrent = () => coreStepId(view);
+  const coreIsEditable = id => view?.journeyStage==='independent'&&view.coreSteps?.completed?.includes(id);
+  const coreInView = () => coreEdit || coreCurrent();
+  const cl = key => coreLabel(locale,key);
   const tutorial = () => isLesson(view?.journeyStage);
   const l = key => lessonLabel(locale,key);
   const lessonAnswer = () => view?.guidance?.decisionByLocale?.[locale] || view?.guidance?.decision;
-  const mentorWork = stepId => view?.journeyStage==='mentor'&&lessonStep(view)?.id===stepId;
+  const mentorWork = stepId => tutorial()&&(view.journeyStage==='mentor'||hasCore())&&lessonStep(view)?.id===stepId;
   const mentorActions = () => availableMentorActions(view);
 
   const visualViewport = window.visualViewport;
@@ -146,6 +156,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     examplePreviewed=saved.examplePreviewed===true;
     controlSampleOpened=saved.controlSampleOpened===true;
     controlMaterialSeen=typeof saved.controlMaterialSeen==='string'?saved.controlMaterialSeen:'';
+    coreEdit=CORE_ACTIONS.includes(saved.coreEdit)?saved.coreEdit:'';
+    choosingCase=seminar&&saved.choosingCase===true;
     pending=saved.pending&&mutationOps.includes(saved.pending.op)&&typeof saved.pending.requestId==='string'?saved.pending:null;
     calendarState=saved.calendarState&&typeof saved.calendarState==='object'?saved.calendarState:{};
     selectedReferences=Array.isArray(saved.selectedReferences)?saved.selectedReferences.filter(x=>x&&typeof x.id==='string'&&typeof x.text==='string').slice(0,20):[];
@@ -164,16 +176,27 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const reader = createSourceReader(root, {signal:lifetime.signal, locale:() => locale,
     presentation:'embedded', getContainer:()=>root.querySelector('[data-source-reader-host]'),
     beforeOpen:()=>{if(page!=='documents'||selectedDoc){selectedDoc='';goPage('documents');}},
-    canSelect:()=>active()&&!paused&&!(busy&&operation==='decide')&&pending?.op!=='decide',
+    canSelect:()=>active()&&!paused&&!(busy&&operation==='decide')&&pending?.op!=='decide'&&(!hasCore()||!busy&&!pending&&coreInView()==='materials'),
     onSelect:reference=>{
       if(!active())return;
+      if(hasCore()&&coreInView()==='materials'){
+        const acts=view.case.normativeActs||[],index=acts.findIndex(act=>act.id===reference.docId);
+        if(index<0)return false;
+        const citation={id:`core-legal-${index+1}`,section:'legalBasis',kind:'legal',sourceId:reference.docId,unitIds:reference.unitIds,quote:reference.text.trim()};
+        if(!citation.quote||citation.quote.length>4000||!citation.unitIds?.length)return false;
+        installCoreCitations([citation]);
+        selectedReferences=[reference,...selectedReferences.filter(item=>item.docId!==reference.docId)].slice(0,20);
+        reader.close();notice=cl('sourceSaved');persist();render();
+        [...root.querySelectorAll('[data-core-citation]')].find(node=>node.dataset.coreCitation===reference.docId)?.scrollIntoView({block:'nearest',behavior:'instant'});
+        return;
+      }
       selectedReferences=gameplayContext&&!correspondenceMode()?[reference]:[reference,...selectedReferences.filter(item=>item.id!==reference.id)].slice(0,20);
       if(correspondenceMode()){reader.close();applyReference(reference);goPage('decision');return;}
       notice=t(gameplayContext?'citationAdded':'referenceAdded');
       if(gameplayContext){detailOpen.add('assessment-legal-citation');reader.close();goPage('decision');}else if(view.case.workbook?.version>=2){reader.close();persist();goPage('documents');}else{applyReference(reference);goPage('decision');}
     }});
   calendar=createCalendarWorkbench(root,{state:calendarState,locale,signal:lifetime.signal,
-    onChange:state=>{calendarState=state;if(active()&&view.case?.workbook){decisionDraft.workbook??=blankWorkbook();decisionDraft.workbook.referralDeadline=state.selectedDates?.referral||'';decisionDraft.deadline=state.selectedDates?.deadline||'';decisionDraft.workbook.registrationTimely=state.registrationTimely===true;confirmation=false;}persist();},
+    onChange:state=>{calendarState=state;if(active()&&view.case?.workbook){decisionDraft.workbook??=blankWorkbook();decisionDraft.workbook.referralDeadline=state.selectedDates?.referral||'';decisionDraft.deadline=state.selectedDates?.deadline||'';decisionDraft.workbook.registrationTimely=state.registrationTimely===true;confirmation=false;}persist();updateCoreButton();},
     onUseDate:(date,{target='deadline'}={})=>{if(!active())return;if(target==='referral'&&view.case?.workbook){decisionDraft.workbook??=blankWorkbook();decisionDraft.workbook.referralDeadline=date;}else decisionDraft.deadline=date;confirmation=false;notice=t('deadlineAdded');persist();render();}});
 
   const text = value => localized(value, locale);
@@ -195,7 +218,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     storageOkay=drafts.save({version:VERSION,owner,sessionId:view?.id||initial?.sessionId||'',caseId:view?.case?.id||savedCaseId,
       caseTitle:view?.case?.title||initial?.caseTitle||'',status:view?.status||initial?.status||'',
       mode:view?.mode||mode,locale,draftMessage,decisionDraft,followupDraft,controlDraft,executionActionDraft,controlWorkspaceUI,controlRecipientPicker,responsePreview,citationSelections,detailOpen:[...detailOpen],tab,selectedDoc,pending,pendingAt,mobilePane,chatScroll,
-      page,calendarState,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,examplePreviewed,controlSampleOpened,controlMaterialSeen});
+      page,calendarState,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
     return storageOkay;
   }
   function incomingMessages() {
@@ -209,6 +232,13 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     illustrationViewer.destroy();persist();if(next!=='documents')reader.close();page=next;mobilePane=page==='chat'?'chat':'desk';confirmation=false;
     if(page==='decision')tab='decision';else if(page==='documents'&&tab==='decision')tab='documents';
     markChatRead();persist();render();
+  }
+  function installCoreCitations(citations) {
+    const draft=restoreCorrespondence(decisionDraft.correspondence);
+    const replaced=new Set(citations.map(citation=>citation.id));
+    draft.citations=[...draft.citations.filter(item=>!replaced.has(item.id)).slice(0,20-citations.length),...citations];
+    decisionDraft.correspondence=draft;
+    responsePreview=false;confirmation=false;
   }
   function applyReference(reference) {
     if(correspondenceMode()){
@@ -225,7 +255,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     detailOpen.add('assessment-law');confirmation=false;persist();
   }
   function clearSessionDraft() {
-    mentorOpen=false;mentorDraft='';examplePreviewed=false;controlSampleOpened=false;sampleComparison=false;controlMaterialSeen='';controlMissing=false;
+    coreEdit='';choosingCase=false;mentorOpen=false;mentorDraft='';examplePreviewed=false;controlSampleOpened=false;sampleComparison=false;controlMaterialSeen='';controlMissing=false;
     responsePreview=false;controlDraft=restoreCorrespondenceControl();citationSelections={};recipientOrderId='';
     executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;
     deferredDocuments.clear();failedOperation='';routingSearch='';routingTerritory='ru-77';view=null;initial=null;pending=null;error=null;notice='';needsResume=false;draftMessage='';decisionDraft=blankDecision();followupDraft='';
@@ -239,10 +269,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const parameters={studentKey:backend?.getProfile?.()?.studentKey||options.studentKey,mode,journeyStage};
     const recovered=await api.recover(parameters,{withProgress:true});
     if(recovered.seminarProgress)seminarProgress=recovered.seminarProgress;
+    if(recovered.legacySessionId)legacySessionIds.set(recovered.legacySessionId,journeyStage);
     const currentStage=nextJourneyStage(seminarProgress);
     if(recovered.view||currentStage===journeyStage||currentStage==='independent'&&!canIndependent())return recovered.view;
     const current=await api.recover({...parameters,journeyStage:currentStage,mode:currentStage==='independent'?'independent':'training'},{withProgress:true});
     if(current.seminarProgress)seminarProgress=current.seminarProgress;
+    if(current.legacySessionId)legacySessionIds.set(current.legacySessionId,currentStage);
     return current.view;
   }
   async function loadCatalog() {
@@ -264,7 +296,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const recovered=candidates.sort((a,b)=>timestamp(b.updatedAt||b.startedAt)-timestamp(a.updatedAt||a.startedAt))[0]||null;
       if(!recovered&&results.some(result=>result.status==='rejected'))throw results.find(result=>result.status==='rejected').reason;
       if(disposed||ownerNow()!==owner)return;
-      if(recovered){persist();const saved=drafts.readSession(recovered.id);view=null;initial=null;if(saved)restoreSaved(saved);acceptView(recovered,{op:'recover'});page='reception';error=null;notice='';needsResume=false;}
+      if(recovered&&!choosingCase){persist();const saved=drafts.readSession(recovered.id);view=null;initial=null;if(saved)restoreSaved(saved);acceptView(recovered,{op:'recover'});page='reception';error=null;notice='';needsResume=false;}
       else if(!quiet)notice=t('noSavedSession');
     }catch(problem){if(problem.code!=='cancelled'&&!quiet)notice=t('recoveryLimited');}
     finally{recoverBusy=false;if(!disposed){persist();render();}}
@@ -288,6 +320,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(code==='guest-unavailable')return t('guestUnavailable');
     if(code==='case-bank-exhausted')return t('caseBankExhausted');
     if(/^(tutorial-step-locked|tutorial-locked|journey-stage-locked|journey-locked|stage-locked)$/.test(code))return l('locked');
+    if(code==='core-citation-required')return cl('noCitation');
+    if(code==='core-calendar-required')return cl('dateHint');
+    if(code==='core-route-required')return cl('routeMissing');
+    if(code==='core-draft-incomplete')return cl('draftIncomplete');
     if(code==='outdated-session')return t('retiredSession');
     if (/not-configured|unsafe-endpoint|pilot-incomplete/.test(code)) return t('config');
     if (/local-demo/.test(code)) return t('localOnly');
@@ -319,10 +355,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function header() {
     const settings=config.demo||options.showLanguageSelector?`<details class="rxa-cabinet-settings" data-details="cabinet-settings"><summary aria-label="${esc(t('settings'))}" title="${esc(t('settings'))}">${icon('menu')}</summary><div class="rxa-settings-panel"><label><span>${esc(t('language'))}</span><select class="rxa-locale" data-language data-focus="language" aria-label="${esc(t('language'))}">${[['ru','RU'],['en','EN'],['zh','中文']].map(([id,label])=>`<option value="${id}" ${locale===id?'selected':''}>${label}</option>`).join('')}</select></label></div></details>`:'';
-    return `<header class="rxa-top"><div class="rxa-brand"><span class="rxa-brand-mark">${icon('reception')}</span><div class="rxa-brand-copy"><strong>${esc(t('cabinet'))}</strong></div></div><div class="rxa-top-actions">${settings}${view?.journeyStage==='mentor'&&['active','followup'].includes(view.status)?button(l(mentorOpen?'close':'ask'),'mentor-toggle',{quiet:true,extra:`aria-expanded="${mentorOpen}"`}):''}${options.onExit?`<button class="rxa-back" type="button" data-action="exit" aria-label="${esc(t('back'))}" title="${esc(t('back'))}">${icon('exit')}</button>`:''}</div></header>`;
+    return `<header class="rxa-top"><div class="rxa-brand"><span class="rxa-brand-mark">${icon('reception')}</span><div class="rxa-brand-copy"><strong>${esc(t('cabinet'))}</strong></div></div><div class="rxa-top-actions">${settings}${seminar&&view&&!choosingCase?`<button type="button" class="rxa-btn quiet rxt-choose-case" data-action="choose-case" ${busy||pending?'disabled':''}>${icon('sources')}<span>${esc(cl('path'))}</span></button>`:''}${view?.journeyStage==='mentor'&&['active','followup'].includes(view.status)?button(l(mentorOpen?'close':'ask'),'mentor-toggle',{quiet:true,extra:`aria-expanded="${mentorOpen}"`}):''}${options.onExit?`<button class="rxa-back" type="button" data-action="exit" aria-label="${esc(t('back'))}" title="${esc(t('back'))}">${icon('exit')}</button>`:''}</div></header>`;
   }
   const atAction=(op)=>(
-    op==='start'&&(page==='reception'&&(!view||view.status!=='complete')||seminar&&view?.status==='complete')||
+    op==='start'&&(choosingCase||page==='reception'&&(!view||view.status!=='complete')||seminar&&view?.status==='complete')||
     op==='decide'&&page==='decision'&&active()&&correspondenceMode()||
     op==='followup'&&page==='decision'&&view?.status==='followup'&&correspondenceMode()||
     op==='control-action'&&page==='decision'&&view?.status==='followup'&&!!view.controlWorkflow||
@@ -344,9 +380,96 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function pathSetup() {
     const locked=busy||!!pending||recoverBusy;
+    const savedIds=new Set(drafts.recent().map(item=>item.id));
+    const legacy=[...legacySessionIds].filter(([id])=>id!==view?.id&&!savedIds.has(id));
+    const resumes=legacy.map(([id,stage])=>button(t('resumeSession')+' · '+l(stage),'resume-session',
+      {quiet:true,disabled:locked,extra:`data-id="${esc(id)}"`})).join('');
     return `<div>${journeyPathView({locale,progress:seminarProgress,locked,canIndependent:canIndependent(),button})}
-      ${!view?`<div class="rxt-recover">${button(t('recoverSession'),'recover',{quiet:true,disabled:locked})}</div>`:''}
+      ${!view||choosingCase?`<div class="rxt-recover">${resumes}${view?button(t('resumeSession'),'close-case-picker',{quiet:true,disabled:locked}):button(t('recoverSession'),'recover',{quiet:true,disabled:locked})}</div>`:''}
       ${actionStatus('start')}</div>`;
+  }
+  function leaveCoreEdit() {
+    if(!coreEdit)return;
+    const values=view.coreSteps?.values;
+    if(coreEdit==='materials'&&values?.citations){
+      installCoreCitations(values.citations);
+      selectedReferences=selectedReferences.filter(reference=>values.citations.some(citation=>
+        citation.sourceId===reference.docId&&citation.unitIds.join(',')===reference.unitIds.join(',')));
+    }
+    if(coreEdit==='calendar'&&values?.calendar){
+      const {deadline,referralDeadline,registrationTimely}=values.calendar;
+      calendarState={...calendarState,selectedDates:{deadline,referral:referralDeadline},registrationTimely};
+      decisionDraft.deadline=deadline;Object.assign(decisionDraft.workbook,{referralDeadline,registrationTimely});
+    }
+    if(coreEdit==='route'&&values?.routing)decisionDraft.workbook.routing=clone(values.routing);
+    coreEdit='';
+  }
+  function goCore(id) {
+    if(!CORE_PAGES[id])return;
+    if(id!==coreEdit)leaveCoreEdit();
+    coreEdit=id!==coreCurrent()&&coreIsEditable(id)?id:'';
+    if(id==='materials'){reader.close();selectedDoc='';tab='documents';}
+    if(id==='route')responsePreview=false;
+    pageScroll[CORE_PAGES[id]]=0;
+    goPage(CORE_PAGES[id]);
+    const heading=root.querySelector('[data-core-heading]')||root.querySelector('.rxa-page-heading h1');
+    if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+  }
+  function coreJourney() {
+    if(!hasCore()||choosingCase||view.status==='complete')return '';
+    const current=coreCurrent(), activeId=coreInView()==='review'?'control':coreInView();
+    const steps=['reception','materials','calendar','route','draft','control'];
+    const doneUntil=current==='review'?steps.length:steps.indexOf(current);
+    return `<nav class="rxt-case-steps" aria-label="${esc(cl('journey'))}"><ol>${steps.map((id,index)=>{
+      const visited=index<doneUntil, isHere=activeId===id;
+      const label=esc(cl(id));
+      const link=index===0||id===current||active()&&coreIsEditable(id);
+      const content=`<span aria-hidden="true">${visited?icon('check'):index+1}</span><span>${label}</span>`;
+      const attrs=`class="rxt-case-step ${visited?'is-complete':''}" ${isHere?'aria-current="step"':''}`;
+      return `<li>${link?`<button type="button" ${attrs} data-action="core-go" data-step="${id}">${content}</button>`:`<span ${attrs}>${content}</span>`}</li>`;
+    }).join('')}</ol></nav>`;
+  }
+  function coreCitationFor(id) {
+    return decisionDraft.correspondence?.citations.find(row=>row.sourceId===id&&row.id.startsWith('core-legal-'));
+  }
+  function coreRecordsReady() {
+    const required=lessonStep(view)?.documentIds||[],opened=view.openedDocumentIds||[];
+    return required.length?required.every(id=>opened.includes(id)):!(view.documents||[]).length||opened.length>0;
+  }
+  function corePayload(id) {
+    if(id==='materials'){
+      const acts=view.case.normativeActs||[];
+      const citations=acts.map(act=>coreCitationFor(act.id));
+      return citations.every(Boolean)&&coreRecordsReady()?{citations}:null;
+    }
+    if(id==='calendar'){
+      const calendar=coreDatePayload(view.case.workbook,calendarState);
+      return calendar?{calendar}:null;
+    }
+    if(id==='route'){
+      const routing=decisionDraft.workbook?.routing;
+      return routing&&(routing.disposition==='internal'||routing.disposition==='forward'&&routing.recipientIds.length)?{routing}:null;
+    }
+    return null;
+  }
+  function coreButton(id) {
+    const label=cl(coreEdit===id?'update':'next'+id[0].toUpperCase()+id.slice(1));
+    return button(label,'core-step',{primary:true,disabled:busy||!!pending||paused||!corePayload(id),
+      extra:`data-step="${id}" data-tour-target="advance"`,glyph:'arrow'});
+  }
+  function updateCoreButton() {
+    const control=root.querySelector('[data-action="core-step"]');
+    if(control&&hasCore())control.disabled=busy||!!pending||paused||!corePayload(control.dataset.step);
+  }
+  function coreFeedback(id) {
+    const finding=view.guidance?.finding;
+    if(finding?.stepId!==id)return '';
+    return `<p class="rxa-alert" role="status">${esc(text(finding.explanation)||l('tryAgain'))}</p>`;
+  }
+  function coreLessonHint(id) {
+    const step=lessonStep(view);
+    return view.journeyStage==='example'&&step?.id===id&&step.explanation?
+      `<details class="rxt-step-hint"><summary>${esc(l('mentorHintLabel'))}</summary><p>${esc(text(step.explanation))}</p></details>`:'';
   }
   function trainingSetup() {
     if(seminar)return pathSetup();
@@ -368,11 +491,29 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function landing() {
     return `<div class="rxa-foyer rxa-foyer-landing ${seminar?'rxt-journey-start':''}"><section class="rxa-welcome"><span class="rxa-eyebrow">${esc(t('welcome'))}</span><h1>${esc(t('hero'))}</h1><p>${esc(t('welcomeHint'))}</p>${guest?`<p class="rxa-guest-note">${esc(t('guestHistory'))}</p>`:''}</section><div class="rxa-foyer-grid">${scene(null,'')}${trainingSetup()}</div>${savedSessions()}${help()}</div>`;
   }
+  function coreCaseRecords() {
+    const reading=selectedDoc&&(view.documents||[]).some(doc=>doc.id===selectedDoc);
+    const ready=coreRecordsReady();
+    const working=active()&&coreCurrent()==='materials';
+    return `<section class="rxa-document-group rxt-case-records" data-core-records>
+      <h2 tabindex="-1">${esc(t('caseMaterials'))}</h2>
+      ${working&&!ready?`<p>${esc(cl(tutorial()?'requireDocuments':'openRecord'))}</p>`:''}
+      ${reading?`<div class="rxa-material-reader">${button(t('allDocuments'),'documents-list',{quiet:true,glyph:'arrow'})}${documents(true)}</div>`:documents()}
+      ${active()?`<div class="rxt-core-footer">${button(cl('toSources'),'core-sources',{primary:ready,quiet:!ready,glyph:'arrow',extra:'data-tour-target="law"'})}</div>`:''}
+    </section>`;
+  }
+  function scrollToCoreRecords() {
+    if(page!=='reception')goPage('reception');
+    const heading=root.querySelector('[data-core-records] h2');
+    heading?.focus({preventScroll:true});heading?.scrollIntoView({block:'start',behavior:'instant'});
+  }
   function reception() {
     const c=view.case||{};
     const firstMessage=(view.messages||[]).find(message=>message.role==='assistant'&&message.id===`opening-${c.id}`);
     const opening=authoredText(c.opening||firstMessage?.text);
-    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}<div class="rxa-foyer-grid rxt-active-reception">${scene(c.citizen,c.id)}<section class="rxa-active-reception"><h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2><p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p>${opening?`<section class="rxt-opening" aria-labelledby="rxtOpeningTitle"><h3 id="rxtOpeningTitle">${esc(l('opening'))}</h3><blockquote>${esc(opening)}</blockquote>${tutorial()?button(l('goGuide'),'guide-jump',{quiet:true,glyph:'arrow'}):''}</section>`:''}<p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>${caseTimelineView(c.workbook,{locale})}${routingOriginView(c.workbook,{locale})}<div class="rxa-actions">${!active()?button(t('continueDecision'),'continue',{primary:true,glyph:'arrow'}):''}${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></section></div><details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary><div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3><div class="rxa-case-meta">${!seminar&&c.level?`<span>${esc(t('level'+c.level))}</span>`:''}${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p><p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div></details>${currentGuide()}${help()}${seminar?'':`<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>`}${savedSessions()}</div>`;
+    const receptionAction=hasCore()&&active()?button(cl(coreCurrent()==='reception'||coreCurrent()==='materials'?'read':'returnTo'),
+      'core-opening',{primary:true,glyph:'arrow',extra:'data-tour-target="advance"'}):'';
+    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}<div class="rxa-foyer-grid rxt-active-reception">${scene(c.citizen,c.id)}<section class="rxa-active-reception"><h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2><p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p>${opening?`<section class="rxt-opening" aria-labelledby="rxtOpeningTitle" data-tour-target="reception"><h3 id="rxtOpeningTitle">${esc(l('opening'))}</h3><blockquote>${esc(opening)}</blockquote>${receptionAction||(!hasCore()&&tutorial()?button(l('goGuide'),'guide-jump',{quiet:true,glyph:'arrow'}):'')}</section>`:''}<p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>${caseTimelineView(c.workbook,{locale})}${routingOriginView(c.workbook,{locale})}<div class="rxa-actions">${!active()?button(t('continueDecision'),'continue',{primary:true,glyph:'arrow'}):''}${hasCore()&&active()?'':button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></section></div><details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary><div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3><div class="rxa-case-meta">${!seminar&&c.level?`<span>${esc(t('level'+c.level))}</span>`:''}${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p><p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div></details>${hasCore()?coreCaseRecords():currentGuide()}${help()}${seminar?'':`<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>`}${savedSessions()}</div>`;
   }
 
   function messageTime(at) {
@@ -400,7 +541,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function documents(reading=false) {
     const docs=view.documents||[],opened=view.openedDocumentIds||[];
     const selected=docs.find(d=>d.id===selectedDoc);
-    if(!reading)return !docs.length?`<p class="rxa-empty">${esc(t('noDocuments'))}</p>`:`<div class="rxa-document-list">${docs.map(d=>`<button type="button" class="rxa-document-button" data-action="document" data-id="${esc(d.id)}" ${paused?'disabled':''}>${icon('docs')}<span><strong>${esc(authoredText(d.title))}</strong><small>${esc(opened.includes(d.id)?t('documentOpened'):t('openDocument'))}</small></span></button>`).join('')}</div>`;
+    const suggested=hasCore()&&coreInView()==='materials'?(lessonStep(view)?.documentIds||[]).find(id=>!opened.includes(id)):null;
+    if(!reading)return !docs.length?`<p class="rxa-empty">${esc(t('noDocuments'))}</p>`:`<div class="rxa-document-list">${docs.map(d=>`<button type="button" class="rxa-document-button" data-action="document" data-id="${esc(d.id)}" ${suggested===d.id?'data-tour-target="materials"':''} ${paused?'disabled':''}>${icon('docs')}<span><strong>${esc(authoredText(d.title))}</strong><small>${esc(opened.includes(d.id)?t('documentOpened'):t('openDocument'))}</small></span></button>`).join('')}</div>`;
     if(!selected)return '';
     const marked=opened.includes(selected.id);
     const markHint=!marked&&active()?`<p class="rxa-panel-intro">${esc(t('documentMarkPending'))}</p>${!busy&&!pending&&!needsResume?button(t('documentMark'),'document-mark',{quiet:true,extra:`data-id="${esc(selected.id)}"`}):''}`:'';
@@ -450,10 +592,25 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const a=view?.case?.assessment,d=decisionDraft;
     return a?assessmentBlock('calendar',t('calendarRuleSummary'),`${optionsField('assessment.calendar.anchor',t('calendarAnchor'),a.calendar.events,d.assessment.calendar.anchor)}${optionsField('assessment.calendar.rule',t('calendarRule'),a.calendar.rules,d.assessment.calendar.rule)}${optionsField('assessment.calendar.start',t('calendarStart'),a.calendar.starts,d.assessment.calendar.start)}${optionsField('assessment.calendar.shift',t('calendarShift'),a.calendar.lastDays,d.assessment.calendar.shift)}`):'';
   }
-  function calendarTask(){return view?.case?.workbook?{...view.case.workbook,hideEventList:true,autoCommit:true,internalSources:Boolean(gameplayContext)}:undefined;}
+  function calendarTask(){
+    return view?.case?.workbook?{...view.case.workbook,hideEventList:!hasCore(),autoCommit:true,internalSources:Boolean(gameplayContext),
+      ...(hasCore()?{registrationCheck:false}:{})}:undefined;
+  }
+  function coreCalendar() {
+    const workbook=view.case.workbook, editable=active()&&coreInView()==='calendar';
+    const locked=!editable||busy||!!pending||paused;
+    const registration=workbook.registrationCheck?`<fieldset class="rxa-fieldset rxt-registration"><legend>${esc(cl('registration'))}</legend>
+      ${[true,false].map(value=>`<label class="rxa-choice"><input type="radio" name="core-registration" data-core-registration value="${value}"
+        ${calendarState.registrationTimely===value?'checked':''} ${locked?'disabled':''}><span>${esc(cl(value?'yes':'no'))}</span></label>`).join('')}</fieldset>`:'';
+    return `<section class="rxa-panel" id="rxaCalendarPanel" aria-labelledby="rxaPage-calendar"><h1 data-core-heading>${esc(cl('calendar'))}</h1>
+      <p class="rxa-panel-intro">${esc(cl('dateHint'))}</p>${coreLessonHint('calendar')}${coreFeedback('calendar')}
+      ${calendarWorkbenchView({state:calendarState,task:calendarTask(),locale,disabled:locked})}${registration}
+      ${editable?`<div class="rxa-calendar-footer rxt-core-footer">${coreButton('calendar')}</div>`:''}</section>`;
+  }
   function calendarPage() {
     const c=view.case||{},a=c.assessment,d=decisionDraft;
     const locked=!active()||paused||(busy&&operation==='decide')||pending?.op==='decide';
+    if(c.workbook&&hasCore())return coreCalendar();
     if(c.workbook)return `<section class="rxa-panel" id="rxaCalendarPanel" aria-labelledby="rxaPage-calendar">${caseHeading(t('calendar'))}${calendarWorkbenchView({state:calendarState,task:calendarTask(),locale,disabled:locked})}<div class="rxa-calendar-footer"><small class="rxa-save-note" data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</small>${button(t('openDecision'),'page',{quiet:true,extra:'data-page="decision"',glyph:'arrow'})}</div></section>`;
     return `<section class="rxa-panel" id="rxaCalendarPanel" aria-labelledby="rxaPage-calendar">${caseHeading(t('calendar'),t('calendarTask'))}${!active()?`<p class="rxa-fixed">${icon('lock')}<span>${esc(t('calendarReadOnly'))}</span></p>`:''}${calendarWorkbenchView({state:calendarState,events:a?.calendar?.events||[],date:c.date,locale,disabled:locked,rulesMarkup:calendarRulesMarkup()})}<details class="rxa-calendar-task" data-details="calendar-task"><summary>${icon('info')}<span>${esc(t('calendarTask'))}</span>${icon('chevron')}</summary><div>${c.date?`<p class="rxa-calendar-case-date"><span>${esc(t('caseDate'))}</span><time datetime="${esc(c.date)}">${esc(humanDate(c.date))}</time></p>`:''}<p>${esc(authoredText(c.deadlinePrompt)||t('calendarHint'))}</p></div></details><details class="rxa-calendar-manual" data-details="calendar-manual"><summary>${icon('edit')}<span>${esc(t('calendarManual'))}</span>${icon('chevron')}</summary><fieldset class="rxa-fieldset rxa-calendar-deadline"><legend>${esc(t('calendarDraftDate'))}</legend><div class="rxa-fields"><label class="rxa-field"><span>${esc(t('deadline'))}</span><input type="date" data-decision="deadline" data-focus="deadline" value="${esc(d.deadline)}" autocomplete="off" ${locked?'disabled':''}></label></div></fieldset></details><div class="rxa-calendar-footer"><small class="rxa-save-note" data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</small>${button(t('openDecision'),'page',{quiet:true,extra:'data-page="decision"',glyph:'arrow'})}</div></section>`;
   }
@@ -529,10 +686,54 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     field?.closest('details')?.setAttribute('open','');
     field?.scrollIntoView({block:'center'});field?.focus({preventScroll:true});
   }
+  function coreRouteRecord() {
+    const routing=view.coreSteps?.values?.routing||decisionDraft.workbook?.routing;
+    const label=routing?.disposition==='internal'?cl('internal'):authoritySelectionLabel(routing,{locale});
+    return `<section class="rxa-panel"><h1 data-core-heading>${esc(cl('route'))}</h1>
+      <p>${esc(label||cl('blocked'))}</p>${button(cl('returnTo'),'core-go',{quiet:true,extra:`data-step="${esc(coreCurrent())}"`,glyph:'arrow'})}</section>`;
+  }
+  function coreRouting() {
+    const routing=decisionDraft.workbook.routing;
+    const locked=busy||!!pending||paused;
+    return `<section class="rxa-panel rxt-route-choice" aria-labelledby="rxtRouteHeading">
+      <h1 id="rxtRouteHeading" data-core-heading>${esc(cl('route'))}</h1>
+      <p class="rxa-panel-intro">${esc(cl('routeHint'))}</p>${routingOriginView(view.case.workbook,{locale})}
+      ${coreLessonHint('route')}${coreFeedback('route')}<fieldset class="rxa-fieldset" data-tour-target="routing">
+      <legend class="rxa-sr">${esc(cl('route'))}</legend>
+      ${['internal','forward'].map(value=>`<label class="rxa-choice"><input type="radio" name="core-disposition" data-core-disposition
+        data-focus="core-route-${value}" value="${value}" ${routing.disposition===value?'checked':''} ${locked?'disabled':''}><span>${esc(cl(value))}</span></label>`).join('')}</fieldset>
+      ${routing.disposition==='forward'?authorityPickerView(routing,{locale,workflow:view.case.workbook,search:routingSearch,territoryId:routingTerritory,disabled:locked}):''}
+      <div class="rxt-core-footer">${coreButton('route')}</div>
+    </section>`;
+  }
+  function coreDecision() {
+    const step=coreInView();
+    if(step!=='draft')return `<section class="rxa-panel"><h1 data-core-heading>${esc(cl('draft'))}</h1>
+      <p>${esc(cl('blocked'))}</p>${button(cl('returnTo'),'core-go',{primary:true,extra:`data-step="${esc(coreCurrent())}"`,glyph:'arrow'})}</section>`;
+    const locked=busy||!!pending||paused;
+    const mentorDraft=mentorWork('draft');
+    const model=mentorDraft&&lessonAnswer();
+    return `<section class="rxa-panel rxc-workspace"><h1 data-core-heading>${esc(cl('draft'))}</h1>
+      <p class="rxa-panel-intro">${esc(cl('draftHint'))}</p>
+      <p class="rxa-draft-status">${icon('cloud')}<span data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</span></p>
+      ${coreFeedback('draft')}${mentorWorkFeedbackView(view,locale)}
+      ${mentorDraft?`<p class="rxa-panel-intro">${esc(cl('evidence'))}</p>`:''}
+      <div class="rxa-actions rxt-draft-links">${button(cl('toSources'),'core-sources',{quiet:true,glyph:'sources'})}
+        ${model?button(l('compare'),'tutorial-sample',{quiet:true}):''}</div>
+      ${sampleComparison?tutorialComparison():''}
+      <form id="rxaDecisionForm" data-decision-form>
+        ${responsePreview?correspondencePreviewView(responseOptions()):correspondenceEditorView({...responseOptions(),guidedCore:true})}
+        <div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit" data-tour-target="draft-submit" ${locked?'disabled':''}>
+          ${icon('decision')}${esc(l(mentorDraft?'checkOwnDraft':'submitProject'))}</button></div>
+        ${actionStatus('decide')}
+      </form>
+    </section>`;
+  }
   function correspondenceDecision() {
     const c=view.case||{},locked=busy||!!pending||paused,profile=c.correspondence||{};
     const order=decisionDraft.correspondence?.orders.find(row=>row.id===recipientOrderId);
     if(order)return `<section class="rxa-panel"><h2>${esc(t('responseAssignmentRecipient'))}</h2><p class="rxa-panel-intro">${esc(t('responseOrderRecipientHint'))}</p>${authorityPickerView({recipientIds:order.recipientIds},{locale,workflow:{recipientLimit:2},search:routingSearch,territoryId:routingTerritory,disabled:locked})}<button class="rxa-btn primary" type="button" data-response-action="recipient-done">${esc(t('responseAssignmentDone'))}</button></section>`;
+    if(hasCore())return coreDecision();
     const omissions=confirmation?decisionOmissions():[];
     const submitLabel=seminar?l('submitProject'):t('responseSubmit');
     const submitFooter=mentorWork('draft')?`<div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit"
@@ -655,13 +856,34 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(correspondenceMode())return correspondenceReview();
     return `<section class="rxa-panel rxa-review"><div class="rxa-review-icon">${icon('check')}</div><h2>${esc(t(view.feedback?'reviewTitle':'fixed'))}</h2>${view.feedback?feedbackMarkup(view.feedback):`<p class="rxa-panel-intro">${esc(t('reviewHidden'))}</p>`}${seminar?'':learningReviewView({view,catalog,locale})}${workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-review-footer">${button(t(Number(view.caseIndex)+1<Number(view.caseCount)?'next':'finish'),'next',{primary:true,disabled:busy||!!pending,glyph:'arrow'})}</div></section>`;
   }
+  function coreMaterials() {
+    const editable=active()&&coreInView()==='materials';
+    const acts=view.case.normativeActs||[];
+    return `<div class="rxa-desk" id="rxaDesk"><h1 data-core-heading>${esc(cl('sources'))}</h1>
+      <div data-source-reader-host></div><div class="rxa-documents-library">
+      ${editable?`<p class="rxa-panel-intro">${esc(cl('materialsHint'))}</p>`:''}${coreLessonHint('materials')}${coreFeedback('materials')}
+      <section class="rxa-document-group rxt-legal-list" data-core-law>
+      ${acts.map(act=>{
+        const citation=coreCitationFor(act.id),reference=selectedReferences.find(row=>row.docId===act.id);
+        return `<div class="rxt-legal-act ${citation?'has-citation':''}" ${citation?`data-core-citation="${esc(act.id)}"`:''}>
+          ${normativeActsView([act],{locale})}${citation?`<details class="rxt-chosen-citation"><summary>${icon('check')}${esc(cl('attached'))}
+            ${reference?`<span>${esc(text(reference.locator))}</span>`:''}</summary><blockquote lang="ru">${esc(citation.quote)}</blockquote></details>`:''}
+          </div>`;
+      }).join('')}
+      </section>
+      ${editable&&!coreRecordsReady()?`<div class="rxt-core-footer">
+        ${button(cl('read'),'core-records',{quiet:true,glyph:'docs',extra:'data-core-records-jump'})}</div>`:''}
+      ${editable?`<div class="rxt-core-footer">${coreButton('materials')}</div>`:''}</div></div>`;
+  }
   function documentsPage() {
+    if(hasCore())return coreMaterials();
     const reading=selectedDoc&&(view.documents||[]).some(doc=>doc.id===selectedDoc);
     const notes=selectedReferences.length?`<details class="rxa-assessment-block" data-details="source-notes"><summary>${esc(t('sourceNotes'))} · ${selectedReferences.length}</summary><div class="rxa-assessment-content">${selectedReferences.map(reference=>referenceView(reference,{locale,removable:active(),internalOnly:Boolean(gameplayContext)})).join('')}</div></details>`:'';
     return `<div class="rxa-desk" id="rxaDesk">${caseHeading(t('documents'))}<div data-source-reader-host></div><div class="rxa-documents-library">${reading?`<div class="rxa-material-reader">${button(t('allDocuments'),'documents-list',{quiet:true,glyph:'arrow'})}${documents(true)}</div>`:`<section class="rxa-document-group"><h2>${esc(t('caseMaterials'))}</h2>${documents()}</section><section class="rxa-document-group"><h2>${esc(t('legalMaterials'))}</h2>${sources()}</section>${notes}`}</div></div>`;
   }
   function currentGuide() {
     const step=lessonStep(view);
+    if(hasCore()&&(!step||['reception','materials','calendar','route','draft'].includes(step.id)||step.page!==page))return '';
     const sampleReady=step?.action==='draft'?examplePreviewed:step?.action==='control'?controlSampleOpened:Boolean(decisionDraft.deadline||decisionDraft.workbook?.referralDeadline);
     const required=step?.documentIds||[], opened=view?.openedDocumentIds||[];
     const documents=(view?.documents||[]).filter(document=>required.includes(document.id))
@@ -681,12 +903,24 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(page==='reception')return reception();
     if(page==='chat')return `<div class="rxa-chat-page">${conversation()}</div>`;
     if(page==='documents')return `<div class="rxa-documents-page">${documentsPage()}</div>`;
+    if(page==='route')return `<div class="rxa-decision-page"><div class="rxa-desk" id="rxaDesk">${active()&&coreInView()==='route'?coreRouting():coreRouteRecord()}</div></div>`;
     if(page==='calendar')return `<div class="rxa-calendar-page"><div class="rxa-desk" id="rxaDesk">${calendarPage()}</div></div>`;
     return `<div class="rxa-decision-page"><div class="rxa-desk" id="rxaDesk">${view.status==='review'?review():view.status==='followup'?followup():decision()}</div></div>`;
   }
   function navigation() {
     const count=unreadCount(), next=lessonStep(view);
-    return `<nav class="rxa-mobile-nav" aria-label="${esc(t('workplace'))}">${[['reception','reception'],['chat','talk'],['documents','docs'],['calendar','calendar'],['decision','decision']].map(([id,glyph])=>`<button type="button" id="rxaPage-${id}" class="${next?.page===id?'rxt-next-tab':''}" data-action="page" data-page="${id}" data-focus="nav-${id}" aria-current="${page===id?'page':'false'}" ${!view&&id!=='reception'?'disabled':''}><span class="rxa-nav-icon">${icon(glyph)}${id==='chat'&&count?`<span class="rxa-unread" data-chat-unread aria-label="${esc(t('unread',{count}))}">${count}</span>`:''}</span><span>${esc(t(id))}</span></button>`).join('')}</nav>`;
+    const tabs=[['reception','reception'],['chat','talk'],['documents',hasCore()?'sources':'docs'],
+      ['calendar','calendar'],...(hasCore()?[['route','arrow']]:[]),['decision','decision']];
+    return `<nav class="rxa-mobile-nav" aria-label="${esc(t('workplace'))}">${tabs.map(([id,glyph])=>{
+      const label=hasCore()&&id==='documents'?cl('sources'):id==='route'?cl('routeTab'):t(id);
+      const short=hasCore()?cl('short'+id[0].toUpperCase()+id.slice(1)):'';
+      return `<button type="button" id="rxaPage-${id}" class="${next?.page===id?'rxt-next-tab':''}" data-action="page" data-page="${id}"
+        data-focus="nav-${id}" aria-current="${(choosingCase?'reception':page)===id?'page':'false'}"
+        ${short?`aria-label="${esc(id==='chat'&&count?label+' · '+t('unread',{count}):label)}"`:''} ${(!view||choosingCase)&&id!=='reception'?'disabled':''}>
+        <span class="rxa-nav-icon">${icon(glyph)}${id==='chat'&&count?`<span class="rxa-unread" data-chat-unread aria-label="${esc(t('unread',{count}))}">${count}</span>`:''}</span>
+        <span class="${short?'rxt-nav-full':''}">${esc(label)}</span>${short?`<span class="rxt-nav-short" aria-hidden="true">${esc(short)}</span>`:''}
+      </button>`;
+    }).join('')}</nav>`;
   }
 
   function journeyResult(result) {
@@ -732,16 +966,16 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const sameRenderedCase=root.dataset.sessionId===(view?.id||'')&&root.dataset.caseId===(view?.case?.id||'');
     const resetReceptionScroll=Boolean(view&&!sameRenderedCase&&page==='reception');
     root.classList.add('reception-ai-root','rxa-cabinet'); root.setAttribute('lang',locale); root.setAttribute('aria-busy',String(busy)); root.dataset.mobilePane=mobilePane;root.dataset.page=page;
-    root.dataset.sessionStatus=view?.status||'setup';
+    root.dataset.sessionStatus=view?.status||'setup';root.dataset.core=String(hasCore());
     root.dataset.sessionId=view?.id||'';root.dataset.caseId=view?.case?.id||'';
     const oldContent=root.querySelector('.rxa-page-content');if(!stageFocus&&sameRenderedCase&&oldContent?.dataset.page===page)pageScroll[page]=oldContent.scrollTop;
     if(resetReceptionScroll)pageScroll.reception=0;
     markChatRead();
     const guide=currentGuide();
-    const comparison=sampleComparison?tutorialComparison():'';
-    const mentor=mentorOpen&&view?.journeyStage==='mentor'?mentorView({view,locale,button,draft:mentorDraft,
+    const comparison=sampleComparison&&!(hasCore()&&active())?tutorialComparison():'';
+    const mentor=!choosingCase&&mentorOpen&&view?.journeyStage==='mentor'?mentorView({view,locale,button,draft:mentorDraft,
       busy:busy&&operation==='mentor-question',locked:busy||!!pending||paused}):'';
-    root.innerHTML = header() + navigation() + `<main class="rxa-page-content" data-page="${page}">`+alerts()+mentor+(page==='reception'?'':guide+comparison) + (restoring?`<div class="rxa-loading" role="status"><div class="rxa-spinner" aria-hidden="true"></div>${esc(t('loading'))}</div>`:!view?landing():workspace())+'</main>';
+    root.innerHTML = header() + navigation() + `<main class="rxa-page-content" data-page="${page}">`+alerts()+coreJourney()+mentor+(page==='reception'||choosingCase?'':guide+comparison) + (restoring?`<div class="rxa-loading" role="status"><div class="rxa-spinner" aria-hidden="true"></div>${esc(t('loading'))}</div>`:!view||choosingCase?landing():workspace())+'</main>';
     for(const section of ['facts','legalBasis','resolution','nextSteps']){
       const saved=citationSelections[section];if(!saved)continue;
       const select=root.querySelector(`[data-response-source="${section}"]`),quote=root.querySelector(`[data-response-source-quote="${section}"]`);
@@ -749,14 +983,17 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     const content=root.querySelector('.rxa-page-content');if(content)content.scrollTop=Number(pageScroll[page])||0;
     const mentorLog=root.querySelector('[data-mentor-log]');if(mentorLog)mentorLog.scrollTop=mentorLog.scrollHeight;
-    calendar.update({state:calendarState,task:calendarTask(),rulesMarkup:calendarRulesMarkup(),events:view?.case?.assessment?.calendar?.events||[],date:view?.case?.date,locale,disabled:!active()||paused||pending?.op==='decide'||busy&&operation==='decide'});
+    calendar.update({state:calendarState,task:calendarTask(),rulesMarkup:calendarRulesMarkup(),events:view?.case?.assessment?.calendar?.events||[],date:view?.case?.date,locale,disabled:!active()||paused||pending?.op==='decide'||busy&&operation==='decide'||hasCore()&&(busy||!!pending||coreInView()!=='calendar')});
     reader.refresh?.();media.refresh();
+    tour.update({stage:view?.journeyStage,sessionId:view?.id,step:lessonStep(view),page,locale,
+      stepIndex:view?.guidance?.stepIndex,stepTotal:view?.guidance?.steps?.length,
+      paused:busy||!!pending||paused||mentorOpen||choosingCase||confirmation});
     updateViewport();
     if(stageFocus){
-      const heading=root.querySelector('[data-stage-heading]');
+      const heading=root.querySelector('[data-stage-heading], [data-core-heading]');
       stageFocus=false;
       if(content)content.scrollTop=0;
-      heading?.focus({preventScroll:true});
+      if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
     }
     if(resetReceptionScroll){
       const sessionId=view.id,caseId=view.case.id;
@@ -790,6 +1027,19 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     field.style.height='auto';field.style.height=Math.min(144,Math.max(46,field.scrollHeight))+'px';
     const counter=root.querySelector('[data-message-count]');if(counter)counter.textContent=draftMessage.length?`${draftMessage.length} / 2000`:'';
   }
+  function syncCoreValues(next, {applySaved=false}={}) {
+    if(!hasCore())return;
+    const values=next.coreSteps?.values;
+    if(values?.citations?.length&&(applySaved||values.citations.some(item=>!decisionDraft.correspondence.citations.some(row=>row.id===item.id))))installCoreCitations(values.citations);
+    if(values?.calendar&&applySaved){
+      decisionDraft.deadline=values.calendar.deadline;
+      Object.assign(decisionDraft.workbook,{
+        referralDeadline:values.calendar.referralDeadline,registrationTimely:values.calendar.registrationTimely,
+      });
+      calendarState={...calendarState,registrationTimely:values.calendar.registrationTimely};
+    }
+    if(values?.routing&&applySaved)decisionDraft.workbook.routing=clone(values.routing);
+  }
   function updateDraftStatus() {
     persist();for(const note of root.querySelectorAll('[data-save-note]'))note.textContent=t(storageOkay?'savedDraft':'storageError');
     for(const hint of root.querySelectorAll('[data-outline-summary]'))hint.textContent=sectionHint(hint.dataset.outlineSummary);
@@ -801,12 +1051,17 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const previousIds=new Set(view?.messages?.map(m=>m.id)||[]);
     enteringMessages=new Set(['start','message','next'].includes(body.op)?(next.messages||[]).filter(m=>!previousIds.has(m.id)&&!(m.id===`${body.requestId}-user`&&lastPendingRenderedId===`pending-${body.requestId}`)).map(m=>m.id):[]);
     const stepChanged=body.op==='tutorial-step'&&lessonStep(next)?.id!==lessonStep(view)?.id;
+    const previousCore=coreCurrent();
+    const coreAcknowledged=body.op==='core-step'&&next.coreSteps?.receipt?.requestId===body.requestId;
+    const newlyStarted=body.op==='start'&&!sameCase;
     if(stepChanged){
       controlWorkspaceUI=restoreControlWorkspaceUI();
       executionActionDraft=restoreControlActionDraft();
       controlRecipientPicker=false;controlMissing=false;
     }
     view = next; mode = next.mode || mode; confirmation = false;
+    if(body.op==='start'||body.op==='recover')choosingCase=false;
+    if(!sameCase)coreEdit='';
     if(next.seminarProgress)seminarProgress=next.seminarProgress;
     if(next.status==='complete'&&isLesson(next.journeyStage)){
       seminarProgress={...seminarProgress,exampleCompleted:true,...(next.journeyStage==='mentor'?{mentorCompleted:true}:{})};
@@ -818,10 +1073,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;}
     if (!sameCase) { deferredDocuments.clear();illustrationViewer.destroy();routingSearch='';routingTerritory='ru-77';decisionDraft = blankDecision(); followupDraft='';detailOpen=new Set();draftMessage = ''; selectedDoc = ''; tab = 'documents'; mobilePane='desk';page='reception';chatScroll={top:0,bottom:true};calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
     if (next.decision && next.status !== 'active') decisionDraft = restoreDecision(next.decision,!!next.case?.assessment);
-    if (body.op === 'document'&&!body.backgroundDocument) {selectedDoc = body.documentId; tab='documents'; mobilePane='desk';page='documents';}
+    if (body.op === 'document'&&!body.backgroundDocument) {selectedDoc = body.documentId; tab='documents'; mobilePane='desk';page=hasCore()?'reception':'documents';}
     if (body.op === 'decide'||body.op==='followup'||body.op==='control-action') {mobilePane='desk';tab='decision';page='decision';}
     if(stageChanged){page='decision';mobilePane='desk';tab='decision';notice='';responsePreview=false;pageScroll.decision=0;stageFocus=true;}
-    if (body.op === 'start') { decisionDraft = blankDecision(); draftMessage = ''; selectedDoc = ''; tab = 'documents';page='reception';calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
+    if (newlyStarted) { decisionDraft = blankDecision(); draftMessage = ''; selectedDoc = ''; tab = 'documents';page='reception';calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={}; }
     // A pending action can finish after the student has opened a source. Keep
     // that reader only for the same case and its Sources page; otherwise its
     // previous selection and scroll lock must not enter the next workspace.
@@ -850,7 +1105,20 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         if(retry.phase==='control'&&next.draftControl)pending={op:'followup',sessionId:next.id,requestId:newRequestId(),control:clone(next.draftControl)};
       }
     }else if(next.case?.assessment)decisionDraft=restoreDecision(decisionDraft,true);else delete decisionDraft.assessment;
-    if(next.case?.workbook){decisionDraft.workbook??=blankWorkbook();calendarState={...calendarState,selectedDates:{referral:decisionDraft.workbook.referralDeadline,deadline:decisionDraft.deadline},registrationTimely:decisionDraft.workbook.registrationTimely};}else delete decisionDraft.workbook;
+    if(next.case?.workbook){
+      decisionDraft.workbook??=blankWorkbook();
+      syncCoreValues(next,{applySaved:!sameCase});
+      calendarState={...calendarState,selectedDates:{referral:decisionDraft.workbook.referralDeadline,deadline:decisionDraft.deadline},
+        registrationTimely:hasCore()&&active()?calendarState.registrationTimely??null:decisionDraft.workbook.registrationTimely};
+    }else delete decisionDraft.workbook;
+    const current=coreCurrent();
+    if(hasCore()&&(coreAcknowledged||stepChanged&&current!==previousCore)){
+      coreEdit='';selectedDoc='';notice='';tab=current==='materials'?'documents':'decision';
+      if(CORE_PAGES[current]){
+        page=previousCore==='reception'&&current==='materials'?'reception':CORE_PAGES[current];
+        mobilePane='desk';pageScroll[page]=0;stageFocus=true;
+      }
+    }
     savedSessionId=next.id;savedCaseId = next.case?.id || '';markChatRead();
     if (next.status === 'complete' && next.result?.attemptId && completedNotified !== next.result.attemptId) {
       completedNotified = next.result.attemptId;
@@ -860,13 +1128,14 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
   }
   function wasCommitted(next, body) {
+    if(body.op==='core-step')return next.coreSteps?.receipt?.requestId===body.requestId;
     if(body.op==='decide')return Boolean(next.decision)||next.caseIndex!==view?.caseIndex&&next.status!=='active';
     if(body.op==='followup')return Boolean(next.control)||Boolean(next.followupChoiceId)||next.controlValidation?.requestId===body.requestId||next.status==='review'||next.status==='complete';
     if(body.op==='control-action')return next.controlActionReceipt?.requestId===body.requestId;
     if(body.op==='next')return next.status==='complete'||Boolean(view&&next.caseIndex>view.caseIndex);
     if(body.op==='message')return (next.messages||[]).some(m=>m.id===body.requestId+'-user');
     if(body.op==='mentor-question')return (next.mentorMessages||[]).some(m=>m.id===body.requestId+'-user')||next.mentorReceipt?.requestId===body.requestId;
-    if(body.op==='tutorial-step')return next.tutorialReceipt?.requestId===body.requestId||next.guidance?.receipt?.requestId===body.requestId
+    if(body.op==='tutorial-step')return next.tutorialReceipt?.requestId===body.requestId||next.guidance?.receipt?.requestId===body.requestId||next.coreSteps?.receipt?.requestId===body.requestId
       || lessonStep(next)?.id!==body.stepId||next.guidance?.finding?.requestId===body.requestId;
     if(body.op==='document')return (next.openedDocumentIds||[]).includes(body.documentId);
     return false;
@@ -902,6 +1171,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         if(buildId && next.status!=='complete' && next.context!=='seminar' && next.buildId!==buildId)throw new ReceptionAPIError('outdated-session',409);
         const waiting=body.op==='resume'&&pending?.sessionId===body.sessionId?pending:null;
         const resolved=waiting&&wasCommitted(next,waiting);
+        if(body.op==='start'&&view?.id!==next.id){
+          const saved=drafts.readSession(next.id);
+          if(saved){view=null;restoreSaved(saved);}
+        }
         acceptView(next,{...(resolved?waiting:body),backgroundDocument});
         if(resolved&&waiting.op==='document')deferredDocuments.delete(waiting.documentId);
         initial=null; if(mutation||resolved)pending=null; needsResume=false;
@@ -913,7 +1186,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         // A definitive rejection is safe to amend; an uncertain transport failure keeps its idempotency key.
         if(/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|revision|conflict|stale|busy/.test(code))needsResume=true;
         const ambiguous=/^(timeout|network|operation-in-progress|invalid-response|busy|server-error)$/.test(code)||code==='request-interrupted'&&!retry;
-        if (mutation && !retryReview && !ambiguous && (/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|busy|revision|conflict|stale|budget|limit|quota|auth|token|forbidden|not-found|not-configured|unsafe-endpoint|local-demo|profile-required|invalid-|closed|completed|locked|validation|not-active|not-reviewed|pilot-incomplete|outdated-session/.test(code)
+        if (mutation && !retryReview && !ambiguous && (/request-failed|request-interrupted|provider-unavailable|provider-invalid|unavailable|busy|revision|conflict|stale|budget|limit|quota|auth|token|forbidden|not-found|not-configured|unsafe-endpoint|local-demo|profile-required|invalid-|core-.*-required|closed|completed|locked|validation|not-active|not-reviewed|pilot-incomplete|outdated-session/.test(code)
           && !/invalid-response/.test(code))) { pending = null; if(body.op==='message'&&!draftMessage)draftMessage=body.text;if(body.op==='mentor-question'&&!mentorDraft)mentorDraft=body.text; }
       } finally {
         clearTimeout(waitingTimer);busy = false; operation = ''; restoring = false; persist(); render({scrollChat:body.op==='message'});
@@ -1035,7 +1308,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       if(!active())return;
       responsePreview=action==='preview';recipientOrderId='';persist();render();return;
     }
-    if(action==='sources'||action==='conversation'){goPage(action==='sources'?'documents':'chat');return;}
+    if(action==='sources'||action==='conversation'){
+      if(hasCore()&&action==='sources')scrollToCoreRecords();
+      else goPage(action==='sources'?'documents':'chat');
+      return;
+    }
     if(busy||pending||paused||!active())return;
     if(action==='choose-recipient'){recipientOrderId=target.dataset.orderId;routingSearch='';persist();render();return;}
     if(action==='recipient-done'){recipientOrderId='';persist();render();return;}
@@ -1050,10 +1327,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const source=responseSources().find(row=>correspondenceSourceKey(row)===key);if(!source)return;
       const candidate=source.quote||source.text||'';
       const quote=action==='use-source'?(candidate.length<=4000?candidate:''):root.querySelector(`[data-response-source-quote="${section}"]`)?.value?.trim();
+      if(!quote&&hasCore()&&action==='use-source'){notice=t('responseQuoteNeeded');render();return;}
       if(!quote){citationSelections[section]={key,quote:''};detailOpen.add('response-sources-'+section);notice=t('responseQuoteNeeded');responsePreview=false;goPage('decision');root.querySelector(`[data-response-source-quote="${section}"]`)?.focus();return;}
       update={type:'source-add',section,source:{...source,quote}};citationSelections[section]={key:'',quote:''};notice=t('responseAttached');detailOpen.add('response-sources-'+section);
     }
-    if(update){decisionDraft.correspondence=reduceCorrespondence(decisionDraft.correspondence,update);responsePreview=false;confirmation=false;error=null;persist();if(action==='use-source')goPage('decision');else render();}
+    if(update){decisionDraft.correspondence=reduceCorrespondence(decisionDraft.correspondence,update);responsePreview=false;confirmation=false;error=null;persist();if(action==='use-source'&&!hasCore())goPage('decision');else render();}
   }
   function editDecision(target) {
     const field=target.dataset.decision;if(!field||!active())return;
@@ -1089,6 +1367,19 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const change = event => {
     if(handleControlIntent(event.target,{changed:true}))return;
     if(handleResponseInput(event.target,true))return;
+    if(hasCore()&&active()&&event.target.matches('[data-core-registration]')){
+      if(busy||pending||paused)return;
+      calendarState={...calendarState,registrationTimely:event.target.value==='true'};
+      decisionDraft.workbook.registrationTimely=calendarState.registrationTimely;
+      calendar.update({state:calendarState});persist();updateCoreButton();return;
+    }
+    if(hasCore()&&active()&&event.target.matches('[data-core-disposition]')){
+      if(busy||pending||paused)return;
+      const routing=decisionDraft.workbook.routing;
+      routing.disposition=event.target.value;
+      if(routing.disposition==='internal')routing.recipientIds=[];
+      persist();render();return;
+    }
     if(event.target.matches('[data-routing-territory]')&&(active()||controlRecipientPicker)){routingTerritory=event.target.value;render();return;}
     if(event.target.matches('[data-routing-recipient]')&&controlRecipientPicker&&view?.status==='followup'){
       if(busy||pending||paused)return;
@@ -1096,6 +1387,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       persist();render();return;
     }
     if(event.target.matches('[data-routing-recipient]')&&active()&&view.case.workbook){
+      if(busy||pending||paused)return;
       if(correspondenceMode()&&recipientOrderId){decisionDraft.correspondence=reduceCorrespondence(decisionDraft.correspondence,{type:'order-recipient',id:recipientOrderId,recipientId:event.target.value,selected:event.target.checked});}
       else{decisionDraft.workbook??=blankWorkbook();const ids=decisionDraft.workbook.routing.recipientIds,limit=view.case.workbook.recipientLimit===2?2:1,id=event.target.value;decisionDraft.workbook.routing.recipientIds=event.target.checked?(limit===1?[id]:[...new Set([...ids,id])].slice(0,limit)):ids.filter(value=>value!==id);}
       confirmation=false;persist();render();return;
@@ -1124,7 +1416,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const step=lessonStep(view), answer=lessonAnswer();
     if(!step||step.page!==page)return;
     let target;
-    if(view.journeyStage==='mentor'&&['draft','control'].includes(step.action)){
+    if((view.journeyStage==='mentor'||hasCore())&&['draft','control'].includes(step.action)){
       sampleComparison=!sampleComparison;target='[data-tutorial-comparison]';
     }else if(step.action==='draft'&&answer){
       decisionDraft=restoreDecision(answer);
@@ -1152,7 +1444,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(!step||page!==step.page||payload.choiceId&&!step.choices.some(choice=>choice.id===payload.choiceId))return;
     await perform({op:'tutorial-step',sessionId:view.id,requestId:newRequestId(),expectedRevision:view.revision,stepId:step.id,...payload});
     if(error||pending)return;
-    const focus=root.querySelector('#rxtGuideTitle');
+    const focus=root.querySelector('[data-core-heading], #rxtGuideTitle');
     focus?.focus({preventScroll:true});focus?.scrollIntoView({block:'nearest',behavior:'instant'});
   }
   const submit = event => {
@@ -1168,6 +1460,20 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(event.target.matches('[data-chat-form]')){event.preventDefault();void sendMessage();}
     if(event.target.matches('[data-decision-form]')){
       event.preventDefault();if(busy||pending||paused||!active())return;
+      if(hasCore()){
+        if(coreInView()!=='draft')return;
+        const draft=decisionDraft.correspondence;
+        const missing=[['subject',draft.subject],...Object.entries(draft.sections).map(([id,value])=>['sections.'+id,value])]
+          .find(([,value])=>!value.trim());
+        if(missing){
+          notice='';error=new ReceptionAPIError('core-draft-incomplete');responsePreview=false;render();
+          const field=root.querySelector(`[data-response-field="${missing[0]}"]`);
+          field?.scrollIntoView({block:'center'});field?.focus({preventScroll:true});return;
+        }
+        if(mentorWork('draft'))void chooseTutorialStep({decision:clone(decisionDraft)});
+        else if(!tutorial())void perform({op:'decide',sessionId:view.id,expectedRevision:view.revision,decision:clone(decisionDraft),requestId:newRequestId()});
+        return;
+      }
       if(mentorWork('draft')){void chooseTutorialStep({decision:clone(decisionDraft)});return;}
       if(tutorial())return;
       const missing=incompleteDecision();
@@ -1236,12 +1542,49 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const illustration=caseIllustrations(view.case.id,view.documents||[]).find(item=>item.id===target.dataset.id);
       illustrationViewer.open(illustration,{locale,trigger:target});return;
     }
-    if(action==='page'){goPage(target.dataset.page);return;}
+    if(action==='choose-case'&&seminar){reader.close();choosingCase=true;mentorOpen=false;persist();render();return;}
+    if(action==='close-case-picker'){choosingCase=false;persist();render();return;}
+    if(action==='core-go'&&hasCore()){goCore(target.dataset.step);return;}
+    if(action==='core-records'&&hasCore()){scrollToCoreRecords();return;}
+    if(action==='core-sources'&&hasCore()){goCore('materials');return;}
+    if(action==='core-opening'&&hasCore()){
+      const step=coreCurrent();
+      if(step==='reception'&&tutorial()){
+        if(!busy&&!pending&&!paused){
+          await chooseTutorialStep({choiceId:'role'});
+          if(coreCurrent()==='materials')scrollToCoreRecords();
+        }
+      }else if(step==='materials')scrollToCoreRecords();
+      else goCore(step);
+      return;
+    }
+    if(action==='core-step'&&hasCore()&&active()){
+      const stepId=target.dataset.step;
+      if(busy||pending||paused||stepId!==coreInView()||page!==CORE_PAGES[stepId])return;
+      const payload=corePayload(stepId);if(!payload)return;
+      if(tutorial())await chooseTutorialStep(payload);
+      else await perform({op:'core-step',sessionId:view.id,stepId,requestId:newRequestId(),expectedRevision:view.revision,...payload});
+      return;
+    }
+    if(action==='page'){
+      const requestedPage=target.dataset.page;
+      if(choosingCase)return;
+      if(hasCore()){
+        const requestedStep={documents:'materials',calendar:'calendar',route:'route'}[requestedPage];
+        if(requestedStep&&active()&&(requestedStep===coreCurrent()||coreIsEditable(requestedStep))){
+          goCore(requestedStep);return;
+        }
+        if(requestedPage!==CORE_PAGES[coreEdit])leaveCoreEdit();
+      }
+      goPage(requestedPage);return;
+    }
     if(action==='chat'){goPage('chat');return;}
     if(action==='continue'){goPage(active()?'chat':'decision');return;}
     if(action==='tab'||action==='workspace'){
       const selected=target.dataset.tab||target.dataset.panel;
       if(!['documents','sources','decision'].includes(selected))return;
+      if(hasCore()&&selected==='documents'){reader.close();selectedDoc='';scrollToCoreRecords();return;}
+      if(hasCore()&&selected==='sources'){goCore('materials');return;}
       reader.close();selectedDoc='';tab=selected;goPage(selected==='decision'?'decision':'documents');return;
     }
     if(action==='edit-section'){const section=target.dataset.section;if(!['facts','routing','actions','law','research','trap','calendar'].includes(section))return;const key='assessment-'+section;detailOpen.add(key);const details=root.querySelector(`[data-details="${key}"]`);if(details){details.open=true;details.querySelector('input,select,textarea')?.focus({preventScroll:true});details.scrollIntoView({block:'start',behavior:'instant'});}persist();return;}
@@ -1250,16 +1593,20 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(action==='documents-list'){selectedDoc='';persist();render();return;}
     if((action==='document'||action==='document-mark')&&view&&(view.documents||[]).some(doc=>doc.id===target.dataset.id)){
       reader.close();
-      selectedDoc=target.dataset.id;tab='documents';mobilePane='desk';page='documents';
+      selectedDoc=target.dataset.id;tab='documents';mobilePane='desk';page=hasCore()?'reception':'documents';
       if(active()&&!(view.openedDocumentIds||[]).includes(selectedDoc))deferredDocuments.add(selectedDoc);
       persist();render();
+      if(hasCore()){
+        const heading=root.querySelector('[data-core-records] .rxa-document h3');
+        heading?.scrollIntoView({block:'nearest',behavior:'instant'});
+      }
       await registerDocuments();
       return;
     }
     if(busy||paused||recoverBusy)return;
     if(action==='load-catalog'){await loadCatalog();return;}
     if(action==='recover'){await recoverSession();return;}
-    if(action==='resume-session'&&!pending){persist();const saved=drafts.readSession(target.dataset.id);restoreSaved(saved);view=null;initial=saved;page='reception';await perform({op:'resume',sessionId:target.dataset.id});return;}
+    if(action==='resume-session'&&!pending){persist();const saved=drafts.readSession(target.dataset.id);restoreSaved(saved);choosingCase=false;view=null;initial=saved;page='reception';await perform({op:'resume',sessionId:target.dataset.id});return;}
     if(action==='remove-reference'&&active()){selectedReferences=selectedReferences.filter(item=>item.id!==target.dataset.id);persist();render();return;}
     if(action==='use-reference'&&!gameplayContext&&active()){const reference=selectedReferences.find(item=>item.id===target.dataset.id);if(reference){applyReference(reference);render();}return;}
     if(action==='retry'&&pending){await perform(clone(pending),{retry:true});return;}
@@ -1289,14 +1636,15 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     if(action==='start-journey'&&seminar){
       const journeyStage=target.dataset.stage;
-      if(journeyStage!==nextJourneyStage(seminarProgress)||journeyStage==='independent'&&!canIndependent())return;
+      if(journeyStage!=='example'&&!seminarProgress.exampleCompleted||
+        journeyStage==='independent'&&(!seminarProgress.mentorCompleted||!canIndependent()))return;
       const mode=journeyStage==='independent'?'independent':'training';
       await perform({op:'start',studentKey:backend?.getProfile?.()?.studentKey||options.studentKey,mode,journeyStage,locale,requestId:newRequestId()});return;
     }
     if(action==='tutorial-sample'&&tutorial()){showTutorialSample();return;}
     if(action==='tutorial-choice'&&tutorial()){await chooseTutorialStep({choiceId:target.dataset.choice});return;}
     if(action==='mentor-check-action'&&mentorActions()){await chooseTutorialStep({confirmOwn:true});return;}
-    if(action==='mentor-use-sample'&&(mentorWork('draft')||mentorWork('control-memo')||mentorActions())){
+    if(action==='mentor-use-sample'&&(!hasCore()||view.journeyStage==='mentor')&&(mentorWork('draft')||mentorWork('control-memo')||mentorActions())){
       await chooseTutorialStep({useExample:true});return;
     }
     if(action==='mentor-open-work'){
@@ -1346,7 +1694,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     restore:async({state:saved,checkpointRef},{signal}={})=>{if(saved.version!==VERSION||checkpointRef.id!==(view?.id||'reception-ai-start'))return {status:'blocked',code:'incompatible'};tab=saved.tab;selectedDoc=saved.selectedDoc;page=workspacePages.includes(saved.page)?saved.page:'reception';mobilePane=page==='chat'?'chat':'desk';render();await restoreUpdateView(root,saved.view,{signal});return {status:'restored',code:'ok'};},
   });
   const cleanup = () => {
-    if(disposed)return Promise.resolve();persist();disposed=true;clearTimeout(waitingTimer);updateAdapter?.destroy();reader.destroy();calendar.destroy();media.destroy();illustrationViewer.destroy();lifetime.abort();options.signal?.removeEventListener('abort',stop);
+    if(disposed)return Promise.resolve();persist();disposed=true;clearTimeout(waitingTimer);updateAdapter?.destroy();tour.destroy();reader.destroy();calendar.destroy();media.destroy();illustrationViewer.destroy();lifetime.abort();options.signal?.removeEventListener('abort',stop);
     owners.delete(presentationToken);if(!owners.size){body.classList.remove('reception-immersive');presentationOwners.delete(body);}
     root.removeEventListener('input',input);root.removeEventListener('change',change);root.removeEventListener('submit',submit);root.removeEventListener('keydown',keydown);root.removeEventListener('click',click);
     root.removeEventListener('toggle',toggle,true);

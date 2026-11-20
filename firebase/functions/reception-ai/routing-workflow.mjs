@@ -4,6 +4,48 @@ import {ReceptionError} from './schema.mjs';
 
 const ID = /^[a-z0-9][a-z0-9-]{0,255}$/;
 const canonicalId = id => Object.hasOwn(ROUTING_AUTHORITY_ALIASES,id) ? ROUTING_AUTHORITY_ALIASES[id] : id;
+const INTERNAL_PATHS = new Set(['reception-unit','independent-review','court-guidance','clarify-environment']);
+// Here the receiving organization already has authority, or its job is to
+// explain a filing path to the applicant. The directory ID still describes
+// the substantive route and is preserved for legacy workbooks.
+const internalByRecipient = {
+  'mos-nizhegorodsky-council':'budget',
+  'info-holder':'budget-link budget-partial budget-published',
+  'fas-at-site':'ads-channel-scope ads-service-message ads-withdrawal-time beer-distance beer-online-agegate',
+  'fssp-office':'bailiff-copy-decision bailiff-specific-petition',
+  'fssp-superior':'bailiff-subordination bailiff-unsigned-complaint',
+  'deciding-court':'court-installments court-order-objections court-typo-not-merits',
+  'git-employer':'driver-planned-extension driver-split-break driver-waiting-work salary-gross-net salary-late-compensation',
+  'git-moscow':'salary-documents-request',
+  'registry-office':'egrn-letter egrn-rights-dispute egrn-source-plan',
+  'education-verify':'education-register',
+  'rostransnadzor':'flight-weather-care',
+  'carrier':'flight-claim',
+  'rpn-consumer-at-site':'food-manufactured-date food-no-receipt-refund',
+  'guard-oversight':'guard-contractor guard-current-register guard-identification-request guard-property-inspection',
+  'regional-heritage':'heritage-approved-restoration heritage-identified-status heritage-license-not-permit',
+  'mfc-manager':'mfc-delay mfc-refusal',
+  'mfc-founder':'mfc-institution',
+  'mos-utilities':'noise-emergency-work',
+  'medical-clinic':'oms-free-slot',
+  'medical-authority':'oms-other-region',
+  'customs-office':'parcel-customs-notice',
+  'postal-operator':'parcel-damaged-delivery',
+  'personal-data-operator':'privacy-own-record privacy-restricted-access',
+  'duty-service':'hatch hatch-location',
+  'phyto-office':'seedlings-batch seedlings-electronic seedlings-lab-not-certificate',
+  'sfr-office':'sickpay-data sickpay-refusal-notice',
+  'road-owner':'sidewalk-restoration sidewalk-safe-detour sidewalk-updated-permit',
+  'municipal-signs':'sign-night-measurement sign-promotion',
+  'transport-local':'signal-night-fault signal-other-crossing signal-timing-proposal signal-visibility',
+  'tax-office':'tax-amended-declaration tax-calendar-months tax-explanations-only tax-simplified-statement',
+  'green-local':'trees-permit-matches trees-pruning-scope',
+};
+const internalCases = Object.fromEntries(Object.entries(internalByRecipient).map(([id,cases])=>[id,new Set(cases.split(' '))]));
+export function isInternalRoutingPath(caseId,id) {
+  const authority=canonicalId(id);
+  return INTERNAL_PATHS.has(authority)||Boolean(internalCases[authority]?.has(caseId));
+}
 const STREETS = [
   ['Садовая','Sadovaya','花园'], ['Лесная','Lesnaya','森林'],
   ['Центральная','Tsentralnaya','中央'], ['Школьная','Shkolnaya','学校'],
@@ -46,18 +88,24 @@ export function publicRoutingWorkflow(caseId,{gameplay=false}={}) {
 }
 
 export function validateRoutingWorkflowDecision(value) {
-  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => key !== 'recipientIds')) throw new ReceptionError('invalid_decision');
-  const {recipientIds} = value;
+  if (!value || typeof value !== 'object' || Array.isArray(value) || Object.keys(value).some(key => !['recipientIds','disposition'].includes(key))) throw new ReceptionError('invalid_decision');
+  const {recipientIds,disposition} = value;
   if (!Array.isArray(recipientIds) || recipientIds.length > 2 || recipientIds.some(id => typeof id !== 'string' || !ID.test(id) || !ROUTING_AUTHORITY_IDS.has(id)) ||
       new Set(recipientIds.map(canonicalId)).size !== recipientIds.length) throw new ReceptionError('invalid_decision');
-  return {recipientIds:[...recipientIds]};
+  if (disposition!==undefined && !(disposition==='internal' && !recipientIds.length ||
+    disposition==='forward' && recipientIds.length)) throw new ReceptionError('invalid_decision');
+  return {recipientIds:[...recipientIds],...(disposition?{disposition}:{})};
 }
 
 export function evaluateRoutingWorkflow(caseId, value) {
   if (!Object.hasOwn(ROUTING_RECIPIENTS, caseId)) return null;
-  const {recipientIds} = validateRoutingWorkflowDecision(value);
+  const {recipientIds,disposition} = validateRoutingWorkflowDecision(value);
   const variants = ROUTING_RECIPIENTS[caseId];
   const chosen = recipientIds.map(canonicalId);
-  const matching = variants.find(ids => ids.length === chosen.length && ids.every(id => chosen.includes(id)));
+  const matching = variants.find(ids=>{
+    const internal=ids.every(id=>isInternalRoutingPath(caseId,id));
+    if(disposition==='internal')return internal;
+    return !(disposition==='forward'&&internal)&&ids.length===chosen.length&&ids.every(id=>chosen.includes(id));
+  });
   return {correct:Boolean(matching),expectedRecipients:(matching || variants[0]).map(id => ROUTING_AUTHORITIES[id])};
 }

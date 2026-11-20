@@ -497,12 +497,21 @@ try{
   stage='seminar-and-optimistic-chat';
   await page.evaluate(()=>sessionStorage.setItem('qa.reception.release','d'.repeat(32)));
   await page.setViewportSize({width:390,height:844});
+  // Resume the actual older seminar format after updating the client. The new
+  // example/mentor/scored lobby is exercised by the guided tutorial browser suite.
+  await page.goto(origin+'/apps/reception/ai/config.js');
+  const seminar=await page.evaluate(async()=>{
+    const start={op:'start',context:'seminar',mode:'training',locale:'ru',workbookVersion:2,requestId:'old-seminar-chat'};
+    const response=await fetch('/api/reception',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(start)});
+    const {view,error}=await response.json();if(!view)throw Error(error?.code||'Old session unavailable');
+    const owner='reception-repair-qa';
+    localStorage.setItem('rudn.reception.workspace.v2:'+owner+':'+encodeURIComponent('/api/reception')+':current',
+      JSON.stringify({owner,version:'reception-ai-ui-v1',sessionId:view.id,mode:view.mode,status:view.status}));
+    return view;
+  });
   await page.goto(origin+'/__qa/reception.html?context=seminar',{waitUntil:'networkidle'});await idle();
-  assert.equal(await page.locator('[name="trainingCaseId"],[name="trainingLevel"],[name="caseSearch"]').count(),0);
-  assert.equal(await page.locator('[name="mode"][value="training"]').count(),1);
-  assert.equal(await page.locator('[name="mode"][value="independent"]').count(),1);
-  const seminar=await apiResponse('start',()=>page.locator('[data-action="start"]').click());
   assert.equal(seminar.context,'seminar');assert.equal(seminar.caseCount,1);
+  assert.equal(await page.locator('[name="trainingCaseId"],[name="trainingLevel"],[name="caseSearch"]').count(),0);
   await navigate('chat');
   let releaseMessage;
   const heldMessage=new Promise(resolve=>{releaseMessage=resolve;});

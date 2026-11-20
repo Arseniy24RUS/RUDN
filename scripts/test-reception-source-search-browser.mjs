@@ -45,7 +45,13 @@ try {
     await page.route('**/*',route=>route.request().url().startsWith(origin)?route.continue():route.abort());
     const errors=[];
     page.on('pageerror',error=>errors.push(String(error)));
-    page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+    page.on('console',message=>{
+      // System media widgets in macOS WebKit can emit missing native-icon
+      // messages without an application stack or a failed reader resource.
+      const nativeMediaIcon = engine==='webkit' && process.platform==='darwin' &&
+        /^Button failed to load, iconName = [\w-]+, layoutTraits = \[MacOSLayoutTraits Inline\], src = blob:http:\/\/127\.0\.0\.1:\d+\/[a-f0-9-]+$/.test(message.text());
+      if(message.type()==='error'&&!nativeMediaIcon)errors.push(message.text());
+    });
     const key=`${width}x${height}-text${textScale}`;
     try {
       const response=await page.goto(`${origin}/__qa/reception.html?context=free&lang=${locale}`,{waitUntil:'domcontentloaded'});

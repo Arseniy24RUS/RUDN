@@ -98,6 +98,17 @@ export function publicCorrespondenceSources(c,state,locale='ru',{includeFollowup
   return [...documents,...dialogue,...execution];
 }
 
+export function validateCorrespondenceCitation(citation) {
+  keys(citation,['id','section','kind','sourceId','unitIds','quote']);
+  if(!CORRESPONDENCE_SECTIONS.includes(citation.section)||!['document','dialogue','legal'].includes(citation.kind))reject();
+  const row={id:id(citation.id),section:citation.section,kind:citation.kind,sourceId:id(citation.sourceId),quote:boundedText(citation.quote,4000,{empty:false})};
+  if(citation.kind==='legal'){
+    row.unitIds=array(citation.unitIds,40).map(value=>id(value));
+    if(!row.unitIds.length||!unique(row.unitIds))reject('invalid_citation');
+  }else if(citation.unitIds!==undefined)reject('invalid_citation');
+  return row;
+}
+
 /** Only syntax and bounds. No character counts, keywords or prose similarity earn points. */
 export function validateCorrespondence(value,c,state,locale='ru') {
   keys(value,['version','kind','subject','sections','citations','orders']);
@@ -107,16 +118,8 @@ export function validateCorrespondence(value,c,state,locale='ru') {
   for(const section of CORRESPONDENCE_SECTIONS)out.sections[section]=boundedText(value.sections[section],6000);
   if(Object.values(out.sections).join('').length>24000)reject();
   for(const citation of array(value.citations,20)){
-    keys(citation,['id','section','kind','sourceId','unitIds','quote']);
-    if(!CORRESPONDENCE_SECTIONS.includes(citation.section)||!['document','dialogue','legal'].includes(citation.kind))reject();
-    const row={id:id(citation.id),section:citation.section,kind:citation.kind,sourceId:id(citation.sourceId),quote:boundedText(citation.quote,4000,{empty:false})};
-    if(citation.kind==='legal'){
-      row.unitIds=array(citation.unitIds,40).map(value=>id(value));
-      if(!row.unitIds.length||!unique(row.unitIds))reject('invalid_citation');
-    }else{
-      if(citation.unitIds!==undefined)reject('invalid_citation');
-      if(!citationSource(c,state,row,locale))reject('invalid_citation');
-    }
+    const row=validateCorrespondenceCitation(citation);
+    if(row.kind!=='legal'&&!citationSource(c,state,row,locale))reject('invalid_citation');
     out.citations.push(row);
   }
   if(!unique(out.citations.map(citation=>citation.id)))reject('invalid_citation');

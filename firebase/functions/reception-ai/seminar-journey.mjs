@@ -1,10 +1,10 @@
 import {readFileSync} from 'node:fs';
 import {copy, fail, localized} from './schema.mjs';
 import {evaluateWorkbook, WORKBOOK_VERSION} from './workbook.mjs';
-import {evaluateRoutingWorkflow} from './routing-workflow.mjs';
+import {evaluateRoutingWorkflow,isInternalRoutingPath} from './routing-workflow.mjs';
 import {CORRESPONDENCE_WEIGHTS} from './correspondence.mjs';
 import {applyControlAction, validateControlSubmission} from './control-workflow.mjs';
-import {acceptableLegalProvisions, applicableLegalUnits} from './normative-acts.mjs';
+import {acceptableLegalProvisions, applicableLegalUnits, requiredSeminarExamples} from './normative-acts.mjs';
 
 export const JOURNEY_STAGES = Object.freeze(['example', 'mentor', 'independent']);
 export const SEMINAR_EXAMPLE = Object.freeze({caseId:'complaint-routing', datePackId:'a'});
@@ -106,7 +106,7 @@ function preparedLegalCitation(c) {
   return null;
 }
 
-function walkthroughReply(c, deadline, language) {
+function walkthroughReply(c, deadline, language, compact) {
   const name=localized(c.public.citizen.name,language);
   const date=new Intl.DateTimeFormat({ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[language],{
     day:'numeric',month:'long',year:'numeric',timeZone:'UTC'
@@ -131,10 +131,28 @@ function walkthroughReply(c, deadline, language) {
       `We will send you a written reply by ${date} at the correspondence address you provided. It will explain what the review established and the decision on each point in your complaint.`,
       `我们将在${date}前（含当日）按您在来信中提供的通信地址寄送书面答复，说明核实的事实以及对各项投诉理由作出的决定。`)
   };
-  return {kind:'reply',subject:localized(subject,language),sections:localized(sections,language)};
+  const concise={
+    facts:T(
+      'Вы сообщаете, что начальник отдела оставил без рассмотрения доводы вашего обращения.',
+      'You report that the division head did not address the points raised in your appeal.',
+      '您反映处长没有审查您来信中的理由。'),
+    legalBasis:T(
+      'По ч. 6 ст. 8 № 59-ФЗ жалобу рассматривает руководитель департамента. Для проверки он запрашивает документы по ст. 10 того же закона.',
+      'Under Article 8(6) of Federal Law No. 59-FZ, the department director will review the complaint. Article 10 authorises the director to obtain the records needed for review.',
+      '根据第59-FZ号联邦法律第8条第6款，由部门负责人审查投诉，并根据该法第10条调取材料。'),
+    resolution:T(
+      'Руководитель сопоставит прежнее обращение, ответ и регистрационную карточку с объяснением начальника отдела.',
+      'The director will compare the earlier appeal, reply and registration record with the division head’s explanation.',
+      '部门负责人将比对原来信、答复、登记记录及处长说明。'),
+    nextSteps:T(
+      `Направим мотивированный ответ по каждому доводу до ${date}.`,
+      `We will send a written response addressing each point by ${date}.`,
+      `我们将在${date}前发出书面答复，逐项说明理由。`)
+  };
+  return {kind:'reply',subject:localized(subject,language),sections:localized(compact?concise:sections,language)};
 }
 
-function presentation(c, profile, language) {
+function presentation(c, profile, language, core) {
   const local = value => localized(value, language) || '';
   const refs = (c.rubric.evidenceGroups || []).flat();
   const docs = [...new Set(refs)].map(id => c.documents.find(doc => doc.id === id)).filter(Boolean);
@@ -148,7 +166,7 @@ function presentation(c, profile, language) {
   const recipientText = c.id===SEMINAR_EXAMPLE.caseId
     ? local(T('Руководитель или независимое уполномоченное подразделение','Director or independent authorised unit','负责人或独立授权部门'))
     : recipients.length?recipients.map(recipient=>local(recipient.name)).join(' / ')
-      : local(T('Оставьте поле направления пустым.','Leave the referral recipient blank.','将转送接收方留空。'));
+      : local(T('Рассмотрите обращение внутри органа.','Review the appeal within the authority.','由本机关内部审查来信。'));
   const workbook = {referralDeadline:'', registrationTimely:false, routing:{recipientIds}};
   const calculation=tutorialOperational(c,{deadline:'',workbook}).workbook.calendar;
   const {expected}=calculation;
@@ -163,23 +181,26 @@ function presentation(c, profile, language) {
   const timetable = [local(referralText),local(deadlineText),registrationText].filter(Boolean).join(' ');
   const legalExplanation = [local(legal?.explanation),local(legal?.expectedApplication)].filter(Boolean).join(' ') || ruling;
   const sections = {
-    facts:[...facts,ruling].filter(Boolean).join('\n\n'),
+    facts:(core&&facts.length?facts:[...facts,ruling]).filter(Boolean).join('\n\n'),
     legalBasis:legalExplanation,
-    resolution:[recipientText,...actions].filter(Boolean).join('\n'),
+    resolution:[recipientText,...(core?actions.slice(0,2):actions)].filter(Boolean).join('\n'),
     nextSteps:[timetable,local(profile.criteria?.nextSteps?.rightsAction?.text),
       ...(profile.criteria?.nextSteps?.monitoringActions || []).map(action=>local(action.text))].filter(Boolean).join('\n')
   };
   const citations = docs.slice(0,8).map((doc,index) => ({id:`evidence-${index+1}`,section:'facts',kind:'document',sourceId:doc.id,
     quote:local(doc.text).trim().slice(0,4000)})).filter(citation=>citation.quote);
-  const law=preparedLegalCitation(c);
-  if(law)citations.push(law);
+  if(core)citations.push(...requiredSeminarExamples(c));
+  else{
+    const law=preparedLegalCitation(c);
+    if(law)citations.push(law);
+  }
   const orders=c.id===SEMINAR_EXAMPLE.caseId?[{
     id:'independent-review',issue:profile.issues[0].id,kind:'review',recipientIds,dueDate:expected.deadline,
     instruction:local(T('Самостоятельно рассмотреть доводы жалобы. Запросить у отдела прежнее обращение, ответ и регистрационную карточку, сопоставить их с объяснением начальника.','Independently review the allegations. Request the prior appeal, reply and registration record, then compare them with the department head’s explanation.','独立审查投诉理由。调取此前来信、答复及登记记录，并与部门主管的说明进行核对。')),
     expectedResult:local(T('Мотивированное решение руководителя по каждому доводу и подтверждение отправки ответа заявителю.','A reasoned decision by the director on each point and proof that a reply was sent to the applicant.','由负责人就各项理由作出有根据的决定，并保留给申请人发送答复的凭证。')),
     citationIds:citations.map(citation=>citation.id)
   }]:[];
-  const reply=c.id===SEMINAR_EXAMPLE.caseId ? walkthroughReply(c,expected.deadline,language) : {
+  const reply=c.id===SEMINAR_EXAMPLE.caseId ? walkthroughReply(c,expected.deadline,language,core) : {
     kind:profile.acceptedKinds?.[0]||'reply',subject:local(c.public.title).slice(0,240),sections
   };
   const decision = {deadline:expected.deadline,workbook,correspondence:{version:1,...reply,citations,orders}};
@@ -202,10 +223,10 @@ export function walkthroughControlProfile(c, profile) {
   return prepared;
 }
 
-export function tutorialGuide(c, profile, language, {execution=false}={}) {
+export function tutorialGuide(c, profile, language, {execution=false,core=false}={}) {
   const text = key => localized(copyText[key],language);
   const local = value => localized(value,language) || '';
-  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText} = presentation(c,profile,language);
+  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText} = presentation(c,profile,language,core);
   const roleExplanation=c.id===SEMINAR_EXAMPLE.caseId
     ? local(T('Вы готовите материалы для руководителя департамента. Жалоба касается начальника отдела. В карточке выделите предмет жалобы и проверьте, кто вправе её рассматривать. Затем решите, кому направить материалы.',
       'You prepare the file for the department director. The complaint concerns the division head. Identify the subject of the complaint and check who has authority to review it. Then decide who should receive the records.',
@@ -236,6 +257,29 @@ export function tutorialGuide(c, profile, language, {execution=false}={}) {
     {id:'review',panel:'decision',action:'review',title:text('review'),prompt:text('reviewPrompt'),
       explanation:text('reviewExplanation'),choices:choose(['draft-only','verified'],'verified',[text('justDraft'),text('reviewResult')])}
   ];
+  if(core){
+    const reception=steps[0];
+    reception.prompt=local(T('Прочитайте обращение и свои полномочия.','Read the appeal and check your authority.','阅读来信并核对自身职权。'));
+    reception.choices=reception.choices.filter(choice=>choice.id==='role');
+    steps.splice(1,1);
+    const materials=steps.find(step=>step.id==='materials');
+    materials.action='legal';
+    materials.prompt=local(T('Откройте правовой источник и выделите фрагмент статьи или пункта.','Open the legal source and select a passage from an article or clause.','打开法规来源并选中具体条款。'));
+    materials.choices=[];
+    const calendar=steps.find(step=>step.id==='calendar');
+    calendar.prompt=local(T('Выберите рассчитанные даты в календаре.','Select the calculated dates in the calendar.','在日历中选择计算出的日期。'));
+    calendar.choices=[];
+    const routing=decision.workbook.routing;
+    decision.workbook.routing=routing.recipientIds.every(id=>isInternalRoutingPath(c.id,id))
+      ? {recipientIds:[],disposition:'internal'} : {...routing,disposition:'forward'};
+    const draft=steps.find(step=>step.id==='draft');
+    draft.prompt=local(T('Кратко изложите факты, правовое основание, решение и следующий шаг.','Briefly state the facts, legal grounds, decision and next step.','简述事实、法律依据、处理决定和下一步。'));
+    draft.choices=[];
+    steps.splice(steps.indexOf(draft),0,{id:'route',panel:'route',action:'route',
+      title:local(T('Маршрут','Route','办理路径')),
+      prompt:local(T('Выберите рассмотрение внутри органа или укажите адресата пересылки.','Choose internal review or select the referral recipient.','选择内部审查或确定转送对象。')),
+      explanation:recipientText,choices:[]});
+  }
   const statuses = profile.control?.expectedStatuses || [];
   const control = {text:initialControl,
     statuses:statuses.map(row=>({issueId:row.issueId,status:row.allowedStatuses[0],evidenceSourceIds:['followup']}))};
@@ -245,16 +289,16 @@ export function tutorialGuide(c, profile, language, {execution=false}={}) {
 export function publicTutorialGuide(guide, session) {
   const state = session.caseStates[session.caseIndex], example = session.journeyStage==='example';
   const stepIndex = state.tutorialStepIndex || 0;
-  const actions=example?null:tutorialExecutionKinds(guide.steps[stepIndex]?.id);
+  const actions=example&&!session.coreStepsVersion?null:tutorialExecutionKinds(guide.steps[stepIndex]?.id);
   return {stepIndex,...(actions?{allowedControlActions:actions}:{}),steps:guide.steps.map(({choices,explanation,...step},index)=>{
     const visited = index <= stepIndex;
     const correctChoiceId = choices.find(choice=>choice.correct)?.id;
     return {...step,
-      ...(visited ? {choices:choices.map(({id,label})=>({id,label}))} : {}),
+      ...(visited && choices.length ? {choices:choices.map(({id,label})=>({id,label}))} : {}),
       ...(visited && (example || index < stepIndex) ? {explanation,correctChoiceId} : {})};
   }), ...(state.tutorialFinding ? {finding:state.tutorialFinding} : {}),
     ...(state.tutorialWorkFeedback ? {workFeedback:state.tutorialWorkFeedback} : {}),
-  ...(stepIndex>=2 ? {decision:guide.decision} : {}),
+  ...(stepIndex>=(session.coreStepsVersion?1:2) ? {decision:guide.decision} : {}),
     ...(guide.steps.some((step,index)=>step.action==='control'&&index<=stepIndex)&&session.status!=='active'
       ? {control:state.control||(state.controlWorkflow?controlMemo(state.controlWorkflow,guide,session.locale):guide.control)} : {})};
 }

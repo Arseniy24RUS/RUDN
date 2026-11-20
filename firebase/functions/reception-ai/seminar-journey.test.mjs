@@ -4,7 +4,7 @@ import {createReceptionService} from './service.mjs';
 import {createFirebaseResultWriter} from './firebase.mjs';
 import {createMemoryStore} from './store.mjs';
 import {hash} from './schema.mjs';
-import {exactCaseScore, seminarPointsAt, tutorialGuide, SEMINAR_GRADING_VERSION} from './seminar-journey.mjs';
+import {exactCaseScore, seminarPointsAt, tutorialGuide, validatedTutorialMemo, SEMINAR_GRADING_VERSION} from './seminar-journey.mjs';
 import {resolveLegalCitation} from './correspondence-legal-sources.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
@@ -19,7 +19,7 @@ const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
 const journal='rudn-platform/v1/grades/'+learner.studentKey+'/seminar-5';
 const attemptPath=id=>'rudn-platform/v1/attempts/'+learner.studentKey+'/'+id;
 
-function fixture({store=createMemoryStore(),caseIds,reviews=[]}={}) {
+function fixture({store=createMemoryStore(),caseIds,reviews=[],guidedSeminarCore=false}={}) {
   const cases=createSyntheticReceptionCases().filter(c=>!caseIds||caseIds.includes(c.id));
   const example=cases.find(c=>c.id==='complaint-routing');
   example.datePackId='a';
@@ -43,7 +43,7 @@ function fixture({store=createMemoryStore(),caseIds,reviews=[]}={}) {
     const result=await store.transaction(path,update);
     return {snapshot:{val:()=>result.value}};
   }})};
-  const create=()=>createReceptionService({store,cases,provider,correspondenceProfiles:executionQAProfiles,requireGameplay:true,
+  const create=()=>createReceptionService({store,cases,provider,correspondenceProfiles:executionQAProfiles,requireGameplay:true,guidedSeminarCore,
     saveResult:createFirebaseResultWriter(db),clock:()=>Date.UTC(2026,10,20)});
   const handle=create().handle;
   const start=(stage,requestId,identity=learner)=>handle(startBody(stage,requestId),identity);
@@ -56,7 +56,7 @@ function fixture({store=createMemoryStore(),caseIds,reviews=[]}={}) {
   };
   async function guide(view){
     const c=(await store.get('sessions/'+view.id)).caseData[0];
-    return tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true});
+    return tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true,core:Boolean(view.coreStepsVersion)});
   }
   return {store,handle,start,send,recover,finish,answer,guide,calls,reviewCalls};
 }
@@ -368,4 +368,166 @@ test('new independent receipts use exact thresholds and monotonic grade and pres
   assert.equal((await h.store.get(ledger)).points,4);
   assert.equal(exactCaseScore({score:80,correspondence:{phase:'initial',rawScore:95,cap:60}}),60);
   for(const [s,points] of [[0,0],[100,5],[70,3],[80,4],[90,5]])assert.equal(seminarPointsAt(s),points);
+});
+
+const coreCalendar = decision => ({deadline:decision.deadline,referralDeadline:decision.workbook.referralDeadline,
+  registrationTimely:decision.workbook.registrationTimely});
+const coreCitations = decision => decision.correspondence.citations.filter(row=>row.kind==='legal');
+const coreSend = (h,view,stepId,data,requestId='core-'+view.revision) => h.send(view,{
+  op:view.journeyStage==='independent'?'core-step':'tutorial-step',stepId,requestId,...data
+});
+
+test('new example requires the selected legal provision, real dates and a considered internal route',async()=>{
+  const h=fixture({guidedSeminarCore:true});
+  let {view}=await h.start('example');
+  assert.equal(view.coreStepsVersion,'guided-core-v1');
+  assert.equal(view.guidance.steps[0].id,'reception');
+  assert.equal(view.guidance.steps[1].id,'materials');
+  assert.equal(view.guidance.steps.find(row=>row.id==='route').panel,'route');
+  await assert.rejects(coreSend(h,view,'route',{routing:{disposition:'internal',recipientIds:[]}}),err('tutorial_step_locked'));
+  view=(await h.answer(view,'reception','role')).view;
+  const decision=view.guidance.decision;
+  const citations=coreCitations(decision);
+  assert.equal(citations.length,view.case.normativeActs.length);
+  await assert.rejects(coreSend(h,view,'materials',{choiceId:'sources'}),err('invalid_core_step'));
+  await assert.rejects(coreSend(h,view,'materials',{useExample:true}),err('invalid_core_step'));
+  await assert.rejects(coreSend(h,view,'materials',{citations:[]}),err('core_citation_required'));
+  await assert.rejects(coreSend(h,view,'materials',{citations:citations.map(row=>({...row,quote:'Цитата отсутствует в источнике.'}))}),err('invalid_citation'));
+  const sourceRequest='sources-stably-recorded';
+  const beforeMaterials=view;
+  view=(await coreSend(h,view,'materials',{citations},sourceRequest)).view;
+  assert.equal(view.coreSteps.stepId,'calendar');
+  assert.deepEqual(view.coreSteps.values.citations,citations);
+  assert.equal(view.coreSteps.receipt.requestId,sourceRequest);
+  assert.equal((await coreSend(h,beforeMaterials,'materials',{citations},sourceRequest)).view.revision,view.revision);
+  assert.equal((await h.recover('example')).view.coreSteps.stepId,'calendar');
+  await assert.rejects(coreSend(h,view,'calendar',{calendar:{...coreCalendar(decision),deadline:''}}),err('core_calendar_required'));
+  view=(await coreSend(h,view,'calendar',{calendar:{...coreCalendar(decision),deadline:'2026-11-11'}})).view;
+  assert.equal(view.coreSteps.stepId,'calendar');
+  assert.equal(view.guidance.finding.stepId,'calendar');
+  view=(await coreSend(h,view,'calendar',{calendar:coreCalendar(decision)})).view;
+  view=(await coreSend(h,view,'route',{routing:{recipientIds:['independent-review'],disposition:'forward'}})).view;
+  assert.equal(view.coreSteps.stepId,'route');
+  assert.equal(view.guidance.finding.stepId,'route');
+  view=(await coreSend(h,view,'route',{routing:decision.workbook.routing})).view;
+  assert.equal(view.coreSteps.stepId,'draft');
+  assert.deepEqual(view.coreSteps.completed,['materials','calendar','route']);
+  for(const documentId of view.guidance.steps.find(row=>row.id==='materials').documentIds)
+    view=(await h.handle({op:'document',sessionId:view.id,requestId:'open-'+documentId,documentId},learner)).view;
+  await assert.rejects(coreSend(h,view,'draft',{useExample:true}),err('invalid_request'));
+  const incomplete={...decision,correspondence:{...decision.correspondence,
+    citations:decision.correspondence.citations.filter(row=>row.kind==='document'),orders:[]}};
+  view=(await coreSend(h,view,'draft',{decision:incomplete})).view;
+  assert.equal(view.coreSteps.stepId,'draft');
+  assert.equal(view.guidance.finding.stepId,'draft');
+  view=(await coreSend(h,view,'draft',{decision})).view;
+  assert.equal(view.status,'followup');
+  assert.equal(view.decision.correspondence.subject,decision.correspondence.subject);
+  assert.equal(h.reviewCalls.length,0);
+  const guide=await h.guide(view);
+  const choose=stepId=>h.answer(view,stepId,guide.steps.find(row=>row.id===stepId).choices.find(row=>row.correct).id);
+  const action=(kind,issueId,params)=>h.send(view,{op:'control-action',requestId:'real-'+view.revision,
+    action:{kind,issueId,reason:'Проверить документ по жалобе',...params}});
+  view=(await choose('control')).view;
+  view=(await coreSend(h,view,'control-request',{confirmOwn:true})).view;
+  assert.equal(view.coreSteps.stepId,'control-request');
+  const saved=await h.store.get('sessions/'+view.id), spec=saved.caseStates[0].controlWorkflow.definition.issues[0];
+  const issue=view.controlWorkflow.issues.find(row=>row.id===spec.id);
+  view=(await action('request_evidence',issue.id,{recipientIds:spec.acceptedRecipientSets[0],dueDate:decision.deadline,
+    instruction:'Представить заключение по жалобе.',expectedResult:'Подтверждение самостоятельного рассмотрения.',
+    evidenceSourceIds:[issue.materialIds[0]]})).view;
+  assert.equal(view.controlWorkflow.journal.at(-1).outcome,'request_received');
+  view=(await coreSend(h,view,'control-request',{confirmOwn:true})).view;
+  const evidenceSourceIds=[spec.responseMaterialId];
+  view=(await action('verify',issue.id,{evidenceSourceIds})).view;
+  view=(await coreSend(h,view,'control-evidence',{confirmOwn:true})).view;
+  if(spec.deliveryRequired)view=(await action('notify',issue.id,{evidenceSourceIds,instruction:'Сообщить результат.',
+    expectedResult:'Подтверждение доставки ответа.'})).view;
+  view=(await action('close',issue.id,{evidenceSourceIds})).view;
+  view=(await coreSend(h,view,'control-status',{confirmOwn:true})).view;
+  const current=await h.store.get('sessions/'+view.id);
+  const control=validatedTutorialMemo(current.caseStates[0].controlWorkflow,executionQAProfiles.private(current.caseData[0]),guide,'ru');
+  view=(await coreSend(h,view,'control-memo',{control})).view;
+  view=(await choose('review')).view;
+  assert.equal(view.status,'review');
+  view=(await h.finish(view)).view;
+  assert.equal(view.status,'complete');
+  assert.equal(view.result.points,undefined);
+  assert.equal(view.seminarProgress.exampleCompleted,true);
+});
+
+test('new assessment accepts valid choices for scoring, enforces the confirmed inputs and resumes legacy work by ID',async()=>{
+  const old=fixture(), h=fixture({store:old.store,guidedSeminarCore:true});
+  await old.store.transaction(ledger,()=>({points:4,journey:{example:{completed:true},mentor:{completed:true}}}));
+  const legacy=(await old.start('independent','old-assessed')).view;
+  const oldSnapshot=await old.store.get('sessions/'+legacy.id);
+  const previous=await h.recover('independent');
+  assert.equal(previous.view,null);
+  assert.equal(previous.legacySessionId,legacy.id);
+  let {view}=await h.start('independent','new-assessed');
+  assert.notEqual(view.id,legacy.id);
+  assert.equal(view.seminarProgress.seminarPoints,4);
+  assert.equal(view.guidance,undefined);
+  assert.equal(view.mentorMessages,undefined);
+  assert.equal(view.coreSteps.stepId,'materials');
+  const {decision}=await h.guide(view);
+  const submit=(output,requestId='final-'+view.revision)=>h.send(view,{op:'decide',decision:output,requestId});
+  const validShape={...decision,correspondence:{...decision.correspondence,citations:coreCitations(decision),orders:[]}};
+  await assert.rejects(submit(validShape),err('core_steps_required'));
+  await assert.rejects(coreSend(h,view,'calendar',{calendar:coreCalendar(decision)}),err('core_step_locked'));
+  view=(await coreSend(h,view,'materials',{citations:coreCitations(decision)})).view;
+  const different='2026-11-12';
+  view=(await coreSend(h,view,'calendar',{calendar:{...coreCalendar(decision),deadline:different}})).view;
+  assert.equal(view.coreSteps.values.calendar.deadline,different);
+  const routing={recipientIds:['rkn-at-site'],disposition:'forward'};
+  view=(await coreSend(h,view,'route',{routing})).view;
+  assert.equal(view.coreSteps.stepId,'draft');
+  assert.equal(view.feedback,null);
+  await assert.rejects(submit(validShape),err('core_calendar_required'));
+  await assert.rejects(submit({...validShape,deadline:different,workbook:{...validShape.workbook,routing},
+    correspondence:{...validShape.correspondence,citations:[]}}),err('core_citation_required'));
+  view=(await coreSend(h,view,'calendar',{calendar:coreCalendar(decision)})).view;
+  assert.equal(view.coreSteps.stepId,'draft');
+  assert.equal(view.coreSteps.values.calendar.deadline,decision.deadline);
+  const recovered=await h.recover('independent');
+  assert.deepEqual(recovered.view.coreSteps,view.coreSteps);
+  assert.equal(recovered.legacySessionId,legacy.id);
+  const resumed=await h.handle({op:'resume',sessionId:legacy.id},learner);
+  assert.equal(resumed.view.coreStepsVersion,undefined);
+  assert.deepEqual(await old.store.get('sessions/'+legacy.id),oldSnapshot);
+});
+
+test('repeating mentor practice preserves availability, historical score and idempotent starts',async()=>{
+  const h=fixture({guidedSeminarCore:true,caseIds:['complaint-routing','ads-consent']});
+  const legacyPoints={points:4,sourceAttemptId:'historical-attempt'};
+  await h.store.transaction(ledger,()=>({points:4,journey:{example:{completed:true},mentor:{completed:true}}}));
+  await h.store.transaction(journal,()=>legacyPoints);
+  const reviewed=async view=>h.store.transaction('sessions/'+view.id,s=>({...s,status:'review',results:[{explanation:'fixture',criteria:[]}]}));
+  const remaining=(await h.recover('independent')).seminarProgress.remainingCases;
+  const [first,duplicate]=await Promise.all([h.start('mentor','mentor-a'),h.start('mentor','mentor-b')]);
+  assert.equal(first.view.id,duplicate.view.id);
+  assert.equal(first.seminarProgress.mentorCompleted,true);
+  assert.equal(first.seminarProgress.mentorActive,true);
+  assert.equal(first.seminarProgress.remainingCases,remaining);
+  await reviewed(first.view);
+  assert.equal((await h.finish(first.view)).view.status,'complete');
+  const graded=(await h.start('independent','graded-a')).view;
+  assert.equal(graded.case.id,'ads-consent');
+  assert.equal(graded.seminarProgress.remainingCases,0);
+  const second=await h.start('mentor','mentor-c');
+  assert.notEqual(second.view.id,first.view.id);
+  assert.equal(second.view.case.id,'ads-consent');
+  assert.equal(second.seminarProgress.independentActive,true);
+  assert.equal(second.seminarProgress.remainingCases,0);
+  assert.equal((await h.start('mentor','mentor-a')).view.id,first.view.id);
+  assert.deepEqual(await h.store.get(journal),legacyPoints);
+  assert.equal((await h.store.get(ledger)).points,4);
+  assert.equal(Object.keys((await h.store.get(ledger)).attempts).length,1);
+  const example=(await h.start('example','example-a')).view;
+  await reviewed(example);
+  await h.finish(example);
+  const repeat=(await h.start('example','example-b')).view;
+  assert.notEqual(repeat.id,example.id);
+  assert.equal(repeat.status,'active');
+  assert.equal(repeat.seminarProgress.exampleCompleted,true);
 });

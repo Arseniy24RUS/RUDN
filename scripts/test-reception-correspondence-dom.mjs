@@ -39,7 +39,7 @@ globalThis.fetch=async input=>{const url=new URL(input,location.href),file=path.
 const c=await createCorrespondenceQACase(),store=createMemoryStore(),identity={uid:'qa-correspondence',studentKey:'12345678'};
 const reviewer=createScriptedCorrespondenceReviewer({reviews:[()=>{throw new ReceptionError('review_unavailable',503);},context=>explicitQAReview(context,{initialLevel:3}),context=>explicitQAReview(context,{controlLevel:3})]});
 const provider={...reviewer,name:'mock',generate:async()=>({reply:'Представленные документы относятся к двум вопросам обращения.',revealedFactIds:[],releasedDocumentIds:[],usage:{inputTokens:0,outputTokens:0}})};
-const service=createReceptionService({store,cases:[c],provider,correspondenceProfiles:correspondenceQAProfiles,requireGameplay:seminar});
+const service=createReceptionService({store,cases:[c],provider,correspondenceProfiles:correspondenceQAProfiles,requireGameplay:seminar,requireSeminarJourney:false});
 const calls=[];let lastView,lastError,handle,dropReplyTo='',awaitActor=null;
 const fetchAPI=async(_url,options)=>{const body=JSON.parse(options.body);calls.push(structuredClone(body));
   if(body.op==='message'&&awaitActor)await awaitActor;
@@ -65,10 +65,20 @@ async function go(page){await click(`#rxaPage-${page}`);assert.equal(root.datase
 async function until(condition,label){const begin=Date.now();while(Date.now()-begin<7000){if(condition())return;await new Promise(resolve=>setTimeout(resolve,20));}throw Error('Timed out: '+label);}
 let stage='mount';
 try{
-  await mkdir(out,{recursive:true});handle=await mountReceptionAI(root,options,config);await settle();
+  await mkdir(out,{recursive:true});
+  // A pre-journey session still opens in its original correspondence workspace.
+  if(seminar){
+    const old={op:'start',context:'seminar',locale:'ru',mode:'training',workbookVersion:2,
+      decisionVersion:'correspondence-v1',requestId:'old-seminar-start'};
+    const previous=await (await fetchAPI('/api/reception',{body:JSON.stringify(old)})).json();
+    assert.ok(previous.ok);
+    const key='rudn.reception.ai.v1:'+identity.studentKey+':seminar:qa:'+encodeURIComponent(config.endpoint);
+    localStorage.setItem(key,JSON.stringify({owner:identity.studentKey,version:'reception-ai-ui-v1',sessionId:previous.view.id}));
+  }
+  handle=await mountReceptionAI(root,options,config);await settle();
   if(seminar)assert.equal(root.querySelector('[name="trainingCaseId"]'),null,'Seminar setup lets the server assign the case');
   else{assert.equal(node('[name="trainingCaseId"]').options.length,2);await select('[name="trainingCaseId"]',c.id);}
-  await click('[data-action="start"]');
+  if(!seminar)await click('[data-action="start"]');
   assert.equal(lastView.decisionVersion,'correspondence-v1');assert.equal(lastView.case.assessment,undefined);passed('New session selects the letter contract and removes the old answer menu');
   if(seminar){
     assert.equal(lastView.context,'seminar');
@@ -148,7 +158,9 @@ try{
   assert.equal(calls.filter(call=>call.op==='next').length,1);
   assert.equal(document.activeElement.hasAttribute('data-stage-heading'),true);
   passed('A lost finish response restores final result without repeating the finishing action');
-  assert.equal(lastView.status,'complete');assert.ok(lastView.result.cases[0].caseInfo.citizen.name);assert.equal(root.querySelectorAll('[data-response-result="0"] [data-response-action="download"]').length,1);passed('The completed case retains its own document, citizen and export controls');
+  assert.equal(lastView.status,'complete');assert.ok(lastView.result.cases[0].caseInfo.citizen.name);assert.ok(node('[data-response-result="0"] .rxc-letter-body').textContent.includes(prose.facts));
+  assert.equal(root.querySelectorAll('[data-response-result="0"] [data-response-action="download"]').length,seminar?0:1);
+  passed('The completed case retains its citizen and submitted letter, with exports scoped to free practice');
   stage='locales';for(const locale of ['en','zh','ru']){await select('[data-language]',locale);assert.equal(root.lang,locale);assert.ok(node('.rxc-letter-body').textContent.includes(prose.facts));}passed('Locale changes preserve the authored document and assessment');
   if(!seminar){
   stage='legacy-resume';

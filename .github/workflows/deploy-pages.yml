@@ -109,6 +109,8 @@ jobs:
       # Focused hotfixes run checks for their authorized scope.
       # Reject the shortcut if the commit changes anything outside this scope.
       - name: Verify focused hotfix change scope
+        env:
+          RECEPTION_PUSH_BASE: ${{ github.event.before }}
         if: env.FOCUSED_HOTFIX == 'true'
         run: |
           python - <<'PY'
@@ -224,8 +226,11 @@ jobs:
             allowed = {'.github/workflows/deploy-pages.yml', 'site/service-worker.js', 'site/apps/settlements/source-manifest.json', 'scripts/test-settlements-route-limits.mjs', 'scripts/test-settlements-route-limits-browser.py', 'scripts/test-settlements-road-routes.mjs', 'scripts/test-settlements-boundaries.mjs'} | {runtime + path for path in paths}
           changed = set(subprocess.check_output(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'], text=True).splitlines())
           if os.environ['RECEPTION_LEGAL_READER'] == 'true':
+            base = os.environ['RECEPTION_PUSH_BASE'] if os.environ['RECEPTION_AI_RELEASE'] == 'true' and os.environ.get('RECEPTION_PUSH_BASE', '').strip('0') else 'HEAD^'
+            if base != 'HEAD^' and subprocess.run(['git','cat-file','-e',f'{base}^{{commit}}'], stderr=subprocess.DEVNULL).returncode:
+              subprocess.run(['git','fetch','--no-tags','--depth=1','origin',base], check=True)
             changed = set(subprocess.check_output(
-              ['git', 'diff', '--no-renames', '--name-only', 'HEAD^', 'HEAD'], text=True
+              ['git', 'diff', '--no-renames', '--name-only', base, 'HEAD'], text=True
             ).splitlines())
             allowed = {
               '.github/workflows/deploy-pages.yml',
@@ -271,8 +276,19 @@ jobs:
               'scripts/test-reception-execution-dom.mjs',
               'scripts/test-reception-execution-browser.mjs',
               'scripts/check-reception-control-workflow.mjs',
+              'scripts/check-reception-bank-submissions.mjs', 'scripts/check-reception-journey-bank.mjs',
+              'scripts/test-reception-tutorial-browser.mjs', 'scripts/test-reception-coach-browser.mjs', 'site/data/course.json',
               'docs/RECEPTION_EXECUTION_PATCH.md',
             })
+            if 'site/data/course.json' in changed:
+              import json
+              def outside_reception_description(ref):
+                course = json.loads(subprocess.check_output(['git','show',f'{ref}:site/data/course.json']))
+                seminar, = [t['seminar'] for t in course['topics'] if t.get('seminar', {}).get('slug') == 'seminar-5']
+                for key in ('description', 'description_en', 'description_zh'):
+                  seminar.pop(key, None)
+                return course
+              assert outside_reception_description(base) == outside_reception_description('HEAD'), 'Shared course changes exceed the Reception seminar description'
           assert changed and changed <= allowed, f'Change outside the focused hotfix scope: {sorted(changed - allowed)}'
           if os.environ['SETTLEMENTS_GRADE_HOTFIX'] == 'true':
             import re, json, hashlib

@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {readFileSync} from 'node:fs';
-import {normativeActsForCase,validateLegalCitation,hasApplicableLegalCitation} from './normative-acts.mjs';
+import {normativeActsForCase,requiredSeminarActs,requiredSeminarExamples,requiredSeminarProvisions,validateLegalCitation,hasApplicableLegalCitation} from './normative-acts.mjs';
+import {resolveLegalCitation} from './correspondence-legal-sources.mjs';
 
 const index=JSON.parse(readFileSync(new URL('./normative-provisions.json',import.meta.url),'utf8'));
 const caseFor=(id,number,actDate,articles,rule='calendar30')=>({
@@ -50,5 +51,23 @@ test('citation payload rejects spoofed metadata and malformed IDs',()=>{
   assert.equal(validateLegalCitation(undefined),null);
   for(const bad of [{...good,article:'8'},{...good,docId:'__proto__'},{...good,text:''},{...good,unitIds:[]},{...good,unitIds:['a','a']}]){
     assert.throws(()=>validateLegalCitation(bad),{code:'invalid_decision'});
+  }
+});
+
+test('guided seminars provide one exact, applicable sample provision for every required act in the authored bank',async()=>{
+  const content=new URL('../../../site/apps/reception/content/',import.meta.url);
+  const catalog=JSON.parse(readFileSync(new URL('catalog.json',content),'utf8'));
+  assert.equal(catalog.length,178);
+  for(const item of catalog){
+    const {template:t}=JSON.parse(readFileSync(new URL(`cases/${item.id}.json`,content),'utf8'));
+    const c={id:item.id,rubric:{authored:{knowledge:t.knowledge,calendar:{rule:t.calendar.correctRule}}}};
+    const sources=requiredSeminarActs(c), examples=requiredSeminarExamples(c), provisions=requiredSeminarProvisions(c);
+    assert.ok(sources.length>0,item.id);
+    assert.deepEqual(examples.map(row=>row.sourceId),sources.map(row=>row.id),item.id);
+    for(const row of examples){
+      assert.ok(hasApplicableLegalCitation(c,{docId:row.sourceId,unitIds:row.unitIds,text:row.quote},provisions),item.id);
+      const verified=await resolveLegalCitation(row,{requireProvision:true});
+      assert.ok(verified.locator,item.id);
+    }
   }
 });

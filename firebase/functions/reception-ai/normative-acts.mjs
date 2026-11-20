@@ -121,6 +121,46 @@ export function acceptableLegalProvisions(c) {
   ])]};
 }
 
+// These secondary acts govern a separate issue in the dossier. The other
+// secondary provisions remain available to the legacy reference browser.
+const necessaryCompanionActs = new Set([
+  'budget-partial','education-register','fire-key','food-other-batch',
+  'heritage-stair','landfill-registry-scope','noise-emergency-work'
+]);
+const requiredSecondaryActs = {
+  'ads-consent':{'reception-law61801':['7']},
+  'several-issues':{'reception-law61801':['7','10.1']},
+  'several-minimum-attachments':{'reception-law61801':['7','10']},
+};
+export function requiredSeminarProvisions(c) {
+  const knowledge=c.rubric?.authored?.knowledge;
+  const id=primaryId(knowledge), provisional={};
+  if(id)provisional[id]=acceptableLegalProvisions(c)[id];
+  const [calendar]=c.rubric?.authored?.calendar?calendarNorms(c):[];
+  const calendarAct=sourceId(calendar?.url);
+  const calendarArticle=calendar?.label.ru.match(/ст\. (\d+(?:\.\d+)?)/u)?.[1];
+  if(calendarAct&&calendarArticle&&!provisional[calendarAct])provisional[calendarAct]=[calendarArticle];
+  const companion=necessaryCompanionActs.has(c.id)?secondaryProvisions[c.id]:requiredSecondaryActs[c.id];
+  for(const [docId,articles] of Object.entries(companion||{}))
+    provisional[docId]=[...new Set([...(provisional[docId]||[]),...articles])];
+  return provisional;
+}
+
+export function requiredSeminarActs(c) {
+  return Object.keys(requiredSeminarProvisions(c)).map(id=>({id,title:documents[id].title,number:documents[id].number}));
+}
+
+export function requiredSeminarExamples(c) {
+  return Object.entries(requiredSeminarProvisions(c)).flatMap(([sourceId,articles],index)=>{
+    const units=articles.flatMap(article=>legalCorpus()[sourceId]?.[article]||[]);
+    const specific=applicableLegalUnits(c,sourceId);
+    const usable=units.filter(([,text])=>text.length>=24&&!/^Статья [\d.]+\./u.test(text));
+    const unit=usable.find(([id])=>specific?.includes(id))||usable[0];
+    return unit?[{id:`basis-provision-${index+1}`,section:'legalBasis',kind:'legal',sourceId,
+      unitIds:[unit[0]],quote:unit[1].slice(0,4000)}]:[];
+  });
+}
+
 const unitId = /^[a-zA-Z0-9_-]{1,120}$/;
 const normalizeQuote = text => text.normalize('NFC').replace(/\s+/gu, ' ').trim();
 
@@ -138,11 +178,12 @@ export function validateLegalCitation(value) {
 }
 
 let corpus;
-export function hasApplicableLegalCitation(c, citation) {
+const legalCorpus=()=>corpus ||= JSON.parse(readFileSync(new URL('./normative-provisions.json', import.meta.url), 'utf8'));
+export function hasApplicableLegalCitation(c, citation, provisionsByAct=acceptableLegalProvisions(c)) {
   if (!citation) return false;
-  const provisions = acceptableLegalProvisions(c)[citation.docId];
+  const provisions = provisionsByAct[citation.docId];
   if (!provisions) return false;
-  corpus ||= JSON.parse(readFileSync(new URL('./normative-provisions.json', import.meta.url), 'utf8'));
+  const corpus = legalCorpus();
   const quote = normalizeQuote(citation.text);
   if (quote.length < 24) return false;
   const allowed = applicableLegalUnits(c,citation.docId);
