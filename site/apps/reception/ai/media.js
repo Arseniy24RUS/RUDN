@@ -36,24 +36,47 @@ export function characterMedia(caseId, portrait) {
   });
 }
 
-// 120 authored 12 fps frames decoded from C03.webp, sampled at 224 × 305.
-const C03_FRAMES = Object.freeze({width:224, height:305, columns:12, count:120, interval:1000/12});
+// The 120 authored frames are grouped in small still images. Keep only the
+// current and next sheet so a phone does not need to decode a 31 MiB atlas.
+const C03_FRAMES = Object.freeze({
+  width:224, height:305, columns:4, rows:5, sheets:6, interval:1000 / 12
+});
+const C03_SHEET_TIMEOUT_MS = 15000;
+const C03_LOOP_TIMEOUT_MS = 30000;
 const MOTION_COPY = Object.freeze({
-  ru:['Анимация', 'Анимация персонажа'],
-  en:['Motion', 'Character motion'],
-  zh:['动画', '角色动画']
+  ru:['Пауза', 'Включить анимацию', 'Анимация персонажа', 'Повторить анимацию'],
+  en:['Pause', 'Play animation', 'Character motion', 'Retry animation'],
+  zh:['暂停', '播放动画', '角色动画', '重试动画']
 });
 
 function createSergeyMotion(root, view, reducedMotion) {
   const document = root.ownerDocument;
+  const {width, height, columns, rows, sheets, interval} = C03_FRAMES;
+  const framesPerSheet = columns * rows;
   const canvas = document.createElement('canvas');
-  let context;
-  const {width,height,columns,count,interval} = C03_FRAMES;
   canvas.width = width;
   canvas.height = height;
-  canvas.className = 'rxa-citizen-video';
   canvas.setAttribute('data-rxa-motion-canvas', '');
-  canvas.setAttribute('aria-hidden', 'true');
+
+  // The same cropped frames can be presented by the browser's image renderer
+  // if a 2D drawing context is unavailable or is lost under memory pressure.
+  const svg = 'http://www.w3.org/2000/svg';
+  const sprite = document.createElementNS(svg, 'svg');
+  sprite.setAttribute('width', width);
+  sprite.setAttribute('height', height);
+  sprite.setAttribute('data-rxa-motion-sprite', '');
+  sprite.setAttribute('overflow', 'hidden');
+  const spriteImage = document.createElementNS(svg, 'image');
+  spriteImage.setAttribute('width', columns * width);
+  spriteImage.setAttribute('height', rows * height);
+  sprite.append(spriteImage);
+  const image = document.createElement('img');
+  image.alt = '';
+  image.setAttribute('data-rxa-motion-image', '');
+  for (const layer of [canvas, sprite, image]) {
+    layer.setAttribute('class', 'rxa-citizen-video');
+    layer.setAttribute('aria-hidden', 'true');
+  }
 
   const toggle = document.createElement('button');
   toggle.type = 'button';
@@ -61,110 +84,225 @@ function createSergeyMotion(root, view, reducedMotion) {
   toggle.dataset.focus = 'citizen-motion';
   const connection = view.navigator.connection;
   const reducedData = view.matchMedia?.('(prefers-reduced-data: reduce)');
-  let stage = null, visible = false, enabled = null, atlas = null, loading = null, failed = false;
-  let timer = null, frame = -1, nextFrameAt = 0;
+  const assets = new Map();
+  let stage = null, visible = false, enabled = null;
+  let layer = canvas, context;
+  let usingImage = false, failed = false, imageLoaded = false, spriteLoaded = false;
+  let checkedCanvas = false, canvasUnavailable = false;
+  let timer = null, imageTimeout = null, frame = 0, nextFrameAt = 0;
 
   function canPlay() { return enabled ?? !(reducedMotion.matches || reducedData?.matches || connection?.saveData); }
-  function shouldDraw() { return stage && visible && canPlay(); }
-
-  function stop() {
-    if (timer !== null) view.clearTimeout(timer);
-    timer = null;
-    stage?.removeAttribute('data-rxa-motion-ready');
+  function shouldDraw() { return stage && visible && canPlay() && !failed; }
+  function clearReady() { stage?.removeAttribute('data-rxa-motion-ready'); }
+  function showFrame() {
+    // These callbacks can complete after the user pauses or leaves the slide.
+    if (shouldDraw()) stage.setAttribute('data-rxa-motion-ready', '');
   }
-
+  function clearImage() {
+    view.clearTimeout(imageTimeout);
+    imageTimeout = null;
+    imageLoaded = false;
+    image.removeAttribute('src');
+  }
+  function stop() {
+    view.clearTimeout(timer);
+    timer = null;
+    clearReady();
+    if (usingImage) clearImage();
+  }
+  function discardSheet(index, sheet) {
+    view.clearTimeout(sheet.timeout);
+    sheet.element.onload = sheet.element.onerror = null;
+    if (!sheet.ready) sheet.element.removeAttribute('src');
+    assets.delete(index);
+  }
+  function resetSheets() {
+    for (const [index, sheet] of assets) discardSheet(index, sheet);
+    spriteLoaded = false;
+    spriteImage.removeAttribute('href');
+  }
+  function setLayer(next) {
+    if (layer === next) return;
+    clearReady();
+    layer.remove();
+    layer = next;
+    stage?.append(layer);
+  }
+  function fallbackImage() {
+    stop();
+    resetSheets();
+    usingImage = true;
+    setLayer(image);
+    sync();
+  }
+  function imageFailed() {
+    if (!image.hasAttribute('src')) return;
+    clearImage();
+    failed = true;
+    clearReady();
+    sync();
+  }
+  function startImage() {
+    if (imageLoaded) showFrame();
+    if (image.hasAttribute('src')) return;
+    image.src = url('assets/gfx1/motion/C03.webp');
+    imageTimeout = view.setTimeout(imageFailed, C03_LOOP_TIMEOUT_MS);
+  }
+  function startSheet(index) {
+    if (assets.has(index)) return assets.get(index);
+    const element = new view.Image();
+    const sheet = {element, ready:false, failed:false, timeout:null};
+    assets.set(index, sheet);
+    const fail = () => {
+      if (assets.get(index) !== sheet) return;
+      sheet.failed = true;
+      if (shouldDraw() && index === Math.floor(frame / framesPerSheet)) fallbackImage();
+    };
+    element.onload = () => {
+      if (assets.get(index) !== sheet) return;
+      view.clearTimeout(sheet.timeout);
+      if (element.naturalWidth !== columns * width || element.naturalHeight !== rows * height) {
+        fail();
+        return;
+      }
+      // load already means the image is drawable. Some WebKit versions reject
+      // decode() for a loaded image on which drawImage() succeeds.
+      sheet.ready = true;
+      if (index === Math.floor(frame / framesPerSheet)) sync();
+    };
+    element.onerror = fail;
+    sheet.timeout = view.setTimeout(fail, C03_SHEET_TIMEOUT_MS);
+    element.src = url(`assets/gfx1/motion/C03-frames-${index + 1}.webp`);
+    return sheet;
+  }
+  function drawStill(sheet, x, y) {
+    if (layer === canvas) {
+      try {
+        context ??= canvas.getContext('2d');
+        if (!context || context.isContextLost?.()) throw new Error('canvas unavailable');
+        context.clearRect(0, 0, width, height);
+        context.drawImage(sheet.element, x, y, width, height, 0, 0, width, height);
+        if (!checkedCanvas) {
+          // Every authored C03 frame has an opaque torso at this interior point.
+          if (!context.getImageData(width / 2, height / 2, 1, 1).data[3]) throw new Error('canvas rendered no frame');
+          checkedCanvas = true;
+        }
+        return true;
+      } catch {
+        context = null;
+        canvasUnavailable = true;
+        setLayer(sprite);
+      }
+    }
+    sprite.setAttribute('viewBox', `${x} ${y} ${width} ${height}`);
+    if (spriteImage.getAttribute('href') !== sheet.element.src) {
+      spriteLoaded = false;
+      spriteImage.setAttribute('href', sheet.element.src);
+    }
+    return spriteLoaded;
+  }
   function tick() {
     timer = null;
-    if (!shouldDraw() || !atlas) return;
+    if (!shouldDraw()) return;
     const at = view.performance.now();
-    if (at >= nextFrameAt) {
-      const advance = 1 + Math.floor((at-nextFrameAt)/interval);
-      frame = (frame+advance)%count;
-      const x = frame%columns*width, y = Math.floor(frame/columns)*height;
-      context.clearRect(0,0,width,height);
-      context.drawImage(atlas,x,y,width,height,0,0,width,height);
-      stage.setAttribute('data-rxa-motion-ready', '');
-      nextFrameAt += advance*interval;
+    if (at + 1 >= nextFrameAt) {
+      const index = Math.floor(frame / framesPerSheet);
+      const nextIndex = (index + 1) % sheets;
+      for (const [oldIndex, sheet] of assets) {
+        if (oldIndex !== index && oldIndex !== nextIndex) discardSheet(oldIndex, sheet);
+      }
+      const sheet = startSheet(index);
+      if (sheet.failed) { fallbackImage(); return; }
+      if (!sheet.ready) return;
+      startSheet(nextIndex);
+      const localFrame = frame % framesPerSheet;
+      const drawn = drawStill(sheet, (localFrame % columns) * width, Math.floor(localFrame / columns) * height);
+      if (!drawn) return;
+      showFrame();
+      frame = (frame + 1) % (framesPerSheet * sheets);
+      nextFrameAt = Math.max(nextFrameAt + interval, at + interval / 2);
     }
-    timer = view.setTimeout(tick,Math.max(0,nextFrameAt-view.performance.now()));
+    timer = view.setTimeout(tick, Math.max(0, nextFrameAt - view.performance.now()));
   }
-
-  function loadFrames() {
-    if (loading || failed) return;
-    const source = new view.Image();
-    loading = source;
-    source.decoding = 'async';
-    source.onload = async () => {
-      try {
-        await source.decode?.();
-        if (loading !== source) return;
-        if (source.naturalWidth !== columns*width || source.naturalHeight !== count/columns*height) {
-          throw new Error('Unexpected C03 frame atlas dimensions');
-        }
-        atlas = source;
-        loading = null;
-        sync();
-      } catch { loadFailed(); }
-    };
-    function loadFailed() {
-      if (loading !== source) return;
-      loading = null;
-      failed = true;
-    }
-    source.onerror = loadFailed;
-    source.src = url('assets/gfx1/motion/C03-frames.webp');
-  }
-
   function sync() {
     if (!stage) return;
-    const lang = (root.lang || document.documentElement.lang).slice(0,2);
-    const [label, accessibleName] = MOTION_COPY[lang] || MOTION_COPY.ru;
-    toggle.textContent = label;
-    toggle.setAttribute('aria-label', accessibleName);
-    toggle.setAttribute('aria-pressed', String(canPlay()));
-    stage.toggleAttribute('data-rxa-motion-manual', enabled===true);
+    const lang = (root.lang || document.documentElement.lang).slice(0, 2);
+    const [pauseLabel, playLabel, accessibleName, retryLabel] = MOTION_COPY[lang] || MOTION_COPY.ru;
+    toggle.textContent = failed ? retryLabel : canPlay() ? pauseLabel : playLabel;
+    toggle.setAttribute('aria-label', failed ? retryLabel : accessibleName);
+    toggle.setAttribute('aria-pressed', String(canPlay() && !failed));
+    stage.toggleAttribute('data-rxa-motion-manual', enabled === true);
     if (!shouldDraw()) { stop(); return; }
-    context ??= canvas.getContext('2d');
-    if (!context) { toggle.disabled = true; return; }
-    if (!atlas) { loadFrames(); return; }
+    if (usingImage) { startImage(); return; }
     if (timer === null) {
       nextFrameAt = view.performance.now();
       tick();
     }
   }
-
   function refresh(next, inView = false) {
     if (next !== stage) {
       stop();
       stage?.removeAttribute('data-rxa-motion-manual');
-      if (next && !stage) failed = false;
       stage = next;
-      if (stage) stage.append(canvas,toggle);
-      else { canvas.remove(); toggle.remove(); }
+      if (stage) stage.append(layer, toggle);
+      else {
+        layer.remove();
+        toggle.remove();
+        resetSheets();
+      }
     }
     visible = inView;
     sync();
   }
-
-  function retry() { failed = false; sync(); }
+  function retry() {
+    if (!failed) return;
+    resetSheets();
+    failed = usingImage = false;
+    setLayer(canvasUnavailable ? sprite : canvas);
+    sync();
+  }
   function chooseMotion() {
+    if (failed) {
+      enabled = true;
+      retry();
+      return;
+    }
     enabled = !canPlay();
-    retry();
+    if (!enabled) resetSheets();
+    sync();
+  }
+  function lostContext() {
+    if (layer !== canvas) return;
+    context = null;
+    canvasUnavailable = true;
+    setLayer(sprite);
+    sync();
   }
   toggle.addEventListener('click', chooseMotion);
+  canvas.addEventListener('contextlost', lostContext);
+  spriteImage.addEventListener('load', () => {
+    spriteLoaded = true;
+    if (layer === sprite) sync();
+  });
+  spriteImage.addEventListener('error', () => {
+    if (layer === sprite && shouldDraw() && spriteImage.hasAttribute('href')) fallbackImage();
+  });
+  image.addEventListener('load', () => {
+    if (!image.hasAttribute('src')) return;
+    view.clearTimeout(imageTimeout);
+    imageLoaded = true;
+    showFrame();
+  });
+  image.addEventListener('error', imageFailed);
   connection?.addEventListener?.('change', sync);
   reducedData?.addEventListener?.('change', sync);
   return {
     refresh, retry,
     destroy() {
       refresh(null);
-      if (loading) {
-        loading.onload = loading.onerror = null;
-        loading.removeAttribute('src');
-        loading = null;
-      }
-      atlas = null;
+      clearImage();
       toggle.removeEventListener('click', chooseMotion);
+      canvas.removeEventListener('contextlost', lostContext);
       connection?.removeEventListener?.('change', sync);
       reducedData?.removeEventListener?.('change', sync);
     }
@@ -176,7 +314,7 @@ function createSergeyMotion(root, view, reducedMotion) {
  * transparent VP9 or video autoplay. An image animation has no pause API: leaving
  * the visible reception clears its src, restores the poster and releases the loop;
  * returning begins the loop again. C03 uses the same frames drawn from a static
- * atlas so mobile autoplay and animated-image policies cannot freeze the loop.
+ * atlas so playback also works when browser autoplay is unavailable.
  */
 export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) {
   const document = root.ownerDocument, view = document?.defaultView;
@@ -203,7 +341,7 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
   motionImage.alt = '';
   motionImage.decoding = 'async';
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
-  const sergeyMotion = lessonFrames && view.CanvasRenderingContext2D
+  const sergeyMotion = lessonFrames
     ? createSergeyMotion(root, view, reduce)
     : null;
   const failedVideo = new Set(), imageFailures = new Map();
@@ -352,8 +490,10 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
 
   function refresh() {
     if (destroyed) return;
-    const candidate = root.querySelector('[data-rxa-actor]');
-    const nextActor = candidate?.dataset.rxaActor || '';
+    const candidate = root.querySelector(sergeyMotion
+      ? '[data-rxa-actor], [data-rxa-chat-actor="C03"]'
+      : '[data-rxa-actor]');
+    const nextActor = candidate?.dataset.rxaActor || candidate?.dataset.rxaChatActor || '';
     const next = ACTOR.test(nextActor) && (!reduce.matches || nextActor === 'C03' && sergeyMotion) ? candidate : null;
     if (next === stage) { playback(); return; }
     const returning = !stage;
@@ -363,8 +503,8 @@ export function createMessengerMedia(root, {signal, lessonFrames = false} = {}) 
       if (reduce.matches) clearSource(); else pause();
       clearImage(); video.remove(); sergeyMotion?.refresh(null); return;
     }
-    if (stage.dataset.rxaActor !== actor) {
-      clearSource(); clearImage(); actor = stage.dataset.rxaActor;
+    if (nextActor !== actor) {
+      clearSource(); clearImage(); actor = nextActor;
       const state = actor.startsWith('S') ? 'S-N' : 'C-N';
       video.poster = url(`assets/gfx1/characters/${actor}/${actor}__${state}__w512.webp`);
     }

@@ -51,7 +51,7 @@ async function pixelDifference(page, first, second) {
 for(const engine of ['chromium','webkit']){
   const browser = await browsers[engine].launch();
   try{
-    for(const preference of ['default','reduced-motion','save-data']){
+    for(const preference of ['default','reduced-motion','save-data','no-canvas','missing-sheet','retry']){
       const lesson = synthetic ? {} : {
         decisionVersion:'correspondence-v1',controlVersion:'execution-v1',
         coreStepsVersion:'mfc-referral-v2',seminarStoryVersion:SEMINAR_STORY_VERSION,
@@ -69,10 +69,25 @@ for(const engine of ['chromium','webkit']){
       const requests = [], errors = [], base = engine+'-'+preference;
       page.on('request', request=>requests.push(new URL(request.url()).pathname));
       page.on('pageerror', error=>errors.push(error.message));
-      await page.addInitScript(saveData=>{
+      const startPaused = ['reduced-motion','save-data'].includes(preference);
+      const useNativeImage = preference === 'missing-sheet';
+      let allSourcesBlocked = preference === 'retry';
+      if (allSourcesBlocked || useNativeImage) {
+        await page.route('**/motion/C03*.webp', route => {
+          const sheet = /C03-frames-\d+\.webp$/.test(route.request().url());
+          return allSourcesBlocked || (useNativeImage && sheet) ? route.abort() : route.continue();
+        });
+      }
+      await page.addInitScript(mode=>{
         HTMLMediaElement.prototype.play = () => Promise.reject(new DOMException('Autoplay disabled','NotAllowedError'));
-        if(saveData)Object.defineProperty(navigator,'connection',{value:{saveData:true}});
-      },preference==='save-data');
+        if(mode==='save-data')Object.defineProperty(navigator,'connection',{value:{saveData:true}});
+        if(mode==='no-canvas'){
+          const getContext=HTMLCanvasElement.prototype.getContext;
+          HTMLCanvasElement.prototype.getContext=function(...args){
+            return this.hasAttribute('data-rxa-motion-canvas') ? null : getContext.apply(this,args);
+          };
+        }
+      },preference);
       try{
         if(synthetic){
           const {view} = await fixture.service.handle({op:'start',context:'seminar',mode:'training',
@@ -105,23 +120,33 @@ for(const engine of ['chromium','webkit']){
         await stage.scrollIntoViewIfNeeded();
         const poster = stage.locator('.rxa-citizen-poster');
         const toggle = stage.getByRole('button',{name:'Анимация персонажа'});
-        const canvas = stage.locator('[data-rxa-motion-canvas]');
+        const activeLayer = stage.locator('.rxa-citizen-video');
         const ready = page.locator('.rxt-active-reception [data-rxa-actor="C03"][data-rxa-motion-ready]');
-        const atlasRequests = ()=>requests.filter(url=>url.endsWith('/C03-frames.webp')).length;
+        const sheetURLs = ()=>requests.filter(url=>/C03-frames-[1-6]\.webp$/.test(url));
         assert.match(await poster.getAttribute('src'),/\/C03\/C03__C-N__w512\.webp$/);
         const visitorName = fixture.cases[0].public.citizen.name.ru;
         assert.equal(await poster.getAttribute('alt'),visitorName);
         if(fixture.dataKind==='supplied-bank')assert.match(visitorName,/Сергей Петрович/);
+        if(preference==='retry'){
+          const retry = stage.getByRole('button',{name:'Повторить анимацию'});
+          await retry.waitFor();
+          assert.equal(await retry.getAttribute('aria-pressed'),'false');
+          assert.equal(await poster.evaluate(node=>getComputedStyle(node).opacity),'1');
+          allSourcesBlocked=false;
+          await retry.tap();
+        }
         assert.ok((await toggle.boundingBox()).height>=44);
-        if(preference!=='default'){
+        if(startPaused){
           assert.equal(await toggle.getAttribute('aria-pressed'),'false');
-          assert.equal(atlasRequests(),0);
+          assert.equal(sheetURLs().length,0);
           assert.equal(await poster.evaluate(node=>getComputedStyle(node).opacity),'1');
           await toggle.tap();
         }
         await ready.waitFor();
         assert.equal(await toggle.getAttribute('aria-pressed'),'true');
-        assert.equal(await canvas.evaluate(node=>getComputedStyle(node).opacity),'1');
+        assert.equal(await activeLayer.evaluate(node=>getComputedStyle(node).opacity),'1');
+        if(preference==='no-canvas')assert.ok(await activeLayer.evaluate(node=>node.hasAttribute('data-rxa-motion-sprite')));
+        if(useNativeImage)assert.ok(await activeLayer.evaluate(node=>node.hasAttribute('data-rxa-motion-image')));
         const movingA = await stage.screenshot({path:path.join(output,base+'-frame-a.png')});
         await page.waitForTimeout(460);
         const movingB = await stage.screenshot({path:path.join(output,base+'-frame-b.png')});
@@ -131,18 +156,17 @@ for(const engine of ['chromium','webkit']){
         const moving = Math.max(...differences);
         assert.ok(moving>500,'Visible actor pixels must change: '+moving);
         if(preference==='default')await page.screenshot({path:path.join(output,base+'-opening.png')});
-        assert.equal(atlasRequests(),1);
-        assert.equal(requests.some(url=>/\/motion\/C03\.(webm|webp)$/.test(url)),false);
+        assert.ok(sheetURLs().length>=1);
+        assert.ok(!requests.some(url=>url.endsWith('/C03-frames.webp')));
+        assert.equal(requests.some(url=>url.endsWith('/motion/C03.webp')),useNativeImage || preference==='retry');
 
         await toggle.tap();
         assert.equal(await toggle.getAttribute('aria-pressed'),'false');
         await ready.waitFor({state:'detached'});
         const pausedA = await stage.screenshot({path:path.join(output,base+'-poster.png')});
-        const pausedFrame = await canvas.evaluate(node=>node.toDataURL());
         await page.waitForTimeout(320);
         const pausedB = await stage.screenshot();
         assert.equal(await pixelDifference(page,pausedA,pausedB),0);
-        assert.equal(await canvas.evaluate(node=>node.toDataURL()),pausedFrame);
         assert.equal(await poster.evaluate(node=>getComputedStyle(node).opacity),'1');
 
         await toggle.tap();
@@ -153,9 +177,8 @@ for(const engine of ['chromium','webkit']){
           document.dispatchEvent(new Event('visibilitychange'));
         });
         await ready.waitFor({state:'detached'});
-        const hiddenFrame = await canvas.evaluate(node=>node.toDataURL());
         await page.waitForTimeout(250);
-        assert.equal(await canvas.evaluate(node=>node.toDataURL()),hiddenFrame);
+        assert.equal(await stage.getAttribute('data-rxa-motion-ready'),null);
         await page.evaluate(()=>{
           delete document.hidden;
           document.dispatchEvent(new Event('visibilitychange'));
@@ -164,18 +187,30 @@ for(const engine of ['chromium','webkit']){
 
         await page.locator('.rxa-mobile-nav [data-page="chat"]').tap();
         await stage.waitFor({state:'detached'});
+        const avatar=page.locator('[data-rxa-chat-actor="C03"][data-rxa-motion-ready]');
+        await avatar.waitFor();
+        const firstPortrait=await avatar.screenshot();
+        await page.waitForTimeout(520);
+        const nextPortrait=await avatar.screenshot();
+        assert.ok(await pixelDifference(page,firstPortrait,nextPortrait)>10,'The visible chat portrait must change.');
+        if(preference==='default')await page.screenshot({path:path.join(output,base+'-chat.png')});
+        const chatToggle=avatar.getByRole('button',{name:'Анимация персонажа'});
+        await chatToggle.tap();
+        await avatar.waitFor({state:'detached'});
         await page.locator('.rxa-mobile-nav [data-page="reception"]').tap();
         await stage.scrollIntoViewIfNeeded();
+        await toggle.waitFor();
+        assert.equal(await toggle.getAttribute('aria-pressed'),'false','Pause in chat must persist when returning to reception.');
+        await toggle.tap();
         await ready.waitFor();
-        assert.equal(atlasRequests(),1);
-        assert.equal(await canvas.evaluate(node=>{
+        if(await activeLayer.evaluate(node=>node.tagName==='CANVAS'))assert.equal(await activeLayer.evaluate(node=>{
           const context = node.getContext('2d');
           const transparent = context.getImageData(0,0,1,1).data[3]===0;
           const opaque = context.getImageData(node.width/2,node.height/2,1,1).data[3]>0;
           return transparent&&opaque;
         }),true);
         assert.deepEqual(errors,[]);
-        results.push({engine,preference,status:'pass',actor:'C03',movingPixels:moving,atlasRequests:atlasRequests()});
+        results.push({engine,preference,status:'pass',actor:'C03',movingPixels:moving,sheets:new Set(sheetURLs()).size});
         console.log(JSON.stringify(results.at(-1)));
       }catch(error){
         await page.screenshot({path:path.join(output,base+'-failure.png')}).catch(()=>{});
