@@ -3,7 +3,7 @@ import {copy, fail, localized} from './schema.mjs';
 import {evaluateWorkbook, WORKBOOK_VERSION} from './workbook.mjs';
 import {evaluateRoutingWorkflow,isInternalRoutingPath} from './routing-workflow.mjs';
 import {mfcRoutingAlternatives,publicMfcRouting} from './mfc-routing.mjs';
-import {MFC_SEMINAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedReplyInstruction,mfcSharedMerits} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedReplyInstruction,mfcSharedMerits,mfcCalendarAction,mfcCalendarMerits} from './mfc-seminar.mjs';
 import {CORRESPONDENCE_WEIGHTS} from './correspondence.mjs';
 import {applyControlAction, validateControlSubmission} from './control-workflow.mjs';
 import {acceptableLegalProvisions, applicableLegalUnits, requiredSeminarExamples} from './normative-acts.mjs';
@@ -37,12 +37,12 @@ export function seminarExample(available) {
   return out;
 }
 
-export function tutorialOperational(c, decision,coreStepsVersion) {
+export function tutorialOperational(c, decision,coreStepsVersion,mfcCalendarVersion) {
   const base = {score:0, criteria:[
     {id:'route', earned:0, max:CORRESPONDENCE_WEIGHTS.initial.route},
     {id:'calendar', earned:0, max:CORRESPONDENCE_WEIGHTS.initial.calendar}
   ], cap:null, explanation:''};
-  return evaluateWorkbook(c, decision, base, WORKBOOK_VERSION, {gameplay:true,coreStepsVersion});
+  return evaluateWorkbook(c, decision, base, WORKBOOK_VERSION, {gameplay:true,coreStepsVersion,mfcCalendarVersion});
 }
 
 const T = (ru, en, zh) => ({ru,en,zh});
@@ -93,7 +93,9 @@ const mentorFindings = {
   emptyControl:T('Напишите заключение по полученным материалам либо явно примените образец наставника.','Write your follow-through record using the materials, or explicitly apply the mentor’s sample.','根据收到的材料撰写监督结论，或明确采用导师示例。'),
   invalidControl:T('Проверьте статус и приложите полученное подтверждение отдельно по каждому вопросу.','Check the status and attach the supporting record for each issue separately.','逐项核对状态并附上收到的证明材料。')
 };
-export const mentorFinding = (code, language) => localized(mentorFindings[code],language);
+export const mentorFinding = (code, language, mfcCalendarVersion) => localized(code==='calendar'&&mfcCalendarVersion===MFC_CALENDAR_VERSION?
+  T('Сверьте две даты: сначала срок передачи, затем срок рассмотрения.','Check both dates: the referral deadline first, then the review deadline.','请核对两项日期：先核对转交期限，再核对审查期限。'):
+  mentorFindings[code],language);
 
 function choose(ids, correct, text) {
   return ids.map((id, index) => ({id, label:text[index], correct:id===correct}));
@@ -157,8 +159,9 @@ function walkthroughReply(c, deadline, language, compact) {
   return {kind:'reply',subject:localized(subject,language),sections:localized(compact?concise:sections,language)};
 }
 
-function presentation(c, profile, language, core,coreStepsVersion) {
+function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVersion) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
+  const currentCalendar=mfc&&mfcCalendarVersion===MFC_CALENDAR_VERSION;
   const local = value => localized(value, language) || '';
   const refs = (c.rubric.evidenceGroups || []).flat();
   const docs = [...new Set(refs)].map(id => c.documents.find(doc => doc.id === id)).filter(Boolean);
@@ -171,7 +174,11 @@ function presentation(c, profile, language, core,coreStepsVersion) {
   const facts = c.facts.filter(fact => c.rubric.requiredFactIds.includes(fact.id)&&
     !(sharedReply&&c.id==='several-minimum-attachments'&&fact.id==='q1')).map(fact => local(fact.text));
   const plan=mfc?profile.acceptablePlans?.[0]:null;
-  const actionText=action=>mfc?(local(c.public.actions.find(row=>row.id===action?.id)?.label)||local(action?.text)):local(action?.text);
+  const actionText=action=>{
+    const replacement=currentCalendar?mfcCalendarAction(c.id,action?.id,language):undefined;
+    if(replacement!==undefined)return replacement;
+    return mfc?(local(c.public.actions.find(row=>row.id===action?.id)?.label)||local(action?.text)):local(action?.text);
+  };
   const actions = (profile.expectedActions || []).filter(action=>(!plan||plan.requiredActionIds.includes(action.id))&&!legacyDispatch.has(action.id))
     .map(actionText).filter(Boolean);
   const recipients = mfc?mfcRoutingAlternatives(c.id)?.[0]:evaluateRoutingWorkflow(c.id,{recipientIds:[]}).expectedRecipients;
@@ -182,10 +189,11 @@ function presentation(c, profile, language, core,coreStepsVersion) {
     ? local(T('Руководитель или независимое уполномоченное подразделение','Director or independent authorised unit','负责人或独立授权部门'))
     : mfc?new Intl.ListFormat(language,{type:'conjunction'}).format(recipientNames):recipientNames.join(' / ');
   const workbook = {referralDeadline:'', registrationTimely:false, routing:{recipientIds,...(mfc?{disposition:'forward'}:{})}};
-  const calculation=tutorialOperational(c,{deadline:'',workbook},coreStepsVersion).workbook.calendar;
+  const calculation=tutorialOperational(c,{deadline:'',workbook},coreStepsVersion,mfcCalendarVersion).workbook.calendar;
   const {expected}=calculation;
   workbook.referralDeadline = expected.referral || '';
-  workbook.registrationTimely = expected.registrationTimely ?? false;
+  if(calculation.calendarVersion===MFC_CALENDAR_VERSION)delete workbook.registrationTimely;
+  else workbook.registrationTimely=expected.registrationTimely??false;
   const calendarExplanation = local(calculation.instructions);
   const deadlineText = mfc?`${local(calculation.targets.find(target=>target.id==='deadline').label)} — ${expected.deadline}.`
     :T(`Крайний срок ответа — ${expected.deadline}.`,`Response deadline: ${expected.deadline}.`,`答复截止日期为 ${expected.deadline}。`);
@@ -197,7 +205,8 @@ function presentation(c, profile, language, core,coreStepsVersion) {
   const authored=c.rubric.authored;
   const knowledge=c.public.assessment?.knowledge?.options.find(row=>row.id===authored?.knowledge?.correct);
   const jointConclusion=sharedReply?local(mfcSharedMerits[c.id]):'';
-  const legalExplanation = jointConclusion||(mfc&&local(knowledge?.label))||[local(legal?.explanation),local(legal?.expectedApplication)].filter(Boolean).join(' ') || ruling;
+  const legalExplanation = jointConclusion||(currentCalendar&&local(mfcCalendarMerits[c.id]))||(mfc&&local(knowledge?.label))||
+    [local(legal?.explanation),local(legal?.expectedApplication)].filter(Boolean).join(' ') || ruling;
   const findings=mfc?(c.public.assessment?.fact?.options||[]).filter(row=>authored?.factIds?.includes(row.id)).map(row=>local(row.label)) : [];
   const routingPolicy=mfcRouting?.routingPolicy;
   const boundary=local(routingPolicy?.boundary),routingContext=local(routingPolicy?.context);
@@ -263,11 +272,11 @@ export function walkthroughControlProfile(c, profile) {
   return prepared;
 }
 
-export function tutorialGuide(c, profile, language, {execution=false,core=false,coreStepsVersion}={}) {
+export function tutorialGuide(c, profile, language, {execution=false,core=false,coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION}={}) {
   const text = key => localized(copyText[key],language);
   const local = value => localized(value,language) || '';
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
-  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText,boundary,routingContext,sharedReply} = presentation(c,profile,language,core,coreStepsVersion);
+  const {decision,docs,facts,timetable,calendarExplanation,legalExplanation,recipientText,boundary,routingContext,sharedReply} = presentation(c,profile,language,core,coreStepsVersion,mfcCalendarVersion);
   const role=mfc?mfcRole(c.public.role,language,sharedReply):null;
   const roleExplanation=mfc?role.text:c.id===SEMINAR_EXAMPLE.caseId
     ? local(T('Вы готовите материалы для руководителя департамента. Жалоба касается начальника отдела. В карточке выделите предмет жалобы и проверьте, кто вправе её рассматривать. Затем решите, кому направить материалы.',
@@ -331,7 +340,7 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false,
   const control = {text:initialControl,
     statuses:statuses.map(row=>({issueId:row.issueId,status:row.allowedStatuses[0],evidenceSourceIds:['followup']}))};
   return {caseTitle:local(c.public.title),role:role?.text||local(c.public.role.text),steps,decision,control,
-    ...(mfc?{coreStepsVersion,authorityContext:role.authorityContext,routingContext,routingBoundary:boundary,sharedReply}:{})};
+    ...(mfc?{coreStepsVersion,mfcCalendarVersion,authorityContext:role.authorityContext,routingContext,routingBoundary:boundary,sharedReply}:{})};
 }
 
 export function publicTutorialGuide(guide, session) {

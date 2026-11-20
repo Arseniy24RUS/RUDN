@@ -1,4 +1,6 @@
 export const MFC_SEMINAR_VERSION = 'mfc-referral-v2';
+export const MFC_CALENDAR_VERSION = 'mfc-7-plus-30-v1';
+export const LEGACY_MFC_CALENDAR_VERSION = 'mfc-calendar-original-v1';
 
 // These authored actions require partitioning the original dispatch. They apply
 // to the legacy case only. The MFC exercise grades the joint addressee choice.
@@ -50,6 +52,67 @@ export function mfcAuthorityName(authority,locale) {
 }
 
 const T=(ru,en,zh)=>({ru,en,zh});
+// Keep the substantive part of an authored action when its other part only
+// asks for a calendar calculation that the current worksheet replaces.
+const formerCalendarActions={
+  'bailiff-subordination':{a2:T('Проверить результат рассмотрения жалобы.','Check the outcome of the complaint review.','核查投诉审查结果。')},
+  'complaint-wrong-procedure':{a4:T('Проверить обоснование решения по отказу.','Check the reasons given for the refusal.','核查拒绝决定的理由。')},
+  'flight-agent-receipt':{a2:null},
+  'insurance-collective':{a2:T('Определить дальнейший способ защиты по спору о возврате.','Identify the next remedy in the refund dispute.','确定退款争议的后续救济途径。')},
+  'sickpay-data':{a2:null},
+  'tax-calendar-months':{a2:null}
+};
+
+export function mfcCalendarAction(caseId,actionId,locale) {
+  const replacement=formerCalendarActions[caseId]?.[actionId];
+  return replacement===null?null:replacement?.[locale];
+}
+
+export const mfcCalendarMerits={
+  'bailiff-subordination':T('Передать жалобу правомочному руководителю. Проверить, имеются ли основания для приостановления исполнения.',
+    'Refer the complaint to the competent supervisor and check whether there are grounds for suspending enforcement.',
+    '将投诉提交有权负责人，并核查是否具备暂停执行的理由。'),
+  'complaint-wrong-procedure':T('Проверить отказ в приёме документов по правилам досудебного обжалования государственной услуги.',
+    'Review the refusal to accept the documents under the administrative complaint procedure for the public service.',
+    '按政务服务的行政申诉程序审查拒收材料的决定。'),
+  'flight-agent-receipt':T('Установить полномочия продавца и подтверждённый факт получения претензии перевозчиком.',
+    'Establish the seller’s authority and verify that the carrier received the claim.',
+    '查明销售方的权限，并核实承运人已收到索赔。'),
+  'insurance-collective-payoff':T('Проверить право на возврат страховой премии пропорционально оставшемуся периоду по части 10 статьи 11.',
+    'Check entitlement under Article 11(10) to a premium refund for the remaining coverage period.',
+    '根据第11条第10款核查是否可按剩余保险期间退还相应保费。'),
+  'insurance-collective':T('Проверить полученное кредитором заявление о возврате и разъяснить, какие условия ставки требуют проверки.',
+    'Check the refund request received by the creditor and explain which interest-rate terms require verification.',
+    '核查贷款方收到的退款申请，并说明哪些利率条款有待查证。'),
+  'mfc-change-not-typo':T('Разъяснить порядок обновления данных и проверить основания жалобы на отказ в исправлении.',
+    'Explain how the records can be updated and examine the grounds of the complaint about correction.',
+    '说明如何更新资料，并核查关于拒绝更正的投诉理由。'),
+  'mfc-correction-overdue':T('Проверить получение заявления об исправлении и выяснить, выдан ли исправленный результат.',
+    'Verify receipt of the correction request and check whether the corrected result was issued.',
+    '核实是否收到更正申请，以及是否已出具更正后的结果。'),
+  'mfc-delay':T('Установить, какая стадия оказания услуги задержалась, кто отвечает за неё и какие действия уже выполнены.',
+    'Establish which stage of the service was delayed, who is responsible and what has already been done.',
+    '查明服务在哪一阶段发生延误、由谁负责，以及已经办理了哪些事项。'),
+  'mfc-refusal':T('Проверить причины отказа в приёме документов и выяснить, было ли названо законное основание для отказа.',
+    'Check why the documents were refused and determine whether a legal ground was given.',
+    '核查拒收材料的原因，并确定是否说明了合法依据。'),
+  'mfc-service-not-overdue':T('Проверить фактический ход оказания услуги и причины жалобы. Различать исполнение услуги и рассмотрение жалобы.',
+    'Check progress on the service and the grounds of the complaint. Distinguish delivery of the service from review of the complaint.',
+    '核查服务实际办理进展及投诉理由，区分服务办理与投诉审查。'),
+  'mfc-service-refusal':T('Установить, кто принял решение об отказе в услуге, и проверить его доводы по материалам дела.',
+    'Identify who refused the service and examine the reasons on the case record.',
+    '查明作出服务拒绝决定的主体，并依据案件材料核查其理由。'),
+  'sickpay-data':T('Проверить, поступили ли в СФР полные сведения, необходимые для назначения и выплаты пособия.',
+    'Check whether the Social Fund received the complete information needed to award and pay the benefit.',
+    '核查社会基金是否已收到核定和支付补助所需的完整资料。'),
+  'sickpay-refusal-notice':T('Проверить мотивировку отказа и направление решения обоим предусмотренным получателям.',
+    'Check the reasons for the refusal and whether the decision was sent to both designated recipients.',
+    '核查拒绝决定的理由，以及是否已将决定送达两个指定接收方。'),
+  'tax-calendar-months':T('Камеральную проверку ведут по представленной декларации. Окончание проверки и возврат средств относятся к разным стадиям.',
+    'The desk audit concerns the submitted tax return. Completion of the audit and payment of a refund are separate stages.',
+    '案头税务审核依据已提交的申报表开展。审核结束与退付资金属于不同阶段。')
+};
+
 export const mfcSharedMerits={
   'ads-consent':T('Проверьте, давал ли адресат согласие на рекламные сообщения и прекратилась ли рассылка после отказа. Установите, кто использовал номер и на каком основании.',
     'Check whether the recipient consented to the advertisements and whether messages stopped after they opted out. Establish who used the number and on what basis.',

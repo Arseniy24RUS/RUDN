@@ -3,7 +3,7 @@ import {localized, normalizeLocale, translator} from './copy.js';
 import './workspace-copy.js';
 import './correspondence-copy.js';
 import {createReceptionTour} from './coach-tour.js';
-import {MFC_VERSION, isCoreJourney, isMfcJourney, CORE_ACTIONS, CORE_PAGES, coreStepId, coreLabel, coreDatePayload} from './core-steps.js';
+import {MFC_VERSION, MFC_CALENDAR_VERSION, isCoreJourney, isMfcJourney, CORE_ACTIONS, CORE_PAGES, coreStepId, coreLabel, coreDatePayload} from './core-steps.js';
 import {availableMentorActions, guidanceView, isLesson, journeyPathView, lessonLabel, lessonStep, mentorView, mentorWorkFeedbackView, nextJourneyStage} from './tutorial.js';
 import {blankCorrespondence,restoreCorrespondence,reduceCorrespondence,correspondenceEditorView,correspondencePreviewView,
   correspondenceControlView,restoreCorrespondenceControl,reduceCorrespondenceControl,correspondenceControlSubmission,
@@ -100,6 +100,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let enteringMessages = new Set(), lastPendingRenderedId = '';
   let chatScroll = {top:0,bottom:true}, followupDraft='';
   let detailOpen = new Set();
+  let calendarDraftVersion='';
   let page='reception', calendarState={}, selectedReferences=[], readMessageIds=new Set(), pageScroll={}, savedSessionId='';
   let catalog=[], catalogLoading=false, catalogError=false, trainingLevel='', trainingCaseId='', caseSearch='';
   let notice='', recoverBusy=false, deferredDocuments=new Set();
@@ -162,6 +163,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     choosingCase=seminar&&saved.choosingCase===true;
     pending=saved.pending&&mutationOps.includes(saved.pending.op)&&typeof saved.pending.requestId==='string'?saved.pending:null;
     calendarState=saved.calendarState&&typeof saved.calendarState==='object'?saved.calendarState:{};
+    calendarDraftVersion=typeof saved.calendarVersion==='string'?saved.calendarVersion:'';
     routingTerritory=typeof saved.routingTerritory==='string'?saved.routingTerritory:undefined;
     selectedReferences=Array.isArray(saved.selectedReferences)?saved.selectedReferences.filter(x=>x&&typeof x.id==='string'&&typeof x.text==='string').slice(0,20):[];
     readMessageIds=new Set(Array.isArray(saved.readMessageIds)?saved.readMessageIds.filter(x=>typeof x==='string'):[]);
@@ -224,7 +226,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     storageOkay=drafts.save({version:VERSION,owner,sessionId:view?.id||initial?.sessionId||'',caseId:view?.case?.id||savedCaseId,
       caseTitle:view?.case?.title||initial?.caseTitle||'',status:view?.status||initial?.status||'',
       mode:view?.mode||mode,locale,draftMessage,decisionDraft,followupDraft,controlDraft,executionActionDraft,controlWorkspaceUI,controlRecipientPicker,responsePreview,citationSelections,detailOpen:[...detailOpen],tab,selectedDoc,pending,pendingAt,mobilePane,chatScroll,
-      page,calendarState,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
+      page,calendarState,calendarVersion:calendarDraftVersion,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
     return storageOkay;
   }
   function incomingMessages() {
@@ -266,7 +268,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;
     deferredDocuments.clear();failedOperation='';routingSearch='';routingTerritory=undefined;view=null;initial=null;pending=null;error=null;notice='';needsResume=false;draftMessage='';decisionDraft=blankDecision();followupDraft='';
     detailOpen.clear();savedCaseId='';savedSessionId='';selectedDoc='';confirmation=false;tab='documents';mobilePane='desk';page='reception';
-    pendingAt=null;lastPendingRenderedId='';calendarState={};selectedReferences=[];readMessageIds.clear();pageScroll={};drafts.clearCurrent();
+    pendingAt=null;lastPendingRenderedId='';calendarState={};calendarDraftVersion='';selectedReferences=[];readMessageIds.clear();pageScroll={};drafts.clearCurrent();
     if(mode==='independent'&&!canIndependent())mode='training';
   }
   function rememberLegacySessions(recovered,stage) {
@@ -519,18 +521,43 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     heading?.focus({preventScroll:true});heading?.scrollIntoView({block:'start',behavior:'instant'});
   }
   function reception() {
-    const c=view.case||{};
+    const c=view.case||{}, mfc=mfcJourney();
     const firstMessage=(view.messages||[]).find(message=>message.role==='assistant'&&message.id===`opening-${c.id}`);
     const opening=authoredText(c.opening||firstMessage?.text);
     const roleContext=c.role?.authorityContext;
-    const roleTitle=mfcJourney()?cl('roleTitle'):authoredText(c.role?.title);
-    const roleText=mfcJourney()?cl('role'):authoredText(c.role?.text);
-    const mfcIntro=mfcJourney()?`<section class="rxt-mfc-intro" aria-labelledby="rxtMfcRole">
+    const roleTitle=mfc?cl('roleTitle'):authoredText(c.role?.title);
+    const roleText=mfc?cl('role'):authoredText(c.role?.text);
+    const mfcIntro=mfc?`<section class="rxt-mfc-intro" aria-labelledby="rxtMfcRole">
       <h2 id="rxtMfcRole">${esc(roleTitle)}</h2><p>${esc(roleText)}</p></section>`:'';
     const receptionAction=hasCore()&&active()?button(cl(coreCurrent()==='reception'||coreCurrent()==='materials'?'read':'returnTo'),
       'core-opening',{primary:true,glyph:'arrow',extra:'data-tour-target="advance"'}):'';
-    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}${mfcIntro}<div class="rxa-foyer-grid rxt-active-reception">${scene(c.citizen,c.id)}<section class="rxa-active-reception"><h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2><p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p>${opening?`<section class="rxt-opening" aria-labelledby="rxtOpeningTitle" data-tour-target="reception"><h3 id="rxtOpeningTitle">${esc(l('opening'))}</h3><blockquote>${esc(opening)}</blockquote>${receptionAction||(!hasCore()&&tutorial()?button(l('goGuide'),'guide-jump',{quiet:true,glyph:'arrow'}):'')}</section>`:''}<p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>${caseTimelineView(visibleWorkbook(c.workbook),{locale})}${routingOriginView(c.workbook,{locale})}<div class="rxa-actions">${!active()?button(t('continueDecision'),'continue',{primary:true,glyph:'arrow'}):''}${hasCore()&&active()?'':button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></section></div><details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary><div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3><div class="rxa-case-meta">${!seminar&&c.level?`<span>${esc(t('level'+c.level))}</span>`:''}${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div>${mfcJourney()?(roleContext?`<div><strong>${esc(text(roleContext.label))}</strong><p>${esc(text(roleContext.title))}</p><p>${esc(text(roleContext.text))}</p></div>`:''):
-      `<strong>${esc(roleTitle)}</strong><p>${esc(roleText)}</p>`}<p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div></details>${hasCore()?coreCaseRecords():currentGuide()}${help()}${seminar?'':`<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>`}${savedSessions()}</div>`;
+    const request=opening?`<section class="rxt-opening" aria-labelledby="rxtOpeningTitle" data-tour-target="reception">
+      <h2 id="rxtOpeningTitle">${esc(l('opening'))}</h2><blockquote>${esc(opening)}</blockquote>
+      ${receptionAction||(!hasCore()&&tutorial()?button(l('goGuide'),'guide-jump',{quiet:true,glyph:'arrow'}):'')}</section>`:'';
+    const portrait=scene(c.citizen,c.id);
+    const withPortrait=mfc?`<div class="rxt-mfc-visitor">${portrait}${request}</div>`:portrait;
+    const info=`<section class="rxa-active-reception">
+      <h2 class="rxa-visitor-name">${esc(text(c.citizen?.name)||t('citizen'))}</h2>
+      <p class="rxa-visitor-description">${esc(authoredText(c.citizen?.description)||t('applicant'))}</p>
+      ${mfc?'':request}
+      <p class="rxa-presence"><span aria-hidden="true"></span>${esc(t(active()?'awaitingReply':'decisionReady'))}</p>
+      ${caseTimelineView(visibleWorkbook(c.workbook),{locale})}${routingOriginView(c.workbook,{locale})}
+      <div class="rxa-actions">${!active()?button(t('continueDecision'),'continue',{primary:true,glyph:'arrow'}):''}
+        ${hasCore()&&active()?'':button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div>
+    </section>`;
+    const caseRole=mfc?(roleContext?`<div><strong>${esc(text(roleContext.label))}</strong><p>${esc(text(roleContext.title))}</p>
+      <p>${esc(text(roleContext.text))}</p></div>`:''):`<strong>${esc(roleTitle)}</strong><p>${esc(roleText)}</p>`;
+    return `<div class="rxa-foyer">${caseHeading(t('reception'),t(active()?'caseActive':'decisionReady'))}
+      <div class="rxa-foyer-grid rxt-active-reception${mfc?' rxt-mfc-reception':''}">${mfcIntro}${withPortrait}${info}</div>
+      <details class="rxa-case-brief" data-details="case-brief"><summary>${icon('info')}<span>${esc(t('currentTask'))}</span>${icon('chevron')}</summary>
+        <div class="rxa-case-brief-body"><h3>${esc(authoredText(c.title))}</h3>
+        <div class="rxa-case-meta">${!seminar&&c.level?`<span>${esc(t('level'+c.level))}</span>`:''}
+          ${c.estimatedMinutes?`<span>${esc(t('minutes',{count:c.estimatedMinutes}))}</span>`:''}</div>
+        ${caseRole}<p class="rxa-persist-hint">${icon('cloud')}${esc(t('preservedSession'))}</p></div>
+      </details>
+      ${hasCore()?coreCaseRecords():currentGuide()}${help()}
+      ${seminar?'':`<details class="rxa-exercise-picker" data-details="exercise-picker"><summary>${icon('sources')}<span>${esc(t('newTraining'))}</span>${icon('chevron')}</summary>${trainingSetup()}</details>`}
+      ${savedSessions()}</div>`;
   }
 
   function messageTime(at) {
@@ -611,7 +638,9 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function visibleWorkbook(workbook) {
     if(!workbook||!mfcJourney())return workbook;
-    const anchors=new Set(['intakeReceived',...workbook.targets.map(target=>target.anchorId)]);
+    const anchorIds=workbook.calendarVersion===MFC_CALENDAR_VERSION?['intakeRegistered']:
+      ['intakeReceived',...workbook.targets.map(target=>target.anchorId)];
+    const anchors=new Set(anchorIds);
     const events=workbook.events.filter(event=>anchors.has(event.id));
     return {...workbook,events};
   }
@@ -1074,11 +1103,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     field.style.height='auto';field.style.height=Math.min(144,Math.max(46,field.scrollHeight))+'px';
     const counter=root.querySelector('[data-message-count]');if(counter)counter.textContent=draftMessage.length?`${draftMessage.length} / 2000`:'';
   }
-  function syncCoreValues(next, {applySaved=false}={}) {
+  function syncCoreValues(next, {applySaved=false,applyCalendar=false}={}) {
     if(!hasCore())return;
     const values=next.coreSteps?.values;
     if(values?.citations?.length&&(applySaved||values.citations.some(item=>!decisionDraft.correspondence.citations.some(row=>row.id===item.id))))installCoreCitations(values.citations);
-    if(values?.calendar&&applySaved){
+    if(values?.calendar&&(applySaved||applyCalendar)){
       decisionDraft.deadline=values.calendar.deadline;
       Object.assign(decisionDraft.workbook,{
         referralDeadline:values.calendar.referralDeadline,registrationTimely:values.calendar.registrationTimely,
@@ -1154,10 +1183,25 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }else if(next.case?.assessment)decisionDraft=restoreDecision(decisionDraft,true);else delete decisionDraft.assessment;
     if(next.case?.workbook){
       decisionDraft.workbook??=blankWorkbook();
-      syncCoreValues(next,{applySaved:!sameCase});
+      const calendarVersion=next.case.workbook.calendarVersion||'';
+      const upgraded=sameCase&&calendarVersion===MFC_CALENDAR_VERSION&&calendarDraftVersion!==calendarVersion;
+      if(upgraded){
+        // Choices from the previous counting rule cannot be carried into the new calendar.
+        if(!next.coreSteps?.values?.calendar){
+          decisionDraft.deadline='';
+          decisionDraft.workbook.referralDeadline='';
+          calendarState={};
+        }
+        if(pending?.stepId==='calendar'){pending=null;pendingAt=null;}
+      }
+      calendarDraftVersion=calendarVersion;
+      syncCoreValues(next,{applySaved:!sameCase,applyCalendar:upgraded});
       calendarState={...calendarState,selectedDates:{referral:decisionDraft.workbook.referralDeadline,deadline:decisionDraft.deadline},
         registrationTimely:hasCore()&&active()?calendarState.registrationTimely??null:decisionDraft.workbook.registrationTimely};
-    }else delete decisionDraft.workbook;
+    }else{
+      delete decisionDraft.workbook;
+      calendarDraftVersion='';
+    }
     const current=coreCurrent();
     if(hasCore()&&(coreAcknowledged||stepChanged&&current!==previousCore)){
       coreEdit='';selectedDoc='';notice='';tab=current==='materials'?'documents':'decision';

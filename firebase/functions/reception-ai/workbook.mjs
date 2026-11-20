@@ -2,7 +2,7 @@ import {parseDateOnly} from './authored.mjs';
 import {fail,fields,copy} from './schema.mjs';
 import {publicRoutingWorkflow,validateRoutingWorkflowDecision,evaluateRoutingWorkflow} from './routing-workflow.mjs';
 import {evaluateMfcRouting,publicMfcRouting,validateMfcRoutingDecision} from './mfc-routing.mjs';
-import {MFC_SEMINAR_VERSION} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
 import {CALENDAR_RULES,WORKBOOK_CALENDAR,calculateWorkbookDeadline} from './workbook-calendar.mjs';
 import {calendarNormId,calendarNorms} from './workbook-norms.mjs';
 
@@ -75,23 +75,25 @@ export function supportsWorkbook(c,version=LEGACY_WORKBOOK_VERSION){
   return Boolean(calendar&&CALENDAR_RULES[calendar.rule]&&parseDateOnly(row.rubric.deadline)&&row.public.assessment?.calendar?.events.some(event=>event.id===calendar.anchor&&parseDateOnly(event.date)));
  });
 }
-export function publicWorkbook(c,version=LEGACY_WORKBOOK_VERSION,{gameplay=false,coreStepsVersion}={}){
- if(version===WORKBOOK_VERSION)return supportsWorkbook(c,version)?publicCaseWorkbook(c,gameplay,coreStepsVersion===MFC_SEMINAR_VERSION):null;
+export function publicWorkbook(c,version=LEGACY_WORKBOOK_VERSION,{gameplay=false,coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION}={}){
+ if(version===WORKBOOK_VERSION)return supportsWorkbook(c,version)?publicCaseWorkbook(c,gameplay,coreStepsVersion===MFC_SEMINAR_VERSION,mfcCalendarVersion):null;
  if(!supportsBasicWorkbook(c))return null;
  return {version,events:workbookEvents(c),targets,registrationCheck:true,...publicRoutingWorkflow(c.id)};
 }
-export function validateWorkbookDecision(value,version=LEGACY_WORKBOOK_VERSION,{coreStepsVersion}={}){
+export function validateWorkbookDecision(value,version=LEGACY_WORKBOOK_VERSION,{coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION}={}){
  if(![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(version))fail('invalid_workbook');
  const d=fields(value,['referralDeadline','registrationTimely','routing']);
- if(typeof d.referralDeadline!=='string'||d.referralDeadline!==''&&!parseDateOnly(d.referralDeadline)||typeof d.registrationTimely!=='boolean')fail('invalid_decision');
  const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
+ const registrationRequired=!mfc||mfcCalendarVersion!==MFC_CALENDAR_VERSION;
+ if(typeof d.referralDeadline!=='string'||d.referralDeadline!==''&&!parseDateOnly(d.referralDeadline)||
+    (registrationRequired||d.registrationTimely!==undefined)&&typeof d.registrationTimely!=='boolean')fail('invalid_decision');
  if(mfc&&!d.referralDeadline)fail('core_calendar_required');
  const routing=mfc?validateMfcRoutingDecision(d.routing):validateRoutingWorkflowDecision(d.routing);
  if(mfc&&routing.disposition!=='forward')fail('core_route_required');
- return {referralDeadline:parseDateOnly(d.referralDeadline)||'',registrationTimely:d.registrationTimely,routing};
+ return {referralDeadline:parseDateOnly(d.referralDeadline)||'',...(registrationRequired?{registrationTimely:d.registrationTimely}:{}),routing};
 }
-export function evaluateWorkbook(c,decision,feedback,version=LEGACY_WORKBOOK_VERSION,{gameplay=false,coreStepsVersion}={}){
- if(version===WORKBOOK_VERSION)return evaluateCaseWorkbook(c,decision,feedback,gameplay,coreStepsVersion===MFC_SEMINAR_VERSION);
+export function evaluateWorkbook(c,decision,feedback,version=LEGACY_WORKBOOK_VERSION,{gameplay=false,coreStepsVersion,mfcCalendarVersion=MFC_CALENDAR_VERSION}={}){
+ if(version===WORKBOOK_VERSION)return evaluateCaseWorkbook(c,decision,feedback,gameplay,coreStepsVersion===MFC_SEMINAR_VERSION,mfcCalendarVersion);
  const events=Object.fromEntries(workbookEvents(c).map(row=>[row.id,row.date]));
  if(!events.registered)fail('invalid_case',503);
  const expected={referral:addCalendarDays(events.registered,7),deadline:addCalendarDays(events.registered,30),registrationTimely:events.registered>=events.received&&events.registered<=addCalendarDays(events.received,3)};
@@ -143,9 +145,25 @@ function calendarInstructions(c,task){
  }));
 }
 const mfcCounting={start:'exclude_anchor',shift:'next_working_day',calendar:'ru-federal-five-day'};
+const mfcCalendarDayCounting={...mfcCounting,shift:'no_shift'};
 const standardReviewNorms=new Set(['registration59','review59','referral59']);
 
-function mfcCalendar(c){
+function mfcCurrentCalendar(c){
+ const events=c.public.assessment.calendar.events;
+ const registered=parseDateOnly(events.find(event=>event.id==='registered')?.date)||parseDateOnly(events.find(event=>event.id==='received')?.date);
+ if(!registered)fail('invalid_case',503);
+ return {
+  calendarVersion:MFC_CALENDAR_VERSION,calendarSnapshotId:WORKBOOK_CALENDAR.id,counting:{...mfcCalendarDayCounting},
+  registrationCheck:false,special:false,liabilityApplicable:false,
+  events:[{id:'intakeRegistered',date:registered,kind:'registered',label:T('Регистрация обращения в МФЦ','Registration at the MFC','MFC 来件登记')}],
+  targets:[
+   {id:'referral',label:T('Крайний срок передачи из МФЦ','MFC referral deadline','MFC 转交截止日'),anchorId:'intakeRegistered',ruleId:'calendar7',...CALENDAR_RULES.calendar7,counting:{...mfcCalendarDayCounting}},
+   {id:'deadline',label:T('Крайний срок рассмотрения у адресата','Competent recipient’s review deadline','主管接收方审查截止日'),anchorId:'referral',ruleId:'calendar30',...CALENDAR_RULES.calendar30,counting:{...mfcCalendarDayCounting}}
+  ]
+ };
+}
+
+function mfcOriginalCalendar(c){
  // Appended events describe the simulation of a handoff. The original events
  // continue to identify the events and actors in the competent recipient's file.
  const base=caseCalendar(c);
@@ -170,6 +188,10 @@ function mfcCalendar(c){
 }
 
 function mfcCalendarInstructions(c,task){
+ if(task.calendarVersion===MFC_CALENDAR_VERSION)return T(
+  'Прибавьте 7 календарных дней к дате регистрации в МФЦ, чтобы получить срок передачи. К сроку передачи прибавьте ещё 30 календарных дней, чтобы получить срок рассмотрения.',
+  'Add 7 calendar days to the MFC registration date to find the referral deadline. Add another 30 calendar days to the referral deadline to find the review deadline.',
+  '在 MFC 登记日期上加七个日历日，得出转交截止日。再在转交截止日上加三十个日历日，得出审查截止日。');
  const intro=T(
   'Правило учебной приёмной: передать материалы в течение 7 календарных дней после регистрации в МФЦ. Отсчёт начните на следующий день. Если последний день нерабочий, перенесите его на ближайший рабочий день.',
   'For this simulation’s reception desk, refer the file within seven calendar days of MFC registration. Start counting the following day. Move a non-working final day to the next working day.',
@@ -191,18 +213,23 @@ function mfcCalendarInstructions(c,task){
   [intro[locale],task.special?special[locale]+' '+authored[locale]:general[locale],registration[locale]].join('\n')]));
 }
 
-function publicCaseWorkbook(c,gameplay,mfc){
- const task=mfc?mfcCalendar(c):caseCalendar(c,gameplay);
- return {version:WORKBOOK_VERSION,events:task.events,targets:task.targets,registrationCheck:task.registrationCheck,special:task.special,
-  instructions:mfc?mfcCalendarInstructions(c,task):calendarInstructions(c,task),counting:task.counting,calendarSnapshotId:task.calendarSnapshotId,
-  norms:calendarNorms(c,mfc?{registrationCheck:false}:task),...(mfc?publicMfcRouting(c.id):publicRoutingWorkflow(c.id,{gameplay}))};
+function calendarTask(c,gameplay,mfc,mfcCalendarVersion){
+ if(!mfc)return caseCalendar(c,gameplay);
+ return mfcCalendarVersion===MFC_CALENDAR_VERSION?mfcCurrentCalendar(c):mfcOriginalCalendar(c);
 }
-function evaluateCaseWorkbook(c,decision,feedback,gameplay,mfc){
+function publicCaseWorkbook(c,gameplay,mfc,mfcCalendarVersion){
+ const task=calendarTask(c,gameplay,mfc,mfcCalendarVersion);
+ return {version:WORKBOOK_VERSION,events:task.events,targets:task.targets,registrationCheck:task.registrationCheck,special:task.special,
+  ...(task.calendarVersion?{calendarVersion:task.calendarVersion}:{}),
+  instructions:mfc?mfcCalendarInstructions(c,task):calendarInstructions(c,task),counting:task.counting,calendarSnapshotId:task.calendarSnapshotId,
+  norms:task.calendarVersion?[]:calendarNorms(c,mfc?{registrationCheck:false}:task),...(mfc?publicMfcRouting(c.id):publicRoutingWorkflow(c.id,{gameplay}))};
+}
+function evaluateCaseWorkbook(c,decision,feedback,gameplay,mfc,mfcCalendarVersion){
  if(!supportsWorkbook(c,WORKBOOK_VERSION))fail('invalid_case',503);
- const task=mfc?mfcCalendar(c):caseCalendar(c,gameplay),events=Object.fromEntries(task.events.map(event=>[event.id,event.date])),expected={},selected={},correct={};
+ const task=calendarTask(c,gameplay,mfc,mfcCalendarVersion),events=Object.fromEntries(task.events.map(event=>[event.id,event.date])),expected={},selected={},correct={};
  for(const target of task.targets){
   const anchorDate=target.anchorId==='referral'?expected.referral:events[target.anchorId];
-  expected[target.id]=target.id==='deadline'&&(mfc?task.special:!task.referred)
+  expected[target.id]=task.calendarVersion?addCalendarDays(anchorDate,target.amount):target.id==='deadline'&&(mfc?task.special:!task.referred)
    ? parseDateOnly(c.rubric.deadline)
    : calculateWorkbookDeadline({anchorDate,ruleId:target.ruleId,...(target.counting||task.counting)});
   selected[target.id]=parseDateOnly(target.id==='deadline'?decision.deadline:decision.workbook.referralDeadline)||'';
@@ -226,6 +253,7 @@ function evaluateCaseWorkbook(c,decision,feedback,gameplay,mfc){
  result.score=result.criteria.reduce((sum,row)=>sum+row.earned,0);
  if(Number.isFinite(result.cap))result.score=Math.min(result.score,result.cap);
  result.workbook={calendar:{version:WORKBOOK_VERSION,targets:task.targets,registrationCheck:task.registrationCheck,special:task.special,
+  ...(task.calendarVersion?{calendarVersion:task.calendarVersion}:{}),
   liabilityApplicable:task.liabilityApplicable,instructions:mfc?mfcCalendarInstructions(c,task):calendarInstructions(c,task),expected,selected,correct,wrongDates:task.targets.some(target=>!correct[target.id])},routing};
  return result;
 }

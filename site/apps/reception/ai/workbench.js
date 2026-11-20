@@ -99,12 +99,12 @@ function calendarContent(options){
     ${legend.length?`<div class="rxw-calendar-legend rxw-calendar-main-legend">${legend.map(([kind,label])=>`<span class="event-${kind}">${esc(label)}</span>`).join('')}</div>`:''}
     ${options.task?.autoCommit?'':`<div class="rxw-calendar-footer"><button type="button" class="rxw-calendar-use" data-calendar-action="use-date" ${disabled||!selected?'disabled':''}>${t.use}${arrow(1)}</button></div>`}
     ${options.task?.registrationCheck===false?'':`<label class="rxw-calendar-registration"><input type="checkbox" data-calendar-input="registration-timely" ${s.registrationTimely===true?'checked':''} ${off}><span>${t.timely}</span></label>`}
-    <details class="rxw-calendar-details" data-calendar-details="norms" data-details="calendar-norms" ${options.normsOpen?'open':''}>
+    ${norms.length?`<details class="rxw-calendar-details" data-calendar-details="norms" data-details="calendar-norms" ${options.normsOpen?'open':''}>
       <summary><span><strong>${t.norms}</strong>${options.task?.special?`<span class="rxa-unread rxw-calendar-norms-badge" aria-hidden="true">!</span><span class="rxw-sr">${t.specialRules}</span>`:''}</span>${arrow(1)}</summary>
       <div class="rxw-calendar-details-content">
         ${norms.map(norm=>`<section class="rxw-calendar-norm"><h4>${esc(localText(norm.label,locale))}</h4>${localText(norm.text,locale).split('\n').filter(Boolean).map(text=>`<p>${highlightDurations(text,locale)}</p>`).join('')}${norm.url?(options.task?.internalSources?normativeDocumentButton(sourceDocumentForURL(norm.url),t.open,'rxa-btn quiet rxw-calendar-law-link'):sourceLinkView({url:norm.url,label:t.external,locale,className:'rxw-calendar-law-link',external:true})):''}</section>`).join('')}
       </div>
-    </details><p class="rxw-calendar-status" data-calendar-status role="status"></p>`;
+    </details>`: ''}<p class="rxw-calendar-status" data-calendar-status role="status"></p>`;
 }
 export function calendarWorkbenchView(options={}){return `<section class="rxw-calendar" data-calendar-workbench>${calendarContent(options)}</section>`;}
 /** Delegation survives panel replacement. onUseDate includes the chosen target. */

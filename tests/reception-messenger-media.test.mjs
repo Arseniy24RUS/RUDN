@@ -120,11 +120,11 @@ function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=tr
   const document=new EventTarget(),reduce=new EventTarget();reduce.matches=reduced;
   document.hidden=hidden;let video,image,io;
   document.createElement=kind=>kind==='video'?(video=new Video()):kind==='img'?(image=new Image()):{getContext:()=>({drawImage(){},getImageData:()=>({data:[0,0,0,alpha]})})};
-  document.defaultView={innerHeight:900,matchMedia:()=>reduce,performance:{now:()=>clock},setTimeout:(fn,ms)=>{const id=++nextTimer;timers.set(id,{fn,at:clock+ms});return id;},clearTimeout:id=>timers.delete(id),...(observer?{IntersectionObserver:class{
+  document.defaultView=Object.assign(new EventTarget(),{innerHeight:900,matchMedia:()=>reduce,performance:{now:()=>clock},setTimeout:(fn,ms)=>{const id=++nextTimer;timers.set(id,{fn,at:clock+ms});return id;},clearTimeout:id=>timers.delete(id),...(observer?{IntersectionObserver:class{
     constructor(callback){this.callback=callback;this.disconnected=false;io=this;}
     observe(target){this.target=target;}unobserve(){}disconnect(){this.disconnected=true;}
     visible(value){this.callback([{target:this.target,isIntersecting:value}]);}
-  }}:{})};
+  }}:{})});
   if(frameCallbacks){Video.prototype.requestVideoFrameCallback=callback=>{const id=++nextFrame;frames.set(id,callback);return id;};Video.prototype.cancelVideoFrameCallback=id=>frames.delete(id);}
   const stage=id=>{const node=new Element();node.dataset.rxaActor=id;return node;};
   const root={ownerDocument:document,stage:stage('C05'),querySelector(){return this.stage;}};
@@ -217,6 +217,48 @@ test('a pending play request and a frozen visible loop both recover without a me
     f.tick(3000);assert.ok(f.image.src?.endsWith('/C05.webp'));
     assert.equal(f.timers.size,0);media.destroy();
   }
+});
+
+test('an original video still transferring can present its first frame after the playback stall threshold',()=>{
+  const f=fixture(),media=createMessengerMedia(f.root);
+  Object.assign(f.video,{networkState:2,NETWORK_LOADING:2,readyState:0,HAVE_CURRENT_DATA:2,videoWidth:0});
+  media.refresh();f.tick(4500);
+  assert.ok(f.video.src.endsWith('/C05.webm'));
+  assert.equal(f.image.hasAttribute('src'),false);
+  f.video.readyState=2;f.video.currentTime=.25;f.video.videoWidth=512;
+  f.video.dispatchEvent(new Event('playing'));
+  assert.ok(f.root.stage.hasAttribute('data-rxa-motion-ready'));
+  media.destroy();
+});
+
+test('the animated fallback retries after a temporary request failure and revives when connectivity returns',()=>{
+  const f=fixture({supported:false}),media=createMessengerMedia(f.root);
+  media.refresh();
+  const stage=f.root.stage;
+  f.image.dispatchEvent(new Event('error'));
+  assert.equal(f.image.hasAttribute('src'),false);
+  f.tick(750);
+  assert.ok(f.image.src.endsWith('/C05.webp'));
+  f.image.dispatchEvent(new Event('load'));
+  assert.ok(stage.hasAttribute('data-rxa-motion-ready'));
+  assert.equal(f.root.stage,stage);
+  f.image.dispatchEvent(new Event('error'));
+  f.tick(750);f.image.dispatchEvent(new Event('error'));f.tick(6000);
+  assert.equal(f.image.hasAttribute('src'),false);
+  assert.equal(f.timers.size,0);
+  f.document.defaultView.dispatchEvent(new Event('online'));
+  assert.ok(f.image.src.endsWith('/C05.webp'));
+  media.destroy();
+});
+
+test('a scheduled fallback retry waits for the scene after it becomes hidden',()=>{
+  const f=fixture({supported:false}),media=createMessengerMedia(f.root);
+  media.refresh();f.image.dispatchEvent(new Event('error'));f.observer.visible(false);f.tick(6000);
+  assert.equal(f.image.srcWrites,1);
+  assert.equal(f.timers.size,0);
+  f.observer.visible(true);f.tick(750);
+  assert.equal(f.image.srcWrites,2);
+  media.destroy();
 });
 
 test('progress recovery is inactive offscreen, in a hidden tab, with reduced motion or after destroy',()=>{

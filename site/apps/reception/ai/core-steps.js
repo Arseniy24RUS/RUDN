@@ -66,6 +66,7 @@ const copy = {
 
 export const CORE_VERSION = 'guided-core-v1';
 export const MFC_VERSION = 'mfc-referral-v2';
+export const MFC_CALENDAR_VERSION = 'mfc-7-plus-30-v1';
 export const isMfcJourney = view => view?.coreStepsVersion === MFC_VERSION;
 export const isCoreJourney = view => view?.coreStepsVersion === CORE_VERSION || isMfcJourney(view);
 export const CORE_ACTIONS = ['materials', 'calendar', 'route'];
@@ -76,11 +77,11 @@ export const CORE_PAGES = {
 const mfcCopy = {
   ru: {
     roleTitle:'Вы принимаете обращение в МФЦ',
-    role:'В учебном деле примите обращение и проверьте его регистрацию в МФЦ. Выберите компетентное ведомство или несколько адресатов и рассчитайте оба срока. Затем подготовьте один ответ заявителю по существу обращения.',
+    role:'Рассчитайте сроки, выберите компетентных адресатов и подготовьте один ответ заявителю по существу.',
     exampleHint:'Проследите путь обращения от приёма в МФЦ до ответа ведомства и проверки результата.',
     mentorHint:'Примите новое обращение в МФЦ. Наставник поможет с нормой, сроками, маршрутом, содержательным ответом и контролем. Этап проходит без оценки.',
     independentHint:'Самостоятельно проведите новое обращение через МФЦ и подготовьте ответ по существу. Оценка учитывает проект ответа и вывод по результатам контроля.',
-    dateHint:'В календаре выберите две даты. Сначала выберите срок передачи из МФЦ, затем срок ответа ведомства.',
+    dateHint:'Выберите две даты в календаре.',
     dateRules:'Откуда считать сроки',
     route:'Маршрут обращения',
     routeHint:'Отметьте компетентных адресатов этого обращения. Если подходят несколько ведомств, выберите их в одном списке.',
@@ -96,11 +97,11 @@ const mfcCopy = {
   },
   en: {
     roleTitle:'You receive the appeal at an MFC',
-    role:'In this exercise, receive the appeal at the public services centre (MFC) and check its registration. Choose the competent authority or authorities and calculate both deadlines. Then draft one substantive reply to the applicant.',
+    role:'Calculate both deadlines, select the competent recipients and draft one substantive reply to the applicant.',
     exampleHint:'Follow an appeal from intake at the MFC through the authority’s reply and follow-through.',
     mentorHint:'Receive a new appeal at the MFC. Your mentor can help with the law, deadlines, referral, substantive reply and follow-through. This stage is ungraded.',
     independentHint:'Handle a new appeal through the MFC and draft a substantive reply on your own. Your grade covers the draft and your follow-through conclusion.',
-    dateHint:'Set both calendar dates. Select the MFC referral deadline first, then the authority’s reply deadline.',
+    dateHint:'Select both dates on the calendar.',
     dateRules:'How to count the deadlines',
     route:'Appeal routing',
     routeHint:'Select the competent recipients of this appeal. If it needs several authorities, select them in the same list.',
@@ -116,11 +117,11 @@ const mfcCopy = {
   },
   zh: {
     roleTitle:'你在多功能政务服务中心受理诉求',
-    role:'在本练习中，你将在多功能政务服务中心（MFC）受理诉求并核对登记情况。选择一个或多个主管机关，并计算两项期限。然后为申请人起草一份实质性答复。',
+    role:'计算两项期限，选择有权接收的主管机关，并为申请人起草一份实质性答复。',
     exampleHint:'了解诉求从政务服务中心受理到主管机关答复并核查结果的全过程。',
     mentorHint:'在政务服务中心受理一项新诉求。导师可以就法律依据、期限、转送、实质性答复和后续核查提供帮助。本阶段不计分。',
     independentHint:'独立通过政务服务中心处理一项新诉求，并撰写实质性答复。评分包括答复草稿和后续核查结论。',
-    dateHint:'请在日历中选定两项截止日期。先设置政务服务中心的转送期限，再设置主管机关的答复期限。',
+    dateHint:'请在日历中选定两项截止日期。',
     dateRules:'如何计算两项期限',
     route:'诉求转送路径',
     routeHint:'选择有权接收这份诉求的主管机关。如需选择多个机关，请在同一列表中勾选。',
@@ -149,6 +150,8 @@ export function coreDatePayload(workbook, state) {
   return {
     deadline:dates.deadline || '',
     referralDeadline:workbook?.targets?.some(target=>target.id==='referral') ? dates.referral : '',
-    registrationTimely:workbook?.registrationCheck ? state.registrationTimely : false,
+    ...(workbook?.calendarVersion===MFC_CALENDAR_VERSION?{}:{
+      registrationTimely:workbook?.registrationCheck ? state.registrationTimely : false,
+    }),
   };
 }

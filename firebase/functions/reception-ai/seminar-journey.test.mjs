@@ -9,7 +9,7 @@ import {resolveLegalCitation} from './correspondence-legal-sources.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
 import {explicitQAReview} from '../../../scripts/reception-correspondence-qa-cases.mjs';
-import {MFC_SEMINAR_VERSION} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
 import {calculateWorkbookDeadline} from './workbook-calendar.mjs';
 import {buildCorrespondenceReviewInstructions} from './provider.mjs';
 
@@ -59,8 +59,9 @@ function fixture({store=createMemoryStore(),caseIds,reviews=[],guidedSeminarCore
     return create().handle({...body,op:'recover',buildId:'b'.repeat(32)},identity);
   };
   async function guide(view){
-    const c=(await store.get('sessions/'+view.id)).caseData[0];
-    return tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true,core:Boolean(view.coreStepsVersion),coreStepsVersion:view.coreStepsVersion});
+    const snapshot=await store.get('sessions/'+view.id),c=snapshot.caseData[0];
+    return tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true,core:Boolean(view.coreStepsVersion),
+      coreStepsVersion:view.coreStepsVersion,mfcCalendarVersion:snapshot.mfcCalendarVersion||LEGACY_MFC_CALENDAR_VERSION});
   }
   return {store,handle,start,send,recover,finish,answer,guide,calls,reviewCalls};
 }
@@ -396,9 +397,11 @@ test('MFC sample uses separate deadlines, a real recipient and a substantive dra
   assert.equal(view.case.role.authorityContext.title,legacy.case.role.title);
   assert.equal(view.messages[0].text,legacy.messages[0].text);
   assert.equal(view.case.workbook.routingPolicy.allowInternal,false);
-  assert.deepEqual(view.case.workbook.targets.map(row=>[row.id,row.anchorId]),[['referral','intakeRegistered'],['deadline','recipientRegistered']]);
+  assert.equal(view.case.workbook.calendarVersion,MFC_CALENDAR_VERSION);
+  assert.equal(view.case.workbook.registrationCheck,false);
+  assert.deepEqual(view.case.workbook.targets.map(row=>[row.id,row.anchorId]),[['referral','intakeRegistered'],['deadline','referral']]);
   const dates=Object.fromEntries(view.case.workbook.events.map(row=>[row.id,row.date]));
-  assert.notEqual(dates.intakeRegistered,dates.recipientRegistered);
+  assert.deepEqual(Object.keys(dates),['intakeRegistered']);
   const recovered=await mfcRecover(h,'example');
   assert.equal(recovered.view.id,view.id);
   assert.deepEqual(recovered.legacySessions,[{id:legacy.id,journeyStage:'example'}]);
@@ -412,8 +415,10 @@ test('MFC sample uses separate deadlines, a real recipient and a substantive dra
   const {decision}=view.guidance;
   for(const target of view.case.workbook.targets){
     const expected=calculateWorkbookDeadline({anchorDate:dates[target.anchorId],ruleId:target.ruleId,...target.counting});
+    dates[target.id]=expected;
     assert.equal(target.id==='referral'?decision.workbook.referralDeadline:decision.deadline,expected);
   }
+  assert.equal(Object.hasOwn(decision.workbook,'registrationTimely'),false);
   assert.equal(decision.workbook.routing.disposition,'forward');
   assert.ok(decision.workbook.routing.recipientIds.length);
   assert.notDeepEqual(decision.workbook.routing.recipientIds,['independent-review']);
@@ -429,6 +434,78 @@ test('MFC sample uses separate deadlines, a real recipient and a substantive dra
   view=(await coreSend(h,view,'draft',{decision})).view;
   assert.equal(view.status,'followup');
   assert.equal((await h.store.get('sessions/'+view.id)).caseStates[0].controlWorkflow.initialRouting.correct,true);
+});
+
+test('a teacher can resume an unconfirmed MFC example with the new workbook, the same case and the completed source step',async()=>{
+  const h=fixture({guidedSeminarCore:true}),teacher={uid:'teacher-mfc-calendar-regression',teacher:true};
+  let {view}=await h.handle({...startBody('example','teacher-mfc-calendar'),coreStepsVersion:MFC_SEMINAR_VERSION},teacher);
+  view=(await h.send(view,{op:'tutorial-step',stepId:'reception',choiceId:'role',requestId:'teacher-reads-case'},teacher)).view;
+  const documentId=view.guidance.steps.find(step=>step.id==='materials').documentIds[0];
+  view=(await h.handle({op:'document',sessionId:view.id,requestId:'teacher-opens-source',documentId},teacher)).view;
+  const citations=coreCitations(view.guidance.decision);
+  view=(await h.send(view,{op:'tutorial-step',stepId:'materials',citations,requestId:'teacher-confirms-source'},teacher)).view;
+  const oldRevision=view.revision;
+  const old=await h.store.transaction('sessions/'+view.id,session=>{
+    delete session.mfcCalendarVersion;
+    const state=session.caseStates[0];
+    state.tutorialFinding={stepId:'calendar',explanation:'Проверьте регистрацию у адресата.'};
+    state.coreStepReceipt={stepId:'calendar',requestId:'old-calendar-finding'};
+    return session;
+  });
+  const c=old.value.caseData[0], guide=tutorialGuide(c,executionQAProfiles.private(c),'ru',{
+    execution:true,core:true,coreStepsVersion:MFC_SEMINAR_VERSION,mfcCalendarVersion:LEGACY_MFC_CALENDAR_VERSION});
+  await assert.rejects(h.send(view,{op:'tutorial-step',stepId:'calendar',calendar:coreCalendar(guide.decision),requestId:'old-client-submit'},teacher),err('revision_conflict'));
+  const [resume,recover]=await Promise.all([
+    h.handle({op:'resume',sessionId:view.id,context:'seminar'},teacher),
+    h.handle({...options,op:'recover',journeyStage:'example',mode:'training',coreStepsVersion:MFC_SEMINAR_VERSION},teacher)
+  ]);
+  assert.equal(resume.view.id,view.id);
+  assert.equal(recover.view.revision,oldRevision+1);
+  assert.deepEqual(resume.view.coreSteps.values,{citations});
+  assert.deepEqual(resume.view.openedDocumentIds,[documentId]);
+  assert.equal(resume.view.guidance.steps[resume.view.guidance.stepIndex].id,'calendar');
+  assert.equal(resume.view.guidance.finding,undefined);
+  assert.equal(resume.view.case.workbook.calendarVersion,MFC_CALENDAR_VERSION);
+  const {decision}=resume.view.guidance;
+  assert.notEqual(decision.deadline,guide.decision.deadline);
+  const calendar={deadline:decision.deadline,referralDeadline:decision.workbook.referralDeadline};
+  view=(await h.send(resume.view,{op:'tutorial-step',stepId:'calendar',calendar,requestId:'new-client-two-dates'},teacher)).view;
+  assert.equal(view.coreSteps.stepId,'route');
+  assert.deepEqual(view.coreSteps.values.calendar,calendar);
+  assert.equal((await h.store.get('sessions/'+view.id)).mfcCalendarVersion,MFC_CALENDAR_VERSION);
+});
+
+test('confirmed MFC calendar keeps the original dates and permits the draft after a restart',async()=>{
+  const h=fixture({guidedSeminarCore:true});
+  let {view}=await mfcStart(h,'example','confirmed-old-mfc-calendar');
+  view=(await h.answer(view,'reception','role')).view;
+  const snapshot=await h.store.get('sessions/'+view.id),c=snapshot.caseData[0];
+  const {decision}=tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true,core:true,coreStepsVersion:MFC_SEMINAR_VERSION,
+    mfcCalendarVersion:LEGACY_MFC_CALENDAR_VERSION});
+  view=(await coreSend(h,view,'materials',{citations:coreCitations(decision)})).view;
+  const calendar=coreCalendar(decision);
+  await h.store.transaction('sessions/'+view.id,session=>{
+    delete session.mfcCalendarVersion;
+    const state=session.caseStates[0];
+    state.coreStepsValues.calendar=calendar;
+    state.tutorialStepIndex++;
+    return session;
+  });
+  const reopened=await mfcRecover(h,'example');
+  assert.equal(reopened.view.id,view.id);
+  assert.equal(reopened.view.revision,view.revision);
+  view=reopened.view;
+  assert.equal(view.case.workbook.calendarVersion,undefined);
+  assert.equal(view.case.workbook.registrationCheck,true);
+  assert.deepEqual(view.coreSteps.values.calendar,calendar);
+  assert.equal(view.guidance.decision.deadline,decision.deadline);
+  view=(await coreSend(h,view,'route',{routing:decision.workbook.routing})).view;
+  for(const id of view.guidance.steps.find(step=>step.id==='materials').documentIds)
+    view=(await h.handle({op:'document',sessionId:view.id,requestId:'retain-source-'+id,documentId:id},learner)).view;
+  view=(await coreSend(h,view,'draft',{decision})).view;
+  assert.equal(view.status,'followup');
+  assert.equal(view.decision.deadline,calendar.deadline);
+  assert.equal(view.decision.workbook.registrationTimely,calendar.registrationTimely);
 });
 
 test('several issues use one MFC reply and a referral-only draft cannot pass with full points on other criteria',async()=>{
@@ -478,7 +555,9 @@ test('several issues use one MFC reply and a referral-only draft cannot pass wit
   assert.equal(received.mfcReception.authorityContext.title,view.case.role.authorityContext.title);
   assert.equal(received.sections.resolution,decision.correspondence.sections.resolution);
   assert.equal(received.operational.workbook.routing.correct,true);
-  assert.deepEqual(received.operational.workbook.calendar.correct,{referral:true,deadline:true,registrationTimely:true});
+  assert.deepEqual(received.operational.workbook.calendar.correct,{referral:true,deadline:true});
+  assert.equal(received.frozenCase.authoredDeadline,undefined);
+  assert.equal(received.mfcReception.calendarVersion,MFC_CALENDAR_VERSION);
   const saved=await h.store.get('sessions/'+view.id);
   const score=saved.caseStates[0].correspondenceInitialFeedback;
   assert.equal(score.criteria.find(row=>row.id==='resolution').earned,0);

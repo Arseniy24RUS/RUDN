@@ -8,7 +8,7 @@ import {createMemoryStore} from './store.mjs';
 import {validateCase, evaluateDecision, hash} from './schema.mjs';
 import {ROUTING_RECIPIENTS} from './routing-cases.mjs';
 import {mfcRoutingAlternatives} from './mfc-routing.mjs';
-import {MFC_SEMINAR_VERSION} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
 import {publicRoutingWorkflow} from './routing-workflow.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {canonicalDecision} from '../../../scripts/reception-ai-qa-helpers.mjs';
@@ -160,13 +160,13 @@ test('calendar credit is independently 8 + 8 + 4 and wrongDates excludes a regis
   assert.equal(evaluateWorkbook(c,decisionFor(c),{...base,cap:40}).score,40,'Regrading the workbook cannot erase an existing score cap');
 });
 
-test('MFC referral does not restart an authored three-calendar-month tax review', () => {
+test('historical MFC referral preserves an already confirmed three-calendar-month tax review', () => {
   const c=withDates(cases()[0],{sent:'2026-04-28',received:'2026-04-29',registered:'2026-04-30'});
   c.id='tax-calendar-months';
   c.public.assessment.calendar.events.unshift({id:'declaration',label:{ru:'Представлена декларация'},date:'2026-01-31'});
   c.rubric.authored.calendar={anchor:'declaration',rule:'months3',start:'exclude_anchor',acceptedShifts:['next_working_day']};
   c.rubric.deadline='2026-04-30';
-  const options={gameplay:true,coreStepsVersion:MFC_SEMINAR_VERSION},before=structuredClone(c);
+  const options={gameplay:true,coreStepsVersion:MFC_SEMINAR_VERSION,mfcCalendarVersion:LEGACY_MFC_CALENDAR_VERSION},before=structuredClone(c);
   const book=publicWorkbook(c,2,options);
   assert.deepEqual(book.targets.map(({id,anchorId,ruleId})=>[id,anchorId,ruleId]),[
     ['referral','intakeRegistered','calendar7'],['deadline','declaration','months3']]);
@@ -179,6 +179,37 @@ test('MFC referral does not restart an authored three-calendar-month tax review'
   assert.deepEqual(feedback.workbook.calendar.expected,{referral:'2026-05-07',deadline:'2026-04-30',registrationTimely:true});
   assert.equal(feedback.score,20);
   assert.deepEqual(c,before);
+});
+
+test('the new MFC calendar adds 7 then 30 days without shifting the year-end holiday or weekend', () => {
+  const c=withDates(cases()[0],{sent:'2026-12-22',received:'2026-12-23',registered:'2026-12-24'});
+  c.id='tax-calendar-months';
+  c.public.assessment.calendar.events.unshift({id:'declaration',label:{ru:'Представлена декларация'},date:'2026-01-31'});
+  c.rubric.authored.calendar={anchor:'declaration',rule:'months3',start:'exclude_anchor',acceptedShifts:['next_working_day']};
+  c.rubric.deadline='2026-04-30';
+  const options={gameplay:true,coreStepsVersion:MFC_SEMINAR_VERSION}, original=structuredClone(c);
+  const book=publicWorkbook(c,2,options);
+  assert.equal(book.calendarVersion,MFC_CALENDAR_VERSION);
+  assert.equal(book.registrationCheck,false);
+  assert.equal(book.special,false);
+  assert.deepEqual(book.norms,[]);
+  assert.deepEqual(book.events.map(({id,date})=>({id,date})),[{id:'intakeRegistered',date:'2026-12-24'}]);
+  assert.deepEqual(book.targets.map(({id,anchorId,ruleId,counting})=>[id,anchorId,ruleId,counting.shift]),[
+    ['referral','intakeRegistered','calendar7','no_shift'],['deadline','referral','calendar30','no_shift']]);
+  assert.equal(workingCalendarDay('2026-12-31'),false);
+  assert.equal(workingCalendarDay('2027-01-30'),false);
+  const routing={disposition:'forward',recipientIds:mfcRoutingAlternatives(c.id)[0].map(row=>row.id)};
+  const draft={referralDeadline:'2026-12-31',routing};
+  assert.deepEqual(validateWorkbookDecision(draft,2,options),draft);
+  assert.deepEqual(validateWorkbookDecision({...draft,registrationTimely:false},2,options),draft);
+  const criteria={criteria:[{id:'calendar',earned:0,max:20}]};
+  const {workbook,score}=evaluateWorkbook(c,{deadline:'2027-01-30',workbook:draft},criteria,2,options);
+  assert.deepEqual(workbook.calendar.expected,{referral:'2026-12-31',deadline:'2027-01-30'});
+  assert.deepEqual(workbook.calendar.correct,{referral:true,deadline:true});
+  assert.equal(score,20);
+  const shifted=evaluateWorkbook(c,{deadline:'2027-02-10',workbook:{...draft,referralDeadline:'2027-01-11'}},criteria,2,options);
+  assert.equal(shifted.score,0);
+  assert.deepEqual(c,original);
 });
 
 test('v1 removes exact obsolete calculation instructions in all languages without rewriting legal merits or legacy feedback', () => {

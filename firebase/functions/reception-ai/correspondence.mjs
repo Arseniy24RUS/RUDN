@@ -4,7 +4,7 @@ import {ReceptionError} from './schema.mjs';
 import {ROUTING_AUTHORITY_IDS,ROUTING_AUTHORITIES} from './routing-directory.mjs';
 import {correspondenceIssueTitle} from './correspondence-profiles.mjs';
 import {controlWorkflowSources,controlReviewContext,publicControlWorkflow} from './control-workflow.mjs';
-import {MFC_SEMINAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedMerits} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedMerits,mfcCalendarAction,mfcCalendarMerits} from './mfc-seminar.mjs';
 
 export const DECISION_VERSION = 'correspondence-v1';
 export const CORRESPONDENCE_RUBRIC_VERSION = 'correspondence-rubric-1';
@@ -236,9 +236,11 @@ export function addReviewDialogue(context,messages,availableBytes) {
 /** The frozen session dossier outranks generic profiles, particularly every date variant. */
 export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null,coreStepsVersion}={}) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
+  const currentCalendar=mfc&&workbook?.calendarVersion===MFC_CALENDAR_VERSION;
   const sharedReply=mfcUsesSharedReply(coreStepsVersion,workbook);
   const legacyDispatch=sharedReply?mfcLegacyDispatchActions(c.id):new Set();
-  const keepAction=id=>!legacyDispatch.has(id);
+  const calendarAction=id=>currentCalendar?mfcCalendarAction(c.id,id,locale):undefined;
+  const keepAction=id=>!legacyDispatch.has(id)&&calendarAction(id)!==null;
   const reception=mfc?mfcRole(c.public.role,locale,sharedReply):null;
   const execution=phase==='control'&&state.controlWorkflow?controlReviewContext(state.controlWorkflow,profile,locale):null;
   if(sharedReply&&execution)for(const issue of execution.issues){
@@ -259,26 +261,28 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   for(const citation of resolvedCitations)sources.push({id:'citation:'+citation.id,kind:citation.kind,title:citation.title,text:citation.text,available:true,url:citation.url,locator:citation.locator});
   const calendar=operational?.workbook?.calendar||state.correspondenceInitialFeedback?.workbook?.calendar;
   const profileCriteria=clone(profile?.criteria);
-  if(sharedReply&&profileCriteria?.resolution){
+  if((sharedReply||currentCalendar)&&profileCriteria?.resolution){
     const rule=profileCriteria.resolution;
     rule.expectedActionIds=(rule.expectedActionIds||[]).filter(keepAction);
     rule.partialOrder=(rule.partialOrder||[]).filter(pair=>pair.every(keepAction));
-    delete rule.correctRoutes;
-    if(profileCriteria.legalBasis&&mfcSharedMerits[c.id]){
-      const merits=local(mfcSharedMerits[c.id],locale);
+    if(sharedReply)delete rule.correctRoutes;
+    const adjustedMerits=(sharedReply&&mfcSharedMerits[c.id])||(currentCalendar&&mfcCalendarMerits[c.id]);
+    if(profileCriteria.legalBasis&&adjustedMerits){
+      const merits=local(adjustedMerits,locale);
       profileCriteria.legalBasis.expectedApplication=merits;
       profileCriteria.legalBasis.explanation=merits;
       delete profileCriteria.legalBasis.researchExplanation;
     }
     const next=profileCriteria.nextSteps;
     if(next){
-      if(next.rightsAction&&!keepAction(next.rightsAction.id))next.rightsAction=null;
-      next.monitoringActions=(next.monitoringActions||[]).filter(action=>keepAction(action.id));
+      const actionText=action=>({...action,text:calendarAction(action.id)??action.text});
+      if(next.rightsAction)next.rightsAction=keepAction(next.rightsAction.id)?actionText(next.rightsAction):null;
+      next.monitoringActions=(next.monitoringActions||[]).filter(action=>keepAction(action.id)).map(actionText);
     }
   }
-  if(profileCriteria?.nextSteps?.calendar && workbook && calendar?.expected){
+  if(profileCriteria?.nextSteps?.calendar && workbook && (currentCalendar||calendar?.expected)){
     profileCriteria.nextSteps.calendar={events:clone(workbook.events),targets:clone(workbook.targets),
-      counting:clone(workbook.counting),expected:clone(calendar.expected)};
+      counting:clone(workbook.counting),...(calendar?.expected?{expected:clone(calendar.expected)}:{})};
   }
   if(workbook)sources.push({id:'workbook-calendar',kind:'case-calendar',title:'Calendar and assignment shown to the student',
     text:JSON.stringify({events:workbook.events,targets:workbook.targets,counting:workbook.counting}),available:true});
@@ -338,6 +342,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
     version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase,locale,caseId:c.id,caseVersion:c.version,datePackId:c.datePackId||null,
     role:reception?.text||local(c.public.role.text,locale),opening:participantOpening(c,locale),
     ...(reception?{mfcReception:{authorityContext:reception.authorityContext,sharedReply,
+      ...(currentCalendar?{calendarVersion:MFC_CALENDAR_VERSION}:{}),
       routingBoundary:workbook?.routingPolicy?.boundary||null,
       routingContext:workbook?.routingPolicy?.context||null,
       selectedRecipients:(decision.workbook?.routing?.recipientIds||[]).map(id=>mfcAuthorityName(ROUTING_AUTHORITIES[id],locale))}}:{}),
@@ -346,7 +351,8 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
     // The snapshot and its server-derived worksheet supply events and target
     // dependencies. Use the actual target anchors and computed deadlines;
     // never invent an additional receipt or registration date.
-    frozenCase:{date:c.public.date,deadline:calendar?.expected?.deadline||c.rubric.deadline,authoredDeadline:c.rubric.deadline,
+    frozenCase:{date:c.public.date,deadline:calendar?.expected?.deadline||(currentCalendar?null:c.rubric.deadline),
+      ...(currentCalendar?{}:{authoredDeadline:c.rubric.deadline}),
       calendarEvents:clone(workbook?.events||c.public.assessment?.calendar?.events||[]),
       calendarTargets:clone(workbook?.targets||[]),calendarCounting:clone(workbook?.counting||null),
       correspondenceOrigin:clone(workbook?.origin||null),site:clone(workbook?.site||null),
@@ -358,12 +364,13 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
       control:{version:'execution-v1',assessmentSource:'execution',instruction:sharedReply?
         'Use current evidence, issue states and one shared conclusion. The simulator supplies control contacts.':
         'Use current scoped execution rules and recipients; the initial decision has already been assessed.'}}:clone({issues:profile.issues,acceptedKinds:profile.acceptedKinds,
-      ...(sharedReply?{}:{acceptablePlans:profile.acceptablePlans,routing:profile.routing}), constraints:profile.constraints,response:profile.response,criteria:profileCriteria,
+      ...(sharedReply?{}:{...(currentCalendar?{}:{acceptablePlans:profile.acceptablePlans}),routing:profile.routing}), constraints:profile.constraints,response:profile.response,criteria:profileCriteria,
       control:phase==='control'?Object.fromEntries(Object.entries(profile.control||{}).filter(([key])=>key!=='workflow')):undefined})):null,
     acceptablePlans:(execution?[]:profile?.acceptablePlans?.length?profile.acceptablePlans:
       c.rubric.authored?.decisionPlans?.length?c.rubric.authored.decisionPlans:[{id:'default',requiredActions:c.rubric.requiredActionIds}])
       .map(plan=>({id:plan.id,routeIds:sharedReply?[]:clone(plan.routeIds||[]),partialOrder:clone((plan.partialOrder||[]).filter(pair=>pair.every(keepAction))),
-        actions:(plan.requiredActionIds||plan.requiredActions||[]).filter(keepAction).map(id=>({id,text:local(c.public.actions.find(action=>action.id===id)?.label,locale)}))})),
+        actions:(plan.requiredActionIds||plan.requiredActions||[]).filter(keepAction).map(id=>({id,
+          text:calendarAction(id)??local(c.public.actions.find(action=>action.id===id)?.label,locale)}))})),
     planPolicy:sharedReply?
       'The shared-response MFC assignment supersedes any legacy partition of questions, answers or attachments. Apply the original plans for the merits and protect confidential information. Accept one lawful substantive plan.' :
       'Each acceptable plan is a separate lawful alternative. Common requirements apply to every plan; branch-specific requirements apply only within the selected lawful branch. Never require the union of mutually alternative plans.',

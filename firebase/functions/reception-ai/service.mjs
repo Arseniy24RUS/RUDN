@@ -19,7 +19,7 @@ import {normativeActsForCase,requiredSeminarActs,validateLegalCitation,hasApplic
 import {JOURNEY_STAGES, SEMINAR_EXAMPLE, SEMINAR_GRADING_VERSION, isTutorial, exactCaseScore, seminarPointsAt,
   seminarExample, tutorialGuide, publicTutorialGuide, tutorialOperational, tutorialExecutionAction, validatedTutorialMemo, mentorFinding, tutorialExecutionKinds, tutorialExecutionProgress, walkthroughControlProfile} from './seminar-journey.mjs';
 import {SEMINAR_CORE_VERSION,CORE_STEP_FIELDS,publicCoreSteps,inspectCoreStep,saveCoreStep,assertCoreDecision} from './seminar-core.mjs';
-import {MFC_SEMINAR_VERSION,mfcRole,mfcUsesSharedReply,mfcSharedReplyInstruction} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION,mfcRole,mfcUsesSharedReply,mfcSharedReplyInstruction} from './mfc-seminar.mjs';
 
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxReviewInputAllowance:320000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
@@ -47,7 +47,13 @@ const SEMINAR_PASS_SCORE = 70;
 const seminarPath = owner => `seminarProgress/${hash(owner)}`;
 const usesLegalCitation = (context,workbookVersion) => Boolean(context) && workbookVersion === WORKBOOK_VERSION;
 const journeyLedger = version => version===MFC_SEMINAR_VERSION?'mfcJourney':version===SEMINAR_CORE_VERSION?'guidedJourney':'journey';
-const workbookOptions = ({context,coreStepsVersion}) => ({gameplay:Boolean(context),coreStepsVersion});
+const calendarVersionFor = s => s.coreStepsVersion===MFC_SEMINAR_VERSION?(s.mfcCalendarVersion||LEGACY_MFC_CALENDAR_VERSION):undefined;
+const workbookOptions = s => ({gameplay:Boolean(s.context),coreStepsVersion:s.coreStepsVersion,mfcCalendarVersion:calendarVersionFor(s)});
+function canUpgradeMfcCalendar(s) {
+  if(s?.coreStepsVersion!==MFC_SEMINAR_VERSION||s.mfcCalendarVersion||s.status!=='active')return false;
+  const state=values(s.caseStates)[s.caseIndex];
+  return Boolean(state&&!state.coreStepsValues?.calendar&&!state.decision&&!state.correspondenceDraft&&!state.reviewPending);
+}
 const hasWorkbook = s => [LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion);
 const workbookFor = (c,s) => hasWorkbook(s)?publicWorkbook(c,s.workbookVersion,workbookOptions(s)):null;
 const roleFor = (c,s,workbook) => s.coreStepsVersion===MFC_SEMINAR_VERSION?
@@ -152,11 +158,29 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (session.owner !== scopeOf(identity) || Boolean(session.guest) !== Boolean(identity.guest)) fail('forbidden', 403);
     if (identity.guest && (session.context !== 'free' || session.mode !== 'training' || session.studentKey || session.teacher)) fail('forbidden', 403);
   }
+  async function upgradeMfcCalendar(s) {
+    if(!canUpgradeMfcCalendar(s))return s;
+    // The revision invalidates an in-flight submission from the previous
+    // calendar. A concurrently confirmed worksheet keeps its original rules.
+    const saved=await store.transaction(`sessions/${s.id}`,current=>{
+      if(!canUpgradeMfcCalendar(current))return undefined;
+      current.caseStates=values(current.caseStates);
+      const state=current.caseStates[current.caseIndex];
+      if(state.tutorialFinding?.stepId==='calendar')delete state.tutorialFinding;
+      if(state.coreStepReceipt?.stepId==='calendar')delete state.coreStepReceipt;
+      current.mfcCalendarVersion=MFC_CALENDAR_VERSION;
+      current.revision++;
+      return current;
+    });
+    if(!saved.value)fail('not_found',404);
+    return normalizeSession(saved.value);
+  }
   async function get(id, identity) {
-    identifier(id); const s = normalizeSession(await store.get(`sessions/${id}`)); own(s, identity); return s;
+    identifier(id); const s = normalizeSession(await store.get(`sessions/${id}`)); own(s, identity); return upgradeMfcCalendar(s);
   }
   function guideFor(s,c,profile){
-    return tutorialGuide(c,profile,s.locale,{execution:s.controlVersion==='execution-v1',core:Boolean(s.coreStepsVersion),coreStepsVersion:s.coreStepsVersion});
+    return tutorialGuide(c,profile,s.locale,{execution:s.controlVersion==='execution-v1',core:Boolean(s.coreStepsVersion),
+      coreStepsVersion:s.coreStepsVersion,mfcCalendarVersion:calendarVersionFor(s)});
   }
   function view(session) {
     const s = normalizeSession(copy(session)), c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex];
@@ -244,6 +268,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       ...(session.buildId ? {buildId:session.buildId} : {}), ...(session.context ? {context:session.context} : {})};
   }
   async function response(s) {
+    s=await upgradeMfcCalendar(s);
     await deliverResult(s);
     await remember(s);
     const progress = s.context==='seminar' ? await seminarProgress(s.owner,s) : null;
@@ -537,6 +562,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       mode, locale: language, ...(body.workbookVersion?{workbookVersion:body.workbookVersion}:{}), ...(body.buildId ? {buildId:body.buildId} : {}), startedAt: timestamp, updatedAt: timestamp, revision: 1, status: 'active', caseIndex: 0,
       ...(context ? {context} : {}), ...(body.journeyStage ? {journeyStage:body.journeyStage} : {}),
       ...(seminar?.coreStepsVersion?{coreStepsVersion:seminar.coreStepsVersion}:{}),
+      ...(seminar?.coreStepsVersion===MFC_SEMINAR_VERSION?{mfcCalendarVersion:MFC_CALENDAR_VERSION}:{}),
       caseData: selected, caseStates: selected.map(c => initialState(c, language, timestamp,context)), results: [], requests: {},
       startSignature: signature, lease: null, result: null, journalSaved: false};
     const created = await store.transaction(`sessions/${id}`, old => old || session);
@@ -972,21 +998,22 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return guide;
   }
 
-  const tutorCorrespondence = (raw,c,state,language,coreStepsVersion) => {
+  const tutorCorrespondence = (raw,c,state,language,session) => {
     const {workbook,...decision}=raw||{};
     return {...validateDecision(decision,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:language}),
-      workbook:validateWorkbookDecision(workbook,WORKBOOK_VERSION,{coreStepsVersion})};
+      workbook:validateWorkbookDecision(workbook,WORKBOOK_VERSION,workbookOptions(session))};
   };
 
-  async function inspectMentorDraft(raw,c,state,profile,language,coreStepsVersion) {
+  async function inspectMentorDraft(raw,c,state,profile,language,session) {
+    const {coreStepsVersion}=session;
     let decision,evidence;
     try{
-      decision=tutorCorrespondence(raw,c,state,language,coreStepsVersion);
+      decision=tutorCorrespondence(raw,c,state,language,session);
       if(coreStepsVersion)assertCoreDecision(state,decision);
       const {sections,subject,citations}=decision.correspondence;
       if(!subject||Object.values(sections).some(text=>!text))return {finding:'emptyDraft',decision};
       if(!profile.acceptedKinds.includes(decision.correspondence.kind))return {finding:'kind',decision};
-      const {routing,calendar}=tutorialOperational(c,decision,coreStepsVersion).workbook;
+      const {routing,calendar}=tutorialOperational(c,decision,coreStepsVersion,calendarVersionFor(session)).workbook;
       if(!routing?.correct)return {finding:'route',decision};
       if(Object.values(calendar.correct).some(correct=>!correct))return {finding:'calendar',decision};
       if(!citations.some(row=>row.section==='facts'&&['document','dialogue'].includes(row.kind)))return {finding:'evidence',decision};
@@ -1049,12 +1076,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(session.lease?.until>clock())fail('busy',409);
     assertCoreStepAllowed(session,body);
     const c=session.caseData[session.caseIndex],state=session.caseStates[session.caseIndex];
-    const inspected=await inspectCoreStep(body,c,state,session.locale,{resolveLegalCitation,guide:isTutorial(session),coreStepsVersion:session.coreStepsVersion});
+    const inspected=await inspectCoreStep(body,c,state,session.locale,{resolveLegalCitation,guide:isTutorial(session),...workbookOptions(session)});
     return response(await mutate(body,identity,s=>{
       assertCoreStepAllowed(s,body);
       const current=s.caseStates[s.caseIndex];
       if(inspected.finding){
-        current.tutorialFinding={stepId:body.stepId,explanation:mentorFinding(inspected.finding,s.locale)};
+        current.tutorialFinding={stepId:body.stepId,explanation:mentorFinding(inspected.finding,s.locale,calendarVersionFor(s))};
         current.coreStepReceipt={requestId,stepId:body.stepId};
       }else{
         saveCoreStep(current,body,inspected);
@@ -1086,7 +1113,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         const c=session.caseData[session.caseIndex], profile=correspondenceProfiles.private(c,session.locale);
         const guide=guideFor(session,c,profile);
         if(guide.steps[state.tutorialStepIndex]?.id===body.stepId){
-          inspected=draft?await inspectMentorDraft(body.decision,c,state,profile,session.locale,session.coreStepsVersion):
+          inspected=draft?await inspectMentorDraft(body.decision,c,state,profile,session.locale,session):
             inspectMentorControl(body.control,c,state,profile,session.locale);
           if(!inspected.finding&&session.journeyStage==='mentor')return reviewMentorProduct(body,identity,inspected);
         }
@@ -1205,7 +1232,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         if(inspected.finding){
           if(inspected.decision)state.correspondenceDraft=inspected.decision;
           if(inspected.control)state.controlDraft=inspected.control;
-          state.tutorialFinding={stepId:step.id,explanation:[mentorFinding(inspected.finding,s.locale),
+          state.tutorialFinding={stepId:step.id,explanation:[mentorFinding(inspected.finding,s.locale,calendarVersionFor(s)),
             ...(inspected.details||[]).map(finding=>finding.message)].join(' ')};
           return;
         }
@@ -1238,12 +1265,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         state.correspondenceEvidence=inspected.evidence;
       }else{
         openTutorialDocuments(c,state,guide.decision.correspondence.citations.map(citation=>citation.sourceId));
-        state.decision=tutorCorrespondence(guide.decision,c,state,s.locale,s.coreStepsVersion);
+        state.decision=tutorCorrespondence(guide.decision,c,state,s.locale,s);
       }
       if(c.followup){
         if(s.controlVersion==='execution-v1')state.controlWorkflow=createControlWorkflow({caseData:c,
           profile:s.journeyStage==='example'?walkthroughControlProfile(c,profile):profile,decision:state.decision,
-          initialFeedback:tutorialOperational(c,state.decision,s.coreStepsVersion),locale:s.locale,timestamp,sharedReply:guide.sharedReply});
+          initialFeedback:tutorialOperational(c,state.decision,s.coreStepsVersion,calendarVersionFor(s)),locale:s.locale,timestamp,sharedReply:guide.sharedReply});
         s.status='followup';
       }
     }

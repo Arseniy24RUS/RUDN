@@ -15,6 +15,9 @@ export const RECEPTION_ACTORS = Object.freeze({
 });
 const ACTOR = /^(?:C(?:0[1-9]|1[0-9]|2[0-4])|S0[34])$/;
 const LEGACY_ACTORS = Object.freeze({'assets/ilya.webp':'C05','assets/maria.webp':'C01','assets/sergey.webp':'C03'});
+const FRAME_TIMEOUT_MS = 3000;
+const LOADING_TIMEOUT_MS = 6500;
+const IMAGE_RETRY_DELAY_MS = 750;
 const url = relative => resourceURL('../' + relative, import.meta.url).href;
 
 /** Public visual metadata only. Arbitrary URLs and directory traversal never enter media src. */
@@ -64,9 +67,9 @@ export function createMessengerMedia(root, {signal} = {}) {
   motionImage.alt = '';
   motionImage.decoding = 'async';
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
-  const failedVideo = new Set(), failedImage = new Set();
+  const failedVideo = new Set(), imageFailures = new Map();
   let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false, imageReady = false;
-  let watchdog, lastVideoTime = 0, lastProgressAt = 0, sourceVersion = 0;
+  let watchdog, imageRetry, lastVideoTime = 0, lastProgressAt = 0, sourceVersion = 0;
   const schedule = view.setTimeout?.bind(view) || globalThis.setTimeout;
   const unschedule = view.clearTimeout?.bind(view) || globalThis.clearTimeout;
   const now = () => view.performance?.now?.() ?? Date.now();
@@ -89,7 +92,10 @@ export function createMessengerMedia(root, {signal} = {}) {
     if (ready && video.currentTime !== lastVideoTime) {
       lastVideoTime = video.currentTime; lastProgressAt = at;
     }
-    if (at - lastProgressAt >= 3000) { error(); return; }
+    // Give the smaller video time to arrive before launching the larger image.
+    // Once data is available, a decoder that cannot draw still falls back quickly.
+    const loading = !ready && video.networkState === video.NETWORK_LOADING && video.readyState < video.HAVE_CURRENT_DATA;
+    if (at - lastProgressAt >= (loading ? LOADING_TIMEOUT_MS : FRAME_TIMEOUT_MS)) { error(); return; }
     watchdog = schedule(checkProgress, 750);
   }
   function watchPlayback() {
@@ -106,28 +112,51 @@ export function createMessengerMedia(root, {signal} = {}) {
     if (video.hasAttribute('src')) { video.removeAttribute('src'); video.load(); }
   }
   function clearImage() {
+    if (imageRetry !== undefined) unschedule(imageRetry);
+    imageRetry = undefined;
     imageReady = false;
     if (motionImage.hasAttribute('src')) motionImage.removeAttribute('src');
     motionImage.remove();
   }
   const shouldPlay = () => !destroyed && stage && visible && !document.hidden && !reduce.matches;
   const useImage = () => !supportsVideo || supportsAlpha === false || failedVideo.has(actor);
-  function imagePlayback() {
-    if (!shouldPlay() || failedImage.has(actor)) { clearImage(); portrait(); return; }
+  function imagePlayback(retrying = false) {
+    if (!shouldPlay()) { clearImage(); portrait(); return; }
     pause(); video.remove();
+    if (motionImage.hasAttribute('src')) {
+      if (motionImage.parentNode !== stage) stage.append(motionImage);
+      if (imageReady) stage.setAttribute('data-rxa-motion-ready', '');
+      return;
+    }
+    const failures = imageFailures.get(actor) || 0;
+    if (failures > 1) return;
+    if (failures === 1 && !retrying) {
+      if (imageRetry === undefined) imageRetry = schedule(() => {
+        imageRetry = undefined;
+        imagePlayback(true);
+      }, IMAGE_RETRY_DELAY_MS);
+      return;
+    }
     if (motionImage.parentNode !== stage) stage.append(motionImage);
-    if (!motionImage.hasAttribute('src')) {
-      imageReady = false; portrait();
-      motionImage.src = url(`assets/gfx1/motion/${actor}.webp`);
-    } else if (imageReady) stage.setAttribute('data-rxa-motion-ready', '');
+    imageReady = false; portrait();
+    motionImage.src = url(`assets/gfx1/motion/${actor}.webp`);
   }
   function imageLoaded() {
     if (!shouldPlay() || !useImage() || !motionImage.hasAttribute('src')) return;
-    if (motionImage.naturalWidth > 0) { imageReady = true; stage.setAttribute('data-rxa-motion-ready', ''); }
+    if (motionImage.naturalWidth > 0) {
+      imageFailures.delete(actor);
+      imageReady = true; stage.setAttribute('data-rxa-motion-ready', '');
+    }
   }
   function imageError() {
-    if (actor) failedImage.add(actor);
+    if (!motionImage.hasAttribute('src')) return;
+    imageFailures.set(actor, (imageFailures.get(actor) || 0) + 1);
     clearImage(); portrait();
+    imagePlayback();
+  }
+  function networkRestored() {
+    if (!imageFailures.delete(actor)) return;
+    clearImage(); playback();
   }
   function presentFrame() {
     frame = undefined;
@@ -153,7 +182,7 @@ export function createMessengerMedia(root, {signal} = {}) {
   function playback() {
     if (!shouldPlay()) {
       pause();
-      if (motionImage.hasAttribute('src')) { clearImage(); portrait(); }
+      if (motionImage.hasAttribute('src') || imageRetry !== undefined) { clearImage(); portrait(); }
       return;
     }
     if (useImage()) { imagePlayback(); return; }
@@ -181,6 +210,7 @@ export function createMessengerMedia(root, {signal} = {}) {
     const candidate = reduce.matches ? null : root.querySelector('[data-rxa-actor]');
     const next = ACTOR.test(candidate?.dataset.rxaActor || '') ? candidate : null;
     if (next === stage) { playback(); return; }
+    const returning = !stage;
     if (stage) { cancelFrame(); observer?.unobserve(stage); stage.removeAttribute('data-rxa-motion-ready'); }
     stage = next;
     if (!stage) {
@@ -192,6 +222,8 @@ export function createMessengerMedia(root, {signal} = {}) {
       const state = actor.startsWith('S') ? 'S-N' : 'C-N';
       video.poster = url(`assets/gfx1/characters/${actor}/${actor}__${state}__w512.webp`);
     }
+    // Reopening the scene is an explicit way to retry after a lasting outage.
+    if (returning) imageFailures.delete(actor);
     if ((ready && !useImage()) || (imageReady && useImage())) stage.setAttribute('data-rxa-motion-ready', '');
     const bounds = stage.getBoundingClientRect();
     visible = !observer || bounds.width > 0 && bounds.height > 0 && bounds.bottom > 0 && bounds.top < view.innerHeight;
@@ -201,6 +233,7 @@ export function createMessengerMedia(root, {signal} = {}) {
     if (destroyed) return;
     destroyed = true; observer?.disconnect();
     document.removeEventListener('visibilitychange', playback);
+    view.removeEventListener?.('online', networkRestored);
     reduce.removeEventListener?.('change', refresh);
     signal?.removeEventListener('abort', destroy);
     video.removeEventListener('playing', playing); video.removeEventListener('error', error);
@@ -208,6 +241,7 @@ export function createMessengerMedia(root, {signal} = {}) {
     clearSource(); clearImage(); video.remove(); stage = null;
   }
   document.addEventListener('visibilitychange', playback);
+  view.addEventListener?.('online', networkRestored);
   reduce.addEventListener?.('change', refresh);
   signal?.addEventListener('abort', destroy, {once:true});
   video.addEventListener('playing', playing); video.addEventListener('error', error);

@@ -14,14 +14,16 @@ import {RECEPTION_AUTHORITIES} from '../site/apps/reception/ai/authority-directo
 import {localizedAuthorityName} from '../site/apps/reception/ai/authority-picker.js';
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
+import {MFC_CALENDAR_VERSION} from '../site/apps/reception/ai/core-steps.js';
 import {SEMINAR_EXAMPLE,seminarPointsAt,tutorialGuide,tutorialExecutionAction,validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
 
 const arg=(key, fallback)=>process.argv.includes(key)?process.argv[process.argv.indexOf(key)+1]:fallback;
 const engine=arg('--browser','chromium');
 const legacy=process.argv.includes('--legacy');
 const scored=process.argv.includes('--scored')||process.argv.includes('--teacher');
-const teacher=process.argv.includes('--teacher');
-assert.ok(!(legacy&&scored),'--legacy and --scored/--teacher are separate browser runs.');
+const teacherExample=process.argv.includes('--teacher-example');
+const teacher=process.argv.includes('--teacher')||teacherExample;
+assert.ok(!(legacy&&(scored||teacherExample))&&!(scored&&teacherExample),'Select just one browser scenario.');
 const coreStepsVersion=legacy?null:'mfc-referral-v2';
 assert.ok(['chromium','webkit'].includes(engine));
 const modulePath=arg('--playwright-module',process.env.RECEPTION_PLAYWRIGHT_MODULE);
@@ -37,7 +39,8 @@ const sizes=[
 assert.ok(sizes.length,'Use --viewport 1440, 390, 430, 320 or 844.');
 const normative=JSON.parse(await readFile(new URL('../firebase/functions/reception-ai/normative-provisions.json',import.meta.url),'utf8'));
 const labelByLocale={ru:'Пошаговая подсказка',en:'Step-by-step guide',zh:'分步提示'};
-const mentorAnswer={ru:'Рассчитайте сроки передачи и ответа по отдельности.',en:'Calculate the referral and reply deadlines separately.',zh:'请分别计算转送期限和答复期限。'};
+const mentorAnswer={ru:'Отсчитайте срок ответа от крайней даты передачи.',en:'Count the reply period from the referral deadline.',zh:'从转送截止日期开始计算答复期限。'};
+const retainedDraft={ru:'Сохранённый вывод по обращению.',en:'A saved conclusion on the appeal.',zh:'已保存的诉求结论。'};
 const independentText={
   ru:{
     facts:'В одном письме заявитель просит проверить сокращение движения автобуса и публикацию его телефона и сведений о здоровье. Именно эти два вопроса зафиксированы в материале дела.',
@@ -90,7 +93,7 @@ async function run({width,height,locale,full}) {
       mfcJourney:{example:{completed:true},mentor:{completed:true}},
     }));
   }
-  const checkLegacyResume=!legacy&&!scored&&width===390;
+  const checkLegacyResume=!legacy&&!scored&&!teacherExample&&width===390;
   const older=checkLegacyResume?(await fixture.service.handle({op:'start',context:'seminar',mode:'training',locale,
     journeyStage:'example',workbookVersion:2,decisionVersion:'correspondence-v1',controlVersion:'execution-v1',
     requestId:'save-previous-example'},fixture.identity)).view:null;
@@ -145,6 +148,7 @@ async function run({width,height,locale,full}) {
       const target=document.querySelector('[aria-describedby*="rxaTourHint"]');
       const ring=document.querySelector('.rxa-tour-highlight');
       const card=document.querySelector('.rxa-tour-card');
+      const arrow=document.querySelector('.rxa-tour-arrow');
       const rect=node=>node?.getBoundingClientRect();
       const intersection=(a,b)=>({left:Math.max(a.left,b.left),right:Math.min(a.right,b.right),top:Math.max(a.top,b.top),bottom:Math.min(a.bottom,b.bottom)});
       const clipped=node=>{
@@ -160,6 +164,11 @@ async function run({width,height,locale,full}) {
       const viewport={left:visualViewport.offsetLeft,top:visualViewport.offsetTop,
         right:visualViewport.offsetLeft+visualViewport.width,bottom:visualViewport.offsetTop+visualViewport.height};
       const visible=!card.hidden&&overlap(cardBounds,viewport);
+      const arrowBounds=rect(arrow),arrowX=(arrowBounds.left+arrowBounds.right)/2,arrowY=(arrowBounds.top+arrowBounds.bottom)/2;
+      const arrowDistance=arrow.hidden?null:Math.hypot(
+        Math.max(targetBounds.left-arrowX,0,arrowX-targetBounds.right),
+        Math.max(targetBounds.top-arrowY,0,arrowY-targetBounds.bottom),
+      );
       const controls=[...document.querySelectorAll('#receptionAI button,#receptionAI input,#receptionAI textarea,#receptionAI select,#receptionAI summary')];
       const covered=controls.filter(node=>{
         if(node===target||!node.getClientRects().length||!visible)return false;
@@ -169,7 +178,7 @@ async function run({width,height,locale,full}) {
         return hit===node||node.contains(hit);
       });
       return {
-        focused:document.activeElement===target, visible, arrow:!document.querySelector('.rxa-tour-arrow').hidden,
+        focused:document.activeElement===target, visible, arrow:!arrow.hidden, arrowDistance,
         pointerEvents:getComputedStyle(ring).pointerEvents, ringMatches:overlap(ringBounds,targetBounds),
         targetOverlap:visible&&overlap(cardBounds,targetBounds),
         coversOtherControl:covered.map(node=>node.dataset.action||node.dataset.controlAction||node.dataset.calendarAction||node.tagName.toLowerCase()),
@@ -178,7 +187,7 @@ async function run({width,height,locale,full}) {
       };
     });
     assert.ok(geometry.ringMatches&&geometry.pointerEvents==='none'&&geometry.insideViewport&&!geometry.targetOverlap&&geometry.coversOtherControl.length===0,JSON.stringify(geometry));
-    if (bubble) assert.ok(geometry.arrow);
+    if (bubble) assert.ok(geometry.arrow&&geometry.arrowDistance<=24,JSON.stringify(geometry));
     row.checks.push({hint:expected,...geometry});
     if(name)await shot(name);
   }
@@ -215,6 +224,90 @@ async function run({width,height,locale,full}) {
     await page.locator('[data-calendar-input="month"]').selectOption(date.slice(5,7));
     await page.locator(`[data-calendar-action="choose-date"][data-date="${date}"]`).click();
     await page.locator(`[data-calendar-action="clear"][data-target="${id}"]`).waitFor();
+  }
+  async function checkReception(view) {
+    const group=root.locator('.rxt-mfc-visitor');
+    const portrait=group.locator('.rxa-foyer-scene');
+    const appeal=group.locator('.rxt-opening');
+    await appeal.waitFor();
+    const [imageBox,appealBox]=await Promise.all([portrait.boundingBox(),appeal.boundingBox()]);
+    assert.ok(imageBox.height>0&&imageBox.y+imageBox.height<=appealBox.y);
+    assert.ok(appealBox.x>=imageBox.x&&appealBox.x+appealBox.width<=imageBox.x+imageBox.width+1);
+    assert.equal(await root.locator('.rxt-opening blockquote').count(),1);
+    assert.equal(await appeal.locator('blockquote').innerText(),view.case.opening);
+    assert.equal(await root.locator('.rxt-mfc-intro').count(),1);
+    const role=await root.locator('.rxt-mfc-intro p').innerText();
+    assert.equal(await root.getByText(role,{exact:true}).count(),1);
+    row.receptionLayout={portrait:imageBox,appeal:appealBox};
+    if(width===390||width===1440){
+      await group.scrollIntoViewIfNeeded();
+      await shot('reception-layout');
+    }
+  }
+  async function checkCalendar(view,model) {
+    const workbook=view.case.workbook;
+    assert.equal(workbook.calendarVersion,MFC_CALENDAR_VERSION);
+    assert.equal(workbook.registrationCheck,false);
+    assert.deepEqual(workbook.events.map(event=>event.id),['intakeRegistered']);
+    assert.deepEqual(workbook.targets.map(target=>[target.id,target.anchorId,target.ruleId,target.counting.shift]),[
+      ['referral','intakeRegistered','calendar7','no_shift'],
+      ['deadline','referral','calendar30','no_shift'],
+    ]);
+    const days=(start,end)=>(Date.parse(end)-Date.parse(start))/86400000;
+    const registrationDate=workbook.events[0].date;
+    const {caseData}=await readSession(view);
+    const events=caseData.public.assessment.calendar.events;
+    assert.equal(registrationDate,events.find(event=>event.id==='registered')?.date||events.find(event=>event.id==='received')?.date);
+    assert.equal(days(registrationDate,model.workbook.referralDeadline),7);
+    assert.equal(days(model.workbook.referralDeadline,model.deadline),30);
+    const rules=root.locator('.rxt-calendar-rules');
+    await rules.waitFor();
+    const instructions=await rules.innerText();
+    assert.match(instructions,/(?:7|seven|七)/i);
+    assert.match(instructions,/(?:30|thirty|三十)/i);
+    assert.doesNotMatch(instructions,/учебн|симуляц|exercise|simulation|本模拟|本练习/i);
+    assert.equal(await root.locator('[data-calendar-action="event-month"]').count(),1);
+    assert.equal(await root.locator('[data-core-registration],[data-calendar-input="registration-timely"],[data-calendar-details="norms"]').count(),0);
+    row.calendar={version:workbook.calendarVersion,registrationDate,referral:model.workbook.referralDeadline,deadline:model.deadline};
+  }
+  async function reloadCalendar(view) {
+    const response=page.waitForResponse(res=>res.url()===origin+'/api/reception'&&res.request().method()==='POST'&&res.request().postDataJSON()?.op==='resume');
+    await page.reload();
+    const result=await (await response).json();
+    assert.equal(result.view.id,view.id);
+    await root.locator('[data-calendar-workbench]').waitFor();
+    assert.equal(await root.getAttribute('data-page'),'calendar');
+    return result.view;
+  }
+  async function migrateTeacherCalendar(view,model) {
+    await chooseDate('referral',model.workbook.referralDeadline,false);
+    await chooseDate('deadline',model.deadline,false);
+    assert.equal(await root.locator('[data-calendar-action="clear"]').count(),2);
+    // A pre-upgrade session and local draft are reproduced on this isolated memory fixture.
+    await fixture.store.transaction('sessions/'+view.id,current=>{
+      delete current.mfcCalendarVersion;
+      return current;
+    });
+    await context.addInitScript(({id,revision,draft})=>{
+      if(sessionStorage.getItem('qa-legacy-calendar'))return;
+      const key=Object.keys(localStorage).find(key=>key.startsWith('rudn.reception.workspace.v2:')&&key.endsWith(':current'));
+      if(!key)return;
+      const saved=JSON.parse(localStorage.getItem(key));
+      if(saved.sessionId!==id)return;
+      delete saved.calendarVersion;
+      saved.decisionDraft.correspondence.sections.resolution=draft;
+      saved.pending={op:'tutorial-step',stepId:'calendar',requestId:'old-calendar-before-update',sessionId:id,
+        expectedRevision:revision,calendar:{deadline:saved.decisionDraft.deadline,referralDeadline:saved.decisionDraft.workbook.referralDeadline,registrationTimely:true}};
+      localStorage.setItem(key,JSON.stringify(saved));
+      sessionStorage.setItem('qa-legacy-calendar','1');
+    },{id:view.id,revision:view.revision,draft:retainedDraft[locale]});
+    const resumed=await reloadCalendar(view);
+    assert.equal(resumed.revision,view.revision+1);
+    assert.deepEqual(resumed.openedDocumentIds,view.openedDocumentIds);
+    assert.deepEqual(resumed.coreSteps.values.citations,view.coreSteps.values.citations);
+    assert.equal(await root.locator('[data-calendar-action="clear"]').count(),0);
+    row.teacherMigration={previousRevision:view.revision,resumedRevision:resumed.revision,openedDocumentIds:resumed.openedDocumentIds};
+    return resumed;
   }
   async function setRecipients(ids) {
     const territory=page.locator('[data-routing-territory]');
@@ -286,10 +379,10 @@ async function run({width,height,locale,full}) {
     assert.equal(view.guidance,undefined);
     assert.equal(await root.locator('[data-action="mentor-toggle"],.rxa-tour-toggle').count(),0);
     await root.locator('.rxt-mfc-intro').waitFor();
-    await shot('independent-intake');
+    await checkReception(view);
     const {caseData}=await readSession(view);
     const profile=privateCorrespondenceProfile(caseData,locale);
-    const guide=tutorialGuide(caseData,profile,locale,{execution:true,core:true,coreStepsVersion});
+    const guide=tutorialGuide(caseData,profile,locale,{execution:true,core:true,coreStepsVersion,mfcCalendarVersion:MFC_CALENDAR_VERSION});
     const model=guide.decision, answer=model.correspondence, {resolution,control}=independentText[locale];
     const records=answer.citations.filter(item=>item.kind==='document');
     for(const {sourceId} of records){
@@ -300,15 +393,13 @@ async function run({width,height,locale,full}) {
     for(const item of answer.citations.filter(item=>item.kind==='legal'))await attachLegal(item);
     view=await operation('core-step',root.locator('[data-action="core-step"][data-step="materials"]'));
     assert.deepEqual(view.coreSteps.completed,['materials']);
-    await root.locator('.rxt-calendar-rules').waitFor();
+    await checkCalendar(view,model);
     await shot('independent-counting-rules');
     const nextDate=root.locator('[data-action="core-step"][data-step="calendar"]');
     await chooseDate('referral',model.workbook.referralDeadline);
-    await root.locator(`[data-core-registration][value="${model.workbook.registrationTimely}"]`).check();
     assert.equal(await nextDate.isEnabled(),false);
-    await page.reload();
+    view=await reloadCalendar(view);
     await root.locator('[data-calendar-action="clear"][data-target="referral"]').waitFor();
-    assert.equal(await root.getAttribute('data-page'),'calendar');
     await chooseDate('deadline',model.deadline);
     assert.equal(await nextDate.isEnabled(),true);
     await shot('independent-both-dates');
@@ -414,6 +505,7 @@ async function run({width,height,locale,full}) {
     assert.equal(await root.locator('.rxt-mfc-intro').count(),legacy?0:1);
     assert.equal(await root.getAttribute('lang'),locale);
     assert.equal(await toggle.getAttribute('aria-pressed'),'true');
+    if(!legacy)await checkReception(view);
     await inspectHint('reception','opening',{bubble:true});
     await toggle.click();
     await ring.waitFor({state:'hidden'});
@@ -443,15 +535,27 @@ async function run({width,height,locale,full}) {
     assert.equal(currentStep(view)?.id,'calendar',view.guidance.finding?.explanation);
     await go('calendar');
     await inspectHint('calendarKind','calendar-type');
-    const calendarModel=view.guidance.decision;
-    const targets=view.case.workbook.targets;
+    let calendarModel=view.guidance.decision;
     if(!legacy){
-      assert.deepEqual(targets.map(target=>target.id),['referral','deadline']);
-      for(const {anchorId} of targets)assert.ok(view.case.workbook.events.some(event=>event.id===anchorId),anchorId);
-      assert.ok(await root.locator('.rxt-calendar-rules').isVisible());
+      await checkCalendar(view,calendarModel);
+      if(teacherExample){
+        view=await migrateTeacherCalendar(view,calendarModel);
+        calendarModel=view.guidance.decision;
+        await checkCalendar(view,calendarModel);
+      }
     }
-    for(const {id} of targets){
+    for(const {id} of view.case.workbook.targets){
       await chooseDate(id,id==='referral'?calendarModel.workbook.referralDeadline:calendarModel.deadline);
+      if(!legacy&&id==='referral'){
+        assert.equal(await root.locator('[data-action="core-step"][data-step="calendar"]').isEnabled(),false);
+        view=await reloadCalendar(view);
+        const chosen=root.locator('[data-calendar-action="clear"][data-target="referral"]');
+        await chosen.waitFor();
+        if(width===390||width===1440){
+          await chosen.scrollIntoViewIfNeeded();
+          await shot('calendar-resumed');
+        }
+      }
     }
     const registration=root.locator(`[data-core-registration][value="${calendarModel.workbook.registrationTimely}"]`);
     if(await registration.count())await registration.check();
@@ -459,6 +563,7 @@ async function run({width,height,locale,full}) {
     view=await operation('tutorial-step',root.locator('[data-step="calendar"][data-action="core-step"]'));
     assert.equal(currentStep(view)?.id,'route',view.guidance.finding?.explanation);
     assert.equal(view.coreSteps.values.calendar.deadline,calendarModel.deadline);
+    if(!legacy)assert.equal(Object.hasOwn(view.coreSteps.values.calendar,'registrationTimely'),false);
     await go(currentStep(view).page||currentStep(view).panel);
     const routing=view.guidance.decision.workbook.routing;
     if(legacy){
@@ -483,6 +588,7 @@ async function run({width,height,locale,full}) {
     view=await operation('tutorial-step',root.locator('[data-step="route"][data-action="core-step"]'));
     assert.equal(currentStep(view)?.id,'draft',view.guidance.finding?.explanation);
     await go('decision');
+    if(teacherExample)assert.equal(await root.locator('[data-response-field="sections.resolution"]').inputValue(),retainedDraft[locale]);
     await inspectHint('draft','draft-start');
     const answer=view.guidance.decision.correspondence;
     const writeSubject=root.locator('[data-response-field="subject"]');
@@ -608,7 +714,7 @@ async function run({width,height,locale,full}) {
         await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="materials"]'));
         await chooseDate('referral',practice.workbook.referralDeadline,false);
         await chooseDate('deadline',practice.deadline,false);
-        await root.locator(`[data-core-registration][value="${practice.workbook.registrationTimely}"]`).check();
+        assert.equal(await root.locator('[data-core-registration]').count(),0);
         await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="calendar"]'));
         assert.equal(await root.locator('[data-core-disposition]').count(),0);
         await setRecipients(practice.workbook.routing.recipientIds);
@@ -647,7 +753,7 @@ try {
   for (const size of sizes)await run(size);
 }finally {
   await browser.close();
-  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacher?'teacher':scored?'independent':'mfc',report},null,2)+'\n');
+  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherExample?'teacher-example':teacher?'teacher':scored?'independent':'mfc',report},null,2)+'\n');
 }
 for (const result of report)console.log(result.key,result.status,result.error||`${result.checks.length} rendered hints`);
 if(report.some(result=>result.status!=='pass'))process.exitCode=1;

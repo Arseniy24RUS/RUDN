@@ -92,8 +92,8 @@ const phrases = {
 
 const mfcPhrases = {
   ru: {
-    reception:['Примите обращение в МФЦ','Прочитайте просьбу заявителя. В материалах выясните, что надо передать ведомству и на какие вопросы предстоит ответить.'],
-    calendarKind:['Рассчитайте оба срока','Для передачи и ответа ведомства сравните отправные события и правила над календарём.'],
+    reception:['Прочитайте обращение','Уточните просьбу заявителя. Затем откройте материалы дела.'],
+    calendarKind:['Рассчитайте оба срока','Сверьтесь с правилами отсчёта сроков передачи и ответа над календарём.'],
     recipient:['Выберите ведомство','Найдите компетентное ведомство на указанной территории. При необходимости отметьте несколько адресатов одного обращения.'],
     draft:['Подготовьте ответ по существу','Подготовьте один ответ заявителю. Примените норму к фактам и объясните вывод по существу. В следующих шагах укажите маршрут и сроки.'],
     request:['Запросите подтверждение','Укажите, какое подтверждение нужно получить для проверки результата.'],
@@ -101,8 +101,8 @@ const mfcPhrases = {
     record:['Обоснуйте результат контроля','Укажите, какой результат по существу подтверждён и чем. Если вопрос остаётся открытым, запишите, что требуется дальше.'],
   },
   en: {
-    reception:['Receive the appeal at the MFC','Read what the applicant wants. Check the records to identify what to refer and which questions the authority needs to answer.'],
-    calendarKind:['Calculate both deadlines','Compare the starting events and counting rules above the calendar for the MFC referral and the authority’s reply.'],
+    reception:['Read the appeal','See what the applicant is asking for. Then open the case records.'],
+    calendarKind:['Calculate both deadlines','Use the referral and reply counting rules above the calendar.'],
     recipient:['Choose the competent authority','Find the competent authority in the relevant territory. If this appeal needs more than one recipient, select them in the same list.'],
     draft:['Draft a reply on the merits','Write one reply to the applicant. Apply the law to the facts and explain your conclusion on the merits. Record the referral and deadlines under next steps.'],
     request:['Request supporting material','Specify the record you need to verify the result.'],
@@ -110,8 +110,8 @@ const mfcPhrases = {
     record:['Explain the follow-through result','State what was resolved on the merits and what confirms it. If an issue stays open, record the next action.'],
   },
   zh: {
-    reception:['在政务服务中心受理诉求','阅读申请人的要求。查阅材料，确定需要转送的事项以及主管机关应当答复的问题。'],
-    calendarKind:['计算两项期限','对照日历上方的说明，分别查明转送期限与主管机关答复期限的起算事件和计算规则。'],
+    reception:['阅读诉求','了解申请人的请求，然后查看案件材料。'],
+    calendarKind:['计算两项期限','根据日历上方的说明计算转送和答复期限。'],
     recipient:['选择主管机关','找到有关地区的主管机关。如需为同一份诉求选择多个接收方，请在同一列表中勾选。'],
     draft:['撰写实质性答复','为申请人撰写一份答复，结合法律和事实说明实质性结论。在后续步骤中注明转送路径和期限。'],
     request:['调取证明材料','说明需要哪份材料来核实办理结果。'],
@@ -316,6 +316,9 @@ function revealWithinApp(element, root, win, block) {
   }
 }
 
+const arrowOnEdge = (targetStart, targetEnd, cardStart, cardEnd) =>
+  clamp(midpoint(targetStart,targetEnd),cardStart+9,cardEnd-9);
+
 function fitCard(size, target, bounds, obstacles) {
   const {width,height} = size;
   if (bounds.right-bounds.left < width || bounds.bottom-bounds.top < height) return null;
@@ -330,8 +333,12 @@ function fitCard(size, target, bounds, obstacles) {
   ];
   return candidates.find(candidate=>{
     const rect={...candidate,right:candidate.left+width,bottom:candidate.top+height};
+    const vertical=candidate.side==='above'||candidate.side==='below';
+    const [start,end,edgeStart,edgeEnd]=vertical?[target.left,target.right,rect.left,rect.right]:
+      [target.top,target.bottom,rect.top,rect.bottom];
+    const arrow=arrowOnEdge(start,end,edgeStart,edgeEnd);
     return rect.left>=bounds.left && rect.top>=bounds.top && rect.right<=bounds.right &&
-      rect.bottom<=bounds.bottom && !obstacles.some(obstacle=>{
+      rect.bottom<=bounds.bottom && arrow>=start && arrow<=end && !obstacles.some(obstacle=>{
         const overlap=intersection(obstacle,rect);
         return overlap.width>0 && overlap.height>0;
       });
@@ -341,10 +348,10 @@ function fitCard(size, target, bounds, obstacles) {
 function drawArrow(arrow, position, size, target) {
   const {side,left,top} = position;
   const vertical=side==='above'||side==='below';
-  const x=vertical?clamp(midpoint(target.left,target.right),left+9,left+size.width-9):
+  const x=vertical?arrowOnEdge(target.left,target.right,left,left+size.width):
     midpoint(side==='left'?left+size.width:left,side==='left'?target.left:target.right);
   const y=vertical?midpoint(side==='above'?top+size.height:top,side==='above'?target.top:target.bottom):
-    clamp(midpoint(target.top,target.bottom),top+9,top+size.height-9);
+    arrowOnEdge(target.top,target.bottom,top,top+size.height);
   const angles={above:0,below:180,left:-90,right:90};
   Object.assign(arrow.style,{left:x+'px',top:y+'px'});
   arrow.style.setProperty('--rxa-tour-angle',angles[side]+'deg');
