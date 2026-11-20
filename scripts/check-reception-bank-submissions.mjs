@@ -81,7 +81,9 @@ export async function checkBankSubmissions({casesDirectory,smoke=0,onProgress=()
        output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(parsed)}]}]}),{status:200});
      }});
      const config={enforceMonetaryBudgets:false};
-     const makeService=()=>createReceptionService({store,cases:[c],provider,config,requireGameplay:true,canStartAssessment:async()=>true,
+     // This matrix preserves the pre-journey sessions and their original control contract.
+     // The staged seminar entry and guided controls have a separate full-bank audit.
+     const makeService=()=>createReceptionService({store,cases:[c],provider,config,requireGameplay:true,requireSeminarJourney:false,canStartAssessment:async()=>true,
       saveResult:async()=>{counters.writes++;report.counts.resultWrites++;}});
      let service=makeService();
      let view=(await service.handle({op:'start',context:mode.context,mode:mode.mode,locale,workbookVersion:2,decisionVersion:'correspondence-v1',

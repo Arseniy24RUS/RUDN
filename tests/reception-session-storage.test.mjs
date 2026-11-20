@@ -94,3 +94,13 @@ test('clearing the current pointer preserves session drafts; corrupt or incompat
   const denied=createReceptionStorage({store:{getItem(){throw Error('Blocked');},setItem(){throw Error('Blocked');},removeItem(){throw Error('Blocked');}},owner:'student-one',version:VERSION,legacyKey:'legacy'});
   assert.equal(denied.readInitial(),null);assert.equal(denied.save(draft()),false);assert.equal(denied.clearCurrent(),false);
 });
+
+test('seminar restore retains drafts across releases and preserves an uncertain mentor request',()=>{
+  const store=memory();
+  const options={store,owner:'student-one',endpoint:'/api/reception',version:VERSION,legacyKey:'legacy-seminar'};
+  const pending={op:'mentor-question',requestId:'mentor-request',text:'Почему?',expectedRevision:3};
+  createReceptionStorage({...options,buildId:'a'.repeat(32)}).save(draft({pending}));
+  const next=createReceptionStorage({...options,buildId:'b'.repeat(32),retainPreviousBuild:true});
+  assert.deepEqual(next.readInitial().pending,pending);
+  assert.equal(next.hasRetiredDraft(),false);
+});

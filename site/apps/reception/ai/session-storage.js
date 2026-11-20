@@ -1,8 +1,8 @@
 /** Drafts belong to a student and service, not to the route used to enter the game. */
-export function createReceptionStorage({store, owner, endpoint = '', legacyKey, version, buildId = ''}) {
+export function createReceptionStorage({store, owner, endpoint = '', legacyKey, version, buildId = '', retainPreviousBuild = false}) {
   const prefix = `rudn.reception.workspace.v2:${encodeURIComponent(owner)}:${encodeURIComponent(endpoint)}`;
   let retired=false;
-  const compatible = value => !buildId || value.status === 'complete' || value.releaseBuildId === buildId;
+  const compatible = value => retainPreviousBuild || !buildId || value.status === 'complete' || value.releaseBuildId === buildId;
   const valid = value => {
     if(value?.version !== version || value.owner !== owner)return false;
     if(!compatible(value)){retired=true;return false;}

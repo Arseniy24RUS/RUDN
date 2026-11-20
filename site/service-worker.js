@@ -64,6 +64,8 @@ const SHELL=[
   './apps/reception/ai/media.js',
   './apps/reception/ai/style.css',
   './apps/reception/ai/workspace-copy.js',
+  './apps/reception/ai/tutorial.js',
+  './apps/reception/ai/tutorial.css',
   './apps/reception/ai/session-storage.js',
   './apps/reception/ai/workbench.js',
   './apps/reception/ai/workbench.css',

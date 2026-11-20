@@ -120,6 +120,23 @@ test('locked submitted work keeps preview and export available while text contro
   }
 });
 
+test('the seminar preview keeps the letter and edit action while the external preview retains exports',()=>{
+  const draft=blankCorrespondence();
+  draft.sections.facts='Содержание письма.';
+  for(const locale of ['ru','en','zh']){
+    const seminar=correspondencePreviewView({draft,locale,seminar:true});
+    assert.match(seminar,/Содержание письма\./);
+    assert.match(seminar,/data-response-action="edit"/);
+    assert.doesNotMatch(seminar,/rxc-project-mark|data-response-action="(?:print|download)"/);
+    assert.doesNotMatch(correspondencePreviewView({draft,locale,seminar:true,disabled:true}),/rxc-preview-toolbar/);
+    const external=correspondencePreviewView({draft,locale});
+    assert.match(external,/rxc-project-mark/);
+    assert.match(external,/data-response-action="print"/);
+    assert.match(external,/data-response-action="download"/);
+    assert.match(correspondencePrintHTML({draft,locale}),/<div class="rxc-project-mark">/);
+  }
+});
+
 test('a source citation needs a real passage and long texts are never silently cut',()=>{
   const draft=blankCorrespondence();
   assert.deepEqual(reduceCorrespondence(draft,{type:'source-add',section:'facts',source:{id:'d1',kind:'document'}}),draft);

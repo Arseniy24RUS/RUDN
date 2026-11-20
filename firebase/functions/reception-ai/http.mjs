@@ -46,7 +46,7 @@ export async function receptionHandler(req, res) {
     // Only bounded operational codes are logged; never student text, credentials or exception bodies.
     const status = error instanceof ReceptionError ? error.status : 503;
     if (status >= 500 || status === 429) {
-      const op = ['catalog','start','recover','resume','locale','message','document','draft','decide','followup','next'].includes(req.body?.op) ? req.body.op : 'unknown';
+      const op = ['catalog','start','recover','resume','locale','message','document','draft','decide','followup','next','tutorial-step','mentor-question'].includes(req.body?.op) ? req.body.op : 'unknown';
       console.warn(JSON.stringify({event:'reception_request_failed',op,status,code:error instanceof ReceptionError ? error.code : 'unavailable'}));
     }
     res.status(error instanceof ReceptionError ? error.status : 503).json({ok: false, error: {code: error instanceof ReceptionError ? error.code : 'unavailable'}});

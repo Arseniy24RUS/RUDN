@@ -1,3 +1,4 @@
+import {participantOpening} from './participant-context.mjs';
 import {createHash} from 'node:crypto';
 import {ReceptionError} from './schema.mjs';
 import {ROUTING_AUTHORITY_IDS,ROUTING_AUTHORITIES} from './routing-directory.mjs';
@@ -201,6 +202,28 @@ function criticalRules(c,state,profile,phase,locale) {
     (!row.condition||conditions.has(row.condition))}));
 }
 
+/** Add the student side of the exchange without duplicating citizen replies or
+ * displacing required review evidence when a long case already fills the budget. */
+export function addReviewDialogue(context,messages,availableBytes) {
+  const dialogueIds=new Set(context.sources.filter(row=>row.kind==='dialogue').map(row=>row.id));
+  const pairs=[];
+  for(let index=1;index<messages.length;index++){
+    const question=messages[index-1],reply=messages[index];
+    if(question.role==='user'&&typeof question.text==='string'&&reply.role==='assistant'&&dialogueIds.has('dialogue:'+reply.id))
+      pairs.push({question:question.text,replySourceId:'dialogue:'+reply.id});
+  }
+  const result={earlierPairsOmitted:pairs.length,exchanges:[]};
+  let bytes=Buffer.byteLength(JSON.stringify({dialogueContext:result}),'utf8');
+  for(const pair of pairs.reverse()){
+    const extra=Buffer.byteLength(JSON.stringify(pair),'utf8')+1;
+    if(bytes+extra>availableBytes)break;
+    result.exchanges.unshift(pair);
+    result.earlierPairsOmitted--;
+    bytes+=extra;
+  }
+  if(result.exchanges.length)context.dialogueContext=result;
+}
+
 /** The frozen session dossier outranks generic profiles, particularly every date variant. */
 export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null}={}) {
   const execution=phase==='control'&&state.controlWorkflow?controlReviewContext(state.controlWorkflow,profile,locale):null;
@@ -268,7 +291,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   });
   const context={
     version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase,locale,caseId:c.id,caseVersion:c.version,datePackId:c.datePackId||null,
-    role:local(c.public.role.text,locale),opening:local(c.public.opening,locale),
+    role:local(c.public.role.text,locale),opening:participantOpening(c,locale),
     citizenName:local(c.public.citizen?.name,locale),
     materialTitles:c.documents.filter(doc=>state.releasedDocumentIds?.includes(doc.id)).map(doc=>local(doc.title,locale)),
     // The snapshot and its server-derived worksheet supply events and target

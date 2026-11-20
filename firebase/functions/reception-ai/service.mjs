@@ -1,7 +1,9 @@
+import {participantOpening} from './participant-context.mjs';
+import {addReviewDialogue} from './correspondence.mjs';
 import {buildConflictContractMaterials} from './contract-materials.mjs';
 import {randomUUID} from 'node:crypto';
 import {ReceptionError, fail, fields, identifier, string, locale, localized, copy, hash, validateCase, validateDecision, evaluateDecision, actorCase,MAX_CATALOG_CASES} from './schema.mjs';
-import {validateActorTurn, estimateReservation, estimateReviewReservation, costMicros, reviewCostMicros} from './provider.mjs';
+import {validateActorTurn, estimateReservation, estimateReviewReservation, costMicros, reviewCostMicros, estimateMentorReservation, estimateMentorWorkReservation} from './provider.mjs';
 import {selectShiftCases} from './selection.mjs';
 import {CATALOG_METADATA} from './catalog-metadata.mjs';
 import {legacySessionIds, LEGACY_RECOVERY_LIMITS} from './store.mjs';
@@ -13,7 +15,9 @@ import {privateCorrespondenceProfile,publicCorrespondenceProfile} from './corres
 import {createControlWorkflow,applyControlAction,normalizeControlWorkflow,publicControlWorkflow,validateControlSubmission} from './control-workflow.mjs';
 import {resolveLegalCitation as defaultLegalCitationResolver} from './correspondence-legal-sources.mjs';
 import {calendarNormId} from './workbook-norms.mjs';
-import {normativeActsForCase,validateLegalCitation,hasApplicableLegalCitation} from './normative-acts.mjs';
+import {normativeActsForCase,validateLegalCitation,hasApplicableLegalCitation,acceptableLegalProvisions} from './normative-acts.mjs';
+import {JOURNEY_STAGES, SEMINAR_EXAMPLE, SEMINAR_GRADING_VERSION, isTutorial, exactCaseScore, seminarPointsAt,
+  seminarExample, tutorialGuide, publicTutorialGuide, tutorialOperational, tutorialExecutionAction, validatedTutorialMemo, mentorFinding, tutorialExecutionKinds, tutorialExecutionProgress, walkthroughControlProfile} from './seminar-journey.mjs';
 
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxReviewInputAllowance:320000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
@@ -22,11 +26,13 @@ const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance:
   guestDailyBudgetMicros:750_000,guestMonthlyBudgetMicros:5_000_000,guestMaxConcurrent:2,
   guestMaxDailyStartsPerUid:3,guestMaxDailyStarts:12};
 const allowed = {
-  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
-  recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','context'],
+  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
+  recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage'],
   message: ['op', 'sessionId', 'text', 'requestId', 'expectedRevision'], document: ['op', 'sessionId', 'documentId', 'requestId'],
   decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'],
   'control-action':['op','sessionId','requestId','expectedRevision','action'],
+  'tutorial-step':['op','sessionId','requestId','expectedRevision','stepId','choiceId','decision','control','useExample','confirmOwn'],
+  'mentor-question':['op','sessionId','requestId','expectedRevision','text','issueId'],
   next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion','controlVersion','context']
 };
 const dayOf = n => new Date(n).toISOString().slice(0, 10), monthOf = n => dayOf(n).slice(0, 7);
@@ -56,6 +62,8 @@ const normalizeSession = s => {
   for (const state of s.caseStates) {
     for (const key of ['messages', 'knownFactIds', 'releasedDocumentIds', 'openedDocumentIds']) state[key] = values(state[key]);
     if(state.controlWorkflow)state.controlWorkflow=normalizeControlWorkflow(state.controlWorkflow);
+    if(s.journeyStage==='mentor')state.mentorMessages=values(state.mentorMessages);
+    if(state.control)for(const row of (state.control.statuses=values(state.control.statuses)))row.evidenceSourceIds=values(row.evidenceSourceIds);
     if(state.decision){for(const key of ['actionIds','basisDocumentIds'])state.decision[key]=values(state.decision[key]);if(state.decision.workbook){state.decision.workbook.routing??={};state.decision.workbook.routing.recipientIds=values(state.decision.workbook.routing.recipientIds);}}
   }
   // Repair only the current active case. Keep the session identity, revision,
@@ -74,7 +82,7 @@ const normalizeSession = s => {
 };
 
 export function createReceptionService({store, cases, provider, clock = Date.now, config = {}, canStartAssessment = null, saveResult = null, requireGameplay = false,
-  guestEnabled = true, resolveLegalCitation=defaultLegalCitationResolver,
+  guestEnabled = true, requireSeminarJourney = requireGameplay, resolveLegalCitation=defaultLegalCitationResolver,
   correspondenceProfiles={private:privateCorrespondenceProfile,public:publicCorrespondenceProfile}} = {}) {
   if (!store?.transaction || !store?.get || !provider?.generate) throw new TypeError('Reception adapters are required');
   const limits = {enforceMonetaryBudgets:true, ...DEFAULTS, ...config};
@@ -84,7 +92,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   if(limits.reviewTimeoutMs>90000||limits.reviewLeaseMs>110000)throw new TypeError('Review limits must fit the 120 second function deadline');
   for (const key of Object.keys(DEFAULTS)) if (!Number.isFinite(limits[key]) || limits[key] <= 0) throw new TypeError('Invalid reception limit');
   let catalogPromise;
-  const legacyMigrations = new Map(), seminarMigrations = new Map();
+  const legacyMigrations = new Map(), seminarMigrations = new Map(), availableCases = new Map();
   function catalogue() {
     // The HTTP adapter owns one service per immutable active catalog version.
     // Cache the in-flight read too: simultaneous cold requests must not load
@@ -134,6 +142,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   function view(session) {
     const s = normalizeSession(copy(session)), c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex];
     const p = localized(c.public, s.locale);
+    p.opening=participantOpening(c,s.locale);
     if(s.context){
       p.procedureRequired=!fixedProcedure(c,s.context);
       if(!p.procedureRequired)p.procedures=[];
@@ -145,13 +154,15 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }
     const correspondence=s.decisionVersion===DECISION_VERSION;
     const profile=correspondence?correspondenceProfiles.public(c,s.locale):null;
+    const guide=isTutorial(s)?publicTutorialGuide(tutorialGuide(c,correspondenceProfiles.private(c,s.locale),s.locale,{execution:s.controlVersion==='execution-v1'}),s):null;
     if(correspondence){
       // Work-product sessions never publish the old multiple-choice answer menu.
       delete p.assessment;p.actions=[];p.procedures=[];p.routes=[];p.procedureRequired=false;
       p.correspondence=profile;p.decisionVersion=DECISION_VERSION;
     }
-    const result = s.status === 'complete' ? {points: s.result.points, maxPoints: 5, total: s.result.total, cap:s.result.cap||null, attemptId: s.result.attemptId,
-      ...(s.context==='seminar'?{...s.seminarProgress,passScore:s.result.passScore??100}:{}),
+    const result = s.status === 'complete' ? {...(guide?{}:{points:s.result.points,maxPoints:5}), total: s.result.total, cap:s.result.cap||null, attemptId: s.result.attemptId,
+      ...(s.context==='seminar'?{...s.seminarProgress,...(guide?{}:{passScore:s.result.passScore??100})}:{}),
+      ...(s.result.gradingVersion?{gradingVersion:s.result.gradingVersion}:{}),
       journalStatus: s.teacher || s.mode === 'training' || provider.name === 'mock' || typeof saveResult !== 'function' ? 'local' : s.journalSaved ? 'saved' : 'pending',
       cases: s.results.map((r, i) => ({caseId: s.caseData[i].id, title: localized(s.caseData[i].public.title, s.locale), score: r.score,
          feedback: localized(r, s.locale), decision: s.caseStates[i].decision,followupChoiceId:s.caseStates[i].followupChoiceId||null,
@@ -164,7 +175,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
          ...(s.caseStates[i].controlWorkflow?{controlWorkflow:publicControlWorkflow(s.caseStates[i].controlWorkflow,null,s.locale)}:{})}))} : null;
     return {id: s.id, revision: s.revision, mode: s.mode, locale: s.locale, caseIndex: s.caseIndex, caseCount: s.caseData.length,
       startedAt: s.startedAt, updatedAt: s.updatedAt, ...(s.buildId ? {buildId:s.buildId} : {}), ...(s.context ? {context:s.context} : {}),
-      ...(s.context==='seminar'?{seminarProgress:s.seminarProgress,seminarPassScore:SEMINAR_PASS_SCORE}:{}),
+      ...(s.context==='seminar'?{journeyStage:s.journeyStage||(s.mode==='independent'?'independent':null),
+        seminarProgress:s.seminarProgress,seminarPassScore:SEMINAR_PASS_SCORE}:{}),
+      ...(guide?{guidance:guide,...(s.journeyStage==='mentor'?{mentorMessages:state.mentorMessages}:{} )}:{}),
       ...(correspondence?{decisionVersion:DECISION_VERSION,correspondenceSources:publicCorrespondenceSources(c,state,s.locale,{includeFollowup:s.status!=='active'}),
         draftDecision:state.correspondenceDraft||null,draftControl:state.controlDraft||null,reviewPending:state.reviewPending||null,control:state.control||null}:{}),
       ...(s.controlVersion==='execution-v1'?{controlVersion:s.controlVersion,
@@ -180,8 +193,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       followup:s.status==='followup'&&c.followup?(correspondence?{intro:localized(c.followup.intro,s.locale),control:true,issues:profile?.issues||[]}:
         localized({intro:c.followup.intro,options:c.followup.options},s.locale)):null,
       followupChoiceId:state.followupChoiceId||null,
-      feedback: s.mode === 'training' && state.feedback ? localized(state.feedback, s.locale) : null,
-      learningReview: learningReviewFor({mode:s.mode,status:s.status,caseData:c,locale:s.locale}),result, provider: provider.name};
+      feedback: !guide && s.mode === 'training' && state.feedback ? localized(state.feedback, s.locale) : null,
+      learningReview: guide?null:learningReviewFor({mode:s.mode,status:s.status,caseData:c,locale:s.locale}),result, provider: provider.name};
   }
   async function remember(session) {
     // Store only an opaque session pointer and lifecycle metadata. Keep completed
@@ -192,12 +205,21 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   }
   function sessionEntry(session) {
     return {id: session.id, mode: session.mode, status: session.status, revision: session.revision,
+      ...(session.journeyStage?{journeyStage:session.journeyStage}:{}),
       ...(session.decisionVersion?{decisionVersion:session.decisionVersion}:{}),
       ...(session.controlVersion?{controlVersion:session.controlVersion}:{}),
       startedAt: session.startedAt, updatedAt: session.updatedAt, ...(session.workbookVersion?{workbookVersion:session.workbookVersion}:{}),
       ...(session.buildId ? {buildId:session.buildId} : {}), ...(session.context ? {context:session.context} : {})};
   }
-  const response = async s => { await deliverResult(s); await remember(s); return {ok: true, view: view(s)}; };
+  async function response(s) {
+    await deliverResult(s);
+    await remember(s);
+    const progress = s.context==='seminar' ? await seminarProgress(s.owner,s) : null;
+    // The immutable attempt receipt is used for journal retries. The student
+    // sees current progress, including a better result from another session.
+    const current = progress ? {...s,seminarProgress:progress} : s;
+    return {ok:true,view:view(current),...(progress?{seminarProgress:progress}:{})};
+  }
   async function migrateLegacyIndex(identity) {
     const owner = scopeOf(identity), ownerKey = hash(owner), path = `sessionIndex/${ownerKey}`;
     if (await store.get(`${path}/legacyMigrated`)) return;
@@ -230,19 +252,34 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (!['training', 'independent'].includes(body.mode)) fail('invalid_mode');
     if (body.studentKey && body.studentKey !== identity.studentKey && !identity.teacher) fail('forbidden', 403);
     const owner = scopeOf(identity), path = `sessionIndex/${hash(owner)}`;
+    const matches = entry => entry.mode===body.mode && entry.context===body.context && entry.status!=='complete'
+      && (body.journeyStage==='independent' ? !entry.journeyStage||entry.journeyStage==='independent' : entry.journeyStage===body.journeyStage)
+      && (!body.decisionVersion || entry.decisionVersion===body.decisionVersion)
+      && (!body.workbookVersion || entry.workbookVersion===body.workbookVersion)
+      && (body.context==='seminar' || !body.buildId || entry.buildId===body.buildId);
+    if(body.journeyStage){
+      const ledger=await store.get(seminarPath(owner)), pointer=ledger?.journey?.[body.journeyStage];
+      if(pointer&&(!pointer.completed||body.journeyStage==='independent')){
+        const saved=normalizeSession(await store.get(`sessions/${pointer.sessionId}`));
+        if(saved&&matches(saved)){own(saved,identity);return response(saved);}
+        if(saved?.status==='complete'&&(!pointer.completed||!saved.journalSaved)){
+          own(saved,identity);await deliverResult(saved);await remember(saved);
+        }
+        // A failed write between assignment and session creation can be retried
+        // from any browser using the server's original validated start request.
+        if(!saved&&pointer.startRequest)return start(JSON.parse(pointer.startRequest),identity);
+      }
+    }
     async function indexed() {
       const index = await store.get(`${path}/entries`);
-      const candidates = Object.values(index || {}).filter(entry => entry.mode === body.mode && entry.context === body.context && entry.status !== 'complete'
-        && (!body.decisionVersion || entry.decisionVersion===body.decisionVersion)
-        && (!body.workbookVersion || entry.workbookVersion===body.workbookVersion) && (!body.buildId || entry.buildId === body.buildId) && /^[a-f0-9]{40}$/.test(entry.id))
+      const candidates = Object.values(index || {}).filter(entry => matches(entry) && /^[a-f0-9]{40}$/.test(entry.id))
         .sort((a, b) => b.updatedAt - a.updatedAt || b.startedAt - a.startedAt || b.id.localeCompare(a.id));
       for (let i = 0; i < candidates.length; i++) {
         if (i >= LEGACY_RECOVERY_LIMITS.sessions) fail('recovery_index_required', 409);
         const entry = candidates[i], s = normalizeSession(await store.get(`sessions/${entry.id}`));
         if (!s) { await store.transaction(`${path}/entries/${entry.id}`, () => null); continue; }
         own(s, identity);
-        if (s.mode !== body.mode || s.context !== body.context || s.status === 'complete' || body.workbookVersion && s.workbookVersion!==body.workbookVersion || body.buildId && s.buildId !== body.buildId
-          ||body.decisionVersion&&s.decisionVersion!==body.decisionVersion) { await remember(s); continue; }
+        if (!matches(s)) { await remember(s); continue; }
         return response(s);
       }
       return null;
@@ -251,10 +288,11 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (!recovered && !body.context && !await store.get(`${path}/legacyMigrated`)) {
       await migrateLegacyIndex(identity); recovered = await indexed();
     }
-    return recovered || {ok: true, view: null};
+    return recovered || {ok:true,view:null,
+      ...(body.context==='seminar'?{seminarProgress:await seminarProgress(owner,body)}:{})};
   }
   function initialState(c, language, timestamp, context) {
-    return {messages: [{id: `opening-${c.id}`, role: 'assistant', text: localized(c.public.opening, language), at: timestamp}],
+    return {messages: [{id: `opening-${c.id}`, role: 'assistant', text: participantOpening(c,language), at: timestamp}],
       knownFactIds: c.facts.filter(f => f.initial).map(f => f.id), releasedDocumentIds: c.documents.filter(d => context || d.initial).map(d => d.id),
       openedDocumentIds: [], turns: 0, decision: null, feedback: null};
   }
@@ -287,29 +325,64 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }
     await seminarMigrations.get(owner);
   }
-  async function reserveSeminarCase(owner, id, signature, available, mode) {
-    const seed = randomUUID(), ordered = [...available].sort((a,b) => hash(`${seed}:${a.id}`).localeCompare(hash(`${seed}:${b.id}`)));
-    const path = seminarPath(owner);
-    const allocation = await store.transaction(path, old => {
+  function seminarAvailable({workbookVersion,decisionVersion,controlVersion}) {
+    const key=JSON.stringify([workbookVersion,decisionVersion,controlVersion]);
+    if(!availableCases.has(key)){
+      const filtered=catalogue().then(all=>all.filter(c=>{
+        if(workbookVersion&&!supportsWorkbook(c,workbookVersion))return false;
+        if(!decisionVersion&&!controlVersion)return true;
+        const profile=correspondenceProfiles.private(c);
+        return Boolean(profile&&(!controlVersion||profile.control?.workflow?.version===controlVersion));
+      })).catch(error=>{availableCases.delete(key);throw error;});
+      availableCases.set(key,filtered);
+    }
+    return availableCases.get(key);
+  }
+
+  function remainingSeminarCases(available, progress) {
+    return available.filter(c => !Object.hasOwn(progress.assigned || {}, c.id)).length;
+  }
+  async function seminarProgress(owner, options) {
+    const progress=await store.get(seminarPath(owner))||{};
+    const available=(await seminarAvailable(options)).filter(c=>!options.journeyStage||c.id!==SEMINAR_EXAMPLE.caseId);
+    const showPoints=!options.id||options.mode==='independent';
+    return {exampleCompleted:progress.journey?.example?.completed===true,mentorCompleted:progress.journey?.mentor?.completed===true,
+      ...(showPoints?{seminarPoints:Math.max(progress.points||0,progress.bestPoints||0)}:{}),
+      remainingCases:remainingSeminarCases(available,progress)};
+  }
+  async function reserveSeminarCase(owner, id, signature, available, body) {
+    const stage=body.journeyStage;
+    const example=stage==='example'?seminarExample(available):null;
+    const seed = randomUUID(), ordered = [...available].filter(c=>!stage||c.id!==SEMINAR_EXAMPLE.caseId)
+      .sort((a,b) => hash(`${seed}:${a.id}`).localeCompare(hash(`${seed}:${b.id}`)));
+    let rejection='case_bank_exhausted';
+    const allocation = await store.transaction(seminarPath(owner), old => {
+      rejection='case_bank_exhausted';
       const progress = old || {};
       progress.attempts ||= {};
       progress.assigned ||= {};
       if (progress.attempts[id]) return progress;
-      const selected = ordered.find(c => !Object.hasOwn(progress.assigned, c.id));
+      if(stage){
+        progress.journey ||= {};
+        if((stage!=='example'&&!progress.journey.example?.completed)||(stage==='independent'&&!progress.journey.mentor?.completed)){
+          rejection='journey_stage_locked';return undefined;
+        }
+        const current=progress.journey[stage];
+        if(current&&(stage!=='independent'||!current.completed))return progress;
+      }
+      const selected = example || ordered.find(c => !Object.hasOwn(progress.assigned, c.id));
       if (!selected) return undefined;
-      progress.attempts[id] = {caseId:selected.id, signature};
-      progress.assigned[selected.id] = id;
+      progress.attempts[id] = {caseId:selected.id, signature,...(stage?{journeyStage:stage}:{})};
+      if(!example)progress.assigned[selected.id] = id;
+      if(stage)progress.journey[stage]={sessionId:id,startRequest:JSON.stringify(body),completed:false};
       return progress;
     });
-    if (!allocation.committed) fail('case_bank_exhausted', 409);
-    const progress = allocation.value, attempt = progress.attempts[id];
-    if (attempt.signature !== signature) fail('request_conflict', 409);
-    if (!available.some(c => c.id === attempt.caseId)) fail('outdated_session', 409);
-    return {caseId:attempt.caseId, progress:{remainingCases:remainingSeminarCases(available,progress),
-      ...(mode==='independent'?{seminarPoints:progress.points||0}:{})}};
-  }
-  function remainingSeminarCases(available, progress) {
-    return available.filter(c => !Object.hasOwn(progress.assigned || {}, c.id)).length;
+    if (!allocation.committed) fail(rejection, 409);
+    const progress=allocation.value, attempt=progress.attempts[id];
+    if(!attempt&&stage)return {existing:progress.journey[stage]};
+    if(attempt.signature!==signature)fail('request_conflict',409);
+    if(!available.some(c=>c.id===attempt.caseId))fail('outdated_session',409);
+    return {caseId:attempt.caseId,example};
   }
   async function reserveGuestStart(day, ownerKey, id, timestamp) {
     const grant = await store.transaction('guestStarts', old => {
@@ -331,19 +404,21 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (!['training', 'independent'].includes(mode)) fail('invalid_mode');
     if (context==='free' && mode!=='training') fail('invalid_mode');
     if (body.studentKey && body.studentKey !== identity.studentKey && !identity.teacher) fail('forbidden', 403);
-    if (provider.ready === false) fail('not_configured', 503);
-    if(body.decisionVersion===DECISION_VERSION&&typeof provider.reviewDecision!=='function')fail('reviewer_unavailable',503);
+    const tutorial=isTutorial(body);
+    if (!tutorial && provider.ready === false) fail('not_configured', 503);
+    if(!tutorial && body.decisionVersion===DECISION_VERSION&&typeof provider.reviewDecision!=='function')fail('reviewer_unavailable',503);
     const owner = scopeOf(identity), requestScope = context ? `${owner}:${context}` : owner;
     const id = hash(`${requestScope}:${body.requestId}`).slice(0, 40), signature = hash(body);
     const existing = normalizeSession(await store.get(`sessions/${id}`));
     if (existing) { own(existing, identity); if (existing.startSignature !== signature) fail('request_conflict', 409); return response(existing); }
     if (requireGameplay && !context) fail('invalid_context');
     if (requireGameplay && body.workbookVersion!==WORKBOOK_VERSION) fail('invalid_workbook');
+    if (requireSeminarJourney && context==='seminar' && mode==='independent' && !body.journeyStage) fail('journey_stage_required',409);
+    if (body.journeyStage && (body.workbookVersion!==WORKBOOK_VERSION||body.decisionVersion!==DECISION_VERSION)) fail('invalid_workbook');
+    if (body.journeyStage && body.controlVersion!=='execution-v1') fail('invalid_control_version');
     const timestamp = clock(), day = dayOf(timestamp), ownerKey = hash(owner);
     if (mode === 'independent' && !identity.teacher && canStartAssessment && !await canStartAssessment(timestamp)) fail('assessment_closed', 403);
-    const all = (await catalogue()).filter(c=>(!body.workbookVersion||supportsWorkbook(c,body.workbookVersion))
-      &&(!body.decisionVersion||Boolean(correspondenceProfiles.private(c)))
-      &&(!body.controlVersion||correspondenceProfiles.private(c)?.control?.workflow?.version===body.controlVersion));
+    const all = await seminarAvailable(body);
     if (mode === 'independent' && context !== 'seminar' && new Set(all.map(c=>c.familyId||c.id)).size < 8) fail('pilot_incomplete', 503);
     if (Object.hasOwn(body, 'caseId')) {
       identifier(body.caseId);
@@ -353,9 +428,16 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const available = body.level ? all.filter(c => publicMetadata(c).level === body.level) : all;
     if (!available.length || (body.caseId && !available.some(c => c.id === body.caseId))) fail('invalid_case');
     if (context==='seminar') await seedSeminarHistory(identity);
-    const seminar = context==='seminar' ? await reserveSeminarCase(owner,id,signature,available,mode) : null;
+    const seminar = context==='seminar' ? await reserveSeminarCase(owner,id,signature,available,body) : null;
+    if(seminar?.existing){
+      const resumed=normalizeSession(await store.get(`sessions/${seminar.existing.sessionId}`));
+      if(resumed){own(resumed,identity);return response(resumed);}
+      if(!seminar.existing.startRequest)fail('outdated_session',409);
+      return start(JSON.parse(seminar.existing.startRequest),identity);
+    }
     const multiCase = mode==='independent' && !seminar;
-    const selected=selectShiftCases(available,id,{count:multiCase?8:1,caseId:seminar?.caseId||body.caseId,balanced:multiCase});
+    const selected=seminar?.example?[seminar.example]:
+      selectShiftCases(available,id,{count:multiCase?8:1,caseId:seminar?.caseId||body.caseId,balanced:multiCase});
     if (identity.guest) await reserveGuestStart(day, ownerKey, id, timestamp);
     else if (!seminar) {
       const grant = await store.transaction(`starts/${day}/${ownerKey}`, old => {
@@ -371,7 +453,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       ...(body.decisionVersion?{decisionVersion:body.decisionVersion}:{}),
       ...(body.controlVersion?{controlVersion:body.controlVersion}:{}),
       mode, locale: language, ...(body.workbookVersion?{workbookVersion:body.workbookVersion}:{}), ...(body.buildId ? {buildId:body.buildId} : {}), startedAt: timestamp, updatedAt: timestamp, revision: 1, status: 'active', caseIndex: 0,
-      ...(context ? {context} : {}), ...(seminar ? {seminarProgress:seminar.progress} : {}),
+      ...(context ? {context} : {}), ...(body.journeyStage ? {journeyStage:body.journeyStage} : {}),
       caseData: selected, caseStates: selected.map(c => initialState(c, language, timestamp,context)), results: [], requests: {},
       startSignature: signature, lease: null, result: null, journalSaved: false};
     const created = await store.transaction(`sessions/${id}`, old => old || session);
@@ -457,8 +539,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return normalizeSession(result.value);
   }
   async function finalizeSeminar(s) {
-    const available = (await catalogue()).filter(c => (!s.workbookVersion || supportsWorkbook(c,s.workbookVersion))
-      &&(s.decisionVersion!==DECISION_VERSION||Boolean(correspondenceProfiles.private(c))));
+    const available=(await seminarAvailable(s)).filter(c=>!s.journeyStage||c.id!==SEMINAR_EXAMPLE.caseId);
     const recorded = await store.transaction(seminarPath(s.owner), progress => {
       const attempt = progress?.attempts?.[s.id];
       if (!attempt || attempt.caseId !== s.caseData[0].id || attempt.signature !== s.startSignature) return undefined;
@@ -466,8 +547,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       attempt.completed = true;
       attempt.remainingCases = remainingSeminarCases(available,progress);
       if (s.mode === 'independent') {
-        progress.points = Math.min(MAX_SEMINAR_POINTS,(progress.points||0) + s.result.points);
-        attempt.seminarPoints = progress.points;
+        if(s.result.gradingVersion===SEMINAR_GRADING_VERSION)progress.bestPoints=Math.max(progress.bestPoints||0,s.result.points);
+        else progress.points=Math.min(MAX_SEMINAR_POINTS,(progress.points||0)+s.result.points);
+        attempt.seminarPoints=s.result.gradingVersion===SEMINAR_GRADING_VERSION?Math.max(progress.bestPoints||0,progress.points||0):progress.points;
+      }
+      const stage=progress.journey?.[s.journeyStage];
+      if(stage?.sessionId===s.id){
+        stage.completed=true;
+        delete stage.startRequest;
       }
       return progress;
     });
@@ -484,7 +571,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(s.status==='complete' && s.context==='seminar' && !s.seminarFinalized) await finalizeSeminar(s);
     if (s.status === 'complete' && !s.journalSaved && s.mode === 'independent' && !s.teacher && !s.guest && provider.name !== 'mock' && typeof saveResult === 'function') {
       try {
-        const result = s.context==='seminar'?{...s.result,seminarPoints:s.seminarProgress.seminarPoints}:copy(s.result);
+        const result = s.context==='seminar'&&!s.result.gradingVersion
+          ? {...s.result,seminarPoints:s.seminarProgress.seminarPoints} : copy(s.result);
         await saveResult({sessionId: s.id, studentKey: s.studentKey, uid: s.uid, result, startedAt: s.startedAt, completedAt: s.result.completedAt ?? s.updatedAt,
           cases: s.caseData.map(c => ({id: c.id, version: c.version,...(c.datePackId?{datePackId:c.datePackId}:{}),...(c.familyId?{familyId:c.familyId}:{})})),
           decisions: s.caseStates.map(state => state.control?{...state.decision,control:state.control,correspondenceFeedback:state.feedback?.correspondence}:
@@ -495,6 +583,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     return s;
   }
   async function message(body, identity) {
+    const mentor=body.op==='mentor-question';
     const requestId = identifier(body.requestId), text = string(body.text, limits.maxMessageChars), digest = hash(body), timestamp = clock(), leaseId = randomUUID();
     if (!Number.isSafeInteger(body.expectedRevision) || body.expectedRevision < 1) fail('invalid_revision');
     let failure, duplicate = false;
@@ -510,9 +599,14 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           fail(prior.status === 'pending' ? 'request_interrupted' : 'request_failed', 409);
         }
         if (s.lease && s.lease.until > timestamp) fail('busy', 409);
-        if (s.status !== 'active') fail('not_active', 409);
+        if(mentor && s.journeyStage!=='mentor')fail('mentor_unavailable',403);
+        if(mentor ? s.status==='complete' : s.status!=='active')fail('not_active',409);
+        if(s.journeyStage==='example')fail('tutorial_step_required',409);
         if (s.revision !== body.expectedRevision) fail('revision_conflict', 409);
-        if (s.caseStates[s.caseIndex].turns >= limits.maxTurnsPerCase) fail('case_turn_limit', 429);
+        const state=s.caseStates[s.caseIndex], turns=mentor?state.mentorMessages.length/2:state.turns;
+        if(mentor&&body.issueId!==undefined&&!state.controlWorkflow?.issues.some(issue=>issue.id===body.issueId))
+          fail('invalid_control_issue');
+        if (turns >= limits.maxTurnsPerCase) fail('case_turn_limit', 429);
         s.lease = {id: leaseId, requestId, until: timestamp + limits.leaseMs}; s.requests[requestId] = {digest, status: 'pending'}; return s;
       } catch (error) { failure = error; return undefined; }
     });
@@ -522,29 +616,43 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex]; let reservation, usage;
     try {
       if (provider.ready === false) fail('not_configured', 503);
-      const dossier = actorCase(c, s.locale);
-      if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)){const facts=localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale);dossier.correspondenceAddress=facts?.origin||null;dossier.eventLocation=facts?.site||null;}
-      dossier.releasedDocumentIds = dossier.documents.filter(document => state.releasedDocumentIds.includes(document.id)).map(document => document.id);
-      if(s.context)dossier.documentsAvailableUpfront=true;
-      const estimate = estimateReservation({actorCase: dossier, messages: state.messages, text, locale: s.locale,
-        maxOutputTokens: Math.max(limits.maxOutputTokens, provider.maxOutputTokens || 0), maxCalls: provider.maxCalls || 1});
+      let estimate, generate;
+      if(mentor){
+        if(typeof provider.answerMentor!=='function')fail('mentor_unavailable',503);
+        const guide=mentorContext(s,c,state,body.issueId);
+        const history=state.mentorMessages.slice(-12).map(({role,text})=>({role,text}));
+        const input={guide,history,text,locale:s.locale};
+        estimate=estimateMentorReservation(input);
+        generate=signal=>provider.answerMentor({...input,signal});
+      }else{
+        const dossier = actorCase(c, s.locale);
+        if([LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)){const facts=localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale);dossier.correspondenceAddress=facts?.origin||null;dossier.eventLocation=facts?.site||null;}
+        dossier.releasedDocumentIds = dossier.documents.filter(document => state.releasedDocumentIds.includes(document.id)).map(document => document.id);
+        if(s.context)dossier.documentsAvailableUpfront=true;
+        estimate=estimateReservation({actorCase:dossier,messages:state.messages,text,locale:s.locale,
+          maxOutputTokens:Math.max(limits.maxOutputTokens,provider.maxOutputTokens||0),maxCalls:provider.maxCalls||1});
+        generate=signal=>provider.generate({actorCase:dossier,messages:copy(state.messages),text,locale:s.locale,signal});
+      }
       if (estimate.perCallInputTokens > limits.maxInputAllowance) fail('context_limit', 413);
       reservation = await reserve(s, requestId, estimate.micros);
       const controller = new AbortController(); let timeout;
       const deadline = new Promise((_, reject) => { timeout = setTimeout(() => { controller.abort(); reject(new ReceptionError('provider_unavailable', 503)); }, limits.providerTimeoutMs); });
       let generated;
-      try { generated = await Promise.race([provider.generate({actorCase: dossier, messages: copy(state.messages), text, locale: s.locale, signal: controller.signal}), deadline]); }
+      try { generated = await Promise.race([generate(controller.signal),deadline]); }
       finally { clearTimeout(timeout); }
       usage = generated?.usage;
-      const turn = validateActorTurn(generated, c, state, s.locale);
+      const turn=mentor?{reply:string(generated?.reply,3200)}:validateActorTurn(generated,c,state,s.locale);
       const finished = await store.transaction(`sessions/${s.id}`, old => {
         const current = normalizeSession(old); if (!current || current.lease?.id !== leaseId) return undefined;
         const st = current.caseStates[current.caseIndex];
-        st.messages.push({id: `${requestId}-user`, role: 'user', text, at: timestamp}, {id: `${requestId}-assistant`, role: 'assistant', text: turn.reply, at: clock()});
-        st.knownFactIds = [...new Set([...st.knownFactIds, ...turn.revealedFactIds])];
-        if(!current.context)st.releasedDocumentIds = [...new Set([...st.releasedDocumentIds, ...turn.releasedDocumentIds])];
-        st.turns++;
-        current.requests[requestId] = {digest, status: 'done', guarded: turn.guarded,
+        const messages=mentor?st.mentorMessages:st.messages;
+        messages.push({id:`${requestId}-user`,role:'user',text,at:timestamp},{id:`${requestId}-assistant`,role:'assistant',text:turn.reply,at:clock()});
+        if(!mentor){
+          st.knownFactIds = [...new Set([...st.knownFactIds, ...turn.revealedFactIds])];
+          if(!current.context)st.releasedDocumentIds = [...new Set([...st.releasedDocumentIds, ...turn.releasedDocumentIds])];
+          st.turns++;
+        }
+        current.requests[requestId] = {digest, status:'done',...(mentor?{}:{guarded:turn.guarded}),
           ...(generated.actorModels?.reply && generated.actorModels?.verification ? {actorModels:generated.actorModels} : {})};
         current.lease = null; current.revision++; current.updatedAt = clock(); return current;
       });
@@ -555,7 +663,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         const current = normalizeSession(old); if (!current || current.lease?.id !== leaseId) return undefined;
         // A quota rejection occurs before any model call. Preserve the option to
         // retry the identical guest message once the allowance is available.
-        if (s.guest && !reservation && error instanceof ReceptionError && error.status === 429) delete current.requests[requestId];
+        if ((s.guest||mentor) && !reservation && error instanceof ReceptionError && error.status === 429) delete current.requests[requestId];
         else current.requests[requestId] = {digest, status: 'failed'};
         current.lease = null; return current;
       });
@@ -671,8 +779,12 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         profile,resolvedCitations:evidence,phase,control:phase==='control'?state.controlDraft:null,operational,
         workbook:[LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion)?localized(publicWorkbook(c,s.workbookVersion,{gameplay:Boolean(s.context)}),s.locale):null,
       });
+      const inputLimit=s.controlVersion==='execution-v1'?limits.maxReviewInputAllowance:limits.maxInputAllowance;
+      const remaining=Math.min(inputLimit-estimateReviewReservation({context}).perCallInputTokens,
+        240000-Buffer.byteLength(JSON.stringify(context),'utf8'));
+      addReviewDialogue(context,state.messages,remaining);
       const estimate=estimateReviewReservation({context});
-      if(estimate.perCallInputTokens>(s.controlVersion==='execution-v1'?limits.maxReviewInputAllowance:limits.maxInputAllowance))fail('context_limit',413);
+      if(estimate.perCallInputTokens>inputLimit)fail('context_limit',413);
       // Every failed attempt has a separately charged receipt. A successful request
       // is returned from the session ledger without invoking the reviewer again.
       reservation=await reserve(s,requestId,estimate.micros,attempt);
@@ -724,9 +836,285 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }finally{controller.abort();if(reservation)await settle(reservation,usage);}
   }
 
+  function openTutorialDocuments(c,state,documentIds) {
+    for(const document of c.documents.filter(doc=>documentIds.includes(doc.id)&&state.releasedDocumentIds.includes(doc.id))){
+      state.openedDocumentIds=[...new Set([...state.openedDocumentIds,document.id])];
+      state.knownFactIds=[...new Set([...state.knownFactIds,...document.factIds])];
+    }
+  }
+
+  function mentorContext(s,c,state,selectedIssueId) {
+    const profile=correspondenceProfiles.private(c,s.locale);
+    const guide=tutorialGuide(c,profile,s.locale,{execution:true});
+    guide.currentStep=guide.steps[state.tutorialStepIndex||0]?.id||'review';
+    if(selectedIssueId)guide.selectedIssueId=selectedIssueId;
+    if(s.status==='active'){
+      guide.steps=guide.steps.filter(step=>!step.id.startsWith('control'));
+      delete guide.control;
+    }
+    const draft=state.decision||state.correspondenceDraft, conclusion=state.control||state.controlDraft;
+    if(draft){
+      const {subject,kind,sections}=draft.correspondence;
+      guide.currentPracticeDraft={subject,kind,sections:Object.fromEntries(Object.entries(sections).map(([key,text])=>[key,text.slice(0,900)]))};
+    }
+    if(conclusion)guide.currentConclusion={text:conclusion.text.slice(0,1200),statuses:conclusion.statuses};
+    if(state.tutorialFinding)guide.currentFinding=state.tutorialFinding;
+    if(state.controlWorkflow){
+      const shown=publicControlWorkflow(state.controlWorkflow,null,s.locale);
+      const latest=shown.journal.at(-1);
+      const related=selectedIssueId ? shown.materials.filter(row=>row.issueIds.includes(selectedIssueId)).slice(-6) : [];
+      const materials=[...new Map([...related,...shown.materials.slice(-6)].map(row=>[row.id,row])).values()].slice(0,6);
+      guide.currentExecution={
+        issues:shown.issues.slice(0,8).map(({id,title,status,verifiedEvidenceIds})=>({id,title,status,verifiedEvidenceIds})),
+        materials:materials.map(({id,title,text})=>({id,title,text:text.slice(0,800)})),
+        latestAction:{issueId:latest?.issueId,kind:latest?.kind,outcome:latest?.outcome,message:latest?.message}
+      };
+    }
+    return guide;
+  }
+
+  const tutorCorrespondence = (raw,c,state,language) => {
+    const {workbook,...decision}=raw||{};
+    return {...validateDecision(decision,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:language}),
+      workbook:validateWorkbookDecision(workbook,WORKBOOK_VERSION)};
+  };
+
+  async function inspectMentorDraft(raw,c,state,profile,language) {
+    let decision,evidence;
+    try{
+      decision=tutorCorrespondence(raw,c,state,language);
+      const {sections,subject,citations}=decision.correspondence;
+      if(!subject||Object.values(sections).some(text=>!text))return {finding:'emptyDraft',decision};
+      if(!profile.acceptedKinds.includes(decision.correspondence.kind))return {finding:'kind',decision};
+      const {routing,calendar}=tutorialOperational(c,decision).workbook;
+      if(!routing?.correct)return {finding:'route',decision};
+      if(Object.values(calendar.correct).some(correct=>!correct))return {finding:'calendar',decision};
+      if(!citations.some(row=>row.section==='facts'&&['document','dialogue'].includes(row.kind)))return {finding:'evidence',decision};
+      const legal = citations.filter(row=>row.kind==='legal'&&row.section==='legalBasis');
+      const applicability=Object.keys(acceptableLegalProvisions(c)).length>0;
+      const sourceIds=new Set(normativeActsForCase(c).map(row=>row.id));
+      const supported=legal.some(row=>applicability
+        ? hasApplicableLegalCitation(c,{docId:row.sourceId,unitIds:row.unitIds,text:row.quote})
+        : !sourceIds.size||sourceIds.has(row.sourceId));
+      if(!supported)return {finding:'legal',decision};
+      evidence=await resolveCorrespondenceCitations(c,state,decision.correspondence,language,{resolveLegalCitation});
+    }catch(error){
+      if(error instanceof ReceptionError&&error.status<500)return {finding:'invalidDraft'};
+      throw error;
+    }
+    return {decision,evidence};
+  }
+
+  function inspectMentorControl(raw,c,state,profile,language) {
+    try{
+      const control=validateCorrespondenceControl(raw,c,state,profile,language);
+      if(!control.text)return {finding:'emptyControl',control};
+      const validation=validateControlSubmission(state.controlWorkflow,profile,control);
+      if(!validation.valid)return {finding:'invalidControl',control,details:localized(validation.findings,language)};
+      return {control};
+    }catch(error){
+      if(error instanceof ReceptionError&&error.status<500)return {finding:'invalidControl'};
+      throw error;
+    }
+  }
+
+  async function tutorialStep(body,identity) {
+    const requestId=identifier(body.requestId);
+    identifier(body.stepId);
+    let inspected;
+    const draft=Object.hasOwn(body,'decision'), control=Object.hasOwn(body,'control');
+    if(draft!==control&&body.useExample===undefined&&body.confirmOwn===undefined&&body.choiceId===undefined){
+      const session=await get(body.sessionId,identity);
+      const state=session.caseStates[session.caseIndex], prior=session.requests[requestId];
+      if(prior){
+        if(prior.digest!==hash(body))fail('request_conflict',409);
+        if(prior.status==='done')return response(session);
+      }
+      if(session.journeyStage==='mentor'&&body.stepId===(draft?'draft':'control-memo')&&session.revision===body.expectedRevision){
+        if(session.lease?.until>clock())fail('busy',409);
+        const c=session.caseData[session.caseIndex], profile=correspondenceProfiles.private(c,session.locale);
+        const guide=tutorialGuide(c,profile,session.locale,{execution:true});
+        if(guide.steps[state.tutorialStepIndex]?.id===body.stepId){
+          inspected=draft?await inspectMentorDraft(body.decision,c,state,profile,session.locale):
+            inspectMentorControl(body.control,c,state,profile,session.locale);
+          if(!inspected.finding)return reviewMentorProduct(body,identity,inspected);
+        }
+      }
+    }
+    return response(await mutate(body,identity,(session,timestamp)=>applyTutorialStep(session,body,timestamp,inspected)));
+  }
+
+  async function reviewMentorProduct(body,identity,inspected) {
+    const {requestId,sessionId,stepId}=body, digest=hash(body), timestamp=clock(), leaseId=randomUUID();
+    const phase=inspected.decision?'draft':'control';
+    let failure;
+    const acquired=await store.transaction('sessions/'+sessionId,old=>{
+      const s=normalizeSession(old);
+      try{
+        own(s,identity);
+        const prior=s.requests[requestId];
+        if(prior?.digest&&prior.digest!==digest)fail('request_conflict',409);
+        if(prior?.status==='done')return s;
+        if(s.lease?.until>timestamp)fail('busy',409);
+        if(s.journeyStage!=='mentor'||s.status!==(phase==='draft'?'active':'followup'))fail('tutorial_step_locked',409);
+        if(s.revision!==body.expectedRevision)fail('revision_conflict',409);
+        const state=s.caseStates[s.caseIndex];
+        if(phase==='draft')state.correspondenceDraft=inspected.decision;
+        else state.controlDraft=inspected.control;
+        state.reviewPending={requestId,phase:'mentor-'+phase,status:'pending'};
+        s.requests[requestId]={digest,status:'pending',attempt:(prior?.attempt||0)+1};
+        s.lease={id:leaseId,requestId,until:timestamp+limits.leaseMs};
+        return s;
+      }catch(error){failure=error;return undefined;}
+    });
+    if(!acquired.committed)throw failure||new ReceptionError('conflict',409);
+    const s=normalizeSession(acquired.value), prior=s.requests[requestId];
+    if(prior.status==='done')return response(s);
+    let reservation,usage,timeout;
+    const controller=new AbortController();
+    try{
+      if(provider.ready===false||typeof provider.reviewMentorWork!=='function')fail('review_unavailable',503);
+      const c=s.caseData[s.caseIndex], state=s.caseStates[s.caseIndex];
+      const guide=mentorContext(s,c,state);
+      const work=phase==='draft'?{decision:inspected.decision,evidence:inspected.evidence.map(({title,quote,kind,locator})=>({title,quote,kind,locator}))}
+        :inspected.control;
+      const input={guide,work,phase,locale:s.locale};
+      const estimate=estimateMentorWorkReservation(input);
+      if(estimate.perCallInputTokens>limits.maxReviewInputAllowance)fail('context_limit',413);
+      const billingId=hash([requestId,'mentor-work',prior.attempt]).slice(0,40);
+      reservation=await reserve(s,billingId,estimate.micros);
+      const deadline=new Promise((_,reject)=>{timeout=setTimeout(()=>{
+        controller.abort();reject(new ReceptionError('review_unavailable',503));
+      },limits.providerTimeoutMs);});
+      const review=await Promise.race([provider.reviewMentorWork({...input,signal:controller.signal}),deadline]);
+      usage=review?.usage;
+      if(typeof review?.ready!=='boolean'||typeof review.feedback!=='string'||!review.feedback.trim()||review.feedback.length>3200)
+        fail('review_unavailable',503);
+      const finished=await store.transaction('sessions/'+sessionId,old=>{
+        const current=normalizeSession(old);
+        if(current?.lease?.id!==leaseId)return undefined;
+        const state=current.caseStates[current.caseIndex];
+        if(review.ready){
+          applyTutorialStep(current,body,timestamp,inspected);
+          state.tutorialWorkFeedback={stepId,text:review.feedback.trim()};
+        }else state.tutorialFinding={stepId,explanation:review.feedback.trim()};
+        state.reviewPending=null;
+        current.requests[requestId]={digest,status:'done',attempt:prior.attempt};
+        current.lease=null;current.revision++;current.updatedAt=clock();
+        return current;
+      });
+      if(!finished.committed)fail('request_interrupted',409);
+      return response(finished.value);
+    }catch(error){
+      const safe=error instanceof ReceptionError?error:new ReceptionError('review_unavailable',503);
+      await store.transaction('sessions/'+sessionId,old=>{
+        const current=normalizeSession(old);
+        if(current?.lease?.id!==leaseId)return undefined;
+        current.caseStates[current.caseIndex].reviewPending={requestId,phase:'mentor-'+phase,status:'retry',code:safe.code};
+        current.requests[requestId]={digest,status:'failed',attempt:prior.attempt};
+        current.lease=null;
+        return current;
+      });
+      throw safe;
+    }finally{
+      clearTimeout(timeout);
+      controller.abort();
+      if(reservation)await settle(reservation,usage);
+    }
+  }
+
+  function applyTutorialStep(s,body,timestamp,inspected) {
+    if(!isTutorial(s))fail('tutorial_unavailable',403);
+    if(!Number.isSafeInteger(body.expectedRevision)||body.expectedRevision!==s.revision)fail('revision_conflict',409);
+    const c=s.caseData[s.caseIndex],state=s.caseStates[s.caseIndex];
+    const profile=correspondenceProfiles.private(c,s.locale), guide=tutorialGuide(c,profile,s.locale,{execution:s.controlVersion==='execution-v1'});
+    const index=state.tutorialStepIndex||0, step=guide.steps[index];
+    if(!step||step.id!==body.stepId)fail('tutorial_step_locked',409);
+    const ownDraft=s.journeyStage==='mentor'&&step.id==='draft';
+    const ownControl=s.journeyStage==='mentor'&&step.id==='control-memo';
+    const ownExecution=s.journeyStage==='mentor'&&tutorialExecutionKinds(step.id);
+    const product=ownDraft||ownControl;
+    if ((body.useExample!==undefined&&(body.useExample!==true||!product&&!ownExecution))||
+      (body.confirmOwn!==undefined&&(body.confirmOwn!==true||!ownExecution||body.useExample))||
+      (body.decision!==undefined&&(!ownDraft||body.useExample))||
+      (body.control!==undefined&&(!ownControl||body.useExample)))fail('invalid_request');
+    if(product||ownExecution){
+      if(body.choiceId!==undefined)fail('invalid_tutorial_choice');
+      if(ownExecution&&!body.useExample){
+        const finding=tutorialExecutionProgress(state.controlWorkflow,step.id);
+        if(finding||!body.confirmOwn){
+          state.tutorialFinding={stepId:step.id,explanation:mentorFinding(finding||{ 'control-request':'request', 'control-evidence':'verify', 'control-status':'status' }[step.id],s.locale)};
+          return;
+        }
+      }
+      if(product&&!body.useExample){
+        inspected=ownDraft?(inspected||{finding:'emptyDraft'})
+          :body.control===undefined?{finding:'emptyControl'}:inspectMentorControl(body.control,c,state,profile,s.locale);
+        if(inspected.finding){
+          if(inspected.decision)state.correspondenceDraft=inspected.decision;
+          if(inspected.control)state.controlDraft=inspected.control;
+          state.tutorialFinding={stepId:step.id,explanation:[mentorFinding(inspected.finding,s.locale),
+            ...(inspected.details||[]).map(finding=>finding.message)].join(' ')};
+          return;
+        }
+      }
+    }else{
+      const selected=step.choices.find(choice=>choice.id===body.choiceId);
+      if(!selected)fail('invalid_tutorial_choice');
+      if(!selected.correct){
+        state.tutorialFinding={stepId:step.id,correctChoiceId:step.choices.find(choice=>choice.correct).id,explanation:step.explanation};
+        return;
+      }
+    }
+    state.tutorialFinding=null;
+    state.tutorialStepIndex=index+1;
+    if(step.id==='conversation'&&s.journeyStage==='example'){
+      // The walkthrough uses the frozen dossier, so every learner sees the same
+      // conversation. It never asks the actor to improvise a solution.
+      for(const fact of c.facts.filter(fact=>c.rubric.requiredFactIds.includes(fact.id)&&fact.knowledge!=='document')){
+        if(fact.prompt)state.messages.push({id:`example-${fact.id}-user`,role:'user',text:localized(fact.prompt,s.locale),at:timestamp});
+        state.messages.push({id:`example-${fact.id}-assistant`,role:'assistant',text:localized(fact.text,s.locale),at:timestamp});
+        state.knownFactIds=[...new Set([...state.knownFactIds,fact.id])];
+      }
+    }
+    if(step.action==='document')openTutorialDocuments(c,state,step.documentIds);
+    if(step.action==='draft'){
+      state.correspondenceDraft=null;
+      state.reviewPending=null;
+      if(inspected?.decision){
+        state.decision=inspected.decision;
+        state.correspondenceEvidence=inspected.evidence;
+      }else{
+        openTutorialDocuments(c,state,guide.decision.correspondence.citations.map(citation=>citation.sourceId));
+        state.decision=tutorCorrespondence(guide.decision,c,state,s.locale);
+      }
+      if(c.followup){
+        if(s.controlVersion==='execution-v1')state.controlWorkflow=createControlWorkflow({caseData:c,
+          profile:s.journeyStage==='example'?walkthroughControlProfile(c,profile):profile,decision:state.decision,
+          initialFeedback:tutorialOperational(c,state.decision),locale:s.locale,timestamp});
+        s.status='followup';
+      }
+    }
+    if(state.controlWorkflow&&tutorialExecutionKinds(step.id)&&(!ownExecution||body.useExample))
+      state.controlWorkflow=tutorialExecutionAction(state.controlWorkflow,step.id,guide,{caseData:c,locale:s.locale,timestamp});
+    if(step.action==='control'){
+      state.controlDraft=null;
+      state.reviewPending=null;
+      state.control=inspected?.control||(state.controlWorkflow ? validatedTutorialMemo(state.controlWorkflow,profile,guide,s.locale)
+        : validateCorrespondenceControl(guide.control,c,state,profile,s.locale));
+    }
+    if(step.action==='review'){
+      state.feedback={explanation:step.explanation,criteria:[]};
+      s.results.push(state.feedback);
+      s.status='review';
+    }
+  }
+
   async function handle(body, identity) {
     checkIdentity(identity); if (!body || !Object.hasOwn(allowed, body.op)) fail('invalid_operation'); fields(body, allowed[body.op]);
     if (body.context!==undefined && !['seminar','free'].includes(body.context)) fail('invalid_context');
+    if (body.journeyStage!==undefined && (!JOURNEY_STAGES.includes(body.journeyStage) || body.context!=='seminar' ||
+      body.mode!==(body.journeyStage==='independent'?'independent':'training'))) fail('invalid_journey_stage');
     if(body.workbookVersion!==undefined&&![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(body.workbookVersion))fail('invalid_workbook');
     if(body.decisionVersion!==undefined&&body.decisionVersion!==DECISION_VERSION)fail('invalid_decision_version');
     if(body.controlVersion!==undefined&&(body.controlVersion!=='execution-v1'||body.decisionVersion!==DECISION_VERSION))fail('invalid_control_version');
@@ -746,23 +1134,34 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       const session=await get(body.sessionId, identity);
       const historicalResult = session.status==='complete' && !session.context;
       if(body.context && session.context!==body.context && !historicalResult)fail('outdated_session',409);
-      if((body.buildId && session.buildId!==body.buildId||body.workbookVersion&&session.workbookVersion!==body.workbookVersion) && session.status!=='complete') fail('outdated_session',409);
+      if((body.buildId && session.context!=='seminar' && session.buildId!==body.buildId||
+        body.workbookVersion&&session.workbookVersion!==body.workbookVersion) && session.status!=='complete') fail('outdated_session',409);
       if(body.decisionVersion&&session.decisionVersion!==body.decisionVersion&&session.status!=='complete')fail('outdated_session',409);
       return response(session);
     }
     if (body.op === 'recover') return recover(body, identity);
-    if (body.op === 'message') return message(body, identity);
+    if (body.op==='message'||body.op==='mentor-question')return message(body,identity);
+    if (body.op==='tutorial-step')return tutorialStep(body,identity);
     if(body.op==='control-action'){
       const updated=await mutate(body,identity,(s,timestamp)=>{
+        if(s.journeyStage==='example')fail('tutorial_step_required',409);
         if(s.controlVersion!=='execution-v1'||s.decisionVersion!==DECISION_VERSION)fail('invalid_control_version');
         if(s.status!=='followup')fail('not_active',409);
         if(!Number.isSafeInteger(body.expectedRevision)||body.expectedRevision!==s.revision)fail('revision_conflict',409);
         const c=s.caseData[s.caseIndex],state=s.caseStates[s.caseIndex];
         if(!state.controlWorkflow||state.control)fail('invalid_control',409);
+        const profile=correspondenceProfiles.private(c,s.locale);
+        const mentor=s.journeyStage==='mentor';
+        const step=mentor?tutorialGuide(c,profile,s.locale,{execution:true}).steps[state.tutorialStepIndex]:null;
+        if(mentor&&!tutorialExecutionKinds(step?.id)?.includes(body.action?.kind))fail('tutorial_step_required',409);
         const workflow=applyControlAction(state.controlWorkflow,null,body.action,{
           caseData:c,locale:s.locale,timestamp,requestId:body.requestId,expectedRevision:state.controlWorkflow.revision,
         });
-        assertExecutionReviewCapacity(s,c,state,correspondenceProfiles.private(c),workflow);
+        if(mentor){
+          const last=workflow.journal.at(-1);
+          state.tutorialFinding=last.accepted&&last.outcome!=='evidence_insufficient'?null:
+            {stepId:step.id,explanation:localized(last.message,s.locale)};
+        }else assertExecutionReviewCapacity(s,c,state,profile,workflow);
         state.controlWorkflow=workflow;
         state.controlActionReceipt={requestId:body.requestId,workflowRevision:state.controlWorkflow.revision};
         state.controlValidation=null;
@@ -771,6 +1170,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }
     if(['decide','followup'].includes(body.op)){
       const session=await get(body.sessionId,identity);
+      if(isTutorial(session))fail('tutorial_step_required',409);
       if(session.decisionVersion===DECISION_VERSION)return reviewCorrespondence(body,identity);
       if(body.control!==undefined||body.decision?.correspondence!==undefined)fail('invalid_decision_version');
     }
@@ -824,12 +1224,22 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           session.caseStates[session.caseIndex] = initialState(session.caseData[session.caseIndex], session.locale, clock(),session.context);
         }
         else {
-          session.status = 'complete'; const raw = session.results.reduce((sum,r)=>sum+r.score,0)/session.results.length;
-          const critical=session.results.some(r=>r.authored&&r.criticalIds?.length),bounded=critical?Math.min(raw,60):raw;
-          const total=session.results.some(r=>r.authored)?bounded:Math.round(bounded*10)/10;
-          const points = session.context==='seminar' ? Number(total >= SEMINAR_PASS_SCORE) : Math.round(total / 20 * 10) / 10;
-          session.result = {points, maxPoints: 5, total, raw, cap:critical?60:null, attemptId: `reception-ai-${session.id}`, caseCount: session.caseData.length,
-            ...(session.context==='seminar'?{completedAt:timestamp,passScore:SEMINAR_PASS_SCORE}: {})};
+          session.status = 'complete';
+          const identity = {attemptId:`reception-ai-${session.id}`,caseCount:session.caseData.length};
+          if(isTutorial(session)){
+            session.result={...identity,completedAt:timestamp};
+          }else{
+            const seminar=session.context==='seminar';
+            const gradedSeminar=seminar && session.journeyStage==='independent';
+            const raw=session.results.reduce((sum,r)=>sum+(gradedSeminar?exactCaseScore(r):r.score),0)/session.results.length;
+            const critical=session.results.some(r=>r.authored&&r.criticalIds?.length);
+            const bounded=critical?Math.min(raw,60):raw;
+            const total=gradedSeminar||session.results.some(r=>r.authored)?bounded:Math.round(bounded*10)/10;
+            const points=gradedSeminar?seminarPointsAt(total):seminar?Number(total>=SEMINAR_PASS_SCORE):Math.round(total/20*10)/10;
+            session.result={...identity,points,maxPoints:5,total,raw,cap:critical?60:null,
+              ...(gradedSeminar?{gradingVersion:SEMINAR_GRADING_VERSION}:{}),
+              ...(seminar?{completedAt:timestamp,passScore:SEMINAR_PASS_SCORE}:{})};
+          }
         }
       }
     });

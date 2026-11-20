@@ -264,7 +264,7 @@ function dateLabel(value,locale) {
   if(!Number.isFinite(date.getTime())||date.toISOString().slice(0,10)!==value)return value;
   return new Intl.DateTimeFormat({ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[language(locale)],{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(date);
 }
-function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source'}={}) {
+function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],specialistName='',locale='ru',citationPrefix='rxc-source'}={}, {showProjectMark=true}={}) {
   const d=restoreCorrespondence(draft),t=copy[language(locale)],available=publicSources(sources,locale);
   const issuer=local(profile.issuer?.name,locale)||local(profile.origin?.name,locale)||local(caseInfo.workbook?.origin?.name,locale)||t.issuer;
   const citizen=local(caseInfo.citizen?.name,locale);
@@ -292,13 +292,17 @@ function letterContent({draft,caseInfo={},profile={},sources=[],recipients=[],sp
   const signature='<footer class="rxc-letter-signature"><span>'+esc(t.signer)+'</span><span>________________<small>'+esc(t.signature)+'</small></span><span>'+esc(t.signerName)+'</span></footer>';
   const specialist=string(specialistName,200).trim();
   const preparedBy=specialist?'<p class="rxc-letter-specialist"><strong>'+esc(t.specialist)+'</strong>: '+esc(specialist)+'</p>':'';
-  return '<div class="rxc-project-mark">'+esc(t.project)+'</div><article class="rxc-letter" lang="'+language(locale)+'"><header class="rxc-letter-head"><div class="rxc-letter-issuer">'+esc(issuer)+'</div><div class="rxc-letter-rule"></div><div class="rxc-letter-meta"><span>'+esc(t.kinds[d.kind])+'</span>'+(address?'<span>'+address+'</span>':'')+'</div>'+requisites+'</header>'+(d.subject?'<h1 class="rxc-letter-subject">'+esc(d.subject)+'</h1>':'')+'<div class="rxc-letter-body">'+(body||'<p class="rxc-letter-empty">'+esc(t.draftEmpty)+'</p>')+'</div>'+signature+preparedBy+orders+citations+'</article>';
+  const projectMark=showProjectMark?'<div class="rxc-project-mark">'+esc(t.project)+'</div>':'';
+  return projectMark+'<article class="rxc-letter" lang="'+language(locale)+'"><header class="rxc-letter-head"><div class="rxc-letter-issuer">'+esc(issuer)+'</div><div class="rxc-letter-rule"></div><div class="rxc-letter-meta"><span>'+esc(t.kinds[d.kind])+'</span>'+(address?'<span>'+address+'</span>':'')+'</div>'+requisites+'</header>'+(d.subject?'<h1 class="rxc-letter-subject">'+esc(d.subject)+'</h1>':'')+'<div class="rxc-letter-body">'+(body||'<p class="rxc-letter-empty">'+esc(t.draftEmpty)+'</p>')+'</div>'+signature+preparedBy+orders+citations+'</article>';
 }
 
 export function correspondencePreviewView(options={}) {
   const t=copy[language(options.locale)];
   const edit=options.disabled?'':'<div>'+button(t.edit,'edit',{icon:'arrow'})+'</div>';
-  return '<section class="rxc-preview" data-correspondence-preview><div class="rxc-preview-toolbar">'+edit+'<div>'+button(t.print,'print',{icon:'print'})+button(t.download,'download',{icon:'download'})+'</div></div><div class="rxc-preview-stage">'+letterContent(options)+'</div></section>';
+  const exports=options.seminar?'':'<div>'+button(t.print,'print',{icon:'print'})+button(t.download,'download',{icon:'download'})+'</div>';
+  const toolbar=edit||exports?'<div class="rxc-preview-toolbar">'+edit+exports+'</div>':'';
+  return '<section class="rxc-preview" data-correspondence-preview>'+toolbar+'<div class="rxc-preview-stage">'+
+    letterContent(options,{showProjectMark:!options.seminar})+'</div></section>';
 }
 
 export function restoreCorrespondenceControl(value) {

@@ -52,7 +52,7 @@ const copy={
     yourDisposition:'Ваш итог по вопросу',chooseDisposition:'Укажите итог',support:'Подтверждающие материалы',memoText:'Мотивированное заключение',memoHint:'Укажите установленные результаты, их основания и необходимые дальнейшие действия. Учитывайте пределы рассмотренного вопроса.',
     back:'Вернуться к работе по делу',submit:'Зафиксировать итог контроля',saved:'Зафиксированное заключение',noConclusion:'Заключение не представлено.',notChosen:'Итог не указан',noEvidence:'Материалы не указаны',
     record:'Запись контроля по делу',recordHint:'Сохранённые действия, полученные материалы и итоговое заключение.',unknownRecipient:'Адресат из записи работы',
-    readOnly:'Работа доступна для просмотра.',ready:'Можно подготовить заключение',selected:'Выбрано',
+    missing:'Заполните поля, необходимые для регистрации действия.',readOnly:'Работа доступна для просмотра.',ready:'Можно подготовить заключение',selected:'Выбрано',
     actions:{request_evidence:'Запросить подтверждения',verify:'Проверить материалы',notify:'Подготовить уведомление',close:'Завершить работу по вопросу',keep_open:'Продолжить контроль',refer:'Передать по компетенции',reopen:'Возобновить рассмотрение'},
     substantive:{pending:'Вопрос остаётся открытым',resolved:'Результат по предмету подтверждён',referred:'Передано по компетенции'},
     stage:{open:'Первичная проверка',awaiting:'Ожидаются сведения',ready:'Материалы проверены',closed:'Работа по вопросу завершена',referred:'Передано',reopened:'Рассмотрение возобновлено'},
@@ -77,7 +77,7 @@ const copy={
     memorandum:'Follow-through memorandum',memoIntro:'State an outcome for each issue and identify its supporting materials. Explain completion or further work.',
     yourDisposition:'Your conclusion on the issue',chooseDisposition:'Choose an outcome',support:'Supporting materials',memoText:'Reasoned conclusion',memoHint:'State the established results, their grounds and any further action. Respect the scope of the issue reviewed.',
     back:'Return to case work',submit:'Record the final conclusion',saved:'Recorded conclusion',noConclusion:'No conclusion submitted.',notChosen:'No outcome specified',noEvidence:'No materials specified',
-    record:'Case follow-through record',recordHint:'Recorded actions, received materials and the final conclusion.',unknownRecipient:'Recipient from the work record',readOnly:'This work is available for review.',ready:'A conclusion can be prepared',selected:'Selected',
+    record:'Case follow-through record',recordHint:'Recorded actions, received materials and the final conclusion.',unknownRecipient:'Recipient from the work record',missing:'Complete the fields required to record this action.',readOnly:'This work is available for review.',ready:'A conclusion can be prepared',selected:'Selected',
     actions:{request_evidence:'Request evidence',verify:'Verify materials',notify:'Prepare a notification',close:'Complete work on the issue',keep_open:'Continue follow-through',refer:'Refer to a competent body',reopen:'Reopen the issue'},
     substantive:{pending:'The issue remains open',resolved:'Result within scope confirmed',referred:'Referred to a competent body'},
     stage:{open:'Initial review',awaiting:'Awaiting information',ready:'Materials verified',closed:'Work on the issue completed',referred:'Referred',reopened:'Review reopened'},
@@ -102,7 +102,7 @@ const copy={
     memorandum:'办理核查结论',memoIntro:'分别说明每项诉求的结果及证明材料，并解释为何可以结束或需要继续工作。',
     yourDisposition:'您对该事项的结论',chooseDisposition:'请选择结果',support:'证明材料',memoText:'附理由的结论',memoHint:'说明已查明的结果、依据以及必要的后续行动。注意已审查事项的范围。',
     back:'返回案件办理',submit:'记录最终核查结论',saved:'已记录的结论',noConclusion:'尚未提交结论。',notChosen:'尚未说明结果',noEvidence:'尚未注明材料',
-    record:'案件核查记录',recordHint:'已记录的行动、收到的材料与最终结论。',unknownRecipient:'办理记录中的接收方',readOnly:'该作业可供查阅。',ready:'可以准备结论',selected:'已选择',
+    record:'案件核查记录',recordHint:'已记录的行动、收到的材料与最终结论。',unknownRecipient:'办理记录中的接收方',missing:'请先填写登记本次行动所需的字段。',readOnly:'该作业可供查阅。',ready:'可以准备结论',selected:'已选择',
     actions:{request_evidence:'请求证明材料',verify:'核验材料',notify:'准备通知',close:'完成该事项的办理',keep_open:'继续跟进',refer:'按职权转送',reopen:'重新审查事项'},
     substantive:{pending:'事项仍待处理',resolved:'已确认事项范围内的结果',referred:'已按职权转送'},
     stage:{open:'初步核查',awaiting:'等待信息',ready:'材料已核验',closed:'事项办理已完成',referred:'已转送',reopened:'已恢复审查'},
@@ -159,6 +159,33 @@ export function reduceControlActionDraft(value,action={},workflow){
   return draft;
 }
 export function controlActionSubmission(value,workflow){return restoreControlActionDraft(value);}
+
+const ACTION_REQUIRED_FIELDS = {
+  request_evidence:['reason','instruction','recipientIds','dueDate','expectedResult','evidenceSourceIds'],
+  verify:['reason','evidenceSourceIds'],
+  notify:['reason','instruction','expectedResult','evidenceSourceIds'],
+  close:['reason','evidenceSourceIds'],
+  keep_open:['reason','instruction'],
+  refer:['reason','instruction','recipientIds','evidenceSourceIds'],
+  reopen:['reason'],
+};
+
+export function missingControlActionFields(value) {
+  const draft = restoreControlActionDraft(value);
+  return (ACTION_REQUIRED_FIELDS[draft.kind] || []).filter(field => {
+    const value=draft[field];
+    return typeof value==='string'?!value.trim():!value.length;
+  });
+}
+
+function controlActionMissingView(draft, ctx) {
+  const missing = missingControlActionFields(draft);
+  if(!missing.length)return '';
+  const labels={reason:'reason',instruction:'instruction',recipientIds:'recipient',dueDate:'due',
+    expectedResult:'expected',evidenceSourceIds:'evidence'};
+  return '<div class="rxe-action-missing" data-control-missing role="status"><p>'+esc(ctx.t.missing)+'</p><ul>'+
+    missing.map(field=>'<li><button type="button" class="rxa-btn quiet" data-action="control-field" data-field="'+field+'">'+esc(ctx.t[labels[field]])+'</button></li>').join('')+'</ul></div>';
+}
 export function restoreControlWorkspaceUI(value,workflow){
   const source=value&&typeof value==='object'?value:{};
   return {issueId:text(source.issueId,120),materialId:text(source.materialId,240),pane:source.pane==='memorandum'?'memorandum':'work',journalAll:source.journalAll===true};
@@ -240,8 +267,8 @@ function journalView(ctx,issueId,ui,recipients,{readOnly=false}={}){
 function actionEvidence(draft,ctx,disabled){
   return '<fieldset class="rxe-evidence"><legend>'+esc(ctx.t.evidence)+'</legend><p class="rxe-muted">'+esc(ctx.t.evidenceHint)+'</p>'+(ctx.materials.length?'<div class="rxe-evidence-list">'+ctx.materials.map(material=>'<div class="rxe-evidence-row"><label><input type="checkbox" data-control-field="evidenceSourceIds" data-source-id="'+esc(material.id)+'" data-focus="control-evidence-'+esc(material.id)+'"'+(draft.evidenceSourceIds.includes(material.id)?' checked':'')+(disabled?' disabled':'')+'><span>'+esc(materialTitle(material,ctx))+'</span></label>'+button(ctx.t.openMaterial,'open-material',{extra:'data-material-id="'+esc(material.id)+'"',quiet:true,glyph:'paper'})+'</div>').join('')+'</div>':'<p class="rxe-muted">'+esc(ctx.t.evidenceEmpty)+'</p>')+'</fieldset>';
 }
-function actionComposer(issue,draft,ctx,recipients,disabled){
-  const available=(Array.isArray(issue.availableActions)?issue.availableActions:[]).filter(action=>ACTIONS.includes(action.kind));
+function actionComposer(issue,draft,ctx,recipients,disabled,showMissing,actionKinds){
+  const available=(Array.isArray(issue.availableActions)?issue.availableActions:[]).filter(action=>ACTIONS.includes(action.kind)&&(!actionKinds||actionKinds.includes(action.kind)));
   const otherDraft=draft.issueId&&draft.issueId!==issue.id&&hasActionWork(draft);
   const selected=available.find(action=>action.kind===draft.kind&&draft.issueId===issue.id);
   const choose=available.map(action=>'<button type="button" class="rxe-tool'+(selected?.kind===action.kind?' rxe-tool-selected':'')+'" data-control-action="select-kind" data-issue-id="'+esc(issue.id)+'" data-kind="'+esc(action.kind)+'" aria-pressed="'+(selected?.kind===action.kind)+'"'+(disabled||otherDraft?' disabled':'')+'>'+icon(action.kind)+'<span>'+esc(local(action.label,ctx.locale)||ctx.t.actions[action.kind])+'</span></button>').join('');
@@ -254,7 +281,7 @@ function actionComposer(issue,draft,ctx,recipients,disabled){
     const needsDate=selected.requiresDueDate===true||['request_evidence','keep_open','refer','reopen'].includes(draft.kind)||Boolean(draft.dueDate);
     const needsExpected=needsDate||draft.kind==='notify'||Boolean(draft.expectedResult);
     const recipientMarkup=needsRecipients?'<fieldset class="rxe-action-recipients"><legend>'+esc(ctx.t.recipient)+'</legend>'+(draft.recipientIds.length?'<div class="rxe-recipient-chips">'+draft.recipientIds.map(id=>'<span><span>'+esc(recipientName(id,recipients,ctx))+'</span>'+button(ctx.t.removeRecipient,'remove-recipient',{extra:'data-recipient-id="'+esc(id)+'"',disabled,quiet:true,glyph:'close_panel'})+'</span>').join('')+'</div>':'<p class="rxe-muted">'+esc(ctx.t.recipientEmpty)+'</p>')+button(ctx.t.chooseRecipient,'choose-recipient',{disabled,quiet:true})+'</fieldset>':'';
-    compose='<section class="rxe-action-composer" data-control-composer><div class="rxe-composer-heading"><div><p class="rxe-eyebrow">'+esc(ctx.t.draft)+'</p><h4>'+esc(ctx.t.actions[draft.kind])+'</h4></div>'+button(ctx.t.clearDraft,'clear-action',{extra:'data-issue-id="'+esc(issue.id)+'"',disabled,quiet:true})+'</div><label class="rxe-field"><span>'+esc(ctx.t.reason)+'</span><textarea data-control-field="reason" data-focus="control-action-reason" maxlength="2000" rows="3"'+off+'>'+esc(draft.reason)+'</textarea><small>'+esc(ctx.t.reasonHint)+'</small></label><label class="rxe-field"><span>'+esc(ctx.t[instructionKey])+'</span><textarea data-control-field="instruction" data-focus="control-action-instruction" maxlength="2000" rows="4"'+off+'>'+esc(draft.instruction)+'</textarea><small>'+esc(ctx.t.instructionHint)+'</small></label>'+recipientMarkup+((needsDate||needsExpected)?'<div class="rxe-action-plan">'+(needsDate?'<label class="rxe-field"><span>'+esc(ctx.t.dueLabel)+'</span><input type="date" data-control-field="dueDate" data-focus="control-action-due" value="'+esc(draft.dueDate)+'"'+off+'><small>'+esc(ctx.t.dueHint)+'</small></label>':'')+(needsExpected?'<label class="rxe-field"><span>'+esc(ctx.t.expectedLabel)+'</span><textarea data-control-field="expectedResult" data-focus="control-action-expected" maxlength="1000" rows="3"'+off+'>'+esc(draft.expectedResult)+'</textarea><small>'+esc(ctx.t.expectedHint)+'</small></label>':'')+'</div>':'')+actionEvidence(draft,ctx,disabled)+'<footer class="rxe-action-footer"><p>'+esc(ctx.t.simulation)+'</p>'+button(ctx.t.execute,'execute',{disabled,primary:true,glyph:draft.kind})+'</footer></section>';
+    compose='<section class="rxe-action-composer" data-control-composer><div class="rxe-composer-heading"><div><p class="rxe-eyebrow">'+esc(ctx.t.draft)+'</p><h4>'+esc(ctx.t.actions[draft.kind])+'</h4></div>'+button(ctx.t.clearDraft,'clear-action',{extra:'data-issue-id="'+esc(issue.id)+'"',disabled,quiet:true})+'</div><label class="rxe-field"><span>'+esc(ctx.t.reason)+'</span><textarea data-control-field="reason" data-focus="control-action-reason" maxlength="2000" rows="3"'+off+'>'+esc(draft.reason)+'</textarea><small>'+esc(ctx.t.reasonHint)+'</small></label><label class="rxe-field"><span>'+esc(ctx.t[instructionKey])+'</span><textarea data-control-field="instruction" data-focus="control-action-instruction" maxlength="2000" rows="4"'+off+'>'+esc(draft.instruction)+'</textarea><small>'+esc(ctx.t.instructionHint)+'</small></label>'+recipientMarkup+((needsDate||needsExpected)?'<div class="rxe-action-plan">'+(needsDate?'<label class="rxe-field"><span>'+esc(ctx.t.dueLabel)+'</span><input type="date" data-control-field="dueDate" data-focus="control-action-due" value="'+esc(draft.dueDate)+'"'+off+'><small>'+esc(ctx.t.dueHint)+'</small></label>':'')+(needsExpected?'<label class="rxe-field"><span>'+esc(ctx.t.expectedLabel)+'</span><textarea data-control-field="expectedResult" data-focus="control-action-expected" maxlength="1000" rows="3"'+off+'>'+esc(draft.expectedResult)+'</textarea><small>'+esc(ctx.t.expectedHint)+'</small></label>':'')+'</div>':'')+actionEvidence(draft,ctx,disabled)+(showMissing?controlActionMissingView(draft,ctx):'')+'<footer class="rxe-action-footer"><p>'+esc(ctx.t.simulation)+'</p>'+button(ctx.t.execute,'execute',{disabled,primary:true,glyph:draft.kind})+'</footer></section>';
   }
   return '<section class="rxe-action-tools"><div class="rxe-section-heading"><h3>'+esc(ctx.t.tools)+'</h3></div><p class="rxe-muted">'+esc(ctx.t.toolsHint)+'</p>'+notice+(choose?'<div class="rxe-tools">'+choose+'</div>':'<p class="rxe-muted">'+esc(ctx.t.noActions)+'</p>')+compose+'</section>';
 }
@@ -262,7 +289,7 @@ function finalEvidence(issueId,selected,ctx,disabled){
   if(!ctx.materials.length)return '<p class="rxe-muted">'+esc(ctx.t.evidenceEmpty)+'</p>';
   return '<div class="rxe-final-evidence">'+ctx.materials.map(material=>'<div class="rxe-evidence-row"><label><input type="checkbox" data-response-status-evidence="'+esc(material.id)+'" data-issue-id="'+esc(issueId)+'" data-focus="response-evidence-'+esc(issueId)+'-'+esc(material.id)+'"'+(selected.some(id=>id===material.id||id==='document:'+material.id)?' checked':'')+(disabled?' disabled':'')+'><span>'+esc(materialTitle(material,ctx))+'</span></label>'+button(ctx.t.openMaterial,'open-material',{extra:'data-material-id="'+esc(material.id)+'"',quiet:true,glyph:'paper'})+'</div>').join('')+'</div>';
 }
-function memorandumView(draft,ctx,disabled,{readOnly=false}={}){
+function memorandumView(draft,ctx,disabled,{readOnly=false,submitLabel=ctx.t.submit}={}){
   const value=restoreCorrespondenceControl(draft),off=disabled?' disabled':'';
   const rows=ctx.issues.map(issue=>{
     const row=value.statuses.find(status=>status.issueId===issue.id);
@@ -271,18 +298,18 @@ function memorandumView(draft,ctx,disabled,{readOnly=false}={}){
     return '<article class="rxe-final-issue"><h4>'+esc(issueTitle(issue,ctx))+'</h4>'+(local(issue.scope,ctx.locale)?'<div class="rxe-scope"><strong>'+esc(ctx.t.scope)+'</strong>'+paragraphs(local(issue.scope,ctx.locale))+'</div>':'')+statusMarkup(issue,ctx)+controls+'</article>';
   }).join('');
   const prose=readOnly?'<div class="rxe-conclusion-text">'+(value.text.trim()?paragraphs(value.text):'<p class="rxe-muted">'+esc(ctx.t.noConclusion)+'</p>')+'</div>':'<label class="rxe-field rxe-memorandum-text"><span>'+esc(ctx.t.memoText)+'</span><textarea data-response-control-field="text" data-focus="response-control-text" maxlength="6000" rows="8"'+off+'>'+esc(value.text)+'</textarea><small>'+esc(ctx.t.memoHint)+'</small></label>';
-  return '<section class="rxe-memorandum" data-control-memorandum tabindex="-1"><div class="rxe-section-heading"><div><p class="rxe-eyebrow">'+esc(readOnly?ctx.t.saved:ctx.t.memorandum)+'</p><h3>'+esc(ctx.t.memoText)+'</h3></div>'+(!readOnly?button(ctx.t.back,'back-to-work',{quiet:true,glyph:'arrow'}):'')+'</div>'+(!readOnly?'<p class="rxe-muted">'+esc(ctx.t.memoIntro)+'</p>':'')+'<div class="rxe-final-issues">'+rows+'</div>'+prose+(!readOnly?'<div class="rxe-memorandum-footer"><button type="submit" class="rxa-btn primary rxe-button" data-control-submit'+off+'>'+icon('close')+'<span>'+esc(ctx.t.submit)+'</span></button></div>':'')+'</section>';
+  return '<section class="rxe-memorandum" data-control-memorandum tabindex="-1"><div class="rxe-section-heading"><div><p class="rxe-eyebrow">'+esc(readOnly?ctx.t.saved:ctx.t.memorandum)+'</p><h3>'+esc(ctx.t.memoText)+'</h3></div>'+(!readOnly?button(ctx.t.back,'back-to-work',{quiet:true,glyph:'arrow'}):'')+'</div>'+(!readOnly?'<p class="rxe-muted">'+esc(ctx.t.memoIntro)+'</p>':'')+'<div class="rxe-final-issues">'+rows+'</div>'+prose+(!readOnly?'<div class="rxe-memorandum-footer"><button type="submit" class="rxa-btn primary rxe-button" data-control-submit'+off+'>'+icon('close')+'<span>'+esc(submitLabel)+'</span></button></div>':'')+'</section>';
 }
 
-export function controlWorkspaceView({workflow,draft,actionDraft,ui,caseInfo={},sources=[],recipients=[],locale='ru',disabled=false}={}){
+export function controlWorkspaceView({workflow,draft,actionDraft,ui,caseInfo={},sources=[],recipients=[],locale='ru',disabled=false,showMissing=false,submitLabel,actionKinds}={}){
   const ctx=publicView(workflow,locale),view=restoreControlWorkspaceUI(ui),action=restoreControlActionDraft(actionDraft);
   const issue=ctx.issues.find(row=>row.id===view.issueId)||ctx.issues[0];
   const material=ctx.materials.find(row=>row.id===view.materialId);
   if(!issue)return '<section class="rxe-workspace" data-control-workspace><p class="rxe-muted">'+esc(ctx.t.noIssues)+'</p></section>';
   const selectedMaterials=ctx.materials.filter(row=>ids(row.issueIds).includes(issue.id)||ids(issue.materialIds,200).includes(row.id));
   const issueCards=ctx.issues.map(row=>'<button type="button" class="rxe-issue'+(row.id===issue.id?' rxe-issue-current':'')+'" data-control-action="select-issue" data-issue-id="'+esc(row.id)+'" aria-current="'+(row.id===issue.id?'true':'false')+'"><strong>'+esc(issueTitle(row,ctx))+'</strong><span>'+esc(ctx.t.stage[row.status]||ctx.t.stage.open)+'</span></button>').join('');
-  const work='<div class="rxe-work-grid"><aside class="rxe-issues"><h3>'+esc(ctx.t.matters)+'</h3><nav aria-label="'+esc(ctx.t.matters)+'">'+issueCards+'</nav>'+button(ctx.t.prepare,'prepare-memorandum',{quiet:true,glyph:'paper'})+'</aside><div class="rxe-work-main"><section class="rxe-current-issue"><p class="rxe-eyebrow">'+esc(ctx.t.current)+'</p><h3>'+esc(issueTitle(issue,ctx))+'</h3>'+(local(issue.scope,ctx.locale)?'<div class="rxe-scope"><strong>'+esc(ctx.t.scope)+'</strong>'+paragraphs(local(issue.scope,ctx.locale))+'</div>':'')+statusMarkup(issue,ctx)+'</section>'+plannedView(ctx,recipients,issue.id)+'<section class="rxe-materials"><div class="rxe-section-heading"><h3>'+esc(ctx.t.materials)+'</h3><span class="rxe-count">'+selectedMaterials.length+'</span></div>'+(selectedMaterials.length?'<div class="rxe-material-list">'+selectedMaterials.map(item=>button(materialTitle(item,ctx),'open-material',{extra:'data-material-id="'+esc(item.id)+'"',quiet:true,glyph:'paper'})).join('')+'</div>':'<p class="rxe-muted">'+esc(ctx.t.noMaterials)+'</p>')+'</section>'+journalView(ctx,issue.id,view,recipients)+actionComposer(issue,action,ctx,recipients,disabled)+'<section class="rxe-prepare"><div><h3>'+esc(ctx.t.memorandum)+'</h3><p>'+esc(ctx.t.prepareHint)+'</p></div>'+button(ctx.t.prepare,'prepare-memorandum',{primary:true,glyph:'paper'})+'</section></div></div>';
-  return '<div class="rxe-workspace" data-control-workspace data-control-revision="'+esc(Number.isInteger(workflow?.revision)?workflow.revision:0)+'"><p class="rxe-workspace-intro">'+esc(ctx.t.intro)+'</p>'+(material?materialView(material,ctx):'')+(view.pane==='memorandum'?memorandumView(draft,ctx,disabled):work)+'</div>';
+  const work='<div class="rxe-work-grid"><aside class="rxe-issues"><h3>'+esc(ctx.t.matters)+'</h3><nav aria-label="'+esc(ctx.t.matters)+'">'+issueCards+'</nav>'+button(ctx.t.prepare,'prepare-memorandum',{quiet:true,glyph:'paper'})+'</aside><div class="rxe-work-main"><section class="rxe-current-issue"><p class="rxe-eyebrow">'+esc(ctx.t.current)+'</p><h3>'+esc(issueTitle(issue,ctx))+'</h3>'+(local(issue.scope,ctx.locale)?'<div class="rxe-scope"><strong>'+esc(ctx.t.scope)+'</strong>'+paragraphs(local(issue.scope,ctx.locale))+'</div>':'')+statusMarkup(issue,ctx)+'</section>'+plannedView(ctx,recipients,issue.id)+'<section class="rxe-materials"><div class="rxe-section-heading"><h3>'+esc(ctx.t.materials)+'</h3><span class="rxe-count">'+selectedMaterials.length+'</span></div>'+(selectedMaterials.length?'<div class="rxe-material-list">'+selectedMaterials.map(item=>button(materialTitle(item,ctx),'open-material',{extra:'data-material-id="'+esc(item.id)+'"',quiet:true,glyph:'paper'})).join('')+'</div>':'<p class="rxe-muted">'+esc(ctx.t.noMaterials)+'</p>')+'</section>'+journalView(ctx,issue.id,view,recipients)+actionComposer(issue,action,ctx,recipients,disabled,showMissing,actionKinds)+'<section class="rxe-prepare"><div><h3>'+esc(ctx.t.memorandum)+'</h3><p>'+esc(ctx.t.prepareHint)+'</p></div>'+button(ctx.t.prepare,'prepare-memorandum',{primary:true,glyph:'paper'})+'</section></div></div>';
+  return '<div class="rxe-workspace" data-control-workspace data-control-revision="'+esc(Number.isInteger(workflow?.revision)?workflow.revision:0)+'"><p class="rxe-workspace-intro">'+esc(ctx.t.intro)+'</p>'+(material?materialView(material,ctx):'')+(view.pane==='memorandum'?memorandumView(draft,ctx,disabled,{submitLabel}):work)+'</div>';
 }
 
 export function controlRecordView({workflow,control,caseInfo={},sources=[],recipients=[],locale='ru'}={}){

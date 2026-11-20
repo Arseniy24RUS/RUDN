@@ -135,11 +135,13 @@ test('complete real-story workflow: citations, pinned law, initial decision, fre
   assert.equal(row.correspondenceSources.some(source=>source.id==='followup'),true);
 });
 
-test('new correspondence preserves the current seminar allocation, sequential referral calendar and one-point completion',async()=>{
+test('a legacy independent submission retains sequential referral dates and the original pass scale',async()=>{
   const contexts=[],h=await harness([context=>explicitReview(context,{initialLevel:2,nextStepsLevel:1}),context=>explicitReview(context,{controlLevel:4})],{
     requireGameplay:true,assertContext:context=>contexts.push(context),
   });
-  let view=(await h.service.handle({op:'start',mode:'independent',context:'seminar',locale:'ru',requestId:'seminar-start',
+  const legacy=createReceptionService({store:h.store,cases:[h.c],provider:{...h.reviewer,generate(){}},correspondenceProfiles:profiles,
+    requireGameplay:true,requireSeminarJourney:false});
+  let view=(await legacy.handle({op:'start',mode:'independent',context:'seminar',locale:'ru',requestId:'seminar-start',
     decisionVersion:DECISION_VERSION,workbookVersion:2},identity)).view;
   assert.equal(view.context,'seminar');assert.equal(view.caseCount,1);
   assert.equal(view.case.procedureRequired,false);
@@ -168,7 +170,7 @@ test('new correspondence preserves the current seminar allocation, sequential re
   assert.equal(view.result.cases[0].caseInfo.workbook.events.some(event=>event.id==='recipientRegistered'),false);
   assert.equal(view.result.cases[0].caseInfo.workbook.targets.find(target=>target.id==='deadline').anchorId,'referral');
   assert.equal((await h.service.handle(finish,identity)).view.result.seminarPoints,1);
-  await assert.rejects(h.service.handle({op:'start',mode:'independent',context:'seminar',locale:'ru',requestId:'seminar-again',
+  await assert.rejects(legacy.handle({op:'start',mode:'independent',context:'seminar',locale:'ru',requestId:'seminar-again',
     decisionVersion:DECISION_VERSION,workbookVersion:2},identity),err('case_bank_exhausted'));
 });
 

@@ -238,6 +238,9 @@
         "points": 5,
         "title_en": "Seminar 6. Citizens’ petitions",
         "title_zh": "研讨课6：公民来信办理",
+        "description": "Разберите пример, пройдите дело с наставником и выполните самостоятельное дело. Итог за самостоятельное дело: с 70 из 100 — 3, с 80 — 4, с 90 — 5.",
+        "description_en": "Work through an example, practise with a mentor, then complete an independent case. A score of 70, 80 or 90 out of 100 earns a grade of 3, 4 or 5 respectively.",
+        "description_zh": "先学习示范案例，再跟随导师练习，最后完成独立案例。独立案例满分100分，达到70、80、90分分别获得3、4、5等。",
         "module": "reception"
       },
       "title_en": "Document flow and records management",

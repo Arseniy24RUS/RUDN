@@ -189,14 +189,18 @@ test('assessed seminar cases accrue one point when solved, cap at five, and surv
   assert.equal(receipts.get(first.v.id).seminarPoints,1);
 });
 
-test('new workbook play uses all documents, a real citation and the configured standard procedure', async () => {
+test('an unfinished legacy workbook keeps its citation and original seminar grading', async () => {
   const c=createSyntheticReceptionCases().find(c=>c.id==='complaint-routing');
   c.public.procedures[0].id='59'; c.rubric.procedureIds=['59'];
   c.rubric.authored.knowledge={...c.rubric.authored.knowledge,number:'59',actDate:'2006-05-02',articles:['8']};
-  const h=harness({cases:[c],requireGameplay:true});
+  const legacy=harness({cases:[c],requireGameplay:true,requireSeminarJourney:false});
+  const h=harness({cases:[c],requireGameplay:true,store:legacy.store});
   await assert.rejects(h.start({mode:'independent',workbookVersion:2}),err('invalid_context'));
   await assert.rejects(h.start({context:'seminar',mode:'independent',workbookVersion:1}),err('invalid_workbook'));
-  let v=await h.start({context:'seminar',mode:'independent',workbookVersion:2});
+  await assert.rejects(h.start({context:'seminar',mode:'independent',workbookVersion:2}),err('journey_stage_required'));
+  let v=await legacy.start({context:'seminar',mode:'independent',workbookVersion:2});
+  const recovered=await h.service.handle({op:'resume',sessionId:v.id,context:'seminar',buildId:'f'.repeat(32)},identity);
+  assert.equal(recovered.view.id,v.id);
   const call=body=>h.service.handle({sessionId:v.id,...body},identity).then(r=>r.view);
   assert.equal(v.case.procedureRequired,false);
   assert.deepEqual(v.case.procedures,[]);
@@ -223,6 +227,7 @@ test('new workbook play uses all documents, a real citation and the configured s
   v=await call({op:'next',requestId:'finish'});
   assert.equal(v.result.points,1);
   assert.equal(v.result.seminarPoints,1);
+  assert.equal(v.result.gradingVersion,undefined);
   assert.equal(v.result.total,100);
   assert.deepEqual(v.result.cases[0].decision.workbook.legalCitation,decision.workbook.legalCitation);
 });

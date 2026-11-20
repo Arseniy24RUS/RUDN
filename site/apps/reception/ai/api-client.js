@@ -24,7 +24,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
   const api = {
     catalog(parameters = {}, options = {}) { return api.request({...parameters, op: 'catalog'}, options); },
     recover(parameters = {}, options = {}) { return api.request({...parameters, op: 'recover'}, options); },
-    async request(body, {signal} = {}) {
+    async request(body, {signal, withProgress = false} = {}) {
       if(context && (['start','recover','resume'].includes(body.op)||context==='free'&&body.op==='catalog')) body={...body,context};
       if(buildId && ['start','recover','resume'].includes(body.op)) body={...body,buildId};
       if(workbookVersion&&['start','catalog','recover','resume'].includes(body.op))body={...body,workbookVersion};
@@ -73,12 +73,14 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
             return packet.cases.map(({id, title, familyId, level, estimatedMinutes}) => ({id, title, familyId, level, estimatedMinutes}));
           }
           const view = packet.view;
-          if (body.op === 'recover' && view === null) return null;
+          const withRecoveryProgress = withProgress && body.op === 'recover';
+          const recovery = () => ({view, seminarProgress:packet.seminarProgress || view?.seminarProgress || null});
+          if (body.op === 'recover' && view === null) return withRecoveryProgress ? recovery() : null;
           if (!view || typeof view.id !== 'string' || !Number.isInteger(view.revision)
             || !['active', 'followup', 'review', 'complete'].includes(view.status) || !Array.isArray(view.messages)) {
             throw new ReceptionAPIError('invalid-response');
           }
-          return view;
+          return withRecoveryProgress ? recovery() : view;
         } catch (error) {
           if (error instanceof ReceptionAPIError) throw error;
           if (controller.signal.aborted) throw new ReceptionAPIError(timedOut ? 'timeout' : 'cancelled');

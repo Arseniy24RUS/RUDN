@@ -209,8 +209,14 @@ try{
   await fillAction({reason:'Заявительнице необходимо сообщить установленный результат по вопросу восстановления дорожки.',
     instruction:'Восстановление дорожки подтверждено поступившим материалом. Рассмотрение жалобы на прежний ответ продолжается самостоятельно.',
     evidenceSourceIds:[repairProofId]});
-  await execute();assert.equal(latest().accepted,false);assert.equal(latest().outcome,'notice_incomplete');
+  const controlCalls=calls.filter(call=>call.op==='control-action').length;
+  const journalSize=lastView.controlWorkflow.journal.length;
+  await execute();
+  assert.equal(calls.filter(call=>call.op==='control-action').length,controlCalls);
+  assert.equal(lastView.controlWorkflow.journal.length,journalSize);
   assert.equal(issue(repairId).notified,false);assert.ok(node('[data-control-field="instruction"]').value.includes('продолжается'));
+  await click('[data-control-missing] [data-field="expectedResult"]');
+  assert.equal(document.activeElement,node('[data-control-field="expectedResult"]'));
   input('[data-control-field="expectedResult"]','Фиксация учебного уведомления о подтверждённом ремонте и продолжающемся рассмотрении жалобы.');
   dropReplyTo='control-action';await execute();
   assert.equal(latest().accepted,true);assert.equal(latest().outcome,'notice_recorded');assert.equal(issue(repairId).notified,true);
@@ -218,12 +224,12 @@ try{
   assert.ok(noticeCall.action.expectedResult);assert.equal(noticeCall.action.dueDate,'');
   const noticeMaterial=lastView.controlWorkflow.materials.find(material=>latest().materialIds.includes(material.id));
   assert.ok(noticeMaterial);assert.ok(noticeMaterial.provenanceLabel);
-  passed('Notification requires the visible expected-result field, preserves an incomplete draft, and records a simulated notice without inventing a deadline');
+  passed('Missing expected result blocks the notification locally, links to the missing field, and preserves the draft and later valid recording');
 
   stage='reload-after-committed-action';
   const noticeEvents=lastView.controlWorkflow.journal.filter(event=>event.outcome==='notice_recorded').length;
   await remount();assert.equal(calls.at(-1).op,'resume');
-  assert.equal(calls.filter(call=>call.op==='control-action'&&call.action.kind==='notify').length,2);
+  assert.equal(calls.filter(call=>call.op==='control-action'&&call.action.kind==='notify').length,1);
   assert.equal(lastView.controlWorkflow.journal.filter(event=>event.outcome==='notice_recorded').length,noticeEvents);
   assert.equal(root.querySelector('[data-control-composer]'),null,'A committed action draft must clear on resume after a lost response');
   passed('Reload after a lost action response reconciles the saved receipt and does not leave an already accepted notice ready for a second submission');

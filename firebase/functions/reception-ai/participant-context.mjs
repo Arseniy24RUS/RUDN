@@ -38,3 +38,12 @@ export function buildParticipantContext(c, locale = 'ru') {
   }
   return result;
 }
+
+// In these two cases the generic opening refers to “my question” without
+// stating it. Surface the same optional personal subject in the scene and chat.
+export function participantOpening(c,locale='ru') {
+  const original=text(c?.public?.opening,locale)||'';
+  if(!['repeat-other-authority','repeat-routing-only'].includes(c?.id))return original;
+  const subject=buildParticipantContext(c,locale).conversationalBackground?.service;
+  return subject ? subject+' '+original : original;
+}

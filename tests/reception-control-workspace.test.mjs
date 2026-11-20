@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   restoreControlActionDraft,reduceControlActionDraft,controlActionSubmission,
   restoreControlWorkspaceUI,reduceControlWorkspaceUI,controlWorkspaceIntent,
-  controlWorkspaceView,controlRecordView,
+  controlWorkspaceView,controlRecordView,missingControlActionFields,
 } from '../site/apps/reception/ai/control-workspace.js';
 import {restoreCorrespondenceControl,reduceCorrespondenceControl,correspondenceControlSubmission} from '../site/apps/reception/ai/response-editor.js';
 
@@ -207,4 +207,13 @@ test('event decoding uses explicit field/action attributes and never performs an
   const execute={dataset:{controlAction:'execute'},disabled:false};
   assert.deepEqual(controlWorkspaceIntent({closest:selector=>selector==='[data-control-action]'?execute:null}),{type:'execute'});
   assert.equal(controlWorkspaceIntent({closest:()=>null}),null);
+});
+
+test('missing action fields are specific to the selected operation and ignore whitespace',()=>{
+  const draft={issueId:'repair',reason:'  ',instruction:'Проверить материал.'};
+  assert.deepEqual(missingControlActionFields({...draft,kind:'keep_open'}),['reason']);
+  assert.deepEqual(missingControlActionFields({...draft,kind:'verify',reason:'Установить результат.'}),['evidenceSourceIds']);
+  assert.deepEqual(missingControlActionFields({...draft,kind:'request_evidence',reason:'Установить результат.'}),
+    ['recipientIds','dueDate','expectedResult','evidenceSourceIds']);
+  assert.deepEqual(missingControlActionFields({...draft,kind:'keep_open',reason:'Установить результат.'}),[]);
 });

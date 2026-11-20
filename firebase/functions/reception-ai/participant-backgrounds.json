@@ -2362,9 +2362,9 @@
     "repeat-other-authority": {
       "sourceSHA256": "541bae12d5dbb84d9617dfada908ae8e59a01a15321d9b39b97a6d78628c6c70",
       "service": {
-        "ru": "Хочу получить ответ по оставшейся части своей проблемы после переписки с другими организациями.",
-        "en": "I want a reply on the remaining part of my problem after correspondence with other organisations.",
-        "zh": "与其他机构通信后，我希望剩余问题得到答复。"
+        "ru": "Хочу узнать, как записаться на личный приём в вашем органе и какие сведения указать при записи.",
+        "en": "I want to know how to book an appointment at your office and what details I should give when booking.",
+        "zh": "我想知道怎样预约到你们单位面谈，以及预约时需要提供哪些信息。"
       },
       "purpose": {
         "ru": "Хочу довести повседневный вопрос до ясного результата, не ходя по кругу.",
@@ -2380,9 +2380,9 @@
     "repeat-routing-only": {
       "sourceSHA256": "9800a26f27f282143f3d28790854f102ecc41cdf9d17d0a93f04150899776696",
       "service": {
-        "ru": "Жду ответа на сам вопрос своего обращения, а не только уведомлений о его движении.",
-        "en": "I am waiting for an answer to my appeal itself rather than notices about its progress.",
-        "zh": "我等待的是诉求内容本身的答复，而不只是流转通知。"
+        "ru": "Я спрашивал, как попасть на личный приём. Мне нужен понятный порядок записи, чтобы спланировать свой визит.",
+        "en": "I asked how to arrange an in-person appointment. I need to know how to book it so I can plan my visit.",
+        "zh": "我问的是怎样预约面谈。我想了解具体的预约办法，好提前安排时间。"
       },
       "purpose": {
         "ru": "Хочу понять, будет ли решена описанная мной повседневная проблема.",
