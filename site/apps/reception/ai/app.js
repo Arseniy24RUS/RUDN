@@ -1899,7 +1899,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const catalogTask=loadCatalog();
   if(initial?.sessionId){
     restoring=true;render();await perform({op:'resume',sessionId:initial.sessionId});
-    if(view&&seminarStoryVersion&&view.seminarStoryVersion!==seminarStoryVersion&&!pending){
+    // Separate older guided journeys from the story journey while allowing
+    // pre-journey correspondence sessions to resume in their own workspace.
+    const resumedJourney=view&&(isLesson(view.journeyStage)||view.coreStepsVersion);
+    if(resumedJourney&&seminarStoryVersion&&view.seminarStoryVersion!==seminarStoryVersion&&!pending){
       persist();clearSessionDraft();await recoverSession(null,{quiet:true});
     }
     if(view&&view.locale!==locale&&!pending)await changeLocale(locale);
