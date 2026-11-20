@@ -986,7 +986,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function navigation() {
     const count=unreadCount(), next=lessonStep(view);
     const tabs=[['reception','reception'],['chat','talk'],['documents',hasCore()?'sources':'docs'],
-      ['calendar','calendar'],...(hasCore()?[['route','arrow']]:[]),['decision','decision']];
+      ['calendar','calendar'],...(hasCore()?[['route','route']]:[]),['decision','decision']];
     return `<nav class="rxa-mobile-nav" aria-label="${esc(t('workplace'))}">${tabs.map(([id,glyph])=>{
       const label=hasCore()&&id==='documents'?cl('sources'):id==='route'?cl('routeTab'):t(id);
       const short=hasCore()?cl('short'+id[0].toUpperCase()+id.slice(1)):'';

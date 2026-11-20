@@ -12,6 +12,7 @@
       "docs": "files",
       "sources": "book-2",
       "calendar": "calendar-week",
+      "route": "route",
       "decision": "clipboard-check",
       "back": "arrow-left",
       "send": "arrow-right",
