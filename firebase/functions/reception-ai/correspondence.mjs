@@ -4,7 +4,7 @@ import {ReceptionError} from './schema.mjs';
 import {ROUTING_AUTHORITY_IDS,ROUTING_AUTHORITIES} from './routing-directory.mjs';
 import {correspondenceIssueTitle} from './correspondence-profiles.mjs';
 import {controlWorkflowSources,controlReviewContext,publicControlWorkflow} from './control-workflow.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedMerits,mfcCalendarAction,mfcCalendarMerits} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,isMfcChainedCalendar,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedMerits,mfcCalendarAction,mfcCalendarMerits} from './mfc-seminar.mjs';
 
 export const DECISION_VERSION = 'correspondence-v1';
 export const CORRESPONDENCE_RUBRIC_VERSION = 'correspondence-rubric-1';
@@ -236,7 +236,7 @@ export function addReviewDialogue(context,messages,availableBytes) {
 /** The frozen session dossier outranks generic profiles, particularly every date variant. */
 export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,resolvedCitations=[],phase='initial',control=null,operational=null,workbook=null,coreStepsVersion}={}) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
-  const currentCalendar=mfc&&workbook?.calendarVersion===MFC_CALENDAR_VERSION;
+  const currentCalendar=mfc&&isMfcChainedCalendar(workbook?.calendarVersion);
   const sharedReply=mfcUsesSharedReply(coreStepsVersion,workbook);
   const legacyDispatch=sharedReply?mfcLegacyDispatchActions(c.id):new Set();
   const calendarAction=id=>currentCalendar?mfcCalendarAction(c.id,id,locale):undefined;
@@ -282,7 +282,8 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
   }
   if(profileCriteria?.nextSteps?.calendar && workbook && (currentCalendar||calendar?.expected)){
     profileCriteria.nextSteps.calendar={events:clone(workbook.events),targets:clone(workbook.targets),
-      counting:clone(workbook.counting),...(calendar?.expected?{expected:clone(calendar.expected)}:{})};
+      counting:clone(workbook.counting),...(workbook.registrationCounting?{registrationCounting:clone(workbook.registrationCounting)}:{}),
+      ...(calendar?.expected?{expected:clone(calendar.expected)}:{})};
   }
   if(workbook)sources.push({id:'workbook-calendar',kind:'case-calendar',title:'Calendar and assignment shown to the student',
     text:JSON.stringify({events:workbook.events,targets:workbook.targets,counting:workbook.counting}),available:true});
@@ -342,7 +343,7 @@ export function buildCorrespondenceReview(c,state,decision,locale='ru',{profile,
     version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase,locale,caseId:c.id,caseVersion:c.version,datePackId:c.datePackId||null,
     role:reception?.text||local(c.public.role.text,locale),opening:participantOpening(c,locale),
     ...(reception?{mfcReception:{authorityContext:reception.authorityContext,sharedReply,
-      ...(currentCalendar?{calendarVersion:MFC_CALENDAR_VERSION}:{}),
+      ...(currentCalendar?{calendarVersion:workbook.calendarVersion}:{}),
       routingBoundary:workbook?.routingPolicy?.boundary||null,
       routingContext:workbook?.routingPolicy?.context||null,
       selectedRecipients:(decision.workbook?.routing?.recipientIds||[]).map(id=>mfcAuthorityName(ROUTING_AUTHORITIES[id],locale))}}:{}),

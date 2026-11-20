@@ -9,7 +9,7 @@ import {resolveLegalCitation} from './correspondence-legal-sources.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
 import {explicitQAReview} from '../../../scripts/reception-correspondence-qa-cases.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
 import {calculateWorkbookDeadline} from './workbook-calendar.mjs';
 import {buildCorrespondenceReviewInstructions} from './provider.mjs';
 
@@ -398,10 +398,10 @@ test('MFC sample uses separate deadlines, a real recipient and a substantive dra
   assert.equal(view.messages[0].text,legacy.messages[0].text);
   assert.equal(view.case.workbook.routingPolicy.allowInternal,false);
   assert.equal(view.case.workbook.calendarVersion,MFC_CALENDAR_VERSION);
-  assert.equal(view.case.workbook.registrationCheck,false);
+  assert.equal(view.case.workbook.registrationCheck,true);
   assert.deepEqual(view.case.workbook.targets.map(row=>[row.id,row.anchorId]),[['referral','intakeRegistered'],['deadline','referral']]);
   const dates=Object.fromEntries(view.case.workbook.events.map(row=>[row.id,row.date]));
-  assert.deepEqual(Object.keys(dates),['intakeRegistered']);
+  assert.deepEqual(Object.keys(dates),['intakeReceived','intakeRegistered']);
   const recovered=await mfcRecover(h,'example');
   assert.equal(recovered.view.id,view.id);
   assert.deepEqual(recovered.legacySessions,[{id:legacy.id,journeyStage:'example'}]);
@@ -418,7 +418,7 @@ test('MFC sample uses separate deadlines, a real recipient and a substantive dra
     dates[target.id]=expected;
     assert.equal(target.id==='referral'?decision.workbook.referralDeadline:decision.deadline,expected);
   }
-  assert.equal(Object.hasOwn(decision.workbook,'registrationTimely'),false);
+  assert.equal(typeof decision.workbook.registrationTimely,'boolean');
   assert.equal(decision.workbook.routing.disposition,'forward');
   assert.ok(decision.workbook.routing.recipientIds.length);
   assert.notDeepEqual(decision.workbook.routing.recipientIds,['independent-review']);
@@ -436,7 +436,7 @@ test('MFC sample uses separate deadlines, a real recipient and a substantive dra
   assert.equal((await h.store.get('sessions/'+view.id)).caseStates[0].controlWorkflow.initialRouting.correct,true);
 });
 
-test('a teacher can resume an unconfirmed MFC example with the new workbook, the same case and the completed source step',async()=>{
+test('an unconfirmed teacher example recovers both intake events and registration check without losing the source step',async()=>{
   const h=fixture({guidedSeminarCore:true}),teacher={uid:'teacher-mfc-calendar-regression',teacher:true};
   let {view}=await h.handle({...startBody('example','teacher-mfc-calendar'),coreStepsVersion:MFC_SEMINAR_VERSION},teacher);
   view=(await h.send(view,{op:'tutorial-step',stepId:'reception',choiceId:'role',requestId:'teacher-reads-case'},teacher)).view;
@@ -446,14 +446,14 @@ test('a teacher can resume an unconfirmed MFC example with the new workbook, the
   view=(await h.send(view,{op:'tutorial-step',stepId:'materials',citations,requestId:'teacher-confirms-source'},teacher)).view;
   const oldRevision=view.revision;
   const old=await h.store.transaction('sessions/'+view.id,session=>{
-    delete session.mfcCalendarVersion;
+    session.mfcCalendarVersion=MFC_DATES_ONLY_CALENDAR_VERSION;
     const state=session.caseStates[0];
     state.tutorialFinding={stepId:'calendar',explanation:'Проверьте регистрацию у адресата.'};
     state.coreStepReceipt={stepId:'calendar',requestId:'old-calendar-finding'};
     return session;
   });
   const c=old.value.caseData[0], guide=tutorialGuide(c,executionQAProfiles.private(c),'ru',{
-    execution:true,core:true,coreStepsVersion:MFC_SEMINAR_VERSION,mfcCalendarVersion:LEGACY_MFC_CALENDAR_VERSION});
+    execution:true,core:true,coreStepsVersion:MFC_SEMINAR_VERSION,mfcCalendarVersion:MFC_DATES_ONLY_CALENDAR_VERSION});
   await assert.rejects(h.send(view,{op:'tutorial-step',stepId:'calendar',calendar:coreCalendar(guide.decision),requestId:'old-client-submit'},teacher),err('revision_conflict'));
   const [resume,recover]=await Promise.all([
     h.handle({op:'resume',sessionId:view.id,context:'seminar'},teacher),
@@ -466,26 +466,29 @@ test('a teacher can resume an unconfirmed MFC example with the new workbook, the
   assert.equal(resume.view.guidance.steps[resume.view.guidance.stepIndex].id,'calendar');
   assert.equal(resume.view.guidance.finding,undefined);
   assert.equal(resume.view.case.workbook.calendarVersion,MFC_CALENDAR_VERSION);
+  assert.deepEqual(resume.view.case.workbook.events.map(row=>row.id),['intakeReceived','intakeRegistered']);
   const {decision}=resume.view.guidance;
-  assert.notEqual(decision.deadline,guide.decision.deadline);
-  const calendar={deadline:decision.deadline,referralDeadline:decision.workbook.referralDeadline};
-  view=(await h.send(resume.view,{op:'tutorial-step',stepId:'calendar',calendar,requestId:'new-client-two-dates'},teacher)).view;
+  assert.equal(decision.deadline,guide.decision.deadline);
+  await assert.rejects(h.send(resume.view,{op:'tutorial-step',stepId:'calendar',calendar:coreCalendar(guide.decision),requestId:'missing-registration'},teacher),err('core_calendar_required'));
+  const calendar=coreCalendar(decision);
+  view=(await h.send(resume.view,{op:'tutorial-step',stepId:'calendar',calendar,requestId:'new-client-complete-calendar'},teacher)).view;
   assert.equal(view.coreSteps.stepId,'route');
   assert.deepEqual(view.coreSteps.values.calendar,calendar);
   assert.equal((await h.store.get('sessions/'+view.id)).mfcCalendarVersion,MFC_CALENDAR_VERSION);
 });
 
-test('confirmed MFC calendar keeps the original dates and permits the draft after a restart',async()=>{
+for(const historicalVersion of [LEGACY_MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION])test(`confirmed ${historicalVersion} keeps its dates and permits the draft after restart`,async()=>{
   const h=fixture({guidedSeminarCore:true});
   let {view}=await mfcStart(h,'example','confirmed-old-mfc-calendar');
   view=(await h.answer(view,'reception','role')).view;
   const snapshot=await h.store.get('sessions/'+view.id),c=snapshot.caseData[0];
   const {decision}=tutorialGuide(c,executionQAProfiles.private(c),'ru',{execution:true,core:true,coreStepsVersion:MFC_SEMINAR_VERSION,
-    mfcCalendarVersion:LEGACY_MFC_CALENDAR_VERSION});
+    mfcCalendarVersion:historicalVersion});
   view=(await coreSend(h,view,'materials',{citations:coreCitations(decision)})).view;
   const calendar=coreCalendar(decision);
   await h.store.transaction('sessions/'+view.id,session=>{
-    delete session.mfcCalendarVersion;
+    if(historicalVersion===LEGACY_MFC_CALENDAR_VERSION)delete session.mfcCalendarVersion;
+    else session.mfcCalendarVersion=historicalVersion;
     const state=session.caseStates[0];
     state.coreStepsValues.calendar=calendar;
     state.tutorialStepIndex++;
@@ -495,10 +498,24 @@ test('confirmed MFC calendar keeps the original dates and permits the draft afte
   assert.equal(reopened.view.id,view.id);
   assert.equal(reopened.view.revision,view.revision);
   view=reopened.view;
-  assert.equal(view.case.workbook.calendarVersion,undefined);
+  const datesOnly=historicalVersion===MFC_DATES_ONLY_CALENDAR_VERSION;
+  assert.equal(view.case.workbook.calendarVersion,datesOnly?historicalVersion:undefined);
   assert.equal(view.case.workbook.registrationCheck,true);
   assert.deepEqual(view.coreSteps.values.calendar,calendar);
   assert.equal(view.guidance.decision.deadline,decision.deadline);
+  if(datesOnly){
+    assert.equal(view.case.workbook.registrationPreviouslyUnasked,true);
+    assert.equal(view.case.workbook.registrationPractice,undefined);
+    assert.deepEqual(view.case.workbook.events.map(row=>row.id),['intakeReceived','intakeRegistered']);
+    const pending=view,body={op:'registration-check',registrationTimely:true,requestId:'practice-historical-registration'};
+    view=(await h.send(pending,body)).view;
+    assert.equal(view.coreSteps.stepId,'route');
+    assert.equal(view.revision,pending.revision+1);
+    assert.deepEqual(view.coreSteps.values.calendar,calendar);
+    assert.deepEqual(view.case.workbook.registrationPractice,{answer:true,correct:true});
+    assert.equal((await h.send(pending,body)).view.revision,view.revision);
+    await assert.rejects(h.send(pending,{...body,requestId:'stale-practice-request'}),err('revision_conflict'));
+  }
   view=(await coreSend(h,view,'route',{routing:decision.workbook.routing})).view;
   for(const id of view.guidance.steps.find(step=>step.id==='materials').documentIds)
     view=(await h.handle({op:'document',sessionId:view.id,requestId:'retain-source-'+id,documentId:id},learner)).view;
@@ -506,6 +523,10 @@ test('confirmed MFC calendar keeps the original dates and permits the draft afte
   assert.equal(view.status,'followup');
   assert.equal(view.decision.deadline,calendar.deadline);
   assert.equal(view.decision.workbook.registrationTimely,calendar.registrationTimely);
+  if(datesOnly){
+    assert.deepEqual(view.case.workbook.registrationPractice,{answer:true,correct:true});
+    await assert.rejects(h.send(view,{op:'registration-check',registrationTimely:false,requestId:'locked-practice'}),err('invalid_core_step'));
+  }
 });
 
 test('several issues use one MFC reply and a referral-only draft cannot pass with full points on other criteria',async()=>{
@@ -555,7 +576,7 @@ test('several issues use one MFC reply and a referral-only draft cannot pass wit
   assert.equal(received.mfcReception.authorityContext.title,view.case.role.authorityContext.title);
   assert.equal(received.sections.resolution,decision.correspondence.sections.resolution);
   assert.equal(received.operational.workbook.routing.correct,true);
-  assert.deepEqual(received.operational.workbook.calendar.correct,{referral:true,deadline:true});
+  assert.deepEqual(received.operational.workbook.calendar.correct,{referral:true,deadline:true,registrationTimely:true});
   assert.equal(received.frozenCase.authoredDeadline,undefined);
   assert.equal(received.mfcReception.calendarVersion,MFC_CALENDAR_VERSION);
   const saved=await h.store.get('sessions/'+view.id);

@@ -4,6 +4,7 @@ import {readFile, readdir} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {createReceptionService} from '../firebase/functions/reception-ai/service.mjs';
 import {createMemoryStore} from '../firebase/functions/reception-ai/store.mjs';
+import {calculateWorkbookDeadline} from '../firebase/functions/reception-ai/workbook-calendar.mjs';
 import {MFC_ROUTING_AUTHORITY_IDS} from '../firebase/functions/reception-ai/routing-directory.mjs';
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
@@ -57,14 +58,17 @@ async function checkCase(c, locale, stage) {
     if (decision.workbook.routing.recipientIds.length>1) counts.multipleRecipients++;
     assert.ok(decision.workbook.routing.recipientIds.every(id=>MFC_ROUTING_AUTHORITY_IDS.has(id)));
     assert.deepEqual(wb.targets.map(target=>target.id),['referral','deadline']);
-    assert.equal(wb.registrationCheck,false);
-    assert.deepEqual(wb.events.map(event=>event.id),['intakeRegistered']);
+    assert.equal(wb.registrationCheck,true);
+    assert.deepEqual(wb.events.map(event=>event.id),['intakeReceived','intakeRegistered']);
     assert.deepEqual(wb.targets.map(target=>[target.anchorId,target.ruleId]),[
       ['intakeRegistered','calendar7'],['referral','calendar30'],
     ]);
     const originalEvents = c.public.assessment.calendar.events;
-    const source = originalEvents.find(event=>event.id==='registered') || originalEvents.find(event=>event.id==='received');
-    assert.equal(wb.events[0].date,source.date);
+    const arrival = originalEvents.find(event=>event.id==='received');
+    const source = originalEvents.find(event=>event.id==='registered') || arrival;
+    assert.deepEqual(wb.events.map(event=>event.date),[arrival.date,source.date]);
+    const lastRegistration = calculateWorkbookDeadline({anchorDate:arrival.date,ruleId:'calendar3',shift:'next_working_day'});
+    assert.equal(decision.workbook.registrationTimely,source.date>=arrival.date && source.date<=lastRegistration);
     const registration = Date.parse(source.date+'T00:00:00Z');
     const daysAfter = days=>new Date(registration+days*86_400_000).toISOString().slice(0,10);
     assert.equal(decision.workbook.referralDeadline,daysAfter(7));
@@ -88,7 +92,7 @@ async function checkCase(c, locale, stage) {
   await step('materials',{citations});
   assert.deepEqual(view.coreSteps.completed,['materials']);
   await step('calendar',{calendar:{deadline:decision.deadline,referralDeadline:decision.workbook.referralDeadline,
-    ...(legacy ? {registrationTimely:decision.workbook.registrationTimely} : {})}});
+    registrationTimely:decision.workbook.registrationTimely}});
   await step('route',{routing:decision.workbook.routing});
   assert.deepEqual(view.coreSteps.completed,['materials','calendar','route']);
   counts.citations+=citations.length;

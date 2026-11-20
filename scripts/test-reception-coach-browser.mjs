@@ -14,7 +14,7 @@ import {RECEPTION_AUTHORITIES} from '../site/apps/reception/ai/authority-directo
 import {localizedAuthorityName} from '../site/apps/reception/ai/authority-picker.js';
 import {privateCorrespondenceProfile} from '../firebase/functions/reception-ai/correspondence-profiles.mjs';
 import {hash} from '../firebase/functions/reception-ai/schema.mjs';
-import {MFC_CALENDAR_VERSION} from '../site/apps/reception/ai/core-steps.js';
+import {MFC_CALENDAR_VERSION,MFC_CALENDAR_WITHOUT_REGISTRATION} from '../site/apps/reception/ai/core-steps.js';
 import {SEMINAR_EXAMPLE,seminarPointsAt,tutorialGuide,tutorialExecutionAction,validatedTutorialMemo} from '../firebase/functions/reception-ai/seminar-journey.mjs';
 
 const arg=(key, fallback)=>process.argv.includes(key)?process.argv[process.argv.indexOf(key)+1]:fallback;
@@ -22,8 +22,9 @@ const engine=arg('--browser','chromium');
 const legacy=process.argv.includes('--legacy');
 const scored=process.argv.includes('--scored')||process.argv.includes('--teacher');
 const teacherExample=process.argv.includes('--teacher-example');
-const teacher=process.argv.includes('--teacher')||teacherExample;
-assert.ok(!(legacy&&(scored||teacherExample))&&!(scored&&teacherExample),'Select just one browser scenario.');
+const teacherAccepted=process.argv.includes('--teacher-accepted');
+const teacher=process.argv.includes('--teacher')||teacherExample||teacherAccepted;
+assert.ok([legacy,scored,teacherExample,teacherAccepted].filter(Boolean).length<=1,'Select just one browser scenario.');
 const coreStepsVersion=legacy?null:'mfc-referral-v2';
 assert.ok(['chromium','webkit'].includes(engine));
 const modulePath=arg('--playwright-module',process.env.RECEPTION_PLAYWRIGHT_MODULE);
@@ -93,7 +94,7 @@ async function run({width,height,locale,full}) {
       mfcJourney:{example:{completed:true},mentor:{completed:true}},
     }));
   }
-  const checkLegacyResume=!legacy&&!scored&&!teacherExample&&width===390;
+  const checkLegacyResume=!legacy&&!scored&&!teacher&&width===390;
   const older=checkLegacyResume?(await fixture.service.handle({op:'start',context:'seminar',mode:'training',locale,
     journeyStage:'example',workbookVersion:2,decisionVersion:'correspondence-v1',controlVersion:'execution-v1',
     requestId:'save-previous-example'},fixture.identity)).view:null;
@@ -238,6 +239,10 @@ async function run({width,height,locale,full}) {
     assert.equal(await root.locator('.rxt-mfc-intro').count(),1);
     const role=await root.locator('.rxt-mfc-intro p').innerText();
     assert.equal(await root.getByText(role,{exact:true}).count(),1);
+    if(view.case.workbook.calendarVersion===MFC_CALENDAR_VERSION){
+      const dates=await root.locator('.rxa-case-timeline time').evaluateAll(items=>items.map(item=>item.dateTime));
+      assert.deepEqual(dates,view.case.workbook.events.map(event=>event.date));
+    }
     row.receptionLayout={portrait:imageBox,appeal:appealBox};
     if(width===390||width===1440){
       await group.scrollIntoViewIfNeeded();
@@ -247,18 +252,19 @@ async function run({width,height,locale,full}) {
   async function checkCalendar(view,model) {
     const workbook=view.case.workbook;
     assert.equal(workbook.calendarVersion,MFC_CALENDAR_VERSION);
-    assert.equal(workbook.registrationCheck,false);
-    assert.deepEqual(workbook.events.map(event=>event.id),['intakeRegistered']);
+    assert.equal(workbook.registrationCheck,true);
+    assert.deepEqual(workbook.events.map(event=>event.id),['intakeReceived','intakeRegistered']);
     assert.deepEqual(workbook.targets.map(target=>[target.id,target.anchorId,target.ruleId,target.counting.shift]),[
       ['referral','intakeRegistered','calendar7','no_shift'],
       ['deadline','referral','calendar30','no_shift'],
     ]);
     const days=(start,end)=>(Date.parse(end)-Date.parse(start))/86400000;
-    const registrationDate=workbook.events[0].date;
+    const [received,registered]=workbook.events;
     const {caseData}=await readSession(view);
     const events=caseData.public.assessment.calendar.events;
-    assert.equal(registrationDate,events.find(event=>event.id==='registered')?.date||events.find(event=>event.id==='received')?.date);
-    assert.equal(days(registrationDate,model.workbook.referralDeadline),7);
+    assert.equal(received.date,events.find(event=>event.id==='received')?.date);
+    assert.equal(registered.date,events.find(event=>event.id==='registered')?.date||received.date);
+    assert.equal(days(registered.date,model.workbook.referralDeadline),7);
     assert.equal(days(model.workbook.referralDeadline,model.deadline),30);
     const rules=root.locator('.rxt-calendar-rules');
     await rules.waitFor();
@@ -266,17 +272,29 @@ async function run({width,height,locale,full}) {
     assert.match(instructions,/(?:7|seven|七)/i);
     assert.match(instructions,/(?:30|thirty|三十)/i);
     assert.doesNotMatch(instructions,/учебн|симуляц|exercise|simulation|本模拟|本练习/i);
-    assert.equal(await root.locator('[data-calendar-action="event-month"]').count(),1);
-    assert.equal(await root.locator('[data-core-registration],[data-calendar-input="registration-timely"],[data-calendar-details="norms"]').count(),0);
-    row.calendar={version:workbook.calendarVersion,registrationDate,referral:model.workbook.referralDeadline,deadline:model.deadline};
+    assert.equal(await root.locator('[data-calendar-action="event-month"]').count(),2);
+    assert.equal(await root.locator('[data-core-registration]').count(),2);
+    assert.equal(await root.locator('[data-calendar-input="registration-timely"],[data-calendar-details="norms"]').count(),0);
+    row.calendar={version:workbook.calendarVersion,receivedDate:received.date,registrationDate:registered.date,
+      referral:model.workbook.referralDeadline,deadline:model.deadline};
   }
-  async function reloadCalendar(view) {
+  const registrationAnswer=value=>root.locator(`[data-core-registration][value="${value}"]`);
+  async function selectRegistration(value) {
+    assert.equal(typeof value,'boolean');
+    await registrationAnswer(value).check();
+    assert.equal(await registrationAnswer(value).isChecked(),true);
+    row.calendar.registrationAnswer=value;
+  }
+  async function calendarEvidence(name) {
+    await root.locator('.rxw-calendar-events').evaluate(element=>element.scrollIntoView({block:'start',behavior:'instant'}));
+    await shot(name);
+  }
+  async function reloadCase(view,tab) {
     const response=page.waitForResponse(res=>res.url()===origin+'/api/reception'&&res.request().method()==='POST'&&res.request().postDataJSON()?.op==='resume');
     await page.reload();
     const result=await (await response).json();
     assert.equal(result.view.id,view.id);
-    await root.locator('[data-calendar-workbench]').waitFor();
-    assert.equal(await root.getAttribute('data-page'),'calendar');
+    await page.locator(`#receptionAI[data-page="${tab}"][aria-busy="false"]`).waitFor();
     return result.view;
   }
   async function migrateTeacherCalendar(view,model) {
@@ -285,28 +303,82 @@ async function run({width,height,locale,full}) {
     assert.equal(await root.locator('[data-calendar-action="clear"]').count(),2);
     // A pre-upgrade session and local draft are reproduced on this isolated memory fixture.
     await fixture.store.transaction('sessions/'+view.id,current=>{
-      delete current.mfcCalendarVersion;
+      current.mfcCalendarVersion=MFC_CALENDAR_WITHOUT_REGISTRATION;
       return current;
     });
-    await context.addInitScript(({id,revision,draft})=>{
+    await context.addInitScript(({id,revision,draft,legacyCalendar})=>{
       if(sessionStorage.getItem('qa-legacy-calendar'))return;
       const key=Object.keys(localStorage).find(key=>key.startsWith('rudn.reception.workspace.v2:')&&key.endsWith(':current'));
       if(!key)return;
       const saved=JSON.parse(localStorage.getItem(key));
       if(saved.sessionId!==id)return;
-      delete saved.calendarVersion;
+      saved.calendarVersion=legacyCalendar;
       saved.decisionDraft.correspondence.sections.resolution=draft;
       saved.pending={op:'tutorial-step',stepId:'calendar',requestId:'old-calendar-before-update',sessionId:id,
-        expectedRevision:revision,calendar:{deadline:saved.decisionDraft.deadline,referralDeadline:saved.decisionDraft.workbook.referralDeadline,registrationTimely:true}};
+        expectedRevision:revision,calendar:{deadline:saved.decisionDraft.deadline,referralDeadline:saved.decisionDraft.workbook.referralDeadline}};
       localStorage.setItem(key,JSON.stringify(saved));
       sessionStorage.setItem('qa-legacy-calendar','1');
-    },{id:view.id,revision:view.revision,draft:retainedDraft[locale]});
-    const resumed=await reloadCalendar(view);
+    },{id:view.id,revision:view.revision,draft:retainedDraft[locale],legacyCalendar:MFC_CALENDAR_WITHOUT_REGISTRATION});
+    const resumed=await reloadCase(view,'calendar');
     assert.equal(resumed.revision,view.revision+1);
     assert.deepEqual(resumed.openedDocumentIds,view.openedDocumentIds);
     assert.deepEqual(resumed.coreSteps.values.citations,view.coreSteps.values.citations);
-    assert.equal(await root.locator('[data-calendar-action="clear"]').count(),0);
+    assert.equal(await root.locator('[data-calendar-action="clear"]').count(),2);
+    assert.equal(await root.locator('[data-core-registration]:checked').count(),0);
+    assert.equal(await root.locator('[data-action="core-step"][data-step="calendar"]').isEnabled(),false);
     row.teacherMigration={previousRevision:view.revision,resumedRevision:resumed.revision,openedDocumentIds:resumed.openedDocumentIds};
+    return resumed;
+  }
+  async function recordPreviousRegistration(view) {
+    const {deadline,referralDeadline,registrationTimely}=view.coreSteps.values.calendar;
+    const routing=view.coreSteps.values.routing;
+    const step=currentStep(view).id;
+    // Reproduce a date-only calendar already accepted in a previous release.
+    await fixture.store.transaction('sessions/'+view.id,current=>{
+      current.mfcCalendarVersion=MFC_CALENDAR_WITHOUT_REGISTRATION;
+      delete current.caseStates[current.caseIndex].coreStepsValues.calendar.registrationTimely;
+      return current;
+    });
+    await context.addInitScript(({id,legacyCalendar})=>{
+      if(sessionStorage.getItem('qa-accepted-calendar'))return;
+      const key=Object.keys(localStorage).find(key=>key.startsWith('rudn.reception.workspace.v2:')&&key.endsWith(':current'));
+      if(!key)return;
+      const saved=JSON.parse(localStorage.getItem(key));
+      if(saved.sessionId!==id)return;
+      saved.calendarVersion=legacyCalendar;
+      delete saved.calendarState.registrationTimely;
+      delete saved.decisionDraft.workbook.registrationTimely;
+      localStorage.setItem(key,JSON.stringify(saved));
+      sessionStorage.setItem('qa-accepted-calendar','1');
+    },{id:view.id,legacyCalendar:MFC_CALENDAR_WITHOUT_REGISTRATION});
+    let resumed=await reloadCase(view,'calendar');
+    assert.equal(currentStep(resumed).id,step);
+    assert.equal(resumed.case.workbook.calendarVersion,MFC_CALENDAR_WITHOUT_REGISTRATION);
+    assert.equal(resumed.case.workbook.registrationPreviouslyUnasked,true);
+    assert.deepEqual(resumed.case.workbook.events.map(event=>event.id),['intakeReceived','intakeRegistered']);
+    assert.deepEqual(resumed.coreSteps.values.calendar,{deadline,referralDeadline});
+    assert.deepEqual(resumed.coreSteps.values.routing,routing);
+    assert.equal(await root.locator('[data-calendar-action="clear"]').count(),2);
+    assert.equal(await root.locator('[data-calendar-action="target"]:enabled').count(),0);
+    assert.equal(await root.locator('[data-action="core-step"][data-step="calendar"]').count(),0);
+    const save=root.locator('[data-action="registration-check"]');
+    assert.equal(await save.isEnabled(),false);
+    await selectRegistration(registrationTimely);
+    assert.equal(await save.isEnabled(),true);
+    await calendarEvidence('accepted-calendar-registration');
+    resumed=await operation('registration-check',save);
+    assert.deepEqual(resumed.case.workbook.registrationPractice,{answer:registrationTimely,correct:true});
+    assert.deepEqual(resumed.coreSteps.values.calendar,{deadline,referralDeadline});
+    assert.deepEqual(resumed.coreSteps.values.routing,routing);
+    assert.equal(currentStep(resumed).id,step);
+    assert.equal(await root.getAttribute('data-page'),'decision');
+    resumed=await reloadCase(resumed,'decision');
+    await go('calendar');
+    assert.equal(await registrationAnswer(registrationTimely).isChecked(),true);
+    assert.equal(await registrationAnswer(registrationTimely).isEnabled(),false);
+    assert.equal(await save.count(),0);
+    await go('decision');
+    row.teacherAccepted={originalStep:step,retainedDates:{deadline,referralDeadline},routing,answer:registrationTimely};
     return resumed;
   }
   async function setRecipients(ids) {
@@ -398,10 +470,15 @@ async function run({width,height,locale,full}) {
     const nextDate=root.locator('[data-action="core-step"][data-step="calendar"]');
     await chooseDate('referral',model.workbook.referralDeadline);
     assert.equal(await nextDate.isEnabled(),false);
-    view=await reloadCalendar(view);
+    view=await reloadCase(view,'calendar');
     await root.locator('[data-calendar-action="clear"][data-target="referral"]').waitFor();
     await chooseDate('deadline',model.deadline);
+    assert.equal(await nextDate.isEnabled(),false);
+    await selectRegistration(false);
     assert.equal(await nextDate.isEnabled(),true);
+    view=await reloadCase(view,'calendar');
+    assert.equal(await registrationAnswer(false).isChecked(),true);
+    await selectRegistration(model.workbook.registrationTimely);
     await shot('independent-both-dates');
     view=await operation('core-step',nextDate);
     await root.locator('[data-routing-search]').waitFor();
@@ -534,7 +611,7 @@ async function run({width,height,locale,full}) {
     view=await operation('tutorial-step',root.locator('[data-step="materials"][data-action="core-step"]'));
     assert.equal(currentStep(view)?.id,'calendar',view.guidance.finding?.explanation);
     await go('calendar');
-    await inspectHint('calendarKind','calendar-type');
+    await inspectHint(legacy?'calendarKind':'calendarRegistration','calendar-type');
     let calendarModel=view.guidance.decision;
     if(!legacy){
       await checkCalendar(view,calendarModel);
@@ -543,12 +620,15 @@ async function run({width,height,locale,full}) {
         calendarModel=view.guidance.decision;
         await checkCalendar(view,calendarModel);
       }
+      await selectRegistration(calendarModel.workbook.registrationTimely);
+      if(!teacherExample)await inspectHint('calendarKind','calendar-deadline-target');
     }
-    for(const {id} of view.case.workbook.targets){
+    for(const {id} of teacherExample?[]:view.case.workbook.targets){
       await chooseDate(id,id==='referral'?calendarModel.workbook.referralDeadline:calendarModel.deadline);
       if(!legacy&&id==='referral'){
         assert.equal(await root.locator('[data-action="core-step"][data-step="calendar"]').isEnabled(),false);
-        view=await reloadCalendar(view);
+        view=await reloadCase(view,'calendar');
+        assert.equal(await registrationAnswer(calendarModel.workbook.registrationTimely).isChecked(),true);
         const chosen=root.locator('[data-calendar-action="clear"][data-target="referral"]');
         await chosen.waitFor();
         if(width===390||width===1440){
@@ -557,13 +637,14 @@ async function run({width,height,locale,full}) {
         }
       }
     }
-    const registration=root.locator(`[data-core-registration][value="${calendarModel.workbook.registrationTimely}"]`);
-    if(await registration.count())await registration.check();
+    if(legacy&&await registrationAnswer(calendarModel.workbook.registrationTimely).count())
+      await registrationAnswer(calendarModel.workbook.registrationTimely).check();
+    if(!legacy&&(locale==='ru'||teacher))await calendarEvidence('registration-and-deadlines');
     await inspectHint('advance','calendar-saved');
     view=await operation('tutorial-step',root.locator('[data-step="calendar"][data-action="core-step"]'));
     assert.equal(currentStep(view)?.id,'route',view.guidance.finding?.explanation);
     assert.equal(view.coreSteps.values.calendar.deadline,calendarModel.deadline);
-    if(!legacy)assert.equal(Object.hasOwn(view.coreSteps.values.calendar,'registrationTimely'),false);
+    if(!legacy)assert.equal(view.coreSteps.values.calendar.registrationTimely,calendarModel.workbook.registrationTimely);
     await go(currentStep(view).page||currentStep(view).panel);
     const routing=view.guidance.decision.workbook.routing;
     if(legacy){
@@ -588,6 +669,7 @@ async function run({width,height,locale,full}) {
     view=await operation('tutorial-step',root.locator('[data-step="route"][data-action="core-step"]'));
     assert.equal(currentStep(view)?.id,'draft',view.guidance.finding?.explanation);
     await go('decision');
+    if(teacherAccepted)view=await recordPreviousRegistration(view);
     if(teacherExample)assert.equal(await root.locator('[data-response-field="sections.resolution"]').inputValue(),retainedDraft[locale]);
     await inspectHint('draft','draft-start');
     const answer=view.guidance.decision.correspondence;
@@ -714,7 +796,8 @@ async function run({width,height,locale,full}) {
         await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="materials"]'));
         await chooseDate('referral',practice.workbook.referralDeadline,false);
         await chooseDate('deadline',practice.deadline,false);
-        assert.equal(await root.locator('[data-core-registration]').count(),0);
+        await registrationAnswer(practice.workbook.registrationTimely).check();
+        assert.equal(await registrationAnswer(practice.workbook.registrationTimely).isChecked(),true);
         await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="calendar"]'));
         assert.equal(await root.locator('[data-core-disposition]').count(),0);
         await setRecipients(practice.workbook.routing.recipientIds);
@@ -753,7 +836,7 @@ try {
   for (const size of sizes)await run(size);
 }finally {
   await browser.close();
-  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherExample?'teacher-example':teacher?'teacher':scored?'independent':'mfc',report},null,2)+'\n');
+  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherAccepted?'teacher-accepted':teacherExample?'teacher-example':teacher?'teacher':scored?'independent':'mfc',report},null,2)+'\n');
 }
 for (const result of report)console.log(result.key,result.status,result.error||`${result.checks.length} rendered hints`);
 if(report.some(result=>result.status!=='pass'))process.exitCode=1;

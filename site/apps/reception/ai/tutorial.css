@@ -159,6 +159,9 @@ button.rxt-case-step:hover, .rxt-case-step[aria-current=step] { background: #dee
 .rxt-step-hint p { margin: 8px 0; white-space: pre-wrap; }
 .rxt-registration { margin-top: 16px; }
 .rxt-registration legend { margin-bottom: 6px; }
+.reception-ai-root .rxw-registration-question { margin: 0 0 14px; padding: 0; border: 0; }
+.rxw-registration-question > div { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+.reception-ai-root .rxw-registration-question .rxa-choice { margin: 0; }
 .rxt-recover { display: flex; gap: 8px; flex-wrap: wrap; }
 .reception-ai-root.rxa-cabinet [data-core-heading] { margin: 0 0 12px; overflow-wrap: anywhere; }
 .reception-ai-root.rxa-cabinet .rxa-documents-page [data-core-heading] { padding: 18px 20px 0; }

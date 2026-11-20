@@ -2,7 +2,7 @@ import {parseDateOnly} from './authored.mjs';
 import {fail,fields,copy} from './schema.mjs';
 import {publicRoutingWorkflow,validateRoutingWorkflowDecision,evaluateRoutingWorkflow} from './routing-workflow.mjs';
 import {evaluateMfcRouting,publicMfcRouting,validateMfcRoutingDecision} from './mfc-routing.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,isMfcChainedCalendar} from './mfc-seminar.mjs';
 import {CALENDAR_RULES,WORKBOOK_CALENDAR,calculateWorkbookDeadline} from './workbook-calendar.mjs';
 import {calendarNormId,calendarNorms} from './workbook-norms.mjs';
 
@@ -84,7 +84,7 @@ export function validateWorkbookDecision(value,version=LEGACY_WORKBOOK_VERSION,{
  if(![LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(version))fail('invalid_workbook');
  const d=fields(value,['referralDeadline','registrationTimely','routing']);
  const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
- const registrationRequired=!mfc||mfcCalendarVersion!==MFC_CALENDAR_VERSION;
+ const registrationRequired=!mfc||mfcCalendarVersion!==MFC_DATES_ONLY_CALENDAR_VERSION;
  if(typeof d.referralDeadline!=='string'||d.referralDeadline!==''&&!parseDateOnly(d.referralDeadline)||
     (registrationRequired||d.registrationTimely!==undefined)&&typeof d.registrationTimely!=='boolean')fail('invalid_decision');
  if(mfc&&!d.referralDeadline)fail('core_calendar_required');
@@ -148,14 +148,20 @@ const mfcCounting={start:'exclude_anchor',shift:'next_working_day',calendar:'ru-
 const mfcCalendarDayCounting={...mfcCounting,shift:'no_shift'};
 const standardReviewNorms=new Set(['registration59','review59','referral59']);
 
-function mfcCurrentCalendar(c){
+function mfcCurrentCalendar(c,calendarVersion){
  const events=c.public.assessment.calendar.events;
- const registered=parseDateOnly(events.find(event=>event.id==='registered')?.date)||parseDateOnly(events.find(event=>event.id==='received')?.date);
- if(!registered)fail('invalid_case',503);
+ const received=parseDateOnly(events.find(event=>event.id==='received')?.date);
+ const registered=parseDateOnly(events.find(event=>event.id==='registered')?.date)||received;
+ const checkRegistration=calendarVersion===MFC_CALENDAR_VERSION;
+ if(!registered||checkRegistration&&!received)fail('invalid_case',503);
  return {
-  calendarVersion:MFC_CALENDAR_VERSION,calendarSnapshotId:WORKBOOK_CALENDAR.id,counting:{...mfcCalendarDayCounting},
-  registrationCheck:false,special:false,liabilityApplicable:false,
-  events:[{id:'intakeRegistered',date:registered,kind:'registered',label:T('Регистрация обращения в МФЦ','Registration at the MFC','MFC 来件登记')}],
+  calendarVersion,calendarSnapshotId:WORKBOOK_CALENDAR.id,counting:{...mfcCalendarDayCounting},
+  registrationCheck:checkRegistration,special:false,liabilityApplicable:false,
+  ...(checkRegistration?{registrationCounting:{...mfcCounting}}:{}),
+  events:[
+   ...(checkRegistration?[{id:'intakeReceived',date:received,kind:'received',label:T('Поступление обращения в МФЦ','Receipt at the MFC','MFC 收到来件')}]:[]),
+   {id:'intakeRegistered',date:registered,kind:'registered',label:T('Регистрация обращения в МФЦ','Registration at the MFC','MFC 来件登记')}
+  ],
   targets:[
    {id:'referral',label:T('Крайний срок передачи из МФЦ','MFC referral deadline','MFC 转交截止日'),anchorId:'intakeRegistered',ruleId:'calendar7',...CALENDAR_RULES.calendar7,counting:{...mfcCalendarDayCounting}},
    {id:'deadline',label:T('Крайний срок рассмотрения у адресата','Competent recipient’s review deadline','主管接收方审查截止日'),anchorId:'referral',ruleId:'calendar30',...CALENDAR_RULES.calendar30,counting:{...mfcCalendarDayCounting}}
@@ -188,10 +194,18 @@ function mfcOriginalCalendar(c){
 }
 
 function mfcCalendarInstructions(c,task){
- if(task.calendarVersion===MFC_CALENDAR_VERSION)return T(
-  'Прибавьте 7 календарных дней к дате регистрации в МФЦ, чтобы получить срок передачи. К сроку передачи прибавьте ещё 30 календарных дней, чтобы получить срок рассмотрения.',
-  'Add 7 calendar days to the MFC registration date to find the referral deadline. Add another 30 calendar days to the referral deadline to find the review deadline.',
-  '在 MFC 登记日期上加七个日历日，得出转交截止日。再在转交截止日上加三十个日历日，得出审查截止日。');
+ if(task.calendarVersion){
+  const deadlines=T(
+   'Прибавьте 7 календарных дней к дате регистрации в МФЦ, чтобы получить срок передачи. К сроку передачи прибавьте ещё 30 календарных дней, чтобы получить срок рассмотрения.',
+   'Add 7 calendar days to the MFC registration date to find the referral deadline. Add another 30 calendar days to the referral deadline to find the review deadline.',
+   '在 MFC 登记日期上加七个日历日，得出转交截止日。再在转交截止日上加三十个日历日，得出审查截止日。');
+  if(!task.registrationCheck)return deadlines;
+  const registration=T(
+   'Для проверки регистрации отсчитайте 3 календарных дня со дня, следующего за поступлением в МФЦ. Если последний день нерабочий, перенесите его на ближайший рабочий день. Сопоставьте результат с датой регистрации.',
+   'To check registration, count 3 calendar days starting on the day after the MFC received the appeal. If the last day is non-working, move it to the next working day. Compare the result with the registration date.',
+   '核查是否按期登记：从 MFC 收到来件的次日起计算三个日历日。若末日为非工作日，顺延至下一工作日。将结果与登记日期比较。');
+  return Object.fromEntries(Object.entries(deadlines).map(([locale,rule])=>[locale,rule+'\n'+registration[locale]]));
+ }
  const intro=T(
   'Правило учебной приёмной: передать материалы в течение 7 календарных дней после регистрации в МФЦ. Отсчёт начните на следующий день. Если последний день нерабочий, перенесите его на ближайший рабочий день.',
   'For this simulation’s reception desk, refer the file within seven calendar days of MFC registration. Start counting the following day. Move a non-working final day to the next working day.',
@@ -215,12 +229,17 @@ function mfcCalendarInstructions(c,task){
 
 function calendarTask(c,gameplay,mfc,mfcCalendarVersion){
  if(!mfc)return caseCalendar(c,gameplay);
- return mfcCalendarVersion===MFC_CALENDAR_VERSION?mfcCurrentCalendar(c):mfcOriginalCalendar(c);
+ return isMfcChainedCalendar(mfcCalendarVersion)?mfcCurrentCalendar(c,mfcCalendarVersion):mfcOriginalCalendar(c);
+}
+export function registrationTimely(received,registered,counting){
+ const last=calculateWorkbookDeadline({anchorDate:received,ruleId:'calendar3',...counting});
+ return registered>=received&&registered<=last;
 }
 function publicCaseWorkbook(c,gameplay,mfc,mfcCalendarVersion){
  const task=calendarTask(c,gameplay,mfc,mfcCalendarVersion);
  return {version:WORKBOOK_VERSION,events:task.events,targets:task.targets,registrationCheck:task.registrationCheck,special:task.special,
   ...(task.calendarVersion?{calendarVersion:task.calendarVersion}:{}),
+  ...(task.registrationCounting?{registrationCounting:task.registrationCounting}:{}),
   instructions:mfc?mfcCalendarInstructions(c,task):calendarInstructions(c,task),counting:task.counting,calendarSnapshotId:task.calendarSnapshotId,
   norms:task.calendarVersion?[]:calendarNorms(c,mfc?{registrationCheck:false}:task),...(mfc?publicMfcRouting(c.id):publicRoutingWorkflow(c.id,{gameplay}))};
 }
@@ -237,8 +256,7 @@ function evaluateCaseWorkbook(c,decision,feedback,gameplay,mfc,mfcCalendarVersio
  }
  if(task.registrationCheck){
   const received=mfc?events.intakeReceived:events.received,registered=mfc?events.intakeRegistered:events.registered;
-  const last=calculateWorkbookDeadline({anchorDate:received,ruleId:'calendar3',...(mfc?mfcCounting:task.counting)});
-  expected.registrationTimely=registered>=received&&registered<=last;
+  expected.registrationTimely=registrationTimely(received,registered,task.registrationCounting||(mfc?mfcCounting:task.counting));
   selected.registrationTimely=decision.workbook.registrationTimely;
   correct.registrationTimely=selected.registrationTimely===expected.registrationTimely;
  }
@@ -254,6 +272,7 @@ function evaluateCaseWorkbook(c,decision,feedback,gameplay,mfc,mfcCalendarVersio
  if(Number.isFinite(result.cap))result.score=Math.min(result.score,result.cap);
  result.workbook={calendar:{version:WORKBOOK_VERSION,targets:task.targets,registrationCheck:task.registrationCheck,special:task.special,
   ...(task.calendarVersion?{calendarVersion:task.calendarVersion}:{}),
+  ...(task.registrationCounting?{registrationCounting:task.registrationCounting}:{}),
   liabilityApplicable:task.liabilityApplicable,instructions:mfc?mfcCalendarInstructions(c,task):calendarInstructions(c,task),expected,selected,correct,wrongDates:task.targets.some(target=>!correct[target.id])},routing};
  return result;
 }

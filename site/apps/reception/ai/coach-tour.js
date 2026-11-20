@@ -143,19 +143,21 @@ function available(element, disabled=false) {
     !element.closest('[hidden],[inert]') && element.ownerDocument.defaultView.getComputedStyle(element).visibility !== 'hidden';
 }
 
-function deadlineTarget(find, memory) {
+function deadlineTarget(find, memory, registrationFirst) {
   const kind = find(marked('calendar-kind'), '.rxw-calendar-targets');
   const selectedKind = find('[data-calendar-action="target"][aria-pressed="true"]');
   const missing = [...(kind?.querySelectorAll('[data-calendar-action="target"]')||[])]
     .filter(button => !button.parentElement.querySelector('[data-calendar-action="clear"]'));
   const registration = find('[data-core-registration]', '.rxw-calendar-registration:not(:has(:checked))');
+  const registrationGroup=registration&&(registration.closest('fieldset')||registration.closest('label')||registration);
+  const unanswered=registrationGroup&&!registrationGroup.querySelector(':checked');
   const use = find(marked('calendar-apply'), '[data-calendar-action="use-date"]');
   const day = find(marked('calendar-day'), '.rxw-calendar-grid');
+  if (registrationFirst&&unanswered) return ['calendarRegistration', registrationGroup];
   if (memory.calendarPick && use) return ['calendarApply', use];
   if (memory.calendarKind && (!selectedKind || missing.includes(selectedKind))) return ['calendarDay', day];
   if (missing.length) return ['calendarKind', missing[0]];
-  if (registration && !registration.closest('fieldset')?.querySelector(':checked') &&
-      !registration.parentElement.querySelector(':checked')) return ['calendarRegistration', registration.closest('fieldset')||registration.closest('label')||registration];
+  if (unanswered) return ['calendarRegistration', registrationGroup];
   return ['advance', find('[data-step="calendar"]'+advance, advance) || day];
 }
 
@@ -216,7 +218,7 @@ function nextTarget(root, state, memory) {
     return ['conversation', find(marked('chat'), '[data-message-draft]', guide+' [data-action="tutorial-choice"]')];
   }
   if (stepId === 'materials') return legalTarget(root, find, memory);
-  if (stepId === 'calendar') return deadlineTarget(find, memory);
+  if (stepId === 'calendar') return deadlineTarget(find, memory, state.registrationFirst);
   if (stepId === 'route') {
     if (state.mfc) {
       const next = find('[data-step="route"]'+advance);

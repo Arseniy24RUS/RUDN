@@ -3,7 +3,7 @@ import {resolveCorrespondenceCitations,validateCorrespondenceCitation} from './c
 import {hasApplicableLegalCitation,requiredSeminarProvisions} from './normative-acts.mjs';
 import {evaluateRoutingWorkflow,validateRoutingWorkflowDecision} from './routing-workflow.mjs';
 import {evaluateMfcRouting,validateMfcRoutingDecision} from './mfc-routing.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,isMfcChainedCalendar} from './mfc-seminar.mjs';
 import {ReceptionError,copy,fail,fields,hash} from './schema.mjs';
 import {tutorialOperational} from './seminar-journey.mjs';
 import {WORKBOOK_VERSION,publicWorkbook} from './workbook.mjs';
@@ -23,12 +23,12 @@ export function publicCoreSteps(state,stepId=null) {
 function validateCalendar(c,raw,coreStepsVersion,mfcCalendarVersion) {
   const {deadline,referralDeadline,registrationTimely}=fields(raw,['deadline','referralDeadline','registrationTimely']);
   const workbook=publicWorkbook(c,WORKBOOK_VERSION,{gameplay:true,coreStepsVersion,mfcCalendarVersion});
-  const registrationRequired=workbook.calendarVersion!==MFC_CALENDAR_VERSION;
+  const registrationRequired=workbook.calendarVersion!==MFC_DATES_ONLY_CALENDAR_VERSION;
   const referral=workbook.targets.some(target=>target.id==='referral');
   const dates=referral?[deadline,referralDeadline]:[deadline];
   if(dates.some(date=>!date||parseDateOnly(date)!==date)||
     !referral&&referralDeadline!==''||(registrationRequired||registrationTimely!==undefined)&&typeof registrationTimely!=='boolean')fail('core_calendar_required');
-  if(registrationRequired)for(const date of dates){
+  if(!isMfcChainedCalendar(workbook.calendarVersion))for(const date of dates){
     try{workingCalendarDay(date);}catch{fail('core_calendar_required');}
   }
   return {deadline,referralDeadline,...(registrationRequired?{registrationTimely}:{})};

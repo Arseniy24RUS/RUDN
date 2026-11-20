@@ -80,6 +80,14 @@ function calendarContent(options){
   const instructions=localText(options.task?.instructions,locale)||t.intro;
   const norms=options.task?.norms||[{label:locale==='ru'?'Федеральный закон от 02.05.2006 № 59-ФЗ «О порядке рассмотрения обращений граждан Российской Федерации»':'59-ФЗ · '+t.norms,text:t.rules.join('\n'),url:'https://mintrud.gov.ru/docs/laws/108'}];
   const visibleInstructions=options.task?.visibleInstructionsLabel;
+  const question=options.task?.registrationQuestion;
+  const questionOff=(question?.disabled??disabled)?'disabled':'';
+  const registration=question?`<fieldset class="rxa-fieldset rxt-registration rxw-registration-question">
+    <legend>${esc(question.label)}</legend><div>
+    ${[true,false].map(value=>`<label class="rxa-choice"><input type="radio" name="core-registration" data-core-registration
+      data-calendar-input="registration-answer" value="${value}" ${question.optional?'':'required'} ${s.registrationTimely===value?'checked':''} ${questionOff}>
+      <span>${esc(value?question.yes:question.no)}</span></label>`).join('')}
+    </div>${question.footer||''}</fieldset>`:'';
   return `<header class="rxw-calendar-heading"><div><h3>${t.title}</h3></div></header>
     ${visibleInstructions?`<section class="rxt-calendar-rules" aria-labelledby="rxtCalendarRules">
       <h4 id="rxtCalendarRules">${esc(visibleInstructions)}</h4>
@@ -89,7 +97,7 @@ function calendarContent(options){
       <div class="rxw-calendar-details-content"><p class="rxw-calendar-instruction">${esc(instructions)}</p></div>
     </details>`}
     ${options.task?.hideEventList?'':`<div class="rxw-calendar-events">${events.map(event=>`<button type="button" class="event-${eventKind(event)}" data-calendar-action="event-month" data-date="${esc(knownDate(event.date,snapshot))}" ${disabled||!knownDate(event.date,snapshot)?'disabled':''}><span>${esc(localText(event.label,locale)||t[eventKind(event)]||'')}</span><strong>${esc(formatDateOnly(event.date))}</strong></button>`).join('')}</div>`}
-    <div class="rxw-calendar-targets" role="group" aria-label="${t.targets}">${targets.map(target=>{
+    ${registration}<div class="rxw-calendar-targets" role="group" aria-label="${t.targets}">${targets.map(target=>{
       const date=s.selectedDates[target.id],displayDate=date&&formatDateOnly(date);
       const clearLabel=esc(`${t.clearDate} — ${target.label} — ${displayDate}`);
       return `<div class="rxw-calendar-target"><button type="button" data-calendar-action="target" data-target="${target.id}" aria-pressed="${s.activeTarget===target.id}" ${off}><span>${esc(target.label)}</span><strong>${displayDate?esc(displayDate):t.empty}</strong></button>${date?`<button type="button" class="rxw-calendar-clear" data-calendar-action="clear" data-target="${target.id}" aria-label="${clearLabel}" title="${clearLabel}" ${off}>${icon('close')}</button>`:''}</div>`;
@@ -98,7 +106,7 @@ function calendarContent(options){
     <div class="rxw-calendar-week" aria-hidden="true">${t.week.map(day=>`<span>${day}</span>`).join('')}</div><div class="rxw-calendar-grid" role="group" aria-label="${esc(formattedDate(s.month+'-01',locale,{day:undefined}))}">${cells}</div></div>
     ${legend.length?`<div class="rxw-calendar-legend rxw-calendar-main-legend">${legend.map(([kind,label])=>`<span class="event-${kind}">${esc(label)}</span>`).join('')}</div>`:''}
     ${options.task?.autoCommit?'':`<div class="rxw-calendar-footer"><button type="button" class="rxw-calendar-use" data-calendar-action="use-date" ${disabled||!selected?'disabled':''}>${t.use}${arrow(1)}</button></div>`}
-    ${options.task?.registrationCheck===false?'':`<label class="rxw-calendar-registration"><input type="checkbox" data-calendar-input="registration-timely" ${s.registrationTimely===true?'checked':''} ${off}><span>${t.timely}</span></label>`}
+    ${question||options.task?.registrationCheck===false?'':`<label class="rxw-calendar-registration"><input type="checkbox" data-calendar-input="registration-timely" ${s.registrationTimely===true?'checked':''} ${off}><span>${t.timely}</span></label>`}
     ${norms.length?`<details class="rxw-calendar-details" data-calendar-details="norms" data-details="calendar-norms" ${options.normsOpen?'open':''}>
       <summary><span><strong>${t.norms}</strong>${options.task?.special?`<span class="rxa-unread rxw-calendar-norms-badge" aria-hidden="true">!</span><span class="rxw-sr">${t.specialRules}</span>`:''}</span>${arrow(1)}</summary>
       <div class="rxw-calendar-details-content">
@@ -125,7 +133,15 @@ export function createCalendarWorkbench(host,initial={}){
       container()?.querySelector(`[data-calendar-action="target"][data-target="${id}"]`)?.focus({preventScroll:true});
     }
   }
-  function change(event){const target=event.target;if(!target.dataset.calendarInput||!container()?.contains(target)||options.disabled)return;const key=target.dataset.calendarInput;if(key==='registration-timely')notify({type:'registration',value:target.checked});else if(key==='month'||key==='year')notify({type:'month',month:key==='month'?`${state.month.slice(0,4)}-${target.value}`:`${target.value}-${state.month.slice(5)}`});}
+  function change(event){
+    const target=event.target,key=target.dataset.calendarInput;
+    if(!key||!container()?.contains(target)||target.disabled||options.disabled&&key!=='registration-answer')return;
+    if(key==='registration-answer'){
+      notify({type:'registration',value:target.value==='true'});
+      container()?.querySelector('[data-calendar-input="registration-answer"]:checked')?.focus({preventScroll:true});
+    }else if(key==='registration-timely')notify({type:'registration',value:target.checked});
+    else if(key==='month'||key==='year')notify({type:'month',month:key==='month'?`${state.month.slice(0,4)}-${target.value}`:`${target.value}-${state.month.slice(5)}`});
+  }
   function keydown(event){const target=event.target.closest?.('[data-calendar-action="choose-date"]');if(!target||!container()?.contains(target)||options.disabled)return;const steps={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7};let date;if(event.key in steps)date=addDays(target.dataset.date,steps[event.key]);else if(event.key==='PageUp'||event.key==='PageDown')date=addCalendarMonths(target.dataset.date,event.key==='PageUp'?-1:1);else return;event.preventDefault();notify({type:'select',date},date);}
   host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('keydown',keydown);const abortSignal=initial.signal;
   function destroy(){if(closed)return;closed=true;host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('keydown',keydown);abortSignal?.removeEventListener('abort',destroy);}

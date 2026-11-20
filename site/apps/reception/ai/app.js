@@ -3,7 +3,7 @@ import {localized, normalizeLocale, translator} from './copy.js';
 import './workspace-copy.js';
 import './correspondence-copy.js';
 import {createReceptionTour} from './coach-tour.js';
-import {MFC_VERSION, MFC_CALENDAR_VERSION, isCoreJourney, isMfcJourney, CORE_ACTIONS, CORE_PAGES, coreStepId, coreLabel, coreDatePayload} from './core-steps.js';
+import {MFC_VERSION, MFC_CALENDAR_VERSION, MFC_CALENDAR_WITHOUT_REGISTRATION, isCoreJourney, isMfcJourney, CORE_ACTIONS, CORE_PAGES, coreStepId, coreLabel, coreDatePayload} from './core-steps.js';
 import {availableMentorActions, guidanceView, isLesson, journeyPathView, lessonLabel, lessonStep, mentorView, mentorWorkFeedbackView, nextJourneyStage} from './tutorial.js';
 import {blankCorrespondence,restoreCorrespondence,reduceCorrespondence,correspondenceEditorView,correspondencePreviewView,
   correspondenceControlView,restoreCorrespondenceControl,reduceCorrespondenceControl,correspondenceControlSubmission,
@@ -29,7 +29,7 @@ const presentationOwners = new WeakMap();
 const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const clone = value => JSON.parse(JSON.stringify(value));
 const workspacePages = ['reception','chat','documents','calendar','route','decision'];
-const mutationOps = ['start','message','document','decide','followup','control-action','next','tutorial-step','mentor-question','core-step'];
+const mutationOps = ['start','message','document','decide','followup','control-action','next','tutorial-step','mentor-question','core-step','registration-check'];
 const blankWorkbook = () => ({referralDeadline:'',registrationTimely:false,routing:{recipientIds:[]}});
 const blankDecision = () => ({workbook:blankWorkbook(),procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:'',basisDocumentIds:[],reasoning:''});
 const blankAssessment = () => ({factId:'',applicationId:'',trapId:'',actDate:'',calendar:{anchor:'',rule:'',start:'',shift:''},research:{recordId:'',fragmentId:'',extracted:'',finding:''}});
@@ -100,7 +100,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let enteringMessages = new Set(), lastPendingRenderedId = '';
   let chatScroll = {top:0,bottom:true}, followupDraft='';
   let detailOpen = new Set();
-  let calendarDraftVersion='';
+  let calendarDraftVersion='', registrationReviewOffered=false;
   let page='reception', calendarState={}, selectedReferences=[], readMessageIds=new Set(), pageScroll={}, savedSessionId='';
   let catalog=[], catalogLoading=false, catalogError=false, trainingLevel='', trainingCaseId='', caseSearch='';
   let notice='', recoverBusy=false, deferredDocuments=new Set();
@@ -113,6 +113,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const legacySessionIds=new Map();
   const hasCore = () => isCoreJourney(view);
   const mfcJourney = () => isMfcJourney(view);
+  const registrationPractice = () => view?.case?.workbook?.registrationPreviouslyUnasked===true;
+  const registrationWritable = () => active()&&registrationPractice()&&!view.case.workbook.registrationPractice&&!busy&&!pending&&!paused;
   const coreCurrent = () => coreStepId(view);
   const coreIsEditable = id => view?.journeyStage==='independent'&&view.coreSteps?.completed?.includes(id);
   const coreInView = () => coreEdit || coreCurrent();
@@ -164,6 +166,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     pending=saved.pending&&mutationOps.includes(saved.pending.op)&&typeof saved.pending.requestId==='string'?saved.pending:null;
     calendarState=saved.calendarState&&typeof saved.calendarState==='object'?saved.calendarState:{};
     calendarDraftVersion=typeof saved.calendarVersion==='string'?saved.calendarVersion:'';
+    registrationReviewOffered=saved.registrationReviewOffered===true;
     routingTerritory=typeof saved.routingTerritory==='string'?saved.routingTerritory:undefined;
     selectedReferences=Array.isArray(saved.selectedReferences)?saved.selectedReferences.filter(x=>x&&typeof x.id==='string'&&typeof x.text==='string').slice(0,20):[];
     readMessageIds=new Set(Array.isArray(saved.readMessageIds)?saved.readMessageIds.filter(x=>typeof x==='string'):[]);
@@ -226,7 +229,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     storageOkay=drafts.save({version:VERSION,owner,sessionId:view?.id||initial?.sessionId||'',caseId:view?.case?.id||savedCaseId,
       caseTitle:view?.case?.title||initial?.caseTitle||'',status:view?.status||initial?.status||'',
       mode:view?.mode||mode,locale,draftMessage,decisionDraft,followupDraft,controlDraft,executionActionDraft,controlWorkspaceUI,controlRecipientPicker,responsePreview,citationSelections,detailOpen:[...detailOpen],tab,selectedDoc,pending,pendingAt,mobilePane,chatScroll,
-      page,calendarState,calendarVersion:calendarDraftVersion,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
+      page,calendarState,calendarVersion:calendarDraftVersion,registrationReviewOffered,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
     return storageOkay;
   }
   function incomingMessages() {
@@ -268,7 +271,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;
     deferredDocuments.clear();failedOperation='';routingSearch='';routingTerritory=undefined;view=null;initial=null;pending=null;error=null;notice='';needsResume=false;draftMessage='';decisionDraft=blankDecision();followupDraft='';
     detailOpen.clear();savedCaseId='';savedSessionId='';selectedDoc='';confirmation=false;tab='documents';mobilePane='desk';page='reception';
-    pendingAt=null;lastPendingRenderedId='';calendarState={};calendarDraftVersion='';selectedReferences=[];readMessageIds.clear();pageScroll={};drafts.clearCurrent();
+    pendingAt=null;lastPendingRenderedId='';calendarState={};calendarDraftVersion='';registrationReviewOffered=false;selectedReferences=[];readMessageIds.clear();pageScroll={};drafts.clearCurrent();
     if(mode==='independent'&&!canIndependent())mode='training';
   }
   function rememberLegacySessions(recovered,stage) {
@@ -473,6 +476,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function updateCoreButton() {
     const control=root.querySelector('[data-action="core-step"]');
     if(control&&hasCore())control.disabled=busy||!!pending||paused||!corePayload(control.dataset.step);
+    const check=root.querySelector('[data-action="registration-check"]');
+    if(check)check.disabled=!registrationWritable()||typeof calendarState.registrationTimely!=='boolean';
   }
   function coreFeedback(id) {
     const finding=view.guidance?.finding;
@@ -638,7 +643,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function visibleWorkbook(workbook) {
     if(!workbook||!mfcJourney())return workbook;
-    const anchorIds=workbook.calendarVersion===MFC_CALENDAR_VERSION?['intakeRegistered']:
+    const currentChain=[MFC_CALENDAR_VERSION,MFC_CALENDAR_WITHOUT_REGISTRATION].includes(workbook.calendarVersion);
+    const anchorIds=currentChain?['intakeReceived','intakeRegistered']:
       ['intakeReceived',...workbook.targets.map(target=>target.anchorId)];
     const anchors=new Set(anchorIds);
     const events=workbook.events.filter(event=>anchors.has(event.id));
@@ -646,18 +652,33 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function calendarTask(){
     const workbook=visibleWorkbook(view?.case?.workbook);
-    return workbook?{...workbook,hideEventList:!hasCore(),autoCommit:true,internalSources:Boolean(gameplayContext),
+    if(!workbook)return;
+    const practice=registrationPractice();
+    const showQuestion=workbook.registrationCheck&&(workbook.calendarVersion===MFC_CALENDAR_VERSION||practice);
+    const question=showQuestion?{label:cl('registration'),yes:cl('yes'),no:cl('no')}:null;
+    if(question&&practice){
+      question.optional=true;
+      question.disabled=!registrationWritable();
+      question.footer=workbook.registrationPractice
+        ?`<p class="rxa-small" role="status">${esc(cl('registrationSaved'))}</p>`
+        :active()?`<div class="rxa-actions">${button(cl('saveRegistration'),'registration-check',
+          {primary:true,disabled:!registrationWritable()||typeof calendarState.registrationTimely!=='boolean'})}
+          ${button(cl('returnTo'),'core-go',{quiet:true,extra:`data-step="${esc(coreCurrent())}"`})}</div>`:'';
+    }
+    return {...workbook,hideEventList:!hasCore(),autoCommit:true,internalSources:Boolean(gameplayContext),
       ...(hasCore()?{registrationCheck:false}:{}),
-      ...(mfcJourney()?{visibleInstructionsLabel:cl('dateRules')}:{})}:undefined;
+      ...(mfcJourney()?{visibleInstructionsLabel:cl('dateRules')}:{}),
+      registrationQuestion:question};
   }
   function coreCalendar() {
-    const workbook=view.case.workbook, editable=active()&&coreInView()==='calendar';
+    const workbook=view.case.workbook, practice=registrationPractice();
+    const editable=!practice&&active()&&coreInView()==='calendar';
     const locked=!editable||busy||!!pending||paused;
-    const registration=workbook.registrationCheck?`<fieldset class="rxa-fieldset rxt-registration"><legend>${esc(cl('registration'))}</legend>
+    const registration=!practice&&workbook.registrationCheck&&workbook.calendarVersion!==MFC_CALENDAR_VERSION?`<fieldset class="rxa-fieldset rxt-registration"><legend>${esc(cl('registration'))}</legend>
       ${[true,false].map(value=>`<label class="rxa-choice"><input type="radio" name="core-registration" data-core-registration value="${value}"
         ${calendarState.registrationTimely===value?'checked':''} ${locked?'disabled':''}><span>${esc(cl(value?'yes':'no'))}</span></label>`).join('')}</fieldset>`:'';
     return `<section class="rxa-panel" id="rxaCalendarPanel" aria-labelledby="rxaPage-calendar"><h1 data-core-heading>${esc(cl('calendar'))}</h1>
-      <p class="rxa-panel-intro">${esc(cl('dateHint'))}</p>${coreLessonHint('calendar')}${coreFeedback('calendar')}
+      ${practice?'':`<p class="rxa-panel-intro">${esc(cl('dateHint'))}</p>${coreLessonHint('calendar')}${coreFeedback('calendar')}`}
       ${calendarWorkbenchView({state:calendarState,task:calendarTask(),locale,disabled:locked})}${registration}
       ${editable?`<div class="rxa-calendar-footer rxt-core-footer">${coreButton('calendar')}</div>`:''}</section>`;
   }
@@ -1059,11 +1080,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     const content=root.querySelector('.rxa-page-content');if(content)content.scrollTop=Number(pageScroll[page])||0;
     const mentorLog=root.querySelector('[data-mentor-log]');if(mentorLog)mentorLog.scrollTop=mentorLog.scrollHeight;
-    calendar.update({state:calendarState,task:calendarTask(),rulesMarkup:calendarRulesMarkup(),events:view?.case?.assessment?.calendar?.events||[],date:view?.case?.date,locale,disabled:!active()||paused||pending?.op==='decide'||busy&&operation==='decide'||hasCore()&&(busy||!!pending||coreInView()!=='calendar')});
+    calendar.update({state:calendarState,task:calendarTask(),rulesMarkup:calendarRulesMarkup(),events:view?.case?.assessment?.calendar?.events||[],date:view?.case?.date,locale,disabled:!active()||paused||pending?.op==='decide'||busy&&operation==='decide'||hasCore()&&(busy||!!pending||(coreInView()!=='calendar'||registrationPractice()))});
     reader.refresh?.();media.refresh();
     tour.update({stage:view?.journeyStage,sessionId:view?.id,step:lessonStep(view),page,locale,
       stepIndex:view?.guidance?.stepIndex,stepTotal:view?.guidance?.steps?.length,mfc:mfcJourney(),
-      paused:busy||!!pending||paused||mentorOpen||choosingCase||confirmation});
+      registrationFirst:view?.case?.workbook?.calendarVersion===MFC_CALENDAR_VERSION,
+      paused:busy||!!pending||paused||mentorOpen||choosingCase||confirmation||page==='calendar'&&registrationPractice()});
     updateViewport();
     if(stageFocus){
       const heading=root.querySelector('[data-stage-heading], [data-core-heading]');
@@ -1137,7 +1159,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     view = next; mode = next.mode || mode; confirmation = false;
     if(body.op==='start'||body.op==='recover')choosingCase=false;
-    if(!sameCase)coreEdit='';
+    if(!sameCase){coreEdit='';registrationReviewOffered=false;}
     if(next.seminarProgress)seminarProgress=next.seminarProgress;
     if(next.status==='complete'&&isLesson(next.journeyStage)){
       seminarProgress={...seminarProgress,exampleCompleted:true,...(next.journeyStage==='mentor'?{mentorCompleted:true}:{})};
@@ -1186,18 +1208,22 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const calendarVersion=next.case.workbook.calendarVersion||'';
       const upgraded=sameCase&&calendarVersion===MFC_CALENDAR_VERSION&&calendarDraftVersion!==calendarVersion;
       if(upgraded){
-        // Choices from the previous counting rule cannot be carried into the new calendar.
+        // The preceding 7+30 calendar used the same dates but did not ask about registration.
         if(!next.coreSteps?.values?.calendar){
-          decisionDraft.deadline='';
-          decisionDraft.workbook.referralDeadline='';
-          calendarState={};
+          if(calendarDraftVersion!==MFC_CALENDAR_WITHOUT_REGISTRATION){
+            decisionDraft.deadline='';
+            decisionDraft.workbook.referralDeadline='';
+            calendarState={};
+          }
+          calendarState.registrationTimely=null;
         }
         if(pending?.stepId==='calendar'){pending=null;pendingAt=null;}
       }
       calendarDraftVersion=calendarVersion;
       syncCoreValues(next,{applySaved:!sameCase,applyCalendar:upgraded});
+      const practiceAnswer=next.case.workbook.registrationPractice?.answer;
       calendarState={...calendarState,selectedDates:{referral:decisionDraft.workbook.referralDeadline,deadline:decisionDraft.deadline},
-        registrationTimely:hasCore()&&active()?calendarState.registrationTimely??null:decisionDraft.workbook.registrationTimely};
+        registrationTimely:practiceAnswer??(hasCore()&&active()?calendarState.registrationTimely??null:decisionDraft.workbook.registrationTimely)};
     }else{
       delete decisionDraft.workbook;
       calendarDraftVersion='';
@@ -1214,6 +1240,13 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(mfcJourney()&&!sameCase&&resumed&&CORE_PAGES[current]){
       page=CORE_PAGES[current];mobilePane='desk';tab=page==='documents'?'documents':'decision';
     }
+    if(resumed&&active()&&registrationPractice()&&!next.case.workbook.registrationPractice&&!registrationReviewOffered){
+      registrationReviewOffered=true;
+      page='calendar';mobilePane='desk';pageScroll.calendar=0;stageFocus=true;
+    }
+    if(body.op==='registration-check'&&next.case.workbook?.registrationPractice){
+      page=CORE_PAGES[current]||'reception';mobilePane='desk';pageScroll[page]=0;stageFocus=true;
+    }
     savedSessionId=next.id;savedCaseId = next.case?.id || '';markChatRead();
     if (next.status === 'complete' && next.result?.attemptId && completedNotified !== next.result.attemptId) {
       completedNotified = next.result.attemptId;
@@ -1223,6 +1256,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
   }
   function wasCommitted(next, body) {
+    if(body.op==='registration-check')return next.case?.workbook?.registrationPractice?.answer===body.registrationTimely;
     if(body.op==='core-step')return next.coreSteps?.receipt?.requestId===body.requestId;
     if(body.op==='decide')return Boolean(next.decision)||next.caseIndex!==view?.caseIndex&&next.status!=='active';
     if(body.op==='followup')return Boolean(next.control)||Boolean(next.followupChoiceId)||next.controlValidation?.requestId===body.requestId||next.status==='review'||next.status==='complete';
@@ -1462,7 +1496,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const change = event => {
     if(handleControlIntent(event.target,{changed:true}))return;
     if(handleResponseInput(event.target,true))return;
-    if(hasCore()&&active()&&event.target.matches('[data-core-registration]')){
+    if(hasCore()&&active()&&event.target.matches('[data-core-registration]:not([data-calendar-input])')){
       if(busy||pending||paused)return;
       calendarState={...calendarState,registrationTimely:event.target.value==='true'};
       decisionDraft.workbook.registrationTimely=calendarState.registrationTimely;
@@ -1566,8 +1600,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
           const field=root.querySelector(`[data-response-field="${missing[0]}"]`);
           field?.scrollIntoView({block:'center'});field?.focus({preventScroll:true});return;
         }
-        if(mentorWork('draft'))void chooseTutorialStep({decision:clone(decisionDraft)});
-        else if(!tutorial())void perform({op:'decide',sessionId:view.id,expectedRevision:view.revision,decision:clone(decisionDraft),requestId:newRequestId()});
+        const decision=clone(decisionDraft);
+        if(view.case.workbook?.calendarVersion===MFC_CALENDAR_WITHOUT_REGISTRATION)
+          delete decision.workbook.registrationTimely;
+        if(mentorWork('draft'))void chooseTutorialStep({decision});
+        else if(!tutorial())void perform({op:'decide',sessionId:view.id,expectedRevision:view.revision,decision,requestId:newRequestId()});
         return;
       }
       if(mentorWork('draft')){void chooseTutorialStep({decision:clone(decisionDraft)});return;}
@@ -1652,6 +1689,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         }
       }else if(step==='materials')scrollToCoreRecords();
       else goCore(step);
+      return;
+    }
+    if(action==='registration-check'&&registrationWritable()&&typeof calendarState.registrationTimely==='boolean'){
+      await perform({op:'registration-check',sessionId:view.id,requestId:newRequestId(),expectedRevision:view.revision,
+        registrationTimely:calendarState.registrationTimely});
       return;
     }
     if(action==='core-step'&&hasCore()&&active()){

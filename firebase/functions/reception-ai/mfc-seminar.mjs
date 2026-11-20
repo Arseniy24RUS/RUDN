@@ -1,6 +1,9 @@
 export const MFC_SEMINAR_VERSION = 'mfc-referral-v2';
-export const MFC_CALENDAR_VERSION = 'mfc-7-plus-30-v1';
+export const MFC_CALENDAR_VERSION = 'mfc-7-plus-30-v2';
+export const MFC_DATES_ONLY_CALENDAR_VERSION = 'mfc-7-plus-30-v1';
 export const LEGACY_MFC_CALENDAR_VERSION = 'mfc-calendar-original-v1';
+
+export const isMfcChainedCalendar = version => [MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION].includes(version);
 
 // These authored actions require partitioning the original dispatch. They apply
 // to the legacy case only. The MFC exercise grades the joint addressee choice.

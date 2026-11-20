@@ -66,7 +66,8 @@ const copy = {
 
 export const CORE_VERSION = 'guided-core-v1';
 export const MFC_VERSION = 'mfc-referral-v2';
-export const MFC_CALENDAR_VERSION = 'mfc-7-plus-30-v1';
+export const MFC_CALENDAR_WITHOUT_REGISTRATION = 'mfc-7-plus-30-v1';
+export const MFC_CALENDAR_VERSION = 'mfc-7-plus-30-v2';
 export const isMfcJourney = view => view?.coreStepsVersion === MFC_VERSION;
 export const isCoreJourney = view => view?.coreStepsVersion === CORE_VERSION || isMfcJourney(view);
 export const CORE_ACTIONS = ['materials', 'calendar', 'route'];
@@ -83,6 +84,8 @@ const mfcCopy = {
     independentHint:'Самостоятельно проведите новое обращение через МФЦ и подготовьте ответ по существу. Оценка учитывает проект ответа и вывод по результатам контроля.',
     dateHint:'Выберите две даты в календаре.',
     dateRules:'Откуда считать сроки',
+    saveRegistration:'Сохранить ответ',
+    registrationSaved:'Ответ сохранён.',
     route:'Маршрут обращения',
     routeHint:'Отметьте компетентных адресатов этого обращения. Если подходят несколько ведомств, выберите их в одном списке.',
     routeMissing:'Выберите ведомство, которому МФЦ передаст обращение.',
@@ -103,6 +106,8 @@ const mfcCopy = {
     independentHint:'Handle a new appeal through the MFC and draft a substantive reply on your own. Your grade covers the draft and your follow-through conclusion.',
     dateHint:'Select both dates on the calendar.',
     dateRules:'How to count the deadlines',
+    saveRegistration:'Save answer',
+    registrationSaved:'Answer saved.',
     route:'Appeal routing',
     routeHint:'Select the competent recipients of this appeal. If it needs several authorities, select them in the same list.',
     routeMissing:'Choose the authority to which the MFC will refer the appeal.',
@@ -123,6 +128,8 @@ const mfcCopy = {
     independentHint:'独立通过政务服务中心处理一项新诉求，并撰写实质性答复。评分包括答复草稿和后续核查结论。',
     dateHint:'请在日历中选定两项截止日期。',
     dateRules:'如何计算两项期限',
+    saveRegistration:'保存答案',
+    registrationSaved:'答案已保存。',
     route:'诉求转送路径',
     routeHint:'选择有权接收这份诉求的主管机关。如需选择多个机关，请在同一列表中勾选。',
     routeMissing:'请选择政务服务中心应将诉求转送至哪个主管机关。',
@@ -145,13 +152,15 @@ export const coreStepId = view => view?.status === 'followup' ? 'control' :
 
 export function coreDatePayload(workbook, state) {
   const dates=state?.selectedDates || {};
+  const includeRegistration=workbook?.calendarVersion!==MFC_CALENDAR_WITHOUT_REGISTRATION;
+  const checkRegistration=includeRegistration&&workbook?.registrationCheck;
   if((workbook?.targets || []).some(target=>!dates[target.id]) ||
-    (workbook?.registrationCheck && typeof state?.registrationTimely !== 'boolean'))return null;
+    (checkRegistration && typeof state?.registrationTimely !== 'boolean'))return null;
   return {
     deadline:dates.deadline || '',
     referralDeadline:workbook?.targets?.some(target=>target.id==='referral') ? dates.referral : '',
-    ...(workbook?.calendarVersion===MFC_CALENDAR_VERSION?{}:{
-      registrationTimely:workbook?.registrationCheck ? state.registrationTimely : false,
-    }),
+    ...(includeRegistration?{
+      registrationTimely:checkRegistration ? state.registrationTimely : false,
+    }:{}),
   };
 }

@@ -8,7 +8,7 @@ import {selectShiftCases} from './selection.mjs';
 import {CATALOG_METADATA} from './catalog-metadata.mjs';
 import {legacySessionIds, LEGACY_RECOVERY_LIMITS} from './store.mjs';
 import {learningReviewFor} from './learning-review.mjs';
-import {WORKBOOK_VERSION,LEGACY_WORKBOOK_VERSION,supportsWorkbook,publicWorkbook,validateWorkbookDecision,evaluateWorkbook} from './workbook.mjs';
+import {WORKBOOK_VERSION,LEGACY_WORKBOOK_VERSION,supportsWorkbook,publicWorkbook,validateWorkbookDecision,evaluateWorkbook,registrationTimely} from './workbook.mjs';
 import {DECISION_VERSION,CORRESPONDENCE_WEIGHTS,publicCorrespondenceSources,resolveCorrespondenceCitations,validateCorrespondenceControl,
   buildCorrespondenceReview,scoreCorrespondenceReview,combineCorrespondenceFeedback} from './correspondence.mjs';
 import {privateCorrespondenceProfile,publicCorrespondenceProfile} from './correspondence-profiles.mjs';
@@ -19,7 +19,7 @@ import {normativeActsForCase,requiredSeminarActs,validateLegalCitation,hasApplic
 import {JOURNEY_STAGES, SEMINAR_EXAMPLE, SEMINAR_GRADING_VERSION, isTutorial, exactCaseScore, seminarPointsAt,
   seminarExample, tutorialGuide, publicTutorialGuide, tutorialOperational, tutorialExecutionAction, validatedTutorialMemo, mentorFinding, tutorialExecutionKinds, tutorialExecutionProgress, walkthroughControlProfile} from './seminar-journey.mjs';
 import {SEMINAR_CORE_VERSION,CORE_STEP_FIELDS,publicCoreSteps,inspectCoreStep,saveCoreStep,assertCoreDecision} from './seminar-core.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION,mfcRole,mfcUsesSharedReply,mfcSharedReplyInstruction} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION,mfcRole,mfcUsesSharedReply,mfcSharedReplyInstruction} from './mfc-seminar.mjs';
 
 const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance: 80000, maxReviewInputAllowance:320000, maxOutputTokens: 650,
   dailyBudgetMicros: 2_000_000, monthlyBudgetMicros: 20_000_000, studentDailyBudgetMicros: 1_000_000,
@@ -35,6 +35,7 @@ const allowed = {
   'control-action':['op','sessionId','requestId','expectedRevision','action'],
   'tutorial-step':['op','sessionId','requestId','expectedRevision','stepId','choiceId','decision','control','useExample','confirmOwn','citations','calendar','routing'],
   'core-step':['op','sessionId','requestId','expectedRevision','stepId','citations','calendar','routing'],
+  'registration-check':['op','sessionId','requestId','expectedRevision','registrationTimely'],
   'mentor-question':['op','sessionId','requestId','expectedRevision','text','issueId'],
   next: ['op', 'sessionId', 'requestId'], locale: ['op', 'sessionId', 'locale'], catalog: ['op', 'locale', 'studentKey', 'workbookVersion','decisionVersion','controlVersion','context']
 };
@@ -50,12 +51,19 @@ const journeyLedger = version => version===MFC_SEMINAR_VERSION?'mfcJourney':vers
 const calendarVersionFor = s => s.coreStepsVersion===MFC_SEMINAR_VERSION?(s.mfcCalendarVersion||LEGACY_MFC_CALENDAR_VERSION):undefined;
 const workbookOptions = s => ({gameplay:Boolean(s.context),coreStepsVersion:s.coreStepsVersion,mfcCalendarVersion:calendarVersionFor(s)});
 function canUpgradeMfcCalendar(s) {
-  if(s?.coreStepsVersion!==MFC_SEMINAR_VERSION||s.mfcCalendarVersion||s.status!=='active')return false;
+  if(s?.coreStepsVersion!==MFC_SEMINAR_VERSION||s.status!=='active'||
+    (s.mfcCalendarVersion&&s.mfcCalendarVersion!==MFC_DATES_ONLY_CALENDAR_VERSION))return false;
   const state=values(s.caseStates)[s.caseIndex];
   return Boolean(state&&!state.coreStepsValues?.calendar&&!state.decision&&!state.correspondenceDraft&&!state.reviewPending);
 }
 const hasWorkbook = s => [LEGACY_WORKBOOK_VERSION,WORKBOOK_VERSION].includes(s.workbookVersion);
 const workbookFor = (c,s) => hasWorkbook(s)?publicWorkbook(c,s.workbookVersion,workbookOptions(s)):null;
+const showRegistrationPractice = (s,state) => s.status!=='complete'&&calendarVersionFor(s)===MFC_DATES_ONLY_CALENDAR_VERSION&&Boolean(state.coreStepsValues?.calendar);
+function registrationPracticeWorkbook(c,s,state) {
+  const current=publicWorkbook(c,s.workbookVersion,{...workbookOptions(s),mfcCalendarVersion:MFC_CALENDAR_VERSION});
+  return {...current,calendarVersion:MFC_DATES_ONLY_CALENDAR_VERSION,registrationPreviouslyUnasked:true,
+    ...(state.registrationPractice?{registrationPractice:state.registrationPractice}:{})};
+}
 const roleFor = (c,s,workbook) => s.coreStepsVersion===MFC_SEMINAR_VERSION?
   mfcRole(c.public.role,s.locale,mfcUsesSharedReply(s.coreStepsVersion,workbook||workbookFor(c,s))):localized(c.public.role,s.locale);
 function controlCommand(action,workflow) {
@@ -186,7 +194,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const s = normalizeSession(copy(session)), c = s.caseData[s.caseIndex], state = s.caseStates[s.caseIndex];
     const p = localized(c.public, s.locale);
     p.opening=participantOpening(c,s.locale);
-    const workbook=localized(workbookFor(c,s),s.locale);
+    const workbook=localized(showRegistrationPractice(s,state)?registrationPracticeWorkbook(c,s,state):workbookFor(c,s),s.locale);
     const mfc=s.coreStepsVersion===MFC_SEMINAR_VERSION;
     if(mfc){
       p.role=roleFor(c,s,workbook);
@@ -971,6 +979,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
   function mentorContext(s,c,state,selectedIssueId) {
     const profile=correspondenceProfiles.private(c,s.locale);
     const guide=guideFor(s,c,profile);
+    if(showRegistrationPractice(s,state)){
+      const practice=localized(registrationPracticeWorkbook(c,s,state),s.locale);
+      guide.registrationPractice={events:practice.events,instructions:practice.instructions,optional:true};
+    }
     guide.currentStep=guide.steps[state.tutorialStepIndex||0]?.id||'review';
     if(selectedIssueId)guide.selectedIssueId=selectedIssueId;
     if(s.status==='active'){
@@ -1323,6 +1335,19 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (body.op==='message'||body.op==='mentor-question')return message(body,identity);
     if (body.op==='tutorial-step')return tutorialStep(body,identity);
     if (body.op==='core-step')return coreStep(body,identity);
+    if (body.op==='registration-check'){
+      if(typeof body.registrationTimely!=='boolean')fail('core_calendar_required');
+      const updated=await mutate(body,identity,s=>{
+        const state=s.caseStates[s.caseIndex];
+        if(s.status!=='active'||!showRegistrationPractice(s,state))fail('invalid_core_step',409);
+        if(!Number.isSafeInteger(body.expectedRevision)||body.expectedRevision!==s.revision)fail('revision_conflict',409);
+        const workbook=registrationPracticeWorkbook(s.caseData[s.caseIndex],s,state);
+        const dates=Object.fromEntries(workbook.events.map(event=>[event.id,event.date]));
+        const expected=registrationTimely(dates.intakeReceived,dates.intakeRegistered,workbook.registrationCounting);
+        state.registrationPractice={answer:body.registrationTimely,correct:body.registrationTimely===expected};
+      });
+      return response(updated);
+    }
     if(body.op==='control-action'){
       const updated=await mutate(body,identity,(s,timestamp)=>{
         if(s.journeyStage==='example'&&!s.coreStepsVersion)fail('tutorial_step_required',409);

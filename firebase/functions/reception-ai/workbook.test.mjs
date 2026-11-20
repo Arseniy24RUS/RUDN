@@ -8,7 +8,7 @@ import {createMemoryStore} from './store.mjs';
 import {validateCase, evaluateDecision, hash} from './schema.mjs';
 import {ROUTING_RECIPIENTS} from './routing-cases.mjs';
 import {mfcRoutingAlternatives} from './mfc-routing.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,LEGACY_MFC_CALENDAR_VERSION} from './mfc-seminar.mjs';
 import {publicRoutingWorkflow} from './routing-workflow.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {canonicalDecision} from '../../../scripts/reception-ai-qa-helpers.mjs';
@@ -190,26 +190,53 @@ test('the new MFC calendar adds 7 then 30 days without shifting the year-end hol
   const options={gameplay:true,coreStepsVersion:MFC_SEMINAR_VERSION}, original=structuredClone(c);
   const book=publicWorkbook(c,2,options);
   assert.equal(book.calendarVersion,MFC_CALENDAR_VERSION);
-  assert.equal(book.registrationCheck,false);
+  assert.equal(book.registrationCheck,true);
   assert.equal(book.special,false);
   assert.deepEqual(book.norms,[]);
-  assert.deepEqual(book.events.map(({id,date})=>({id,date})),[{id:'intakeRegistered',date:'2026-12-24'}]);
+  assert.deepEqual(book.events.map(({id,date})=>({id,date})),[
+    {id:'intakeReceived',date:'2026-12-23'},{id:'intakeRegistered',date:'2026-12-24'}]);
+  assert.equal(book.registrationCounting.shift,'next_working_day');
   assert.deepEqual(book.targets.map(({id,anchorId,ruleId,counting})=>[id,anchorId,ruleId,counting.shift]),[
     ['referral','intakeRegistered','calendar7','no_shift'],['deadline','referral','calendar30','no_shift']]);
   assert.equal(workingCalendarDay('2026-12-31'),false);
   assert.equal(workingCalendarDay('2027-01-30'),false);
   const routing={disposition:'forward',recipientIds:mfcRoutingAlternatives(c.id)[0].map(row=>row.id)};
-  const draft={referralDeadline:'2026-12-31',routing};
+  const draft={referralDeadline:'2026-12-31',registrationTimely:true,routing};
   assert.deepEqual(validateWorkbookDecision(draft,2,options),draft);
-  assert.deepEqual(validateWorkbookDecision({...draft,registrationTimely:false},2,options),draft);
+  assert.throws(()=>validateWorkbookDecision({referralDeadline:draft.referralDeadline,routing},2,options),errorCode('invalid_decision'));
   const criteria={criteria:[{id:'calendar',earned:0,max:20}]};
   const {workbook,score}=evaluateWorkbook(c,{deadline:'2027-01-30',workbook:draft},criteria,2,options);
-  assert.deepEqual(workbook.calendar.expected,{referral:'2026-12-31',deadline:'2027-01-30'});
-  assert.deepEqual(workbook.calendar.correct,{referral:true,deadline:true});
+  assert.deepEqual(workbook.calendar.expected,{referral:'2026-12-31',deadline:'2027-01-30',registrationTimely:true});
+  assert.deepEqual(workbook.calendar.correct,{referral:true,deadline:true,registrationTimely:true});
   assert.equal(score,20);
   const shifted=evaluateWorkbook(c,{deadline:'2027-02-10',workbook:{...draft,referralDeadline:'2027-01-11'}},criteria,2,options);
-  assert.equal(shifted.score,0);
+  assert.equal(shifted.score,4);
   assert.deepEqual(c,original);
+});
+
+test('the MFC registration check accepts the first workday and scores a late registration as No', ()=>{
+  const original=cases()[0],options={gameplay:true,coreStepsVersion:MFC_SEMINAR_VERSION};
+  const recipients=mfcRoutingAlternatives(original.id)[0].map(row=>row.id);
+  const feedback={criteria:[{id:'calendar',earned:0,max:20}]};
+  for(const [registered,referral,deadline,timely] of [
+    ['2027-01-11','2027-01-18','2027-02-17',true],['2027-01-12','2027-01-19','2027-02-18',false]
+  ]){
+    const c=withDates(original,{sent:'2026-12-30',received:'2026-12-31',registered});
+    const workbook={referralDeadline:referral,registrationTimely:timely,routing:{disposition:'forward',recipientIds:recipients}};
+    const result=evaluateWorkbook(c,{deadline,workbook},feedback,2,options);
+    assert.equal(result.workbook.calendar.expected.registrationTimely,timely);
+    assert.equal(result.workbook.calendar.correct.registrationTimely,true);
+    assert.equal(result.score,20);
+    const incorrect=evaluateWorkbook(c,{deadline,workbook:{...workbook,registrationTimely:!timely}},feedback,2,options);
+    assert.equal(incorrect.workbook.calendar.correct.registrationTimely,false);
+    assert.equal(incorrect.score,16);
+    if(!timely){
+      const previousOptions={...options,mfcCalendarVersion:MFC_DATES_ONLY_CALENDAR_VERSION};
+      const datesOnly=validateWorkbookDecision(workbook,2,previousOptions);
+      assert.equal(Object.hasOwn(datesOnly,'registrationTimely'),false);
+      assert.equal(evaluateWorkbook(c,{deadline,workbook:datesOnly},feedback,2,previousOptions).score,20);
+    }
+  }
 });
 
 test('v1 removes exact obsolete calculation instructions in all languages without rewriting legal merits or legacy feedback', () => {

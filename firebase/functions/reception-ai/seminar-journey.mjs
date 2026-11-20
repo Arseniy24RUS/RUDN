@@ -3,7 +3,7 @@ import {copy, fail, localized} from './schema.mjs';
 import {evaluateWorkbook, WORKBOOK_VERSION} from './workbook.mjs';
 import {evaluateRoutingWorkflow,isInternalRoutingPath} from './routing-workflow.mjs';
 import {mfcRoutingAlternatives,publicMfcRouting} from './mfc-routing.mjs';
-import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedReplyInstruction,mfcSharedMerits,mfcCalendarAction,mfcCalendarMerits} from './mfc-seminar.mjs';
+import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,isMfcChainedCalendar,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedReplyInstruction,mfcSharedMerits,mfcCalendarAction,mfcCalendarMerits} from './mfc-seminar.mjs';
 import {CORRESPONDENCE_WEIGHTS} from './correspondence.mjs';
 import {applyControlAction, validateControlSubmission} from './control-workflow.mjs';
 import {acceptableLegalProvisions, applicableLegalUnits, requiredSeminarExamples} from './normative-acts.mjs';
@@ -93,7 +93,7 @@ const mentorFindings = {
   emptyControl:T('Напишите заключение по полученным материалам либо явно примените образец наставника.','Write your follow-through record using the materials, or explicitly apply the mentor’s sample.','根据收到的材料撰写监督结论，或明确采用导师示例。'),
   invalidControl:T('Проверьте статус и приложите полученное подтверждение отдельно по каждому вопросу.','Check the status and attach the supporting record for each issue separately.','逐项核对状态并附上收到的证明材料。')
 };
-export const mentorFinding = (code, language, mfcCalendarVersion) => localized(code==='calendar'&&mfcCalendarVersion===MFC_CALENDAR_VERSION?
+export const mentorFinding = (code, language, mfcCalendarVersion) => localized(code==='calendar'&&mfcCalendarVersion===MFC_DATES_ONLY_CALENDAR_VERSION?
   T('Сверьте две даты: сначала срок передачи, затем срок рассмотрения.','Check both dates: the referral deadline first, then the review deadline.','请核对两项日期：先核对转交期限，再核对审查期限。'):
   mentorFindings[code],language);
 
@@ -161,7 +161,7 @@ function walkthroughReply(c, deadline, language, compact) {
 
 function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVersion) {
   const mfc=coreStepsVersion===MFC_SEMINAR_VERSION;
-  const currentCalendar=mfc&&mfcCalendarVersion===MFC_CALENDAR_VERSION;
+  const currentCalendar=mfc&&isMfcChainedCalendar(mfcCalendarVersion);
   const local = value => localized(value, language) || '';
   const refs = (c.rubric.evidenceGroups || []).flat();
   const docs = [...new Set(refs)].map(id => c.documents.find(doc => doc.id === id)).filter(Boolean);
@@ -192,7 +192,7 @@ function presentation(c, profile, language, core,coreStepsVersion,mfcCalendarVer
   const calculation=tutorialOperational(c,{deadline:'',workbook},coreStepsVersion,mfcCalendarVersion).workbook.calendar;
   const {expected}=calculation;
   workbook.referralDeadline = expected.referral || '';
-  if(calculation.calendarVersion===MFC_CALENDAR_VERSION)delete workbook.registrationTimely;
+  if(calculation.calendarVersion===MFC_DATES_ONLY_CALENDAR_VERSION)delete workbook.registrationTimely;
   else workbook.registrationTimely=expected.registrationTimely??false;
   const calendarExplanation = local(calculation.instructions);
   const deadlineText = mfc?`${local(calculation.targets.find(target=>target.id==='deadline').label)} — ${expected.deadline}.`
@@ -321,6 +321,8 @@ export function tutorialGuide(c, profile, language, {execution=false,core=false,
     const calendar=steps.find(step=>step.id==='calendar');
     calendar.prompt=local(mfc?T('Укажите две даты: срок передачи из МФЦ и срок рассмотрения у адресата.','Enter the MFC referral deadline and the recipient’s review deadline.','填写 MFC 转交截止日与主管接收方审查截止日。'):
       T('Выберите рассчитанные даты в календаре.','Select the calculated dates in the calendar.','在日历中选择计算出的日期。'));
+    if(mfc&&mfcCalendarVersion===MFC_CALENDAR_VERSION)calendar.prompt+=' '+local(T(
+      'Проверьте, зарегистрировано ли обращение в МФЦ в срок.','Check whether the MFC registered the appeal on time.','核查 MFC 是否按期登记来件。'));
     calendar.choices=[];
     const routing=decision.workbook.routing;
     if(!mfc)decision.workbook.routing=routing.recipientIds.every(id=>isInternalRoutingPath(c.id,id))
