@@ -287,6 +287,8 @@ test('current mentor practice accepts an incomplete answer and saves only a veri
   const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
   await store.transaction(ledger,()=>({bestPoints:4,[SEMINAR_STORY_PROGRESS_KEY]:{example:{completed:true}}}));
   let view=(await use({...storyStage,journeyStage:'mentor',op:'start',requestId:'score-practice',locale:'ru'})).view;
+  const indexEntry='sessionIndex/'+hash('student:'+learner.studentKey)+'/entries/'+view.id;
+  assert.equal(await store.get(indexEntry),null);
   let sequence=0;
   const step=(stepId,input)=>use(messages(view,{op:'tutorial-step',stepId,requestId:'practice-'+(++sequence),...input}));
   await assert.rejects(step('draft',{decision:{}}),{code:'tutorial_step_locked'});
@@ -339,6 +341,15 @@ test('current mentor practice accepts an incomplete answer and saves only a veri
   assert.equal(completed.draftDecision,null);
   assert.deepEqual(completed.decision.correspondence,decision.correspondence);
   assert.match(completed.result.cases[0].feedback.correspondence.criteria.find(row=>row.id==='resolution').findings[0].explanation,/наличие согласия/);
+  assert.equal((await store.get(indexEntry)).status,'complete');
+  const readOnly=build({requireCurrentSeminarTraining:true,
+    store:{get:store.get,transaction(){assert.fail('A frozen archive cannot write to the database');}},
+    saveResult(){assert.fail('A frozen archive cannot send a result to the journal');}
+  }).handle;
+  const packet=await readOnly({op:'resume',sessionId:view.id,history:true,context:'seminar',buildId:'f'.repeat(32)},learner);
+  assert.equal(packet.view.id,view.id);
+  assert.deepEqual(packet.view.result.cases,completed.result.cases);
+  assert.equal(packet.view.result.total,30);
   assert.deepEqual((await resume()).result,completed.result);
   assert.deepEqual((await use(body)).view.result,completed.result);
   assert.equal(reviewCalls,2);

@@ -122,7 +122,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let mentorChatScroll={top:0,bottom:true};
   let controlMaterialSeen='', controlMissing=false, coreEdit='', coreCitationsEdited=false, choosingCase=false;
   const legacySessionIds=new Map();
-  let archiveEntry=null;
+  let archiveEntry=null, historyScreen=null, reconcilingDecision=false;
   const hasCore = () => isCoreJourney(view);
   const mfcJourney = () => isMfcJourney(view);
   const currentDocumentKind = () => {
@@ -443,7 +443,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function header() {
     const settings=config.demo||options.showLanguageSelector?`<details class="rxa-cabinet-settings" data-details="cabinet-settings"><summary aria-label="${esc(t('settings'))}" title="${esc(t('settings'))}">${icon('menu')}</summary><div class="rxa-settings-panel"><label><span>${esc(t('language'))}</span><select class="rxa-locale" data-language data-focus="language" aria-label="${esc(t('language'))}">${[['ru','RU'],['en','EN'],['zh','中文']].map(([id,label])=>`<option value="${id}" ${locale===id?'selected':''}>${label}</option>`).join('')}</select></label></div></details>`:'';
-    return `<header class="rxa-top"><div class="rxa-brand"><span class="rxa-brand-mark">${icon('reception')}</span><div class="rxa-brand-copy"><strong>${esc(t('cabinet'))}</strong></div></div><div class="rxa-top-actions">${settings}${seminar&&view&&!choosingCase?`<button type="button" class="rxa-btn quiet rxt-choose-case" data-action="choose-case" ${busy||pending?'disabled':''}>${icon('sources')}<span>${esc(cl('path'))}</span></button>`:''}${options.onExit?`<button class="rxa-back" type="button" data-action="exit" aria-label="${esc(t('back'))}" title="${esc(t('back'))}">${icon('exit')}</button>`:''}</div></header>`;
+    return `<header class="rxa-top"><div class="rxa-brand"><span class="rxa-brand-mark">${icon('reception')}</span><div class="rxa-brand-copy"><strong>${esc(t('cabinet'))}</strong></div></div><div class="rxa-top-actions">${settings}${seminar?`<button type="button" class="rxa-btn quiet rxt-choose-case" data-action="open-history" aria-label="${esc(l('historyTitle'))}" title="${esc(l('historyTitle'))}">${icon('actions')}<span>${esc(l('historyTitle'))}</span></button>`:''}${seminar&&view&&!choosingCase?`<button type="button" class="rxa-btn quiet rxt-choose-case" data-action="choose-case" ${busy||pending?'disabled':''}>${icon('sources')}<span>${esc(cl('path'))}</span></button>`:''}${options.onExit?`<button class="rxa-back" type="button" data-action="exit" aria-label="${esc(t('back'))}" title="${esc(t('back'))}">${icon('exit')}</button>`:''}</div></header>`;
   }
   const atAction=(op)=>(
     op==='mentor-question'&&inMentorChat()||
@@ -479,7 +479,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const history=resumes&&seminarStoryVersion?`<details class="rxa-help" data-details="archive"><summary>${esc(l('archive'))} · ${legacy.length}</summary>${resumes}</details>`:resumes;
     return `<div>${journeyPathView({locale,progress:seminarProgress,locked,canIndependent:canIndependent(),button,mfc:coreStepsVersion===MFC_VERSION})}
       ${!view||choosingCase?`<div class="rxt-recover">${history}${view?button(t('resumeSession'),'close-case-picker',{quiet:true,disabled:locked}):button(t('recoverSession'),'recover',{quiet:true,disabled:locked})}</div>`:''}
-      ${choosingCase?savedSessions():''}${actionStatus('start')}</div>`;
+      ${choosingCase?savedSessions():''}<div class="rxa-actions">${button(l('historyTitle'),'open-history',{quiet:true,glyph:'actions'})}</div>${actionStatus('start')}</div>`;
   }
   function leaveCoreEdit() {
     if(!coreEdit)return;
@@ -1282,25 +1282,103 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const journal = result.journalStatus === 'saved' ? 'journalSaved' : ['local','not-applicable'].includes(result.journalStatus) || view.mode === 'training' || view.provider === 'mock' ? 'journalLocal' : 'journalPending';
     return `<section class="rxa-complete"><div class="rxa-complete-head"><p class="rxa-eyebrow">${esc(t('complete'))}</p><h1 tabindex="-1" data-stage-heading>${esc(t(Number.isInteger(result.seminarPoints)?'seminarTotal':'totalScore'))}</h1><div class="rxa-score"><strong>${esc(result.seminarPoints??result.points)}</strong><span>${esc(t('outOf'))} ${esc(seminar&&view.mode==='training'?1:result.maxPoints ?? 5)}</span></div>${Number.isInteger(result.seminarPoints)?`<p>${esc(t('casePoints',{count:result.points}))}</p><p>${esc(t('seminarScoreThreshold',{count:result.passScore??100}))}</p>`:''}<p class="rxa-journal" role="status">${esc(t(guest?'guestResult':journal))}</p>${journal==='journalPending'?`<div class="rxa-actions">${button(t('journalRetry'),'refresh',{disabled:busy})}</div>`:''}</div>${Array.isArray(result.cases)&&result.cases.length?`<h2>${esc(t('casesReview'))}</h2>${result.cases.map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${index+1}. ${esc(authoredText(row.title))} · ${esc(view.context==='seminar'?t('casePoints',{count:result.points}):row.score+' / 100')}</summary>${feedbackMarkup(row.feedback,row)}${correspondenceMode()?responseRecord(row,index):''}${row.controlWorkflow?executionRecord(row):''}</details>`).join('')}`:''}${learningReviewView({view,catalog,locale})}${correspondenceMode()?'':workRecordView({view,decision:decisionDraft,references:selectedReferences,locale})}<div class="rxa-actions">${button(t(view.mode==='training'?'oneMore':'newSession'),'new-session',{primary:true,disabled:busy||result.remainingCases===0,glyph:'arrow'})}${options.onExit?button(t('back'),'exit',{}):''}</div>${guest?savedSessions():''}</section>`;
   }
+  function historyNumber(value) {
+    return new Intl.NumberFormat(locale,{maximumFractionDigits:4}).format(value);
+  }
+  function historyMarkup(screen) {
+    const entries=screen.rows.map(row=>{
+      const date=new Date(row.completedAt);
+      const meta=[row.journeyStage?l(row.journeyStage):'',Number.isFinite(date.valueOf())?new Intl.DateTimeFormat(locale,{dateStyle:'medium',timeStyle:'short'}).format(date):'',
+        Number.isFinite(row.points)&&Number.isFinite(row.maxPoints)?historyNumber(row.points)+' / '+historyNumber(row.maxPoints):'',
+        Number.isFinite(row.score)?historyNumber(row.score)+' / 100':''].filter(Boolean).join(' · ');
+      return `<article><div><strong>${esc(row.title)}</strong><small>${esc(meta)}</small></div>${button(l('historyOpen'),'open-history-entry',
+        {disabled:screen.loading,extra:`data-id="${esc(row.id)}" aria-label="${esc(l('historyOpen')+' · '+row.title)}"`})}</article>`;
+    }).join('');
+    return `<main class="rxa-page-content" data-history-screen><section class="rxa-setup" aria-labelledby="rxaHistoryTitle">
+      ${button(view&&!choosingCase?l('historyClose'):l('archiveBack'),'close-history',{quiet:true,glyph:'back'})}
+      <h1 id="rxaHistoryTitle" tabindex="-1">${esc(l('historyTitle'))}</h1>
+      ${screen.loading?`<p role="status">${esc(t('loading'))}</p>`:''}
+      ${screen.error?`<div class="rxa-alert" role="alert"><p>${esc(l('historyUnavailable'))}</p>${button(t('retry'),'retry-history',{quiet:true})}</div>`:''}
+      ${entries?`<div class="rxa-saved-sessions">${entries}</div>`:!screen.loading&&!screen.error?`<p>${esc(l('historyEmpty'))}</p>`:''}
+      ${screen.nextCursor&&!screen.error?button(l('historyMore'),'more-history',{quiet:true,disabled:screen.loading}):''}</section></main>`;
+  }
+  async function readHistory({cursor,id}={}) {
+    const screen=historyScreen;
+    if(!screen||screen.loading||paused||ownerNow()!==owner)return;
+    screen.loading=true;screen.error=null;render();
+    const stillCurrent=()=>!disposed&&historyScreen===screen&&ownerNow()===owner;
+    try{
+      if(id){
+        const record=await api.request({op:'resume',sessionId:id,history:true},{signal:screen.controller.signal});
+        if(!stillCurrent())return;
+        if(record.id!==id||record.status!=='complete')throw new ReceptionAPIError('invalid-response');
+        archiveEntry=record;
+      }else{
+        const result=await api.history({
+          studentKey:backend?.getProfile?.()?.studentKey||options.studentKey,locale,...(cursor?{cursor}:{})
+        },{signal:screen.controller.signal});
+        if(!stillCurrent())return;
+        const rows=cursor?screen.rows:[];
+        screen.rows=[...new Map([...rows,...result.attempts].map(row=>[row.id,row])).values()];
+        screen.nextCursor=result.nextCursor!==cursor?result.nextCursor:null;
+      }
+    }catch(problem){
+      if(stillCurrent()&&problem.code!=='cancelled')screen.error={cursor,id};
+    }finally{
+      if(stillCurrent()){
+        screen.loading=false;render();
+        if(archiveEntry)root.querySelector('[data-historical-session] h1')?.focus({preventScroll:true});
+      }
+    }
+  }
+  function archivedCaseContent({record,row,decision,index}) {
+    const feedback=row?.feedback||(record&&record.feedback);
+    const criteria=(feedback?.criteria||[]).map(criterion=>`<tr><td>${esc(authoredText(criterion.label)||criterion.id)}</td>
+      <td>${esc(Number.isFinite(criterion.earned)&&Number.isFinite(criterion.max)?historyNumber(criterion.earned)+' / '+historyNumber(criterion.max):'')}</td></tr>`).join('');
+    const reply=decision?.correspondence?correspondencePreviewView({
+      draft:decision.correspondence,caseInfo:row?.caseInfo||record?.case,
+      profile:row?.correspondenceProfile||record?.case?.correspondence,
+      sources:row?.correspondenceSources||record?.correspondenceSources,locale,seminar:true,disabled:true,
+      citationPrefix:`rxc-archive-source-${index}`,
+    }):decision?.reasoning?`<p>${esc(decision.reasoning)}</p>`:'';
+    return `${criteria?`<table class="rxa-criteria"><thead><tr><th>${esc(t('criteria'))}</th><th>${esc(t('earned'))}</th></tr></thead><tbody>${criteria}</tbody></table>`:''}
+      ${feedback?.explanation?`<p>${esc(authoredText(feedback.explanation))}</p>`:''}${responseProtocolMarkup(feedback)}
+      ${reply?`<details class="rxa-assessment-block" open><summary>${esc(t('responseWork'))}</summary>${reply}</details>`:''}`;
+  }
   function archiveMarkup(record) {
-    const local=drafts.readSession(record.id);
-    const decision=record.decision||record.draftDecision||local?.decisionDraft;
-    const paragraphs=Object.values(decision?.correspondence?.sections||{}).filter(Boolean);
-    const score=record.result?.seminarPoints??record.result?.points;
+    const local=historyScreen?null:drafts.readSession(record.id);
+    const result=record.result;
+    const cases=result?.cases||[];
+    const lastResult=cases.at(-1);
+    const decision=lastResult?.decision||record.decision||(!historyScreen&&(record.draftDecision||local?.decisionDraft));
+    const points=result?.points;
+    const score=result?.total??lastResult?.score;
+    const journal=result?.journalStatus==='saved'?'journalSaved':result?.journalStatus==='pending'?'journalPending':'journalLocal';
     const messages=(record.messages||[]).map(message=>`<p><strong>${esc(message.role==='user'?t('you'):text(record.case?.citizen?.name)||t('citizen'))}</strong><br>${esc(text(message.text))}</p>`).join('');
+    const opening=record.case?.opening?`<p>${esc(authoredText(record.case.opening))}</p>`:'';
     const mentor=(record.mentorMessages||[]).map(message=>`<p><strong>${esc(message.role==='user'?t('you'):l('mentor'))}</strong><br>${esc(text(message.text))}</p>`).join('');
-    const transcript=messages?`<details class="rxa-help"><summary>${esc(t('chat'))}</summary>${messages}</details>`:'';
-    return `<main class="rxa-page-content"><section class="rxa-setup" data-historical-session><p class="rxa-eyebrow">${esc(l('archive'))}</p><h1>${esc(authoredText(record.case?.title||local?.caseTitle)||l('archiveCase'))}</h1>
-      ${record.case?.opening?`<p>${esc(authoredText(record.case.opening))}</p>`:''}
-      ${transcript}${mentor?`<details class="rxa-help"><summary>${esc(l('mentor'))}</summary>${mentor}</details>`:''}${paragraphs.map(value=>`<p>${esc(value)}</p>`).join('')}
-      ${Number.isFinite(score)?`<p>${esc(t('totalScore'))} · <strong>${score} / ${esc(record.result?.maxPoints??5)}</strong></p>`:''}
-      ${button(l('archiveBack'),'close-archive',{primary:true})}</section></main>`;
+    return `<main class="rxa-page-content"><section class="rxa-setup" data-historical-session>
+      ${button(l(historyScreen?'historyBack':'archiveBack'),'close-archive',{quiet:true,glyph:'back'})}
+      <h1 tabindex="-1">${esc(authoredText(record.case?.title||local?.caseTitle)||l('archiveCase'))}</h1>
+      ${record.journeyStage?`<p>${esc(l(record.journeyStage))}</p>`:''}
+      ${Number.isFinite(points)?`<p><strong>${esc(l('caseGrade'))}</strong> · ${historyNumber(points)} / ${historyNumber(result.maxPoints??5)}</p><p>${esc(t(journal))}</p>`:''}
+      ${Number.isFinite(score)?`<p><strong>${esc(l('quality'))}</strong> · ${historyNumber(score)} / 100</p>`:''}
+      ${archivedCaseContent({record,row:lastResult,decision,index:cases.length})}
+      ${cases.slice(0,-1).map((row,index)=>`<details class="rxa-case-review"><summary>${esc(authoredText(row.title)||l('archiveCase'))}
+        ${Number.isFinite(row.score)?` · ${historyNumber(row.score)} / 100`:''}</summary>
+        ${archivedCaseContent({row,decision:row.decision,index})}</details>`).join('')}
+      ${messages||opening?`<details class="rxa-help"><summary>${esc(t('chat'))}</summary>${messages||opening}</details>`:''}
+      ${mentor?`<details class="rxa-help"><summary>${esc(l('mentor'))}</summary>${mentor}</details>`:''}</section></main>`;
   }
   function render({scrollChat=false} = {}) {
     if (disposed) return;
-    if(archiveEntry){
-      root.setAttribute('aria-busy','false');
-      root.innerHTML=archiveMarkup(archiveEntry);
+    if(archiveEntry||historyScreen){
+      const previousHistory=root.querySelector('[data-history-screen]');
+      if(previousHistory&&historyScreen)historyScreen.scrollTop=previousHistory.scrollTop;
+      root.setAttribute('aria-busy',String(Boolean(historyScreen?.loading)));
+      root.innerHTML=archiveEntry?archiveMarkup(archiveEntry):historyMarkup(historyScreen);
+      const list=root.querySelector('[data-history-screen]');
+      if(list)list.scrollTop=historyScreen.scrollTop||0;
       tour.update({paused:true});media.refresh();return;
     }
     const focused = !stageFocus && root.contains(document.activeElement) ? document.activeElement : null;
@@ -1650,6 +1728,17 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     } finally {
       recoveringMaterials=false;
     }
+  }
+  async function reconcilePendingDecision() {
+    const waiting=pending;
+    if(reconcilingDecision||disposed||paused||window.navigator?.onLine===false||!waiting?.sessionId||
+      waiting.sessionId!==view?.id||!(waiting.op==='decide'||waiting.op==='tutorial-step'&&waiting.stepId==='draft'))return;
+    reconcilingDecision=true;
+    try{
+      if(busy)await work;
+      if(waiting.requestId===pending?.requestId&&waiting.sessionId===view?.id&&window.navigator?.onLine!==false)
+        await perform({op:'resume',sessionId:waiting.sessionId});
+    }finally{reconcilingDecision=false;}
   }
   async function sendMessage() {
     if (!active() || busy || pending || paused || needsResume) return;
@@ -2010,6 +2099,26 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(responseTarget&&root.contains(responseTarget)&&!responseTarget.disabled&&!disposed){handleResponseAction(responseTarget);return;}
     const target=event.target.closest('[data-action]');if(!target||!root.contains(target)||target.disabled||disposed)return;
     const action=target.dataset.action;
+    if(action==='open-history'&&seminar&&!historyScreen&&!paused&&ownerNow()===owner){
+      persist();reader.close();illustrationViewer.destroy();
+      historyScreen={rows:[],nextCursor:null,controller:new AbortController()};
+      void readHistory();
+      root.querySelector('#rxaHistoryTitle')?.focus({preventScroll:true});return;
+    }
+    if(action==='close-history'&&historyScreen){
+      historyScreen.controller.abort();historyScreen=null;archiveEntry=null;render();
+      root.querySelector('[data-action="open-history"]')?.focus({preventScroll:true});return;
+    }
+    if(action==='close-archive'){
+      archiveEntry=null;render();root.querySelector('#rxaHistoryTitle')?.focus({preventScroll:true});return;
+    }
+    if(historyScreen){
+      if(action==='more-history'&&historyScreen.nextCursor)await readHistory({cursor:historyScreen.nextCursor});
+      if(action==='retry-history'&&historyScreen.error)await readHistory(historyScreen.error);
+      if(action==='open-history-entry'&&historyScreen.rows.some(row=>row.id===target.dataset.id))
+        await readHistory({id:target.dataset.id});
+      return;
+    }
     if(action==='mentor-open-chat'&&mentorAvailable()){
       goPage('chat',{dialog:'mentor'});root.querySelector('#rxaMentorDialog')?.focus({preventScroll:true});return;
     }
@@ -2147,7 +2256,6 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(busy||paused||recoverBusy)return;
     if(action==='load-catalog'){await loadCatalog();return;}
     if(action==='recover'){await recoverSession();return;}
-    if(action==='close-archive'){archiveEntry=null;render();return;}
     if(action==='resume-session'&&!pending){
       await perform({op:'resume',sessionId:target.dataset.id},{openSaved:true});return;
     }
@@ -2220,9 +2328,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     if(action==='next'&&view?.status==='review'){await perform({op:'next',sessionId:view.id,requestId:newRequestId()});}
   };
-  const toggle = event => {const node=event.target;if(!node.matches?.('details[data-details]')||!root.contains(node))return;if(node.open)detailOpen.add(node.dataset.details);else detailOpen.delete(node.dataset.details);persist();};
-  const identity = () => {if(ownerNow()!==owner){persist();error=new ReceptionAPIError('identity-changed');paused=true;render();}};
-  const reconnect = () => {void recoverPendingMaterials();};
+  const toggle = event => {if(historyScreen||archiveEntry)return;const node=event.target;if(!node.matches?.('details[data-details]')||!root.contains(node))return;if(node.open)detailOpen.add(node.dataset.details);else detailOpen.delete(node.dataset.details);persist();};
+  const identity = () => {if(ownerNow()!==owner){
+    persist();historyScreen?.controller.abort();historyScreen=null;archiveEntry=null;
+    error=new ReceptionAPIError('identity-changed');paused=true;render();
+  }};
+  const reconnect = () => {void recoverPendingMaterials();void reconcilePendingDecision();};
   const visibility = () => {
     if(disposed||document.hidden)return;
     if(page==='chat'){markChatRead();persist();render();}
@@ -2254,7 +2365,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     },
   });
   const cleanup = () => {
-    if(disposed)return Promise.resolve();persist();disposed=true;clearTimeout(waitingTimer);updateAdapter?.destroy();tour.destroy();reader.destroy();calendar.destroy();media.destroy();illustrationViewer.destroy();lifetime.abort();options.signal?.removeEventListener('abort',stop);
+    if(disposed)return Promise.resolve();persist();disposed=true;historyScreen?.controller.abort();clearTimeout(waitingTimer);updateAdapter?.destroy();tour.destroy();reader.destroy();calendar.destroy();media.destroy();illustrationViewer.destroy();lifetime.abort();options.signal?.removeEventListener('abort',stop);
     owners.delete(presentationToken);if(!owners.size){body.classList.remove('reception-immersive');presentationOwners.delete(body);}
     root.removeEventListener('input',input);root.removeEventListener('change',change);root.removeEventListener('submit',submit);root.removeEventListener('keydown',keydown);root.removeEventListener('click',click);
     root.removeEventListener('toggle',toggle,true);

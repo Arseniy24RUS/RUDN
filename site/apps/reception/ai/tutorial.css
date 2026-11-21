@@ -187,6 +187,7 @@ button.rxt-case-step:hover, .rxt-case-step[aria-current=step] { background: #dee
     position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
   }
   .reception-ai-root.rxa-cabinet .rxt-choose-case { padding: 8px; min-width: 40px; }
+  .reception-ai-root.rxa-cabinet .rxt-choose-case[data-action=open-history] { min-width: 44px; }
   .reception-ai-root.rxa-cabinet .rxt-core-footer > .primary { width: 100%; }
 }
 

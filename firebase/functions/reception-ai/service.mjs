@@ -29,9 +29,16 @@ const DEFAULTS = {maxMessageChars: 2400, maxTurnsPerCase: 24, maxInputAllowance:
   reviewLeaseMs:105000,reviewTimeoutMs:90000,
   guestDailyBudgetMicros:750_000,guestMonthlyBudgetMicros:5_000_000,guestMaxConcurrent:2,
   guestMaxDailyStartsPerUid:3,guestMaxDailyStarts:12};
+const HISTORY_PAGE_SIZE = 12;
+const SESSION_ID = /^[a-f0-9]{40}$/;
+const HISTORY_LEDGERS = [SEMINAR_STORY_PROGRESS_KEY,'storyJourney','mfcJourney','guidedJourney','journey'];
+const inHistoryScope = s => s?.context==='seminar'||s?.context==null&&s?.mode==='independent';
+const hasHistoryResult = s => inHistoryScope(s)&&!s.guest&&s.status==='complete'&&typeof s.result?.attemptId==='string'&&
+  (s.context==='seminar'||Number.isFinite(s.result.points)&&Number.isFinite(s.result.total));
 const allowed = {
-  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage','coreStepsVersion','seminarStoryVersion'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context'],
+  start: ['op', 'studentKey', 'mode', 'locale', 'requestId', 'caseId', 'level', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage','coreStepsVersion','seminarStoryVersion'], resume: ['op', 'sessionId', 'buildId', 'workbookVersion','decisionVersion','context','history'],
   recover: ['op', 'studentKey', 'mode', 'buildId', 'workbookVersion','decisionVersion','controlVersion','context','journeyStage','coreStepsVersion','seminarStoryVersion'],
+  history: ['op','context','studentKey','locale','cursor'],
   message: ['op', 'sessionId', 'text', 'requestId', 'expectedRevision','suggestionId'], document: ['op', 'sessionId', 'documentId', 'requestId'],
   decide: ['op', 'sessionId', 'decision', 'requestId','expectedRevision'], followup:['op','sessionId','requestId','choiceId','control','expectedRevision'],
   'control-action':['op','sessionId','requestId','expectedRevision','action'],
@@ -294,9 +301,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       learningReview: guide?null:learningReviewFor({mode:s.mode,status:s.status,caseData:c,locale:s.locale}),result, provider: provider.name};
   }
   async function remember(session) {
-    // Repeatable practice is recovered from its atomic stage pointer. The
-    // full session remains resumable by its original ID after completion.
-    if(session.coreStepsVersion&&isTutorial(session))return;
+    // Recover active repeatable practice from its stage pointer. Keep its
+    // completed session in the index when another practice replaces that pointer.
+    if(session.coreStepsVersion&&isTutorial(session)&&session.status!=='complete')return;
     // Store only an opaque session pointer and lifecycle metadata. Keep completed
     // tombstones so a delayed response cannot resurrect an older active revision.
     const entry = sessionEntry(session);
@@ -407,6 +414,57 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       legacyMigrations.set(ownerKey, job);
     }
     await legacyMigrations.get(ownerKey);
+  }
+  async function history(body, identity) {
+    if(body.context!=='seminar')fail('invalid_context');
+    if(body.studentKey!==undefined&&body.studentKey!==identity.studentKey)fail('forbidden',403);
+    const language=locale(body.locale);
+    let boundary=null;
+    if(body.cursor!==undefined&&body.cursor!==null){
+      if(typeof body.cursor!=='string'||!/^[-_a-z0-9]{1,80}$/i.test(body.cursor))fail('invalid_cursor');
+      const text=Buffer.from(body.cursor,'base64url').toString('ascii');
+      const match=text.match(/^(0|[1-9]\d{0,15}):([a-f0-9]{40})$/);
+      if(!match||Buffer.from(text).toString('base64url')!==body.cursor||!Number.isSafeInteger(Number(match[1])))fail('invalid_cursor');
+      boundary={startedAt:Number(match[1]),id:match[2]};
+    }
+    const owner=scopeOf(identity);
+    const [index,progress]=await Promise.all([
+      store.get(`sessionIndex/${hash(owner)}/entries`),store.get(seminarPath(owner))
+    ]);
+    const candidates=new Map();
+    function include(id){
+      if(!SESSION_ID.test(id||''))return;
+      const startedAt=index?.[id]?.startedAt;
+      candidates.set(id,{id,startedAt:Number.isSafeInteger(startedAt)&&startedAt>=0?startedAt:0});
+    }
+    for(const [id,entry] of Object.entries(index||{})){
+      if(entry?.id===id&&entry.status==='complete'&&inHistoryScope(entry))include(id);
+    }
+    for(const [id,attempt] of Object.entries(progress?.attempts||{})){
+      if(attempt?.completed===true)include(id);
+    }
+    // Inspect each stage head even if delivery stopped between committing the
+    // full result and marking its pointer or index as completed.
+    for(const ledger of HISTORY_LEDGERS)for(const stage of JOURNEY_STAGES)include(progress?.[ledger]?.[stage]?.sessionId);
+    const compare=(a,b)=>b.startedAt-a.startedAt||b.id.localeCompare(a.id);
+    const ordered=[...candidates.values()].filter(row=>!boundary||compare(row,boundary)>0).sort(compare);
+    const page=ordered.slice(0,HISTORY_PAGE_SIZE);
+    const attempts=(await Promise.all(page.map(async ({id})=>{
+      const session=await store.get(`sessions/${id}`);
+      if(session?.id!==id||session.owner!==owner||!hasHistoryResult(session))return null;
+      const stage=session.journeyStage||(session.mode==='independent'?'independent':'example');
+      if(!JOURNEY_STAGES.includes(stage))return null;
+      const title=localized(values(session.caseData)[0]?.public?.title,language);
+      const completedAt=session.result.completedAt??session.updatedAt??session.startedAt;
+      if(typeof title!=='string'||!title||!Number.isSafeInteger(completedAt)||completedAt<=0)return null;
+      const {points,total}=session.result;
+      return {id,title,journeyStage:stage,completedAt,
+        ...(session.mode==='independent'&&Number.isFinite(points)?{points,maxPoints:5}:{}),
+        ...(Number.isFinite(total)?{score:total}:{})};
+    }))).filter(Boolean);
+    const last=page.at(-1);
+    const nextCursor=ordered.length>page.length?Buffer.from(`${last.startedAt}:${last.id}`).toString('base64url'):null;
+    return {ok:true,attempts,nextCursor};
   }
   async function recover(body, identity, cachedIndex=null) {
     if (!['training', 'independent'].includes(body.mode)) fail('invalid_mode');
@@ -1550,7 +1608,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(body.controlVersion!==undefined&&(body.controlVersion!=='execution-v1'||body.decisionVersion!==DECISION_VERSION))fail('invalid_control_version');
     if (body.buildId !== undefined && (typeof body.buildId !== 'string' || !/^[a-f0-9]{32}$/.test(body.buildId))) fail('invalid_build');
     if (identity.guest) {
-      if (Object.hasOwn(body, 'studentKey')) fail('forbidden', 403);
+      if (body.op==='history'||body.history===true||Object.hasOwn(body, 'studentKey')) fail('forbidden', 403);
       if (['catalog', 'start', 'recover'].includes(body.op) && body.context !== 'free') fail('forbidden', 403);
       if (['start', 'recover'].includes(body.op) && body.mode !== 'training') fail('forbidden', 403);
       if (body.op === 'start' && (body.workbookVersion !== WORKBOOK_VERSION || body.decisionVersion !== DECISION_VERSION)) fail('invalid_workbook');
@@ -1559,8 +1617,18 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if (body.op === 'catalog') return {ok: true, cases: (await catalogue()).filter(c=>(!body.workbookVersion||supportsWorkbook(c,body.workbookVersion))&&
       (!body.decisionVersion||Boolean(correspondenceProfiles.private(c)))&&
       (!body.controlVersion||correspondenceProfiles.private(c)?.control?.workflow?.version===body.controlVersion)).map(c => ({id: c.id, title: localized(c.public.title, locale(body.locale)), ...publicMetadata(c)}))};
+    if (body.op === 'history') return history(body,identity);
     if (body.op === 'start') return start(body, identity);
     if (body.op === 'resume') {
+      if(body.history!==undefined&&body.history!==true)fail('invalid_request');
+      if(body.history===true){
+        if(body.context!==undefined&&body.context!=='seminar')fail('invalid_context');
+        if(typeof body.sessionId!=='string'||!SESSION_ID.test(body.sessionId))fail('invalid_id');
+        const stored=await store.get(`sessions/${body.sessionId}`);
+        own(stored,identity);
+        if(stored.id!==body.sessionId||!hasHistoryResult(stored))fail('not_found',404);
+        return {ok:true,view:view(normalizeSession(stored))};
+      }
       const session=await get(body.sessionId, identity,{readOnly:true});
       const historical=historicalSession(session);
       const historicalResult = !session.context&&(session.status==='complete'||historical);

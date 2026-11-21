@@ -29,6 +29,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
   const api = {
     catalog(parameters = {}, options = {}) { return api.request({...parameters, op: 'catalog'}, options); },
     recover(parameters = {}, options = {}) { return api.request({...parameters, op: 'recover'}, options); },
+    history(parameters = {}, options = {}) { return api.request({...parameters, context: 'seminar', op: 'history'}, options); },
     async request(body, {signal, withProgress = false} = {}) {
       if(context && (['start','recover','resume'].includes(body.op)||context==='free'&&body.op==='catalog')) body={...body,context};
       if(buildId && ['start','recover','resume'].includes(body.op)) body={...body,buildId};
@@ -39,7 +40,7 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
       // An existing session always retains its frozen execution contract.
       if(controlVersion==='execution-v1'&&decisionVersion==='correspondence-v1'&&['start','catalog'].includes(body.op))body={...body,controlVersion};
       const url = resolveEndpoint();
-      const retryTransport = ['catalog', 'resume'].includes(body.op) || isRecoverableMaterialRequest(body);
+      const retryTransport = ['catalog', 'history', 'resume'].includes(body.op) || isRecoverableMaterialRequest(body);
       const payload = JSON.stringify(body);
       let token;
       let refreshedToken = false;
@@ -91,6 +92,23 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
               throw new ReceptionAPIError('invalid-response');
             }
             return packet.cases.map(({id, title, familyId, level, estimatedMinutes}) => ({id, title, familyId, level, estimatedMinutes}));
+          }
+          if (body.op === 'history') {
+            const {attempts, nextCursor} = packet;
+            if (!Array.isArray(attempts) || attempts.length > 32 || attempts.some(row => !row
+              || typeof row.id !== 'string' || !/^[a-f0-9]{40}$/.test(row.id)
+              || typeof row.title !== 'string' || !row.title.trim() || row.title.length > 512
+              || !['example', 'mentor', 'independent'].includes(row.journeyStage)
+              || !Number.isSafeInteger(row.completedAt) || row.completedAt < 1 || row.completedAt > 8640000000000000
+              || (row.points !== undefined && (!Number.isFinite(row.points) || row.points < 0 || row.points > row.maxPoints))
+              || (row.points !== undefined && (!Number.isFinite(row.maxPoints) || row.maxPoints <= 0 || row.maxPoints > 5))
+              || (row.score !== undefined && (!Number.isFinite(row.score) || row.score < 0 || row.score > 100)))
+              || new Set(attempts.map(row => row.id)).size !== attempts.length
+              || (nextCursor !== null && (typeof nextCursor !== 'string' || !nextCursor || nextCursor.length > 256))) {
+              throw new ReceptionAPIError('invalid-response');
+            }
+            return {attempts: attempts.map(({id, title, journeyStage, completedAt, points, maxPoints, score}) =>
+              ({id, title, journeyStage, completedAt, ...(points === undefined ? {} : {points, maxPoints}), ...(score === undefined ? {} : {score})})), nextCursor};
           }
           const view = packet.view;
           const withRecoveryProgress = withProgress && body.op === 'recover';

@@ -76,6 +76,28 @@ test('catalog reads public assignment metadata without expecting a session view'
   assert.equal(calls[0].cache,'no-store');
 });
 
+test('history returns a bounded owner history with zero points and no session mutation fields',async()=>{
+  const bodies=[];
+  const row={id:'a'.repeat(40),title:'Регистрация обращения',journeyStage:'independent',
+    completedAt:1795263000000,points:0,maxPoints:5,score:53};
+  let packet={ok:true,attempts:[{...row,private:'discard'}],nextCursor:'next-page'};
+  const client=createReceptionAPI({endpoint:'/api/reception',baseURL:'http://127.0.0.1:8787/',demo:true,
+    context:'seminar',buildId:'f'.repeat(32),coreStepsVersion:'mfc-referral-v2',fetch:async(_url,options)=>{
+      bodies.push(JSON.parse(options.body));return new Response(JSON.stringify(packet));
+    }});
+  assert.deepEqual(await client.history({studentKey:'12345678',locale:'ru'}),{attempts:[row],nextCursor:'next-page'});
+  packet={ok:true,attempts:[],nextCursor:null};
+  assert.deepEqual(await client.history({studentKey:'12345678',locale:'ru',cursor:'next-page'}),{attempts:[],nextCursor:null});
+  assert.deepEqual(bodies,[{studentKey:'12345678',locale:'ru',context:'seminar',op:'history'},
+    {studentKey:'12345678',locale:'ru',cursor:'next-page',context:'seminar',op:'history'}]);
+  for(const bad of [{...row,points:'0'},{...row,id:'other'},{...row,score:101},{...row,completedAt:0}]){
+    packet={ok:true,attempts:[bad],nextCursor:null};
+    await assert.rejects(client.history(),{code:'invalid-response'});
+  }
+  packet={ok:true,attempts:[row,row],nextCursor:null};
+  await assert.rejects(client.history(),{code:'invalid-response'});
+});
+
 test('recover accepts an explicit empty result and retains ordinary resume validation',async()=>{
   const bodies=[];
   const client=createReceptionAPI({endpoint:'/api/reception',baseURL:'http://127.0.0.1:8787/',demo:true,
