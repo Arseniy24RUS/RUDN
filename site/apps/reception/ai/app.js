@@ -32,6 +32,12 @@ const clone = value => JSON.parse(JSON.stringify(value));
 const workspacePages = ['reception','chat','documents','calendar','route','decision'];
 const mutationOps = ['start','message','document','decide','followup','control-action','next','tutorial-step','mentor-question','core-step','registration-check'];
 const complaintExamplePassages = {exampleComplaintArticle8:'law59999-u52',exampleComplaintArticle10:'law59999-u60'};
+function complaintExampleArticle(unitIds) {
+  if(unitIds.includes(complaintExamplePassages.exampleComplaintArticle8)&&
+    unitIds.every(id=>/^law59999-u(?:4[6-9]|5[0-3])$/.test(id)))return 8;
+  if(unitIds.length&&unitIds.every(id=>/^law59999-u(?:5[89]|6[0-6])$/.test(id)))return 10;
+  return null;
+}
 const blankWorkbook = () => ({referralDeadline:'',registrationTimely:false,routing:{recipientIds:[]}});
 const blankDecision = () => ({workbook:blankWorkbook(),procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:'',basisDocumentIds:[],reasoning:''});
 const blankAssessment = () => ({factId:'',applicationId:'',trapId:'',actDate:'',calendar:{anchor:'',rule:'',start:'',shift:''},research:{recordId:'',fragmentId:'',extracted:'',finding:''}});
@@ -211,7 +217,21 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       if(hasCore()&&coreInView()==='materials'){
         const acts=view.case.normativeActs||[],index=acts.findIndex(act=>act.id===reference.docId);
         if(index<0)return false;
-        const current=coreCitationsFor(reference.docId);
+        let current=coreCitationsFor(reference.docId);
+        if(acceptsTwoCoreCitations()&&reference.unitIds.length===1&&Object.values(complaintExamplePassages).includes(reference.unitIds[0])){
+          // Older drafts can still contain a selected heading or another inapplicable paragraph.
+          const article=complaintExampleArticle(reference.unitIds);
+          const removed=current.filter(row=>{
+            const priorArticle=row.quote.replace(/\s+/gu,' ').trim().length>=24&&complaintExampleArticle(row.unitIds);
+            return !priorArticle||priorArticle===article&&!sameCoreReference(reference,row);
+          });
+          if(removed.length){
+            current=current.filter(row=>!removed.includes(row));
+            installCoreCitations(current,{replaceAll:true});
+            selectedReferences=selectedReferences.filter(saved=>!removed.some(row=>sameCoreReference(saved,row)));
+            if(coreIsEditable('materials'))coreCitationsEdited=true;
+          }
+        }
         const alreadySelected=current.find(item=>sameCoreReference(reference,item));
         if(!alreadySelected&&acceptsTwoCoreCitations()&&current.length>=2){
           reader.close();notice=cl('citationLimit');render();return;

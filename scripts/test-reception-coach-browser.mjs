@@ -136,7 +136,7 @@ async function run({width,height,locale,full}) {
   row.origin=origin;
   const context=await browser.newContext({viewport:{width,height},hasTouch:width<500,isMobile:width<500,serviceWorkers:'block',reducedMotion:'reduce'});
   const page=await context.newPage();
-  await page.route('**/*',route=>route.request().url().startsWith(origin)?route.continue():route.abort());
+  await page.route('**/*',route=>new URL(route.request().url()).origin===origin?route.continue():route.abort());
   page.setDefaultTimeout(8000);
   let visitorMessages=0;
   await page.exposeFunction('qaVisitedVisitorChat',()=>{row.visitedVisitorChat=true;});
@@ -892,7 +892,28 @@ async function run({width,height,locale,full}) {
     const citations=model.correspondence.citations.filter(row=>row.kind==='legal');
     assert.deepEqual([...new Set(citations.map(row=>row.sourceId))].sort(),view.case.normativeActs.map(act=>act.id).sort());
     await inspectHint('law','legal-source');
-    for(const citation of citations)await attachLegal(citation);
+    if(stories){
+      await context.addInitScript(id=>{
+        if(sessionStorage.getItem('qa-stale-article-headings'))return;
+        const key=Object.keys(localStorage).find(key=>key.startsWith('rudn.reception.workspace.v2:')&&key.endsWith(':current'));
+        if(!key)return;
+        const saved=JSON.parse(localStorage.getItem(key));
+        if(saved.sessionId!==id)return;
+        saved.decisionDraft.correspondence.citations=[
+          ['core-legal-1','law59999-u45','Статья 8. Направление и регистрация письменного обращения'],
+          ['core-legal-1-2','law59999-u57','Статья 10. Рассмотрение обращения']
+        ].map(([id,unitId,quote])=>({id,section:'legalBasis',kind:'legal',sourceId:'reception-law59999',unitIds:[unitId],quote}));
+        localStorage.setItem(key,JSON.stringify(saved));
+        sessionStorage.setItem('qa-stale-article-headings','1');
+      },view.id);
+      view=await reloadCase(view,'documents');
+      const selected=root.locator('[data-core-passage]');
+      assert.equal(await selected.count(),2);
+      await root.locator('[data-action="example-law-passage"][data-passage="exampleComplaintArticle8"]').click();
+      await root.locator('[data-source-reference-use]:enabled').click();
+      assert.equal(await selected.count(),1);
+      assert.equal(await selected.locator('blockquote').textContent(),citations[0].quote);
+    }else for(const citation of citations)await attachLegal(citation);
     view=await operation('tutorial-step',root.locator('[data-step="materials"][data-action="core-step"]'));
     assert.equal(currentStep(view)?.id,'calendar',view.guidance.finding?.explanation);
     await go('calendar');
