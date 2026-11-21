@@ -30,6 +30,7 @@ async function fixture(t) {
     'apps/governor/platform-bridge.js': 'globalThis.bridgeFixture=true;'
   };
   for (const name of ['assets/js/release-resources.js', 'assets/js/release-recovery.js', 'data/platform-contracts.json',
+    'apps/career/assets/seminar-progress.mjs', logical('assets/icon-192.png'), logical('assets/rudn-logo.webp'),
     logical('src/resource-url.js'), logical('assets/advisors/mira.png'), logical('assets/illustrated/school.webp'),
     logical('assets/services/unavailable.svg'), logical('assets/illustrated/region.webp')]) {
     files[name] = await readFile(new URL(name, siteSource));
@@ -72,6 +73,11 @@ async function illustrations(resolve, {fail = false} = {}) {
 test('Governor assets resolve against a real release manifest, including changed object bytes', async t => {
   const f = await fixture(t);
   assert.equal(f.built.status, 'pass');
+  assert.ok(f.manifest.packs.shell.includes('apps/career/assets/seminar-progress.mjs'),
+    'The offline platform shell includes its shared draft-policy dependency');
+  const appAssets = Object.keys(f.manifest.resources).filter(name => name.startsWith(logical('assets/')));
+  assert.equal(appAssets.length, 6);
+  assert.deepEqual(f.manifest.packs.governor.filter(name => name.startsWith(logical('assets/'))).sort(), appAssets.sort());
   const unchanged = f.manifest.resources[logical('assets/advisors/mira.png')];
   const changed = f.manifest.resources[logical('assets/illustrated/school.webp')];
   assert.equal(unchanged.url, '/RUDN/apps/governor/assets/advisors/mira.png');

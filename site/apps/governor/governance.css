@@ -2,7 +2,7 @@
 .gov-dialog {border:1px solid #c8def0;border-radius:24px;padding:0;background:#fff;color:#153454;width:min(1150px,94vw);max-height:92dvh;box-shadow:0 22px 80px #113b6059;overflow:hidden;}
 .gov-dialog:not([open]){display:none}.gov-dialog[open]{display:flex;flex-direction:column}.gov-dialog::backdrop{background:#143957a6;backdrop-filter:blur(6px)}
 .gov-header{display:flex;align-items:flex-start;justify-content:space-between;padding:24px 30px 18px;border-bottom:1px solid #dbe9f4;background:#f6fbff;gap:20px;flex-shrink:0}
-.gov-header small{color:#007ebd;font-size:11px;letter-spacing:.13em;font-weight:800}.gov-header h2{font-size:27px;line-height:1.2;margin:5px 0 6px}.gov-header p{color:#4e6980;font-size:13px;margin:0}
+.gov-header small{color:#006fa7;font-size:11px;letter-spacing:.13em;font-weight:800}.gov-header h2{font-size:27px;line-height:1.2;margin:5px 0 6px}.gov-header p{color:#4e6980;font-size:13px;margin:0}
 .gov-header-copy{flex:1;min-width:0}
 .gov-header-art{width:180px;height:96px;object-fit:cover;border-radius:14px;border:1px solid #d6e8f3;box-shadow:0 4px 16px #204a6d12;flex:0 0 180px}
 

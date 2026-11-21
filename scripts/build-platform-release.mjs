@@ -136,9 +136,12 @@ function rewriteHTML(source,logical,resources,base,inlineModules,recovery){
 function packsFor(resources){
   const packs={shell:[]};for(const mod of ['legal-lab','settlements','governor','career','reception','puzzle'])packs[mod]=[];
   for(const [name,item] of Object.entries(resources)){
-    if(name==='index.html'||name==='manifest.webmanifest'||/^assets\/img\/(?:rudn-logo(?:-en)?|icon-192|icon-512)\.png$/.test(name)||(item.kind==='runtime'&&!name.startsWith('apps/'))||/^data\/(?:platform-contracts|course|questions|exam_questions|question_media|symbol_manifest|legacy-en|legacy-zh)\.json$/.test(name)||name==='apps/legal-lab/data/catalog.json')packs.shell.push(name);
+    // The platform draft policy imports the shared Career progress contract.
+    const sharedCareerProgress=name==='apps/career/assets/seminar-progress.mjs';
+    if(sharedCareerProgress||name==='index.html'||name==='manifest.webmanifest'||/^assets\/img\/(?:rudn-logo(?:-en)?|icon-192|icon-512)\.png$/.test(name)||(item.kind==='runtime'&&!name.startsWith('apps/'))||/^data\/(?:platform-contracts|course|questions|exam_questions|question_media|symbol_manifest|legacy-en|legacy-zh)\.json$/.test(name)||name==='apps/legal-lab/data/catalog.json')packs.shell.push(name);
     for(const mod of Object.keys(packs).filter(x=>x!=='shell')){
       const prefix=mod==='puzzle'?'assets/puzzle/':`apps/${mod}/`;
+      if(mod==='governor'&&name.startsWith(prefix+'assets/')){packs.governor.push(name);continue;}
       if((name.startsWith(prefix)&&item.kind==='runtime')||(mod==='puzzle'&&name==='apps/puzzle.html'))packs[mod].push(name);
       // Vacancy descriptors and pages are requested only for an opened employer.
       // They must never become part of a complete career/offline pack.
