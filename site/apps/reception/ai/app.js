@@ -223,6 +223,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
           if(coreIsEditable('materials'))coreCitationsEdited=true;
         }
         selectedReferences=[reference,...selectedReferences.filter(item=>acceptsTwoCoreCitations()?item.id!==reference.id:item.docId!==reference.docId)].slice(0,20);
+        if(error&&['core_citation_required','invalid_citation','core-citation-required','invalid-citation'].includes(error.code)&&
+          corePayload('materials'))error=null;
         reader.close();notice=cl('sourceSaved');persist();render();
         [...root.querySelectorAll('[data-core-citation]')].find(node=>node.dataset.coreCitation===reference.docId)?.scrollIntoView({block:'nearest',behavior:'instant'});
         return;
@@ -385,6 +387,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(code==='tutorial-question-required')return l('askVisitorPrompt');
     if(/^(tutorial-step-locked|tutorial-locked|journey-stage-locked|journey-locked|stage-locked)$/.test(code))return l('locked');
     if(code==='core-citation-required')return cl('noCitation');
+    if(code==='invalid-citation'&&hasCore())return cl('invalidCitation');
     if(code==='core-calendar-required')return cl('dateHint');
     if(code==='core-route-required')return cl('routeMissing');
     if(code==='core-draft-incomplete')return cl('draftIncomplete');
@@ -493,6 +496,11 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function coreCitationsFor(id) {
     return (decisionDraft.correspondence?.citations||[]).filter(row=>row.sourceId===id&&row.id.startsWith('core-legal-'));
+  }
+  function sameCoreCitations(selected,confirmed) {
+    return selected.length===confirmed?.length&&selected.every(citation=>confirmed.some(row=>
+      row.id===citation.id&&row.sourceId===citation.sourceId&&row.kind===citation.kind&&row.section===citation.section&&
+      row.unitIds?.join(',')===citation.unitIds?.join(',')&&row.quote===citation.quote.trim()));
   }
   function sameCoreReference(reference,citation) {
     return reference.docId===citation.sourceId&&reference.unitIds?.join(',')===citation.unitIds?.join(',')&&reference.text?.trim()===citation.quote;
@@ -961,15 +969,15 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       <p class="rxa-panel-intro">${esc(filled?l('filledDraftHint'):internal?l('internalNext'):cl('draftHint'))}</p>
       <p class="rxa-draft-status">${icon('cloud')}<span data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</span></p>
       ${coreFeedback('draft')}${mentorWorkFeedbackView(view,locale)}
-      ${coreCitationsEdited?`<p class="rxa-panel-intro" role="status">${esc(cl('citationEditPending'))}</p>`:''}
       ${mentorDraft&&!filled?`<p class="rxa-panel-intro">${esc(cl('evidence'))}</p>`:''}
       <div class="rxa-actions rxt-draft-links">${button(cl('toSources'),'core-sources',{quiet:true,glyph:'sources'})}
         ${model&&!filled?button(l('compare'),'tutorial-sample',{quiet:true}):''}</div>
       ${sampleComparison?tutorialComparison():''}
       <form id="rxaDecisionForm" data-decision-form>
         ${responsePreview?correspondencePreviewView(responseOptions()):correspondenceEditorView({...responseOptions(),guidedCore:true,showOrders:!currentDocumentKind()&&!commonReply})}
-        <div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit" data-tour-target="draft-submit" ${locked||coreCitationsEdited?'disabled':''}>
+        <div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit" data-tour-target="draft-submit" ${locked?'disabled':''}>
           ${icon('decision')}${esc(l(submitLabel))}</button></div>
+        ${busy&&pending?.stepId==='materials'?`<p class="rxa-operation-status" role="status">${esc(cl('savingCitations'))}</p>`:''}
         ${actionStatus('decide')}
       </form>
     </section>`;
@@ -1395,7 +1403,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const previousCore=coreCurrent();
     const coreReceipt=next.coreSteps?.receipt?.requestId===body.requestId&&Boolean(body.requestId);
     const materialsSaved=coreReceipt&&body.stepId==='materials'&&next.guidance?.finding?.stepId!=='materials';
-    const coreAcknowledged=body.op==='core-step'&&coreReceipt||body.op==='tutorial-step'&&materialsSaved&&coreEdit==='materials';
+    const coreAcknowledged=!body.backgroundMaterials&&(
+      body.op==='core-step'&&coreReceipt||body.op==='tutorial-step'&&materialsSaved&&coreEdit==='materials');
     const newlyStarted=body.op==='start'&&!sameCase;
     if(stepChanged){
       controlWorkspaceUI=restoreControlWorkspaceUI();
@@ -1532,7 +1541,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if((view.openedDocumentIds||[]).includes(docId)){await registerDocuments();return;}
     await perform({op:'document',sessionId:view.id,documentId:docId,requestId:newRequestId()},{backgroundDocument:true});
   }
-  async function perform(body, {retry=false,backgroundDocument=false,openSaved=false} = {}) {
+  async function perform(body, {retry=false,backgroundDocument=false,backgroundMaterials=false,openSaved=false} = {}) {
     if (busy || disposed || paused) return;
     if (ownerNow() !== owner) { error = new ReceptionAPIError('identity-changed'); render(); return; }
     const mutation = mutationOps.includes(body.op);
@@ -1572,7 +1581,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
           const saved=drafts.readSession(next.id);
           if(saved){view=null;restoreSaved(saved);}
         }
-        acceptView(next,{...(resolved?waiting:body),backgroundDocument});
+        acceptView(next,{...(resolved?waiting:body),backgroundDocument,backgroundMaterials});
         if(resolved&&waiting.op==='document')deferredDocuments.delete(waiting.documentId);
         initial=null; if(mutation||resolved)pending=null; needsResume=false;
       } catch (problem) {
@@ -1874,6 +1883,51 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const focus=root.querySelector('[data-core-heading], #rxtGuideTitle');
     focus?.focus({preventScroll:true});focus?.scrollIntoView({block:'nearest',behavior:'instant'});
   }
+  async function saveCoreCitationsForReply() {
+    const payload=corePayload('materials');
+    if(!payload){
+      notice='';error=new ReceptionAPIError('core-citation-required');
+      goCore('materials');
+      const missing=root.querySelector('[data-core-citation-missing]')?.closest('.rxt-legal-act')?.querySelector('[data-normative-doc]');
+      missing?.scrollIntoView({block:'center'});missing?.focus({preventScroll:true});
+      return false;
+    }
+    const confirmed=()=>sameCoreCitations(payload.citations,view?.coreSteps?.values?.citations);
+    if(confirmed()){
+      coreCitationsEdited=false;
+      return true;
+    }
+    const sessionId=view.id,caseId=view.case.id;
+    await perform({op:tutorial()?'tutorial-step':'core-step',sessionId,stepId:'materials',requestId:newRequestId(),
+      expectedRevision:view.revision,...payload},{backgroundMaterials:true});
+    if(disposed||paused||busy||pending||!active()||view.id!==sessionId||view.case.id!==caseId||
+      page!=='decision'||coreInView()!=='draft')return false;
+    const code=String(error?.code||'').replaceAll('_','-');
+    if(['invalid-citation','core-citation-required'].includes(code)||!error&&view.guidance?.finding?.stepId==='materials'){
+      goCore('materials');return false;
+    }
+    if(error)return false;
+    if(confirmed())return true;
+    error=new ReceptionAPIError('core-citation-required');goCore('materials');
+    return false;
+  }
+  async function submitCoreDecision() {
+    if(coreInView()!=='draft')return;
+    const draft=decisionDraft.correspondence;
+    const missing=[['subject',draft.subject],...Object.entries(draft.sections).map(([id,value])=>['sections.'+id,value])]
+      .find(([,value])=>!value.trim());
+    if(missing){
+      notice='';error=new ReceptionAPIError('core-draft-incomplete');responsePreview=false;render();
+      const field=root.querySelector(`[data-response-field="${missing[0]}"]`);
+      field?.scrollIntoView({block:'center'});field?.focus({preventScroll:true});return;
+    }
+    if(coreCitationsEdited&&!await saveCoreCitationsForReply())return;
+    const decision=clone(decisionDraft);
+    if(view.case.workbook?.calendarVersion===MFC_CALENDAR_WITHOUT_REGISTRATION)
+      delete decision.workbook.registrationTimely;
+    if(mentorWork('draft'))await chooseTutorialStep({decision});
+    else if(!tutorial())await perform({op:'decide',sessionId:view.id,expectedRevision:view.revision,decision,requestId:newRequestId()});
+  }
   async function sendMentorQuestion() {
     if(!inMentorChat()||busy||pending||paused||needsResume)return;
     const question=mentorDraft.trim();
@@ -1889,23 +1943,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(event.target.matches('[data-chat-form]')){event.preventDefault();void sendMessage();}
     if(event.target.matches('[data-decision-form]')){
       event.preventDefault();if(busy||pending||paused||!active())return;
-      if(hasCore()){
-        if(coreInView()!=='draft'||coreCitationsEdited)return;
-        const draft=decisionDraft.correspondence;
-        const missing=[['subject',draft.subject],...Object.entries(draft.sections).map(([id,value])=>['sections.'+id,value])]
-          .find(([,value])=>!value.trim());
-        if(missing){
-          notice='';error=new ReceptionAPIError('core-draft-incomplete');responsePreview=false;render();
-          const field=root.querySelector(`[data-response-field="${missing[0]}"]`);
-          field?.scrollIntoView({block:'center'});field?.focus({preventScroll:true});return;
-        }
-        const decision=clone(decisionDraft);
-        if(view.case.workbook?.calendarVersion===MFC_CALENDAR_WITHOUT_REGISTRATION)
-          delete decision.workbook.registrationTimely;
-        if(mentorWork('draft'))void chooseTutorialStep({decision});
-        else if(!tutorial())void perform({op:'decide',sessionId:view.id,expectedRevision:view.revision,decision,requestId:newRequestId()});
-        return;
-      }
+      if(hasCore()){void submitCoreDecision();return;}
       if(mentorWork('draft')){void chooseTutorialStep({decision:clone(decisionDraft)});return;}
       if(tutorial())return;
       const missing=incompleteDecision();

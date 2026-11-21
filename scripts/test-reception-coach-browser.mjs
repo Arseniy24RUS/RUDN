@@ -156,9 +156,12 @@ async function run({width,height,locale,full}) {
   const toggle=page.getByRole('button',{name:labelByLocale[locale],exact:true});
   const clue=page.locator('[aria-describedby*="rxaTourHint"]');
   const currentStep=view=>view.guidance?.steps?.[view.guidance.stepIndex];
-  const operation=async (op, trigger)=>{
-    const pending=page.waitForResponse(response=>response.url()===origin+'/api/reception'&&
-      response.request().method()==='POST'&&response.request().postDataJSON()?.op===op);
+  const operation=async (op, trigger,{stepId}={})=>{
+    const pending=page.waitForResponse(response=>{
+      if(response.url()!==origin+'/api/reception'||response.request().method()!=='POST')return false;
+      const request=response.request().postDataJSON();
+      return request?.op===op&&(!stepId||request.stepId===stepId);
+    });
     await trigger.click();
     const response=await pending;
     const body=await response.json();
@@ -533,13 +536,12 @@ async function run({width,height,locale,full}) {
     assert.equal(await chosen.count(),1);
     await replacementPassage.scrollIntoViewIfNeeded();
     await shot('example-one-norm-after-reload');
-    view=await operation('tutorial-step',save);
     assert.equal(currentStep(view)?.id,'draft');
-    assert.deepEqual(view.coreSteps.values.citations,[replacement]);
+    assert.deepEqual(view.coreSteps.values.citations,[original,replacement]);
     await go('decision');
     assert.deepEqual(await readDraft(),draft);
     row.normRevision={sourceId,removedUnit:original.unitIds[0],retainedUnit:replacementUnit};
-    return {view,draft,removed:original};
+    return {view,draft,removed:original,replacement};
   }
   async function verifyEmptyDraft() {
     assert.deepEqual(await readDraft(),{subject:'',sections:Object.fromEntries(draftSectionIds.map(key=>[key,'']))});
@@ -978,6 +980,7 @@ async function run({width,height,locale,full}) {
     const answer=view.guidance.decision.correspondence;
     let expected;
     let removedCitation;
+    let replacementCitation;
     const writeSubject=root.locator('[data-response-field="subject"]');
     if(stories){
       const prefill=await verifyExamplePrefill(view);
@@ -985,6 +988,7 @@ async function run({width,height,locale,full}) {
       view=revised.view;
       expected=revised.draft;
       removedCitation=revised.removed;
+      replacementCitation=revised.replacement;
     }else{
       await writeSubject.fill(answer.subject);
       expected=answer;
@@ -1006,19 +1010,43 @@ async function run({width,height,locale,full}) {
     }
     await checkDocumentKind(answer.kind,view.case.citizen.name,{leavePreview:stories});
     if(stories){
-      for(const citation of view.coreSteps.values.citations)await verifyLinkedProvision(citation);
+      await verifyLinkedProvision(replacementCitation);
       const removedExcerpt=root.locator('[data-correspondence-preview] li').filter({has:page.getByText(removedCitation.quote,{exact:true})});
       assert.equal(await removedExcerpt.count(),0);
     }
-    const expectedLegal=stories?view.coreSteps.values.citations:null;
     await inspectHint('draftSubmit','draft-filled');
-    if(stories)await root.getByRole('button',{name:exampleConfirm[locale],exact:true}).waitFor();
-    view=await operation('tutorial-step',root.locator('[data-tour-target="draft-submit"]'));
+    const submit=root.locator('[data-tour-target="draft-submit"]');
+    if(stories){
+      const action=root.getByRole('button',{name:exampleConfirm[locale],exact:true});
+      await action.waitFor();
+      assert.equal(await action.isEnabled(),true,'The draft must be submittable with an unsaved citation change');
+      const submissions=[];
+      const recordStep=request=>{
+        if(request.url()!==origin+'/api/reception'||request.method()!=='POST')return;
+        const payload=request.postDataJSON();
+        if(payload?.op==='tutorial-step')submissions.push(payload);
+      };
+      page.on('request',recordStep);
+      try{
+        view=await operation('tutorial-step',action,{stepId:'draft'});
+      }finally{
+        page.off('request',recordStep);
+      }
+      const steps=submissions.map(request=>request.stepId);
+      assert.deepEqual(steps,['materials','draft']);
+      assert.equal(submissions[1].expectedRevision,submissions[0].expectedRevision+1);
+      row.normRevision.submittedSteps=steps;
+    }else view=await operation('tutorial-step',submit);
     assert.equal(view.status,stories?'complete':'followup',view.guidance.finding?.explanation);
     assert.equal(view.decision.correspondence.subject,expected.subject);
     assert.deepEqual(view.decision.correspondence.sections,expected.sections);
     if(stories){
-      assert.deepEqual(view.decision.correspondence.citations.filter(citation=>citation.kind==='legal'),expectedLegal);
+      assert.deepEqual(view.coreSteps.values.citations,[replacementCitation]);
+      assert.deepEqual(view.decision.correspondence.citations.filter(citation=>citation.kind==='legal'),[replacementCitation]);
+      const saved=await fixture.store.get('sessions/'+view.id);
+      assert.equal(saved.status,'complete');
+      assert.deepEqual(saved.caseStates[saved.caseIndex].decision.correspondence,view.decision.correspondence);
+      assert.equal(view.seminarProgress.exampleCompleted,true);
       row.normRevision.submitted=true;
       await verifyNoControl(view);
       await checkMentor(view);
