@@ -56,7 +56,7 @@ export const backend = {
           if (url.pathname.endsWith('/assets/js/backend.js')) {
             return route.fulfill({ contentType: 'application/javascript', body: fakeBackend });
           }
-          if (url.pathname.endsWith('/apps/reception/js/app.js')) {
+          if (url.pathname.endsWith('/apps/reception/ai/entry.js')) {
             importRequests++;
             await importGate;
             return route.fulfill({ contentType: 'application/javascript', body: "throw new Error('synthetic-reception-import-failure');" });

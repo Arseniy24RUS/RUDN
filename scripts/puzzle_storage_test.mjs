@@ -6,9 +6,12 @@ import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
 const playwright=require(process.env.PLAYWRIGHT_PATH||'playwright');
-const sources=Object.fromEntries(await Promise.all(['puzzle-storage.js','durable-store.js','student-identity.js'].map(async name=>[name,await readFile(new URL(`../site/assets/js/${name}`,import.meta.url))])));
+const sourcePaths=['assets/js/puzzle-storage.js','assets/js/durable-store.js','assets/js/student-identity.js',
+  'assets/js/game-release-policy.js','assets/js/release-resources.js','apps/career/assets/seminar-progress.mjs'];
+const sources=new Map(await Promise.all(sourcePaths.map(async name=>['/'+name,await readFile(new URL(`../site/${name}`,import.meta.url))])));
 const server=createServer((request,response)=>{
-  const source=sources[new URL(request.url,'http://localhost').pathname.slice(1)];
+  const pathname=new URL(request.url,'http://localhost').pathname,source=sources.get(pathname);
+  if(pathname!=='/'&&!source){response.writeHead(404).end();return;}
   response.setHeader('Content-Type',source?'text/javascript':'text/html');
   response.end(source||'<!doctype html><title>Puzzle isolated storage tests</title>');
 });
@@ -22,8 +25,8 @@ try{
       const context=await browser.newContext(),page=await context.newPage();
       await page.goto(url);
       const results=await page.evaluate(async()=>{
-        const {createPuzzleGeometryStore,commitPuzzleLeaderboard,puzzleGeometryUrl}=await import('/puzzle-storage.js');
-        const {createDurableStore}=await import('/durable-store.js');
+        const {createPuzzleGeometryStore,commitPuzzleLeaderboard,puzzleGeometryUrl}=await import('/assets/js/puzzle-storage.js');
+        const {createDurableStore}=await import('/assets/js/durable-store.js');
         const ok=(value,message)=>{if(!value)throw new Error(message)},results=[];
         const media='https://media.githubusercontent.com/media/wmgeolab/geoBoundaries/9469f09/releaseData/gbOpen/AFG/ADM1/map.geojson';
         ok(puzzleGeometryUrl('https://github.com/wmgeolab/geoBoundaries/raw/9469f09/releaseData/gbOpen/AFG/ADM1/map.geojson')===media,'GitHub raw redirect normalized before native fetch');
@@ -72,7 +75,7 @@ try{
       });
       const other=await context.newPage();await other.goto(url);
       const init=async page=>page.evaluate(async()=>{
-        const {createPuzzleWriter}=await import('/puzzle-storage.js');
+        const {createPuzzleWriter}=await import('/assets/js/puzzle-storage.js');
         window.writerChanges=[];window.writer=createPuzzleWriter({scope:'student:multi-tab',readState:async()=>JSON.parse(localStorage.getItem('test-state')||'null'),onChange:event=>writerChanges.push(event),beforeRelease:async()=>localStorage.setItem('test-state',JSON.stringify({placed:9}))});
         await writer.acquire();return writer.canWrite();
       });
@@ -83,7 +86,7 @@ try{
       assert.deepEqual(takeover,{writable:true,restore:{placed:9}},`${engine}: lock transfer loads latest saved state`);
       await other.evaluate(()=>writer.close());await page.evaluate(()=>writer.close());
       await page.evaluate(async()=>{
-        const {createPuzzleWriter}=await import('/puzzle-storage.js');
+        const {createPuzzleWriter}=await import('/assets/js/puzzle-storage.js');
         let finishRead;
         const pendingWriter=createPuzzleWriter({scope:'pending-close',readState:()=>new Promise(resolve=>finishRead=resolve)});
         const acquiring=pendingWriter.acquire();

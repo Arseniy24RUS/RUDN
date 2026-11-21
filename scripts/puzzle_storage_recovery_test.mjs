@@ -5,9 +5,15 @@ import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {join} from 'node:path';
 const require=createRequire(import.meta.url),pw=require(process.env.PLAYWRIGHT_PATH||'playwright');
-const source=await readFile(new URL('../site/assets/js/durable-store.js',import.meta.url));
-const identitySource=await readFile(new URL('../site/assets/js/student-identity.js',import.meta.url));
-const server=createServer((req,res)=>{const module=req.url==='/store.js'?source:req.url==='/student-identity.js'?identitySource:null;res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type',module?'text/javascript':'text/html');res.end(module||'<!doctype html><title>Isolated completion recovery</title>');});
+const sourcePaths=['assets/js/durable-store.js','assets/js/student-identity.js','assets/js/game-release-policy.js',
+ 'assets/js/release-resources.js','apps/career/assets/seminar-progress.mjs'];
+const sources=new Map(await Promise.all(sourcePaths.map(async name=>['/'+name,await readFile(new URL(`../site/${name}`,import.meta.url))])));
+const server=createServer((req,res)=>{
+ const pathname=new URL(req.url,'http://localhost').pathname,source=sources.get(pathname);
+ if(pathname!=='/'&&!source){res.writeHead(404).end();return;}
+ res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type',source?'text/javascript':'text/html');
+ res.end(source||'<!doctype html><title>Isolated completion recovery</title>');
+});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const report=[];
 try{
@@ -18,7 +24,7 @@ try{
    page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto(`http://127.0.0.1:${server.address().port}`);
    const cases=await page.evaluate(async()=>{
-    const {createDurableStore}=await import('/store.js');
+    const {createDurableStore}=await import('/assets/js/durable-store.js');
     const check=(value,message)=>{if(!value)throw Error(message);};
     const equal=(actual,expected,message)=>check(JSON.stringify(actual)===JSON.stringify(expected),message);
     const results=[];

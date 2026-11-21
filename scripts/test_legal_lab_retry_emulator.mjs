@@ -24,6 +24,10 @@ function device(name,period){
  const map=new Map(),storage={get length(){return map.size},key:i=>[...map.keys()][i]??null,getItem:k=>map.get(k)??null,setItem:(k,v)=>map.set(k,String(v)),removeItem:k=>map.delete(k)};
  const store=createDurableStore({indexedDB:null,localStorage:storage,broadcast:false,locks:null,databaseName:name});
  const backend={generation:1,user,profile:{studentKey},getProfile(){return this.profile},loadDraft:s=>store.loadDraft(s),checkpoint:(s,o)=>store.checkpoint(s,o),restTransport:()=>transport};
+ backend.readCloud=async(path,{authoritative}={})=>{
+  assert.equal(authoritative,true,'A fresh device verifies delivery from authoritative attempt and grade records');
+  return get(path);
+ };
  const sync=createCheckpointSync({store,transport,deviceId:name,getIdentity:()=>({owner,studentKey,uid:user.uid,generation:backend.generation}),commitAttempt:(a,o)=>commitStudentAttempt(transport,a,{studentKey,uid:user.uid,activityMax:{'seminar-4':5},...o})});backend.durableSync=()=>sync;
  backend.saveAttempt=async a=>{const record={...a,studentKey,ownerUid:user.uid},scope={owner,activitySlug:'seminar-4',mode:a.draftMode,attemptId:a.id},previous=await store.loadDraft(scope);assert.ok(previous);await store.complete({...scope,contentVersion:version,state:{...previous.state,phase:'completed',resultAttempt:record},attempt:record});return record;};
  const persistence=createLegalLabPersistence({backend,store,owner,period,contentVersion:version});

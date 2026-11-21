@@ -33,8 +33,11 @@ def tap(page, selector, touch):
         control.click()
 
 
-def close_chapter(page, touch):
-    if visible(page, "[data-enter-chapter]:visible").count():
+def close_chapter(page, touch, expected=False):
+    entrance = visible(page, "[data-enter-chapter]:visible")
+    if expected:
+        entrance.wait_for()
+    if entrance.count():
         tap(page, "[data-enter-chapter]:visible", touch)
 
 
@@ -102,7 +105,7 @@ def run(browser, base, output, width, height, language, full=False):
         result["startImage"] = image_ok(page, "#start-screen figure img")
         snap("start")
         tap(page, '#start-form button[type="submit"]', touch)
-        close_chapter(page, touch)
+        close_chapter(page, touch, expected=True)
         visible(page, "#agenda-heading").wait_for()
         result["stages"]["agenda"] = layout(page)
         result["agendaHeading"] = visible(page, "#agenda-heading").inner_text()
@@ -164,7 +167,7 @@ def run(browser, base, output, width, height, language, full=False):
                 snap("result")
             tap(page, "#continue-turn", touch)
             if year < 20:
-                close_chapter(page, touch)
+                close_chapter(page, touch, expected=year in (5, 10, 15))
                 visible(page, "#agenda-heading").wait_for()
                 if year == 1 and width > 900:
                     assert visible(page, "#secondary-stage").evaluate("node=>node.scrollTop") <= 2
@@ -205,7 +208,7 @@ def run(browser, base, output, width, height, language, full=False):
     finally:
         context.close()
         (output / f"{name}.json").write_text(json.dumps(result, indent=2, ensure_ascii=False))
-        print(result["status"], name, result.get("failure", "").splitlines()[-1:], flush=True)
+        print(result["status"], name, result.get("failure", "").strip().splitlines()[-1:], flush=True)
     return result["status"] == "pass"
 
 

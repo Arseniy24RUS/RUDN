@@ -7,9 +7,19 @@ import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),pw=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const root=new URL('../site/',import.meta.url);
 const profile={studentKey:'games-platform-fixture',fullName:'Platform QA',group:'ГГУбд-01-26',ticket:'1234567890'};
-// TEST-ONLY completion used to reach the separate, prerequisite-gated module
-// in the delayed-import regression. It never leaves this isolated backend.
-const careerCompletion={id:'fixture-career-completion',studentKey:profile.studentKey,activitySlug:'career-diagnostic',type:'career-diagnostic',recordGrade:false,career:{schema:'rudn-career-result',schemaVersion:2,recordId:'fixture-career-completion',createdAt:'2026-10-30T12:00:00.000Z',modelVersion:'8.1.0',questionnaireVersion:'8.0.0',registryVersion:'test-only',roleProfile:{raw:Object.fromEntries(['N','K','A','M','C','E','D','T','I'].map(id=>[id,3]))},prioritySectors:['EDU','SOC','HEA','ADM'],lowPrioritySectors:['SEC','INT'],conditions:{FIELD:3,SCHEDULE:3,FORMAL:3,SECURITY:3},ranking:['mintrud','minpros','minzdrav','mincifry','minjust'].map((authorityId,index)=>({rank:index+1,authorityId,score:80-index}))}};
+// TEST-ONLY prerequisite for the delayed knowledge import. Store a reviewed
+// workspace through the real checkpoint API without writing a grade or cloud record.
+const knowledgeScope={owner:'student:'+profile.studentKey,activitySlug:'career-workspace',mode:'diagnostic',attemptId:'workspace-v1'};
+const vacancyId='12345678-1234-1234-1234-123456789abc';
+const reviewedAt='2026-11-07T12:00:00.000Z',resultRecordId='functional-games-fixture';
+const markKey='fixture-decision',signature=JSON.stringify(['requirement','skills','Составление служебной записки']);
+const careerWorkspace={personalityComplete:true,route:'review',values:{
+  'functional-career-v1':JSON.stringify({setupComplete:true,completedAt:reviewedAt,resultRecordId,answers:Array(47).fill(3),
+    completion:{schema:'rudn-career-result',schemaVersion:3,resultKind:'vacancy-functional',completed:true,createdAt:reviewedAt,recordId:resultRecordId,answerCount:47},
+    reviewCompletion:{schemaVersion:1,resultRecordId,markKey,signature,status:'met',target:{vacancyId,authorityId:'fixture',
+      pagePath:'pages/aa/bbbbbbbbbbbbbbbbbbbbbbbb/p0001-cccccccccccccccc.json.gz',pageSHA256:'d'.repeat(64),sourceURL:'https://gossluzhba.gov.ru/vacancy/'+vacancyId}}}),
+  ['functional-vacancy-review-v1:'+vacancyId]:JSON.stringify({schemaVersion:1,vacancyId,marks:{[markKey]:{signature,status:'met'}}})
+}};
 const backendSource=`import {durableStore as store} from '/assets/js/durable-store.js';
 export const groupOptions=()=>['ГГУбд-01-26'];
 const read=(key,fallback)=>JSON.parse(localStorage.getItem('qa.'+key)||JSON.stringify(fallback));
@@ -36,16 +46,19 @@ const base=`http://127.0.0.1:${server.address().port}`;
 const ready=page=>page.locator('#app[aria-busy="false"]').waitFor();
 const route=async(page,hash)=>{await page.evaluate(hash=>{location.hash=hash;},hash);await page.waitForFunction(hash=>location.hash==='#'+hash,hash);await ready(page);};
 async function lateModuleDoesNotReplaceCatalog(browser,module='career'){
- const config={career:{path:'/apps/career/entry.mjs',mount:'#careerMount'},settlements:{path:'/apps/settlements/entry.mjs',mount:'#settlementsMount'},reception:{path:'/apps/reception/js/app.js',mount:'#receptionMount'},'legal-lab':{path:'/apps/legal-lab/platform.mjs',mount:'#legalLabMount'},knowledge:{path:'/assets/js/civil-service-course.mjs',mount:'#civilServiceMount'}}[module];
+ const config={career:{path:'/apps/career/entry.mjs',mount:'#careerMount'},settlements:{path:'/apps/settlements/entry.mjs',mount:'#settlementsMount'},reception:{path:'/apps/reception/ai/entry.js',mount:'#receptionMount'},'legal-lab':{path:'/apps/legal-lab/platform.mjs',mount:'#legalLabMount'},knowledge:{path:'/assets/js/civil-service-course.mjs',mount:'#civilServiceMount'}}[module];
  const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage(),errors=[],requests=[];
  let release,notifyHeld;const gate=new Promise(resolve=>{release=resolve;}),held=new Promise(resolve=>{notifyHeld=resolve;});
  page.on('pageerror',error=>errors.push(error.message));page.on('request',request=>requests.push(request.url()));
  await context.route('**/*',request=>new URL(request.request().url()).origin===base?request.continue():request.abort());
  await context.route('**'+config.path+'*',async request=>{notifyHeld();await gate;await request.continue();});
- if(module==='legal-lab'||module==='knowledge')await context.addInitScript(profile=>{localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.access',JSON.stringify(Object.fromEntries(Array.from({length:8},(_,i)=>['topic-'+(i+1),'open']))));},profile);
- if(module==='knowledge')await context.addInitScript(completion=>localStorage.setItem('qa.attempts',JSON.stringify([completion])),careerCompletion);
+ if(['legal-lab','knowledge','reception'].includes(module))await context.addInitScript(profile=>{localStorage.setItem('qa.profile',JSON.stringify(profile));localStorage.setItem('qa.access',JSON.stringify(Object.fromEntries(Array.from({length:8},(_,i)=>['topic-'+(i+1),'open']))));},profile);
  try{
   await page.goto(base+'/#games');await page.locator('[data-game]').first().waitFor();
+  if(module==='knowledge')await page.evaluate(async draft=>{
+   const {durableStore}=await import('/assets/js/durable-store.js');
+   await durableStore.checkpoint(draft,{queue:false});
+  },{...knowledgeScope,phase:'answering',state:careerWorkspace});
   if(module==='legal-lab')await page.evaluate(()=>{location.hash='activity/seminar-4'});else if(module==='knowledge')await page.evaluate(()=>{location.hash='activity/seminar-6/knowledge'});else await page.locator(`[data-game="${module}"] a`).click();
   await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error(module+' import was not requested')),30000);held.then(()=>{clearTimeout(timer);resolve();});});
   await page.goBack();await page.locator('[data-game]').first().waitFor();
@@ -109,7 +122,8 @@ try{for(const engine of(process.env.DURABLE_TEST_BROWSERS||'chromium,webkit').sp
   await context.route('**/*',request=>new URL(request.request().url()).origin===base?request.continue():request.abort());
   await page.goto(base+'/#games');await ready(page);
   assert.deepEqual(await page.locator('[data-game]').evaluateAll(nodes=>nodes.map(node=>node.dataset.game)),['settlements','maps','governor','reception','career']);
-  assert.deepEqual(modules,[],'Catalog does not load heavyweight modules before selection');
+  const entryRequests=modules.filter(url=>new URL(url).pathname!=='/apps/career/assets/seminar-progress.mjs');
+  assert.deepEqual(entryRequests,[],'Catalog loads only the shared Career progress contract before selection');
   for(const locale of ['en','zh','ru']){
    await page.locator(`[data-lang="${locale}"]`).first().click();await ready(page);
    assert.equal(await page.locator('[data-game] a').count(),5);assert.equal(await page.locator('[data-game=career] a').getAttribute('href'),'#games/career');
