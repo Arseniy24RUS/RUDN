@@ -182,7 +182,25 @@ try{for(const engine of (process.env.RELEASE_BROWSERS||'chromium,webkit').split(
     assert.equal(reopened.search,'?language=zh&x=a%20b&x=%2b');
     await other.locator('#lazy').click();await other.locator('#lazy-result').filter({hasText:'B'}).waitFor();
     markStage('standalone-B-update-click');await standalonePage.locator('#update').click();markStage('standalone-B-ready');await standalonePage.locator('#app').filter({hasText:'B B question-7'}).waitFor();assert.equal(new URL(standalonePage.url()).pathname,`/RUDN/_releases/${b.buildId}/standalone.html`);assert.equal(new URL(standalonePage.url()).hash,'#question-3');
-    if(sw==='allow'){markStage('offline-controller');await page.waitForFunction(()=>navigator.serviceWorker.controller!==null);networkDown=true;markStage('offline-reload');await page.reload();markStage('offline-B-ready');await page.locator('#app').filter({hasText:'B B question-7'}).waitFor();networkDown=false;}
+    if(sw==='allow'){
+      markStage('offline-controller');
+      // The offline reload starts after the new worker takes control. A non-null
+      // controller alone also matches the older worker during Firefox activation.
+      await page.evaluate(async()=>{
+        const registration=await navigator.serviceWorker.ready;
+        await registration.update();
+      });
+      await page.waitForFunction(async()=>{
+        const registration=await navigator.serviceWorker.getRegistration();
+        const controller=navigator.serviceWorker.controller;
+        return controller?.state==='activated'&&registration?.active===controller&&
+          !registration.installing&&!registration.waiting;
+      });
+      networkDown=true;
+      markStage('offline-reload');await page.reload();
+      markStage('offline-B-ready');await page.locator('#app').filter({hasText:'B B question-7'}).waitFor();
+      networkDown=false;
+    }
     markStage('update-assertions');
     assert.equal(await page.evaluate(()=>localStorage.getItem('fixture-completed-results')),'[{"attempt":"completed-A","score":100}]');await page.screenshot({path:path.join(out,`${engine}-${sw}.png`)});assert.deepEqual(errors,[]);results.push({engine,serviceWorkers:sw,status:'pass',buildId:b.buildId,oldEntryOpensCurrent:true,completedResultsPreserved:true,cookiePreserved:true,offline:sw==='allow'?'pass':'not-applicable'});
   }catch(error){
