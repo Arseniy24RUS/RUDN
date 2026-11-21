@@ -115,6 +115,7 @@ button.agenda-time:hover,button.agenda-time:focus-visible{background:#e9f6fc}
   .game-shell.turn-scene>.topbar .topbar-brand{width:44px!important;min-width:0;grid-column:1}
   .game-shell.turn-scene>.topbar .core-stats{grid-row:1;grid-column:2;gap:3px;min-width:0}
   .turn-scene .stat-card{min-height:38px;padding:2px 4px;border:0;border-radius:8px;box-shadow:none}
+  .turn-scene .stat-copy{flex:1 1 0;grid-template-columns:minmax(0,1fr);column-gap:0}
   .turn-scene .stat-copy small{font-size:10px;line-height:1.1}
   .turn-scene .stat-copy strong{font-size:13px;line-height:1.2}
   .turn-scene .stat-copy em{display:none!important}
