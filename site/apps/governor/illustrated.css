@@ -1,5 +1,6 @@
 /* Stage 10. Existing RUDN blue/white system; imported art is an independent layer. */
-.start-backdrop{background-image:url('assets/illustrated/region.webp')!important;}
+.start-backdrop{background-image:url('assets/illustrated/region-cover-1024.webp')!important;}
+@media(max-width:700px){.start-backdrop{background-image:url('assets/illustrated/region-cover-640.webp')!important;}}
 .agenda-illustration{height:180px;background:#eaf5fc;}
 .agenda-illustration img{object-fit:contain;object-position:center;max-width:310px;filter:drop-shadow(0 5px 6px #19558b18);}
 .action-art.illustrated-action{background:#edf6fc;}
@@ -156,3 +157,72 @@
 /* Do not cut off a delivery time to keep it beside the cost on narrow cards. */
 .action-card-footer{flex-wrap:wrap;row-gap:4px;}
 .action-card-footer .future-chip{max-width:100%;overflow:visible;text-overflow:clip;}
+
+/* One interactive miniature stays on the governor’s desk throughout the turn. */
+.world-moment.world-host{height:auto;min-height:0;overflow:visible;color:#182f42;background:#e6edf1}
+.world-moment>.world-toolbar,.world-moment>.world-selection,.world-moment>.world-accessible,.world-moment>.world-key{display:none}
+.world-moment .world-window{position:relative;isolation:isolate;flex:0 0 auto;height:clamp(230px,36vh,410px);min-height:0;background:#d4e2ee}
+.world-moment .world-canvas{position:absolute;inset:0}
+.world-moment .moment-year,.world-moment .moment-index>summary{
+ display:flex;align-items:center;gap:6px;line-height:1.1;font-size:12px;font-weight:700;
+ color:#17374b;background:rgba(255,255,255,.94);border:1px solid #b7cdcf;
+ border-radius:8px;box-shadow:0 2px 8px #1c374026
+}
+.moment-year{position:absolute;top:9px;left:9px;padding:8px 10px;pointer-events:none;z-index:4}
+.moment-index{position:absolute;right:9px;top:9px;z-index:6;max-width:min(300px,calc(100% - 18px))}
+.moment-index>summary{margin-left:auto;min-height:38px;width:max-content;max-width:100%;padding:6px 10px;cursor:pointer;list-style:none}
+.moment-index>summary::-webkit-details-marker{display:none}
+.moment-index>div{margin-top:4px;max-height:clamp(142px,25vh,290px);overflow:auto;overscroll-behavior:contain;background:#fff;border:1px solid #b8ced4;border-radius:12px;box-shadow:0 5px 22px #163a4a43;padding:6px;scrollbar-width:thin}
+.moment-index button{display:block;width:100%;background:transparent;border:0;border-radius:6px;text-align:start;color:#234559;cursor:pointer;font:600 13px/1.35 system-ui;padding:8px;min-height:42px}
+.moment-index button:hover,.moment-index button:focus-visible{background:#e2f3ef}
+.moment-index h4{margin:6px 0 0;padding:7px 8px 3px;border-top:1px solid #dbe7e7;color:#52706d;font:700 12px/1.3 system-ui}
+.moment-index>summary:focus-visible{outline:3px solid #064b69;outline-offset:2px}
+.world-moment .world-place{min-height:36px;border-radius:18px;transform:translate(-50%,-58%);padding:7px 9px;background:#fffffff2;border:1px solid #a4b9be;color:#163d4b;box-shadow:0 2px 7px #0d29414a}
+.world-moment .world-place.selected{background:#175b58;color:white;border-color:white}
+.world-moment .world-place:not(.selected){display:flex}
+.world-moment .world-place span{color:inherit}
+.world-moment .world-place b{font-size:11px}
+.world-moment .world-project{transform:translate(-50%,4px);width:29px;height:29px;border:2px solid white}
+.world-moment .world-place::after,.world-moment .world-project::after{content:"";position:absolute;inset:-5px;border-radius:inherit}
+.world-moment .moment-caption{position:relative;display:flex;align-items:center;gap:10px;min-height:56px;padding:7px 13px;background:#f7faf7;border-top:1px solid #becfcb}
+.moment-caption>div{flex:1;min-width:0;line-height:1.24}
+.moment-caption strong,.moment-caption span{display:block;overflow-wrap:anywhere}
+.moment-caption strong{font-size:15px;color:#193b40}
+.moment-caption span{margin-top:3px;font-size:12px;color:#385963}
+.moment-caption>.moment-art{width:49px;height:46px;object-fit:contain;flex:none}
+.moment-caption button{display:grid;place-items:center;flex:none;width:44px;min-height:44px;border:1px solid #bbd0c9;background:white;color:#285646;border-radius:12px;cursor:pointer}
+.moment-halo{position:absolute;height:18px;transform:translate(-50%,-52%);border:2px solid #167468;border-radius:50%;box-shadow:0 0 0 2px #fff9;pointer-events:none;z-index:1}
+.moment-halo[data-kind="approved"]{border-color:#ae6912}
+.moment-halo[data-kind="completed"]{border-style:dashed;border-color:#536879}
+.moment-halo.is-changing::before,.moment-halo.is-changing::after{content:"";position:absolute;inset:-3px -5px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 5px #006e65;animation:moment-ripple .88s ease-out both}
+.moment-halo.is-changing::after{animation-delay:.2s}
+@keyframes moment-ripple{from{opacity:1;transform:scale(.65)}to{opacity:0;transform:scale(1.85)}}
+@media(max-width:900px){
+ .world-moment .world-window,.map-stage .world-moment .world-window{height:clamp(155px,23vh,230px);min-height:0}
+ .world-moment .world-place:not(.selected){display:flex}
+ .world-moment .world-place b{display:none}
+ .world-moment .world-place{transform:translate(-50%,-50%);padding:5px;justify-content:center;min-height:29px;min-width:29px}
+ .world-moment .world-place.selected{outline:2px solid #fff9;outline-offset:1px}
+ .world-moment .world-project{height:23px;width:23px;transform:translate(-50%,7px)}
+ .world-moment .moment-year{top:6px;left:6px;font-size:10px;padding:6px 8px}
+ .world-moment .moment-index{right:6px;top:6px}
+ .world-moment .moment-index>summary{min-height:34px;padding:6px 9px;font-size:10px}
+ .world-moment .moment-index>div{max-height:clamp(102px,15vh,160px)}
+ .world-moment .moment-caption{padding:5px 10px;gap:7px;min-height:44px}
+ .moment-caption strong{font-size:13px}.moment-caption span{font-size:11px}
+ .moment-caption>.moment-art{width:39px;height:36px}
+}
+@media(prefers-reduced-motion:reduce){
+ .moment-halo.is-changing::before,.moment-halo.is-changing::after{display:none;animation:none}
+}
+
+#turn-world.world-moment{height:100%;display:flex;flex-direction:column;overflow:hidden}
+#turn-world.world-moment .world-window{min-height:0;height:auto;flex:1 1 0}
+#turn-world .moment-caption{flex:0 0 auto}
+#turn-world .moment-index[open]{max-height:calc(100% - 12px);display:flex;flex-direction:column}
+#turn-world .moment-index[open]>div{flex:1;min-height:0}
+.moment-transition{pointer-events:none;position:absolute;z-index:1;height:auto;aspect-ratio:1;transform:translate(-50%,-94.8%);opacity:0}
+.moment-transition.leaving{animation:moment-open .82s ease-out both}
+@keyframes moment-open{0%,18%{opacity:1}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.moment-transition{display:none}}
+.moment-caption .moment-reading{display:block;margin-top:3px;color:#315a4d;font:650 11px/1.25 system-ui;overflow-wrap:anywhere}

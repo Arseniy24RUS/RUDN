@@ -10,7 +10,7 @@
   const base = 'assets/illustrated/';
   const serviceBase = 'assets/services/';
   const memo = new Map();
-  const existing = new Set(['school', 'clinic', 'digital', 'industry', 'barrier', 'housing', 'construction']);
+  const existing = new Set(['school', 'school-site', 'clinic', 'digital', 'industry', 'barrier', 'housing', 'construction']);
   const titles = [
     ['school-delivery', 'Строительство школы', 'School construction'],
     ['clinic-delivery', 'Строительство клиники', 'Clinic construction'],
@@ -59,7 +59,7 @@
     'single-window': recipe('public-service-desk', 'equipment'),
     'cyber-first': recipe('backup-server-room', 'equipment'),
     'open-feedback': recipe('civic-tech-workshop'),
-    'school-campus': recipe('school', 'building', 'school-delivery'),
+    'school-campus': recipe('school', 'building', 'school-site'),
     'school-bus': recipe('school-bus'),
     'second-shift': recipe('school', 'service', null, true),
     'medical-hub': recipe('clinic', 'building', 'clinic-delivery'),
@@ -133,7 +133,7 @@
     return {...describe(id, thumb), family: r.asset, form: r.form, site: structural(p),
       contextual: r.contextual, direct: !r.contextual, ended: phase === 'current' && p?.status === 'completed',
       targetView: inDelivery && !r.delivery, inDelivery, deliveryArtwork: inDelivery && !!r.delivery,
-      approximatePair: !!r.delivery, phase, icon: p?.icon || null};
+      matchedSite: r.delivery === 'school-site', approximatePair: !!r.delivery && r.delivery !== 'school-site', phase, icon: p?.icon || null};
   }
   function note(im, lang = 'ru') {
     const local = value => value[G.I18n?.normalize(lang) || lang] || value.ru;
@@ -146,6 +146,11 @@
       ru: 'Планируемый вид после запуска. Сейчас ещё идёт подготовка.',
       en: 'Intended form after launch. Preparation is still in progress.',
       zh: '展示启用后的示意效果。目前仍在筹备中。'
+    });
+    if (im.matchedSite) return local({
+      ru: 'Один школьный кампус на этапах строительства и открытия.',
+      en: 'The same school campus during construction and after opening.',
+      zh: '同一座校园在施工期间和启用后的样貌。'
     });
     if (im.approximatePair) return local({
       ru: 'Иллюстрации этапов программы. Архитектура условная и различается между изображениями.',

@@ -14,6 +14,8 @@ import {governorReflectionText,isGovernorReflection,latestGovernorReflection,mak
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
 
 const G=window.GovernorGame;
+G.I18n.setCatalogLoader(()=>import('./locales/zh-Hans.js'));
+if(G.I18n.normalize(getLocale())==='zh')await G.I18n.ensureCatalog();
 G.Saves.setReleasePolicy({canResume:canResumeGameDraft,mark:markGameDraft});
 const courseResponse=await fetch(resourceURL('../../data/course.json',import.meta.url));
 if(!courseResponse.ok)throw new Error('Course catalogue unavailable');
@@ -32,7 +34,11 @@ let language=G.I18n.normalize(getLocale());
 const tr=(ru,en,zh)=>language==='zh'&&zh?zh:G.I18n.choose(language,ru,en);
 const local=value=>G.I18n.local(value,language);
 $('#platform-loading-text').textContent={ru:'Восстанавливаем профиль платформы…',en:'Restoring your course profile…',zh:'正在恢复课程账号…'}[language];
-const message=text=>{$('#platform-status').textContent=text;};
+function message(text,routine=false){
+  const status=$('#platform-status');
+  status.textContent=text;
+  status.classList.toggle('routine-status',routine);
+}
 const canAccess=()=>{
   if(free)return gameAccessGate('governor',backend,course)?.open!==false;
   if(backend.isAdmin())return true;
@@ -83,7 +89,7 @@ function refresh(){
   const profile=backend.getProfile();
   $('#platform-identity').textContent=backend.isAdmin()?tr('Преподаватель','Instructor'):(profile?.fullName||(free?tr('Гость','Guest','访客'):''));
   $('#platform-identity').title=backend.isAdmin()?(backend.user.displayName||backend.user.email||''):(profile?.fullName||'');
-  if(active)message(syncText());
+  if(active)message(syncText(),free&&latestSaveStatus?.durable!==false);
   if($('#platform-rubric'))renderRules();
   if($('#platform-submission')?.open){$('#platform-submission-status').textContent=syncText();renderReflectionStatus();}
 }
@@ -185,7 +191,7 @@ function submissionDialog(){
   const acknowledged=backend.localAttempts().some(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner);
   $('#platform-submission-title').textContent=tr('Отчёт к седьмому семинару','Report for seminar seven');
   $('#platform-submission-intro').textContent=backend.isAdmin()
-    ?tr('Это пробное прохождение преподавателя. Его можно изучить и скачать; учебный журнал студентов не изменяется.','This is an instructor preview. Inspect or download it; the student gradebook is unchanged.')
+    ?tr('Пробное прохождение преподавателя. Итоги доступны для учебного разбора.','Instructor preview. Your results are available for discussion.')
     :tr('По завершении кампании платформа автоматически рассчитывает оценку от 0 до 5 и сохраняет её вместе с отчётом. Учитывается лучший результат. Критерии оценивают выполнение задания в учебной модели.','When the campaign ends, the platform automatically calculates a grade from 0 to 5 and saves it with the report. Your best result counts. The criteria assess performance within this teaching model.');
   $('#platform-run-progress').textContent=terminal(state)
     ?state.completed?tr('Полная кампания: 20 из 20 решений.','Full campaign: 20 of 20 decisions.')
@@ -254,6 +260,9 @@ async function tryStart(){
   const restored=await backend.loadDraft({owner,activitySlug,mode:'campaign'});
   if(!sameOwner())return;
   const localStore=new G.Saves.Store(storage),localResult=localStore.inspect(),localRaw=localStore.raw();
+  // Authored fields in existing reports can have been saved in any language.
+  if(localRaw||restored?.state?.campaign||run)await G.I18n.ensureCatalog();
+  if(!sameOwner())return;
   const schema=restored?.state?.governorSaveSchema??G.Saves.SCHEMA;
   const restoredState=schema===G.Saves.SCHEMA&&restored?.state?.campaign?G.Engine.restoreState(restored.state.campaign):null;
   if(restored?.state?.campaign&&!restoredState){
@@ -290,7 +299,7 @@ async function tryStart(){
     onSaved:state=>{try{ensureRun(state);refresh();if(runtime&&terminal(state)&&(free||!backend.isAdmin()))submit();}catch{message(tr('Партия сохранена; сведения об отчёте требуют свободного места на устройстве.','Campaign saved; report metadata needs free device storage.'));}},
     onLanguage:next=>{language=G.I18n.normalize(next);setLocale(language);refresh();},
     onEnd:host=>{if(host.querySelector('[data-platform-submit]'))return;const b=document.createElement('button');b.type='button';b.className='primary-button';b.dataset.platformSubmit='';b.textContent=free?tr('Отчёт о кампании','Campaign report','游戏报告'):tr('Оценка и отчёт к семинару','Seminar grade and report');b.addEventListener('click',submissionDialog);host.append(b);},
-    attach:api=>{runtime=api;if(!sameOwner()){block(tr('Профиль изменился во время загрузки. Вернитесь в раздел 7.','Your profile changed while loading. Return to section 7.'));return;}$('#player-name').value=G.Platform.profile.name;$('#player-group').value=G.Platform.profile.group;$('#player-name').readOnly=true;$('#player-group').readOnly=true;$('#platform-loading').hidden=true;$('#app').hidden=false;$('#app').inert=false;$('#platform-report').disabled=!api.canWrite();refresh();installUpdateAdapter();loadEnd({success:true});diagnostics.record('module-ready',{success:true});if(!sessionStorage.getItem(UPDATE_PENDING_KEY)&&terminal(runtime.state())&&(free||!backend.isAdmin()))submit();}
+    attach:api=>{runtime=api;if(!sameOwner()){block(tr('Профиль изменился во время загрузки. Вернитесь в раздел 7.','Your profile changed while loading. Return to section 7.'));return;}$('#player-name').value=G.Platform.profile.name;$('#player-group').value=G.Platform.profile.group;$('#player-name').readOnly=true;$('#player-group').readOnly=true;$('#platform-loading').hidden=true;$('#app').hidden=false;$('#app').inert=false;$('#platform-report').disabled=!api.canWrite();refresh();installUpdateAdapter();loadEnd({success:true});diagnostics.record('module-ready',{success:true});window.dispatchEvent(new Event('governor:playable'));if(!sessionStorage.getItem(UPDATE_PENDING_KEY)&&terminal(runtime.state())&&(free||!backend.isAdmin()))submit();}
   };
   try{
     await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=resourceURL('./src/app.js',import.meta.url).href;script.onload=resolve;script.onerror=reject;document.body.append(script);});
@@ -329,7 +338,7 @@ backend.init().then(tryStart).catch(()=>block(tr('Не удалось восст
 
 // The platform owns caching; never install a competing nested service worker.
 if('serviceWorker'in navigator){
-  let preparing=false,moduleReady=false;
+  let preparing=false,moduleReady=false,canPrepare=false;
   const updateOfflineStatus=()=>{
     const element=$('#offline-status');if(!element)return;
     element.dataset.platformOffline=moduleReady?'ready':'pending';
@@ -341,7 +350,7 @@ if('serviceWorker'in navigator){
   const statusMount=new MutationObserver(()=>{if($('#offline-status')){updateOfflineStatus();statusMount.disconnect();}});
   statusMount.observe(document.body,{childList:true,subtree:true});
   const prepare=()=>{
-    if(preparing||moduleReady||!navigator.serviceWorker.controller)return;
+    if(!canPrepare||preparing||moduleReady||!navigator.serviceWorker.controller)return;
     preparing=true;updateOfflineStatus();
     navigator.serviceWorker.controller.postMessage({type:'PREPARE_MODULE',module:'governor',urls:[location.href,resourceURL('../../assets/course/previews/seminar_07_simulator.jpg',import.meta.url).href]});
   };
@@ -352,6 +361,17 @@ if('serviceWorker'in navigator){
   navigator.serviceWorker.addEventListener('controllerchange',()=>{preparing=false;moduleReady=false;prepare();});
   window.addEventListener('online',prepare);
   window.addEventListener('rudn:locale',updateOfflineStatus);
-  navigator.serviceWorker.register(new URL('service-worker.js',getReleaseContext()?.siteRoot||new URL('../../',import.meta.url)))
-    .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{});
+  window.addEventListener('governor:playable',()=>{
+    const register=()=>{
+      canPrepare=true;
+      navigator.serviceWorker.register(new URL('service-worker.js',getReleaseContext()?.siteRoot||new URL('../../',import.meta.url)),{updateViaCache:'none'})
+        .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{});
+    };
+    // Give the first tap a quiet interval. A visitor who stays on the landing
+    // still gets the complete verified pack without having to opt in.
+    setTimeout(()=>{
+      if('requestIdleCallback' in window)window.requestIdleCallback(register,{timeout:1500});
+      else register();
+    },1200);
+  },{once:true});
 }

@@ -228,9 +228,10 @@ class Suite:
         self.chapter(page)
         page.locator("#action-cards .defer-action").click()
         page.locator("#confirm-action").click()
-        page.locator("#resolution-dialog[open]").wait_for()
+        assert page.locator("#resolution-dialog").is_hidden()
         assert len(self.snapshot(page)["save"]["state"]["history"]) == number
-        page.locator("#continue-turn").click()
+        if number in (5, 10, 15):
+            page.locator("#campaign-course-dialog[open] [data-course-close]").click()
         if number == 20:
             page.locator("#end-dialog[open]").wait_for()
         else:
@@ -298,16 +299,20 @@ class Suite:
         grade = final["grades"][STUDENT_A["studentKey"]]["seminar-7"]
         assert grade["points"] == record["points"] and grade["sourceAttemptId"] == record["id"]
         self.current["automatic_grade"] = {"points": record["points"], "max": 5, "pending": 1}
-        report = self.parity(page, record)
-        with page.expect_download() as download_info:
-            page.locator("#download-report-end").click()
-        download = download_info.value
-        downloaded = self.output / (label + "-report.json")
-        download.save_as(str(downloaded))
-        downloaded_report = json.loads(downloaded.read_text(encoding="utf-8"))
-        assert downloaded_report["final"] == report["final"]
-        assert downloaded_report["population"] == report["population"]
-        assert downloaded_report["decisions"] == report["decisions"]
+        self.parity(page, record)
+        page.locator("#end-summary [data-learning-report]").click()
+        debrief = page.locator("#learning-report[open]")
+        assert "20/20" in debrief.locator(".report-heading").inner_text()
+        tables = debrief.locator(".report-table tbody")
+        assert tables.nth(0).locator("tr").count() == 5
+        assert tables.nth(2).locator("tr").count() == 20
+        rendered_years = tables.nth(2).locator("th").all_text_contents()
+        assert rendered_years == [str(row["year"]) for row in record["governor"]["decisionRegister"]]
+        assert debrief.locator("button.release-close").is_visible()
+        # Unlock notifications may appear inside the active modal with their own dismiss button.
+        assert debrief.locator("button:not(.release-close):not(.toast-close), a[download]").count() == 0
+        assert page.locator("#download-report-end, #settings-export").count() == 0
+        debrief.locator(".release-close").click()
         page.locator("#review-region").click()
         page.locator("#platform-report").click()
         page.locator("#platform-submission[open]").wait_for()

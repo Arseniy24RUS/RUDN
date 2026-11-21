@@ -23,6 +23,17 @@
     if(active||running)return false;
     const logical=logicalEntry();if(!logical)return false;
     if(navigator.onLine===false){status(copy.missing);return false;}
+    // The current alias can point directly to its immutable page. The exact
+    // page checks the live pointer before mounting, including after an update.
+    const aliasBuild=html.dataset.releaseAliasBuild;
+    if(logical==='apps/governor/index.html'&&html.dataset.releaseAlias===logical&&
+        /^[a-f0-9]{32}$/.test(aliasBuild||'')&&/^[a-f0-9]{64}$/.test(html.dataset.releaseAliasDigest||'')){
+      const next=new URL(`_releases/${aliasBuild}/${logical}`,root);
+      // A retired exact page reaches this same recovery through its 404
+      // document without a release-alias attribute and resolves the live pointer.
+      next.search=location.search;next.hash=location.hash;
+      location.replace(next.href);return true;
+    }
     running=true;status(copy.loading);
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),10000);
     try{

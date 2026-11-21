@@ -56,16 +56,9 @@
 
       <div class="start-layout">
         <div class="start-copy">
-          <div class="stage-badge" data-ui="demoBadge">Версия 1.1 · Стратегическая кампания</div>
-          <p class="start-eyebrow" data-ui="startEyebrow">Учебная видеоигра РУДН</p>
           <h1 id="start-title" data-ui="startTitle">Какой останется ваша область?</h1>
           <p class="start-lead" data-ui="startLead">Двадцать годовых решений. Пять территорий. Стройте, договаривайтесь и возвращайтесь к людям, которым дали обещания.</p>
-          <figure class="start-region"><img src="assets/illustrated/region.webp" width="1672" height="941" alt="Иллюстрированная карта пяти территорий Новой области" fetchpriority="high"><figcaption data-ui="regionCaption">Один регион. Пять территорий. Последствия каждого решения.</figcaption></figure>
-          <div class="feature-ribbon" aria-label="Возможности версии">
-            <span><i aria-hidden="true"></i><b>20</b> <span data-ui="featureMission">миссий в четырёх сюжетных главах</span></span>
-            <span><i aria-hidden="true"></i><span data-ui="featureConsequences">карта хранит проекты и последствия</span></span>
-            <span><i aria-hidden="true"></i><span data-ui="featureOffline">синергии, конфликты и повторные прохождения</span></span>
-          </div>
+          <figure class="start-region"><picture><source media="(max-width: 700px)" srcset="assets/illustrated/region-cover-640.webp"><img src="assets/illustrated/region-cover-1024.webp" width="1672" height="941" alt="Иллюстрированная карта пяти территорий Новой области" fetchpriority="high"></picture><figcaption data-ui="regionCaption">Один регион. Пять территорий. Последствия каждого решения.</figcaption></figure>
         </div>
 
         <form id="start-form" class="start-card" novalidate>
@@ -106,6 +99,7 @@
 
           <details class="platform-rubric" id="platform-rubric"><summary>Как рассчитывается оценка 0–5</summary></details>
           <p id="start-error" class="form-error" role="alert"></p>
+          <a class="mobile-setup-link" href="#scenario-select" data-ui="startSetup">Настроить</a>
           <button class="primary-button start-primary" type="submit">
             <span data-ui="startButton">Начать кампанию</span>
             <span class="button-icon" id="start-arrow"></span>
@@ -181,7 +175,7 @@
         <main id="main-game" class="stage-column" tabindex="-1">
           <section id="map-stage" class="map-stage view-panel" data-panel="mission">
             <div id="main-world"></div>
-            <img class="map-art" src="assets/illustrated/region.webp" alt="Стилизованная карта Новой области">
+            <img class="map-art" loading="lazy" src="assets/illustrated/region.webp" alt="Стилизованная карта Новой области">
             <div class="map-shade" aria-hidden="true"></div>
             <div class="weather-layer" id="weather-layer" aria-hidden="true"></div>
             <div id="map-district-auras" class="map-district-auras" aria-hidden="true"></div>
@@ -190,7 +184,7 @@
             <div id="map-story-card" class="map-story-card" aria-live="polite"></div>
 
             <div class="region-card">
-              <div class="region-thumb"><img src="assets/illustrated/region.webp" alt=""></div>
+              <div class="region-thumb"><img loading="lazy" src="assets/illustrated/region.webp" alt=""></div>
               <div>
                 <small data-ui="regionOverview">Ваш регион</small>
                 <strong data-ui="regionName">Новая область</strong>
@@ -300,7 +294,7 @@
   </dialog>
 
   <dialog id="end-dialog" class="game-dialog end-dialog" aria-labelledby="end-title">
-    <div class="end-illustration" aria-hidden="true"><img src="assets/illustrated/region.webp" alt=""></div>
+    <div class="end-illustration" aria-hidden="true"><img loading="lazy" src="assets/illustrated/region.webp" alt=""></div>
     <div class="end-content">
       <p class="end-kicker" data-ui="endTitle">Кампания завершена</p>
       <h2 id="end-title"></h2>
@@ -308,7 +302,6 @@
       <div id="end-summary"></div>
       <div class="end-actions">
         <button id="review-region" class="secondary-button end-review" type="button" data-ui="reviewRegion">Вернуться к региону</button>
-        <button id="download-report-end" class="secondary-button" type="button"><span id="end-download-icon"></span><span data-ui="reportDownload">Скачать полный отчёт</span></button>
         <button id="play-again" class="primary-button" type="button"><span data-ui="playAgain">Новая кампания</span><span class="button-icon" id="play-again-icon"></span></button>
       </div>
     </div>
@@ -319,7 +312,6 @@
   <div id="screen-reader-live" class="sr-only" aria-live="assertive"></div>
 
   <script src="src/i18n.js"></script>
-  <script src="locales/zh-Hans.js"></script>
   <script src="src/i18n-shell.js"></script>
   <script src="src/icons.js"></script>
   <script src="src/game-data.js"></script>

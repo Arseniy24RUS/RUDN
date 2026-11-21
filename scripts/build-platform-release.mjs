@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {parse} from 'acorn';
+import {build,transform} from 'esbuild';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 
@@ -112,7 +113,87 @@ function resolveStatic(value,logical,resources,base){
 }
 function rewriteCSS(source,logical,resources,base){return source.replace(/url\(\s*(['"]?)([^)'"\s]+)\1\s*\)/g,(_,quote,url)=>`url(${quote}${resolveStatic(url,logical,resources,base)}${quote})`);}
 function recoveryMarkup(source){return `<script data-platform-recovery>${source.replace(/<\/script/gi,'<\\/script')}</script>`;}
-function aliasHTML(logical,base,recovery){return `<!doctype html><html lang="ru" data-release-scope="${base}"${logical?` data-release-alias="${logical}"`:' data-release-missing'}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${logical?'РУДН':'404 · РУДН'}</title></head><body><main><h1>${logical?'РУДН':'404'}</h1><p id="releaseRecoveryStatus">${logical?'Открываем актуальную версию…':'Страница не найдена.'}</p></main>${recoveryMarkup(recovery)}</body></html>\n`;}
+const governorEntry='apps/governor/index.html';
+function aliasHTML(logical,base,recovery,target){
+  // The exact Governor entry still verifies the entire manifest before executing
+  // its plan. This hint avoids fetching it twice on a fresh canonical navigation.
+  const hint=logical===governorEntry&&target?.governorManifest
+    ?` data-release-alias-build="${target.buildId}" data-release-alias-digest="${target.manifestSha256}"`:'';
+  return `<!doctype html><html lang="ru" data-release-scope="${base}"${logical?` data-release-alias="${logical}"${hint}`:' data-release-missing'}><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${logical?'РУДН':'404 · РУДН'}</title></head><body><main><h1>${logical?'РУДН':'404'}</h1><p id="releaseRecoveryStatus">${logical?'Открываем актуальную версию…':'Страница не найдена.'}</p></main>${recoveryMarkup(recovery)}</body></html>\n`;}
+async function bundleGovernorBridge(site,resources,runtime,base){
+  const dir=path.join(site,'apps/governor'),name='apps/governor/governor-platform.mjs';
+  const relativeToBridge=file=>{
+    const relative=path.relative(dir,file).split(path.sep).join('/');
+    return relative.startsWith('.')?relative:'./'+relative;
+  };
+  // Release bootstrap and the game must bind to the same native module
+  // instances. Locale packs and Firebase SDKs keep their existing lazy edges.
+  const native=new Set(['release-bootstrap.js','release-resources.js','platform-update-contracts.js','platform-update-failures.js']);
+  const projectModules={name:'governor-platform-imports',setup(builder){
+    builder.onResolve({filter:/^\./},args=>{
+      const [pathname,suffix='']=args.path.split(/(?=[?#])/,2);
+      if(args.kind!=='dynamic-import'&&!native.has(path.basename(pathname)))return;
+      const file=path.resolve(args.resolveDir,pathname);
+      const logical=path.relative(site,file).split(path.sep).join('/');
+      if(!resources[logical])fail('release/unpinned-governor-import:'+logical);
+      return {path:relativeToBridge(file)+suffix,external:true};
+    });
+    builder.onLoad({filter:/\.m?js$/},async args=>{
+      // A native relative URL in a copied module still resolves beside its
+      // original file (e.g. the backend's question catalogue).
+      if(path.dirname(args.path)===dir)return;
+      const source=await fs.readFile(args.path,'utf8');
+      if(!source.includes('import.meta.url'))return;
+      const original=`new URL(${JSON.stringify(relativeToBridge(args.path))},import.meta.url).href`;
+      return {contents:source.replaceAll('import.meta.url',original),resolveDir:path.dirname(args.path),loader:'js'};
+    });
+  }};
+  const result=await build({entryPoints:[path.join(dir,'platform-bridge.js')],bundle:true,format:'esm',target:'es2022',
+    write:false,minify:true,charset:'utf8',legalComments:'inline',plugins:[projectModules]});
+  const text=result.outputFiles[0].text;
+  runtime.set(name,text);resources[name]={kind:'runtime',sha256:digest(text),bytes:Buffer.byteLength(text),url:`${base}_releases/${TOKEN}/${name}`};
+}
+async function bundleGovernor(source,site,resources,runtime,base){
+  // Only adjacent local styles and classic scripts are joined. Modules retain
+  // native execution boundaries and share the platform's existing singletons.
+  const joinGroup=async(html,pattern,extension,getPath)=>{
+    const group=html.match(pattern)?.[0];
+    if(!group)return html;
+    const names=[...group.matchAll(getPath)].map(match=>path.posix.join('apps/governor',match[1]));
+    const pieces=await Promise.all(names.map(async name=>{
+      if(!resources[name]||!name.startsWith('apps/governor/'))fail('release/governor-bundle:'+name);
+      const value=await fs.readFile(path.join(site,name),'utf8');
+      return extension==='css'?rewriteCSS(value,name,resources,base):value;
+    }));
+    const filename='governor-start.'+extension,name='apps/governor/'+filename;
+    const text=(await transform(pieces.join(extension==='css'?'\n':'\n;\n'),{
+      loader:extension,target:'es2020',minify:true,charset:'utf8',legalComments:'inline'
+    })).code;
+    runtime.set(name,text);
+    resources[name]={kind:'runtime',sha256:digest(text),bytes:Buffer.byteLength(text),url:`${base}_releases/${TOKEN}/${name}`};
+    const tag=extension==='css'?`<link rel="stylesheet" href="${filename}">`:`<script src="${filename}"></script>`;
+    return html.replace(group,()=>tag+'\n');
+  };
+  let html=await joinGroup(source,/(?:<link rel="stylesheet" href="[A-Za-z0-9./_-]+\.css">\s*){2,}/,'css',/href="([^"]+)"/g);
+  html=await joinGroup(html,/(?:<script src="[A-Za-z0-9./_-]+\.js"><\/script>\s*){2,}/,'js',/src="([^"]+)"/g);
+  if(resources['apps/governor/governor-start.js']&&resources['apps/governor/platform-bridge.js']){
+    await bundleGovernorBridge(site,resources,runtime,base);
+    html=html.replace('type="module" src="platform-bridge.js"','type="module" src="governor-platform.mjs"');
+  }
+  const hints=[];
+  for(const file of ['release-bootstrap.js','release-resources.js','platform-update-failures.js','platform-update-contracts.js']){
+    if(resources['assets/js/'+file])hints.push(`<link rel="modulepreload" href="../../assets/js/${file}">`);
+  }
+  if(resources['data/course.json'])hints.push('<link rel="preload" as="fetch" crossorigin href="../../data/course.json">');
+  hints.push(`<link rel="preload" as="fetch" crossorigin href="${base}_releases/${TOKEN}/governor-manifest.json">`);
+  if(resources['apps/governor/governor-start.js'])hints.push('<link rel="preload" as="script" href="governor-start.js">');
+  if(resources['apps/governor/governor-platform.mjs'])hints.push('<link rel="modulepreload" href="governor-platform.mjs">');
+  for(const file of ['firebase-core.js','firebase-shared.js']){
+    if(resources['assets/vendor/firebase/'+file])hints.push(`<link rel="modulepreload" href="../../assets/vendor/firebase/${file}">`);
+  }
+  if(resources['apps/governor/src/app.js'])hints.push('<link rel="preload" as="script" href="src/app.js">');
+  return html.replace('</head>',hints.join('\n')+'\n</head>');
+}
 function rewriteHTML(source,logical,resources,base,inlineModules,recovery){
   if(!/<html\b/i.test(source))return rewriteCSS(source.replace(/\b(src|href|poster)\s*=\s*(["'])(.*?)\2/gi,(full,key,quote,value)=>`${key}=${quote}${resolveStatic(value,logical,resources,base)}${quote}`),logical,resources,base);
   const plan=[];
@@ -125,13 +206,30 @@ function rewriteHTML(source,logical,resources,base,inlineModules,recovery){
   });
   if(logical==='index.html'&&!plan.length)plan.push({type:'module',src:resources['assets/js/main.js'].url});
   html=html.replace(/\b(src|href|poster)\s*=\s*(["'])(.*?)\2/gi,(full,key,quote,value)=>`${key}=${quote}${resolveStatic(value,logical,resources,base)}${quote}`);
+  // Governor's two art-directed picture sources each have one exact URL.
+  if(logical===governorEntry)html=html.replace(/(<source\s[^>]*?srcset=")([^",\s]+)(")/gi,(_,before,url,after)=>before+resolveStatic(url,logical,resources,base)+after);
   html=rewriteCSS(html,logical,resources,base).replace(/<html\b([^>]*)>/i,(_,attrs)=>`<html${attrs.replace(/\sdata-release-build=["'][^"']*["']/g,'')} data-release-build="${TOKEN}" data-release-scope="${base}">`);
   // The inline recovery must not push charset metadata beyond HTML's initial
   // encoding prescan. All source/runtime files are UTF-8.
   html=html.replace(/<head\b[^>]*>/i,full=>full+'<meta charset="utf-8">'+recoveryMarkup(recovery));
   if(!/<head\b/i.test(html))html=html.replace(/<html\b[^>]*>/i,full=>full+'<head><meta charset="utf-8">'+recoveryMarkup(recovery)+'</head>');
+  if(logical===governorEntry&&resources['apps/governor/locales/zh-Hans.js']){
+    const url=JSON.stringify(resources['apps/governor/locales/zh-Hans.js'].url);
+    const preload=`<script>(()=>{try{let lang=localStorage.getItem('rudn.locale');if(!['en','ru','zh'].includes(lang))lang=[...(navigator.languages||[]),navigator.language].find(value=>/^(?:en|ru|zh)/i.test(value));if(/^zh/i.test(lang)){const link=document.createElement('link');link.rel='modulepreload';link.href=${url};document.head.append(link);}}catch{}})();</script>`;
+    html=html.replace('</head>',preload+'</head>');
+  }
   const bootstrap=`<script id="platform-entry-scripts" type="application/json">${JSON.stringify(plan).replace(/</g,'\\u003c')}</script>\n<script src="${resources['assets/js/diagnostics-bootstrap.js'].url}" data-platform-diagnostics></script>\n<script type="module" src="${resources['assets/js/release-bootstrap.js'].url}" data-platform-bootstrap></script>`;
   return /<\/body\s*>/i.test(html)?html.replace(/<\/body\s*>/i,bootstrap+'\n</body>'):html+'\n'+bootstrap;
+}
+function governorManifest(manifest,fullDigest){
+  const names=new Set([...manifest.packs.shell,...manifest.packs.governor]);
+  const preview='assets/course/previews/seminar_07_simulator.jpg';
+  if(manifest.resources[preview])names.add(preview);
+  return {schema:manifest.schema,retention:manifest.retention,buildId:manifest.buildId,baselineId:manifest.baselineId,
+    runtimeRoot:manifest.runtimeRoot,entryURL:manifest.entryURL,contracts:manifest.contracts,fullManifestSha256:fullDigest,
+    publicEntries:manifest.publicEntries.filter(name=>names.has(name)),
+    resources:Object.fromEntries([...names].sort().map(name=>[name,manifest.resources[name]])),
+    packs:{shell:manifest.packs.shell,governor:manifest.packs.governor}};
 }
 function packsFor(resources){
   const packs={shell:[]};for(const mod of ['legal-lab','settlements','governor','career','reception','puzzle'])packs[mod]=[];
@@ -163,6 +261,14 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     expectedFiles.add(manifestPath);expectedFiles.add(`_releases/${target.buildId}/release.json`);
     const manifest=JSON.parse(bytes);if(manifest.buildId!==target.buildId)fail('release/build-mismatch');if(manifest.baselineId!==baseline.baselineId)fail('release/baseline-mismatch');
     if(manifest.retention!==RETENTION)fail('release/retention-policy');
+    if(manifest.governorEntryIndex||target.governorManifest){
+      const expectedPath=`_releases/${target.buildId}/governor-manifest.json`;
+      const projection=json(governorManifest(manifest,target.manifestSha256));
+      if(manifest.governorEntryIndex!==1||target.governorManifest?.url!==base+expectedPath||
+          target.governorManifest.sha256!==digest(projection)||
+          await fs.readFile(path.join(out,expectedPath),'utf8')!==projection)fail('release/governor-manifest-integrity');
+      expectedFiles.add(expectedPath);
+    }
     const descriptor=JSON.parse(await fs.readFile(path.join(out,`_releases/${target.buildId}/release.json`),'utf8'));
     if(JSON.stringify(descriptor)!==JSON.stringify(target))fail('release/descriptor-integrity');
     const collections=lazyCollections(manifest,base);
@@ -197,13 +303,14 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     if(JSON.stringify(manifest.publicEntries)!==JSON.stringify([...runtimeTexts.keys()].filter(name=>name.endsWith('.html')&&/<html\b/i.test(runtimeTexts.get(name))).sort()))fail('release/public-entry-inventory');
     if(target===pointer.current){
       const recovery=runtimeTexts.get('assets/js/release-recovery.js');if(!recovery)fail('release/recovery-missing');
-      for(const name of new Set([...Object.keys(baseline.legacyEntryHTML),...manifest.publicEntries].filter(name=>!controls.has(name)))){if(!safeName(name)||!name.endsWith('.html'))fail('release/unsafe-alias');expectedFiles.add(name);if(await fs.readFile(path.join(out,name),'utf8')!==aliasHTML(name,base,recovery))fail('release/alias-integrity:'+name);}
+      for(const name of new Set([...Object.keys(baseline.legacyEntryHTML),...manifest.publicEntries].filter(name=>!controls.has(name)))){if(!safeName(name)||!name.endsWith('.html'))fail('release/unsafe-alias');expectedFiles.add(name);if(await fs.readFile(path.join(out,name),'utf8')!==aliasHTML(name,base,recovery,manifest.publicEntries.includes(name)?target:null))fail('release/alias-integrity:'+name);}
       if(await fs.readFile(path.join(out,'404.html'),'utf8')!==aliasHTML(null,base,recovery))fail('release/recovery-integrity');
       if(await fs.readFile(path.join(out,'index.html'),'utf8')!==runtimeTexts.get('index.html'))fail('release/root-entry-integrity');
     }
     const graph=new Map(),roots=new Set(Object.keys(manifest.resources).filter(name=>name==='assets/js/main.js'||/(?:^|\/)entry\.mjs$/.test(name)));
     for(const [name,item] of Object.entries(manifest.resources).filter(([n,e])=>e.kind==='runtime'&&/\.html$/.test(n))){
       const html=runtimeTexts.get(name),plan=/<script id="platform-entry-scripts" type="application\/json">([\s\S]*?)<\/script>/.exec(html);
+      if(/<html\b/i.test(html)&&!plan)fail('release/missing-entry-plan:'+name);
       for(const entry of plan?JSON.parse(plan[1]):[])if(entry.src){const physical=sitePath(entry.src.split(/[?#]/)[0],base);const found=Object.entries(manifest.resources).find(([,value])=>sitePath(value.url,base)===physical);if(found)roots.add(found[0]);else fail('release/unpinned-html-entry:'+name);}
     }
     // Parse rather than scan minified strings. Besides static ES declarations,
@@ -277,7 +384,7 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
   if(adaptiveHosting){if(!resources[ADAPTIVE_MANIFEST])fail('release/adaptive-manifest-missing');Object.assign(resources[ADAPTIVE_MANIFEST],adaptiveResourceMetadata(adaptiveHosting));}
   const recovery=await fs.readFile(path.join(site,'assets/js/release-recovery.js'),'utf8');
   onProgress('transform-runtime');const runtime=new Map();for(const [name,item] of Object.entries(resources))if(item.kind==='runtime'){
-    let text=await fs.readFile(path.join(site,name),'utf8');if(/\.html$/.test(name))text=rewriteHTML(text,name,resources,base,runtime,recovery);else if(/\.css$/.test(name))text=rewriteCSS(text,name,resources,base);runtime.set(name,text);
+    let text=await fs.readFile(path.join(site,name),'utf8');if(name===governorEntry)text=await bundleGovernor(text,site,resources,runtime,base);if(/\.html$/.test(name))text=rewriteHTML(text,name,resources,base,runtime,recovery);else if(/\.css$/.test(name))text=rewriteCSS(text,name,resources,base);runtime.set(name,text);
   }
   const inputHash=crypto.createHash('sha256').update(`schema:${SCHEMA}\nbase:${base}\nbaseline:${baselineId}\n`);
   for(const [name,item] of Object.entries(resources))inputHash.update(name+'\0'+(runtime.has(name)?digest(runtime.get(name)):item.sha256)+'\n');
@@ -297,12 +404,18 @@ export async function buildRelease({site,baseline:baselineDir,out,sitePath:base=
     else if(!frozen[physical])await copyResource(site,name,out,physical);
   }
   const publicEntries=[...runtime.keys()].filter(name=>name.endsWith('.html')&&/<html\b/i.test(runtime.get(name))).sort();
-  const manifest={schema:SCHEMA,retention:RETENTION,buildId,baselineId,workerTemplateSha256:source['service-worker.js'].sha256,runtimeRoot:`${base}_releases/${buildId}/`,entryURL:`${base}_releases/${buildId}/index.html`,contracts,publicEntries,resources,packs:packsFor(resources),...(collections.length?{lazyCollections:collections}:{})};
+  const manifest={schema:SCHEMA,retention:RETENTION,buildId,baselineId,workerTemplateSha256:source['service-worker.js'].sha256,runtimeRoot:`${base}_releases/${buildId}/`,entryURL:`${base}_releases/${buildId}/index.html`,contracts,publicEntries,resources,packs:packsFor(resources),...(publicEntries.includes(governorEntry)?{governorEntryIndex:1}:{}),...(collections.length?{lazyCollections:collections}:{})};
   const manifestBytes=json(manifest),target={buildId,manifestURL:`${base}_releases/${buildId}/manifest.json`,manifestSha256:digest(manifestBytes),entryURL:manifest.entryURL};
+  if(manifest.governorEntryIndex){
+    const projection=json(governorManifest(manifest,target.manifestSha256));
+    const name=`_releases/${buildId}/governor-manifest.json`;
+    target.governorManifest={url:base+name,sha256:digest(projection)};
+    await put(out,name,projection);
+  }
   await put(out,`_releases/${buildId}/manifest.json`,manifestBytes);await put(out,`_releases/${buildId}/release.json`,json(target));
   await put(out,'release.json',json({schema:SCHEMA,retention:RETENTION,current:target,previous}));await put(out,'platform-baseline.json',json({schema:3,retention:RETENTION,baselineId,sitePath:base,files:frozen,legacyEntryHTML}));
   await put(out,'index.html',await fs.readFile(path.join(out,`_releases/${buildId}/index.html`)));
-  for(const name of new Set([...Object.keys(legacyEntryHTML),...publicEntries].filter(name=>!controls.has(name))))await put(out,name,aliasHTML(name,base,recovery));
+  for(const name of new Set([...Object.keys(legacyEntryHTML),...publicEntries].filter(name=>!controls.has(name))))await put(out,name,aliasHTML(name,base,recovery,publicEntries.includes(name)?target:null));
   await put(out,'404.html',aliasHTML(null,base,recovery));
   let worker=await fs.readFile(path.join(site,'service-worker.js'),'utf8');if(!worker.includes('const PLATFORM_RELEASE=null;'))fail('release/worker-placeholder-missing');
   worker=worker.replace('const PLATFORM_RELEASE=null;',`const PLATFORM_RELEASE=${JSON.stringify({schema:SCHEMA,retention:RETENTION,current:target,previous})};`);await put(out,'service-worker.js',worker);

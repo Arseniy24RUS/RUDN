@@ -14,8 +14,8 @@
   const intlLocale=value=>({ru:'ru-RU',en:'en-US',zh:'zh-CN'}[normalize(value)]);
   const escapeRegex=value=>value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
   function prepare(){
-    if(catalog===G.ChineseCatalog)return;
-    catalog=G.ChineseCatalog||[];exact=new Map();patterns=[];authoredExact=new Map();authoredPatterns=[];
+    if(!G.ChineseCatalog||catalog===G.ChineseCatalog)return;
+    catalog=G.ChineseCatalog;exact=new Map();patterns=[];authoredExact=new Map();authoredPatterns=[];
     for(const entry of catalog){
       // A separate bidirectional index is used only for known authored fields
       // in historical reports. The normal UI translation contract stays intact.
@@ -111,7 +111,23 @@
       getOwnPropertyDescriptor:()=>({enumerable:true,configurable:true})
     })});
   }
-  const ready=()=>Array.isArray(G.ChineseCatalog)&&G.ChineseCatalog.length>=2031&&G.ChineseCatalog.every(entry=>entry.zh);
-  const api={normalize,intlLocale,choose,local,translate,authored,install,ready,setLanguage:value=>(language=normalize(value)),getLanguage:()=>language};
+  let catalogLoader=null,loading=null,verifiedCatalog=null;
+  const loaded=()=>{
+    const rows=G.ChineseCatalog;
+    if(!Array.isArray(rows)||!rows.length)return false;
+    if(rows===verifiedCatalog)return true;
+    if(!rows.every(entry=>typeof entry.zh==='string'&&entry.zh.length))return false;
+    verifiedCatalog=rows;return true;
+  };
+  const ready=()=>Boolean(catalogLoader)||loaded();
+  function ensureCatalog(){
+    if(loaded())return Promise.resolve();
+    if(!catalogLoader)return Promise.reject(new Error('governor/catalog-unavailable'));
+    if(!loading)loading=catalogLoader().then(()=>{
+      if(!loaded())throw new Error('governor/catalog-incomplete');
+    }).finally(()=>{loading=null;});
+    return loading;
+  }
+  const api={normalize,intlLocale,choose,local,translate,authored,install,ready,ensureCatalog,setCatalogLoader:load=>{catalogLoader=load;},setLanguage:value=>(language=normalize(value)),getLanguage:()=>language};
   G.I18n=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

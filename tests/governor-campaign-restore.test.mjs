@@ -8,7 +8,7 @@ import {canResumeGameDraft,markGameDraft} from '../site/assets/js/game-release-p
 import {scopedStorage,createRunMetadata} from '../site/apps/governor/platform-contract.js';
 
 globalThis.crypto ||= webcrypto;
-const [saveSource,bridge]=await Promise.all(['src/save-system.js','platform-bridge.js'].map(name=>fs.readFile(new URL('../site/apps/governor/'+name,import.meta.url),'utf8')));
+const [saveSource,bridge,i18n,catalog]=await Promise.all(['src/save-system.js','platform-bridge.js','src/i18n.js','locales/zh-Hans.js'].map(name=>fs.readFile(new URL('../site/apps/governor/'+name,import.meta.url),'utf8')));
 const owner='student:governor-restore-synthetic',scope={owner,activitySlug:'seminar-7',mode:'campaign'};
 const state={version:'fixture',completed:false,sessionId:'same-campaign',storiesRunId:'same-run',history:[1,2,3]},run={submissionId:'same-attempt',campaignToken:state.storiesRunId};
 const A='a'.repeat(32),B='b'.repeat(32);
@@ -26,7 +26,7 @@ function fixture(){
       $,diagnostics,diagnosticService:{forModule:()=>diagnostics},resourceURL:()=>new URL('https://example.test/app.js'),
       backend:{authReady:true,isAdmin:()=>false,getProfile:()=>({fullName:'Synthetic',group:'G'}),loadDraft:s=>durable.loadDraft(s),checkpoint:(s,o)=>durable.checkpoint(s,o)},
       document:{createElement:()=>({}),body:{append(script){script.onload();}}},CustomEvent:class{},sessionStorage:{getItem:()=>null},location:{href:'https://example.test/apps/governor/index.html'}});
-    sandbox.window=sandbox;sandbox.dispatchEvent=()=>{};vm.runInContext(saveSource,sandbox);
+    sandbox.window=sandbox;sandbox.dispatchEvent=()=>{};vm.runInContext(i18n,sandbox);vm.runInContext(catalog,sandbox);vm.runInContext(saveSource,sandbox);
     vm.runInContext(`const G=GovernorGame;G.Saves.setReleasePolicy({canResume:canResumeGameDraft,mark:markGameDraft});
       const context='course',free=false,activitySlug='seminar-7',language='ru';
       let owner=null,active=false,storage=null,run=null,runtime=null,started=false,latestSaveStatus=null,reflectionFailure='';

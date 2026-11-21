@@ -4,7 +4,7 @@ import {mkdtemp, mkdir, readFile, rm, writeFile, access} from 'node:fs/promises'
 import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
-import {buildRelease} from '../scripts/build-platform-release.mjs';
+import {buildRelease,verifyRelease} from '../scripts/build-platform-release.mjs';
 import {resolveAsset} from '../site/apps/governor/src/resource-url.js';
 
 const siteSource = new URL('../site/', import.meta.url);
@@ -146,4 +146,18 @@ test('standalone asset paths and an installed platform resolver remain supported
     globalThis.__RUDN_RELEASE__ = previousContext;
     globalThis.GovernorGame.Platform = previousPlatform;
   }
+});
+
+test('Governor startup index exactly projects the verified offline packs from its own build', async t => {
+  const {built,manifest}=await fixture(t);
+  const {current}=JSON.parse(await readFile(path.join(built.out,'release.json'),'utf8'));
+  const file=path.join(built.out,'_releases',manifest.buildId,'governor-manifest.json');
+  const index=JSON.parse(await readFile(file,'utf8'));
+  assert.equal(index.fullManifestSha256,current.manifestSha256);
+  const names=new Set([...manifest.packs.shell,...manifest.packs.governor]);
+  assert.deepEqual(Object.keys(index.resources).sort(),[...names].sort());
+  for(const name of names)assert.deepEqual(index.resources[name],manifest.resources[name]);
+  delete index.resources['apps/governor/index.html'];
+  await writeFile(file,JSON.stringify(index));
+  await assert.rejects(verifyRelease(built.out),/governor-manifest-integrity/);
 });
