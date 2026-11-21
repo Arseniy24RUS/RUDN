@@ -379,6 +379,28 @@ try{
   if(!preliminary)await record(browser,`${name}-delivery-retry-report`,[390,844],async(page,context,rec)=>{
    const item=await startDossier(page);page._qaId=`${name}-empty`;await page.locator('#delivery').click();const report=await dossier(page,item,{empty:true});assert.equal(await page.locator('#deliveries').innerText(),'0');await page.locator(sel('retry-delivery')).waitFor();await page.locator('#delivery').click();await page.locator(sel('retry-delivery')).click();await page.waitForFunction(()=>document.querySelector('#deliveries')?.textContent==='1');await page.locator('#remount').click();await page.locator('.ll-result').waitFor();assert.equal(await page.locator('#deliveries').innerText(),'1');assert.equal(await page.locator(sel('retry-delivery')).count(),0);await page.locator('#reportVariant').selectOption('stripped');await page.locator('#report').click();await page.waitForFunction(()=>document.querySelector('#host-status')?.textContent==='report ready');assert.equal(await page.locator('[data-five-criterion]').count(),5);assert.match(await page.locator('.ll-result-score').innerText(),/^0\s*\/\s*5/);assert.equal(await page.locator(sel('finish-assessment')).count(),0);rec.savedAttemptId=report.attemptId;rec.emptyAnswerRecordRemoved=true;rec.screenshot=await shot(page,`${name}-stored-report`);
   },{url:isolated});
+  if(!preliminary)await record(browser,`${name}-delivery-resume-after-reload`,[390,844],async(page,context,rec)=>{
+   const item=await startDossier(page);page._qaId=`${name}-resume`;
+   await page.locator('#delivery').click();
+   const report=await dossier(page,item,{empty:true});
+   assert.equal(await page.locator('#deliveries').innerText(),'0');
+   const saved=await page.evaluate(()=>{
+     const state=JSON.parse(localStorage.getItem('qa-host:A'));
+     if(state.assessment.delivery!=='pending')throw Error('Completed assessment was not persisted as pending');
+     state.assessment.delivery='not-submitted';
+     localStorage.setItem('qa-host:A',JSON.stringify(state));
+     return state.assessment;
+   });
+   await page.reload();await ready(page);
+   await page.waitForFunction(()=>document.querySelector('#deliveries')?.textContent==='1');
+   await page.locator(sel('retry-delivery')).waitFor({state:'hidden'});
+   await page.getByText('Результат сохранён. При подключении к сети журнал синхронизируется автоматически.',{exact:true}).waitFor();
+   const restored=await page.evaluate(()=>JSON.parse(localStorage.getItem('qa-host:A')).assessment);
+   assert.equal(restored.attemptId,report.attemptId);
+   assert.deepEqual(restored,{...saved,delivery:'host-accepted'});
+   rec.savedAttemptId=restored.attemptId;rec.recoveredDelivery=true;
+   rec.screenshot=await shot(page,`${name}-delivery-resumed`);
+  },{url:isolated});
   if(!preliminary)await record(browser,`${name}-readonly-report-integrity`,[390,844],async(page,context,rec)=>{
    const item=await startDossier(page);page._qaId=`${name}-integrity`;await dossier(page,item);
    await page.locator('#reportVariant').selectOption('criteria');await page.locator('#report').click();await page.waitForFunction(()=>document.querySelector('#host-status')?.textContent==='report ready');assert.equal(await page.locator('[data-review-marker]').count(),0);assert.doesNotMatch(await page.locator('#mount').innerText(),/Harmless QA marker/);assert.match(await page.locator('.ll-result-score').innerText(),/^5\s*\/\s*5/);assert.equal(await page.locator('[data-five-criterion]').count(),5);rec.recomputedCriteria=true;

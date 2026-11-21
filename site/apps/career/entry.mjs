@@ -6,6 +6,7 @@ import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../ass
 import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
 import {compatibleCareerMirror,currentGameReleaseBuild,gameWorkspaceId,notifyRetiredGameDraft} from '../../assets/js/game-release-policy.js';
 import {seminar5ProgressFromWorkspace} from './assets/seminar-progress.mjs';
+import {readCareerSeminarProgress} from '../../assets/js/career-course.js';
 
 const MODULE_BASE = new URL('./', import.meta.url);
 const BANK_PREFIX = 'data/vacancies/bank/';
@@ -176,6 +177,7 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
   signal?.addEventListener('abort',abortFromHost,{once:true});
   if(signal?.aborted){api.destroy();throw new DOMException('Career mount aborted.','AbortError');}
   const restored=await readWorkspace();
+  const restoredProgress=free?null:await readCareerSeminarProgress({backend,owner:durableOwner,workspace:restored});
   personalityComplete=!free&&restored?.state?.personalityComplete===true;
   const legacyTime=Math.max(0,...[...values.values()].map(value=>{try{return Date.parse(JSON.parse(value)?.updatedAt)||0;}catch{return 0;}}));
   if(restored?.state?.values&&restored.updatedAt>=legacyTime){values.clear();for(const [key,value] of Object.entries(restored.state.values))values.set(key,String(value));if(free&&initialRoute==='home'&&VALID_ROUTES.has(restored.state.route))route=restored.state.route;}
@@ -290,8 +292,9 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         await api.flush();
         if(saveFailure)await persistWorkspace();
         const workspace=await readWorkspace();
-        if(!seminar5ProgressFromWorkspace(workspace?.state).reviewComplete)throw Object.assign(new Error('A saved vacancy review is required.'),{code:'career/review-required'});
-        const completion=await durableStore.loadDraft({owner:durableOwner,activitySlug:'career-diagnostic',mode:'diagnostic'});
+        const progress=await readCareerSeminarProgress({backend,owner:durableOwner,workspace});
+        if(!progress.reviewComplete)throw Object.assign(new Error('A saved vacancy review is required.'),{code:'career/review-required'});
+        const completion=await backend.loadDraft({owner:durableOwner,activitySlug:'career-diagnostic',mode:'diagnostic'});
         if(saveFailure||completion?.saveStatus?.durable!==true||!completion?.state?.record)throw Object.assign(new Error('Career result is not durably saved.'),{code:'storage/local-save-failed'});
         if(!destroyed)await onOpenKnowledge();
       },
@@ -300,7 +303,10 @@ async function mountCareerInternal(container, {owner = 'guest', context: hostCon
         if(destroyed||free)return;
         if(VALID_ROUTES.has(update.stage))progressStage=update.stage;
         if(typeof update.personalityComplete==='boolean'&&personalityComplete!==update.personalityComplete){personalityComplete=update.personalityComplete;persistWorkspace();}
-        if(typeof onProgress==='function')onProgress(seminar5ProgressFromWorkspace(workspaceState(),progressStage));
+        if(typeof onProgress==='function'){
+          const progress=seminar5ProgressFromWorkspace(workspaceState(),progressStage);
+          onProgress(!progress.reviewComplete&&restoredProgress?.reviewComplete?{...restoredProgress,stage:progress.stage}:progress);
+        }
       },
       get destroyed() {return destroyed;},
       storageKey:name => `${ownerKey}${name}`,

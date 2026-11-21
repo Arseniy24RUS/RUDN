@@ -5795,8 +5795,8 @@
     },
     {
       "url": "apps/legal-lab/entry.mjs",
-      "bytes": 111085,
-      "sha256": "ffdcf1f3c3ad0230c9827ea1d5e83bb551391fac3bf9342218cc00676cb59b70"
+      "bytes": 112107,
+      "sha256": "98d302bc13935e5a159d522d67f86219c899d042be5fedb2766bb3b58fdd453a"
     },
     {
       "url": "apps/legal-lab/lib/article-evidence.mjs",
@@ -5815,13 +5815,13 @@
     },
     {
       "url": "apps/legal-lab/lib/corpus.mjs",
-      "bytes": 5174,
-      "sha256": "53ab39a620d49a4b6be38af6df2a29ae80e5f54a1174cd859a21420561ea4805"
+      "bytes": 5234,
+      "sha256": "601c86c04c2f55633f4928263a5a8afab35ec735e323977bb9eadc88436b135d"
     },
     {
       "url": "apps/legal-lab/lib/five-view.mjs",
-      "bytes": 8134,
-      "sha256": "9901b36cd8e839a248e9403c7b2a2c207c64e4d5163300923543d7d61b21a37f"
+      "bytes": 8314,
+      "sha256": "59e6b5b0096f8ce09b5a6c80debe28e82b8f0429d8ceb8c70eee6309e7a17179"
     },
     {
       "url": "apps/legal-lab/lib/live.mjs",
@@ -5840,8 +5840,8 @@
     },
     {
       "url": "apps/legal-lab/lib/reader-data.mjs",
-      "bytes": 16984,
-      "sha256": "de0e778d5ce65cbc62406657de4e7cd410f04d52efa6a8244f5821a69ca9ebb9"
+      "bytes": 18302,
+      "sha256": "bb7278b14b01f5932a220fb263a5ec5630964632082f70c3323834e06474b1d4"
     },
     {
       "url": "apps/legal-lab/lib/reader-registry.mjs",
@@ -5850,8 +5850,8 @@
     },
     {
       "url": "apps/legal-lab/lib/reader-search-worker.mjs",
-      "bytes": 2810,
-      "sha256": "0eed2d017ecdc9f14622fe8b35266c03150bb3ddf02432810ec001bf8f9e4d0e"
+      "bytes": 3571,
+      "sha256": "5cfcd3933b08704479a4b9533b4d56e5ced0f41bb591dfbdd042dcf5db6ddbd2"
     },
     {
       "url": "apps/legal-lab/lib/reader-tools.mjs",
@@ -5860,8 +5860,8 @@
     },
     {
       "url": "apps/legal-lab/lib/reader-view.mjs",
-      "bytes": 18248,
-      "sha256": "96b22a0244d51e7783b9dedd422a5419db765e207ce0a23788a43383e0fad6c1"
+      "bytes": 18278,
+      "sha256": "1bf25b5324e1098a19ed726137c93adaf538747f4452cb95eec50a112be2603c"
     },
     {
       "url": "apps/legal-lab/lib/report-corpus.mjs",
@@ -5904,6 +5904,6 @@
       "sha256": "38dd2219119cc956cd759c44ea2712aaff913b2c7384d7efbbdb8730da8cf35a"
     }
   ],
-  "totalBytes": 146488404,
+  "totalBytes": 146491775,
   "policy": "On-demand module cache through the course service worker; never cache auth/API responses here."
 }

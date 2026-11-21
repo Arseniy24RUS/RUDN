@@ -87,8 +87,14 @@ export function createLegalLabPersistence({backend, owner, period, contentVersio
       if(draft.phase==='completed'&&state.assessment&&extension.terminalIntentId===draft.lastIntentId&&
         !retryAssessment(state.assessment)&&['host-accepted','pending','not-submitted'].includes(extension.delivery))state.assessment.delivery=extension.delivery;
     }
-    if(retryAssessment(state.assessment)&&state.assessment.delivery==='host-accepted'&&
-      (terminal?.attemptId!==state.assessment.attemptId||acceptedRetryIntentId!==terminal?.lastIntentId))state.assessment.delivery='pending';
+    const assessment=state.assessment;
+    if(assessment?.result&&!assessment.preview){
+      if(retryAssessment(assessment)){
+        assessment.delivery=terminal?.attemptId===assessment.attemptId&&acceptedRetryIntentId===terminal.lastIntentId?'host-accepted':'pending';
+      }else if(draft.phase==='completed'&&assessment.attemptId===draft.attemptId){
+        assessment.delivery=acceptedTerminalIntentId===draft.lastIntentId?'host-accepted':'pending';
+      }
+    }
     return state;
   }
   function terminalMatches(row,assessment){
@@ -96,15 +102,38 @@ export function createLegalLabPersistence({backend, owner, period, contentVersio
     const saved=legalLabState(row.state);
     return same(fixedAssessment(saved?.assessment),fixedAssessment(assessment))&&saved?.assessment?.phase==='completed';
   }
+  async function receivedResult(row){
+    const receipt=row?.state?.resultAttempt;
+    if(row?.phase!=='completed'||receipt?.id!==row.attemptId||receipt.type!=='legal-lab'||receipt.activitySlug!==scope.activitySlug)return false;
+    const matches=attempt=>attempt?.id===receipt.id&&['type','activitySlug','contentVersion','caseId','startedAt','finishedAt','points','maxPoints']
+      .every(key=>attempt[key]===receipt[key])&&attempt.legalLab?.answerJson===receipt.legalLab?.answerJson;
+    const local=await store.listAttempts({owner:canonicalOwner});
+    assertActive();
+    if(local.some(matches))return true;
+    if(!student||!backend.user||!backend.readCloud||globalThis.navigator?.onLine===false)return false;
+    try{
+      const studentKey=canonicalOwner.slice(8);
+      const [attempt,grade]=await Promise.all([
+        backend.readCloud(`attempts/${studentKey}/${receipt.id}`,{authoritative:true}),
+        backend.readCloud(`grades/${studentKey}/${scope.activitySlug}`,{authoritative:true})
+      ]);
+      assertActive();
+      return matches(attempt)&&Number.isFinite(grade?.points)&&grade.points>=receipt.points;
+    }catch(error){
+      if(!active())throw error;
+      return false;
+    }
+  }
   async function loadTerminal(state,{remote=false}={}){
     const assessment=state?.assessment;
     if(!retryAssessment(assessment)){terminal=null;acceptedRetryIntentId=null;return;}
     terminal=remote?await loadScope(retryScope(assessment.attemptId)):await store.loadDraft(retryScope(assessment.attemptId));
     assertActive();
     if(!terminalMatches(terminal,assessment)||acceptedRetryIntentId!==terminal?.lastIntentId)acceptedRetryIntentId=null;
-    // A durable terminal receipt proves the host save even if the browser closed
-    // before its final workspace autosave. It does not claim cloud delivery.
-    if(terminalMatches(terminal,assessment)&&!((await conflictsFor(terminal)).length))acceptedRetryIntentId=terminal.lastIntentId;
+    // A cloud checkpoint can arrive just before its separate journal write.
+    if(terminalMatches(terminal,assessment)&&!((await conflictsFor(terminal)).length)&&await receivedResult(terminal))
+      acceptedRetryIntentId=terminal.lastIntentId;
+    else acceptedRetryIntentId=null;
   }
   async function loadScope(target){
     let row=await backend.loadDraft(target);
@@ -120,8 +149,7 @@ export function createLegalLabPersistence({backend, owner, period, contentVersio
   async function load() {
     draft=await loadScope(scope);
     practice=await loadScope(practiceScope);
-    const extension=practiceState(practice?.state,contentVersion);
-    acceptedTerminalIntentId=draft?.phase==='completed'&&extension?.terminalIntentId===draft.lastIntentId&&extension.delivery==='host-accepted'?draft.lastIntentId:null;
+    acceptedTerminalIntentId=draft?.phase==='completed'&&await receivedResult(draft)?draft.lastIntentId:null;
     await loadTerminal(restoredState(),{remote:true});
     try{await checkConflicts();}catch(error){if(error.code!=='storage/conflict')throw error;}
     return restoredState();

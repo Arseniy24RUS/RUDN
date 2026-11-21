@@ -89,14 +89,24 @@ export function bindCareerProgress(nav,{activitySlug,getLocale}){
   };
 }
 
-export async function readCareerSeminarProgress({backend,owner}={}){
+export async function readCareerSeminarProgress({backend,owner,workspace}={}){
   const durableOwner=owner==='guest'?'guest:career':owner;
   if(!/^(?:student:[^\s]+|teacher:[^\s]+|guest:career)$/.test(durableOwner||''))return seminar5ProgressFromWorkspace(null);
   const scope={owner:durableOwner,activitySlug:'career-workspace',mode:'diagnostic'};
-  const draft=await backend.loadDraft({...scope,attemptId:gameWorkspaceId('workspace-v1')})||
-    (currentGameReleaseBuild()?await backend.loadDraft(scope):null);
-  const matches=draft&&Object.entries(scope).every(([key,value])=>draft[key]===value);
-  return seminar5ProgressFromWorkspace(matches?draft.state:null);
+  const legacyAttemptId='workspace-v1';
+  const build=currentGameReleaseBuild();
+  const draft=workspace!==undefined?workspace:
+    (await backend.loadDraft({...scope,attemptId:gameWorkspaceId(legacyAttemptId)})||(build?await backend.loadDraft(scope):null));
+  const matches=candidate=>candidate&&Object.entries(scope).every(([key,value])=>candidate[key]===value);
+  const progress=seminar5ProgressFromWorkspace(matches(draft)?draft.state:null);
+  if(!build||progress.reviewComplete||matches(draft)&&draft.attemptId===legacyAttemptId)return progress;
+
+  // A newer workspace can retain only the compatible vacancy data. The
+  // validated completed course review in the original workspace still counts.
+  const legacy=await backend.loadDraft({...scope,attemptId:legacyAttemptId});
+  if(!matches(legacy)||legacy.attemptId!==legacyAttemptId||legacy.conflictId||legacy.saveStatus?.state==='conflict')return progress;
+  const previous=seminar5ProgressFromWorkspace(legacy.state,progress.stage);
+  return previous.reviewComplete?previous:progress;
 }
 
 export async function readCareerKnowledgeCompletion({backend,owner,activitySlug}){

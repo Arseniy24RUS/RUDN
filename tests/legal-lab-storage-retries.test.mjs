@@ -23,15 +23,24 @@ function fixture(){
   const network=syntheticTransport(),devices=[];
   function device(name,storage=memoryStorage()){
     const store=createDurableStore({indexedDB:null,localStorage:storage,broadcast:false,locks:null,databaseName:name});
-    const backend={generation:1,user:{uid},getProfile(){return this.profile;},profile:{studentKey},loadDraft:s=>store.loadDraft(s),checkpoint:(s,o)=>store.checkpoint(s,o),restTransport:()=>network.transport};
+    let blockAttemptCommit=false;
+    const cloudReads=[],hostSaves=[];
+    const backend={generation:1,user:{uid},getProfile(){return this.profile;},profile:{studentKey},loadDraft:s=>store.loadDraft(s),checkpoint:(s,o)=>store.checkpoint(s,o),restTransport:()=>network.transport,
+      async readCloud(path,options){cloudReads.push({path,options});return (await network.transport.get(path)).value;}};
     const sync=createCheckpointSync({store,deviceId:name,getIdentity:()=>({owner,studentKey,uid:backend.user.uid,generation:backend.generation}),transport:network.transport,
-      commitAttempt:(attempt,options)=>commitStudentAttempt(network.transport,attempt,{studentKey,uid,activityMax:{'seminar-4':5},...options})});backend.durableSync=()=>sync;
+      commitAttempt(attempt,options){
+        if(blockAttemptCommit)throw new TypeError('Synthetic interruption after terminal checkpoint sync');
+        return commitStudentAttempt(network.transport,attempt,{studentKey,uid,activityMax:{'seminar-4':5},...options});
+      }});backend.durableSync=()=>sync;
     backend.saveAttempt=async attempt=>{
       const scope={owner,activitySlug:'seminar-4',mode:attempt.draftMode,attemptId:attempt.id},previous=await store.loadDraft(scope);
-      await store.complete({...scope,contentVersion:version,state:{...previous?.state,phase:'completed',resultAttempt:copy(attempt)},attempt:copy(attempt)});return attempt;
+      const record={...copy(attempt),studentKey,ownerUid:uid};
+      hostSaves.push(record.id);
+      await store.complete({...scope,contentVersion:version,state:{...previous?.state,phase:'completed',resultAttempt:record},attempt:record});return record;
     };
     const persistence=createLegalLabPersistence({backend,store,owner,period,contentVersion:version});
-    const d={store,storage,sync,backend,persistence,base:persistence.attemptId,
+    const d={store,storage,sync,backend,persistence,cloudReads,hostSaves,base:persistence.attemptId,
+      blockAttemptCommit(){blockAttemptCommit=true;},
       scope:{owner,activitySlug:'seminar-4',mode:'legal-lab-workspace',attemptId:persistence.attemptId},
       checkpoint:state=>persistence.checkpoint({state,contentVersion:version}),
       async retry(){for(const op of await store.listPending({owner,includeDeferred:true,limit:1000}))await store.retry(op.id,{revision:op.revision});return sync.flush();},
@@ -53,6 +62,83 @@ test('five-task receipt completes a distinct scope; workspace and prior grades s
     state.assessment.delivery='host-accepted';await d.checkpoint(state);await d.retry();
     const restored=f.device('five-two');assert.deepEqual(await restored.persistence.load(),state);
     const terminal=await restored.store.loadDraft({...d.scope,mode:'legal-lab-assessment',attemptId:state.assessment.attemptId});assert.equal(terminal.phase,'completed');assert.equal(terminal.state.legalLabParent.mode,'legal-lab-workspace');
+  }finally{f.close();}
+});
+
+test('a synced terminal checkpoint without an attempt is recoverable on a fresh device',async()=>{
+  const f=fixture();try{
+    const original=f.device('interrupted-submit');await original.persistence.load();
+    const state=finished(workspace(original.base));await original.checkpoint(state);
+    original.blockAttemptCommit();
+    await original.persistence.saveAttempt(attemptOf(state));
+    state.assessment.delivery='host-accepted';await original.checkpoint(state);await original.retry();
+    const id=state.assessment.attemptId,attemptPath='attempts/'+studentKey+'/'+id;
+    const terminalPath='checkpoints/'+studentKey+'/seminar-4/'+id;
+    const terminal=await f.get(terminalPath);
+    assert.equal(terminal.current.phase,'completed');
+    assert.equal(await f.get(attemptPath),null);
+
+    const fresh=f.device('interrupted-new-device');
+    assert.deepEqual(await fresh.store.listAttempts({owner}),[]);
+    assert.equal(await fresh.store.loadDraft({...fresh.scope,mode:'legal-lab-assessment',attemptId:id}),null);
+    const resumed=await fresh.persistence.load();
+    assert.deepEqual(resumed,{...state,assessment:{...state.assessment,delivery:'pending'}});
+    assert.ok(fresh.cloudReads.some(read=>read.path===attemptPath&&read.options?.authoritative===true));
+    assert.deepEqual(fresh.hostSaves,[]);
+    await fresh.persistence.saveAttempt(attemptOf(resumed));
+    await fresh.retry();
+    assert.deepEqual(fresh.hostSaves,[id]);
+    assert.deepEqual(Object.keys(await f.get('attempts/'+studentKey)),[id]);
+    assert.equal((await f.get(attemptPath)).points,state.assessment.result.points);
+    assert.deepEqual((await f.get(terminalPath)).current.state,terminal.current.state);
+  }finally{f.close();}
+});
+
+test('a matching authoritative attempt confirms a fresh-device result without another host save',async()=>{
+  const f=fixture();try{
+    const original=f.device('confirmed-submit');await original.persistence.load();
+    const state=finished(workspace(original.base));await original.checkpoint(state);
+    await commitStudentAttempt(f.transport,{id:'higher-previous-grade',studentKey,activitySlug:'seminar-4',points:5,maxPoints:5,type:'quiz'},
+      {studentKey,uid,activityMax:{'seminar-4':5}});
+    await original.persistence.saveAttempt(attemptOf(state));await original.retry();
+    // The device was closed before persisting the host-accepted UI marker.
+    const id=state.assessment.attemptId,attemptPath='attempts/'+studentKey+'/'+id;
+    const official=await f.get(attemptPath);
+    assert.equal(official.id,id);
+    const gradePath='grades/'+studentKey+'/seminar-4';
+    assert.equal((await f.get(gradePath)).points,5);
+    const fresh=f.device('confirmed-new-device');
+    assert.deepEqual(await fresh.store.listAttempts({owner}),[]);
+    assert.deepEqual(await fresh.persistence.load(),{...state,assessment:{...state.assessment,delivery:'host-accepted'}});
+    assert.ok(fresh.cloudReads.some(read=>read.path===attemptPath&&read.options?.authoritative===true));
+    assert.ok(fresh.cloudReads.some(read=>read.path===gradePath&&read.options?.authoritative===true));
+    assert.deepEqual(fresh.hostSaves,[]);
+    assert.equal((await fresh.store.listPending({owner,includeDeferred:true})).length,0);
+    assert.deepEqual(await f.get(attemptPath),official);
+  }finally{f.close();}
+});
+
+for(const priorPoints of [null,2])test('an authoritative attempt with a '+(priorPoints===null?'missing':'lower')+' grade remains recoverable after acknowledgement loss',async()=>{
+  const f=fixture();try{
+    const original=f.device('attempt-without-grade');await original.persistence.load();
+    const state=finished(workspace(original.base));await original.checkpoint(state);
+    if(priorPoints!==null)await commitStudentAttempt(f.transport,{id:'lower-previous-grade',studentKey,activitySlug:'seminar-4',points:priorPoints,maxPoints:5,type:'quiz'},
+      {studentKey,uid,activityMax:{'seminar-4':5}});
+    await original.persistence.saveAttempt(attemptOf(state));
+    f.setLoseAttemptAck(true);await original.retry();
+    assert.equal(f.ackLossPending(),false);
+    const id=state.assessment.attemptId,attemptPath='attempts/'+studentKey+'/'+id;
+    const gradePath='grades/'+studentKey+'/seminar-4',official=await f.get(attemptPath);
+    assert.equal(official.id,id);
+    assert.equal((await f.get(gradePath))?.points??null,priorPoints);
+
+    const fresh=f.device('grade-missing-new-device');
+    assert.deepEqual(await fresh.persistence.load(),state);
+    assert.ok(fresh.cloudReads.some(read=>read.path===gradePath&&read.options?.authoritative===true));
+    await fresh.persistence.saveAttempt(attemptOf(state));await fresh.retry();
+    assert.deepEqual(fresh.hostSaves,[id]);
+    assert.deepEqual(await f.get(attemptPath),official);
+    assert.equal((await f.get(gradePath)).points,state.assessment.result.points);
   }finally{f.close();}
 });
 
