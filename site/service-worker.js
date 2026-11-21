@@ -152,6 +152,7 @@ const SHELL=[
   './assets/js/firebase-rest.js',
   './assets/js/firebase-gateway.js',
   './assets/js/form-draft.js',
+  './assets/js/governor-reflections.js',
   './assets/js/governor-report-locale.js',
   './assets/js/backend.js?v=1.3.10',
   './assets/js/session.js?v=1.3.10',
@@ -386,6 +387,10 @@ const GOVERNOR_ASSETS=[
   "./apps/governor/platform.css",
   "./apps/governor/recovery.css",
   "./apps/governor/release.css",
+  "./apps/governor/campaign.css",
+  "./apps/governor/src/campaign-ui.js",
+  "./apps/governor/src/campaign-strategy.js",
+  "./apps/governor/src/resource-url.js",
   "./apps/governor/src/agenda-ui.js",
   "./apps/governor/src/agenda.js",
   "./apps/governor/src/app.js",
@@ -447,7 +452,12 @@ const PUZZLE_SHELL=[
 ];
 // The course shell reads this small version catalog on every route, including
 // Governor/quiz return. Full legal documents and translations remain lazy.
-const SHARED_DATA=['./apps/legal-lab/data/catalog.json'];
+const SHARED_DATA=[
+  './apps/legal-lab/data/catalog.json',
+  // Shared draft and course modules import these before any lesson can render.
+  './assets/js/game-release-policy.js',
+  './apps/career/assets/seminar-progress.mjs',
+];
 const PRECACHE=[...SHELL,...SHARED_DATA,...CAREER_SHELL,...GOVERNOR_ASSETS];
 // The puzzle entry and catalogs must survive the first offline navigation after
 // an update. Its scripts already belong to the platform shell; prepare the whole

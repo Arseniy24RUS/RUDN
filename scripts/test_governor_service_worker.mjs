@@ -4,6 +4,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import vm from 'node:vm';
 import test from 'node:test';
+import {seminarTopic} from '../site/assets/js/seminar-modules.js';
 
 const siteRoot=fileURLToPath(new URL('../site/',import.meta.url));
 const workerSource=await readFile(path.join(siteRoot,'service-worker.js'),'utf8');
@@ -15,6 +16,7 @@ assert.notEqual(futureVersion,currentVersion,'The second update must install a d
 const scope='https://example.test/platform-rudn/';
 const modulePath='apps/governor/';
 const excludedNames=new Set(['LICENSE','VERSION']);
+const gameReleaseModules=['./assets/js/game-release-policy.js','./apps/career/assets/seminar-progress.mjs'];
 const indexHTML=await readFile(path.join(siteRoot,'index.html'),'utf8');
 const globalStylesheets=[...indexHTML.replace(/<!--[\s\S]*?-->/g,'').matchAll(/<link\b[^>]*>/gi)].flatMap(([tag])=>{
   const attributes=Object.fromEntries([...tag.matchAll(/\b([^\s=<>/]+)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/g)]
@@ -210,9 +212,10 @@ test('module manifest includes runtime files; platform and puzzle entry are inst
   }
   assert.ok(worker.installedRequests.every(request=>request.cache==='reload'));
   const installedApps=[...new Set(worker.installedRequests.map(request=>new URL(request.url).pathname.slice(new URL(scope).pathname.length)).filter(path=>path.startsWith('apps/')))];
-  assert.deepEqual(installedApps.sort(),['apps/legal-lab/data/catalog.json','apps/puzzle.html'],
-    'Only the puzzle entry and shared course metadata may install; full documents, translations and optional module assets stay lazy');
-  assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')).length,29);
+  assert.deepEqual(installedApps.sort(),['apps/career/assets/seminar-progress.mjs','apps/legal-lab/data/catalog.json','apps/puzzle.html'],
+    'Only the puzzle entry and shared course dependencies may install; full documents, translations and optional module assets stay lazy');
+  const core=new Set(worker.core);
+  assert.equal(worker.precache.filter(entry=>entry.startsWith('./apps/career/')&&!core.has(entry)).length,29);
   assert.ok(worker.cacheName.startsWith(worker.cachePrefix+`v${currentVersion}-`));
 });
 
@@ -252,13 +255,13 @@ test('failure to retrieve any global stylesheet prevents activating an incomplet
   });
 });
 
-test('the first offline course reload has its shared catalog and every manifest icon without a prior controlled visit',async()=>{
+test('the first offline course reload has its shared catalog, game release imports, and every manifest icon without a prior controlled visit',async()=>{
   const worker=makeWorker();
   await worker.emit('install');
   await worker.emit('activate');
   const catalog='./apps/legal-lab/data/catalog.json';
   const manifest=JSON.parse(await readFile(path.join(siteRoot,'manifest.webmanifest'),'utf8'));
-  const entries=[catalog,...manifest.icons.map(icon=>'./'+icon.src)];
+  const entries=[catalog,...gameReleaseModules,...manifest.icons.map(icon=>'./'+icon.src)];
   assert.ok((await stat(path.join(siteRoot,catalog))).size<=32*1024,'Shared metadata must stay small; full legal content remains lazy');
   const before=worker.networkCalls;
   worker.fetch=async()=>{throw new TypeError('Network unavailable')};
@@ -633,15 +636,28 @@ test('page boot pins its exact build and only the controlling worker may wake th
   const main=await readFile(path.join(siteRoot,'assets/js/main.js'),'utf8');
   const helper=main.slice(main.indexOf('function connectPageRelease(){'),main.indexOf('async function bootstrap(){'));
   assert.ok(helper.startsWith('function connectPageRelease(){'));
+  const receptionEntryStart=main.indexOf('function receptionEntry(');
+  assert.ok(receptionEntryStart>=0);
+  const receptionEntryEnd=main.indexOf('\n}',receptionEntryStart);
+  assert.ok(receptionEntryEnd>receptionEntryStart);
+  const receptionEntrySource=main.slice(receptionEntryStart,receptionEntryEnd+2);
+  const data={course:{topics:[{seminar:{module:'reception',slug:'reception-practice'}}]}};
+  let canonicalRoute;
   const listeners=new Map(),sent=[],checks=[];
   const exact={buildId:'a'.repeat(32),manifestURL:scope+'manifest.json',manifestSha256:'b'.repeat(64)};
   const original={postMessage:message=>sent.push(message)};
   const updated={postMessage:message=>sent.push(message)};
   const workers={controller:original,ready:Promise.resolve(),addEventListener:(type,handler)=>listeners.set(type,handler)};
-  vm.runInNewContext(helper.replace('import.meta.url',JSON.stringify(scope+'assets/js/main.js?v=1.3.2'))+'\nconnectPageRelease();',{
+  vm.runInNewContext(receptionEntrySource+'\n'+helper.replace('import.meta.url',JSON.stringify(scope+'assets/js/main.js?v=1.3.2'))+'\nconnectPageRelease();',{
     URL,navigator:{serviceWorker:workers},CONFIG:{version:currentVersion},backend:{},diagnostics:{record(){}},attemptOwner:()=> 'guest',updateAdapters:()=>[],currentCleanup:null,
-    getReleaseContext:()=>exact,bootstrapUpdateCoordinator:()=>({check:reason=>checks.push(reason)})
+    data,seminarTopic,getReleaseContext:()=>exact,
+    bootstrapUpdateCoordinator:options=>{
+      canonicalRoute=options.canonicalRoute;
+      return {check:reason=>checks.push(reason)};
+    }
   });
+  assert.equal(canonicalRoute('#games/reception'),'#activity/reception-practice');
+  assert.equal(canonicalRoute('#games/governor'),'#games/governor');
   await Promise.resolve();
   assert.ok(sent.length>=1);
   assert.ok(sent.every(message=>message.type==='BIND_BUILD'&&message.buildId===exact.buildId));

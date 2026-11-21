@@ -5,6 +5,7 @@
 (function (root) {
   'use strict';
   const G = root.GovernorGame = root.GovernorGame || {};
+  const asset = src => G.resolveAsset ? G.resolveAsset(src) : src;
   if (!G.AssetMetadata && typeof require === 'function') require('./asset-metadata.js');
   const base = 'assets/illustrated/';
   const serviceBase = 'assets/services/';
@@ -135,15 +136,27 @@
       approximatePair: !!r.delivery, phase, icon: p?.icon || null};
   }
   function note(im, lang = 'ru') {
-    if (im.contextual) return lang === 'en'
-      ? 'Thematic illustration, not a literal output of this measure.'
-      : 'Тематический образ: он не означает, что мера создаёт именно этот объект.';
-    if (im.targetView) return lang === 'en'
-      ? 'Intended form after launch. Preparation is still in progress.'
-      : 'Планируемый вид после запуска. Сейчас ещё идёт подготовка.';
-    return lang === 'en'
-      ? 'Representative programme illustration, not a count of facilities or people.'
-      : 'Условный образ программы, не количество объектов или обслуженных жителей.';
+    const local = value => value[G.I18n?.normalize(lang) || lang] || value.ru;
+    if (im.contextual) return local({
+      ru: 'Тематический образ: он не означает, что мера создаёт именно этот объект.',
+      en: 'Thematic illustration, not a literal output of this measure.',
+      zh: '主题插图，不表示该措施一定建设图中的设施。'
+    });
+    if (im.targetView) return local({
+      ru: 'Планируемый вид после запуска. Сейчас ещё идёт подготовка.',
+      en: 'Intended form after launch. Preparation is still in progress.',
+      zh: '展示启用后的示意效果。目前仍在筹备中。'
+    });
+    if (im.approximatePair) return local({
+      ru: 'Иллюстрации этапов программы. Архитектура условная и различается между изображениями.',
+      en: 'Illustrations of programme stages. Building forms are approximate and differ between images.',
+      zh: '项目阶段示意图。建筑形态仅供示意，不同图片中的建筑外形有所不同。'
+    });
+    return local({
+      ru: 'Условный образ программы, не количество объектов или обслуженных жителей.',
+      en: 'Representative programme illustration, not a count of facilities or people.',
+      zh: '项目示意图，不代表设施数量或实际服务人数。'
+    });
   }
   function topic(id) {
     const map = {'rural-healthcare': 'mobile-medical-unit', 'school-neighbourhood': 'school',
@@ -153,9 +166,10 @@
   }
   const safe = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
   function tag(im, {className = '', alt = '', lazy = true} = {}) {
-    return `<img class="${safe(className)}" src="${safe(im.src)}" width="${im.width}" height="${im.height}" style="--art-limit:${im.maxDisplayWidth}px" data-art-id="${safe(im.id)}" alt="${safe(alt)}" ${lazy ? 'loading="lazy"' : 'loading="eager"'} decoding="async">`;
+    return `<img class="${safe(className)}" src="${safe(asset(im.src))}" width="${im.width}" height="${im.height}" style="--art-limit:${im.maxDisplayWidth}px" data-art-id="${safe(im.id)}" alt="${safe(alt)}" ${lazy ? 'loading="lazy"' : 'loading="eager"'} decoding="async">`;
   }
   function preload(src) {
+    src = asset(src);
     if (memo.has(src)) return memo.get(src).promise;
     const entry = {image: null, failed: false, promise: null};
     memo.set(src, entry);
@@ -177,8 +191,8 @@
     const im = event.target;
     if (im?.tagName !== 'IMG' || !im.dataset.artId || im.dataset.artFallback) return;
     im.dataset.artFallback = 'true'; im.classList.add('art-unavailable');
-    im.src = serviceBase + 'unavailable.svg';
-    im.alt = root.document.documentElement.lang === 'en' ? 'Illustration unavailable' : 'Иллюстрация недоступна';
+    im.src = asset(serviceBase + 'unavailable.svg');
+    im.alt = ({ru: 'Иллюстрация недоступна', en: 'Illustration unavailable', zh: '插图暂不可用', 'zh-Hans': '插图暂不可用'})[root.document.documentElement.lang] || 'Иллюстрация недоступна';
   }, true);
   if (G.DATA?.ui) {
     G.DATA.ui.ru.demoBadge = '0.11 · Объекты и услуги';
@@ -186,7 +200,7 @@
   }
   G.IllustratedAssets = {VERSION: '2.0.0', base, serviceBase, catalog, recipes, spec, family, structural,
     image, describe, note, file, tag, topic, preload,
-    peek: src => memo.get(src)?.image || null, failed: src => !!memo.get(src)?.failed,
+    peek: src => memo.get(asset(src))?.image || null, failed: src => !!memo.get(asset(src))?.failed,
     prepare: () => preload(base + 'region.webp')};
   if (typeof module !== 'undefined') module.exports = G.IllustratedAssets;
 })(typeof window !== 'undefined' ? window : globalThis);

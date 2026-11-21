@@ -62,7 +62,7 @@
     for(const effect of [p.activationEffects,p.activationResilience,p.annualEffects])if(!effect||Object.values(effect).some(v=>!finite(v,-1000,1000)))errors.push('project-effects');
    }
    for(const [i,r]of s.history.entries()){
-    const m=Agenda.mode(s)==='agenda'&&i<5?Agenda.byId(r.missionId):D.missions[i];if(!m||r.missionId!==m.id||!m.actions.some(a=>a.id===r.actionId)||!['treasury','cofinance','debt','reserve'].includes(r.fundingMode))errors.push('decision-reference');
+    const m=Agenda.isFlexibleTurn(s,i)?Agenda.byId(r.missionId):D.missions[i];if(!m||r.missionId!==m.id||!m.actions.some(a=>a.id===r.actionId)||!['treasury','cofinance','debt','reserve'].includes(r.fundingMode))errors.push('decision-reference');
    }
    // Validate display caches against their authoritative year snapshot or live supply.
    // A newly entered crisis is applied by advanceYear, not retroactively to last year's display.

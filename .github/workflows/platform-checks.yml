@@ -97,6 +97,10 @@ jobs:
       - run: npm run build:firebase && npm run build:career
       - run: python -m pip install playwright==1.61.0
       - run: python -m playwright install --with-deps ${{ matrix.browser }}
+      - name: Play a Governor campaign in the browser
+        run: >-
+          python scripts/test_governor_campaign_browser.py --engine '${{ matrix.browser }}'
+          --full --output "${{ runner.temp }}/governor-${{ matrix.browser }}"
       - name: Verify automatic diagnostics and restore in real browser engines
         env:
           RELEASE_BROWSERS: ${{ matrix.browser }}
@@ -133,4 +137,5 @@ jobs:
             ${{ runner.temp }}/loader-retry-${{ matrix.browser }}
             ${{ runner.temp }}/standalone-diagnostics-${{ matrix.browser }}
             ${{ runner.temp }}/shell-${{ matrix.browser }}
+            ${{ runner.temp }}/governor-${{ matrix.browser }}
           retention-days: 30

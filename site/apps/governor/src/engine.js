@@ -143,6 +143,7 @@
   }
 
   function getChapter(state) {
+    if (Agenda.persistent(state)) return Math.min(4, 1 + Math.floor(state.turnIndex / 5));
     const mission = getCurrentMission(state);
     return mission ? mission.chapter : 4;
   }
@@ -462,7 +463,7 @@
   }
 
   function enterCurrentMission(state) {
-    const mission = getCurrentMission(state);
+    const mission = Agenda.persistent(state) ? Agenda.eventForYear(state) || getCurrentMission(state) : getCurrentMission(state);
     state.currentEntry = null;
     if (!mission || !mission.crisis || state.entryApplied[mission.id]) {
       ensureFeasibleChoice(state, mission);
@@ -604,6 +605,7 @@
     enterCurrentMission(state);
     evaluateBadges(state);
     Stories.sync(state);
+    if (opts.strategyId && root.GovernorGame?.CampaignStrategy?.create) state.campaignStrategy = root.GovernorGame.CampaignStrategy.create(state, opts.strategyId);
     if(opts.recoveryCase){state.recovery=Recovery.fresh();state.version=RECOVERY_VERSION;state.sessionId+='-R1';}
     if(opts.budgetMode==='decisions'){state.budgetReview=BudgetReview.fresh();state.version=REVIEW_VERSION;state.sessionId+='-B1';}
     return state;
@@ -1027,6 +1029,7 @@
     const closedLedger = Finance.closeTurn(state);
     if (state.history.length) state.history[state.history.length - 1].fiscalLedger = deepClone(closedLedger);
 
+    const strategyReview = root.GovernorGame?.CampaignStrategy?.review?.(state, state.turnIndex + 1) || null;
     const isLast = state.turnIndex >= DATA.missions.length - 1;
     if (isLast) {
       state.completed = true;
@@ -1037,12 +1040,12 @@
       state.selectedPlacementId = null;
       const newBadges = evaluateBadges(state);
       Stories.sync(state);
-      return { state, completed: true, newBadges, closedLedger };
+      return { state, completed: true, newBadges, closedLedger, strategyReview };
     }
 
     state.turnIndex += 1;
     state.agenda.selectedId = null;
-    if (Agenda.mode(state) === 'agenda') state.activeView = state.turnIndex <= Agenda.LENGTH ? 'agenda' : 'mission';
+    if (Agenda.mode(state) === 'agenda') state.activeView = Agenda.open(state) ? 'agenda' : 'mission';
     state.draft = null;
     state.governance.draft = null;
     const lifecycle = applyLifecycle(state, Finance.advancePortfolio(state));
@@ -1067,6 +1070,7 @@
       income,
       newBadges,
       lifecycle,
+      strategyReview,
       openedLedger: deepClone(state.finance.currentLedger),
       closedLedger
     };
@@ -1131,13 +1135,16 @@
     const completed = new Set((state.history || []).map(item => item.missionId));
     return (DATA.chapters || []).map(chapter => {
       const missions = DATA.missions.filter(mission => mission.chapter === chapter.id);
-      if (chapter.id===1 && Agenda.mode(state)==='agenda') {
-        const rows=Array.from({length:5},(_,i)=>{
+      if (Agenda.persistent(state) || (chapter.id===1 && Agenda.mode(state)==='agenda')) {
+        const offset=(chapter.id-1)*5;
+        const rows=Array.from({length:5},(_,slot)=>{
+          const i=offset+slot;
           const r=state.history[i];
           return {record:r||null,mission:r?Agenda.byId(r.missionId):{id:'agenda-slot-'+i,threadPhase:'design',title:{ru:`Повестка ${state.population.baseYear+i} года`,en:`Agenda for ${state.population.baseYear+i}`},objective:{ru:'Выберите следующий приоритет',en:'Choose the next priority'}},
             status:r?'done':state.turnIndex===i?'current':'locked'};
         });
-        return {chapter,records:rows,completed:Math.min(5,state.history.length),total:5,status:state.history.length>=5?'done':'current'};
+        const count=Math.max(0,Math.min(5,state.history.length-offset));
+        return {chapter,records:rows,completed:count,total:5,status:count===5?'done':state.turnIndex>=offset?'current':'locked'};
       }
       const records = missions.map(mission => ({
         mission: Agenda.byId(mission.id, state),
@@ -1236,6 +1243,7 @@
   function validateStateUnchecked(state) {
     if (!Integrity.check(state, DATA, Population, Finance).ok) return false;
     if (Recovery.verify(state).length) return false;
+    if (root.GovernorGame?.CampaignStrategy?.check?.(state)?.length) return false;
     if (BudgetReview.verify(state).length) return false;
     if (BudgetReview.pending(state) && !verifyBudgetPending(state)) return false;
     if (state?.stories && Stories.verify(state).length) return false;
@@ -1265,7 +1273,7 @@
     if (!Array.isArray(state.history) || !Array.isArray(state.finance.ledgers)) return false;
     const expectedHistory = state.completed || state.awaitingContinue ? state.turnIndex + 1 : state.turnIndex;
     if (state.history.length !== expectedHistory) return false;
-    if (state.history.some((r,i)=>r.turn!==i+1 || ((Agenda.mode(state)!=='agenda'||i>=Agenda.LENGTH) && r.missionId!==DATA.missions[i].id))) return false;
+    if (state.history.some((r,i)=>r.turn!==i+1 || (!Agenda.isFlexibleTurn(state,i) && r.missionId!==DATA.missions[i].id))) return false;
     if (state.finance.ledgers.length !== (state.completed ? DATA.missions.length : state.turnIndex)) return false;
     if ([state.finance.treasury,state.finance.reserve,state.finance.debt].some(n=>!Number.isFinite(n)||n<0)) return false;
     if (state.finance.debt > state.finance.debtLimit + 1e-7) return false;
@@ -1296,7 +1304,7 @@
       if (state?.version === '0.8.0-consolidation' && state?.contentVersion === 'stage8-2026-09-05') {
         state.migratedFrom = {version:state.version,contentVersion:state.contentVersion};
         state.version = VERSION;state.contentVersion = CONTENT_VERSION;
-        state.agenda = Agenda.create('guided');
+        state.agenda = {...Agenda.create('guided'),version:Agenda.LEGACY_VERSION};
       }
       if (!validateState(state)) return null;
       state.language = ['ru','en','zh'].includes(state.language) ? state.language : 'ru';
@@ -1347,6 +1355,7 @@
     const finance = Finance.getSummary(state);
     return {
       firstTermAgenda: Agenda.report(state),
+      campaignStrategy: state.campaignStrategy ? deepClone(state.campaignStrategy) : null,
       recoveryCase: Recovery.report(state),
       budgetReview: BudgetReview.report(state),
       campaignMode: Agenda.mode(state),

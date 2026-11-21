@@ -10,6 +10,7 @@ import {gameAccessGate} from '../../assets/js/games-catalog.js?v=1.3.10';
 import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.10';
 import {durableStore} from '../../assets/js/durable-store.js';
 import {canResumeGameDraft,markGameDraft} from '../../assets/js/game-release-policy.js';
+import {governorReflectionText,isGovernorReflection,latestGovernorReflection,makeGovernorReflection} from '../../assets/js/governor-reflections.js';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
 
 const G=window.GovernorGame;
@@ -22,7 +23,8 @@ const context=new URL(location.href).searchParams.get('context')==='free'?'free'
 const free=context==='free',activitySlug=free?'governor-freeplay':'seminar-7';
 const courseUrl=new URL(free?'../../#games':'../../#activity/seminar-7',import.meta.url).href;
 const currentOwner=()=>attemptOwner()==='guest'&&free?'guest:governor':attemptOwner();
-let owner=null,active=false,storage=null,run=null,runtime=null,started=false,submissionBusy=false;
+let owner=null,active=false,storage=null,run=null,runtime=null,started=false,submissionBusy=false,reflectionBusy=false;
+let reflectionFailure='';
 const storageValues=new Map(),pendingCheckpoints=new Set();
 let latestSaveStatus=null,updateAdapter=null,updateCoordinator=null,updatePaused=false;
 const diagnosticService=getSharedPlatformDiagnostics({backend,getLocale:()=>getLocale(),getModule:()=> 'governor'});let diagnostics=diagnosticService.forModule('governor');
@@ -42,21 +44,21 @@ const terminal=s=>Boolean(s&&(s.completed||G.BudgetReview.stopped(s)));
 function stored(key,fallback=null){try{return JSON.parse(storage.getItem(key))??fallback;}catch{return fallback;}}
 function checkpointCampaign(state){
  if(!owner||!run||!state)return Promise.resolve();
- const snapshot={campaign:structuredClone(state),run:structuredClone(run),storage:Object.fromEntries(storageValues)},started=performance.now(),scope=diagnostics;
+ const snapshot={governorSaveSchema:G.Saves.SCHEMA,campaign:structuredClone(state),run:structuredClone(run),storage:Object.fromEntries(storageValues)},started=performance.now(),scope=diagnostics;
  const promise=backend.checkpoint({owner,activitySlug,mode:'campaign',attemptId:run.submissionId,contentVersion:String(state.version||'governor-v1'),phase:terminal(state)?'completed':'answering',state:snapshot},{queue:owner.startsWith('student:')})
   .then(saved=>{scope.record('checkpoint',{operation:'draft-save',success:!!saved.saveStatus?.durable,code:saved.saveStatus?.durable?'ok':'storage',durationMs:performance.now()-started});latestSaveStatus=saved.saveStatus;if(sameOwner())refresh();return saved;})
   .catch(error=>{scope.error(error,{event:'checkpoint',code:'storage',operation:'save',durationMs:performance.now()-started});window.dispatchEvent(new CustomEvent('rudn:storage-warning',{detail:{owner,errorCode:error.code||'storage/unavailable'}}));return null;});
  pendingCheckpoints.add(promise);promise.finally(()=>pendingCheckpoints.delete(promise));return promise;
 }
 async function flushCampaign(){if(runtime?.state())await checkpointCampaign(runtime.state());await Promise.allSettled([...pendingCheckpoints]);await durableStore.flush();}
-function persistRun(state=runtime?.state()){storage.setItem('platform-run',JSON.stringify(run));if(state)checkpointCampaign(state);}
+function persistRun(state=runtime?.state()){run.updatedAt=Math.max(Date.now(),(Number(run.updatedAt)||0)+1);storage.setItem('platform-run',JSON.stringify(run));if(state)checkpointCampaign(state);}
 function ensureRun(state){
   if(!run||run.campaignToken&&state?.storiesRunId&&run.campaignToken!==state.storiesRunId){run=createRunMetadata();}
   if(state?.storiesRunId)run.campaignToken=state.storiesRunId;
   persistRun(state);return run;
 }
 function runChanged(state){
-  run=createRunMetadata();run.campaignToken=state?.storiesRunId||null;
+  run=createRunMetadata();run.campaignToken=state?.storiesRunId||null;reflectionFailure='';
   try{persistRun(state);message(tr('Новая партия сохраняется в вашем профиле на этом устройстве.','A new campaign is saved to your profile on this device.'));}
   catch{message(tr('Не удалось сохранить сведения о попытке. Скачайте файл партии.','Attempt metadata could not be saved. Download a campaign save.'));}
 }
@@ -83,10 +85,11 @@ function refresh(){
   $('#platform-identity').title=backend.isAdmin()?(backend.user.displayName||backend.user.email||''):(profile?.fullName||'');
   if(active)message(syncText());
   if($('#platform-rubric'))renderRules();
-  if($('#platform-submission')?.open)$('#platform-submission-status').textContent=syncText();
+  if($('#platform-submission')?.open){$('#platform-submission-status').textContent=syncText();renderReflectionStatus();}
 }
 function renderRules(){
   const root=$('#platform-rubric');if(!root)return;
+  root.hidden=free;if(free)return;
   const open=root.open;root.replaceChildren();const summary=document.createElement('summary');summary.textContent=tr('Как рассчитывается оценка 0–5','How the 0–5 grade is calculated');root.append(summary);
   for(const rule of assessmentRules){const p=document.createElement('p');const strong=document.createElement('strong');strong.textContent=local(rule.title)+'. ';p.append(strong,document.createTextNode(local(rule.detail)));root.append(p);}
   root.open=open;
@@ -94,6 +97,8 @@ function renderRules(){
 function renderAssessment(assessment){
   const root=$('#platform-assessment');root.replaceChildren();if(!assessment)return;
   const title=document.createElement('h3');title.textContent=tr(`Автоматическая оценка: ${assessment.points}/5`,`Automatic grade: ${assessment.points}/5`);root.append(title);
+  if(assessment.version){const version=document.createElement('p');version.className='platform-hint';version.textContent=tr(`Рубрика этой кампании: ${assessment.version}.`,`This campaign’s rubric: ${assessment.version}.`,`本局评分标准：${assessment.version}。`);root.append(version);}
+  if(assessment.version==='governor-assignment-v1'){const note=document.createElement('p');note.className='platform-hint';note.textContent=tr('Сохранённая кампания использует рубрику первого выпуска. Новые кампании оцениваются по многолетним результатам; их правила приведены на стартовом экране.','This saved campaign uses the first-release rubric. New campaigns are assessed on results over multiple years; their rules appear on the start screen.','此保存的游戏使用首版评分标准。新游戏按多年结果评分，其规则显示在开始界面。');root.append(note);}
   for(const criterion of assessment.criteria){const section=document.createElement('div');section.className='platform-criterion';const h=document.createElement('strong');h.textContent=`${local(criterion.title)} · ${criterion.points}/${criterion.maxPoints}`;const p=document.createElement('p');p.textContent=local(criterion.detail);section.append(h,p);root.append(section);}
 }
 function block(reason){
@@ -110,12 +115,73 @@ function identityChanged(){
   if(!sameOwner())block(free?tr('Профиль изменился. Вернитесь к играм; партия прежнего пользователя сохранена отдельно.','Your profile changed. Return to Games; the previous user’s campaign is stored separately.','账号已更改。请返回游戏目录；此前玩家的进度已单独保存。'):tr('Профиль или доступ изменился. Вернитесь в раздел 7; партия прежнего пользователя сохранена отдельно.','Your profile or access changed. Return to section 7; the previous user’s campaign is stored separately.'));
   else refresh();
 }
+function reflectionParent(){return run?stored('submission:'+run.submissionId)||backend.localAttempts().find(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner):null;}
+function reflectionReceipt(parent=reflectionParent()){
+  if(!parent)return null;
+  return latestGovernorReflection([...backend.localAttempts(),...(isGovernorReflection(run?.reflectionReceipt,parent)?[run.reflectionReceipt]:[])],parent);
+}
+function reflectionChanged(parent=reflectionParent()){
+  return Boolean(parent)&&governorReflectionText(run?.reflection??parent.reflection)!==governorReflectionText(reflectionReceipt(parent)?.reflection??parent.reflection);
+}
+function renderReflectionStatus(){
+  const field=$('#platform-reflection'),hint=$('#platform-reflection-hint'),button=$('#platform-reflection-save');
+  if(!field||!hint||!button||!run)return;
+  const parent=reflectionParent(),receipt=reflectionReceipt(parent),changed=reflectionChanged(parent),ended=terminal(runtime?.state());
+  field.readOnly=backend.isAdmin();
+  button.hidden=backend.isAdmin()||!ended;
+  button.disabled=reflectionBusy||submissionBusy||(!changed&&!run.pendingReflection);
+  button.textContent=reflectionBusy?tr('Сохраняем вывод…','Saving reflection…','正在保存反思……'):run.pendingReflection?tr('Повторить сохранение вывода','Retry reflection save','重试保存反思'):tr('Сохранить вывод','Save reflection','保存反思');
+  hint.textContent=reflectionFailure||(!ended
+    ?tr('Объясните отвергнутую альтернативу, территориальные различия и неожиданный результат. Вывод можно дополнить после итогов; он не меняет автоматическую оценку.','Explain a rejected alternative, territorial differences, and an unexpected result. You can add to this after the final results; it does not change the automatic grade.','请解释被否决的备选方案、地区差异及意外结果。游戏结束后仍可补充反思；反思不改变自动评分。')
+    :reflectionBusy?tr('Сохраняем дополнение к отчёту. Текст можно продолжать редактировать.','Saving an addendum to the report. You can keep editing.','正在保存报告补充内容。您可以继续编辑。')
+    :changed||run.pendingReflection?tr('Текст сохранён как черновик на этом устройстве. Нажмите «Сохранить вывод», чтобы добавить его к отчёту преподавателя. Оценка не изменится.','The text is saved as a draft on this device. Choose “Save reflection” to add it to the instructor’s report. The grade will not change.','文本已作为草稿保存在此设备上。点击“保存反思”将其添加到教师报告中，评分不会改变。')
+    :receipt&&readState(pendingStorageKey(receipt),null)?tr('Вывод сохранён на устройстве и ожидает отправки. Он отправится автоматически при подключении к сети; текст можно дополнить.','The reflection is saved on this device and is awaiting upload. It will upload automatically when online; you can continue editing.','反思已保存在此设备上，等待上传。联网后会自动上传；您仍可继续编辑。')
+    :receipt?tr('Дополнение сохранено для отчёта. Его можно редактировать и сохранить снова; оценка останется прежней.','The addendum is saved for the report. You can edit and save it again; the grade stays the same.','报告补充内容已保存。您可以再次编辑并保存，评分保持不变。')
+    :tr('После знакомства с итогами можно написать или дополнить вывод и сохранить его отдельным дополнением к отчёту. Автоматическая оценка уже зафиксирована.','After reviewing the results, write or edit your reflection and save it as a report addendum. The automatic grade is already fixed.','查看结果后，您可以撰写或修改反思，并将其作为报告补充内容保存。自动评分已确定。'));
+}
+async function saveReflection(){
+  if(reflectionBusy||updatePaused||!sameOwner()||free||backend.isAdmin()||!runtime?.canWrite()||!terminal(runtime.state())||!run)return;
+  reflectionBusy=true;reflectionFailure='';const editingRun=run,scope=diagnostics,started=performance.now();let saved=false;
+  try{
+    if(!reflectionParent())await submit();
+    if(!sameOwner()||run!==editingRun)return;
+    const parent=reflectionParent();if(!parent)throw new Error('governor/missing-report');
+    let record=editingRun.pendingReflection;
+    if(record&&!isGovernorReflection(record,parent))throw new Error('governor/invalid-reflection');
+    if(!record&&!reflectionChanged(parent))return;
+    if(!record){
+      const receipt=reflectionReceipt(parent),revision=Math.max(receipt?.reflectionRevision||0,editingRun.reflectionRevision||0)+1;
+      record=makeGovernorReflection({id:createRunMetadata().submissionId,parent,reflection:editingRun.reflection,revision});
+      record.title=tr('Семинар 7. Дополнение к выводу','Seminar 7. Reflection addendum','研讨课7：反思补充');
+      editingRun.pendingReflection=record;
+      // Freeze the addendum id/content before a request. A retry must use the
+      // same immutable record even when the textarea has changed meanwhile.
+      persistRun();
+    }
+    renderReflectionStatus();
+    if(!editingRun.submitted&&!backend.localAttempts().some(a=>a.id===parent.id&&a.studentKey===parent.studentKey))await submit();
+    if(!sameOwner()||run!==editingRun)return;
+    if(!editingRun.submitted&&!backend.localAttempts().some(a=>a.id===parent.id&&a.studentKey===parent.studentKey))throw new Error('governor/report-not-saved');
+    await backend.saveAttempt({...record,draftMode:'reflection'});
+    editingRun.reflectionReceipt=record;editingRun.reflectionRevision=record.reflectionRevision;delete editingRun.pendingReflection;saved=true;
+    if(sameOwner()&&run===editingRun)persistRun();
+    scope.record('result-save',{operation:'reflection',success:true,durationMs:performance.now()-started});
+  }catch(error){
+    scope.error(error,{event:'result-save',operation:'reflection',durationMs:performance.now()-started});
+    if(sameOwner()&&run===editingRun)reflectionFailure=tr('Отправка вывода пока не подтверждена. Текст можно редактировать; нажмите «Повторить сохранение вывода» или откройте эту кампанию после восстановления связи.','Reflection saving is not confirmed yet. You can keep editing; retry saving or reopen this campaign when the connection is restored.','反思保存尚未确认。您可以继续编辑；请重试保存，或在网络恢复后重新打开本局。');
+  }finally{
+    reflectionBusy=false;if(sameOwner())renderReflectionStatus();
+    // Edits made during the request become a new record, never a mutation of
+    // the one the backend may already have accepted.
+    if(saved&&sameOwner()&&run===editingRun&&reflectionChanged())void saveReflection();
+  }
+}
 function submissionDialog(){
   if(free){if(sameOwner()&&runtime?.state())G.ReleaseUI.openReport();return;}
   const d=$('#platform-submission');const state=runtime?.state();
   if(!sameOwner()||!state||!runtime.canWrite())return;
   try{ensureRun(state);}catch{message(tr('Недостаточно места для сохранения попытки. Сначала скачайте партию.','Not enough space to save this attempt. Download the campaign first.'));return;}
-  const sent=stored('submission:'+run.submissionId);
+  const sent=reflectionParent();
   const acknowledged=backend.localAttempts().some(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner);
   $('#platform-submission-title').textContent=tr('Отчёт к седьмому семинару','Report for seminar seven');
   $('#platform-submission-intro').textContent=backend.isAdmin()
@@ -127,9 +193,9 @@ function submissionDialog(){
     :tr(`Принято решений: ${state.history.length}/20. Ниже — текущий расчёт; окончательная оценка сохранится при завершении.`,`Decisions made: ${state.history.length}/20. This is the current calculation; the final grade is saved when the campaign ends.`);
   renderAssessment(sent?.governor?.assessment||assessCampaign(state,G));
   $('#platform-reflection-label').textContent=tr('Учебный вывод (необязательно)','Reflection (optional)');
-  $('#platform-reflection-hint').textContent=sent?tr('Вывод сохранён вместе с итоговым отчётом. Его наличие не влияет на автоматическую оценку.','The reflection was saved with the final report. It does not affect the automatic grade.'):tr('Можно заполнить до последнего решения: объясните отвергнутую альтернативу, территориальные различия и неожиданный результат. Вывод сохранится с итоговым отчётом и не влияет на оценку.','You can write this before the final decision: explain a rejected alternative, territorial differences, and an unexpected result. It is saved with the final report and does not affect your grade.');
-  $('#platform-reflection').value=sent?.reflection??run.reflection??'';
-  $('#platform-reflection').readOnly=Boolean(sent)||backend.isAdmin();
+  if(run.reflection===undefined)run.reflection=reflectionReceipt(sent)?.reflection??sent?.reflection??'';
+  $('#platform-reflection').value=run.reflection;
+  renderReflectionStatus();
   $('#platform-submit').hidden=backend.isAdmin();$('#platform-submit').disabled=acknowledged||!terminal(state);
   $('#platform-submit').textContent=acknowledged?tr('Отчёт принят платформой','Report accepted by the platform'):sent?tr('Повторить отправку','Retry submission'):tr('Передать преподавателю','Submit to instructor');
   $('#platform-readable').textContent=tr('Открыть полный учебный отчёт','Open the full learning report');
@@ -140,7 +206,7 @@ function submissionDialog(){
 async function submit(){
   if(updatePaused||submissionBusy||!sameOwner()||(!free&&backend.isAdmin())||!runtime?.canWrite()||(free&&run?.submitted))return;
   const state=runtime?.state();if(!terminal(state))return;
-  if(run&&backend.localAttempts().some(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner)){refresh();return;}
+  if(run&&backend.localAttempts().some(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner)){run.submitted=true;refresh();if(run.pendingReflection)void saveReflection();return;}
   submissionBusy=true;$('#platform-submit').disabled=true;const started=performance.now(),scope=diagnostics;
   try{
     ensureRun(state);
@@ -158,7 +224,7 @@ async function submit(){
     if(sameOwner()){refresh();if($('#platform-submission').open)submissionDialog();}
   }catch(error){
       scope.error(error,{event:'result-save',operation:'submit',durationMs:performance.now()-started});if(sameOwner()){if(free){message(tr('Не удалось сохранить итог. Повторим при следующем открытии.','Could not save the result. It will be retried on reopening.','暂未保存结果，下次打开时将重试。'));return;}const text=tr('Сохранение оценки пока не подтверждено. Откройте «Отчёт к семинару» и повторите отправку.','Grade saving is not confirmed yet. Open the seminar report and retry submission.');message(text);$('#platform-submission-status').textContent=text;$('#platform-submit').disabled=false;}
-  }finally{submissionBusy=false;}
+  }finally{submissionBusy=false;if(sameOwner()){renderReflectionStatus();if(!free&&run?.submitted&&run.pendingReflection)void saveReflection();}}
 }
 async function tryStart(){
   if(started||!backend.authReady)return;
@@ -176,21 +242,50 @@ async function tryStart(){
     if(!sameOwner())throw new Error('auth/profile-changed');remember(key);
     let actual;try{actual=scoped.getItem(key);}catch{actual=observed.get(key);}
     if(actual!==observed.get(key))throw Object.assign(new Error('other-tab'),{code:'other-tab'});
-    storageValues.set(key,String(value));try{scoped.setItem(key,String(value));observed.set(key,String(value));}catch{/* The onSaved boundary commits to IndexedDB even when localStorage is full. */}
+    try{scoped.setItem(key,String(value));observed.set(key,String(value));}catch(error){
+      // Recovery is the only copy of otherwise unreadable data. Do not allow
+      // replacement of that data until its archive has really been written.
+      if(key===G.Saves.Recovery)throw error;
+      /* The onSaved boundary commits regular state to IndexedDB when localStorage is full. */
+    }
+    storageValues.set(key,String(value));
   },removeItem:key=>{if(!sameOwner())throw new Error('auth/profile-changed');storageValues.set(key,null);try{scoped.removeItem(key);observed.set(key,null);}catch{}}};
   run=stored('platform-run');
   const restored=await backend.loadDraft({owner,activitySlug,mode:'campaign'});
   if(!sameOwner())return;
-  let localCampaign=stored(G.Saves.Key);
-  if(restored?.state?.campaign&&restored.state.run&&G.Engine.restoreState(restored.state.campaign)&&(!localCampaign||restored.updatedAt>=(Date.parse(localCampaign.savedAt)||0))){
-    for(const [key,value] of Object.entries(restored.state.storage||{})){remember(key);storageValues.set(key,value);}
-    remember(G.Saves.Key);storageValues.set(G.Saves.Key,JSON.stringify(markGameDraft({format:'rudn-autosave',revision:Math.max(1,Number(localCampaign?.revision)||1),savedAt:new Date(restored.updatedAt).toISOString(),state:restored.state.campaign})));
-    run=structuredClone(restored.state.run);remember('platform-run');storageValues.set('platform-run',JSON.stringify(run));latestSaveStatus=restored.saveStatus;
-  }else if(localCampaign?.state){ensureRun(localCampaign.state);}
+  const localStore=new G.Saves.Store(storage),localResult=localStore.inspect(),localRaw=localStore.raw();
+  const schema=restored?.state?.governorSaveSchema??G.Saves.SCHEMA;
+  const restoredState=schema===G.Saves.SCHEMA&&restored?.state?.campaign?G.Engine.restoreState(restored.state.campaign):null;
+  if(restored?.state?.campaign&&!restoredState){
+    localStore.preserve(JSON.stringify(restored),'platform-campaign',schema!==G.Saves.SCHEMA?'incompatible-schema':'invalid-state');
+    // Expose an unsupported cloud-only campaign to the save manager instead of
+    // silently presenting an empty account. The exact snapshot is archived above.
+    if(!localRaw)storageValues.set(G.Saves.Key,JSON.stringify({format:'rudn-autosave',schema,revision:1,state:restored.state.campaign}));
+  }
+  if(restoredState&&restored.state.run&&(localResult.status!=='ok'||restored.updatedAt>=(Date.parse(localResult.savedAt)||0))){
+    const recoveryRaw=restored.state.storage?.[G.Saves.Recovery];
+    if(recoveryRaw){
+      let entries;try{const archive=JSON.parse(recoveryRaw);if(archive.format==='rudn-governor-recovery'&&archive.schema===G.Saves.SCHEMA&&Array.isArray(archive.entries))entries=archive.entries;}catch{}
+      if(entries?.every(entry=>typeof entry?.raw==='string'&&typeof entry?.key==='string'))for(const entry of entries)localStore.preserve(entry.raw,entry.key,entry.reason);
+      else localStore.preserve(recoveryRaw,G.Saves.Recovery,'unreadable-recovery');
+    }
+    if(localRaw&&JSON.stringify(localResult.state)!==JSON.stringify(restoredState))localStore.preservePrevious(localRaw);
+    const localBackup=storageValues.get(G.Saves.Backup);
+    for(const [key,value] of Object.entries(restored.state.storage||{})){
+      if([G.Saves.Key,G.Saves.Recovery,'platform-run'].includes(key)||(key===G.Saves.Backup&&localBackup))continue;
+      remember(key);storageValues.set(key,value);
+    }
+    remember(G.Saves.Key);storageValues.set(G.Saves.Key,JSON.stringify(markGameDraft({format:'rudn-autosave',schema:G.Saves.SCHEMA,model:restoredState.version,revision:Math.max(1,localResult.revision||1),savedAt:new Date(restored.updatedAt).toISOString(),state:restoredState})));
+    // Text can change after the last game decision. Keep a newer local sidecar
+    // from this exact attempt if closing/offline interrupted its checkpoint.
+    const restoredRun=restored.state.run;
+    if(run?.submissionId!==restoredRun.submissionId||(Number(run?.updatedAt)||0)<=(Number(restoredRun.updatedAt)||0))run=structuredClone(restoredRun);
+    remember('platform-run');storageValues.set('platform-run',JSON.stringify(run));latestSaveStatus=restored.saveStatus;
+  }else if(localResult.status==='ok'){ensureRun(localResult.state);}
   const profile=backend.getProfile();
   G.Platform={
     storage,lockName:scoped.lockName,storageKey:scoped.keyFor(G.Saves.Key),offlineEnabled:false,
-    language,profile:{name:backend.isAdmin()?tr('Преподаватель · пробная кампания','Instructor · preview campaign'):(profile?.fullName||tr('Гость','Guest','访客')),group:profile?.group||''},
+    language,freePlay:free,profile:{name:backend.isAdmin()?tr('Преподаватель · пробная кампания','Instructor · preview campaign'):(profile?.fullName||tr('Гость','Guest','访客')),group:profile?.group||''},
     canWrite:()=>!updatePaused&&sameOwner(),onResume:()=>{identityChanged();updateCoordinator?.notifyStateChanged();},onNewRun:runChanged,onError:()=>{loadEnd({success:false,code:'load-failed'});diagnostics.record('module-error',{operation:'load',success:false,code:'load-failed'});block(tr('Не удалось запустить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not start. Reload or return to section 7.'));},
     onSaved:state=>{try{ensureRun(state);refresh();if(runtime&&terminal(state)&&(free||!backend.isAdmin()))submit();}catch{message(tr('Партия сохранена; сведения об отчёте требуют свободного места на устройстве.','Campaign saved; report metadata needs free device storage.'));}},
     onLanguage:next=>{language=G.I18n.normalize(next);setLocale(language);refresh();},
@@ -205,10 +300,10 @@ async function tryStart(){
 function installUpdateAdapter(){
  updateAdapter?.destroy();
  updateAdapter=createUpdateAdapter({module:'governor',root:document.body,diagnostics,getIdentity:()=>({owner:currentOwner()}),
-  isBusy:()=>!sameOwner()||submissionBusy||!!runtime?.updateBusy?.(),
+  isBusy:()=>!sameOwner()||submissionBusy||reflectionBusy||!!runtime?.updateBusy?.(),
   pause:async value=>{updatePaused=value;runtime.pauseForUpdate(value);if(value)await Promise.allSettled([...pendingCheckpoints]);},
   capture:()=>({schema:1,runtime:runtime.captureForUpdate(),view:captureUpdateView(document.body)}),
-  checkpoint:async()=>{if(!sameOwner())throw Error('update/identity');const state=runtime.checkpointForUpdate();if(!state)return {durable:true,revision:0,checkpointRef:{kind:'start'}};if(!run)throw Error('update/missing-attempt');const field=$('#platform-reflection');if(field&&!field.readOnly&&!run.submitted)run.reflection=field.value.slice(0,6000);const saved=await checkpointCampaign(state);if(saved?.saveStatus?.durable!==true)throw Error('update/not-durable');return {durable:true,revision:saved.revision,checkpointRef:{attemptId:run.submissionId,revision:saved.revision}};},
+  checkpoint:async()=>{if(!sameOwner())throw Error('update/identity');const state=runtime.checkpointForUpdate();if(!state)return {durable:true,revision:0,checkpointRef:{kind:'start'}};if(!run)throw Error('update/missing-attempt');const saved=await checkpointCampaign(state);if(saved?.saveStatus?.durable!==true)throw Error('update/not-durable');return {durable:true,revision:saved.revision,checkpointRef:{attemptId:run.submissionId,revision:saved.revision}};},
   restore:async({state,checkpointRef},{signal}={})=>{if(state.schema!==1||checkpointRef.attemptId&&checkpointRef.attemptId!==run?.submissionId)return {status:'blocked',code:'incompatible'};if(!runtime.restoreForUpdate(state.runtime))return {status:'partial',code:'incompatible'};await restoreUpdateView(document.body,state.view,{signal});return {status:'restored',code:'ok'};}
  });
  if(!updateCoordinator)updateCoordinator=bootstrapUpdateCoordinator({getAdapters:()=>updateAdapter?[updateAdapter]:[],backend,diagnostics,module:'governor',getOwner:currentOwner,getRoute:()=>context+location.hash});
@@ -220,12 +315,14 @@ $('#platform-report').addEventListener('click',()=>{if(runtime?.state())submissi
 $('#platform-submission-close').addEventListener('click',()=>$('#platform-submission').close());
 $('#platform-readable').addEventListener('click',()=>{$('#platform-submission').close();G.ReleaseUI.openReport();});
 $('#platform-submit').addEventListener('click',submit);
-$('#platform-reflection').addEventListener('input',()=>{if(!run||!sameOwner()||run.submitted)return;run.reflection=$('#platform-reflection').value.slice(0,6000);try{persistRun();}catch{message(tr('Не удалось сохранить текст. Скопируйте его перед закрытием страницы.','Text could not be saved. Copy it before closing this page.'));}});
+const reflectionSaveButton=document.createElement('button');reflectionSaveButton.type='button';reflectionSaveButton.className='secondary-button';reflectionSaveButton.id='platform-reflection-save';reflectionSaveButton.hidden=true;reflectionSaveButton.addEventListener('click',saveReflection);$('#platform-submit').before(reflectionSaveButton);
+$('#platform-reflection').addEventListener('input',()=>{if(!run||!sameOwner()||backend.isAdmin())return;run.reflection=$('#platform-reflection').value.slice(0,6000);reflectionFailure='';try{persistRun();}catch{reflectionFailure=tr('Не удалось сохранить текст. Скопируйте его перед закрытием страницы.','Text could not be saved. Copy it before closing this page.');message(reflectionFailure);}renderReflectionStatus();});
 $('#platform-back').addEventListener('click',async event=>{event.preventDefault();await flushCampaign();location.href=courseUrl;});
 window.addEventListener('pagehide',()=>{if(!updatePaused&&runtime?.state())checkpointCampaign(runtime.state());});
 window.addEventListener('rudn:identitychange',identityChanged);
 window.addEventListener('rudn:accesschange',identityChanged);
 window.addEventListener('visibilitychange',()=>{if(!document.hidden)identityChanged();});
+window.addEventListener('online',()=>{if(sameOwner()&&terminal(runtime?.state())){void submit();if(run?.pendingReflection)void saveReflection();}});
 backend.onStatus(()=>{if(started)identityChanged();});
 refresh();
 backend.init().then(tryStart).catch(()=>block(tr('Не удалось восстановить профиль. Вернитесь на платформу.','Your profile could not be restored. Return to the platform.')));

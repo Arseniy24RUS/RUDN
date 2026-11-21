@@ -5,6 +5,8 @@
   const Engine = window.GovernorGame.Engine;
   const Agenda = window.GovernorGame.Agenda;
   const AgendaUI = window.GovernorGame.AgendaUI;
+  const CampaignUI = window.GovernorGame.CampaignUI;
+  const assetURL = value => window.GovernorGame.resolveAsset ? window.GovernorGame.resolveAsset(value) : value;
   const BudgetReview=window.GovernorGame.BudgetReview;
   const BudgetReviewUI=window.GovernorGame.BudgetReviewUI;
   const financialReason=(code,lang)=>BudgetReviewUI.reason(code,lang)||RecoveryUI.reason(code,lang);
@@ -317,19 +319,30 @@
   function saveError(e){
     const messages={
       'checksum-mismatch':['Контрольная сумма не совпала. Файл повреждён или изменён.','Checksum mismatch. File is corrupted or modified.'],
-      'incompatible-model':['Эта модель сохранения не поддерживается. Версия 1.0 читает партии 0.9–0.16 и проверенные партии 0.8 с переносом в последовательный маршрут.','Unsupported save model. Version 1.0 reads games from 0.9–0.16 and validated 0.8 games on the guided route.'],
+      'incompatible-model':['Эта модель сохранения не поддерживается. Игра читает совместимые партии 0.9–0.16 и 1.0 и проверенные партии 0.8 с переносом в последовательный маршрут.','Unsupported save model. The game reads compatible saves from 0.9–0.16 and 1.0 and validated 0.8 games on the guided route.'],
       'not-save-file':['Нужен файл .govsave.json, а не итоговый отчёт.','Select a .govsave.json file, not an outcome report.'],
       'invalid-state':['Состояние не прошло проверку. Текущая партия не заменена.','State validation failed. Your current game was not replaced.'],
+      'incompatible-schema':['Формат сохранения новее поддерживаемого. Исходные данные сохранены; откройте их в совместимой версии игры.','This save uses a newer format. Original data is preserved; open it in a compatible game version.'],
+      'recovery-unavailable':['Не удалось сохранить исходные данные в резерв. Замена остановлена; скачайте исходник сохранения.','Could not back up the original data. Replacement stopped; download the original save data.'],
       'file-too-large':['Файл больше 20 МБ.','File exceeds 20 MB.'],
       'other-tab':['Партия уже изменена в другой вкладке.','The game changed in another tab.']};
     const pair=messages[e.code]||['Не удалось прочитать или сохранить файл. Текущая партия сохранена в памяти.','Could not read or write the file. Your game remains in memory.'];
+    const chinese={'incompatible-schema':'此存档使用较新的格式。原始数据已保留；请在兼容版本中打开。','recovery-unavailable':'无法备份原始数据。已停止替换；请下载原始存档数据。'};
+    if(language==='zh'&&chinese[e.code])return chinese[e.code];
     return globalThis.GovernorGame.I18n.choose(language,...pair);
   }
   function openSaveManager(){
     const current=state||savedState,backup=store.backup();
     $('#save-status').textContent=storageStatus==='corrupt'?(globalThis.GovernorGame.I18n.choose(language,()=>('Текущее автосохранение повреждено. Резервная копия не загружается без вашего решения.'),()=>('The autosave is corrupted. A backup will not load without your choice.'))):(globalThis.GovernorGame.I18n.choose(language,()=>('Файл переносит партию, выборы и письма. Итоговый отчёт для этого не подходит.'),()=>('A save file transfers the game, choices and letters. Outcome reports cannot restore a game.')));
+    if(storageStatus==='incompatible')$('#save-status').textContent=language==='zh'?'此存档格式不兼容。原始数据仍被保留。请下载原始数据，并在兼容版本中打开。':language==='en'?'This save is incompatible with this model. The original data is preserved. Download it and use a compatible game version.':'Сохранение несовместимо с этой моделью. Исходные данные сохранены. Скачайте их и откройте в совместимой версии игры.';
+    let recoveryActions=$('#save-recovery-actions');
+    if(!recoveryActions){recoveryActions=document.createElement('div');recoveryActions.id='save-recovery-actions';recoveryActions.className='save-recovery-actions';$('#save-backup-info').after(recoveryActions);}
+    recoveryActions.replaceChildren();
+    for(const [raw,suffix,ru,en,zh] of [[store.raw?.(),'original','Скачать исходные данные','Download original data','下载原始数据'],[store.raw?.(Saves.Recovery),'archive','Скачать архив восстановления','Download recovery archive','下载恢复档案']]){
+      if(!raw)continue;const button=document.createElement('button');button.type='button';button.className='secondary-button';button.textContent=language==='zh'?zh:language==='en'?en:ru;button.onclick=()=>downloadBlob(raw,`governor-${suffix}.recovery.json`);recoveryActions.append(button);
+    }
     $('#save-export').disabled=!current;$('#save-backup').disabled=backup.status!=='ok';
-    $('#save-current').textContent=current?`${current.profile.name} · ${current.history.length}/20 · ${current.version}`:(globalThis.GovernorGame.I18n.choose(language,()=>('Нет текущей партии. Выберите файл .govsave.json версии 0.8–1.0.'),()=>('No current game. Choose a .govsave.json file from version 0.8–1.0.')));
+    $('#save-current').textContent=current?`${current.profile.name} · ${current.history.length}/20 · ${current.version}`:(globalThis.GovernorGame.I18n.choose(language,()=>('Нет текущей партии. Выберите совместимый файл .govsave.json.'),()=>('No current game. Choose a compatible .govsave.json file.')));
     $('#save-backup-info').textContent=backup.state?(globalThis.GovernorGame.I18n.choose(language,()=>(`Резервная копия: ${backup.state.profile.name}, решений ${backup.state.history.length}/20`),()=>(`Backup: ${backup.state.profile.name}, decisions ${backup.state.history.length}/20`))):'';
     pendingImport=null;importRequest++;$('#save-import-confirm').hidden=true;
     const legacy=store.legacy();$('#save-legacy').hidden=!legacy.state;
@@ -358,8 +371,8 @@
   }
 
   function mountConsolidationUI(){
-    Object.assign(DATA.ui.ru,{saveTitle:'Сохранение и перенос',saveExport:'Скачать сохранение',saveImport:'Выбрать файл',saveConfirm:'Заменить и продолжить',saveBackup:'Выбрать резервную копию',saveClose:'Закрыть',saveNumbers:'Клавиши 1–3 только внутри списка решений',saveAccess:'Сохранение',conflictTitle:'Эта партия открыта в другой вкладке',conflictText:'Закройте другую вкладку и обновите эту. Текущее состояние не перезаписывается.',reload:'Обновить вкладку',modelStage:'Версия 1.0',shortcutHint:'Tab – перейти к кнопке; Enter – нажать кнопку',forecastRange:'Возможный прямой эффект',reward:'Освоение механики'});
-    Object.assign(DATA.ui.en,{saveTitle:'Save and transfer',saveExport:'Download save',saveImport:'Choose file',saveConfirm:'Replace and continue',saveBackup:'Choose backup',saveClose:'Close',saveNumbers:'Keys 1–3 only inside the decision list',saveAccess:'Save',conflictTitle:'This game is open in another tab',conflictText:'Close the other tab and refresh this one. The saved game has not been overwritten.',reload:'Refresh tab',modelStage:'Version 1.0',shortcutHint:'Tab moves to a button; Enter activates it',forecastRange:'Possible direct effect',reward:'Learning progress'});
+    Object.assign(DATA.ui.ru,{saveTitle:'Сохранение и перенос',saveExport:'Скачать сохранение',saveImport:'Выбрать файл',saveConfirm:'Заменить и продолжить',saveBackup:'Выбрать резервную копию',saveClose:'Закрыть',saveNumbers:'Клавиши 1–3 только внутри списка решений',saveAccess:'Сохранение',conflictTitle:'Эта партия открыта в другой вкладке',conflictText:'Закройте другую вкладку и обновите эту. Текущее состояние не перезаписывается.',reload:'Обновить вкладку',modelStage:'Модель 1.0',shortcutHint:'Tab – перейти к кнопке; Enter – нажать кнопку',forecastRange:'Возможный прямой эффект',reward:'Освоение механики'});
+    Object.assign(DATA.ui.en,{saveTitle:'Save and transfer',saveExport:'Download save',saveImport:'Choose file',saveConfirm:'Replace and continue',saveBackup:'Choose backup',saveClose:'Close',saveNumbers:'Keys 1–3 only inside the decision list',saveAccess:'Save',conflictTitle:'This game is open in another tab',conflictText:'Close the other tab and refresh this one. The saved game has not been overwritten.',reload:'Refresh tab',modelStage:'Model 1.0',shortcutHint:'Tab moves to a button; Enter activates it',forecastRange:'Possible direct effect',reward:'Learning progress'});
     document.body.insertAdjacentHTML('beforeend',`<dialog id="save-dialog" class="save-dialog" aria-labelledby="save-title"><h2 id="save-title" data-ui="saveTitle"></h2><p id="save-current"></p><p id="save-status" role="status"></p><div class="save-actions"><button class="primary-button" id="save-export" type="button" data-ui="saveExport"></button><button class="secondary-button" id="save-import" type="button" data-ui="saveImport"></button><button class="secondary-button" id="save-backup" type="button" data-ui="saveBackup"></button></div><p id="save-backup-info"></p><button type="button" class="secondary-button" id="save-legacy" hidden>Открыть сохранение 0.8</button><input id="save-file" type="file" accept=".json,application/json" hidden><button class="primary-button" id="save-import-confirm" type="button" data-ui="saveConfirm" hidden></button><label><input type="checkbox" id="number-shortcuts"><span data-ui="saveNumbers"></span></label><div class="save-actions"><button class="secondary-button" id="save-close" type="button" data-ui="saveClose"></button></div></dialog>
      <dialog id="tab-conflict" class="save-dialog" aria-labelledby="conflict-title"><h2 id="conflict-title" data-ui="conflictTitle"></h2><p data-ui="conflictText"></p><div class="save-actions"><button id="conflict-export" type="button" class="secondary-button" data-ui="saveExport"></button><button id="conflict-refresh" type="button" class="primary-button" data-ui="reload"></button></div></dialog>`);
     $('#start-form').insertAdjacentHTML('beforeend','<button type="button" class="save-access" id="start-save" data-ui="saveAccess"></button>');
@@ -426,6 +439,7 @@
     $('#language-toggle').textContent = nextLanguage;
     $('#mobile-menu-button').setAttribute('aria-label', globalThis.GovernorGame.I18n.choose(language,()=>('Открыть разделы игры'),()=>('Open game sections')));
     updateCampaignModeLabels();
+    CampaignUI?.translate();
     window.GovernorGame.ReleaseUI.translate(language);
     Platform?.onLanguage?.(language);
     populateScenarioOptions();
@@ -569,9 +583,10 @@
     }});
     const updateMode=()=>{const en=language==='en';
       $('#campaign-mode-label').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Маршрут кампании'),()=>('Campaign route'));
-      $('#campaign-mode').options[0].textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Своя повестка · первые пять лет на ваш выбор'),()=>('Your agenda · choose the first five years'));
+      $('#campaign-mode').options[0].textContent=language==='zh'?'自主议程 · 二十年的决策':language==='en'?'Your agenda · twenty years of decisions':'Своя повестка · двадцать лет решений';
       $('#campaign-mode').options[1].textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Последовательный маршрут · фиксированный порядок'),()=>('Guided route · fixed sequence'));
-      $('#campaign-mode-hint').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('В обоих вариантах 20 лет. Последующие главы сохраняют сюжетный порядок.'),()=>('20 years in either route. Later chapters remain story-led.'));
+      $('#campaign-mode-hint').textContent=language==='zh'?'您决定整个任期的优先事项。新议题根据地区状况和游戏阶段解锁。':language==='en'?'Choose priorities throughout the term. New issues unlock with regional conditions and campaign stages.':'Приоритеты на весь срок выбираете вы. Новые вопросы открываются по ситуации и этапу кампании.';
+      if($('#campaign-mode').value==='guided')$('#campaign-mode-hint').textContent=language==='zh'?'二十个年度议题按固定顺序进行。您仍可选择具体措施与资金来源，并检查战略目标。':language==='en'?'Twenty yearly issues follow a fixed sequence. You still choose measures and funding and review your strategic targets.':'Двадцать годовых вопросов идут в фиксированном порядке. Вы выбираете меры и финансирование и проверяете цели курса.';
       $('#save-legacy').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Открыть сохранение 0.8'),()=>('Open a 0.8 autosave'));
     };
     updateCampaignModeLabels=updateMode;updateMode();$('#campaign-mode').addEventListener('change',updateMode);
@@ -589,7 +604,7 @@
     if(!on&&budgetInput.dataset.previous==='1'){budgetInput.checked=true;delete budgetInput.dataset.previous;}
     budgetInput.disabled=on;
     $('#budget-review-mode-label').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Дефицит требует решения'),()=>('Every shortfall needs a decision'));
-    $('#budget-review-mode-hint').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Реальные разрывы бюджета: резерв, ограниченный заём, помощь с условиями. Без автоматического спасения; возможна досрочная передача управления. Только для новой партии, отдельно от «Счёта из прошлого».'),()=>('Actual cash gaps: reserves, a capped loan or conditional support. No automatic bailout; an early handover is possible. New campaigns only, separate from An inherited bill.'));
+    $('#budget-review-mode-hint').textContent=language==='zh'?'储备、限额贷款或附条件援助。可能提前移交管理。取消勾选可启用自动援助的简化预算模式。':language==='en'?'Reserves, capped loans or conditional support. An early handover is possible. Uncheck for an assisted budget with automatic support.':'Резерв, ограниченный заём, помощь с условиями. Возможна досрочная передача управления. Снимите флажок для облегчённого бюджета с автоматической помощью.';
     $('#recovery-case-label').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Особое начало: «Счёт из прошлого»'),()=>('Special opening: An inherited bill'));
     $('#recovery-case-hint').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Резерв, помощь с условиями или заём. Учебный кейс: сбалансированная область, обычные правила, открытая повестка. Дальше – та же кампания из 20 лет.'),()=>('Reserves, conditional support or a loan. Classroom case: balanced region, standard rules and open agenda, followed by the same 20-year campaign.'));
     const fields=['scenario-select','challenge-select','campaign-mode'];
@@ -627,7 +642,9 @@
     }
     $('#player-name').removeAttribute('aria-invalid');
     error.textContent = '';
+    const campaignOptions=CampaignUI.startOptions();
     state = Engine.createState({
+      strategyId:campaignOptions.strategyId,
       name,
       group,
       recoveryCase: $('#recovery-case').checked?Recovery.CASE:undefined,
@@ -639,6 +656,7 @@
       language,
       soundEnabled: currentSoundEnabled()
     });
+    CampaignUI.start(state,campaignOptions);
     Platform?.onNewRun?.(state);
     selectedActionId = null;
     selectedFundingMode = null;
@@ -691,7 +709,7 @@
         if (record) showResolution(record);
       } else if (state.completed) {
         showEndScreen();
-      } else if (!(Agenda.mode(state)==='agenda' && state.turnIndex===5 && state.activeView==='agenda')) { Presentation.maybeChapter(); }
+      } else if (!(!Agenda.persistent(state) && Agenda.mode(state)==='agenda' && state.turnIndex===5 && state.activeView==='agenda')) { Presentation.maybeChapter(); }
     });
   }
 
@@ -731,6 +749,7 @@
     if (state.activeView && state.activeView !== 'mission') renderSecondaryStage(state.activeView);
     else showMissionView();
     recoveryBrief($('#mission-panel'),$('#mission-description'));
+    CampaignUI.refresh(Boolean(selectedActionId));
   }
 
   function renderStoryBrief() {
@@ -786,6 +805,9 @@
     $$('.nav-button[data-view], .mobile-bottom-nav [data-view]').forEach(button => {
       button.classList.toggle('active', button.dataset.view === view || (view === 'agenda' && button.dataset.view === 'mission') || ((view === 'residents' || view === 'stories') && button.dataset.view === 'map') || (button.classList.contains('mobile-primary') && view === 'mission'));
     });
+    $('.mobile-primary small').textContent = Agenda.needsChoice(state)
+      ? (language==='zh'?'议程':language==='en'?'Agenda':'Повестка')
+      : (language==='zh'?'决策':language==='en'?'Decision':'Решение');
     const incompleteQuests = DATA.quests.filter(quest => !Engine.questStatus(state, quest).complete).length;
     $('#quest-badge').textContent = String(incompleteQuests);
     $('#badge-count').textContent = String(state.badges.length);
@@ -857,7 +879,7 @@
     advisorContainer.innerHTML = DATA.advisors.map(advisor => {
       const trust = Number(state.advisorTrust[advisor.id] || 50);
       return `<button class="advisor-button" type="button" data-advisor="${advisor.id}" aria-label="${esc(l(advisor.name))}, ${esc(l(advisor.role))}, ${t('advisorTrust')} ${trust}">
-        <span class="portrait-frame" style="--trust:${trust}"><img src="${advisor.image}" alt=""><span class="advisor-trust">${formatNumber(trust, 0)}</span></span>
+        <span class="portrait-frame" style="--trust:${trust}"><img src="${esc(assetURL(advisor.image))}" alt=""><span class="advisor-trust">${formatNumber(trust, 0)}</span></span>
         <strong>${esc(l(advisor.role))}</strong>
       </button>`;
     }).join('');
@@ -881,7 +903,7 @@
       const trust = Number(state.advisorTrust[id] || 50);
       const advice = mission.advisors && mission.advisors[id] ? mission.advisors[id] : advisor.principle;
       return `<button type="button" class="debate-advisor" data-debate-advisor="${id}">
-        <img src="${advisor.image}" alt=""><span><small>${esc(l(advisor.role))} · ${esc(t('advisorTrust'))} ${formatNumber(trust, 0)}</small><strong>${esc(l(advice))}</strong></span>
+        <img src="${esc(assetURL(advisor.image))}" alt=""><span><small>${esc(l(advisor.role))} · ${esc(t('advisorTrust'))} ${formatNumber(trust, 0)}</small><strong>${esc(l(advice))}</strong></span>
       </button>`;
     }).join('');
     const split = ids.length > 1;
@@ -936,6 +958,7 @@
     } else {
       confirm.querySelector('[data-ui]').textContent = hasMeeting ? (globalThis.GovernorGame.I18n.choose(language,()=>('Обсудить условия'),()=>('Discuss terms'))) : t('confirmAction');
     }
+    CampaignUI.refresh(Boolean(selectedActionId));
   }
 
   function renderEntryImpact() {
@@ -1020,6 +1043,7 @@
     selectedPlacementId = preview.recommendedPlacementId || null;
     playSound('select');
     renderMissionPanel();
+    CampaignUI.refresh(Boolean(selectedActionId));
     const mission = Engine.getCurrentMission(state);
     const index = mission.actions.findIndex(item => item.id === actionId);
     const card = $(`[data-action="${CSS.escape(actionId)}"]`);
@@ -1118,7 +1142,7 @@
     const reactions = preview.advisorReactions.filter(item => debateIds.includes(item.advisorId));
     const reactionStrip = reactions.length ? `<div class="reaction-strip">${reactions.map(reaction => {
       const advisor = DATA.advisors.find(item => item.id === reaction.advisorId);
-      return `<span class="reaction-pill ${reaction.stance}"><img src="${advisor.image}" alt=""><b>${esc(l(advisor.role))}</b><small>${esc(t(reaction.stance === 'support' ? 'advisorApproved' : reaction.stance === 'oppose' ? 'advisorOpposed' : 'advisorCautious'))}</small></span>`;
+      return `<span class="reaction-pill ${reaction.stance}"><img src="${esc(assetURL(advisor.image))}" alt=""><b>${esc(l(advisor.role))}</b><small>${esc(t(reaction.stance === 'support' ? 'advisorApproved' : reaction.stance === 'oppose' ? 'advisorOpposed' : 'advisorCautious'))}</small></span>`;
     }).join('')}</div>` : '';
 
     container.innerHTML = `<div class="preview-content preview-content-stage3">
@@ -1224,6 +1248,7 @@
       if (window.innerWidth <= 900) $('#secondary-stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     playSound('select');
+    CampaignUI.refresh(Boolean(selectedActionId));
   }
 
   function secondaryHeader(iconName, title, lead) {
@@ -1247,11 +1272,19 @@
     stage.classList.toggle('stories-stage', view === 'stories');
     if (view === 'agenda') {
       AgendaUI.render(stage);
+      const agendaContent=stage.querySelector('.agenda-board')||stage.querySelector('.agenda-heading');
+      agendaContent?.insertAdjacentHTML('afterend',CampaignUI.agendaHtml(state,language));
+      CampaignUI.attachAgenda(stage);
       const overview=window.GovernorGame.DeliveryDesk.snapshot(state);
-      if(overview.items.length){const b=document.createElement('button');b.type='button';b.className='agenda-delivery-link';b.dataset.openDelivery='';
-        b.innerHTML=icon('calendar',{size:19})+'<span>'+(globalThis.GovernorGame.I18n.choose(language,()=>('Уже принятые решения'),()=>('Existing commitments')))+'</span><b>'+
-          (globalThis.GovernorGame.I18n.choose(language,()=>((overview.pendingRenewals?overview.pendingRenewals+' продление · ':'' )+overview.attention.length+' требуют внимания'),()=>(overview.attention.length+' need attention')))+'</b>'+icon('arrow',{size:17});
-        b.onclick=showDeliveryDesk;stage.querySelector('.agenda-heading')?.after(b);}
+      if(overview.items.length){
+        const button=document.createElement('button');
+        button.type='button';button.className='agenda-delivery-link';button.dataset.openDelivery='';
+        const title={ru:'Уже принятые решения',en:'Existing commitments',zh:'已作出的决策'}[language];
+        const events=formatNumber(overview.attention.length,0);
+        const eventLabel={ru:`События: ${events}`,en:`Updates: ${events}`,zh:`进展：${events}`}[language];
+        button.innerHTML=icon('calendar',{size:19})+`<span>${title}</span><b>${eventLabel}</b>`+icon('arrow',{size:17});
+        button.onclick=showDeliveryDesk;agendaContent?.after(button);
+      }
     }
     else if (view === 'stories') StoriesUI.render(stage);
     else if (view === 'residents') renderResidentsView(stage);
@@ -1264,7 +1297,10 @@
     else if (view === 'settings') renderSettingsView(stage);
     else renderMapView(stage);
     if(view==='treasury'){const panel=document.createElement('div');panel.innerHTML=window.GovernorGame.ConsolidationUI.treasury(state,language);stage.querySelector('.secondary-stage-header').after(panel);window.GovernorGame.ConsolidationUI.attachTreasury(panel,state,language,()=>renderGame(),()=>saveState(false));}
-    if(['agenda','treasury','journal'].includes(view))recoveryBrief(stage,stage.querySelector('.agenda-heading,.secondary-stage-header'));
+    if(['agenda','treasury','journal'].includes(view)){
+      const agendaBoard=view==='agenda'&&!Recovery.active(state)?stage.querySelector('.agenda-board'):null;
+      recoveryBrief(stage,agendaBoard||stage.querySelector('.agenda-heading,.secondary-stage-header'));
+    }
     const back = stage.querySelector('.back-mission');
     if (back) {
       const svg = back.querySelector('svg');
@@ -1385,7 +1421,7 @@
           const latest = memories[memories.length - 1];
           const latestText = latest ? (() => { const pair = actionForRecord(latest); return pair.action ? `${l(pair.action.title)} · ${deliveryLabel(latest.delivery)}` : ''; })() : l(advisor.memory || advisor.principle);
           return `<button class="advisor-command-card" type="button" data-advisor-card="${advisor.id}">
-            <div class="advisor-command-portrait"><img src="${advisor.image}" alt=""><span style="--trust:${trust}%"><i></i><b>${formatNumber(trust, 0)}</b></span></div>
+            <div class="advisor-command-portrait"><img src="${esc(assetURL(advisor.image))}" alt=""><span style="--trust:${trust}%"><i></i><b>${formatNumber(trust, 0)}</b></span></div>
             <div class="advisor-command-copy"><small>${esc(l(advisor.role))}</small><h3>${esc(l(advisor.name))}</h3><p>${esc(l(advisor.principle))}</p><div class="advisor-memory-preview">${icon('journal', { size: 15 })}<span>${esc(latestText)}</span></div></div>
             <div class="advisor-command-now"><small>${esc(t('currentMission'))}</small><strong>${esc(l(mission.advisors?.[advisor.id] || advisor.principle))}</strong></div>
           </button>`;
@@ -1498,8 +1534,9 @@
     if(result.budgetOperation==='commit'){showResolution(result.record,result.preview);return;}
     $('#resolution-dialog').close();
     if(result.completed){recordCompletedCampaign();showEndScreen();return;}
+    if(state.activeView==='agenda') $('#secondary-stage').scrollTop=0;
     Presentation.yearNote(state,result.lifecycle?.events||[]);
-    if(!(Agenda.mode(state)==='agenda'&&state.turnIndex===5))Presentation.maybeChapter();
+    if(!(!Agenda.persistent(state)&&Agenda.mode(state)==='agenda'&&state.turnIndex===5))Presentation.maybeChapter();
   }
 
   function showResolution(record, previewArg) {
@@ -1546,7 +1583,7 @@
     const interactions = (record.interactions || []).map(item => `<div class="resolution-interaction ${item.type}">${icon(item.type === 'conflict' ? 'conflict' : 'link', { size: 17 })}<div><strong>${esc(t(item.type === 'conflict' ? 'conflict' : 'synergy'))}</strong><span>${esc(l(item.text))}</span></div></div>`).join('');
     const reactions = (record.advisorReactions || []).filter(item => (mission.debate || []).includes(item.advisorId)).map(reaction => {
       const advisor = DATA.advisors.find(item => item.id === reaction.advisorId);
-      return `<div class="resolution-advisor ${reaction.stance}"><img src="${advisor.image}" alt=""><div><small>${esc(l(advisor.role))} · ${esc(stanceName(reaction.stance))}</small><strong>${esc(l(advisor.name))}</strong><span>${formatSigned(reaction.trustDelta)} · ${esc(t('advisorTrust'))} ${formatNumber(reaction.trustAfter, 0)}</span></div></div>`;
+      return `<div class="resolution-advisor ${reaction.stance}"><img src="${esc(assetURL(advisor.image))}" alt=""><div><small>${esc(l(advisor.role))} · ${esc(stanceName(reaction.stance))}</small><strong>${esc(l(advisor.name))}</strong><span>${formatSigned(reaction.trustDelta)} · ${esc(t('advisorTrust'))} ${formatNumber(reaction.trustAfter, 0)}</span></div></div>`;
     }).join('');
     const expectedRange = preview.expectedRange || null;
 
@@ -1563,6 +1600,7 @@
       <section class="result-section"><h3>${esc(t('resultFuture'))}</h3><div class="result-future">${esc(l(action.future))}</div></section>`;
 
     Presentation.decorateResolution(record,state);
+    $('#resolution-content').insertAdjacentHTML('afterbegin',CampaignUI.resultHtml(record,state,language));
     const isLast = state.turnIndex >= DATA.missions.length - 1;
     $('#continue-turn').querySelector('[data-ui]').textContent = isLast ? (globalThis.GovernorGame.I18n.choose(language,()=>('Завершить кампанию'),()=>('Complete campaign'))) : t('nextTurn');
     $('#resolution-content').insertAdjacentHTML('beforeend',window.GovernorGame.ConsolidationUI.results(state,record,language));
@@ -1597,9 +1635,10 @@
         showEndScreen();
       } else {
         renderGame();
+        if (state.activeView === 'agenda') $('#secondary-stage').scrollTop = 0;
         const lifecycleEvents = result.lifecycle?.events || [];
         Presentation.yearNote(state,lifecycleEvents);
-        if (!(Agenda.mode(state)==='agenda' && state.turnIndex===5)) Presentation.maybeChapter();
+        if (!(!Agenda.persistent(state) && Agenda.mode(state)==='agenda' && state.turnIndex===5)) Presentation.maybeChapter();
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     } catch (error) {
@@ -1613,7 +1652,7 @@
     if (!advisor || !mission) return;
     const trust = Number(state.advisorTrust[advisorId] || 50);
     const memories = (state.advisorMemories[advisorId] || []).slice().reverse();
-    $('#advisor-dialog-content').innerHTML = `<div class="advisor-dialog-card stage3"><div class="advisor-dialog-profile"><div class="advisor-dialog-portrait"><img src="${advisor.image}" alt=""><span style="--trust:${trust}%"><b>${formatNumber(trust, 0)}</b></span></div><div><p class="dialog-eyebrow">${esc(l(advisor.role))}</p><h2>${esc(l(advisor.name))}</h2><p class="principle">${esc(l(advisor.principle))}</p></div></div><div class="advisor-quote">«${esc(l(mission.advisors?.[advisor.id] || advisor.principle))}»</div><div class="advisor-memory-section"><p class="dialog-eyebrow">${esc(t('advisorMemory'))}</p><p class="advisor-memory-principle">${esc(l(advisor.memory || advisor.principle))}</p>${memories.length ? memories.map(memory => { const pair = actionForRecord(memory); return `<div class="advisor-memory-row ${memory.stance}"><span>${icon(memory.stance === 'support' ? 'check' : memory.stance === 'oppose' ? 'conflict' : 'info', { size: 15 })}</span><div><small>${esc(pair.mission ? l(pair.mission.title) : memory.missionId)} · ${esc(deliveryLabel(memory.delivery))}</small><strong>${esc(pair.action ? l(pair.action.title) : memory.actionId)}</strong></div><b>${formatSigned(memory.trustDelta)}</b></div>`; }).join('') : `<div class="interaction-empty">${icon('journal', { size: 15 })}<span>${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Советник ещё не видел ваших решений.'),()=>('The adviser has not observed a decision yet.')))}</span></div>`}</div></div>`;
+    $('#advisor-dialog-content').innerHTML = `<div class="advisor-dialog-card stage3"><div class="advisor-dialog-profile"><div class="advisor-dialog-portrait"><img src="${esc(assetURL(advisor.image))}" alt=""><span style="--trust:${trust}%"><b>${formatNumber(trust, 0)}</b></span></div><div><p class="dialog-eyebrow">${esc(l(advisor.role))}</p><h2>${esc(l(advisor.name))}</h2><p class="principle">${esc(l(advisor.principle))}</p></div></div><div class="advisor-quote">«${esc(l(mission.advisors?.[advisor.id] || advisor.principle))}»</div><div class="advisor-memory-section"><p class="dialog-eyebrow">${esc(t('advisorMemory'))}</p><p class="advisor-memory-principle">${esc(l(advisor.memory || advisor.principle))}</p>${memories.length ? memories.map(memory => { const pair = actionForRecord(memory); return `<div class="advisor-memory-row ${memory.stance}"><span>${icon(memory.stance === 'support' ? 'check' : memory.stance === 'oppose' ? 'conflict' : 'info', { size: 15 })}</span><div><small>${esc(pair.mission ? l(pair.mission.title) : memory.missionId)} · ${esc(deliveryLabel(memory.delivery))}</small><strong>${esc(pair.action ? l(pair.action.title) : memory.actionId)}</strong></div><b>${formatSigned(memory.trustDelta)}</b></div>`; }).join('') : `<div class="interaction-empty">${icon('journal', { size: 15 })}<span>${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Советник ещё не видел ваших решений.'),()=>('The adviser has not observed a decision yet.')))}</span></div>`}</div></div>`;
     $('#advisor-dialog').showModal();
     playSound('select');
   }
@@ -1677,6 +1716,7 @@
       ${GovUI.summaryHtml(state, language)}
       ${PeopleUI.finalSummary(state, language)}
       <ul class="end-lessons">${report.final.ending.lessons.map(lesson => `<li>${esc(lesson)}</li>`).join('')}</ul>`;
+    $('#end-summary').insertAdjacentHTML('beforeend',CampaignUI.reportHtml(state,language));
     $('#end-summary').insertAdjacentHTML('beforeend',window.GovernorGame.ConsolidationUI.treasury(state,language));
     window.GovernorGame.ReleaseUI.reportButton($('#end-summary'));
     Platform?.onEnd?.($('#end-summary'));
@@ -1830,14 +1870,15 @@
   }
 
   async function init() {
-    Object.assign(DATA.ui.ru,{demoBadge:'Версия 1.0 · Учебная кампания',startTitle:'Какой останется ваша область?',startLead:'Двадцать годовых решений. Пять разных территорий. Стройте, договаривайтесь и возвращайтесь к людям, которым дали обещания.'});
-    Object.assign(DATA.ui.en,{demoBadge:'Version 1.0 · Learning campaign',startTitle:'What will your region become?',startLead:'Twenty yearly decisions. Five different places. Build, negotiate, and return to the people you made promises to.'});
+    Object.assign(DATA.ui.ru,{demoBadge:'Версия 1.1 · Стратегическая кампания',startTitle:'Какой останется ваша область?',startLead:'Двадцать годовых решений. Пять разных территорий. Стройте, договаривайтесь и возвращайтесь к людям, которым дали обещания.'});
+    Object.assign(DATA.ui.en,{demoBadge:'Version 1.1 · Strategy campaign',startTitle:'What will your region become?',startLead:'Twenty yearly decisions. Five different places. Build, negotiate, and return to the people you made promises to.'});
     BudgetReviewUI.init({state:()=>state,language:()=>language,canWrite:()=>writerReady&&!blockedByOtherTab,save:()=>saveState(false),refresh:()=>renderGame(),transition:completeBudgetTransition,exportSave:downloadSave,notice:message=>toast(globalThis.GovernorGame.I18n.choose(language,()=>('Сохранение'),()=>('Save')),message,'warning')});
     RecoveryUI.init({state:()=>state,language:()=>language,canWrite:()=>writerReady&&!blockedByOtherTab,save:()=>saveState(false),refresh:()=>renderGame()});
     StoriesUI.init({state:()=>state, language:()=>language, save:()=>saveState(false), navigate:view=>setView(view), refreshBrief:()=>renderStoryBrief(), refreshList:()=>{if(state?.activeView==='stories')StoriesUI.render($('#secondary-stage'));}, notice:message=>toast(globalThis.GovernorGame.I18n.choose(language,()=>('История жителей'),()=>('Residents’ stories')),message,'info')});
     Presentation.init({state:()=>state,language:()=>language,map:()=>setView('map'),delivery:()=>showDeliveryDesk(),onClose:()=>{WorldUI.refreshVisible();const focus=state?.activeView==='agenda'?$('#agenda-heading'):$('#mission-title');if(focus){focus.tabIndex=-1;focus.focus({preventScroll:true});}}});
     GovUI.init({getState:()=>state, getLanguage:()=>language, save:()=>saveState(false), refresh:()=>renderGame(), commit:()=>commitSelectedAction(), toast:message=>toast(globalThis.GovernorGame.I18n.choose(language,()=>('Проверьте условия'),()=>('Check the terms')),message,'warning')});
     window.GovernorGame.ReleaseUI.init({state:()=>state,language:()=>language,navigate:setView,save:downloadSave,report:downloadReport});
+    CampaignUI.init({state:()=>state,language:()=>language,selected:()=>Boolean(selectedActionId),navigate:setView,save:()=>saveState(false),delivery:showDeliveryDesk});
     mountConsolidationUI();
   setupAgendaUI();
     setStaticIcons();
