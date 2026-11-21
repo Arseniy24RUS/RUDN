@@ -108,3 +108,53 @@ test('the current workbook version is attached only to session lifecycle and cat
   assert.deepEqual(calls.map(body=>body.workbookVersion),[1,1,1,1,undefined,undefined]);
   assert.ok(calls.every(body=>body.requestId==='stable'));
 });
+
+
+test('session reads and keyed material writes retry one transport failure with identical endpoint and body',async()=>{
+  const sessionId=view.id,requestId='existing-key';
+  for(const body of [
+    {op:'resume',sessionId},
+    {op:'catalog'},
+    {op:'document',sessionId,requestId,documentId:'receipt'},
+    {op:'core-step',sessionId,requestId,stepId:'materials',expectedRevision:1},
+    {op:'tutorial-step',sessionId,requestId,stepId:'materials',expectedRevision:1},
+  ]){
+    const calls=[];
+    const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',getIdToken:async()=> 'token',
+      fetch:async(url,options)=>{
+        calls.push([url,options.body]);
+        if(calls.length===1)throw new TypeError('Load failed');
+        return body.op==='catalog'?new Response(JSON.stringify({ok:true,cases:[]})):accepted();
+      }});
+    await client.request(body);
+    assert.deepEqual(calls,Array.from({length:2},()=>['https://example.test/reception',JSON.stringify(body)]));
+  }
+});
+
+test('a material transport retry is bounded and cannot refresh the token more than once',async()=>{
+  const tokens=[],calls=[];
+  const body={op:'document',sessionId:view.id,requestId:'existing-key',documentId:'receipt'};
+  const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',
+    getIdToken:async({forceRefresh})=>{tokens.push(forceRefresh);return forceRefresh?'fresh':'expired';},
+    fetch:async(_url,options)=>{
+      calls.push(options);
+      if(calls.length===1)return new Response('{}',{status:401});
+      throw new TypeError('Load failed');
+    }});
+  await assert.rejects(client.request(body),error=>error.code==='network');
+  assert.deepEqual(tokens,[false,true]);
+  assert.deepEqual(calls.map(options=>options.headers.Authorization),['Bearer expired','Bearer fresh','Bearer fresh']);
+  assert.ok(calls.every(options=>options.body===JSON.stringify(body)));
+});
+
+test('unkeyed document and other step requests are not replayed on transport failure',async()=>{
+  let calls=0;
+  const client=createReceptionAPI({endpoint:'https://example.test/reception',baseURL:'https://course.test/',getIdToken:async()=> 'token',
+    fetch:async()=>{calls++;throw new TypeError('Load failed');}});
+  for(const body of [
+    {op:'document',sessionId:view.id,documentId:'receipt'},
+    {op:'core-step',sessionId:view.id,requestId:'existing-key',stepId:'calendar'},
+    {op:'tutorial-step',sessionId:view.id,requestId:'existing-key',stepId:'draft'},
+  ])await assert.rejects(client.request(body),error=>error.code==='network');
+  assert.equal(calls,3);
+});

@@ -1,4 +1,4 @@
-import {createReceptionAPI, newRequestId, ReceptionAPIError} from './api-client.js';
+import {createReceptionAPI, isRecoverableMaterialRequest, newRequestId, ReceptionAPIError} from './api-client.js';
 import {localized, normalizeLocale, translator} from './copy.js';
 import './workspace-copy.js';
 import './correspondence-copy.js';
@@ -105,7 +105,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let calendarDraftVersion='', registrationReviewOffered=false;
   let page='reception', calendarState={}, selectedReferences=[], readMessageIds=new Set(), pageScroll={}, savedSessionId='';
   let catalog=[], catalogLoading=false, catalogError=false, trainingLevel='', trainingCaseId='', caseSearch='';
-  let notice='', recoverBusy=false, deferredDocuments=new Set();
+  let notice='', recoverBusy=false, deferredDocuments=new Set(), recoveringMaterials=false;
   let failedOperation='', waitingTimer, stageFocus=false;
   let responsePreview=false,controlDraft=restoreCorrespondenceControl(),citationSelections={},recipientOrderId='';
   let executionActionDraft=restoreControlActionDraft(),controlWorkspaceUI=restoreControlWorkspaceUI(),controlRecipientPicker=false;
@@ -1600,6 +1600,21 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     work = task; await task;
     if(recoverCurrent&&!disposed)await recoverSession(null,{quiet:true});
   }
+  function retryPending() {
+    if(!pending)return;
+    return perform(clone(pending),{retry:true,backgroundDocument:pending.op==='document'});
+  }
+  async function recoverPendingMaterials() {
+    if(recoveringMaterials||disposed||paused||archiveEntry||navigator.onLine===false||!isRecoverableMaterialRequest(pending))return;
+    recoveringMaterials=true;
+    const requestId=pending.requestId;
+    try {
+      if(busy)await work;
+      if(pending?.requestId===requestId&&navigator.onLine!==false)await retryPending();
+    } finally {
+      recoveringMaterials=false;
+    }
+  }
   async function sendMessage() {
     if (!active() || busy || pending || paused || needsResume) return;
     const question=guidedQuestion();
@@ -2067,7 +2082,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     if(action==='remove-reference'&&active()){selectedReferences=selectedReferences.filter(item=>item.id!==target.dataset.id);persist();render();return;}
     if(action==='use-reference'&&!gameplayContext&&active()){const reference=selectedReferences.find(item=>item.id===target.dataset.id);if(reference){applyReference(reference);render();}return;}
-    if(action==='retry'&&pending){await perform(clone(pending),{retry:true});return;}
+    if(action==='retry'&&pending){await retryPending();return;}
     if(action==='refresh'){const sessionId=view?.id||initial?.sessionId;if(sessionId)await perform({op:'resume',sessionId});return;}
     if(!seminar&&action==='related-training'&&view?.status==='complete'&&!pending){
       const caseId=target.dataset.caseId;
@@ -2136,11 +2151,17 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   };
   const toggle = event => {const node=event.target;if(!node.matches?.('details[data-details]')||!root.contains(node))return;if(node.open)detailOpen.add(node.dataset.details);else detailOpen.delete(node.dataset.details);persist();};
   const identity = () => {if(ownerNow()!==owner){persist();error=new ReceptionAPIError('identity-changed');paused=true;render();}};
-  const visibility = () => {if(!disposed&&page==='chat'&&!document.hidden){markChatRead();persist();render();}};
+  const reconnect = () => {void recoverPendingMaterials();};
+  const visibility = () => {
+    if(disposed||document.hidden)return;
+    if(page==='chat'){markChatRead();persist();render();}
+    reconnect();
+  };
   root.addEventListener('input',input);root.addEventListener('change',change);root.addEventListener('submit',submit);root.addEventListener('keydown',keydown);root.addEventListener('click',click);
   root.addEventListener('toggle',toggle,true);
   window.addEventListener('rudn:identitychange',identity);
-  window.addEventListener('pagehide',persist);document.addEventListener('visibilitychange',visibility);
+  window.addEventListener('pagehide',persist);window.addEventListener('pageshow',reconnect);
+  window.addEventListener('online',reconnect);document.addEventListener('visibilitychange',visibility);
   window.addEventListener('resize',updateViewport);visualViewport?.addEventListener('resize',updateViewport);
   visualViewport?.addEventListener('scroll',updateViewport);
   root.addEventListener('focusin',updateViewport);root.addEventListener('focusout',updateViewport);
@@ -2167,7 +2188,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     root.removeEventListener('input',input);root.removeEventListener('change',change);root.removeEventListener('submit',submit);root.removeEventListener('keydown',keydown);root.removeEventListener('click',click);
     root.removeEventListener('toggle',toggle,true);
     window.removeEventListener('rudn:identitychange',identity);
-    window.removeEventListener('pagehide',persist);document.removeEventListener('visibilitychange',visibility);
+    window.removeEventListener('pagehide',persist);window.removeEventListener('pageshow',reconnect);
+    window.removeEventListener('online',reconnect);document.removeEventListener('visibilitychange',visibility);
     window.removeEventListener('resize',updateViewport);visualViewport?.removeEventListener('resize',updateViewport);
     visualViewport?.removeEventListener('scroll',updateViewport);
     root.removeEventListener('focusin',updateViewport);root.removeEventListener('focusout',updateViewport);
@@ -2187,6 +2209,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(resumedJourney&&seminarStoryVersion&&view.seminarStoryVersion!==seminarStoryVersion&&!pending){
       persist();clearSessionDraft();await recoverSession(null,{quiet:true});
     }
+    if(view)await recoverPendingMaterials();
     if(view&&view.locale!==locale&&!pending)await changeLocale(locale);
   }
   else {

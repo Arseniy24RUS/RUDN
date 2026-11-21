@@ -8,6 +8,11 @@ export class ReceptionAPIError extends Error {
 export const newRequestId = () => globalThis.crypto?.randomUUID?.()
   || `rxai-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
 
+export function isRecoverableMaterialRequest(body) {
+  if (typeof body?.sessionId !== 'string' || typeof body.requestId !== 'string' || !body.sessionId || !body.requestId) return false;
+  return body.op === 'document' || (body.op === 'core-step' || body.op === 'tutorial-step') && body.stepId === 'materials';
+}
+
 export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: fetcher = globalThis.fetch,
   signal: lifetime, timeoutMs = 60000, baseURL = globalThis.location?.href, buildId = '', workbookVersion, decisionVersion, controlVersion, coreStepsVersion, seminarStoryVersion, context} = {}) {
   const resolveEndpoint = () => {
@@ -34,8 +39,13 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
       // An existing session always retains its frozen execution contract.
       if(controlVersion==='execution-v1'&&decisionVersion==='correspondence-v1'&&['start','catalog'].includes(body.op))body={...body,controlVersion};
       const url = resolveEndpoint();
-      if (lifetime?.aborted || signal?.aborted) throw new ReceptionAPIError('cancelled');
-      for (let attempt = 0; attempt < 2; attempt++) {
+      const retryTransport = ['catalog', 'resume'].includes(body.op) || isRecoverableMaterialRequest(body);
+      const payload = JSON.stringify(body);
+      let token;
+      let refreshedToken = false;
+      let retriedTransport = false;
+      while (true) {
+        if (lifetime?.aborted || signal?.aborted) throw new ReceptionAPIError('cancelled');
         const controller = new AbortController();
         const abort = () => controller.abort();
         lifetime?.addEventListener('abort', abort, {once: true});
@@ -46,17 +56,26 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
           const headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
           if (!demo) {
             if (typeof getIdToken !== 'function') throw new ReceptionAPIError('auth-required');
-            let token;
-            try { token = await getIdToken({forceRefresh: attempt === 1}); }
-            catch { throw new ReceptionAPIError('auth-required'); }
-            if (!token) throw new ReceptionAPIError('auth-required');
+            if (!token) {
+              try { token = await getIdToken({forceRefresh: refreshedToken}); }
+              catch { throw new ReceptionAPIError('auth-required'); }
+              if (!token) throw new ReceptionAPIError('auth-required');
+            }
             headers.Authorization = `Bearer ${token}`;
           }
-          const response = await fetcher(url, {method: 'POST', headers, body: JSON.stringify(body),
+          const response = await fetcher(url, {method: 'POST', headers, body: payload,
             credentials: 'omit', cache: 'no-store', signal: controller.signal});
-          if (response.status === 401 && attempt === 0 && !demo) continue;
+          if (response.status === 401 && !refreshedToken && !demo) {
+            token = undefined;
+            refreshedToken = true;
+            continue;
+          }
           let packet;
-          try { packet = await response.json(); } catch { throw new ReceptionAPIError('invalid-response', response.status); }
+          try { packet = await response.json(); }
+          catch (error) {
+            if (controller.signal.aborted || error instanceof TypeError) throw error;
+            throw new ReceptionAPIError('invalid-response', response.status);
+          }
           if (!response.ok || packet?.ok !== true) {
             // Raw server messages can contain diagnostics. UI only receives a bounded error code.
             const code = typeof packet?.error?.code === 'string' && /^[a-z0-9_/-]{1,80}$/i.test(packet.error.code)
@@ -88,6 +107,10 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
         } catch (error) {
           if (error instanceof ReceptionAPIError) throw error;
           if (controller.signal.aborted) throw new ReceptionAPIError(timedOut ? 'timeout' : 'cancelled');
+          if (retryTransport && !retriedTransport) {
+            retriedTransport = true;
+            continue;
+          }
           throw new ReceptionAPIError('network');
         } finally {
           clearTimeout(timer);
@@ -95,7 +118,6 @@ export function createReceptionAPI({endpoint, getIdToken, demo = false, fetch: f
           signal?.removeEventListener('abort', abort);
         }
       }
-      throw new ReceptionAPIError('auth-required', 401);
     },
   };
   return api;

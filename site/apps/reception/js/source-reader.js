@@ -106,6 +106,8 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     if(mountedContainer!==target)mountedContainer?.classList.remove('rx-source-reader-open');
     mountedContainer=target;target.classList.add('rx-source-reader-open');host.dataset.sourceReaderOpen='true';
     if(dialog.parentNode!==target)target.append(dialog);
+    const tray=dialog.querySelector('[data-source-reference-tray]');
+    if(tray)tray.hidden=!selectionEnabled();
     if(app&&app.locale!==language()&&!switching)void switchDocumentLanguage(false);
     return true;
   }
@@ -156,7 +158,16 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
   function translate(){if(app)translateDOM(app.root,language());}
   function originalUnit(id,unit){
     const spec=SOURCE_LOCATORS[current.id],position=Number(id.match(/-u(\d+)$/)?.[1]);
-    const locator=spec?.starts.findLast(([start])=>start<=position)?.[1];
+    let locator;
+    if(spec){
+      for(let index=spec.starts.length-1;index>=0;index--){
+        const [start,label]=spec.starts[index];
+        if(start<=position){
+          locator=label;
+          break;
+        }
+      }
+    }
     return {...unit,id,label:locator?`${spec.kind} ${locator}`:unit.label||unit.locator||''};
   }
   function unitForElement(element){
@@ -197,7 +208,9 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
   }
   async function useSelection(){
     if(!selectedReference||saving||switching||!selectionEnabled())return;
-    const ticket=generation,owner=app,doc=current,{displayLocale,...selection}=structuredClone(selectedReference);
+    const ticket=generation,owner=app,doc=current;
+    const {displayLocale,...selection}=selectedReference;
+    selection.unitIds=[...selection.unitIds];
     saving=true;renderSelection();
     try{
       let reference=selection;
@@ -222,11 +235,35 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       saving=false;renderSelection();selectionFeedback(cabinetLabels().selectFailed);
     }
   }
+  function refreshContents(owner,doc){
+    if(doc.id!=='reception-law34683'){refreshReaderToc(owner,doc);return;}
+    const nav=owner.root.querySelector('.ll-toc');
+    if(!nav)return;
+    nav.replaceChildren();
+    if(!readerState[doc.id].tocOpen)return;
+    const lang=language();
+    const articleLabel={ru:'Статья',en:'Article',zh:'条'};
+    const startLabel={ru:'Начало документа',en:'Start of document',zh:'文件开头'};
+    const fragment=nav.ownerDocument.createDocumentFragment();
+    for(const [index,article] of SOURCE_LOCATORS[doc.id].starts){
+      if(!article&&index!==0)continue;
+      const unit=owner.readerSpec.descriptor.units[index];
+      if(!unit)continue;
+      const button=nav.ownerDocument.createElement('button');
+      button.type='button';
+      button.dataset.action='article-section';
+      button.dataset.id=unit.id;
+      button.textContent=article?(lang==='zh'?article+articleLabel[lang]:articleLabel[lang]+' '+article):startLabel[lang];
+      fragment.append(button);
+    }
+    nav.append(fragment);
+  }
   function renderDocument(){
     const selected=selectedReference?.unitIds||[];
     dialog.querySelector('.rx-source-dialog-bar .ll-reader-tools')?.remove();
     dialog.querySelector('.rx-source-title')?.remove();
     app.root.innerHTML=readerView(app,current,selected,{context:'reception',readonly:true,showSource:!embedded});
+    if(current.id==='reception-law34683'&&readerState[current.id].tocOpen)refreshContents(app,current);
     const bar=dialog.querySelector('.rx-source-dialog-bar');
     const languageTools=app.root.querySelector('.ll-document-language');
     bar.querySelector('.ll-document-language')?.remove();
@@ -322,15 +359,22 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
         await switchDocumentLanguage(true);
       }else if(target.dataset.action==='toggle-toc'){
         rs.tocOpen=!rs.tocOpen;owner.root.querySelector('.ll-reader-grid').classList.toggle('toc-open',rs.tocOpen);
-        target.setAttribute('aria-expanded',String(rs.tocOpen));refreshReaderToc(owner,doc);
+        target.setAttribute('aria-expanded',String(rs.tocOpen));refreshContents(owner,doc);
       }else if(target.dataset.action==='toggle-reader-search'||target.dataset.action==='clear-search'){
         rs.searchOpen=embedded||target.dataset.action==='toggle-reader-search'&&!rs.searchOpen;
         if(!rs.searchOpen||target.dataset.action==='clear-search'){owner.readerController.cancelSearch();setReaderQuery(owner,doc,'');}
         refreshReaderSearch(owner,doc);if(embedded)decorateEmbeddedReader();translate();
         if(rs.searchOpen)owner.root.querySelector('[data-input="reader-query"]')?.focus();
-      }else if(target.dataset.action==='section'){
-        const section=owner.readerSpec.descriptor.sections.find(item=>item.id===target.dataset.id);
-        if(section){rs.tocOpen=false;owner.root.querySelector('.ll-reader-grid').classList.remove('toc-open');refreshReaderToc(owner,doc);await owner.readerController.navigate(section.unitIds[0]);}
+      }else if(target.dataset.action==='section'||target.dataset.action==='article-section'){
+        const unitId=target.dataset.action==='article-section'?target.dataset.id:
+          owner.readerSpec.descriptor.sections.find(item=>item.id===target.dataset.id)?.unitIds[0];
+        if(unitId){
+          rs.tocOpen=false;
+          owner.root.querySelector('.ll-reader-grid').classList.remove('toc-open');
+          if(target.dataset.action==='article-section')dialog.querySelector('[data-action="toggle-toc"]')?.setAttribute('aria-expanded','false');
+          refreshContents(owner,doc);
+          await owner.readerController.navigate(unitId);
+        }
       }else if(target.dataset.action==='jump-unit'){
         if(embedded){
           target.closest('.ll-search-results').hidden=true;

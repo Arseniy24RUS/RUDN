@@ -1,10 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
 import {BUNDLED_CALENDARS} from '../site/assets/js/calendar-bundled.js';
 import {normalizeCalendarWorkbenchState,reduceCalendarWorkbench,calendarWorkbenchView,createCalendarWorkbench,sourceLinkView,referenceView} from '../site/apps/reception/ai/workbench.js';
 import {createSourceReference,referenceDecisionPatch,safeSourceURL} from '../site/apps/reception/js/source-reference.js';
 import {sourceDocumentForURL} from '../site/apps/reception/js/source-reader.js';
+import {SOURCE_LOCATORS} from '../site/apps/reception/js/source-locators.js';
 
 const selected=date=>reduceCalendarWorkbench({activeTarget:'deadline'}, {type:'select',date});
 const law={id:'reception-law59999',title:'Федеральный закон от 02.05.2006 N 59-ФЗ',number:'2 мая 2006 года N 59-ФЗ',sourceUrl:'https://www.consultant.ru/document/cons_doc_LAW_59999/'};
@@ -105,6 +107,21 @@ test('source links offer one action, keep internal documents in the platform and
 test('every canonical source in the existing embedded corpus resolves back to that document',async()=>{
   const catalog=JSON.parse(await readFile(new URL('../site/apps/reception/content/legal-documents/catalog.json',import.meta.url),'utf8'));
   for(const document of catalog.documents)assert.equal(sourceDocumentForURL(document.sourceUrl),document.id,document.title);
+});
+
+test('Labour Code contents follows every article heading in the pinned full text',async()=>{
+  const bundleURL=new URL('../site/apps/reception/content/legal-documents/bundles/reception-law34683.json.gz',import.meta.url);
+  const bundle=JSON.parse(gunzipSync(await readFile(bundleURL)));
+  const blocks=Object.entries(bundle.files).filter(([path])=>path.includes('/blocks/'))
+    .map(([,entry])=>entry.value).sort((a,b)=>a.start-b.start);
+  const units=blocks.flatMap(block=>block.units);
+  const articles=units.flatMap((unit,index)=>{
+    const match=unit.text.match(/^ТК РФ Статья\s+(\d+(?:[.-]\d+)*)/iu);
+    return match?[[index,match[1]]]:[];
+  });
+  const inContents=SOURCE_LOCATORS[bundle.docId].starts.filter(([,article])=>article);
+  assert.deepEqual(inContents,articles);
+  assert.equal(units[inContents.find(([,article])=>article==='357')[0]].id,'law34683-u3044');
 });
 
 function hostFixture(){
