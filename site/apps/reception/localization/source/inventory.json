@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "count": 10912,
-  "characters": 865603,
+  "count": 10947,
+  "characters": 867602,
   "entries": [
     {
       "id": "3c8472661c5a6f79",
@@ -2539,78 +2539,81 @@
       "id": "e1b9ed590f7a4bad",
       "ru": "Доступ определяется расписанием основной платформы. Завершённые черновики не удаляются.",
       "contexts": [
-        "boot.js:26"
+        "boot.js:38"
       ]
     },
     {
       "id": "ee344fdb556e8d05",
       "ru": "Вернуться к курсу",
       "contexts": [
-        "boot.js:26",
-        "boot.js:31"
+        "boot.js:11",
+        "boot.js:38",
+        "boot.js:43"
       ]
     },
     {
       "id": "fcdd89bcbc0b488b",
       "ru": "Семинар ещё не открыт",
       "contexts": [
-        "boot.js:26"
+        "boot.js:11",
+        "boot.js:38"
       ]
     },
     {
       "id": "2387bc7b51ce1db3",
       "ru": "Смена должна сохраняться под вашим студенческим профилем.",
       "contexts": [
-        "boot.js:27"
+        "boot.js:39"
       ]
     },
     {
       "id": "5323cec277d960ff",
       "ru": "Автономная тренировка без оценки",
       "contexts": [
-        "boot.js:27"
+        "boot.js:39"
       ]
     },
     {
       "id": "5bf04feb4973910e",
       "ru": "Открыть семинар на платформе",
       "contexts": [
-        "boot.js:27"
+        "boot.js:39"
       ]
     },
     {
       "id": "aeafac7aae8a6ce1",
       "ru": "Войдите в профиль платформы",
       "contexts": [
-        "boot.js:27"
+        "boot.js:11",
+        "boot.js:39"
       ]
     },
     {
       "id": "928955133a32955c",
       "ru": "Открыть автономную тренировку",
       "contexts": [
-        "boot.js:31"
+        "boot.js:43"
       ]
     },
     {
       "id": "b3e006460d2f7cce",
       "ru": "Подключение к платформе недоступно",
       "contexts": [
-        "boot.js:31"
+        "boot.js:43"
       ]
     },
     {
       "id": "d289abbc857e3cc5",
       "ru": "Этот файл предназначен для установки в репозиторий RUDN. Для просмотра без профиля откройте автономную тренировку.",
       "contexts": [
-        "boot.js:31"
+        "boot.js:43"
       ]
     },
     {
       "id": "debbbf1b25792555",
       "ru": "Автономная тренировка",
       "contexts": [
-        "boot.js:14"
+        "boot.js:26"
       ]
     },
     {
@@ -2681,7 +2684,8 @@
       "id": "baf5e7f029743ce8",
       "ru": "План помещений и просьба",
       "contexts": [
-        "cases:CASE_TEMPLATES[access-counter].documents[d0].title"
+        "cases:CASE_TEMPLATES[access-counter].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[access-counter__d0].alt"
       ]
     },
     {
@@ -4058,7 +4062,8 @@
       "id": "d71930865ede5a5b",
       "ru": "Спорная рекламная рассылка",
       "contexts": [
-        "cases:CASE_TEMPLATES[ads-channel-scope].documents[d2].title"
+        "cases:CASE_TEMPLATES[ads-channel-scope].documents[d2].title",
+        "graphics-data:GFX_EVIDENCE[ads-channel-scope__d2].alt"
       ]
     },
     {
@@ -4761,7 +4766,8 @@
       "id": "9cfed58e30b12150",
       "ru": "Чужой рекламный скриншот",
       "contexts": [
-        "cases:CASE_TEMPLATES[ads-service-message].documents[d2].title"
+        "cases:CASE_TEMPLATES[ads-service-message].documents[d2].title",
+        "graphics-data:GFX_EVIDENCE[ads-service-message__d2].alt"
       ]
     },
     {
@@ -8019,7 +8025,8 @@
       "id": "d6b6c39dcf07fa68",
       "ru": "Измерение расстояния до школы",
       "contexts": [
-        "cases:CASE_TEMPLATES[beer-online-agegate].documents[d2].title"
+        "cases:CASE_TEMPLATES[beer-online-agegate].documents[d2].title",
+        "graphics-data:GFX_EVIDENCE[beer-online-agegate__d2].alt"
       ]
     },
     {
@@ -8381,7 +8388,8 @@
       "id": "2e1e9ad14e91a7dc",
       "ru": "Другой рекламный плакат",
       "contexts": [
-        "cases:CASE_TEMPLATES[beer-required-menu].documents[d1].title"
+        "cases:CASE_TEMPLATES[beer-required-menu].documents[d1].title",
+        "graphics-data:GFX_EVIDENCE[beer-required-menu__d1].alt"
       ]
     },
     {
@@ -9136,7 +9144,8 @@
       "id": "f9105e721bccfda0",
       "ru": "Состояние учебного раздела сайта",
       "contexts": [
-        "cases:CASE_TEMPLATES[budget-link].documents[web].title"
+        "cases:CASE_TEMPLATES[budget-link].documents[web].title",
+        "graphics-data:GFX_EVIDENCE[budget-link__web].alt"
       ]
     },
     {
@@ -10529,7 +10538,8 @@
       "ru": "Сохранённая страница «Проект бюджета»",
       "contexts": [
         "cases:CASE_TEMPLATES[budget].documents[draft].title",
-        "cases:CASE_TEMPLATES[budget-misdirected].documents[draft].title"
+        "cases:CASE_TEMPLATES[budget-misdirected].documents[draft].title",
+        "graphics-data:GFX_EVIDENCE[budget-misdirected__draft].alt"
       ]
     },
     {
@@ -11542,7 +11552,8 @@
       "id": "bce792d4860389e0",
       "ru": "Учебная схема полномочий",
       "contexts": [
-        "cases:CASE_TEMPLATES[complaint-routing].documents[competence].title"
+        "cases:CASE_TEMPLATES[complaint-routing].documents[competence].title",
+        "graphics-data:GFX_EVIDENCE[complaint-routing__competence].alt"
       ]
     },
     {
@@ -16266,7 +16277,8 @@
       "id": "f5adce21e7a13f07",
       "ru": "Общая рекламная страница",
       "contexts": [
-        "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d0].title"
+        "cases:CASE_TEMPLATES[education-accreditation-scope].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[education-accreditation-scope__d0].alt"
       ]
     },
     {
@@ -19652,7 +19664,8 @@
       "id": "63cc743ac2f9fc91",
       "ru": "Страница контактов",
       "contexts": [
-        "cases:CASE_TEMPLATES[electronic-email].documents[d1].title"
+        "cases:CASE_TEMPLATES[electronic-email].documents[d1].title",
+        "graphics-data:GFX_EVIDENCE[electronic-email__d1].alt"
       ]
     },
     {
@@ -20807,7 +20820,8 @@
       "id": "8255b6e322130a2f",
       "ru": "План двери Э-2",
       "contexts": [
-        "cases:CASE_TEMPLATES[fire-inside-release].documents[d1].title"
+        "cases:CASE_TEMPLATES[fire-inside-release].documents[d1].title",
+        "graphics-data:GFX_EVIDENCE[fire-inside-release__d1].alt"
       ]
     },
     {
@@ -25566,7 +25580,8 @@
       "id": "925690bab5f8aa8f",
       "ru": "Объявление о плановых работах",
       "contexts": [
-        "cases:CASE_TEMPLATES[gas-planned-outage].documents[d1].title"
+        "cases:CASE_TEMPLATES[gas-planned-outage].documents[d1].title",
+        "graphics-data:GFX_EVIDENCE[gas-planned-outage__d1].alt"
       ]
     },
     {
@@ -28066,7 +28081,8 @@
       "id": "53e49be3be8d7226",
       "ru": "Письмо и схема К-17",
       "contexts": [
-        "cases:CASE_TEMPLATES[hatch-known-owner].documents[d0].title"
+        "cases:CASE_TEMPLATES[hatch-known-owner].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[hatch-known-owner__d0].alt"
       ]
     },
     {
@@ -29703,7 +29719,8 @@
       "id": "f0f2dcfb1475a5e4",
       "ru": "Принятое обращение",
       "contexts": [
-        "cases:CASE_TEMPLATES[hatch].documents[appeal].title"
+        "cases:CASE_TEMPLATES[hatch].documents[appeal].title",
+        "graphics-data:GFX_EVIDENCE[hatch__appeal].alt"
       ]
     },
     {
@@ -30524,7 +30541,8 @@
       "id": "42d8012dec1c010c",
       "ru": "Результат самостоятельного поиска",
       "contexts": [
-        "cases:CASE_TEMPLATES[heritage-identified-status].documents[d1].title"
+        "cases:CASE_TEMPLATES[heritage-identified-status].documents[d1].title",
+        "graphics-data:GFX_EVIDENCE[heritage-identified-status__d1].alt"
       ]
     },
     {
@@ -30868,7 +30886,8 @@
       "id": "ca63e51b72f7cf53",
       "ru": "Буклет подрядчика",
       "contexts": [
-        "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d0].title"
+        "cases:CASE_TEMPLATES[heritage-license-not-permit].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[heritage-license-not-permit__d0].alt"
       ]
     },
     {
@@ -46095,7 +46114,8 @@
       "id": "e40c196792bde5f3",
       "ru": "Материалы предложения",
       "contexts": [
-        "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d0].title"
+        "cases:CASE_TEMPLATES[proposal-representative-limits].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[proposal-representative-limits__d0].alt"
       ]
     },
     {
@@ -50166,7 +50186,8 @@
       "id": "89562da8e7c52139",
       "ru": "Объявление о вакансии",
       "contexts": [
-        "cases:CASE_TEMPLATES[salary-gross-net].documents[d2].title"
+        "cases:CASE_TEMPLATES[salary-gross-net].documents[d2].title",
+        "graphics-data:GFX_EVIDENCE[salary-gross-net__d2].alt"
       ]
     },
     {
@@ -53793,14 +53814,16 @@
       "id": "06b20e8d17e79cc3",
       "ru": "Опись обращения Д-37",
       "contexts": [
-        "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d1].title"
+        "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d1].title",
+        "graphics-data:GFX_EVIDENCE[several-minimum-attachments__d1].alt"
       ]
     },
     {
       "id": "60137a5659c57215",
       "ru": "Схема компетенции",
       "contexts": [
-        "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d2].title"
+        "cases:CASE_TEMPLATES[several-minimum-attachments].documents[d2].title",
+        "graphics-data:GFX_EVIDENCE[several-minimum-attachments__d2].alt"
       ]
     },
     {
@@ -56855,7 +56878,8 @@
       "id": "01d771e1952d1f66",
       "ru": "Фото стенда",
       "contexts": [
-        "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d0].title"
+        "cases:CASE_TEMPLATES[sidewalk-updated-permit].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[sidewalk-updated-permit__d0].alt"
       ]
     },
     {
@@ -57200,7 +57224,8 @@
       "id": "24d5aa3907f5997b",
       "ru": "Старый кадр экрана",
       "contexts": [
-        "cases:CASE_TEMPLATES[sign-light-restored].documents[d0].title"
+        "cases:CASE_TEMPLATES[sign-light-restored].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[sign-light-restored__d0].alt"
       ]
     },
     {
@@ -58352,7 +58377,8 @@
       "id": "d41010bebd2c27ef",
       "ru": "Фотография соседней аптеки",
       "contexts": [
-        "cases:CASE_TEMPLATES[sign-promotion].documents[d2].title"
+        "cases:CASE_TEMPLATES[sign-promotion].documents[d2].title",
+        "graphics-data:GFX_EVIDENCE[sign-promotion__d2].alt"
       ]
     },
     {
@@ -59476,7 +59502,8 @@
       "id": "73bc939533abed58",
       "ru": "Действующий план регулирования",
       "contexts": [
-        "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d0].title"
+        "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[signal-timing-proposal__d0].alt"
       ]
     },
     {
@@ -59504,7 +59531,8 @@
       "id": "013be2d2539df0e2",
       "ru": "План соседнего перекрёстка",
       "contexts": [
-        "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d2].title"
+        "cases:CASE_TEMPLATES[signal-timing-proposal].documents[d2].title",
+        "graphics-data:GFX_EVIDENCE[signal-timing-proposal__d2].alt"
       ]
     },
     {
@@ -61768,7 +61796,8 @@
       "id": "11c7d471e03ae336",
       "ru": "Схема служебного взаимодействия",
       "contexts": [
-        "cases:CASE_TEMPLATES[trees-current-danger].documents[d1].title"
+        "cases:CASE_TEMPLATES[trees-current-danger].documents[d1].title",
+        "graphics-data:GFX_EVIDENCE[trees-current-danger__d1].alt"
       ]
     },
     {
@@ -62102,7 +62131,8 @@
       "id": "b0bb66926f3a4476",
       "ru": "Схема А/Б и разрешительная карточка",
       "contexts": [
-        "cases:CASE_TEMPLATES[trees-other-site].documents[d0].title"
+        "cases:CASE_TEMPLATES[trees-other-site].documents[d0].title",
+        "graphics-data:GFX_EVIDENCE[trees-other-site__d0].alt"
       ]
     },
     {
@@ -80298,6 +80328,251 @@
       "ru": "состоит из восьми дел без подсказок; итог — от 0 до 5 баллов. В автономной версии он остаётся на этом устройстве.",
       "contexts": [
         "standalone.js:20"
+      ]
+    },
+    {
+      "id": "5f3964803b81a340",
+      "ru": "Откройте приёмную из своего профиля.",
+      "contexts": [
+        "boot.js:11"
+      ]
+    },
+    {
+      "id": "9098a3579fead3a2",
+      "ru": "Связь с приёмной недоступна",
+      "contexts": [
+        "boot.js:11"
+      ]
+    },
+    {
+      "id": "c642d40941d1ff74",
+      "ru": "Приёмная будет доступна по расписанию курса.",
+      "contexts": [
+        "boot.js:11"
+      ]
+    },
+    {
+      "id": "e2da30872cbe3b19",
+      "ru": "Попробуйте открыть приёмную ещё раз.",
+      "contexts": [
+        "boot.js:11"
+      ]
+    },
+    {
+      "id": "6730c9dd480112bc",
+      "ru": "Схема другого плаката. Общая площадь 1000 см², площадь предупреждения 120 см².",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[beer-warning-area__d0].alt"
+      ]
+    },
+    {
+      "id": "6d637a4f46693c07",
+      "ru": "Схема плаката Р-10. Общая площадь 1000 см², площадь предупреждения 50 см².",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[beer-warning-area__d1].alt"
+      ]
+    },
+    {
+      "id": "8f1920dc2f50bed7",
+      "ru": "Отдельная отметка «18+» площадью 100 см².",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[beer-warning-area__d2].alt"
+      ]
+    },
+    {
+      "id": "54137d19d1b0b47d",
+      "ru": "Снимок детской площадки без людей.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[complaint-access-materials__d1].alt"
+      ]
+    },
+    {
+      "id": "c996012e19e6f430",
+      "ru": "На схеме руководитель поручает проверку С-9 и запрашивает объяснение С-8.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[complaint-officer-not-organ__d0].alt"
+      ]
+    },
+    {
+      "id": "f4ddb08cbd6b4713",
+      "ru": "На стенде объявление «Простой транспорта не оплачивается».",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[driver-waiting-work__d0].alt"
+      ]
+    },
+    {
+      "id": "8b1c140635838b62",
+      "ru": "На учебной распечатке контур участка У-12 выглядит смещённым.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[egrn-map-layer__d1].alt"
+      ]
+    },
+    {
+      "id": "7fb59a92e2ea0abf",
+      "ru": "Номер помещения 18 указан и в исходном плане, и в записи ЕГРН.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[egrn-source-plan__d0].alt"
+      ]
+    },
+    {
+      "id": "79613d72dbc4cc8a",
+      "ru": "Коридор К-3 ведёт к выходу Э-3. На плане часть прохода перекрыта предметами.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[fire-corridor-blocked__d1-plan].alt"
+      ]
+    },
+    {
+      "id": "a572c2b06f9c6ca1",
+      "ru": "Наружная сторона двери с замочной скважиной.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[fire-inside-release__d0].alt"
+      ]
+    },
+    {
+      "id": "afac7fd2108041d6",
+      "ru": "На плане показано направление движения к эвакуационному выходу.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[fire-key__d0-plan].alt"
+      ]
+    },
+    {
+      "id": "28da81ce33db9823",
+      "ru": "Обрезанный фрагмент цифровой маркировки упаковки без названия поля.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[food-manufactured-date__d1].alt"
+      ]
+    },
+    {
+      "id": "d19ca3d26347c205",
+      "ru": "На упаковке отмечена партия А, на соседнем документе указана партия Б.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[food-other-batch__d0].alt"
+      ]
+    },
+    {
+      "id": "0b476cbeb14267a5",
+      "ru": "Маршрут от остановки «Парк» через двор Б к мосту. Дом А расположен в стороне.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[hatch-location__photo-route].alt"
+      ]
+    },
+    {
+      "id": "6f24781fb27d8bc1",
+      "ru": "Синий киоск на заднем плане у дорожки к мосту.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[hatch-location__photo].alt"
+      ]
+    },
+    {
+      "id": "87f89d9ce0d138a0",
+      "ru": "Схема привязки колодца К-17. Крышка лежит рядом.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[hatch-network__inspection].alt"
+      ]
+    },
+    {
+      "id": "744a993cf01dd360",
+      "ru": "Фрагмент чертежа с декоративными элементами E-3 и E-4.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[heritage-approved-restoration__d0].alt"
+      ]
+    },
+    {
+      "id": "541c0667744e6d32",
+      "ru": "На территориальной схеме объект Э-30 расположен за пределами Москвы.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[landfill-registry-scope__d2].alt"
+      ]
+    },
+    {
+      "id": "b8ac03063c375434",
+      "ru": "На учебной карте обозначено место объекта в Тверской области.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[landfill-territory__d0-map].alt"
+      ]
+    },
+    {
+      "id": "3035b3010da44fd8",
+      "ru": "На условной схеме объект Ш-24 обозначен в Московской области.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[noise-other-region__d1].alt"
+      ]
+    },
+    {
+      "id": "6578583380fb5578",
+      "ru": "Макет публикации с графами о фамилии и здоровье. Содержимое строк закрыто.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[privacy__screen].alt"
+      ]
+    },
+    {
+      "id": "dd27ab87e4ed7630",
+      "ru": "Таблица суммарных данных. Технические кружки 210, искусство 175, спорт 260.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[privacy-aggregate__table].alt"
+      ]
+    },
+    {
+      "id": "c9bc7943c69ce4dc",
+      "ru": "Эскиз размещения двух скамеек в точках А и Б и небольшого навеса.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[proposal-bench__proposal].alt"
+      ]
+    },
+    {
+      "id": "c97f09c68d47a624",
+      "ru": "Возле основания фонарного столба виден повреждённый кабель.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[repeat-new-facts__comparison].alt"
+      ]
+    },
+    {
+      "id": "ac76c12a8e07ef31",
+      "ru": "План пешеходного коридора вдоль строительного ограждения.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[sidewalk-boundary__d0-plan].alt"
+      ]
+    },
+    {
+      "id": "8efc90014d78d863",
+      "ru": "Схема временного обхода вокруг ограждённого участка Т-4.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[sidewalk-safe-detour__d0].alt"
+      ]
+    },
+    {
+      "id": "989a8c5eec6df3d4",
+      "ru": "Прямая дорожка до начала работ.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[sidewalk-safe-detour__d2].alt"
+      ]
+    },
+    {
+      "id": "0222764ea553501e",
+      "ru": "П-1 показан слева на западе. П-2 находится справа рядом со школой.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[signal-other-crossing__d0].alt"
+      ]
+    },
+    {
+      "id": "dfeb931d288e12ac",
+      "ru": "Кнопка вызова сигнала у пешеходного перехода рядом со школой.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[signal-other-crossing__d1].alt"
+      ]
+    },
+    {
+      "id": "8d6b203dabda72c5",
+      "ru": "План участка с двумя отмеченными деревьями Д-14 и Д-15.",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[trees-permit-matches__d0-plan].alt"
+      ]
+    },
+    {
+      "id": "dc8ff8a6b5fd853f",
+      "ru": "На контейнере наклейка «Любое вторсырьё».",
+      "contexts": [
+        "graphics-data:GFX_EVIDENCE[waste-container-fractions__d0].alt"
       ]
     }
   ]
