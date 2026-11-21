@@ -58,6 +58,7 @@
 .reception-ai-root.rxa-cabinet .rxa-cabinet-settings > summary { display: grid; place-items: center; width: 44px; height: 44px; min-width: 44px; padding: 10px; border: 0; border-radius: 10px; color: #3a5a77; background: transparent; cursor: pointer; list-style: none; }
 .reception-ai-root.rxa-cabinet .rxa-back .rxa-icon { width: 25px; height: 25px; }
 .reception-ai-root.rxa-cabinet .rxa-cabinet-settings { position: relative; }
+.reception-ai-root.rxa-cabinet .rxa-cabinet-settings:not([open]) > .rxa-settings-panel { display: none; }
 .reception-ai-root.rxa-cabinet .rxa-cabinet-settings > summary::-webkit-details-marker { display: none; }
 .reception-ai-root.rxa-cabinet .rxa-cabinet-settings > summary:hover,
 .reception-ai-root.rxa-cabinet .rxa-cabinet-settings[open] > summary,
