@@ -625,11 +625,27 @@ class Backend{
         }
       }
     }
-    if(this.user&&studentKey){try{
-      const remote=await this.readCloud(`grades/${studentKey}`)||{};
-      for(const [slug,grade] of Object.entries(remote))if(!grades[slug]||Number(grade.points)>=Number(grades[slug].points))grades[slug]=grade;
-      try{this.writeLocalGrades(studentKey,grades)}catch{}
-    }catch{/* Do not clear grades because a request failed. */}}
+    const uid=this.user?.uid;
+    if(uid&&studentKey){
+      const generation=this.generation, path=`grades/${studentKey}`, receptionSlug='seminar-5';
+      const [remote,reception]=await Promise.allSettled([
+        this.readCloud(path),
+        this.readCloud(`${path}/${receptionSlug}`,{authoritative:true})
+      ]);
+      if(this.user?.uid!==uid||this.generation!==generation)return grades;
+      if(remote.status==='fulfilled'){
+        for(const [slug,grade] of Object.entries(remote.value||{})){
+          if(!grades[slug]||Number(grade.points)>=Number(grades[slug].points))grades[slug]=grade;
+        }
+      }
+      // The server has already selected the best Reception grade. A connected
+      // Firebase SDK read and the device's older attempts can contain stale values.
+      const currentReception=reception.status==='fulfilled'&&Number.isFinite(reception.value?.points);
+      if(currentReception)grades[receptionSlug]=reception.value;
+      if(remote.status==='fulfilled'||currentReception){
+        try{this.writeLocalGrades(studentKey,grades)}catch{}
+      }
+    }
     return grades;
   }
   async uploadFile(activitySlug,file,{attemptId}={}){

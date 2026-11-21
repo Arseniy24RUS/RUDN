@@ -31,6 +31,7 @@ const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp
 const clone = value => JSON.parse(JSON.stringify(value));
 const workspacePages = ['reception','chat','documents','calendar','route','decision'];
 const mutationOps = ['start','message','document','decide','followup','control-action','next','tutorial-step','mentor-question','core-step','registration-check'];
+const complaintExamplePassages = {exampleComplaintArticle8:'law59999-u52',exampleComplaintArticle10:'law59999-u60'};
 const blankWorkbook = () => ({referralDeadline:'',registrationTimely:false,routing:{recipientIds:[]}});
 const blankDecision = () => ({workbook:blankWorkbook(),procedureId:'',routeId:'',actionIds:[],law:{number:'',article:''},deadline:'',basisDocumentIds:[],reasoning:''});
 const blankAssessment = () => ({factId:'',applicationId:'',trapId:'',actDate:'',calendar:{anchor:'',rule:'',start:'',shift:''},research:{recordId:'',fragmentId:'',extracted:'',finding:''}});
@@ -201,6 +202,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     workbookVersion:config.workbookVersion??(config.decisionVersion==='legacy'&&config.demo?undefined:2),decisionVersion:config.decisionVersion??'correspondence-v1',
     controlVersion:config.controlVersion??'execution-v1',coreStepsVersion,seminarStoryVersion});
   const reader = createSourceReader(root, {signal:lifetime.signal, locale:() => locale,
+    requireProvision:hasCore,
     presentation:'embedded', getContainer:()=>root.querySelector('[data-source-reader-host]'),
     beforeOpen:()=>{if(page!=='documents'||selectedDoc){selectedDoc='';goPage('documents');}},
     canSelect:()=>active()&&!paused&&!(busy&&operation==='decide')&&pending?.op!=='decide'&&(!hasCore()||!busy&&!pending&&coreInView()==='materials'),
@@ -371,7 +373,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const code = String(problem?.code || '').toLowerCase().replaceAll('_','-');
     if(/^(reviewer-unavailable|review-unavailable|review-invalid|review-unconfirmed)$/.test(code))return t('responseReviewUnavailable');
     if(code==='citation-source-unavailable')return t('responseSourceUnavailable');
-    if(code==='invalid-citation')return t('responseInvalidCitation');
+    if(code==='invalid-citation')return hasCore()?cl('invalidCitation'):t('responseInvalidCitation');
     if(code==='control-context-limit')return t('executionContextLimit');
     if(code==='control-action-limit')return t('executionActionLimit');
     if(code==='invalid-control-version')return t('executionVersion');
@@ -387,7 +389,6 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(code==='tutorial-question-required')return l('askVisitorPrompt');
     if(/^(tutorial-step-locked|tutorial-locked|journey-stage-locked|journey-locked|stage-locked)$/.test(code))return l('locked');
     if(code==='core-citation-required')return cl('noCitation');
-    if(code==='invalid-citation'&&hasCore())return cl('invalidCitation');
     if(code==='core-calendar-required')return cl('dateHint');
     if(code==='core-route-required')return cl('routeMissing');
     if(code==='core-draft-incomplete')return cl('draftIncomplete');
@@ -441,7 +442,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function alerts() {
     const lines = [];
-    if ((error || pending && !busy)&&!atAction(pending?.op||failedOperation)) lines.push(`<section class="rxa-alert" role="alert">${icon('info')}<div><p>${esc(error?errorText(error):t('pending'))}</p><div class="rxa-actions">${pending?button(t('retry'),'retry',{disabled:busy}):view || initial?.sessionId?button(t('refresh'),'refresh',{disabled:busy}):''}${error && !view && !pending?button(t('newSession'),'clear-session',{disabled:busy}):''}</div></div></section>`);
+    const code=String(error?.code||'').toLowerCase().replaceAll('_','-');
+    const canResume=Boolean(view||initial?.sessionId)&&(needsResume||
+      /^(network|timeout|invalid-response|server-error|operation-in-progress)$/.test(code));
+    if ((error || pending && !busy)&&!atAction(pending?.op||failedOperation)) lines.push(`<section class="rxa-alert" role="alert">${icon('info')}<div><p>${esc(error?errorText(error):t('pending'))}</p><div class="rxa-actions">${pending?button(t('retry'),'retry',{disabled:busy}):canResume?button(t('refresh'),'refresh',{disabled:busy}):''}${error && !view && !pending?button(t('newSession'),'clear-session',{disabled:busy}):''}</div></div></section>`);
     if (!storageOkay) lines.push(`<div class="rxa-alert" role="status">${icon('info')}<p>${esc(t('storageError'))}</p></div>`);
     if(notice)lines.push(`<div class="rxa-notice" role="status">${icon('check')}<span>${esc(notice)}</span></div>`);
     return lines.join('');
@@ -1123,6 +1127,9 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       ${acts.length?`<p class="rxt-citation-progress" data-core-citation-progress role="status">
         <span class="rxa-sr">${esc(cl('citationProgressLabel'))}. </span>${esc(progress)}</p>`:''}
       ${coreLessonHint('materials')}${coreFeedback('materials')}
+      ${editable&&acceptsTwoCoreCitations()?`<div class="rxa-actions">${Object.keys(complaintExamplePassages).map(key=>
+        button(cl(key),'example-law-passage',
+          {quiet:true,disabled:!removable,glyph:'sources',extra:`data-passage="${key}"`})).join('')}</div>`:''}
       <section class="rxa-document-group rxt-legal-list" data-core-law>
       ${acts.map(({act,citations})=>`<div class="rxt-legal-act ${citations.length?'has-citation':''}" ${citations.length?`data-core-citation="${esc(act.id)}"`:''}>
         ${normativeActsView([act],{locale})}${citations.length?citations.map(citation=>{
@@ -2032,6 +2039,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(action==='core-go'&&hasCore()){goCore(target.dataset.step);return;}
     if(action==='core-records'&&hasCore()){scrollToCoreRecords();return;}
     if(action==='core-sources'&&hasCore()){goCore('materials');return;}
+    if(action==='example-law-passage'&&acceptsTwoCoreCitations()&&page==='documents'&&coreInView()==='materials'&&active()&&!busy&&!pending&&!paused){
+      const key=target.dataset.passage;
+      if(Object.hasOwn(complaintExamplePassages,key))
+        await reader.openDocument('reception-law59999',target,'',{unitId:complaintExamplePassages[key]});
+      return;
+    }
     if(action==='example-question'&&guidedQuestion()&&!guidedQuestion().completed){
       draftMessage=guidedQuestion().prompt;
       persist();render();

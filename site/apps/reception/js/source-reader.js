@@ -19,6 +19,12 @@ function loadReader(){
 const BASE=new URL('../',import.meta.url);
 const SHARED_BASE=new URL('../../legal-lab/',import.meta.url);
 const EXISTING={'48601':'civil79','82959':'corruption273','34661':'koap'};
+const articleHeading=/^(?:[А-ЯЁ. ]+ )?Статья (\d+(?:\.\d+)*)\./u;
+const selectProvision={
+  ru:'Коснитесь абзаца с текстом нормы целиком или выделите более длинный фрагмент.',
+  en:'Tap a paragraph containing the rule or select a longer passage.',
+  zh:'请点击包含条文的整段文字，或选取更长的片段。',
+};
 const localizedReaderCopy={
   ru:{original:'Русский оригинал',translation:'Показать перевод',tooLong:'Откройте русский оригинал и выделите фрагмент до 4 000 знаков.',switchFailed:'Не удалось переключить язык документа. Повторите попытку.'},
   en:{original:'Russian original',translation:'Show translation',studyTranslation:'Study translation',machineTranslation:'Machine-assisted study translation',tooLong:'Open the Russian original and select a passage of up to 4,000 characters.',switchFailed:'Could not switch the document language. Try again.'},
@@ -75,7 +81,7 @@ function loadStyles(){
 }
 
 /** Mounts the seminar-4 reader without importing its assignments or grading. */
-export function createSourceReader(host,{signal,locale=()=>document.documentElement.lang,onSelect,canSelect=()=>true,presentation='dialog',getContainer,beforeOpen}={}){
+export function createSourceReader(host,{signal,locale=()=>document.documentElement.lang,onSelect,canSelect=()=>true,requireProvision=()=>false,presentation='dialog',getContainer,beforeOpen}={}){
   const lifetime=new AbortController();
   const positions={},readerState={};
   const embedded=presentation==='embedded';
@@ -213,17 +219,26 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     selection.unitIds=[...selection.unitIds];
     saving=true;renderSelection();
     try{
-      let reference=selection;
+      let reference=selection,units;
       if(displayLocale!=='ru'){
         const original=await owner.corpus.readerDocument(doc.id,'ru',{activate:false});
         const ordered=selection.unitIds.map(id=>original.units.find(unit=>unit.id===id));
         if(ordered.some((unit,index)=>!unit||index>0&&unit.index!==ordered[index-1].index+1))throw Error('Selected passage is unavailable');
         const loaded=await owner.corpus.loadUnits(doc.id,'ru',selection.unitIds);
         if(ticket!==generation)return;
-        const units=ordered.map(unit=>unit&&loaded.has(unit.id)?originalUnit(unit.id,{...unit,...loaded.get(unit.id)}):null);
+        units=ordered.map(unit=>unit&&loaded.has(unit.id)?originalUnit(unit.id,{...unit,...loaded.get(unit.id)}):null);
         if(units.some(unit=>!unit))throw Error('Selected passage is unavailable');
         reference=createSourceReference(doc,{units,url:sourceURL});
         if(!reference||units.length>40||reference.text.length>4000){
+          saving=false;renderSelection();selectionFeedback(readerCopy().tooLong);return;
+        }
+      }
+      if(requireProvision()){
+        const originalUnits=units||selection.unitIds.map(id=>owner.corpus.peekUnit(doc.id,'ru',id));
+        if(reference.text.replace(/\s+/gu,' ').trim().length<24||originalUnits.every(unit=>unit&&articleHeading.test(unit.text))){
+          saving=false;renderSelection();selectionFeedback(selectProvision[language()]);return;
+        }
+        if(reference.truncated||reference.unitIds.length>40||reference.text.length>4000){
           saving=false;renderSelection();selectionFeedback(readerCopy().tooLong);return;
         }
       }
@@ -387,7 +402,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       }else if(target.dataset.action==='search-page')await search(Number(target.dataset.page));
     }catch(error){if(app===owner)fail(error);}
   }
-  async function openDocument(id,trigger=document.activeElement,url=''){
+  async function openDocument(id,trigger=document.activeElement,url='',{unitId}={}){
     if(!id||closed)return false;
     close();
     if(embedded){await beforeOpen?.();if(closed)return false;}
@@ -401,7 +416,7 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     else{document.body.append(dialog);dialog.showModal();}
     dialog.addEventListener('cancel',event=>{event.preventDefault();close();},{signal:aborter.signal});
     dialog.querySelector('[data-source-reader-close]').addEventListener('click',close,{signal:aborter.signal});
-    dialog.querySelector('[data-source-reader-retry]').addEventListener('click',()=>void openDocument(id,opener,url),{signal:aborter.signal});
+    dialog.querySelector('[data-source-reader-retry]').addEventListener('click',()=>void openDocument(id,opener,url,{unitId}),{signal:aborter.signal});
     dialog.querySelector('[data-source-reference-use]')?.addEventListener('click',()=>void useSelection(),{signal:aborter.signal});
     dialog.querySelector('[data-source-reference-clear]')?.addEventListener('click',()=>{selectedReference=null;dialog.ownerDocument.defaultView.getSelection()?.removeAllRanges();renderSelection();},{signal:aborter.signal});
     try{
@@ -454,7 +469,13 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
       }
       app.root.addEventListener('submit',event=>{if(event.target.matches('[data-search-form="reader"]')){event.preventDefault();void search();}},{signal:aborter.signal});
       app.root.inert=false;
-      dialog.querySelector('[data-source-reader-close]').focus({preventScroll:true});
+      if(unitId&&await app.readerController.navigate(unitId)){
+        if(ticket!==generation)return false;
+        const paragraph=[...app.root.querySelectorAll('[data-unit]')].find(element=>element.dataset.unit===unitId);
+        if(paragraph&&selectionEnabled())setSelection(createSourceReference(doc,{units:[unitForElement(paragraph)],url:sourceURL}));
+      }else if(ticket===generation){
+        dialog.querySelector('[data-source-reader-close]').focus({preventScroll:true});
+      }
       return true;
     }catch(error){if(ticket===generation)fail(error);return false;}
   }
