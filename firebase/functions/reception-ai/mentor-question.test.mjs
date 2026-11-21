@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {createReceptionService} from './service.mjs';
 import {createMemoryStore} from './store.mjs';
@@ -11,6 +12,10 @@ import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
 import {explicitQAReview} from '../../../scripts/reception-correspondence-qa-cases.mjs';
 import {createFirebaseResultWriter} from './firebase.mjs';
 import {SEMINAR_REPLY_GRADING_VERSION} from './seminar-journey.mjs';
+import {deterministicMaterialsHint,mentorEvidence} from './mentor-evidence.mjs';
+import {requiredSeminarExamples} from './normative-acts.mjs';
+import {inspectCoreStep} from './seminar-core.mjs';
+import {resolveLegalCitation} from './correspondence-legal-sources.mjs';
 
 async function fixture(answerMentor, {locale='ru',ready=true,acceptedKinds,reviewMentorWork,reviewDecision,stage='mentor',writeJournal=false}={}) {
   const identity={uid:'mentor-question-fixture',studentKey:'99990001'};
@@ -244,4 +249,54 @@ test('a missing provider gives a localized workspace lookup without a model call
   assert.match(next.mentorMessages.at(-1).text,/可以打开的文件/);
   assert.ok(view.documents.every(row=>next.mentorMessages.at(-1).text.includes(row.title)));
   await assert.rejects(ask(next,'请用四句话起草一封正式回复。','draft'),{code:'not_configured'});
+});
+
+
+test('waste site register names the unread document and quotes both provisions accepted by the materials step',async()=>{
+  const {template}=JSON.parse(readFileSync(new URL(
+    '../../../site/apps/reception/content/cases/waste-site-register.json',import.meta.url),'utf8'));
+  const c={id:template.id,documents:template.documents.map(({id,title,text})=>({id,title:{ru:title},text:{ru:text},factIds:[]})),
+    facts:[],rubric:{authored:{knowledge:template.knowledge,calendar:{rule:'calendar30'}}}};
+  const state={releasedDocumentIds:c.documents.map(doc=>doc.id),openedDocumentIds:['d0'],messages:[]};
+  const guide={coreStepsVersion:MFC_SEMINAR_VERSION,currentStep:'materials',decision:{},
+    steps:[{id:'materials',documentIds:['d1']}]};
+  guide.evidence=mentorEvidence(c,state,'ru',guide,null,'active');
+
+  const citations=requiredSeminarExamples(c);
+  assert.deepEqual(citations.map(row=>row.unitIds),[['law19109-u291'],['law59999-u78']]);
+  const result=await inspectCoreStep({stepId:'materials',citations},c,state,'ru',{
+    guide:true,resolveLegalCitation,coreStepsVersion:MFC_SEMINAR_VERSION
+  });
+  assert.equal(result.field,'citations');
+  for(const question of ['Какую статью выбрать?', 'Почему не пускает в календарь?', 'А ещё?']){
+    const reply=deterministicMaterialsHint({guide,text:question,locale:'ru'});
+    for(const row of citations)assert.ok(reply.includes(row.quote));
+    assert.match(reply,/89-ФЗ[^\n]+ст\. 13\.4/);
+    assert.match(reply,/59-ФЗ[^\n]+ст\. 12/);
+    assert.match(reply,/Запись реестра П-9/);
+    assert.doesNotMatch(reply,/Уведомление перевозчика|Акт размещения/);
+    assert.match(reply,/«К срокам»/);
+  }
+});
+
+test('a materials checklist bypasses the model and remains in mentor history without advancing the case',async()=>{
+  let calls=0;
+  const {view,send,ask,store}=await fixture(async()=>{
+    calls++;
+    return {reply:'Ответ на отдельный вопрос',usage:{inputTokens:10,outputTokens:5}};
+  });
+  const question='Какую статью выбрать?';
+  let current=(await ask(view,question,'before-materials')).view;
+  assert.equal(calls,1);
+  current=(await send(current,{op:'tutorial-step',stepId:'reception',choiceId:'role',requestId:'get-to-materials'})).view;
+  const before=await store.get('budget');
+  const checked=(await ask(current,question,'materials-checklist')).view;
+  assert.equal(calls,1);
+  assert.deepEqual(await store.get('budget'),before);
+  assert.deepEqual(checked.messages,current.messages);
+  assert.deepEqual(checked.openedDocumentIds,current.openedDocumentIds);
+  assert.deepEqual(checked.coreSteps,current.coreSteps);
+  assert.equal(checked.mentorMessages.length,current.mentorMessages.length+2);
+  assert.match(checked.mentorMessages.at(-1).text,/38-ФЗ[^\n]+ст\. 18/);
+  assert.match(checked.mentorMessages.at(-1).text,/«К срокам»/);
 });

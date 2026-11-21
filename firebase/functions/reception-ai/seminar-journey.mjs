@@ -418,12 +418,30 @@ function prefilledExampleDecision(guide,state,language) {
   return decision;
 }
 
+export function missingCoreMaterials(c, state, steps) {
+  const required=steps.find(step=>step.id==='materials')?.documentIds||[];
+  return required.filter(id=>!state.openedDocumentIds.includes(id))
+    .map(id=>c.documents.find(doc=>doc.id===id&&state.releasedDocumentIds.includes(id))).filter(Boolean);
+}
+
 export function publicTutorialGuide(guide, session) {
   const state = session.caseStates[session.caseIndex], example = session.journeyStage==='example';
   const stepIndex = state.tutorialStepIndex || 0;
   const allowed=example&&!session.coreStepsVersion?null:tutorialExecutionKinds(guide.steps[stepIndex]?.id);
   const actions=guide.sharedReply?allowed?.filter(kind=>kind!=='notify'):allowed;
-  const story=session.caseData?.[session.caseIndex]?.seminarStory;
+  const c=session.caseData?.[session.caseIndex], story=c?.seminarStory;
+  let finding=state.tutorialFinding;
+  if (!example && story && session.status==='active' && guide.steps[stepIndex]?.id==='materials') {
+    const missing=missingCoreMaterials(c,state,guide.steps);
+    if(missing.length){
+      const names=missing.map(doc=>localized(doc.title,session.locale));
+      const instruction=localized(T(
+        'Чтобы перейти к срокам, откройте в «Материалах дела» '+names.map(name=>'«'+name+'»').join(', ')+'.',
+        'To continue to deadlines, open '+names.map(name=>'“'+name+'”').join(', ')+' in Case materials.',
+        '进入期限步骤前，请在「案件材料」中打开'+names.map(name=>'《'+name+'》').join('、')+'。'),session.locale);
+      finding={stepId:'materials',explanation:instruction};
+    }
+  }
   const question=example&&story?.exampleDialogue;
   const questionCompleted=state.exampleQuestionCompleted===true;
   const prefilled=question&&guide.fixedKind&&session.status==='active'&&guide.steps[stepIndex]?.id==='draft'&&
@@ -437,7 +455,7 @@ export function publicTutorialGuide(guide, session) {
     return {...step,
       ...(visited && choices.length ? {choices:choices.map(({id,label})=>({id,label}))} : {}),
       ...(visited && (example || index < stepIndex) && !(story&&step.id==='route') ? {explanation,correctChoiceId} : {})};
-  }), ...(state.tutorialFinding ? {finding:state.tutorialFinding} : {}),
+  }), ...(finding ? {finding} : {}),
     ...(state.tutorialWorkFeedback ? {workFeedback:state.tutorialWorkFeedback} : {}),
   ...(stepIndex>=(session.coreStepsVersion?1:2) ? {decision:guide.decision} : {}),
     ...(prefilled?{prefilledDecision:prefilled}:{}),

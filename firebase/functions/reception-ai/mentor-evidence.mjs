@@ -5,6 +5,7 @@ import {mfcAuthorityName} from './mfc-seminar.mjs';
 import {hasApplicableLegalCitation, requiredSeminarActs, requiredSeminarExamples, requiredSeminarProvisions} from './normative-acts.mjs';
 import {calculateWorkbookDeadline} from './workbook-calendar.mjs';
 import {registrationTimely} from './workbook.mjs';
+import {missingCoreMaterials} from './seminar-journey.mjs';
 
 const guidedWorkspace = {
   ru:{reception:'Приёмная', records:'Материалы дела', recordsButton:'К материалам дела',
@@ -29,7 +30,7 @@ function legalEvidence(c) {
     const citation = example && {docId:id, unitIds:example.unitIds, text:example.quote};
     const articles = provisions[id];
     const exampleArticle = citation && articles.find(article => hasApplicableLegalCitation(c, citation, {[id]:[article]}));
-    return {title, number, articles, ...(exampleArticle ? {exampleArticle, exactPassage:example.quote.slice(0, 1500)} : {})};
+    return {title, number, articles, ...(exampleArticle ? {exampleArticle, exactPassage:example.quote} : {})};
   });
 }
 
@@ -62,12 +63,14 @@ export function mentorEvidence(c, state, language, guide, workbook, status) {
     .map(doc => ({title:localized(doc.title, language), text:localized(doc.text, language).slice(0, 3600),
       hasImage:Boolean(doc.image), opened:state.openedDocumentIds.includes(doc.id),
       linkedFacts:c.facts.filter(fact => doc.factIds.includes(fact.id)).map(fact => localized(fact.text, language))}));
+  const unreadRequiredDocuments = missingCoreMaterials(c, state, guide.steps)
+    .map(doc => localized(doc.title, language));
   const recipients = guide.coreStepsVersion ? mfcRoutingAlternatives(c)?.map(set =>
     set.map(authority => mfcAuthorityName(authority, language))) : null;
   return {stage:guide.currentStep, status, documents, ...(guide.coreStepsVersion ? {workspace:guidedWorkspace[language]} : {}),
     participantOpening:participantOpening(c, language),
     participantDialogue:state.messages.slice(1).slice(-6).map(({role,text}) => ({role,text:text.slice(0, 900)})),
-    calendar:calendarEvidence(workbook, guide.decision), recipients, legalSources:legalEvidence(c),
+    calendar:calendarEvidence(workbook, guide.decision), recipients, legalSources:legalEvidence(c), unreadRequiredDocuments,
     ...(status==='followup' && c.followup ? {followupNotice:localized(c.followup.intro, language)} : {})};
 }
 
@@ -91,6 +94,55 @@ const questions = {
     legal:/^(?:请问)?我?(?:应该|应当)?(?:查阅|引用|选择)哪些(?:法律来源|法律条文|法条)$/
   }
 };
+
+const materialsIntent = {
+  ru:/^(?:а\s+)?(?:ещ[её]|что ещ[её])$|^(?:(?:подскажи(?:те)?|скажи(?:те)?|пожалуйста)[, ]+)?(?:(?:какую (?:статью|норму|часть|цитату)|какой (?:пункт|фрагмент))(?: (?:мне )?(?:нужно )?(?:выбрать|выделить|отметить|цитировать|процитировать))?(?: (?:здесь|добавить|по этому делу|в нормах))?|что (?:именно )?(?:выбрать|выделить|цитировать|процитировать))$|^(?:почему (?:меня )?)?(?:не пускает|не пропускает|не переходит|не получается перейти|не могу перейти|не открывается|заблокирован[ао]?|как перейти)[^?]*?(?:календар|срок)/u,
+  en:/^(?:and (?:what )?else|what else|which (?:article|provision|passage) should i (?:select|quote|choose))$|(?:can.t (?:continue|go|move)|won.t let me go) (?:to|on to) (?:the )?(?:calendar|deadlines)/u,
+  zh:/^(?:还有呢|还有什么|要选哪一条|应该引用哪一条|为什么进不了期限|无法进入日历)$/u
+};
+
+const materialsCopy = {
+  ru:{
+    start:'На шаге «Нормы» в полном тексте выделите по одному фрагменту из каждого обязательного акта.',
+    article:'ст.',
+    unread:'В разделе «Материалы дела» откройте:',
+    oneRecord:'В разделе «Материалы дела» откройте хотя бы один документ.',
+    next:'Когда отмечены все фрагменты и открыты нужные материалы, вернитесь в «Нормы» и нажмите «К срокам».'
+  },
+  en:{
+    start:'In Sources, select one passage from the full text of each required act.',
+    article:'art.',
+    unread:'In Case materials, open:',
+    oneRecord:'Open at least one document in Case materials.',
+    next:'Once all passages are selected and the required records are open, return to Sources and click “Go to deadlines”.'
+  },
+  zh:{
+    start:'在「依据」中打开法规全文，从每部必选法规中选取一段。',
+    article:'第',
+    unread:'请在「案件材料」中打开：',
+    oneRecord:'请在「案件材料」中至少打开一份文件。',
+    next:'选完所有条文并打开所需文件后，回到「依据」，点击「设置期限」。'
+  }
+};
+
+export function deterministicMaterialsHint({guide, text, locale}) {
+  const evidence = guide.evidence;
+  if (!guide.coreStepsVersion || evidence?.stage !== 'materials') return null;
+  const question = text.trim().toLowerCase().replace(/[?？。.!！]+$/u, '').trim();
+  if (!materialsIntent[locale].test(question) && !questions[locale].legal.test(question)) return null;
+  const {legalSources, unreadRequiredDocuments, documents} = evidence;
+  if (!legalSources.length || legalSources.some(source => !source.exactPassage)) return null;
+  const copy = materialsCopy[locale];
+  const quotes = legalSources.map(({title, number, exampleArticle, exactPassage}, index) => {
+    const article = locale === 'zh' ? `第${exampleArticle}条` : `${copy.article} ${exampleArticle}`;
+    return `${index + 1}. ${number} «${title}», ${article} — «${exactPassage}»`;
+  });
+  const unread = unreadRequiredDocuments.length
+    ? [copy.unread, ...unreadRequiredDocuments.map(title => `• «${title}»`)]
+    : documents.length && !documents.some(doc => doc.opened) ? [copy.oneRecord] : [];
+  const reply = [copy.start, ...quotes, ...unread, copy.next].join('\n');
+  return reply.length <= 3200 ? reply : null;
+}
 
 function fallbackCalendar(calendar, language) {
   if (!calendar?.deadlines.length) return null;

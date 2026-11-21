@@ -4,7 +4,7 @@ import {buildConflictContractMaterials} from './contract-materials.mjs';
 import {randomUUID} from 'node:crypto';
 import {ReceptionError, fail, fields, identifier, string, locale, localized, copy, hash, validateCase, validateDecision, evaluateDecision, actorCase,MAX_CATALOG_CASES} from './schema.mjs';
 import {validateActorTurn, estimateReservation, estimateReviewReservation, costMicros, reviewCostMicros, estimateMentorReservation, estimateMentorWorkReservation} from './provider.mjs';
-import {groundedMentorFallback,mentorEvidence} from './mentor-evidence.mjs';
+import {deterministicMaterialsHint,groundedMentorFallback,mentorEvidence} from './mentor-evidence.mjs';
 import {selectShiftCases} from './selection.mjs';
 import {CATALOG_METADATA} from './catalog-metadata.mjs';
 import {legacySessionIds, LEGACY_RECOVERY_LIMITS} from './store.mjs';
@@ -922,7 +922,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     try {
       if (!mentor && provider.ready === false) fail('not_configured', 503);
       let estimate, generate;
-      let mentorInput;
+      let mentorInput, materialsHint;
       if(mentor){
         const guide=mentorContext(s,c,state,body.issueId);
         if(body.workspacePage)guide.workspacePage=body.workspacePage;
@@ -931,7 +931,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         guide.decision.correspondence.citations=[];
         const history=state.mentorMessages.slice(-12).map(({role,text})=>({role,text}));
         mentorInput={guide,history,text,locale:s.locale};
-        estimate=estimateMentorReservation(mentorInput);
+        materialsHint=deterministicMaterialsHint(mentorInput);
+        if(!materialsHint)estimate=estimateMentorReservation(mentorInput);
         generate=signal=>{
           if(provider.ready===false)fail('not_configured',503);
           if(typeof provider.answerMentor!=='function')fail('mentor_unavailable',503);
@@ -953,9 +954,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           maxOutputTokens:Math.max(limits.maxOutputTokens,provider.maxOutputTokens||0),maxCalls:provider.maxCalls||1});
         generate=signal=>provider.generate({actorCase:dossier,messages:copy(state.messages),text,locale:s.locale,signal});
       }
-      let generated;
+      let generated={reply:materialsHint};
       let timeout;
-      try {
+      if(!materialsHint)try {
         if (estimate.perCallInputTokens > limits.maxInputAllowance) fail('context_limit', 413);
         if (!mentor || provider.ready !== false && typeof provider.answerMentor==='function')
           reservation = await reserve(s, requestId, estimate.micros);
