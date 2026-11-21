@@ -8,7 +8,14 @@
  const copy=x=>JSON.parse(JSON.stringify(x));
  const round=x=>Math.round((Number(x)+Number.EPSILON)*100)/100;
  const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
- const sceneFor=id=>C.scenes.find(s=>s.missionId===id)||null;
+ function sceneFor(id,actionId){
+  const scene=C.scenes.find(s=>s.missionId===id)||null;
+  const dialogue=scene?.actionDialogue?.[actionId];
+  if(!dialogue)return scene;
+  return{...scene,
+   speeches:scene.speeches.map((line,index)=>dialogue.speeches?.[index]||line),
+   questions:scene.questions.map((line,index)=>dialogue.questions?.[index]||line)};
+ }
  const termFor=id=>C.terms.find(t=>t.id===id);
  const keyFor=(missionId,actionId,mode,placement)=>[missionId,actionId,mode,placement||''].join('|');
  function create(){return{version:VERSION,draft:null,agreements:[],promises:[],events:[],trust:Object.fromEntries(C.actors.map(a=>[a.id,0]))};}

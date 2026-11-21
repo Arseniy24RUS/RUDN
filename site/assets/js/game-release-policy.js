@@ -5,9 +5,11 @@ export function currentGameReleaseBuild(context = getReleaseContext()) {
   return context?.retention === 'current-only' ? context.buildId || null : null;
 }
 
-export function canResumeGameDraft(draft, {completed = false, context = getReleaseContext()} = {}) {
+export function canResumeGameDraft(draft, {completed = false, context = getReleaseContext(), module, compatible = false} = {}) {
   const buildId = currentGameReleaseBuild(context);
-  return !buildId || completed || draft?.releaseBuildId === buildId;
+  // Governor validates and migrates its save schema/model before opting in.
+  // A deployment of another course module must not retire a compatible campaign.
+  return !buildId || completed || draft?.releaseBuildId === buildId || (module === 'governor' && compatible);
 }
 
 export function markGameDraft(draft, context = getReleaseContext()) {
@@ -24,7 +26,8 @@ const games = new Set(['maps-freeplay', 'settlements-freeplay', 'settlements-tut
   'governor-freeplay', 'career-workspace', 'career-freeplay']);
 const gameModes = {'seminar-2': /^seminar$/, 'seminar-3': /^settlements-assessment$/,
   'seminar-5': /^\d{4}-\d{4}:(practice|assessment|demo)$/, 'seminar-7': /^campaign$/};
-const gameAdapters = new Set(['maps', 'puzzle', 'settlements', 'reception', 'governor', 'career']);
+// Governor's update adapter checks its own schema and Engine restoration.
+const gameAdapters = new Set(['maps', 'puzzle', 'settlements', 'reception', 'career']);
 
 export function isGameDraft({activitySlug, mode} = {}) {
   return games.has(activitySlug) || (Object.hasOwn(gameModes, activitySlug) && gameModes[activitySlug].test(mode));
@@ -61,6 +64,9 @@ export function compatibleCareerMirror(values) {
 
 export function canResumeStoredGameDraft(draft) {
   if (!draft || !isGameDraft(draft)) return true;
+  // Selection is not restoration: the Governor bridge checks the envelope and
+  // Engine.restoreState before use, and preserves unsupported saves for recovery.
+  if (draft.mode === 'campaign' && ['seminar-7', 'governor-freeplay'].includes(draft.activitySlug)) return true;
   const state = draft.state;
   const completed = draft.phase === 'completed' || state?.phase === 'completed' || state?.completed === true ||
     state?.finished === true || state?.status === 'completed' ||

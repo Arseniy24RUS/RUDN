@@ -507,6 +507,97 @@
     }
   ]
 };
+ // Delivery conversations follow the chosen measure. These are display-only
+ // variants: actor positions, terms and saved agreement IDs remain unchanged.
+ const say=(ru,en,zh)=>({ru,en,zh});
+ const actionDialogue={
+  'rural-healthcare':{
+   clinics:{speeches:[
+    say('Для трёх клиник нужны площадки, подъезды и специалисты. Кто сведёт подготовку и открытие в один план?','Three clinics need sites, access roads and staff. Who will coordinate preparation and opening?','三所诊所需要场地、通道和医务人员。谁来统筹筹备与启用？'),
+    say('После строительства клиникам понадобятся ежегодные средства на работу. Проверим, что останется на содержание.','After construction, the clinics need annual operating funds. Let us check what remains for operation.','诊所建成后每年仍需运营经费。我们要核实后续资金是否充足。'),
+    say('Новые клиники помогут только после открытия. Мне нужен понятный срок и помощь, которая не исчезнет через год.','New clinics help only after opening. We need a clear date and care that will not disappear a year later.','新诊所启用后才能提供帮助。我们需要明确日期，也需要不会一年后就中断的服务。')
+   ],questions:{0:say('Назовём ответственного за подготовку и открытие клиник. Совместная команда уменьшает риск задержки, но не гарантирует срок.','Name who owns clinic preparation and opening. A joint team reduces delay risk but cannot guarantee the date.','请明确诊所筹备和启用的负责人。联合团队可以降低延期风险，但不能保证日期。')}},
+   'mobile-units':{speeches:[
+    say('Мобильным бригадам нужны маршруты, расписание и специалисты. Кто отвечает за регулярные выезды в поселения?','Mobile teams need routes, schedules and staff. Who is responsible for regular visits to the settlements?','流动医疗队需要路线、时间表和医务人员。谁负责定期前往各居民点？'),
+    say('Медбригады требуют ежегодных расходов на работу и поездки. После окончания программы понадобится решение о продлении.','Medical teams need annual operating and travel funds. Continuing beyond the programme requires a renewal decision.','医疗队每年都需要运营和出行经费。项目到期后，继续服务需要作出续期决定。'),
+    say('Для моей семьи важны регулярные приезды бригады. Когда начнутся выезды и как долго мы сможем на них рассчитывать?','My family needs regular team visits. When will they start, and how long can we rely on them?','我们家需要医疗队定期来访。什么时候开始，我们可以依靠这项服务多久？')
+   ],questions:{0:say('Согласуем начало выездов и ответственного за расписание. Дата запуска не заменяет ежегодное финансирование бригад.','Agree on the first visits and who owns the schedule. A launch date does not replace annual team funding.','请确定首次出诊日期和排班负责人。启动日期不能代替医疗队每年的经费安排。')}},
+   'train-staff':{speeches:[
+    say('Вы выбрали подготовку местных медицинских кадров. Кто организует обучение и поможет специалистам начать работу в поселениях?','You chose local medical training. Who will organise it and help trained staff begin work in the settlements?','您选择培养本地医务人员。谁负责组织培训，并帮助受训人员到各居民点开展工作？'),
+    say('Здесь оплачивается кадровая программа. Проверим её ежегодные расходы и срок финансирования, прежде чем обещать результат.','This funds a staffing programme. Check its annual costs and funding period before promising results.','这项支出用于人才培养项目。在承诺成果之前，要核实年度费用和资助期限。'),
+    say('Нам нужны специалисты, к которым можно попасть на приём. Когда подготовка кадров начнёт менять доступность помощи?','We need staff we can actually see for care. When will training begin to improve access?','我们需要真正能够接诊的医务人员。人才培养何时开始改善就医可及性？')
+   ],questions:{0:say('Назовём ответственного за запуск кадровой программы. Её результат проверим по работе подготовленных специалистов и доступности помощи.','Name who owns the staffing programme launch. Check results through trained staff working and access to care.','请明确人才项目启动的负责人。应通过受训人员实际工作和就医可及性来检验成效。')}}
+  },
+  'school-neighbourhood':{
+   'school-campus':{speeches:[
+    say('Для новой школы нужно согласовать строительство и набор учителей. Кто отвечает за подготовку к открытию?','The new school needs coordinated construction and teacher recruitment. Who is responsible for opening preparations?','新学校需要协调建设和教师招聘。谁负责启用前的准备工作？'),
+    say('Средства на строительство не оплачивают все будущие годы работы школы. Проверим ежегодное содержание.','Construction funding does not pay for every future school year. Check annual operating costs.','建设资金并不能支付学校今后每年的运营费用。需要核实年度经费。'),
+    say('Школа рядом с домом нужна семьям. Но пока она строится, переполненные классы остаются: когда появятся новые места?','Families need a nearby school. Classes remain crowded during construction: when will the new places be ready?','家庭需要就近上学。但建设期间班级仍然拥挤：新学位何时可以使用？')
+   ],questions:{0:say('У школы есть срок строительства и будущие годы работы. Отдельно назовём ответственного за открытие и расходы после него.','The school has a construction schedule and future operating years. Identify opening responsibility and the costs after it.','学校既有建设周期，也有后续运营期。应分别明确启用责任和启用后的费用。')}},
+   'school-bus':{speeches:[
+    say('Выбраны школьные автобусы. Нужно связать безопасные маршруты со свободными местами в действующих школах.','You chose school buses. Safe routes need to connect pupils with available places in existing schools.','您选择了校车。安全路线需要把学生与现有学校的空余学位连接起来。'),
+    say('Автобусам нужны водители, топливо и обслуживание. После окончания оплаченного срока маршрут потребует продления.','Buses need drivers, fuel and maintenance. The route needs renewal when its funded period ends.','校车需要司机、燃料和维护。已获资助的期限结束后，线路需要续期。'),
+    say('Автобус даёт доступ к школе, но дети проведут часть дня в дороге. Хочу знать расписание и срок работы маршрута.','A bus gives access to school, but travel takes part of the children’s day. We need a schedule and a service period.','校车能帮助孩子到校，但通勤会占用时间。我们需要了解时间表和线路运营期限。')
+   ],questions:{0:say('У маршрута есть оплаченный срок. Заранее проверим продление: дата первого рейса не гарантирует дальнейшую работу.','The route has a funded term. Plan its renewal: the first journey does not guarantee continued operation.','线路有确定的资助期限。要提前考虑续期：首次发车并不保证持续运营。')}},
+   'second-shift':{speeches:[
+    say('Вторая смена использует действующую школу. Кто согласует новое расписание, нагрузку учителей и срок временной меры?','A second shift uses the existing school. Who will coordinate timetables, teacher workload and the temporary term?','第二轮教学利用现有校舍。谁来协调课表、教师工作量和临时措施的期限？'),
+    say('Временная вторая смена тоже требует ежегодных расходов. При продлении потребуются новые обязательства.','A temporary second shift still has annual costs. Renewal creates further commitments.','临时增加一轮教学也有年度费用。续期会产生新的支出义务。'),
+    say('Вторая смена меняет расписание всей семьи. Скажите, как долго она будет действовать и когда вернёмся к этому решению.','A second shift changes the whole family’s day. Tell us how long it will last and when we will review it.','第二轮教学会改变全家的时间安排。请说明持续多久，以及何时重新评估这项决定。')
+   ],questions:{0:say('Нужно организовать расписание действующей школы. Назовём срок временной меры и заранее обсудим, что будет после него.','Organise the existing school’s timetable. Define the temporary term and discuss what follows before it ends.','需要安排现有学校的课表。应明确临时措施的期限，并提前讨论到期后的安排。')}}
+  },
+  'river-land-use':{
+   'nature-buffer':{speeches:[
+    say('Природный буфер требует восстановления поймы и согласования использования земли. Кто отвечает за работы в долине?','A natural buffer requires floodplain restoration and agreed land use. Who is responsible for the valley work?','自然缓冲区需要恢复洪泛区并协调土地用途。谁负责河谷内的工作？'),
+    say('У природного буфера есть ежегодное содержание. Ограничение застройки тоже меняет возможности развития территории.','The natural buffer has annual upkeep. Development restrictions also change the area’s economic options.','自然缓冲区每年需要维护。建设限制也会改变地区的发展选择。'),
+    say('Нам важно, как изменятся привычные участки и доступ к берегу. Покажите, что именно сделано для защиты долины.','We need to understand changes to familiar land and river access. Show what was actually done to protect the valley.','我们需要了解常用地块和河岸通行会怎样变化。请展示保护河谷的实际工作。')
+   ]},
+   'logistics-embankment':{speeches:[
+    say('Дамба и логистический коридор должны работать как один проект. Кто согласует защиту берега, дорогу и сроки работ?','The levee and logistics corridor must work as one project. Who will coordinate river protection, the road and timing?','堤坝和物流通道需要作为一个项目协同发挥作用。谁来协调护岸、道路和工期？'),
+    say('Этот проект дорог при запуске и требует дальнейшего содержания. Проверим, чем обеспечены оба этапа.','This project is costly to launch and needs ongoing upkeep. Check funding for both stages.','这个项目启动费用高，之后也需要维护。应核实两个阶段的资金来源。'),
+    say('Защита берега и новая дорога затронут дома и поездки на работу. Хочу видеть фактические работы и оставшиеся риски.','River protection and a new road affect homes and journeys to work. I want to see actual delivery and remaining risks.','护岸工程和新道路会影响住房及通勤。我希望看到实际进展和剩余风险。')
+   ]},
+   'zoning-moratorium':{speeches:[
+    say('Мораторий меняет правила застройки. Кто объяснит ограничения муниципалитетам и будет отвечать за их исполнение?','A moratorium changes development rules. Who will explain the restrictions to municipalities and oversee implementation?','暂停建设改变了开发规则。谁向市镇解释限制并负责落实？'),
+    say('У моратория небольшие прямые расходы, но есть упущенные инвестиции. Дешёвое решение тоже требует контроля.','A moratorium has low direct costs but forgoes investment. A low-cost choice still needs oversight.','暂停建设的直接费用较低，但会失去部分投资机会。低成本措施仍然需要监督。'),
+    say('Ограничение новой застройки не отвечает на все вопросы жителей существующих домов. Какие риски останутся у нас?','Restricting new development does not answer every concern of existing residents. What risks remain for us?','限制新建并不能解决现有居民的全部问题。我们还面临哪些风险？')
+   ],questions:{0:say('Согласуем исполнение правил и проверяемый отчёт. Для моратория запуск означает начало действия ограничений.','Agree on enforcement and a verifiable report. Launching a moratorium means the restrictions take effect.','请明确规则执行和可核验的报告。暂停建设措施的启动是指限制开始生效。')}}
+  },
+  'digital-procurement':{
+   'modular-platform':{speeches:[
+    say('У модульной платформы несколько поставщиков и единые стандарты. Кто отвечает за совместимость и внедрение?','A modular platform combines multiple suppliers and common standards. Who owns interoperability and rollout?','模块化平台涉及多个供应商和统一标准。谁负责兼容性和部署？'),
+    say('Сравним расходы на внедрение, сопровождение и резервный контур. Цена запуска не показывает весь срок работы.','Compare rollout, maintenance and backup costs. The launch price does not describe the full service lifetime.','应比较部署、维护和备用系统的费用。启动价格并不代表整个使用期的成本。'),
+    say('Для жителей важно, чтобы сервисы работали вместе. Покажите проверяемые результаты внедрения, а не только презентацию.','Residents need services that work together. Show verifiable rollout results, not just a presentation.','居民需要能够协同工作的服务。请展示可核验的部署成果，而不仅是演示。')
+   ]},
+   'single-vendor-contract':{speeches:[
+    say('У единого поставщика проще определить ответственного. Кто со стороны области будет контролировать исполнение контракта?','A single vendor makes accountability clearer. Who on the regional side will supervise contract delivery?','单一供应商便于明确责任。地区方面由谁监督合同履行？'),
+    say('Быстрый запуск может обернуться зависимостью от поставщика. Сравним ежегодные платежи и будущие обязательства.','A fast launch can create vendor dependence. Compare annual payments and future commitments.','快速上线可能造成对供应商的依赖。应比较年度付款和未来义务。'),
+    say('Мне нужна надёжная услуга и понятная ответственность при сбое. Что покажет публичный отчёт о работе поставщика?','I need a reliable service and clear responsibility when it fails. What will the public report show about the vendor?','我需要可靠的服务，以及故障时明确的责任。公开报告将如何说明供应商的工作？')
+   ]},
+   'civic-tech-lab':{speeches:[
+    say('Лаборатория будет проверять сервисы небольшими шагами. Кто свяжет работу университета, компаний и жителей?','The lab will test services in small steps. Who will coordinate the university, companies and residents?','实验室将以小步试验的方式测试服务。谁来协调大学、企业和居民？'),
+    say('У лаборатории есть ежегодный бюджет и срок программы. Проверим, какие обязательства возникают после запуска.','The lab has an annual budget and a programme term. Check the commitments that follow launch.','实验室有年度预算和项目期限。应核实启动后的支出义务。'),
+    say('Если нас зовут тестировать сервисы, хочу узнать, что изменилось после наших замечаний. Это должно попасть в отчёт.','If residents test services, I want to know what changed after our feedback. Include that in the report.','如果邀请居民测试服务，我想知道意见带来了哪些改变。这应写入报告。')
+   ]}
+  },
+  'river-legacy':{
+   'resilient-relocation':{speeches:[
+    say('Переселение требует новых безопасных площадок и подготовки жилья. Кто согласует работы и переезд жителей?','Relocation needs safer sites and prepared housing. Who will coordinate construction and residents’ moves?','搬迁需要更安全的地点和住房准备。谁来协调建设和居民迁移？'),
+    say('Переселение займёт время, а часть расходов останется преемнику. Покажем обязательства за пределами срока.','Relocation takes time, and some costs pass to the successor. Show commitments beyond the term.','搬迁需要时间，部分费用将由继任者承担。应列明任期之后的义务。'),
+    say('Безопасность важна, но переезд меняет всю жизнь семьи. Хочу понять сроки и проверить, какие обещания выполнены.','Safety matters, but moving changes family life. I need clear timing and evidence of which promises were kept.','安全很重要，但搬迁会改变整个家庭的生活。我需要明确时间，并核实哪些承诺已兑现。')
+   ]},
+   'build-back-fast':{speeches:[
+    say('Восстановление идёт на прежних местах. Кто отвечает за работы и объяснит, какие риски сохранятся после возвращения?','Rebuilding uses the same sites. Who owns delivery and will explain the risks that remain after residents return?','重建将在原址进行。谁负责实施，并解释居民返回后仍然存在的风险？'),
+    say('Быстрое восстановление всё равно требует содержания. Эти расходы продолжатся и после конца кампании.','Rapid rebuilding still needs upkeep. Those costs continue beyond the campaign.','快速重建仍需要后续维护。这些费用会延续到游戏任期结束之后。'),
+    say('Вернуться домой хочется быстрее. Но мы должны понимать, что восстановлено и насколько прежний риск остаётся с нами.','We want to return home quickly. But we need to know what was rebuilt and how much of the old risk remains.','我们希望尽快回家。但也需要了解恢复了什么，以及过去的风险还剩多少。')
+   ]},
+   'climate-insurance-pool':{speeches:[
+    say('Страховой пул объединяет риски жителей, муниципалитетов и бизнеса. Кто организует его запуск и работу с участниками?','The insurance pool shares household, municipal and business risks. Who will organise launch and work with participants?','保险池分担家庭、市镇和企业的风险。谁负责启动并协调各参与方？'),
+    say('Страховая программа требует средств на протяжении всего срока. Покажем будущие платежи, включая годы после кампании.','The insurance programme needs funding throughout its term. Show future payments, including years beyond this campaign.','保险项目在整个期限内都需要资金。应列出未来付款，包括游戏任期之后的年份。'),
+    say('После паводка нужна понятная финансовая защита. Хочу проверить условия программы и увидеть отчёт о её работе.','After the flood, we need understandable financial protection. I want to inspect the programme terms and its delivery report.','洪水过后，我们需要清楚的财务保障。我希望查看项目条件和运行报告。')
+   ],questions:{0:say('Здесь согласуем начало работы страховой программы. Обязательства, которые продолжатся после срока, должны остаться в отчёте.','Agree on the start of the insurance programme. Commitments continuing beyond the term must remain in the report.','这里需要确定保险项目的启动。任期结束后仍持续的义务必须保留在报告中。')}}
+  }
+ };
+ for(const scene of CONFIG.scenes)scene.actionDialogue=actionDialogue[scene.missionId]||{};
  root.GovernorGame=root.GovernorGame||{};
  root.GovernorGame.GovernanceData=CONFIG;
  D.stage5Ready=true;

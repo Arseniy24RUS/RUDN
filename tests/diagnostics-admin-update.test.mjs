@@ -287,21 +287,29 @@ test('checkpoint contract metadata contains only canonical versions and respects
 
 const bootstrapSource=await readFile(new URL('../site/assets/js/release-bootstrap.js',import.meta.url),'utf8');
 const bootFailedSource=bootstrapSource.slice(bootstrapSource.indexOf('async function bootFailed('),bootstrapSource.indexOf('\nconst ownURL='));
-for(const outcome of ['compatible','missing-checkpoint-metadata','missing-previous-metadata','wrong-version','wrong-module','missing-token'])test('actual early bootstrap rollback: '+outcome,async()=>{
+for(const outcome of ['compatible','missing-checkpoint-metadata','missing-previous-metadata','wrong-version','wrong-module','missing-token','current-only-context','current-only-checkpoint'])test('actual early bootstrap rollback: '+outcome,async()=>{
  const manifest=JSON.parse(await readFile(new URL('../site/data/platform-contracts.json',import.meta.url),'utf8')),previous=structuredClone(manifest);
  const pending={token:'retained-token',sourceBuild:'A',targetBuild:'B',phase:'switching',previous:{buildId:'A'},checkpointContracts:captureCheckpointContracts(manifest,[{module:'diagnostics'}])};
+ const currentOnlyBoot=outcome==='current-only-context';
+ if(outcome==='current-only-checkpoint')pending.retention='current-only';
  if(outcome==='missing-checkpoint-metadata')delete pending.checkpointContracts;
  if(outcome==='missing-token')delete pending.token;
  if(outcome==='wrong-version')previous.modules.diagnostics=2;
  if(outcome==='wrong-module')delete previous.modules.diagnostics;
  let navigated=0,shown=0,prepared=0;const writes=[];
- const context=vm.createContext({bootSettled:false,stopBootWatchdog(){context.bootSettled=true},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},
+ const context=vm.createContext({currentOnlyBoot,bootSettled:false,stopBootWatchdog(){context.bootSettled=true},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},
   dispatchEvent:()=>true,pendingTransition:()=>pending,document:{documentElement:{dataset:{releaseBuild:'B'}}},showBootFailure:()=>shown++,recordFailedRelease:()=>{},
   AbortController,setTimeout,clearTimeout,validateTarget:()=>{},writeTransition:value=>writes.push(structuredClone(value)),acceptsCheckpointContracts,
   prepareRelease:async()=>{prepared++;return {ready:true,buildId:'A',context:outcome==='missing-previous-metadata'?{}:{contracts:previous}}},
   activatePreparedRelease:()=>navigated++,failure:code=>Object.assign(Error(code),{code}),mark:()=>{}
  });
  vm.runInContext(bootFailedSource+'\nthis.invoke=bootFailed;',context);await context.invoke('synthetic-import-failed');
+ if(currentOnlyBoot||pending.retention==='current-only'){
+  assert.equal(prepared,0);assert.equal(navigated,0);assert.equal(shown,1);
+  await context.invoke('synthetic-late-error');
+  assert.deepEqual(writes,[{...pending,phase:'blocked',bootFailure:'synthetic-import-failed',code:'update/current-unavailable'}]);
+  return;
+ }
  assert.equal(prepared,1);assert.equal(pending.token,outcome==='missing-token'?undefined:'retained-token');assert.equal(pending.rollbackAttempted,true);
  assert.equal(pending.phase,outcome==='compatible'?'rollback':'blocked');assert.equal(navigated,outcome==='compatible'?1:0);assert.equal(shown,outcome==='compatible'?0:1);
  if(outcome!=='compatible')assert.equal(pending.code,'update/rollback-incompatible-contract');

@@ -61,6 +61,10 @@ backend.init=async()=>{
 """
 
 
+class BrowserTestHTTPServer(ThreadingHTTPServer):
+    request_queue_size = 128
+
+
 class LocalFixtureServer:
     def __enter__(self):
         class Handler(SimpleHTTPRequestHandler):
@@ -85,7 +89,7 @@ class LocalFixtureServer:
                 else:
                     super().do_GET()
 
-        self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        self.server = BrowserTestHTTPServer(("127.0.0.1", 0), Handler)
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
         self.origin = f"http://127.0.0.1:{self.server.server_port}"

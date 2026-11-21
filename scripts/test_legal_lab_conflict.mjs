@@ -19,6 +19,10 @@ export async function runLegalLabSyncRegression({transport,user,studentKey,setOf
     // This narrow host boundary mirrors Backend.saveAttempt's durable commit:
     // the actual store.complete preserves the module JSON in the same draft.
     backend={generation:0,user,profile:{studentKey},getProfile(){return this.profile},loadDraft:s=>store.loadDraft(s),checkpoint:(s,o)=>store.checkpoint(s,o),durableSync:()=>sync,restTransport:()=>transport,
+      async readCloud(path,{authoritative}={}){
+        assert.equal(authoritative,true,'A fresh device verifies delivery from authoritative attempt and grade records');
+        return (await transport.get(path)).value;
+      },
       async saveAttempt(attempt){
         assert.equal(attempt.draftMode,'legal-lab-workspace');
         const record={...attempt,studentKey:this.profile.studentKey,ownerUid:this.user.uid};
@@ -155,9 +159,10 @@ export async function runLegalLabSyncRegression({transport,user,studentKey,setOf
     await fullB.retry();assert.equal((await queue(fullB)).length,0);assert.deepEqual(await get('attempts/'+studentKey+'/'+fullB.persistence.attemptId),fullReceipt,'Lost-ack retry cannot change the existing full-map receipt');
     assert.equal(Object.keys(await get('attempts/'+studentKey)).length,Object.keys(receiptsBeforeFull).length+1,'Full-map completion creates exactly one additional attempt');
     assert.deepEqual(await get('attempts/'+studentKey+'/old-quiz'),oldQuizBeforeFull);assert.deepEqual(await get('grades/'+studentKey+'/seminar-4'),bestBeforeFull,'The synthetic lower result preserves the previous best grade');
-    const fullCompletedRestore=device('all-requisites-terminal-restore',fullVersion);assert.deepEqual(await fullCompletedRestore.persistence.load(),fullTerminal,'A fresh device restores the full terminal workspace including learning metadata and field indices');
+    const fullCompleted={...fullTerminal,assessment:{...fullTerminal.assessment,delivery:'host-accepted'}};
+    const fullCompletedRestore=device('all-requisites-terminal-restore',fullVersion);assert.deepEqual(await fullCompletedRestore.persistence.load(),fullCompleted,'A fresh device restores accepted delivery, the full terminal workspace, learning metadata and field indices');
     const fullPrimaryBeforePractice=await get(checkpointPath(fullB)),fullReceiptsBeforePractice=await get('attempts/'+studentKey),fullGradeBeforePractice=await get('grades/'+studentKey+'/seminar-4');
-    const fullPractice=structuredClone(fullTerminal);fullPractice.assessment.delivery='host-accepted';fullPractice.view='learn';fullPractice.answers.S01.metadata.signature='title';fullPractice.answers.S01.submitted=false;fullPractice.scanFields.S01=1;
+    const fullPractice=structuredClone(fullCompleted);fullPractice.view='learn';fullPractice.answers.S01.metadata.signature='title';fullPractice.answers.S01.submitted=false;fullPractice.scanFields.S01=1;
     await fullB.persistence.checkpoint({state:fullPractice,contentVersion:fullVersion});await fullB.sync.flush();
     const fullPracticeRestore=device('all-requisites-practice-restore',fullVersion);assert.deepEqual(await fullPracticeRestore.persistence.load(),fullPractice,'Post-terminal practice restores the learning marker, complete map and changed scanFields index exactly');
     assert.deepEqual(await get(checkpointPath(fullB)),fullPrimaryBeforePractice,'Full-map practice cannot mutate the terminal primary');assert.deepEqual(await get('attempts/'+studentKey),fullReceiptsBeforePractice,'Full-map practice cannot create or alter attempts');assert.deepEqual(await get('grades/'+studentKey+'/seminar-4'),fullGradeBeforePractice,'Full-map practice cannot change the best grade');assert.deepEqual(await get('attempts/'+studentKey+'/old-quiz'),oldQuizBeforeFull,'Full-map practice preserves the original quiz');

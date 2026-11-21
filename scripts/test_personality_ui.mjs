@@ -9,6 +9,8 @@ import {fileURLToPath,pathToFileURL} from 'node:url';
 import path from 'node:path';
 import {MODEL_VERSION,QUESTIONNAIRE_VERSION,REGISTRY_VERSION} from '../site/apps/career/assets/versions.mjs';
 import {PERSONALITY_ITEMS,PERSONALITY_DOMAINS,PERSONALITY_FACETS} from '../site/apps/career/assets/personality-model.mjs';
+import {buildQuestionBank} from '../site/apps/career/assets/adaptive-model.mjs';
+import {createAdaptiveCareerIndexFixture,chooseAdaptiveCareerPreferences} from './helpers/career-adaptive-ui-fixture.mjs';
 import {WORK_TRAITS,TEAM_ROLES} from '../site/apps/career/assets/personality-insights.mjs';
 
 const require=createRequire(import.meta.url),args=process.argv.slice(2);
@@ -21,14 +23,17 @@ assert.ok(output!==root&&!output.startsWith(root+path.sep),'Keep browser evidenc
 const playwrightPath=process.env.PLAYWRIGHT_MODULE_PATH||process.env.PLAYWRIGHT_PATH;
 const questions=JSON.parse(await readFile(path.join(site,'apps/career/data/questions.json'),'utf8'));
 const careerLocales=Object.fromEntries(await Promise.all(['en','zh-Hans'].map(async language=>[language,JSON.parse(await readFile(path.join(site,'apps/career/locales',language+'.json'),'utf8'))])));
+const taxonomy=JSON.parse(await readFile(path.join(site,'apps/career/data/adaptive-taxonomy.json'),'utf8'));
+const broadQuestions=buildQuestionBank(taxonomy).filter(question=>question.broad);
+const adaptiveFixture=createAdaptiveCareerIndexFixture(taxonomy);
 const OWNER_A='student:personality-qa-a',OWNER_B='student:personality-qa-b',OWNER_OLD='student:personality-qa-existing',OWNER_LOCALES='student:personality-qa-locales';
 const LANGUAGES=['ru','en','zh-Hans'];
 const LOCALE_COPY={
-  ru:{title:'Личностный профиль',stage:'Личностный профиль',results:'Ваш стиль работы в команде',back:'Назад',next:'Далее',finish:'Мои результаты',edit:'К ответам',continue:'Перейти к профориентации',method:'Методика:',
+  ru:{title:'Личностный профиль',stage:'Профиль',results:'Ваш стиль работы в команде',back:'Назад',next:'Далее',finish:'Мои результаты',edit:'К ответам',continue:'Перейти к профориентации',method:'Методика:',
     anchors:['Совершенно неверно','Скорее неверно','Ни верно, ни неверно','Скорее верно','Совершенно верно'],counter:(answered)=>`Ответов: ${answered} из 120`,page:(number)=>`Страница ${number} из 12`,decimal:'4,0 / 5'},
   en:{title:'Personality profile',stage:'Personality',results:'Your style of working in a team',back:'Back',next:'Next',finish:'My results',edit:'Back to answers',continue:'Continue to career interests',method:'Method:',
     anchors:['Very inaccurate','Moderately inaccurate','Neither accurate nor inaccurate','Moderately accurate','Very accurate'],counter:(answered)=>`Answered: ${answered} of 120`,page:(number)=>`Page ${number} of 12`,decimal:'4.0 / 5'},
-  'zh-Hans':{title:'人格特征',stage:'人格特征',results:'你的团队工作风格',back:'上一步',next:'下一步',finish:'我的结果',edit:'返回答案',continue:'继续职业兴趣测试',method:'方法：',
+  'zh-Hans':{title:'人格特征',stage:'人格',results:'你的团队工作风格',back:'上一步',next:'下一步',finish:'我的结果',edit:'返回答案',continue:'继续职业兴趣测试',method:'方法：',
     anchors:['完全不符合','比较不符合','介于符合与不符合之间','比较符合','完全符合'],counter:(answered)=>`已回答：${answered} / 120`,page:(number)=>`第${number}页，共12页`,decimal:'4.0 / 5'}
 };
 const normalize=text=>String(text).replace(/\s+/g,' ').trim();
@@ -46,18 +51,24 @@ loadDraft:scope=>durableStore.loadDraft(scope),
 checkpoint:(input,options)=>{window.qa.checkpoints.push(structuredClone(input));return durableStore.checkpoint(input,{...options,queue:false});},
 saveAttempt:async()=>{window.qa.unexpectedSubmissions++;throw Error('Personality QA forbids submissions');}};`;
 
-const harness=`<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Personality course UI · isolated QA</title>
-<style>body{margin:0;background:#f4f7fb;font:16px system-ui,sans-serif}#module{box-sizing:border-box;width:100%;max-width:1140px;margin:16px auto;padding:0 16px}#qa-error{white-space:pre-wrap;color:#900}</style></head><body><pre id="qa-error" hidden></pre><main id="module"></main>
+const harness=`<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Personality course UI · isolated QA</title><link rel="stylesheet" href="/assets/css/site.css">
+<style>body{margin:0;background:#f4f7fb;font:16px system-ui,sans-serif}#module{box-sizing:border-box;width:100%;max-width:1140px;margin:16px auto;padding:0 16px}#qa-error{white-space:pre-wrap;color:#900}</style></head><body><pre id="qa-error" hidden></pre><nav id="qa-progress" class="career-course-progress"></nav><main id="module"></main>
 <script type="module">
 import {mountCareer} from '/apps/career/entry.mjs';
+import {bindCareerProgress} from '/assets/js/career-course.js';
 import {updateSnapshotStore} from '/assets/js/platform-update-state.js';
 const query=new URLSearchParams(location.search);
 window.qa={owner:query.get('owner')||'${OWNER_A}',lang:query.get('lang')||'ru',context:'course',route:'home',checkpoints:[],results:[],unexpectedSubmissions:0};
+const showProgress=bindCareerProgress(document.querySelector('#qa-progress'),{activitySlug:'seminar-5',getLocale:()=>qa.lang==='zh-Hans'?'zh':qa.lang});
+window.refreshProgress=()=>showProgress(qa.progress||{stage:'personality'});
+window.readFunctional=()=>{const key=Object.keys(localStorage).find(key=>key.includes(encodeURIComponent(qa.owner))&&key.endsWith('functional-career-v1'));return key?JSON.parse(localStorage.getItem(key)):null;};
 window.mount=async(options={})=>{
   if(window.handle)await window.handle.destroy();
   document.documentElement.removeAttribute('data-qa-ready');
   qa.owner=options.owner||qa.owner;qa.lang=options.lang||qa.lang;qa.context=options.context||'course';qa.route=options.route||'home';
+  document.querySelector('#qa-progress').hidden=qa.context==='free';qa.progress={stage:'personality'};refreshProgress();
   window.handle=await mountCareer(document.querySelector('#module'),{owner:qa.owner,context:qa.context,lang:qa.lang,initialRoute:qa.route,
+    onProgress:progress=>{qa.progress=progress;refreshProgress();},
     onResult:record=>qa.results.push(structuredClone(record)),onRouteChange:route=>{qa.route=route;}});
   document.documentElement.dataset.qaReady='true';return true;
 };
@@ -82,6 +93,8 @@ const server=createServer(async(req,res)=>{
       return res.end(harness);
     }
     if(pathname==='/assets/js/backend.js'){res.setHeader('Content-Type',mime['.js']);return res.end(backendSource);}
+    const fixture=adaptiveFixture.get(pathname);
+    if(fixture){res.setHeader('Content-Type',fixture.type);res.setHeader('Content-Length',fixture.body.length);return res.end(fixture.body);}
     if(pathname==='/favicon.ico'){res.statusCode=204;return res.end();}
     const target=path.resolve(site,'.'+decodeURIComponent(pathname));
     if(!target.startsWith(site+path.sep))throw Error('Outside test site');
@@ -144,22 +157,10 @@ async function finishQuestionnaire(page,{fill=true}={}){
   assert.fail('The complete 120-item inventory must show results');
 }
 async function chooseCareerPreferences(page){
-  await page.locator('#view-preferences:not([hidden])').waitFor();
-  const next=page.locator('#journey-preferences-next');
-  await next.waitFor();
-  assert.equal(await page.locator('#view-test').isVisible(),false,'The career questions wait for explicit employer choices');
-  assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),0,'A new owner has no inherited employer choices');
-  assert.equal(await next.isDisabled(),true,'Three preferred employers are required');
-  for(let priority=0;priority<3;priority++){
-    await page.locator('[data-add-wish][aria-pressed="false"]:not([disabled])').first().click();
-    assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),priority+1);
-    assert.equal(await next.isDisabled(),priority<2,'Partial choices cannot skip the preference stage');
-  }
-  const desiredIds=await page.locator('#journey-desired-choices [data-remove-wish]').evaluateAll(nodes=>nodes.map(node=>node.dataset.removeWish));
-  assert.equal(new Set(desiredIds).size,3,'All three ordered choices are distinct');
-  await next.click();
-  await page.locator('#view-test:not([hidden])').waitFor();
-  return desiredIds;
+  await chooseAdaptiveCareerPreferences(page);
+  const session=await page.evaluate(()=>readFunctional());
+  assert.deepEqual(session.regionIds,[]);assert.equal(session.responsibilityPreference,'specialist');
+  assert.equal(session.setupComplete,true);assert.deepEqual(session.answers,[]);
 }
 function hasAnswerKeys(value){
   if(value===null||typeof value!=='object')return false;
@@ -180,10 +181,10 @@ async function assertPrivatePayloads(page,snapshot){
 }
 
 async function setLocale(page,language){
-  await page.evaluate(async language=>{await handle.setLocale(language);qa.lang=language;},language);
+  await page.evaluate(async language=>{qa.lang=language;await handle.setLocale(language);refreshProgress();},language);
 }
 async function assertLocaleSurface(page,selector,language){
-  const text=await page.locator(selector+', .seminar-progress').evaluateAll(nodes=>nodes.map(node=>[
+  const text=await page.locator(selector+', .career-course-progress').evaluateAll(nodes=>nodes.map(node=>[
     node.innerText,...[...node.querySelectorAll('[aria-label],[aria-valuetext],[title]')].flatMap(element=>
       ['aria-label','aria-valuetext','title'].map(attribute=>element.getAttribute(attribute)||''))
   ].join('\n')).join('\n'));
@@ -223,7 +224,7 @@ async function assertQuestionLocale(page,language,pageNumber,answers){
     });
     assert.equal(normalize(field.selected),answers[definition.id]?copy.anchors[answers[definition.id]-1]:'');
   }
-  assert.equal(await page.locator('.seminar-step[aria-current="step"] strong').innerText(),copy.stage);
+  assert.equal(await page.locator('[data-career-step][aria-current="step"] > span:last-child').innerText(),copy.stage);
   await assertLocaleSurface(page,'#view-personality',language);
   return expected.map(item=>item.id);
 }
@@ -272,18 +273,23 @@ async function assertResultsLocale(page,language){
   for(const meter of actual.meters){assert.equal(meter.value,4);assert.ok(meter.label);assert.ok(meter.description.includes(language==='ru'?'из 5':language==='en'?'out of 5':'满分5分'));}
   const identity=await resultIdentity(page);assert.equal(identity.scores.length,41);assert.ok(identity.scores.every(item=>item.score===4));
   assert.deepEqual(identity.roles,TEAM_ROLES.map(role=>role.id));
-  assert.equal(await page.locator('.seminar-step[aria-current="step"] strong').innerText(),copy.stage);
+  assert.equal(await page.locator('[data-career-step][aria-current="step"] > span:last-child').innerText(),copy.stage);
   await assertLocaleSurface(page,'#view-personality-results',language);
   return identity;
 }
 async function assertCareerQuestionLocale(page,language,index){
-  const expected=language==='ru'?questions[index].text:careerLocales[language].entries[normalize(questions[index].text)];
-  assert.ok(typeof expected==='string'&&expected.length>0,`${language}: existing career question has a translation`);
-  await page.locator('#question-text').filter({hasText:expected}).waitFor();
-  assert.equal(normalize(await page.locator('#question-text').innerText()),normalize(expected));
-  const labels=['Совершенно неинтересно','Скорее неинтересно','Трудно сказать','Скорее интересно','Очень интересно'];
-  assert.deepEqual(await page.locator('#answer-options .answer-option > span').allTextContents(),labels.map(label=>language==='ru'?label:careerLocales[language].entries[label]));
-  assert.equal(await page.locator('.seminar-step[aria-current="step"] strong').innerText(),translated(['Профориентация','Career interests','职业兴趣'],language));
+  const question=broadQuestions[index],expected=question.text[language];
+  assert.ok(typeof expected==='string'&&expected.length>0,`${language}: functional question has a translation`);
+  await page.locator('#adaptive-question').filter({hasText:expected}).waitFor();
+  assert.equal(await page.locator('#adaptive-question').getAttribute('data-question-id'),question.id);
+  assert.equal(normalize(await page.locator('#adaptive-question').innerText()),normalize(expected));
+  const labels={ru:['Очень интересно','Скорее интересно','Нейтрально','Скорее неинтересно','Совсем неинтересно','Пока не знаю'],
+    en:['Very interested','Rather interested','Neutral','Rather uninterested','Not at all interested','Not sure yet'],
+    'zh-Hans':['非常感兴趣','比较感兴趣','态度中立','不太感兴趣','完全不感兴趣','暂时不确定']};
+  assert.deepEqual(await page.locator('#adaptive-answer-options [data-adaptive-answer] > span:last-child').allTextContents(),labels[language]);
+  assert.deepEqual(await page.locator('[data-adaptive-answer]').evaluateAll(nodes=>nodes.map(node=>Number(node.dataset.adaptiveAnswer))),[5,4,3,2,1,0]);
+  assert.equal(await page.locator('[data-career-step][aria-current="step"] > span:last-child').innerText(),translated(['Интересы','Interests','兴趣'],language));
+  assert.equal((await page.evaluate(()=>readFunctional())).answers.length,index);
 }
 async function verifyAllLocales(page){
   await page.evaluate(owner=>mount({owner,lang:'en',route:'home'}),OWNER_LOCALES);await item(page,1,3).waitFor();
@@ -337,10 +343,10 @@ async function verifyAllLocales(page){
     if(careerIndex===0)await chooseCareerPreferences(page);
     else await page.locator('#view-test:not([hidden])').waitFor();
     await assertCareerQuestionLocale(page,language,careerIndex);
-    await page.locator('#answer-options [data-answer="'+(careerIndex+2)+'"]').click();await page.locator('#question-next').click();careerIndex++;
+    await page.locator('[data-adaptive-answer="'+(careerIndex+2)+'"]').click();await page.locator('#adaptive-next').click();careerIndex++;
     await assertCareerQuestionLocale(page,language,careerIndex);
     await page.evaluate(()=>handle.navigate('personality-results'));
-    check(language+': Back to answers and Continue retain results and open the existing career questionnaire in the same language');
+    check(language+': Back to answers and Continue retain results and open the functional career questionnaire in the same language');
   }
   await page.evaluate(owner=>mount({owner,lang:'zh-Hans',route:'home'}),OWNER_LOCALES);
   await page.locator('#view-personality-results:not([hidden])').waitFor();assert.deepEqual(await assertResultsLocale(page,'zh-Hans'),original);
@@ -367,8 +373,8 @@ try{
   assert.equal(await page.locator('#personality-root input[type="radio"]').count(),50);
   assert.equal(await page.locator('#personality-root input:checked').count(),0);
   assert.equal(await page.locator('#personality-next').isDisabled(),true);
-  assert.equal(await page.locator('.seminar-step').count(),6);
-  assert.match(await page.locator('.seminar-step[aria-current="step"]').innerText(),/Личностный профиль/);
+  assert.equal(await page.locator('[data-career-step]').count(),6);
+  assert.match(await page.locator('[data-career-step][aria-current="step"]').innerText(),/Профиль/);
   check('New course session begins with the independent personality inventory');
 
   for(const width of [320,390,1280])await assertLayout(page,width,'questions');
@@ -421,14 +427,18 @@ try{
   check('Editing re-scores the inventory; incomplete recalculation is guarded; completed results survive reload');
 
   await page.locator('#personality-continue').click();await chooseCareerPreferences(page);
-  assert.equal(await page.locator('#question-text').innerText(),questions[0].text);
-  await page.locator('#answer-options [data-answer="3"]').click();await page.locator('#question-next').click();
-  await page.locator('#answer-options [data-answer="4"]').click();await page.locator('#question-next').click();
-  assert.equal(await page.locator('#question-text').innerText(),questions[2].text);
+  await assertCareerQuestionLocale(page,'ru',0);
+  await page.locator('[data-adaptive-answer="3"]').click();await page.locator('#adaptive-next').click();
+  await assertCareerQuestionLocale(page,'ru',1);
+  await page.locator('[data-adaptive-answer="4"]').click();await page.locator('#adaptive-next').click();
+  await assertCareerQuestionLocale(page,'ru',2);
+  const careerAnswers=await page.evaluate(()=>readFunctional().answers);
+  assert.deepEqual(careerAnswers,broadQuestions.slice(0,2).map((question,index)=>({questionId:question.id,value:index+3})));
   await page.evaluate(()=>handle.navigate('personality-results'));await page.locator('#personality-continue').click();
-  assert.equal(await page.locator('#question-text').innerText(),questions[2].text,'Returning from personality results resumes previous career answers');
+  await assertCareerQuestionLocale(page,'ru',2);
+  assert.deepEqual(await page.evaluate(()=>readFunctional().answers),careerAnswers,'Returning from personality results preserves functional answers');
   await assertPrivatePayloads(page);
-  check('Continue requires three employer choices before the existing career questionnaire and preserves both stages');
+  check('Continue requires explicit location and role choices, then preserves the functional questionnaire and personality results');
 
   await page.evaluate(owner=>mount({owner,route:'personality-results'}),OWNER_B);
   await item(page,1,2).waitFor();

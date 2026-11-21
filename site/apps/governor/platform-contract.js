@@ -5,7 +5,7 @@ const MAX_TERRITORIES = 5;
 const ASSESSMENT_VERSION = 'governor-assignment-v1';
 
 /** Published assignment targets, not an empirically validated measure of competence. */
-export const assessmentRules = [
+const legacyAssessmentRules = [
   {
     id: 'completion', title: { ru: 'Завершение кампании', en: 'Campaign completion' },
     detail: {
@@ -48,6 +48,36 @@ export const assessmentRules = [
       en: 'Maximum 5 points. Criteria 2–5 are multiplied by completed-decision share c = min(20, decisions) / 20. Early financial handover is capped at 2.5 points; if exceeded, all criteria are reduced proportionally. The total is rounded to 0.01, with rounded criterion allocations summing exactly to it. This published game-assignment rubric is not an empirically validated measure of general competence. Territorial indicators also reflect demographic changes and do not establish the causal effect of student decisions.'
     }
   }
+];
+
+/** Outcomes over the whole term, compared with the same model without new policy.
+ * Weights are published assignment rules, not an estimate of general competence.
+ * Existing version-1 saves retain their original grading contract. */
+export const assessmentRules = [
+  {id:'mandate',title:{ru:'Общественный мандат',en:'Public mandate',zh:'公众信任'},detail:{
+    ru:'До 0,75 балла: сохранение поддержки и развития относительно начала и их улучшение относительно того же сценария без новых мер. Учитывается весь срок: 65% веса у всех прошедших лет, 35% — у последних пяти. Полное сохранение индекса даёт половину критерия; вторая половина — за преимущество над бездействием на 20% исходного индекса (не менее 5 пунктов).',
+    en:'Up to 0.75 points: preserve support and development relative to the start and improve on the same scenario without new measures. All elapsed years carry 65% of the weight; the latest five carry 35%. Full preservation earns half the criterion; the other half requires a gain over inaction of 20% of the initial index, at least 5 points.',
+    zh:'最高0.75分：保持初始公众支持和发展水平，并优于相同情景下不采取新措施的结果。全部已过年度权重为65%，最近五年为35%。保持初始水平获得本项一半分数；另一半要求优于无行动基准达到初始指标的20%，且至少5点。'}},
+  {id:'delivery',title:{ru:'Качество исполнения',en:'Quality of delivery',zh:'执行质量'},detail:{
+    ru:'До 0,75 балла: средний коэффициент фактического исполнения принятых мер. Для программы нужен запуск и оплаченные годы работы — до трёх доступных после запуска лет; разовая мера учитывается по фактическому исполнению. Число строек само по себе не повышает оценку. Без принятых мер — 0.',
+    en:'Up to 0.75 points: mean realised delivery factor of the measures adopted. A programme must open and have paid operating years, up to the first three available years after opening; a one-off measure uses its actual delivery factor. Building more projects does not itself improve the score. No measures earns 0.',
+    zh:'最高0.75分：已采取措施的实际执行系数平均值。项目必须投入运行并支付运营费用，考察开放后最多三个可用年度；一次性措施按实际执行计分。建设数量本身不增加分数。未采取措施得0分。'}},
+  {id:'territories',title:{ru:'Многолетний результат услуг',en:'Services over the term',zh:'任期服务成效'},detail:{
+    ru:'До 2 баллов: преимущество доступности услуг над тем же сценарием без новых мер. Пять территорий имеют равный вес; медицина/школа/уход за детьми/жильё/занятость/цифровые услуги — веса 25/20/15/15/15/10%. Цель полного балла — сокращение 35% исходного среднего разрыва (не менее 2,5 процентного пункта). 65% веса у всего срока, 35% — у последних пяти лет. Ухудшение территории относительно бездействия снижает результат. Рост населения не требуется; демографическое уменьшение спроса само по себе баллов не даёт.',
+    en:'Up to 2 points: service access gained over the same scenario without new measures. Five districts have equal weight; health/school/childcare/housing/employment/digital services have weights 25/20/15/15/15/10%. Full credit requires closing 35% of the initial mean gap, at least 2.5 percentage points. All years carry 65% of the weight; the latest five carry 35%. A district doing worse than inaction reduces the result. Population growth is not required; demographic reductions in demand do not themselves earn points.',
+    zh:'最高2分：相对同情景无新政策基准的服务改善。五个地区等权；医疗、学校、托幼、住房、就业和数字服务权重分别为25、20、15、15、15、10%。满分目标为缩小初始平均缺口的35%，且不少于2.5个百分点。全任期权重65%，最近五年35%。地区表现低于无行动基准会扣分。不要求人口增长；单纯因人口需求减少而提高可及性不计分。'}},
+  {id:'finance',title:{ru:'Финансовая устойчивость',en:'Financial sustainability',zh:'财政可持续性'},detail:{
+    ru:'До 1 балла: среднее из запаса до долгового лимита относительно начала и доли трёх прогнозных лет с покрытием казной и резервом. Результат умножается на 1 / (1 + полученная экстренная помощь / исходные казна и резерв). Законное проектное софинансирование не штрафуется. При досрочной передаче управления — 0.',
+    en:'Up to 1 point: average initial-relative debt headroom and the share of three projected years covered by cash and reserves. Multiply by 1 / (1 + emergency aid received / initial cash and reserves). Ordinary project cofinancing is not penalised. Early financial handover earns 0.',
+    zh:'最高1分：相对初始债务余量和未来三年现金及储备覆盖比例的平均值。再乘以1/(1+所获紧急援助/初始现金与储备)。正常项目配套资金不扣分。提前移交财政管理得0分。'}},
+  {id:'promises',title:{ru:'Проверяемые обязательства',en:'Accountable commitments',zh:'可核验承诺'},detail:{
+    ru:'До 0,5 балла: выполненные обещания / максимум из 3 и числа обещаний, срок которых наступил в пределах кампании. Выполненное после согласованного переноса даёт коэффициент 0,75. Нарушенные и просроченные обещания входят в знаменатель. Обещания за пределами срока не повышают результат.',
+    en:'Up to 0.5 points: kept promises / the larger of 3 and promises due within the campaign. Fulfilment after an agreed revision has factor 0.75. Broken and overdue promises stay in the denominator. Promises beyond the term do not increase the result.',
+    zh:'最高0.5分：已兑现承诺数除以3与任期内应履行承诺数中的较大值。经协商延期后兑现的系数为0.75。违约和逾期承诺计入分母。任期以外的承诺不增加分数。'}},
+  {id:'overall',title:{ru:'Итоговая оценка',en:'Overall grade',zh:'总评'},detail:{
+    ru:'Максимум 5 баллов. Все критерии умножаются на долю подтверждённых лет / 20; прохождение само по себе баллов не даёт. Досрочная передача управления ограничивает сумму 2,5 балла. Эталон без новых мер пересчитывает ту же модель, сценарий и календарные кризисы; это игровое сравнение, не доказательство реального причинного эффекта. Старые сохранения версии повестки 1.0 сохраняют опубликованную для них рубрику.',
+    en:'Maximum 5 points. Every criterion is multiplied by confirmed years / 20; completion itself earns no points. Early handover caps the total at 2.5. The no-new-measures baseline runs the same model, scenario and calendar crises; this is an in-model comparison, not evidence of a real causal effect. Agenda version 1.0 saves keep their original published rubric.',
+    zh:'总分最高5分。所有指标乘以已确认年度数/20；完成回合本身不计分。提前移交管理时总分上限2.5分。无新措施基准使用相同模型、情景和危机日程；它是模型内比较，不证明现实因果效应。议程1.0旧存档保留原评分规则。'}}
 ];
 
 function fail(code) {
@@ -109,7 +139,7 @@ const clip = value => Math.max(0, Math.min(1, Number.isFinite(value) ? value : 0
 const round2 = value => Math.round((value + Number.EPSILON) * 100) / 100;
 const scoreText = value => value.toFixed(4).replace(/0+$/, '').replace(/\.$/, '');
 
-function assessReport(state, G, report) {
+function assessLegacyReport(state, G, report) {
   const completionRatio = clip((Array.isArray(state.history) ? state.history.length : 0) / MAX_DECISIONS);
   const handover = campaignStatus(state, G) === 'financial-handover';
   const projects = (report.finance?.portfolio ?? []).filter(project => project.deferred !== true);
@@ -173,7 +203,7 @@ function assessReport(state, G, report) {
     uncappedPoints: round2(uncapped),
     capMultiplier,
     handoverCapApplied: capMultiplier < 1,
-    criteria: assessmentRules.slice(0, 5).map((rule, index) => ({
+    criteria: legacyAssessmentRules.slice(0, 5).map((rule, index) => ({
       id: rule.id,
       title: { ...rule.title },
       points: cents[index] / 100,
@@ -186,6 +216,126 @@ function assessReport(state, G, report) {
       }
     }))
   };
+}
+
+const assessmentBaselines = new WeakMap();
+const CURRENT_ASSESSMENT_VERSION = 'governor-outcomes-v2';
+const OUTCOME_WEIGHTS = [0.75, 0.75, 2, 1, 0.5];
+const SERVICE_KEYS = ['healthAccess','schoolAccess','childcareAccess','housingAccess','employment','digitalAccess'];
+const SERVICE_WEIGHTS = [0.25,0.2,0.15,0.15,0.15,0.1];
+
+function policyBaseline(state, G) {
+  const E=G.Engine;
+  if(typeof E.createState!=='function'||typeof E.commitAction!=='function')return null;
+  let cache=assessmentBaselines.get(E);
+  if(!cache){cache=new Map();assessmentBaselines.set(E,cache);}
+  const key=JSON.stringify([state.scenarioId,state.challengeId,state.seed,state.agenda?.mode,state.agenda?.version]);
+  if(cache.has(key))return cache.get(key);
+  // No promises, new projects, strategy bonuses or financial rescues chosen by
+  // the player. Automatic mode keeps the counterfactual calendar comparable.
+  const baseline=E.createState({scenarioId:state.scenarioId,challengeId:state.challengeId,seed:state.seed,
+    campaignMode:state.agenda?.mode||'guided',budgetMode:'automatic',soundEnabled:false});
+  if(state.agenda?.version===G.Agenda?.LEGACY_VERSION)baseline.agenda.version=G.Agenda.LEGACY_VERSION;
+  const initialStats={...baseline.stats};
+  while(!baseline.completed){
+    if(G.Agenda?.needsChoice(baseline))E.chooseAgenda(baseline,G.Agenda.OPERATIONS.id);
+    const mission=E.getCurrentMission(baseline),action=mission.actions.find(item=>item.deferred);
+    E.commitAction(baseline,action.id,'treasury');
+    E.advanceTurn(baseline);
+  }
+  const value={initialStats,history:baseline.history,initial:baseline.population.initial,finance:baseline.finance};
+  cache.set(key,value);
+  if(cache.size>24)cache.delete(cache.keys().next().value);
+  return value;
+}
+
+const mean = values => values.reduce((sum,value)=>sum+value,0)/Math.max(1,values.length);
+function annualWeights(count){
+  const recent=Math.min(5,count);
+  return Array.from({length:count},(_,index)=>0.65/count+(index>=count-recent?0.35/recent:0));
+}
+function serviceValue(place){
+  return SERVICE_KEYS.reduce((sum,key,index)=>sum+clip(finite(place?.[key])??0)*SERVICE_WEIGHTS[index],0);
+}
+function assessOutcomeReport(state,G,report){
+  const history=(state.history||[]).slice(0,MAX_DECISIONS),count=history.length,completionRatio=clip(count/MAX_DECISIONS);
+  const weights=annualWeights(count),baseline=policyBaseline(state,G),handover=campaignStatus(state,G)==='financial-handover';
+  const initial=report.population?.initial?.access||{},ids=(G.Population?.MUNICIPALITIES?.map(m=>m.id)||Object.keys(initial)).slice(0,MAX_TERRITORIES);
+  const initialStats=baseline?.initialStats||history[0]?.before||report.final||{};
+  let preservation=0,mandateGain=0,serviceGain=0;
+  const districtGains=Object.fromEntries(ids.map(id=>[id,0]));
+  for(let index=0;index<count;index++){
+    const actual=history[index],reference=baseline?.history[index];
+    const places=actual.population?.after?.municipalities||report.population?.current?.municipalities||{};
+    const referencePlaces=reference?.population?.after?.municipalities||initial;
+    const actualStats=actual.after||report.final||{},referenceStats=reference?.after||initialStats;
+    for(const key of ['support','development']){
+      const start=finite(initialStats[key])??0,value=finite(actualStats[key])??0,b=finite(referenceStats[key])??start;
+      preservation+=weights[index]*0.5*clip((value-start*0.5)/Math.max(1,start*0.5));
+      mandateGain+=weights[index]*0.5*clip((value-b)/Math.max(5,start*0.2));
+    }
+    for(const id of ids){
+      const gain=serviceValue(places[id])-serviceValue(referencePlaces[id]);
+      districtGains[id]+=weights[index]*gain;
+      serviceGain+=weights[index]*gain/Math.max(1,ids.length);
+    }
+  }
+  const mandate=count?(preservation+mandateGain)/2:0;
+  const initialGap=mean(ids.map(id=>1-serviceValue(initial[id])));
+  const serviceTarget=Math.max(0.025,initialGap*0.35);
+  const worstDistrictGain=Math.min(0,...Object.values(districtGains));
+  // Explicit regional equity discount. Equal district weights already prevent
+  // improvement in the capital from outweighing all smaller territories.
+  const equityFactor=clip(1+worstDistrictGain/0.1);
+  const territories=clip(serviceGain/serviceTarget)*(0.75+0.25*equityFactor);
+
+  const projects=report.finance?.portfolio||[],adopted=history.filter(record=>!record.deferred);
+  const execution=adopted.map(record=>{
+    const project=projects.find(item=>item.id===record.project?.id);
+    if(!record.project)return clip(record.delivery?.effectFactor??1);
+    if(!project||!(finite(project.activatedTurn)>0))return 0;
+    const expected=Math.max(1,Math.min(3,count-project.activatedTurn+1));
+    return clip(project.implementationFactor)*clip((project.paidTurns?.length||0)/expected);
+  });
+  const delivery=mean(execution);
+  const limit=finite(report.final?.debtLimit),debt=finite(report.final?.debt),initialDebt=finite(report.finance?.initialDebt);
+  const debtHeadroom=limit===null||debt===null||initialDebt===null?0:clip((limit-debt)/Math.max(0.01,limit-initialDebt));
+  const reserve=finite(report.final?.reserve);
+  const coveredYears=(report.forecast?.rows||[]).slice(0,3).filter(row=>finite(row.cash)!==null&&reserve!==null&&row.cash+reserve>=0).length;
+  const firstLedger=state.finance?.ledgers?.[0]||state.finance?.currentLedger;
+  const initialCushion=Math.max(1,(finite(firstLedger?.openingTreasury)||0)+(finite(firstLedger?.openingReserve)||0));
+  const emergencyAid=Math.max(0,finite(report.finance?.totalEmergencyTransfers)||0),aidFactor=1/(1+emergencyAid/initialCushion);
+  const finance=handover?0:(debtHeadroom+coveredYears/3)/2*aidFactor;
+  const promises=report.governance?.promises||[];
+  const kept=promises.filter(p=>p.status==='kept'&&!p.revisions?.length&&p.dueTurn<=MAX_DECISIONS).length;
+  const revisedKept=promises.filter(p=>p.status==='kept'&&p.revisions?.length&&p.dueTurn<=MAX_DECISIONS).length;
+  const accountable=promises.filter(p=>['kept','broken'].includes(p.status)||p.status==='pending'&&p.dueTurn<=MAX_DECISIONS).length;
+  const fulfilment=(kept+0.75*revisedKept)/Math.max(3,accountable);
+  const raw=[mandate,delivery,territories,finance,fulfilment].map(clip);
+  const progress=raw.map((score,index)=>score*OUTCOME_WEIGHTS[index]*completionRatio);
+  const uncapped=progress.reduce((sum,value)=>sum+value,0),capMultiplier=handover&&uncapped>2.5?2.5/uncapped:1;
+  const scaled=progress.map(value=>value*capMultiplier),cents=scaled.map(value=>Math.floor(value*100+1e-9));
+  const totalCents=Math.min(handover?250:500,Math.round(scaled.reduce((sum,value)=>sum+value,0)*100));
+  const remainder=scaled.map((value,index)=>({index,remainder:value*100-cents[index]})).sort((a,b)=>b.remainder-a.remainder||a.index-b.index);
+  const remaining=totalCents-cents.reduce((sum,value)=>sum+value,0);
+  for(let index=0;index<remaining;index++)cents[remainder[index].index]++;
+  const evidence=[
+    {ru:`Сохранение индексов ${scoreText(preservation)}; преимущество над бездействием ${scoreText(mandateGain)}.`,en:`Index preservation ${scoreText(preservation)}; gain over inaction ${scoreText(mandateGain)}.`,zh:`指标保持系数${scoreText(preservation)}；优于无行动基准${scoreText(mandateGain)}。`},
+    {ru:`Принято мер: ${adopted.length}; средний коэффициент исполнения ${scoreText(delivery)}.`,en:`Measures adopted: ${adopted.length}; mean delivery factor ${scoreText(delivery)}.`,zh:`已采取${adopted.length}项措施；平均执行系数${scoreText(delivery)}。`},
+    {ru:`Многолетнее преимущество услуг ${(serviceGain*100).toFixed(2)} п.п.; цель ${(serviceTarget*100).toFixed(2)} п.п.; территориальный коэффициент ${scoreText(0.75+0.25*equityFactor)}.`,en:`Weighted service gain ${(serviceGain*100).toFixed(2)} pp; target ${(serviceTarget*100).toFixed(2)} pp; equity factor ${scoreText(0.75+0.25*equityFactor)}.`,zh:`多年服务改善${(serviceGain*100).toFixed(2)}个百分点；目标${(serviceTarget*100).toFixed(2)}个百分点；地区公平系数${scoreText(0.75+0.25*equityFactor)}。`},
+    {ru:handover?'Финансовое управление передано досрочно.':`Запас долга ${scoreText(debtHeadroom)}; прогнозных лет с покрытием ${coveredYears}/3; экстренная помощь ${scoreText(emergencyAid)}, коэффициент ${scoreText(aidFactor)}.`,en:handover?'Financial management handed over early.':`Debt headroom ${scoreText(debtHeadroom)}; covered years ${coveredYears}/3; emergency aid ${scoreText(emergencyAid)}, factor ${scoreText(aidFactor)}.`,zh:handover?'财政管理已提前移交。':`债务余量${scoreText(debtHeadroom)}；覆盖年度${coveredYears}/3；紧急援助${scoreText(emergencyAid)}，系数${scoreText(aidFactor)}。`},
+    {ru:`Выполнено ${kept}; после переноса ${revisedKept}; учтено обязательств ${accountable}.`,en:`Kept ${kept}; kept after revision ${revisedKept}; accountable commitments ${accountable}.`,zh:`已兑现${kept}项；延期后兑现${revisedKept}项；计入${accountable}项承诺。`}
+  ];
+  return {version:CURRENT_ASSESSMENT_VERSION,points:totalCents/100,maxPoints:5,completionRatio,uncappedPoints:round2(uncapped),capMultiplier,handoverCapApplied:capMultiplier<1,
+    comparison:{kind:baseline?'same-scenario-no-new-policy':'initial-state-only',years:count,serviceGain,serviceTarget,districtGains,equityFactor,emergencyAid,aidFactor},
+    criteria:assessmentRules.slice(0,5).map((rule,index)=>({id:rule.id,title:{...rule.title},points:cents[index]/100,maxPoints:OUTCOME_WEIGHTS[index],rawPoints:raw[index],progressPoints:progress[index],detail:{
+      ru:`${evidence[index].ru} Коэффициент ${scoreText(raw[index])}; вес ${OUTCOME_WEIGHTS[index]}; подтверждено ${count}/20 лет; множитель ограничения ${scoreText(capMultiplier)}. Вклад ${cents[index]/100}/${OUTCOME_WEIGHTS[index]}.`,
+      en:`${evidence[index].en} Factor ${scoreText(raw[index])}; weight ${OUTCOME_WEIGHTS[index]}; confirmed years ${count}/20; cap multiplier ${scoreText(capMultiplier)}. Contribution ${cents[index]/100}/${OUTCOME_WEIGHTS[index]}.`,
+      zh:`${evidence[index].zh} 系数${scoreText(raw[index])}；权重${OUTCOME_WEIGHTS[index]}；已确认${count}/20年；上限系数${scoreText(capMultiplier)}。得分${cents[index]/100}/${OUTCOME_WEIGHTS[index]}。`
+    }}))};
+}
+function assessReport(state,G,report){
+  return state.agenda?.version==='2.0.0'?assessOutcomeReport(state,G,report):assessLegacyReport(state,G,report);
 }
 
 /** Deterministic assignment performance, available for previews and terminal saves alike. */
@@ -203,13 +353,26 @@ export function compactReport(state, GovernorGame) {
   const names = new Map((GovernorGame.Population?.MUNICIPALITIES ?? []).map(place => [place.id, localName(place.name)]));
   const baseYear = finite(report.population?.baseYear);
   return {
-    applicationVersion: '1.0.0',
+    applicationVersion: '1.1.0',
     modelVersion: text(report.modelVersion, 80),
     campaignStatus: campaignStatus(state, GovernorGame),
     decisions: decisions.length,
     seed: text(report.seed, 256),
     scenario: text(report.scenario?.name ?? report.scenario?.id),
     assessment: assessReport(state, GovernorGame, report),
+    campaignStrategy: report.campaignStrategy ? {
+      version: report.campaignStrategy.version,
+      courseId: text(report.campaignStrategy.id, 80),
+      reviews: (report.campaignStrategy.reviews || []).slice(0, 4).map(review => ({
+        year: finite(review.year), status: text(review.status, 40), progress: finite(review.progress),
+        support: finite(review.support), sustainable: review.sustainable === true,
+        capacityDelta: finite(review.capacityDelta),
+        goals: (review.goals || []).slice(0, 2).map(goal => ({
+          key: text(goal.key, 80), initial: finite(goal.initial), value: finite(goal.value),
+          target: finite(goal.target), progress: finite(goal.progress), met: goal.met === true
+        }))
+      }))
+    } : null,
     final: {
       support: finite(report.final?.support),
       development: finite(report.final?.development),

@@ -1,6 +1,7 @@
 /* A single presentation of the funded project, shared by map and treasury. */
 (function(root){
 'use strict';const G=root.GovernorGame,P=G.ProjectPresentation,A=G.IllustratedAssets;
+const asset=src=>G.resolveAsset?G.resolveAsset(src):src;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const tr=(l,r,e)=>globalThis.GovernorGame.I18n.choose(l,()=>(r),()=>(e)),loc=(x,l)=>G.WorldModel.local(x,l);
 const n=(x,l)=>new Intl.NumberFormat(globalThis.GovernorGame.I18n.intlLocale(l),{maximumFractionDigits:1}).format(x||0);
@@ -20,7 +21,7 @@ function render(host,state,id,l,hooks={}){
  <ol class="project-life" aria-label="${tr(l,'Жизненный цикл проекта','Project lifecycle')}">${v.stages.map(s=>{
   const title={decision:tr(l,'Утверждено','Approved'),delivery:stageName(v,l),opening:tr(l,'Запуск','Opening'),operation:tr(l,'Работа','Operation')}[s.id];
   const year=s.id==='delivery'?(v.status==='delivery'?tr(l,`Ещё ${v.yearsToLaunch} г.`,`${v.yearsToLaunch} years left`):tr(l,'Завершено','Done')):s.id==='operation'?(v.status==='completed'?String(v.completionYear):v.status==='active'?tr(l,`Ещё ${v.yearsFunded} г.`,`${v.yearsFunded} years left`):tr(l,'После запуска','After opening')):(s.planned?tr(l,'План: ','Planned: '):'')+s.year;
-  return `<li class="${s.state}" ${s.state==='current'?'aria-current="step"':''}><span>${v.structural?`<img src="assets/illustrated/stage-${s.id}-thumb.webp" width="46" height="46" alt="">`:icon(s.state==='done'?'check':s.id==='delivery'?'clock':s.id==='opening'?'flag':'repeat',20)}</span><b>${title}</b><small>${esc(year)}</small></li>`;
+  return `<li class="${s.state}" ${s.state==='current'?'aria-current="step"':''}><span>${v.structural?`<img src="${esc(asset(`assets/illustrated/stage-${s.id}-thumb.webp`))}" width="46" height="46" alt="">`:icon(s.state==='done'?'check':s.id==='delivery'?'clock':s.id==='opening'?'flag':'repeat',20)}</span><b>${title}</b><small>${esc(year)}</small></li>`;
  }).join('')}</ol>
  ${v.badges.length?`<div class="project-issues">${v.badges.map(b=>`<p>${icon('warning',17)}${esc({delayed:tr(l,`Первоначально планировался запуск в ${v.originalYear} г.; срок был увеличен.`,`Originally planned for ${v.originalYear}; delivery was delayed.`),partial:tr(l,'Исполнение неполное. Открытие не означает, что весь план выполнен.','Delivery is partial. Opening does not mean every planned outcome was achieved.'),overrun:tr(l,`Удорожание: ${money(v.cost-v.plannedCost,l)} сверх первоначальной стоимости.`,`Cost overrun: ${money(v.cost-v.plannedCost,l)} above the original budget.`)}[b])}</p>`).join('')}</div>`:''}
  <details class="project-art-disclosure"><summary>${tr(l,'Что показано на иллюстрации','About this illustration')}</summary><p>${esc(A.note(v.current,l))}</p>${v.current.approximatePair?`<p>${tr(l,'Виды стройки и готового объекта – разные иллюстрации одной программы, не совпадающие архитектурные планы.','Delivery and finished views illustrate the same programme; they are not matched architectural plans.')}</p>`:''}<p>${tr(l,'Изображение не измеряет охват услуги, число сооружений или строительную готовность. Даты и расчёты относятся к текущему состоянию партии.','Artwork does not measure coverage, facility count or construction progress. Dates and figures refer to the current campaign state.')}</p></details>
@@ -28,7 +29,7 @@ function render(host,state,id,l,hooks={}){
  <div class="project-visit-actions"><button class="secondary-button" type="button" data-project-gallery>${tr(l,'Все проекты','All projects')}</button><button class="primary-button" type="button" data-project-people>${tr(l,'Жители этой территории','People in this place')}${icon('arrow')}</button></div></section>`;
  host.querySelectorAll('[data-project-period]').forEach(b=>b.addEventListener('click',()=>{
   const initial=b.dataset.projectPeriod==='initial';const image=initial?v.initial:v.current;
-  const art=host.querySelector('.project-main-art');art.removeAttribute('data-art-fallback');art.classList.remove('art-unavailable');art.dataset.artId=image.id;art.style.setProperty('--art-limit',image.maxDisplayWidth+'px');art.width=image.width;art.height=image.height;art.src=image.src;art.alt=initial?tr(l,'Состояние при утверждении','State at approval'):status(v,l);
+  const art=host.querySelector('.project-main-art');art.removeAttribute('data-art-fallback');art.classList.remove('art-unavailable');art.dataset.artId=image.id;art.style.setProperty('--art-limit',image.maxDisplayWidth+'px');art.width=image.width;art.height=image.height;art.src=asset(image.src);art.alt=initial?tr(l,'Состояние при утверждении','State at approval'):status(v,l);
   host.querySelector('[data-art-note]').textContent=A.note(image,l);
   host.querySelector('[data-project-scene]').classList.toggle('target-art',image.targetView);
   host.querySelector('[data-project-scene]').classList.toggle('contextual-art',image.contextual);

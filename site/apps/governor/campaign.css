@@ -1,0 +1,63 @@
+/* New campaign surfaces use the existing white/blue Governor design system. */
+.campaign-start-course{margin:18px 0 14px;padding-top:16px;border-top:1px solid #d4e5ef}
+.campaign-coach-choice{display:flex!important;align-items:flex-start;gap:10px;font-size:13px!important;line-height:1.5!important;margin:14px 0 6px!important}
+.campaign-coach-choice input{width:18px!important;min-width:18px;height:18px;accent-color:#0784d1;margin:1px 0 0!important}
+.campaign-coach{padding:15px 17px;margin:14px 0;background:#eff8fc;border-left:4px solid #0886bd;border-radius:0 12px 12px 0;color:#234e67}
+.campaign-coach strong{display:block;font-size:15px;line-height:1.35;color:#0c547a}
+.campaign-coach p{font-size:13px;line-height:1.6;margin:7px 0 10px;max-width:86ch}
+.campaign-coach-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px 16px}
+.campaign-coach-actions button,.campaign-text-button{font:600 12px/1.5 system-ui,sans-serif;font-family:inherit;color:#086e9d;background:transparent;border:0;padding:5px 0;text-align:left;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.campaign-coach-actions button[data-coach-skip]{font-weight:400;color:#526f82;margin-left:auto}
+.campaign-coach-actions button:focus-visible,.campaign-text-button:focus-visible{outline:3px solid #173c51;outline-offset:4px}
+.campaign-overview{margin:15px 0 20px;border-top:1px solid #d4e5ef;border-bottom:1px solid #d4e5ef}
+.campaign-mandate,.campaign-milestones{padding:12px 0}
+.campaign-milestones{border-top:1px solid #e0ebf0}
+.campaign-mandate>summary,.campaign-milestones>summary{cursor:pointer;font:500 13px/1.5 system-ui,sans-serif;font-family:inherit;color:#28556f;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+.campaign-mandate>summary:before,.campaign-milestones>summary:before{content:'+';font-weight:700;color:#087cab}
+.campaign-mandate[open]>summary:before,.campaign-milestones[open]>summary:before{content:'−'}
+.campaign-mandate>summary>span:first-of-type{flex:1}
+.campaign-mandate>summary>span:last-child,.campaign-milestones>summary>span{font-size:12px;color:#5b7485}
+.campaign-goals{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 8px}
+.campaign-goal{min-width:0}
+.campaign-goal>span{display:block;font-size:12px;line-height:1.45;color:#496779;margin-bottom:5px}
+.campaign-goal>strong{font-size:21px;line-height:1.3;font-variant-numeric:tabular-nums;color:#095f85}
+.campaign-goal>strong small{font-size:13px;font-weight:400;color:#5a7789}
+.campaign-goal meter{display:block;width:100%;height:8px;margin-top:7px;accent-color:#0b89b1}
+.campaign-guardrails{font-size:11px!important;line-height:1.6;color:#5d7483;margin:8px 0 0!important}
+.campaign-review-status{margin:0;padding:10px 0;font-size:12px;line-height:1.5;color:#436c84}
+.campaign-review-status.at-risk{color:#97532a}.campaign-review-status.secured{color:#217657}
+.campaign-milestones p{display:flex;align-items:baseline;gap:12px;font-size:12px;line-height:1.5;margin:8px 0;color:#496779}
+.campaign-milestones p b{color:#0c759d;font-variant-numeric:tabular-nums}.campaign-milestones p span{flex:1}
+.agenda-topic .agenda-urgency{color:#a64a20}.agenda-topic .agenda-reason{font-size:11px;color:#577082}
+.agenda-more{margin-top:12px}.agenda-more>summary{cursor:pointer;font-size:13px;line-height:1.5;padding:8px 2px;color:#496b81}
+.agenda-more .agenda-topic-list{margin-top:8px}
+.agenda-future-row{display:flex;gap:10px;justify-content:space-between;align-items:baseline;border-top:1px solid #e3edf2;padding:9px 1px;font-size:12px;line-height:1.5;color:#46687c}
+.agenda-future-row small{font-size:11px;color:#627989;max-width:55%}
+.agenda-need{margin:10px 0 14px;background:#f4f9fc;border-radius:9px;padding:10px 12px;color:#456779;font-size:12px;line-height:1.6}
+.campaign-result{background:#eef7fb;padding:16px 18px;border-radius:12px;margin-bottom:18px;color:#315c74}
+.campaign-result h3{font-size:18px;line-height:1.3;margin:0 0 10px;color:#12597e}
+.campaign-result p{font-size:13px;line-height:1.6;margin:7px 0}
+.campaign-report{margin:22px 0}.campaign-report h2{font-size:22px;line-height:1.3}.campaign-report h3{font-size:16px;line-height:1.4}
+.campaign-report article{border-top:1px solid #d9e7ef;padding:7px 0}.campaign-report p{font-size:13px;line-height:1.65;color:#47687c}
+#campaign-coach-toggle,#campaign-all-sections{font-size:12px;min-height:42px}
+.side-nav [hidden]{display:none!important}
+.save-recovery-actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+@media(max-width:900px){.campaign-coach{padding:13px 14px}.campaign-coach p{font-size:12px}.campaign-coach strong{font-size:14px}.campaign-goals{grid-template-columns:1fr;gap:14px}.campaign-goal>strong{font-size:20px}.campaign-overview{margin:12px 0 16px}.campaign-mandate>summary>span:last-child{width:100%;padding-left:17px}.campaign-future-row{align-items:flex-start}.campaign-coach-actions button{min-height:36px}.campaign-result{padding:14px}.campaign-result h3{font-size:17px}}
+
+button.agenda-time{font:inherit;color:inherit;border:0;border-left:1px solid #cde4ef;background:#f5fafc;padding-block:8px;border-radius:0 10px 10px 0;cursor:pointer;text-align:left}
+button.agenda-time:hover,button.agenda-time:focus-visible{background:#e9f6fc}
+@media(max-width:900px){button.agenda-time{text-align:center;padding-right:8px}}
+
+.resolution-dialog[open]{display:flex;flex-direction:column}
+.resolution-dialog #resolution-content{flex:1 1 auto;min-height:0;max-height:none}
+.resolution-dialog .result-hero,.resolution-dialog #continue-turn{flex:none}
+.resolution-dialog .result-hero{grid-template-columns:58px minmax(0,1fr) auto}
+.resolution-dialog .result-hero h2{overflow-wrap:anywhere}
+@media(max-width:900px){
+  .resolution-dialog .result-hero{grid-template-columns:48px minmax(0,1fr) auto}
+}
+@media(max-width:430px){
+  .resolution-dialog .result-hero{grid-template-columns:40px minmax(0,1fr);gap:8px 12px;padding:12px 17px}
+  .resolution-dialog .result-check{width:40px;height:40px}
+  .resolution-dialog .result-reward{grid-column:2;justify-self:start;min-height:0;max-width:100%;font-size:12px}
+}

@@ -650,7 +650,9 @@ jobs:
           node --check site/service-worker.js
       - name: Verify Governor grading and offline contract
         if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
-        run: node --test scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs
+        run: >-
+          node --test --test-concurrency=3 scripts/test_governor_contract.mjs scripts/test_governor_i18n.mjs
+          scripts/test_governor_service_worker.mjs scripts/test_governor_report_locale.mjs tests/governor-*.test.mjs
       - name: Verify Settlements source integrity, score and persistence
         if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
         run: |

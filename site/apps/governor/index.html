@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="budget-review.css">
   <link rel="stylesheet" href="release.css">
   <link rel="stylesheet" href="platform.css">
+  <link rel="stylesheet" href="campaign.css">
 </head>
 <body>
   <header class="platform-bar" aria-label="Образовательная платформа РУДН">
@@ -55,7 +56,7 @@
 
       <div class="start-layout">
         <div class="start-copy">
-          <div class="stage-badge" data-ui="demoBadge">Версия 1.0 · Учебная кампания</div>
+          <div class="stage-badge" data-ui="demoBadge">Версия 1.1 · Стратегическая кампания</div>
           <p class="start-eyebrow" data-ui="startEyebrow">Учебная видеоигра РУДН</p>
           <h1 id="start-title" data-ui="startTitle">Какой останется ваша область?</h1>
           <p class="start-lead" data-ui="startLead">Двадцать годовых решений. Пять территорий. Стройте, договаривайтесь и возвращайтесь к людям, которым дали обещания.</p>
@@ -87,10 +88,10 @@
 
           <details id="campaign-options" class="campaign-options"><summary data-ui="campaignOptions">Параметры кампании</summary>
           <label id="campaign-mode-label" for="campaign-mode">Маршрут кампании</label>
-          <select id="campaign-mode" aria-describedby="campaign-mode-hint"><option value="agenda">Своя повестка · первые пять лет на ваш выбор</option><option value="guided">Последовательный маршрут · фиксированный порядок</option></select>
-          <p class="field-hint" id="campaign-mode-hint">В обоих вариантах 20 лет. Последующие главы сохраняют сюжетный порядок.</p>
+          <select id="campaign-mode" aria-describedby="campaign-mode-hint"><option value="agenda">Своя повестка · двадцать лет решений</option><option value="guided">Последовательный маршрут · фиксированный порядок</option></select>
+          <p class="field-hint" id="campaign-mode-hint">Приоритеты на весь срок выбираете вы. Новые вопросы открываются по ситуации и этапу кампании.</p>
 
-          <div class="budget-start"><input type="checkbox" id="budget-review-mode" aria-describedby="budget-review-mode-hint"><label for="budget-review-mode"><strong id="budget-review-mode-label">Дефицит требует решения</strong><small id="budget-review-mode-hint">Реальные разрывы бюджета: резерв, ограниченный заём, помощь с условиями. Без автоматического спасения; возможна досрочная передача управления. Включается только для новой партии.</small></label></div>
+          <div class="budget-start"><input type="checkbox" id="budget-review-mode" checked aria-describedby="budget-review-mode-hint"><label for="budget-review-mode"><strong id="budget-review-mode-label">Дефицит требует решения</strong><small id="budget-review-mode-hint">Резерв, ограниченный заём, помощь с условиями. Возможна досрочная передача управления. Снимите флажок для облегчённого бюджета с автоматической помощью.</small></label></div>
           <div class="recovery-start"><input type="checkbox" id="recovery-case" aria-describedby="recovery-case-hint"><label for="recovery-case"><strong id="recovery-case-label">Особое начало: «Счёт из прошлого»</strong><small id="recovery-case-hint">Сравните резерв, помощь с условиями и заём. Отдельный учебный кейс на сбалансированной области, обычные правила, открытая повестка.</small></label></div>
           <label for="session-seed" data-ui="startSeed">Код учебной сессии</label>
           <input id="session-seed" name="seed" maxlength="40" value="RUDN-2026" spellcheck="false" aria-describedby="seed-hint">
@@ -331,6 +332,7 @@
   <script src="src/recovery.js"></script>
   <script src="src/budget-review.js"></script>
   <script src="src/finance.js"></script>
+  <script src="src/campaign-strategy.js"></script>
   <script src="src/governance-data.js"></script>
   <script src="src/governance.js"></script>
   <script src="src/stories-data.js"></script>
@@ -359,6 +361,8 @@
   <script src="src/budget-review-ui.js"></script>
   <script src="src/learning.js"></script>
   <script src="src/release-ui.js"></script>
+  <script src="src/campaign-ui.js"></script>
+  <script type="module" src="src/resource-url.js"></script>
   <script type="module" src="platform-bridge.js"></script>
 </body>
 </html>

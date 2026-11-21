@@ -1,11 +1,14 @@
 // Real module mounts and IndexedDB, isolated loopback backend. No Firebase calls.
 import assert from 'node:assert/strict';
+import {createAdaptiveCareerIndexFixture,chooseAdaptiveCareerPreferences} from './helpers/career-adaptive-ui-fixture.mjs';
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 const require=createRequire(import.meta.url),pw=require(process.env.PLAYWRIGHT_PATH||'playwright');
 const root=new URL('../site/',import.meta.url);
+const taxonomy=JSON.parse(await readFile(new URL('apps/career/data/adaptive-taxonomy.json',root),'utf8'));
+const adaptiveFixture=createAdaptiveCareerIndexFixture(taxonomy);
 const backendSource=`import {durableStore as store} from '/assets/js/durable-store.js';
 const profile=()=>JSON.parse(localStorage.getItem('qa.profile')||'null');
 export const groupOptions=()=>['ГГУбд-01-26'];
@@ -32,6 +35,8 @@ const server=createServer(async(req,res)=>{
   const path=new URL(req.url,'http://localhost').pathname;
   if(path==='/qa.html'){res.setHeader('Content-Type','text/html');res.end('<!doctype html><html lang="ru"><meta name="viewport" content="width=device-width,initial-scale=1"><div id="module"></div>');return;}
   if(path==='/assets/js/backend.js'){res.setHeader('Content-Type','text/javascript');res.end(backendSource);return;}
+  const fixture=adaptiveFixture.get(path);
+  if(fixture){res.setHeader('Content-Type',fixture.type);res.setHeader('Content-Length',fixture.body.length);res.end(fixture.body);return;}
   const url=new URL('.'+path,root);if(!fileURLToPath(url).startsWith(fileURLToPath(root)))throw Error('path');
   const bytes=await readFile(url);res.setHeader('Content-Type',types[path.slice(path.lastIndexOf('.'))]||'application/octet-stream');res.end(bytes);
  }catch{res.statusCode=404;res.end('Missing test resource');}
@@ -85,28 +90,20 @@ try{
      }
      await page.locator('#view-personality-results:not([hidden])').waitFor();
      await page.locator('#personality-continue').click();
-     await page.locator('#view-preferences:not([hidden])').waitFor();
-     const next=page.locator('#journey-preferences-next');await next.waitFor();
-     assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),0,'New course owner has no inherited employer choices');
-     assert.equal(await next.isDisabled(),true,'Course requires three employer choices');
-     for(let priority=0;priority<3;priority++){
-      await page.locator('[data-add-wish][aria-pressed="false"]:not([disabled])').first().click();
-      assert.equal(await page.locator('#journey-desired-choices [data-remove-wish]').count(),priority+1);
-      assert.equal(await next.isDisabled(),priority<2);
-     }
-     await next.click();
-     await page.locator('#view-test:not([hidden])').waitFor();
+     await chooseAdaptiveCareerPreferences(page);
     }
     const courseScope={owner:'student:'+profile.studentKey,activitySlug:module==='reception'?'seminar-5':'career-workspace',mode:module==='reception'?'2026-2027:practice':'diagnostic'};
     const freeScope={...courseScope,activitySlug:module+'-freeplay',mode:module==='reception'?'2026-2027:practice':'workspace'};
-    const answer=async value=>{await page.locator(module==='reception'?'[data-action="start"]':`#answer-options [data-answer="${value}"]`).first().click();await flush(page);};
-    await answer(2);const original=await load(page,courseScope);assert(original?.state);
+    const answer=async(value,{course=false}={})=>{await page.locator(module==='reception'?'[data-action="start"]':course?`[data-adaptive-answer="${value}"]`:`#answer-options [data-answer="${value}"]`).first().click();await flush(page);};
+    await answer(2,{course:true});const original=await load(page,courseScope);assert(original?.state);
     await mount(page,module,'free');if(module==='reception')assert.equal(await page.locator('[data-mode]').count(),0,'Free Reception has no assessment selector');
     await answer(4);const free=await load(page,freeScope);assert(free?.state);assert.notEqual(free.id,original.id);
     if(module==='career'){
-     const journey=JSON.parse(original.state.values['career-journey-v1']);
-     assert.equal(journey.confirmed,true);assert.equal(new Set(journey.desiredIds).size,3);
-     assert.equal(free.state.values['career-journey-v1'],undefined,'Free career never inherits the course employer choices');
+     const functional=JSON.parse(original.state.values['functional-career-v1']);
+     assert.equal(functional.setupComplete,true);assert.deepEqual(functional.regionIds,[]);
+     assert.equal(functional.responsibilityPreference,'specialist');assert.equal(functional.pending.value,2);
+     assert.equal(typeof functional.pending.questionId,'string');
+     assert.equal(free.state.values['functional-career-v1'],undefined,'Free career never inherits the course functional preferences or answers');
      assert.equal(/ipip-\d{3}/.test(JSON.stringify([original.state,free.state])),false,'Private personality answers remain outside both synced workspaces');
     }
     assert.deepEqual((await load(page,courseScope)).state,original.state,'Free actions leave course state intact');

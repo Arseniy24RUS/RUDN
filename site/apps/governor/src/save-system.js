@@ -4,13 +4,14 @@
 (function(root){
  'use strict';
  const FORMAT='rudn-governor-save',SCHEMA=1,MAX_BYTES=20*1024*1024;
- const Key='rudn-governor-stage9-state',Backup=Key+'-backup';
+ const Key='rudn-governor-stage9-state',Backup=Key+'-backup',Recovery=Key+'-recovery';
  const E=()=>root.GovernorGame?.Engine||(typeof require==='function'?require('./engine.js'):null);
  const I=()=>root.GovernorGame?.Integrity||(typeof require==='function'?require('./state-integrity.js'):null);
  let releasePolicy={canResume:()=>true,mark:value=>value};
  const terminal=state=>state?.completed===true||state?.budgetReview?.status==='supervised';
  function setReleasePolicy(policy){if(typeof policy?.canResume!=='function'||typeof policy?.mark!=='function')throw error('invalid-release-policy');releasePolicy=policy;}
  function error(code){const e=new Error(code);e.code=code;return e;}
+ const supportedModel=model=>[E().VERSION,E().RECOVERY_VERSION,E().REVIEW_VERSION,'0.8.0-consolidation'].filter(Boolean).includes(model);
  // Pure SHA-256 fallback for file/embedded contexts without WebCrypto.
  // It has exactly the same digest as WebCrypto; it is not an authentication key.
  function sha256(bytes){
@@ -43,46 +44,78 @@
  async function unpack(text){
   if(typeof text!=='string'||new TextEncoder().encode(text).byteLength>MAX_BYTES)throw error('file-too-large');
   let box;try{box=JSON.parse(text);}catch(_){throw error('not-save-file');}
-  if(!box||box.format!==FORMAT||box.schema!==SCHEMA||typeof box.payload!=='string')throw error('not-save-file');
-  if(![E().VERSION,E().RECOVERY_VERSION,E().REVIEW_VERSION,'0.8.0-consolidation'].includes(box.model))throw error('incompatible-model');
+  if(!box||box.format!==FORMAT||typeof box.payload!=='string')throw error('not-save-file');
+  if(box.schema!==SCHEMA)throw error('incompatible-schema');
+  if(!supportedModel(box.model))throw error('incompatible-model');
   if(box.checksum!==await hash(box.payload))throw error('checksum-mismatch');
   let parsed;try{parsed=JSON.parse(box.payload);I().safeTree(parsed);}catch(_){throw error('invalid-state');}
   if(parsed.version!==box.model)throw error('incompatible-model');
-  if(!releasePolicy.canResume(box,{completed:terminal(parsed)}))throw error('retired-build');
   const state=E().restoreState(parsed);if(!state)throw error('invalid-state');
+  if(!releasePolicy.canResume(box,{completed:terminal(state),module:'governor',compatible:true}))throw error('retired-build');
   return state;
+ }
+ function inspectAutosave(raw){
+  if(!raw)return{status:'empty',state:null};
+  let box;try{box=JSON.parse(raw);}catch(_){return{status:'corrupt',state:null,reason:'not-save-file'};}
+  if(!box||box.format!=='rudn-autosave'||!Number.isSafeInteger(box.revision)||box.revision<1)return{status:'corrupt',state:null,reason:'not-save-file'};
+  // Autosaves written before this field was introduced are schema 1.
+  if(box.schema!==undefined&&box.schema!==SCHEMA)return{status:'incompatible',state:null,reason:'incompatible-schema'};
+  if(!supportedModel(box.state?.version)||(box.model!==undefined&&box.model!==box.state?.version))return{status:'incompatible',state:null,reason:'incompatible-model'};
+  let state;try{state=E().restoreState(box.state);}catch(_){}
+  if(!state)return{status:'corrupt',state:null,reason:'invalid-state'};
+  if(!releasePolicy.canResume(box,{completed:terminal(state),module:'governor',compatible:true}))return{status:'incompatible',state:null,reason:'retired-build'};
+  return{status:'ok',state,revision:box.revision,savedAt:box.savedAt||null};
  }
  class Store{
   constructor(storage){this.storage=storage;this.token=undefined;this.error=null;}
   inspect(key=Key){
    let raw;try{raw=this.storage.getItem(key);if(key===Key)this.token=raw;}catch(_){return{status:'unavailable',state:null};}
-   if(!raw)return{status:'empty',state:null};
-   try{const b=JSON.parse(raw);if(b.format!=='rudn-autosave'||!Number.isSafeInteger(b.revision)||b.revision<1)throw error('invalid');
-    if(!releasePolicy.canResume(b,{completed:terminal(b.state)}))return{status:'empty',state:null,retired:true};
-    const state=E().restoreState(b.state);return state?{status:'ok',state,revision:b.revision}:{status:'corrupt',state:null};
-   }catch(_){return{status:'corrupt',state:null};}
+   return inspectAutosave(raw);
   }
   backup(){return this.inspect(Backup);}
   legacy(){return this.inspect('rudn-governor-stage8-state');}
+  raw(key=Key){return this.storage.getItem(key);}
+  recovery(){
+   const raw=this.storage.getItem(Recovery);if(!raw)return[];
+   let archive;try{archive=JSON.parse(raw);}catch(_){throw error('recovery-unavailable');}
+   if(archive?.format!=='rudn-governor-recovery'||archive.schema!==SCHEMA||!Array.isArray(archive.entries)||archive.entries.some(entry=>typeof entry?.raw!=='string'||typeof entry?.key!=='string'))throw error('recovery-unavailable');
+   return archive.entries;
+  }
+  preserve(raw,key=Key,reason='replaced'){
+   if(!raw)return;
+   const entries=this.recovery();if(entries.some(entry=>entry.key===key&&entry.raw===raw))return;
+   entries.push({key,reason,savedAt:new Date().toISOString(),raw});
+   // If the recovery write fails, replacement must fail as well. Never discard
+   // the only bytes of an unsupported or damaged campaign to start a new one.
+   this.storage.setItem(Recovery,JSON.stringify({format:'rudn-governor-recovery',schema:SCHEMA,entries}));
+  }
+  preservePrevious(raw){
+   if(!raw)return;
+   const previous=inspectAutosave(raw);
+   if(previous.status!=='ok'){this.preserve(raw,Key,previous.reason);return;}
+   const backup=this.storage.getItem(Backup),backupStatus=inspectAutosave(backup);
+   if(backup&&backupStatus.status!=='ok')this.preserve(backup,Backup,backupStatus.reason);
+   this.storage.setItem(Backup,raw);
+  }
   write(state){
    if(!E().validateState(state))throw error('invalid-state');
    const raw=this.storage.getItem(Key);
    if(this.token!==undefined&&raw!==this.token)throw error('other-tab');
    let previous=null;try{previous=raw?JSON.parse(raw):null;}catch(_){}
    const stateText=JSON.stringify(state);
-   if(previous&&JSON.stringify(previous.state)===stateText&&releasePolicy.mark({...previous}).releaseBuildId===previous.releaseBuildId){this.token=raw;return true;}
+   if(previous?.schema===SCHEMA&&previous.model===state.version&&inspectAutosave(raw).status==='ok'&&JSON.stringify(previous.state)===stateText&&releasePolicy.mark({...previous}).releaseBuildId===previous.releaseBuildId){this.token=raw;return true;}
    const revision=Number.isSafeInteger(previous?.revision)?previous.revision+1:1;
-   if(raw&&previous?.state&&E().validateState(previous.state))this.storage.setItem(Backup,raw);
-   const next=JSON.stringify(releasePolicy.mark({format:'rudn-autosave',revision,savedAt:new Date().toISOString(),state}));
+   this.preservePrevious(raw);
+   const next=JSON.stringify(releasePolicy.mark({format:'rudn-autosave',schema:SCHEMA,model:state.version,revision,savedAt:new Date().toISOString(),state}));
    this.storage.setItem(Key,next);this.token=next;return true;
   }
   clear(){
    const raw=this.storage.getItem(Key);if(this.token!==undefined&&raw!==this.token)throw error('other-tab');
-   if(raw){try{const b=JSON.parse(raw);if(E().validateState(b.state))this.storage.setItem(Backup,raw);}catch(_){}}
+   this.preservePrevious(raw);
    this.storage.removeItem(Key);this.token=null;
   }
  }
- const api={FORMAT,SCHEMA,MAX_BYTES,Key,Backup,Store,pack,unpack,hash,sha256,setReleasePolicy};
+ const api={FORMAT,SCHEMA,MAX_BYTES,Key,Backup,Recovery,Store,pack,unpack,inspectAutosave,hash,sha256,setReleasePolicy};
  root.GovernorGame=root.GovernorGame||{};root.GovernorGame.Saves=api;
  if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
