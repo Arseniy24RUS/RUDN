@@ -1605,12 +1605,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     return perform(clone(pending),{retry:true,backgroundDocument:pending.op==='document'});
   }
   async function recoverPendingMaterials() {
-    if(recoveringMaterials||disposed||paused||archiveEntry||navigator.onLine===false||!isRecoverableMaterialRequest(pending))return;
+    if(recoveringMaterials||disposed||paused||archiveEntry||!isRecoverableMaterialRequest(pending)||window.navigator?.onLine===false)return;
     recoveringMaterials=true;
     const requestId=pending.requestId;
     try {
       if(busy)await work;
-      if(pending?.requestId===requestId&&navigator.onLine!==false)await retryPending();
+      if(pending?.requestId===requestId&&window.navigator?.onLine!==false)await retryPending();
     } finally {
       recoveringMaterials=false;
     }
