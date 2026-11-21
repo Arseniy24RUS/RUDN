@@ -34,7 +34,7 @@ function validateCalendar(c,raw,coreStepsVersion,mfcCalendarVersion) {
   return {deadline,referralDeadline,...(registrationRequired?{registrationTimely}:{})};
 }
 
-export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,guide,coreStepsVersion,mfcCalendarVersion}) {
+export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,guide,complaintExample,coreStepsVersion,mfcCalendarVersion}) {
   const field=CORE_STEP_FIELDS[body.stepId];
   if(!field||!Object.hasOwn(body,field)||
     [...Object.values(CORE_STEP_FIELDS),'decision','control','choiceId','useExample','confirmOwn']
@@ -43,12 +43,12 @@ export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,
   if(field==='citations'){
     const provisions=requiredSeminarProvisions(c), requiredIds=Object.keys(provisions);
     if(!requiredIds.length)fail('invalid_case',503);
-    if(!Array.isArray(raw)||raw.length!==requiredIds.length)fail('core_citation_required');
+    if(!Array.isArray(raw)||raw.length!==requiredIds.length&&!(complaintExample&&raw.length===2))fail('core_citation_required');
     let value;
     try {
       value=raw.map(validateCorrespondenceCitation);
       if(new Set(value.map(row=>row.id)).size!==value.length||
-        value.some(row=>row.kind!=='legal'||row.section!=='legalBasis')||
+        value.some(row=>row.kind!=='legal'||row.section!=='legalBasis'||!requiredIds.includes(row.sourceId))||
         !requiredIds.every(id=>value.some(row=>row.sourceId===id)))fail('invalid_citation');
       await resolveCorrespondenceCitations(c,state,{citations:value},locale,{
         resolveLegalCitation:(citation,options)=>resolveLegalCitation(citation,{...options,requireProvision:true})
@@ -57,8 +57,15 @@ export async function inspectCoreStep(body,c,state,locale,{resolveLegalCitation,
       if(error instanceof ReceptionError&&error.status<500)fail('invalid_citation');
       throw error;
     }
-    if(guide&&!value.every(row=>hasApplicableLegalCitation(c,
-      {docId:row.sourceId,unitIds:row.unitIds,text:row.quote},provisions)))return {finding:'legal'};
+    if(guide){
+      const matches=(row,allowed)=>hasApplicableLegalCitation(c,
+        {docId:row.sourceId,unitIds:row.unitIds,text:row.quote},allowed);
+      const valid=complaintExample
+        ? value.every(row=>matches(row,provisions)||matches(row,{'reception-law59999':['10']}))&&
+          (value.length===1||value.filter(row=>matches(row,provisions)).length===1)
+        : value.every(row=>matches(row,provisions));
+      if(!valid)return {finding:'legal'};
+    }
     return {field,value};
   }
   if(field==='calendar'){
@@ -83,7 +90,7 @@ export function saveCoreStep(state,body,{field,value}) {
   state.coreStepReceipt={requestId:body.requestId,stepId:body.stepId};
 }
 
-export function assertCoreDecision(state,decision) {
+export function assertCoreDecision(state,decision,{rejectUnconfirmedCoreCitations=false}={}) {
   const {citations,calendar,routing}=state.coreStepsValues||{};
   if(!citations?.length||!calendar||!routing)fail('core_steps_required',409);
   if(decision.deadline!==calendar.deadline||decision.workbook?.referralDeadline!==calendar.referralDeadline||
@@ -93,4 +100,9 @@ export function assertCoreDecision(state,decision) {
     !chosen.recipientIds.every(id=>routing.recipientIds.includes(id)))fail('core_route_required',409);
   const selected=new Set(decision.correspondence.citations.map(row=>hash(row)));
   if(!citations.every(row=>selected.has(hash(row))))fail('core_citation_required',409);
+  if(rejectUnconfirmedCoreCitations){
+    const confirmed=new Set(citations.map(row=>hash(row)));
+    if(decision.correspondence.citations.some(row=>row.kind==='legal'&&row.id.startsWith('core-legal-')&&
+      !confirmed.has(hash(row))))fail('core_citation_required',409);
+  }
 }

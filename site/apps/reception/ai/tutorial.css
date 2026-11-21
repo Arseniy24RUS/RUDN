@@ -145,11 +145,18 @@ button.rxt-case-step:hover, .rxt-case-step[aria-current=step] { background: #dee
   margin: 0; padding: 9px 15px; border-top: 1px solid var(--rxa-border);
   background: #f5f8fb; color: #485e71; font-size: .875rem;
 }
-.rxt-chosen-citation { border-top: 1px solid #b9d6bf; background: #eff8f0; color: #214d36; }
+.rxt-chosen-citation { position: relative; border-top: 1px solid #b9d6bf; background: #eff8f0; color: #214d36; }
 .rxt-chosen-citation summary {
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px 13px;
   font-weight: 650; cursor: pointer; list-style: none;
 }
+.rxt-chosen-citation:has(.rxt-remove-citation) summary { min-height: 44px; padding-inline-end: 49px; }
+.reception-ai-root.rxa-cabinet .rxt-chosen-citation .rxt-remove-citation {
+  position: absolute; inset-block-start: 0; inset-inline-end: 0; display: grid; place-items: center;
+  width: 44px; height: 44px; padding: 0; border: 0; border-radius: 6px; color: #365a46;
+}
+.reception-ai-root.rxa-cabinet .rxt-remove-citation:hover { color: #132d1e; background: #dceee0; }
+.reception-ai-root.rxa-cabinet .rxt-remove-citation:focus-visible { outline: 2px solid #206189; outline-offset: -4px; }
 .rxt-chosen-citation summary span { font-weight: 400; }
 .rxt-chosen-citation summary::-webkit-details-marker { display: none; }
 .rxt-chosen-citation blockquote { padding: 0 13px 12px; margin: 0; overflow-wrap: anywhere; }

@@ -482,10 +482,6 @@ async function run({width,height,locale,full}) {
     }
     await shot('example-prefilled');
     row.prefilledExample={fields:1+draftSectionIds.length,selectedLegalCitations:view.coreSteps.values.citations.length};
-    if(width===1440){
-      row.prefilledExample.withoutTyping=true;
-      return {view,draft:actual};
-    }
     const facts=actual.sections.facts+'\n\n'+learnerAddition[locale];
     await draftField('sections.facts').fill(facts);
     await go('calendar');
@@ -497,6 +493,53 @@ async function run({width,height,locale,full}) {
     row.prefilledExample.learnerEditPreserved=true;
     await shot('example-edited-after-reload');
     return {view,draft:updated};
+  }
+  async function verifyExampleNormRevision(view,draft) {
+    const sourceId='reception-law59999';
+    const replacementUnit='law59999-u60';
+    const [original]=view.coreSteps.values.citations;
+    assert.deepEqual(view.coreSteps.values.citations.map(citation=>[citation.sourceId,citation.unitIds]),[
+      [sourceId,['law59999-u52']],
+    ]);
+    const act=root.locator(`[data-core-citation="${sourceId}"]`);
+    const chosen=act.locator('[data-core-passage]');
+    const originalPassage=act.locator(`[data-core-passage="${original.id}"]`);
+    const readerContent=root.locator('.rx-source-embedded .rx-source-reader-content:not([inert])');
+    const save=root.locator('[data-step="materials"][data-action="core-step"]');
+    await go('documents');
+    await attachLegal({sourceId,unitIds:[replacementUnit]},false);
+    assert.equal(await chosen.count(),2);
+    assert.equal(await originalPassage.count(),1);
+    await act.scrollIntoViewIfNeeded();
+    await shot('example-two-norms');
+    view=await operation('tutorial-step',save);
+    assert.equal(currentStep(view)?.id,'draft');
+    assert.equal(view.coreSteps.values.citations.length,2);
+    assert.ok(view.coreSteps.values.citations.some(citation=>citation.id===original.id&&citation.unitIds.includes(original.unitIds[0])));
+    const replacement=view.coreSteps.values.citations.find(citation=>citation.unitIds.includes(replacementUnit));
+    assert.equal(replacement?.sourceId,sourceId);
+    await go('decision');
+    assert.deepEqual(await readDraft(),draft);
+    await go('documents');
+    await originalPassage.locator('[data-action="remove-core-citation"]').click();
+    const replacementPassage=act.locator(`[data-core-passage="${replacement.id}"]`);
+    await replacementPassage.waitFor();
+    assert.equal(await originalPassage.count(),0);
+    assert.equal(await chosen.count(),1);
+    assert.equal(await readerContent.isVisible(),false,'Removing a provision must leave the full-text reader closed');
+    view=await reloadCase(view,'documents');
+    await replacementPassage.waitFor();
+    assert.equal(await originalPassage.count(),0,'The locally removed provision must stay removed on resume');
+    assert.equal(await chosen.count(),1);
+    await replacementPassage.scrollIntoViewIfNeeded();
+    await shot('example-one-norm-after-reload');
+    view=await operation('tutorial-step',save);
+    assert.equal(currentStep(view)?.id,'draft');
+    assert.deepEqual(view.coreSteps.values.citations,[replacement]);
+    await go('decision');
+    assert.deepEqual(await readDraft(),draft);
+    row.normRevision={sourceId,removedUnit:original.unitIds[0],retainedUnit:replacementUnit};
+    return {view,draft,removed:original};
   }
   async function verifyEmptyDraft() {
     assert.deepEqual(await readDraft(),{subject:'',sections:Object.fromEntries(draftSectionIds.map(key=>[key,'']))});
@@ -934,11 +977,14 @@ async function run({width,height,locale,full}) {
     else await inspectHint('draft','draft-start');
     const answer=view.guidance.decision.correspondence;
     let expected;
+    let removedCitation;
     const writeSubject=root.locator('[data-response-field="subject"]');
     if(stories){
       const prefill=await verifyExamplePrefill(view);
-      view=prefill.view;
-      expected=prefill.draft;
+      const revised=await verifyExampleNormRevision(prefill.view,prefill.draft);
+      view=revised.view;
+      expected=revised.draft;
+      removedCitation=revised.removed;
     }else{
       await writeSubject.fill(answer.subject);
       expected=answer;
@@ -959,7 +1005,12 @@ async function run({width,height,locale,full}) {
       await addFactCitation(caseSource);
     }
     await checkDocumentKind(answer.kind,view.case.citizen.name,{leavePreview:stories});
-    if(stories)for(const citation of view.coreSteps.values.citations)await verifyLinkedProvision(citation);
+    if(stories){
+      for(const citation of view.coreSteps.values.citations)await verifyLinkedProvision(citation);
+      const removedExcerpt=root.locator('[data-correspondence-preview] li').filter({has:page.getByText(removedCitation.quote,{exact:true})});
+      assert.equal(await removedExcerpt.count(),0);
+    }
+    const expectedLegal=stories?view.coreSteps.values.citations:null;
     await inspectHint('draftSubmit','draft-filled');
     if(stories)await root.getByRole('button',{name:exampleConfirm[locale],exact:true}).waitFor();
     view=await operation('tutorial-step',root.locator('[data-tour-target="draft-submit"]'));
@@ -967,6 +1018,8 @@ async function run({width,height,locale,full}) {
     assert.equal(view.decision.correspondence.subject,expected.subject);
     assert.deepEqual(view.decision.correspondence.sections,expected.sections);
     if(stories){
+      assert.deepEqual(view.decision.correspondence.citations.filter(citation=>citation.kind==='legal'),expectedLegal);
+      row.normRevision.submitted=true;
       await verifyNoControl(view);
       await checkMentor(view);
     }else if(full)await checkControl(view);

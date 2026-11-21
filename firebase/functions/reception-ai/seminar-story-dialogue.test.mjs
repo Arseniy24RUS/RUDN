@@ -181,6 +181,72 @@ test('the worked example offers a ready draft with the exact saved provision and
   }
 });
 
+test('the complaint accepts Articles 8(6) and 10 separately or together, and lets the learner replace a confirmed selection',async()=>{
+  const sourceId='reception-law59999';
+  const provisions=JSON.parse(readFileSync(new URL('./normative-provisions.json',import.meta.url)))[sourceId];
+  const citation=(article,id)=>{
+    const [,quote]=provisions[article].find(([unitId])=>unitId===id);
+    return {id:'core-legal-'+id,kind:'legal',section:'legalBasis',sourceId,unitIds:[id],quote};
+  };
+  const partSix=citation('8','law59999-u52');
+  const articleTen=citation('10','law59999-u60');
+  const registration=citation('8','law59999-u47');
+  for(const [selected,edited] of [
+    [[partSix],false],[[articleTen],false],[[partSix,articleTen],false],[[articleTen,partSix],true]
+  ]){
+    const {use,start}=fixture({ready:false});
+    let view=(await start(storyStage,'choose-norms')).view;
+    let sequence=0;
+    const request=body=>({sessionId:view.id,requestId:'norms-'+(++sequence),
+      ...(body.op==='document'?{}:{expectedRevision:view.revision}),...body});
+    const send=async body=>{
+      view=(await use(request(body))).view;
+    };
+    const step=(stepId,input)=>send({op:'tutorial-step',stepId,...input});
+    await send({op:'message',text:view.guidance.question.prompt,suggestionId:view.guidance.question.id});
+    await step('reception',{choiceId:'role'});
+    const model=view.guidance.decision;
+    for(const row of model.correspondence.citations.filter(row=>row.kind==='document'))
+      await send({op:'document',documentId:row.sourceId});
+    await step('materials',{citations:selected});
+    assert.equal(view.coreSteps.stepId,'calendar');
+    assert.deepEqual(view.coreSteps.values.citations,selected);
+    await step('calendar',{calendar:{deadline:model.deadline,referralDeadline:model.workbook.referralDeadline,
+      registrationTimely:model.workbook.registrationTimely}});
+    await step('route',{routing:model.workbook.routing});
+    assert.equal(view.coreSteps.stepId,'draft');
+    assert.deepEqual(view.guidance.prefilledDecision.correspondence.citations.filter(row=>row.kind==='legal'),selected);
+
+    if(edited){
+      const stale=view.guidance.prefilledDecision;
+      await step('materials',{citations:[articleTen,registration]});
+      assert.equal(view.guidance.finding.stepId,'materials');
+      assert.equal(view.coreSteps.stepId,'draft');
+      assert.deepEqual(view.coreSteps.values.citations,selected);
+      const replace=request({op:'tutorial-step',stepId:'materials',citations:[partSix]});
+      view=(await use(replace)).view;
+      assert.equal(view.coreSteps.stepId,'draft');
+      assert.equal(view.guidance.finding,undefined);
+      assert.deepEqual(view.coreSteps.receipt,{requestId:replace.requestId,stepId:'materials'});
+      assert.deepEqual((await use(replace)).view,view);
+      assert.deepEqual(view.coreSteps.values.citations,[partSix]);
+      await step('draft',{decision:stale});
+      assert.equal(view.status,'active');
+      assert.equal(view.guidance.finding.stepId,'draft');
+      assert.deepEqual(view.guidance.prefilledDecision.correspondence.citations.filter(row=>row.kind==='legal'),[partSix]);
+    }
+    const draft=view.guidance.prefilledDecision;
+    if(edited){
+      draft.correspondence.subject='Мой заголовок ответа по жалобе';
+      draft.correspondence.citations.push({...articleTen,id:'optional-grounds'});
+    }
+    await step('draft',{decision:draft});
+    assert.equal(view.status,'complete',view.guidance?.finding?.explanation);
+    assert.equal(view.seminarProgress.exampleCompleted,true);
+    assert.deepEqual(view.decision.correspondence,draft.correspondence);
+  }
+});
+
 test('new independent work opens the projected dossier with no tutorial question or route hint',async()=>{
   const {use,start,store}=fixture();
   const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
@@ -226,14 +292,21 @@ test('current mentor practice accepts an incomplete answer and saves only a veri
   await assert.rejects(step('draft',{decision:{}}),{code:'tutorial_step_locked'});
   view=(await step('reception',{choiceId:'role'})).view;
   const model=structuredClone(view.guidance.decision);
-  const citations=requiredSeminarExamples((await store.get('sessions/'+view.id)).caseData[0]);
-  view=(await step('materials',{citations})).view;
+  const originalCitations=requiredSeminarExamples((await store.get('sessions/'+view.id)).caseData[0]);
+  view=(await step('materials',{citations:originalCitations})).view;
   view=(await step('calendar',{calendar:{deadline:model.deadline,referralDeadline:model.workbook.referralDeadline,
     registrationTimely:model.workbook.registrationTimely}})).view;
   view=(await step('route',{routing:model.workbook.routing})).view;
   assert.equal(view.guidance.steps[view.guidance.stepIndex].id,'draft');
+  const citations=originalCitations.map(row=>({...row,id:'replacement-'+row.id}));
+  view=(await step('materials',{citations})).view;
+  assert.equal(view.coreSteps.stepId,'draft');
+  assert.equal(view.coreSteps.receipt.stepId,'materials');
+  assert.deepEqual(view.coreSteps.values.citations,citations);
   const decision={...model,correspondence:{...model.correspondence,subject:'',citations,orders:[],
     sections:{facts:'Заявитель сообщил о рассылке.',legalBasis:'',resolution:'',nextSteps:''}}};
+  await assert.rejects(step('draft',{decision:{...decision,correspondence:{...decision.correspondence,citations:originalCitations}}}),
+    {code:'core_citation_required'});
   const body=messages(view,{op:'tutorial-step',stepId:'draft',requestId:'submit-practice',decision});
   const empty=structuredClone(decision);
   empty.correspondence.sections.facts=' ';

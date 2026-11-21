@@ -1072,7 +1072,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           const decision=validateDecision(raw,c,state.openedDocumentIds,{decisionVersion:DECISION_VERSION,state,locale:s.locale,
             fixedKind:fixedKindFor(s,profile),initialOnly:initialOnlyFor(s)});
           if(workbook)decision.workbook=workbook;
-          if(s.coreStepsVersion)assertCoreDecision(state,decision);
+          if(s.coreStepsVersion)assertCoreDecision(state,decision,{rejectUnconfirmedCoreCitations:practice});
           const sections=decision.correspondence.sections;
           if(practice&&!Object.values(sections).some(Boolean))fail('invalid_correspondence');
           if(!practice&&s.coreStepsVersion===MFC_SEMINAR_VERSION&&!sections.resolution)fail('invalid_correspondence');
@@ -1239,7 +1239,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     let decision,evidence;
     try{
       decision=tutorCorrespondence(raw,c,state,language,session,profile);
-      if(coreStepsVersion)assertCoreDecision(state,decision);
+      if(coreStepsVersion)assertCoreDecision(state,decision,{rejectUnconfirmedCoreCitations:currentSeminarContract(session)});
       const {sections,subject,citations}=decision.correspondence;
       if(!subject||Object.values(sections).some(text=>!text))return {finding:'emptyDraft',decision};
       if(!fixedKindFor(session,profile)&&!profile.acceptedKinds.includes(decision.correspondence.kind))return {finding:'kind',decision};
@@ -1285,11 +1285,15 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     const state=s.caseStates[s.caseIndex];
     if(isTutorial(s)){
       const c=s.caseData[s.caseIndex], profile=correspondenceProfiles.private(c,s.locale);
-      if(guideFor(s,c,profile).steps[state.tutorialStepIndex||0]?.id!==body.stepId)fail('tutorial_step_locked',409);
-    }else{
-      const steps=publicCoreSteps(state);
-      if(steps.stepId!==body.stepId&&!steps.completed.includes(body.stepId))fail('core_step_locked',409);
+      const {steps}=guideFor(s,c,profile), index=state.tutorialStepIndex||0;
+      if(steps[index]?.id===body.stepId)return true;
+      if(body.stepId==='materials'&&state.coreStepsValues?.citations?.length&&
+        steps.slice(0,index).some(step=>step.id==='materials'))return false;
+      fail('tutorial_step_locked',409);
     }
+    const steps=publicCoreSteps(state);
+    if(steps.stepId!==body.stepId&&!steps.completed.includes(body.stepId))fail('core_step_locked',409);
+    return false;
   }
 
   async function coreStep(body,identity,loaded) {
@@ -1306,9 +1310,11 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(session.lease?.until>clock())fail('busy',409);
     assertCoreStepAllowed(session,body);
     const c=session.caseData[session.caseIndex],state=session.caseStates[session.caseIndex];
-    const inspected=await inspectCoreStep(body,c,state,session.locale,{resolveLegalCitation,guide:isTutorial(session),...workbookOptions(session)});
+    const complaintExample=currentSeminarContract(session)&&session.journeyStage==='example'&&c.id===SEMINAR_EXAMPLE.caseId;
+    const inspected=await inspectCoreStep(body,c,state,session.locale,{resolveLegalCitation,guide:isTutorial(session),
+      complaintExample,...workbookOptions(session)});
     return response(await mutate(body,identity,s=>{
-      assertCoreStepAllowed(s,body);
+      const advancesTutorial=assertCoreStepAllowed(s,body);
       const current=s.caseStates[s.caseIndex];
       if(inspected.finding){
         current.tutorialFinding={stepId:body.stepId,explanation:mentorFinding(inspected.finding,s.locale,calendarVersionFor(s))};
@@ -1317,7 +1323,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         saveCoreStep(current,body,inspected);
         if(isTutorial(s)){
           current.tutorialFinding=null;
-          current.tutorialStepIndex=(current.tutorialStepIndex||0)+1;
+          if(advancesTutorial)current.tutorialStepIndex=(current.tutorialStepIndex||0)+1;
         }
       }
     }));

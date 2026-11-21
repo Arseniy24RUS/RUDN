@@ -41,7 +41,7 @@ const relevantUnits = {
   'budget-published': {'reception-info8':['info8-u181']},
   'complaint-access-materials': {'reception-law59999':['law59999-u33']},
   'complaint-officer-not-organ': {'reception-law59999':['law59999-u52','law59999-u53']},
-  'complaint-routing': {'reception-law59999':['law59999-u52','law59999-u53']},
+  'complaint-routing': {'reception-law59999':['law59999-u52','law59999-u53','law59999-u59','law59999-u60','law59999-u62']},
   'complaint-wrong-procedure': {'reception-law103023':['law103023-u224','law103023-u234']},
   'court-cancel': {'reception-law59999':['law59999-u69']},
   'driver-planned-extension': {'reception-driver160':['driver160-u35','driver160-u36']},

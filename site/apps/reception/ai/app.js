@@ -113,7 +113,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   let seminarProgress={}, mentorDraft='', examplePreviewed=false, controlSampleOpened=false, sampleComparison=false;
   let chatDialog='citizen', mentorReturnPage='reception', mentorWelcomeSeen=false;
   let mentorChatScroll={top:0,bottom:true};
-  let controlMaterialSeen='', controlMissing=false, coreEdit='', choosingCase=false;
+  let controlMaterialSeen='', controlMissing=false, coreEdit='', coreCitationsEdited=false, choosingCase=false;
   const legacySessionIds=new Map();
   let archiveEntry=null;
   const hasCore = () => isCoreJourney(view);
@@ -127,7 +127,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   const registrationWritable = () => active()&&registrationPractice()&&!view.case.workbook.registrationPractice&&!busy&&!pending&&!paused;
   const coreCurrent = () => coreStepId(view);
   const replyOnly = () => view?.case?.correspondence?.initialOnly===true;
-  const coreIsEditable = id => view?.journeyStage==='independent'&&view.coreSteps?.completed?.includes(id);
+  const coreIsEditable = id => view?.coreSteps?.completed?.includes(id)&&(id==='materials'||view.journeyStage==='independent');
+  const acceptsTwoCoreCitations = () => view?.seminarStoryVersion===SEMINAR_STORY_VERSION&&view.journeyStage==='example'&&view.case.id==='complaint-routing';
   const coreInView = () => coreEdit || coreCurrent();
   const cl = key => coreLabel(locale,key,mfcJourney());
   const tutorial = () => isLesson(view?.journeyStage);
@@ -179,6 +180,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     controlSampleOpened=saved.controlSampleOpened===true;
     controlMaterialSeen=typeof saved.controlMaterialSeen==='string'?saved.controlMaterialSeen:'';
     coreEdit=CORE_ACTIONS.includes(saved.coreEdit)?saved.coreEdit:'';
+    coreCitationsEdited=saved.coreCitationsEdited===true;
     choosingCase=seminar&&saved.choosingCase===true;
     pending=saved.pending&&mutationOps.includes(saved.pending.op)&&typeof saved.pending.requestId==='string'?saved.pending:null;
     calendarState=saved.calendarState&&typeof saved.calendarState==='object'?saved.calendarState:{};
@@ -207,10 +209,20 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       if(hasCore()&&coreInView()==='materials'){
         const acts=view.case.normativeActs||[],index=acts.findIndex(act=>act.id===reference.docId);
         if(index<0)return false;
-        const citation={id:`core-legal-${index+1}`,section:'legalBasis',kind:'legal',sourceId:reference.docId,unitIds:reference.unitIds,quote:reference.text.trim()};
+        const current=coreCitationsFor(reference.docId);
+        const alreadySelected=current.find(item=>sameCoreReference(reference,item));
+        if(!alreadySelected&&acceptsTwoCoreCitations()&&current.length>=2){
+          reader.close();notice=cl('citationLimit');render();return;
+        }
+        const baseId=`core-legal-${index+1}`;
+        const id=alreadySelected?.id||(acceptsTwoCoreCitations()&&current.some(item=>item.id===baseId)?baseId+'-2':baseId);
+        const citation={id,section:'legalBasis',kind:'legal',sourceId:reference.docId,unitIds:reference.unitIds,quote:reference.text.trim()};
         if(!citation.quote||citation.quote.length>4000||!citation.unitIds?.length)return false;
-        installCoreCitations([citation]);
-        selectedReferences=[reference,...selectedReferences.filter(item=>item.docId!==reference.docId)].slice(0,20);
+        if(!alreadySelected){
+          installCoreCitations([citation]);
+          if(coreIsEditable('materials'))coreCitationsEdited=true;
+        }
+        selectedReferences=[reference,...selectedReferences.filter(item=>acceptsTwoCoreCitations()?item.id!==reference.id:item.docId!==reference.docId)].slice(0,20);
         reader.close();notice=cl('sourceSaved');persist();render();
         [...root.querySelectorAll('[data-core-citation]')].find(node=>node.dataset.coreCitation===reference.docId)?.scrollIntoView({block:'nearest',behavior:'instant'});
         return;
@@ -253,7 +265,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     storageOkay=drafts.save({version:VERSION,owner,seminarStoryVersion:view?.seminarStoryVersion||initial?.seminarStoryVersion||seminarStoryVersion,sessionId:view?.id||initial?.sessionId||'',caseId:view?.case?.id||savedCaseId,
       caseTitle:view?.case?.title||initial?.caseTitle||'',status:view?.status||initial?.status||'',
       mode:view?.mode||mode,locale,draftMessage,decisionDraft,followupDraft,controlDraft,executionActionDraft,controlWorkspaceUI,controlRecipientPicker,responsePreview,citationSelections,detailOpen:[...detailOpen],tab,selectedDoc,pending,pendingAt,mobilePane,chatScroll,
-      page,calendarState,calendarVersion:calendarDraftVersion,registrationReviewOffered,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,chatDialog,mentorReturnPage,mentorWelcomeSeen,mentorChatScroll,exampleDraftSeed,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,choosingCase});
+      page,calendarState,calendarVersion:calendarDraftVersion,registrationReviewOffered,routingTerritory:mfcJourney()?routingTerritory:undefined,selectedReferences,deferredDocuments:[...deferredDocuments],readMessageIds:[...readMessageIds],pageScroll,trainingLevel,trainingCaseId,caseSearch,mentorDraft,chatDialog,mentorReturnPage,mentorWelcomeSeen,mentorChatScroll,exampleDraftSeed,examplePreviewed,controlSampleOpened,controlMaterialSeen,coreEdit,coreCitationsEdited,choosingCase});
     return storageOkay;
   }
   function incomingMessages() {
@@ -275,10 +287,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(page==='decision')tab='decision';else if(page==='documents'&&tab==='decision')tab='documents';
     markChatRead();persist();render();
   }
-  function installCoreCitations(citations) {
+  function installCoreCitations(citations,{replaceAll=false}={}) {
     const draft=restoreCorrespondence(decisionDraft.correspondence);
     const replaced=new Set(citations.map(citation=>citation.id));
-    draft.citations=[...draft.citations.filter(item=>!replaced.has(item.id)).slice(0,20-citations.length),...citations];
+    draft.citations=[...draft.citations.filter(item=>!replaced.has(item.id)&&(!replaceAll||!item.id.startsWith('core-legal-'))).slice(0,20-citations.length),...citations];
     decisionDraft.correspondence=draft;
     responsePreview=false;confirmation=false;
   }
@@ -302,7 +314,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function clearSessionDraft() {
     exampleDraftSeed=null;
-    coreEdit='';choosingCase=false;resetMentorChat();examplePreviewed=false;controlSampleOpened=false;sampleComparison=false;controlMaterialSeen='';controlMissing=false;
+    coreEdit='';coreCitationsEdited=false;choosingCase=false;resetMentorChat();examplePreviewed=false;controlSampleOpened=false;sampleComparison=false;controlMaterialSeen='';controlMissing=false;
     responsePreview=false;controlDraft=restoreCorrespondenceControl();citationSelections={};recipientOrderId='';
     executionActionDraft=restoreControlActionDraft();controlWorkspaceUI=restoreControlWorkspaceUI();controlRecipientPicker=false;
     deferredDocuments.clear();failedOperation='';routingSearch='';routingTerritory=undefined;view=null;initial=null;pending=null;error=null;notice='';needsResume=false;draftMessage='';decisionDraft=blankDecision();followupDraft='';
@@ -445,11 +457,6 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   function leaveCoreEdit() {
     if(!coreEdit)return;
     const values=view.coreSteps?.values;
-    if(coreEdit==='materials'&&values?.citations){
-      installCoreCitations(values.citations);
-      selectedReferences=selectedReferences.filter(reference=>values.citations.some(citation=>
-        citation.sourceId===reference.docId&&citation.unitIds.join(',')===reference.unitIds.join(',')));
-    }
     if(coreEdit==='calendar'&&values?.calendar){
       const {deadline,referralDeadline,registrationTimely}=values.calendar;
       calendarState={...calendarState,selectedDates:{deadline,referral:referralDeadline},registrationTimely};
@@ -484,18 +491,32 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       return `<li>${link?`<button type="button" ${attrs} data-action="core-go" data-step="${id}">${content}</button>`:`<span ${attrs}>${content}</span>`}</li>`;
     }).join('')}</ol></nav>`;
   }
-  function coreCitationFor(id) {
-    return decisionDraft.correspondence?.citations.find(row=>row.sourceId===id&&row.id.startsWith('core-legal-'));
+  function coreCitationsFor(id) {
+    return (decisionDraft.correspondence?.citations||[]).filter(row=>row.sourceId===id&&row.id.startsWith('core-legal-'));
+  }
+  function sameCoreReference(reference,citation) {
+    return reference.docId===citation.sourceId&&reference.unitIds?.join(',')===citation.unitIds?.join(',')&&reference.text?.trim()===citation.quote;
+  }
+  function removeCoreCitation(id) {
+    const citation=decisionDraft.correspondence?.citations.find(row=>row.id===id&&row.id.startsWith('core-legal-'));
+    if(!citation)return;
+    decisionDraft.correspondence=reduceCorrespondence(decisionDraft.correspondence,{type:'source-remove',id});
+    selectedReferences=selectedReferences.filter(reference=>!sameCoreReference(reference,citation));
+    if(coreIsEditable('materials'))coreCitationsEdited=true;
+    notice='';responsePreview=false;confirmation=false;
+    persist();render();
+    [...root.querySelectorAll('[data-normative-doc]')].find(node=>node.dataset.normativeDoc===citation.sourceId)?.focus({preventScroll:true});
   }
   function coreRecordsReady() {
+    if(coreIsEditable('materials'))return true;
     const required=lessonStep(view)?.documentIds||[],opened=view.openedDocumentIds||[];
     return required.length?required.every(id=>opened.includes(id)):!(view.documents||[]).length||opened.length>0;
   }
   function corePayload(id) {
     if(id==='materials'){
       const acts=view.case.normativeActs||[];
-      const citations=acts.map(act=>coreCitationFor(act.id));
-      return citations.every(Boolean)&&coreRecordsReady()?{citations}:null;
+      const groups=acts.map(act=>coreCitationsFor(act.id));
+      return groups.every(group=>group.length)&&coreRecordsReady()?{citations:groups.flat()}:null;
     }
     if(id==='calendar'){
       const calendar=coreDatePayload(view.case.workbook,calendarState);
@@ -940,13 +961,14 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       <p class="rxa-panel-intro">${esc(filled?l('filledDraftHint'):internal?l('internalNext'):cl('draftHint'))}</p>
       <p class="rxa-draft-status">${icon('cloud')}<span data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</span></p>
       ${coreFeedback('draft')}${mentorWorkFeedbackView(view,locale)}
+      ${coreCitationsEdited?`<p class="rxa-panel-intro" role="status">${esc(cl('citationEditPending'))}</p>`:''}
       ${mentorDraft&&!filled?`<p class="rxa-panel-intro">${esc(cl('evidence'))}</p>`:''}
       <div class="rxa-actions rxt-draft-links">${button(cl('toSources'),'core-sources',{quiet:true,glyph:'sources'})}
         ${model&&!filled?button(l('compare'),'tutorial-sample',{quiet:true}):''}</div>
       ${sampleComparison?tutorialComparison():''}
       <form id="rxaDecisionForm" data-decision-form>
         ${responsePreview?correspondencePreviewView(responseOptions()):correspondenceEditorView({...responseOptions(),guidedCore:true,showOrders:!currentDocumentKind()&&!commonReply})}
-        <div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit" data-tour-target="draft-submit" ${locked?'disabled':''}>
+        <div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit" data-tour-target="draft-submit" ${locked||coreCitationsEdited?'disabled':''}>
           ${icon('decision')}${esc(l(submitLabel))}</button></div>
         ${actionStatus('decide')}
       </form>
@@ -1082,25 +1104,30 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function coreMaterials() {
     const editable=active()&&coreInView()==='materials';
-    const acts=(view.case.normativeActs||[]).map(act=>({act,citation:coreCitationFor(act.id)}));
+    const removable=editable&&!busy&&!pending&&!paused;
+    const acts=(view.case.normativeActs||[]).map(act=>({act,citations:coreCitationsFor(act.id)}));
     const formatCount=new Intl.NumberFormat(locale);
-    const selectedCount=acts.filter(({citation})=>citation).length;
+    const selectedCount=acts.filter(({citations})=>citations.length).length;
     const progress=cl('citationProgress').replace('{count}',formatCount.format(selectedCount)).replace('{total}',formatCount.format(acts.length));
     return `<div class="rxa-desk" id="rxaDesk"><h1 data-core-heading>${esc(cl('sources'))}</h1>
       <div data-source-reader-host></div><div class="rxa-documents-library">
-      ${editable?`<p class="rxa-panel-intro">${esc(cl('materialsHint'))}</p>`:''}
+      ${editable?`<p class="rxa-panel-intro">${esc(cl(acceptsTwoCoreCitations()?'materialsHintTwo':'materialsHint'))}</p>`:''}
       ${acts.length?`<p class="rxt-citation-progress" data-core-citation-progress role="status">
         <span class="rxa-sr">${esc(cl('citationProgressLabel'))}. </span>${esc(progress)}</p>`:''}
       ${coreLessonHint('materials')}${coreFeedback('materials')}
       <section class="rxa-document-group rxt-legal-list" data-core-law>
-      ${acts.map(({act,citation})=>{
-        const reference=selectedReferences.find(row=>row.docId===act.id);
-        return `<div class="rxt-legal-act ${citation?'has-citation':''}" ${citation?`data-core-citation="${esc(act.id)}"`:''}>
-          ${normativeActsView([act],{locale})}${citation?`<details class="rxt-chosen-citation"><summary>${icon('check')}${esc(cl('attached'))}
-            ${reference?`<span>${esc(text(reference.locator))}</span>`:''}</summary><blockquote lang="ru">${esc(citation.quote)}</blockquote></details>`:
-            `<p class="rxt-missing-citation" data-core-citation-missing>${esc(cl(editable?'chooseFragment':'noFragment'))}</p>`}
+      ${acts.map(({act,citations})=>`<div class="rxt-legal-act ${citations.length?'has-citation':''}" ${citations.length?`data-core-citation="${esc(act.id)}"`:''}>
+        ${normativeActsView([act],{locale})}${citations.length?citations.map(citation=>{
+          const reference=selectedReferences.find(row=>sameCoreReference(row,citation));
+          const label=cl('removePassage')+(reference?.locator?' · '+text(reference.locator):'');
+          return `<div class="rxt-chosen-citation" data-core-passage="${esc(citation.id)}">
+            <details><summary>${icon('check')}${esc(cl('attached'))}
+              ${reference?.locator?`<span>${esc(text(reference.locator))}</span>`:''}</summary><blockquote lang="ru">${esc(citation.quote)}</blockquote></details>
+            ${removable?`<button type="button" class="rxa-btn quiet rxt-remove-citation" data-action="remove-core-citation" data-id="${esc(citation.id)}"
+              aria-label="${esc(label)}" title="${esc(label)}">${icon('close')}</button>`:''}
           </div>`;
-      }).join('')}
+        }).join(''):`<p class="rxt-missing-citation" data-core-citation-missing>${esc(cl(editable?'chooseFragment':'noFragment'))}</p>`}
+        </div>`).join('')}
       </section>
       ${editable&&!coreRecordsReady()?`<div class="rxt-core-footer">
         ${button(cl('read'),'core-records',{quiet:true,glyph:'docs',extra:'data-core-records-jump'})}</div>`:''}
@@ -1323,7 +1350,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(next.journeyStage!=='example'||next.status!=='active'||!supplied||!draft)return;
     // Keep deliberate edits (including erased fields) across visits and language changes.
     const language=next.locale;
-    if(exampleDraftSeed?.locale===language)return;
+
     const sample=restoreCorrespondence(supplied);
     if(exampleDraftSeed?draft.subject===exampleDraftSeed.subject:!draft.subject)draft.subject=sample.subject;
     for(const key of Object.keys(sample.sections)){
@@ -1331,6 +1358,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     if(!exampleDraftSeed){
       for(const citation of sample.citations){
+        if(citation.id.startsWith('core-legal-'))continue;
         const existing=draft.citations.find(item=>item.id===citation.id||
           item.section===citation.section&&item.kind===citation.kind&&item.sourceId===citation.sourceId&&item.quote===citation.quote);
         if(!existing&&draft.citations.length<20)draft.citations.push(citation);
@@ -1338,10 +1366,12 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     }
     exampleDraftSeed={locale:language,subject:sample.subject,sections:sample.sections};
   }
-  function syncCoreValues(next, {applySaved=false,applyCalendar=false}={}) {
+  function syncCoreValues(next, {applySaved=false,applyCalendar=false,applyCitations=false}={}) {
     if(!hasCore())return;
     const values=next.coreSteps?.values;
-    if(values?.citations?.length&&(applySaved||values.citations.some(item=>!decisionDraft.correspondence.citations.some(row=>row.id===item.id))))installCoreCitations(values.citations);
+    if(!coreCitationsEdited&&values?.citations?.length&&(applySaved||applyCitations||values.citations.some(item=>!decisionDraft.correspondence.citations.some(row=>row.id===item.id)))){
+      installCoreCitations(values.citations,{replaceAll:true});
+    }
     if(values?.calendar&&(applySaved||applyCalendar)){
       decisionDraft.deadline=values.calendar.deadline;
       Object.assign(decisionDraft.workbook,{
@@ -1363,7 +1393,9 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     enteringMessages=new Set(['start','message','next'].includes(body.op)?(next.messages||[]).filter(m=>!previousIds.has(m.id)&&!(m.id===`${body.requestId}-user`&&lastPendingRenderedId===`pending-${body.requestId}`)).map(m=>m.id):[]);
     const stepChanged=body.op==='tutorial-step'&&lessonStep(next)?.id!==lessonStep(view)?.id;
     const previousCore=coreCurrent();
-    const coreAcknowledged=body.op==='core-step'&&next.coreSteps?.receipt?.requestId===body.requestId;
+    const coreReceipt=next.coreSteps?.receipt?.requestId===body.requestId&&Boolean(body.requestId);
+    const materialsSaved=coreReceipt&&body.stepId==='materials'&&next.guidance?.finding?.stepId!=='materials';
+    const coreAcknowledged=body.op==='core-step'&&coreReceipt||body.op==='tutorial-step'&&materialsSaved&&coreEdit==='materials';
     const newlyStarted=body.op==='start'&&!sameCase;
     if(stepChanged){
       controlWorkspaceUI=restoreControlWorkspaceUI();
@@ -1376,7 +1408,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     view = next; mode = next.mode || mode; confirmation = false;
     if(body.op==='start'||body.op==='recover')choosingCase=false;
     if(body.op==='start')notice='';
-    if(!sameCase){coreEdit='';registrationReviewOffered=false;}
+    if(!sameCase){coreEdit='';coreCitationsEdited=false;registrationReviewOffered=false;}
     const currentJourney=!seminarStoryVersion||next.seminarStoryVersion===seminarStoryVersion;
     if(next.seminarProgress&&currentJourney)seminarProgress=next.seminarProgress;
     if(next.status==='complete'&&isLesson(next.journeyStage)&&currentJourney){
@@ -1440,7 +1472,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         if(pending?.stepId==='calendar'){pending=null;pendingAt=null;}
       }
       calendarDraftVersion=calendarVersion;
-      syncCoreValues(next,{applySaved:!sameCase,applyCalendar:upgraded});
+      if(materialsSaved)coreCitationsEdited=false;
+      syncCoreValues(next,{applySaved:!sameCase,applyCalendar:upgraded,applyCitations:materialsSaved});
       const practiceAnswer=next.case.workbook.registrationPractice?.answer;
       calendarState={...calendarState,selectedDates:{referral:decisionDraft.workbook.referralDeadline,deadline:decisionDraft.deadline},
         registrationTimely:practiceAnswer??(hasCore()&&active()?calendarState.registrationTimely??null:decisionDraft.workbook.registrationTimely)};
@@ -1478,7 +1511,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
   }
   function wasCommitted(next, body) {
     if(body.op==='registration-check')return next.case?.workbook?.registrationPractice?.answer===body.registrationTimely;
-    if(body.op==='core-step')return next.coreSteps?.receipt?.requestId===body.requestId;
+    if(body.op==='core-step'||body.op==='tutorial-step'&&body.stepId==='materials'&&next.coreStepsVersion)
+      return next.coreSteps?.receipt?.requestId===body.requestId;
     if(body.op==='decide')return Boolean(next.decision)||next.caseIndex!==view?.caseIndex&&next.status!=='active';
     if(body.op==='followup')return Boolean(next.control)||Boolean(next.followupChoiceId)||next.controlValidation?.requestId===body.requestId||next.status==='review'||next.status==='complete';
     if(body.op==='control-action')return next.controlActionReceipt?.requestId===body.requestId;
@@ -1841,7 +1875,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     if(event.target.matches('[data-decision-form]')){
       event.preventDefault();if(busy||pending||paused||!active())return;
       if(hasCore()){
-        if(coreInView()!=='draft')return;
+        if(coreInView()!=='draft'||coreCitationsEdited)return;
         const draft=decisionDraft.correspondence;
         const missing=[['subject',draft.subject],...Object.entries(draft.sections).map(([id,value])=>['sections.'+id,value])]
           .find(([,value])=>!value.trim());
@@ -1969,12 +2003,14 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         registrationTimely:calendarState.registrationTimely});
       return;
     }
+    if(action==='remove-core-citation'&&hasCore()&&active()&&!busy&&!pending&&!paused&&page==='documents'&&coreInView()==='materials'){
+      removeCoreCitation(target.dataset.id);return;
+    }
     if(action==='core-step'&&hasCore()&&active()){
       const stepId=target.dataset.step;
       if(busy||pending||paused||stepId!==coreInView()||page!==CORE_PAGES[stepId])return;
       const payload=corePayload(stepId);if(!payload)return;
-      if(tutorial())await chooseTutorialStep(payload);
-      else await perform({op:'core-step',sessionId:view.id,stepId,requestId:newRequestId(),expectedRevision:view.revision,...payload});
+      await perform({op:tutorial()?'tutorial-step':'core-step',sessionId:view.id,stepId,requestId:newRequestId(),expectedRevision:view.revision,...payload});
       return;
     }
     if(action==='page'){
