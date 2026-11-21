@@ -181,7 +181,7 @@ try{
     if(!guest)await page.evaluate(()=>{window.qaHoldSave=true;});
     const chapter=async()=>{const entry=page.locator('[data-enter-chapter]:visible');if(await entry.count())await entry.click();};
     for(let turn=1;turn<=20;turn++){
-     await chapter();await page.locator('#action-cards .defer-action').click();await page.locator('#confirm-action').click();await page.locator('#resolution-dialog[open]').waitFor();await page.locator('#continue-turn').click();
+     await chapter();await page.locator('#action-cards .defer-action').click();await page.locator('#confirm-action').click();if([5,10,15].includes(turn))await page.locator('#campaign-course-dialog[open] [data-course-close]').click();
     }
     await page.locator('#end-dialog[open]').waitFor();
     const owner=guest?'guest:governor':'student:'+profile.studentKey;

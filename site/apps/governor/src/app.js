@@ -47,6 +47,7 @@
   let selectedFundingMode = null;
   let selectedPlacementId = null;
   let resolutionShown = false;
+  const copy = (ru, en, zh) => language === 'zh' ? zh : language === 'en' ? en : ru;
   let audioContext = null;
   let savedState = loadSavedState();
   let metaState = loadMetaState();
@@ -109,8 +110,9 @@
   }
 
   function formatBudget(value, compact) {
-    const number = formatNumber(value, 1);
-    if (language === 'ru') return compact ? `₽ ${number}` : `₽ ${number} ${t('billion')}`;
+    const amount = Number(value) || 0;
+    const digits = Math.abs(amount * 10 - Math.round(amount * 10)) > 0.00001 ? 2 : 1;
+    const number = formatNumber(amount, digits);
     return compact ? `₽ ${number}` : `${number} ${t('billion')}`;
   }
 
@@ -281,7 +283,7 @@
       return true;
     }catch(e){
       if(e.code==='other-tab'){blockForOtherTab();return false;}
-      if(showFeedback||!saveFailureWarned)toast(t('saveFailed'),globalThis.GovernorGame.I18n.choose(language,()=>('Партия в памяти. Скачайте файл сохранения через кнопку «Сохранение» перед закрытием.'),()=>('The game is in memory. Download a save file before closing.')),'warning');
+      if(showFeedback||!saveFailureWarned)toast(t('saveFailed'),copy('Партия в памяти. Откройте настройки и сохраните копию до выхода.','Your game is in memory. Open Settings and save a copy before leaving.','游戏暂存在内存中。请在离开前打开设置并保存副本。'),'warning');
       saveFailureWarned=true;return false;
     }
   }
@@ -371,14 +373,12 @@
   }
 
   function mountConsolidationUI(){
-    Object.assign(DATA.ui.ru,{saveTitle:'Сохранение и перенос',saveExport:'Скачать сохранение',saveImport:'Выбрать файл',saveConfirm:'Заменить и продолжить',saveBackup:'Выбрать резервную копию',saveClose:'Закрыть',saveNumbers:'Клавиши 1–3 только внутри списка решений',saveAccess:'Сохранение',conflictTitle:'Эта партия открыта в другой вкладке',conflictText:'Закройте другую вкладку и обновите эту. Текущее состояние не перезаписывается.',reload:'Обновить вкладку',modelStage:'Модель 1.0',shortcutHint:'Tab – перейти к кнопке; Enter – нажать кнопку',forecastRange:'Возможный прямой эффект',reward:'Освоение механики'});
-    Object.assign(DATA.ui.en,{saveTitle:'Save and transfer',saveExport:'Download save',saveImport:'Choose file',saveConfirm:'Replace and continue',saveBackup:'Choose backup',saveClose:'Close',saveNumbers:'Keys 1–3 only inside the decision list',saveAccess:'Save',conflictTitle:'This game is open in another tab',conflictText:'Close the other tab and refresh this one. The saved game has not been overwritten.',reload:'Refresh tab',modelStage:'Model 1.0',shortcutHint:'Tab moves to a button; Enter activates it',forecastRange:'Possible direct effect',reward:'Learning progress'});
+    Object.assign(DATA.ui.ru,{saveTitle:'Перенести или восстановить партию',saveExport:'Скачать сохранение',saveImport:'Выбрать файл',saveConfirm:'Заменить и продолжить',saveBackup:'Выбрать резервную копию',saveClose:'Закрыть',saveNumbers:'Клавиши 1–3 только внутри списка решений',saveAccess:'Сохранение',conflictTitle:'Эта партия открыта в другой вкладке',conflictText:'Закройте другую вкладку и обновите эту. Текущее состояние не перезаписывается.',reload:'Обновить вкладку',modelStage:'Модель 1.0',shortcutHint:'Tab – перейти к кнопке; Enter – нажать кнопку',forecastRange:'Возможный прямой эффект',reward:'Освоение механики'});
+    Object.assign(DATA.ui.en,{saveTitle:'Transfer or restore a game',saveExport:'Download save',saveImport:'Choose file',saveConfirm:'Replace and continue',saveBackup:'Choose backup',saveClose:'Close',saveNumbers:'Keys 1–3 only inside the decision list',saveAccess:'Save',conflictTitle:'This game is open in another tab',conflictText:'Close the other tab and refresh this one. The saved game has not been overwritten.',reload:'Refresh tab',modelStage:'Model 1.0',shortcutHint:'Tab moves to a button; Enter activates it',forecastRange:'Possible direct effect',reward:'Learning progress'});
     document.body.insertAdjacentHTML('beforeend',`<dialog id="save-dialog" class="save-dialog" aria-labelledby="save-title"><h2 id="save-title" data-ui="saveTitle"></h2><p id="save-current"></p><p id="save-status" role="status"></p><div class="save-actions"><button class="primary-button" id="save-export" type="button" data-ui="saveExport"></button><button class="secondary-button" id="save-import" type="button" data-ui="saveImport"></button><button class="secondary-button" id="save-backup" type="button" data-ui="saveBackup"></button></div><p id="save-backup-info"></p><button type="button" class="secondary-button" id="save-legacy" hidden>Открыть сохранение 0.8</button><input id="save-file" type="file" accept=".json,application/json" hidden><button class="primary-button" id="save-import-confirm" type="button" data-ui="saveConfirm" hidden></button><label><input type="checkbox" id="number-shortcuts"><span data-ui="saveNumbers"></span></label><div class="save-actions"><button class="secondary-button" id="save-close" type="button" data-ui="saveClose"></button></div></dialog>
      <dialog id="tab-conflict" class="save-dialog" aria-labelledby="conflict-title"><h2 id="conflict-title" data-ui="conflictTitle"></h2><p data-ui="conflictText"></p><div class="save-actions"><button id="conflict-export" type="button" class="secondary-button" data-ui="saveExport"></button><button id="conflict-refresh" type="button" class="primary-button" data-ui="reload"></button></div></dialog>`);
-    $('#start-form').insertAdjacentHTML('beforeend','<button type="button" class="save-access" id="start-save" data-ui="saveAccess"></button>');
-    // Saving belongs to the toolbar, never over a decision card or its text.
-    $('#game-shell .profile-box').insertAdjacentHTML('afterbegin','<button id="floating-save" class="save-access" type="button" data-ui="saveAccess"></button>');
-    $('#start-save').addEventListener('click',openSaveManager);$('#floating-save').addEventListener('click',openSaveManager);
+    $('#start-form').insertAdjacentHTML('beforeend','<button type="button" class="save-access" id="start-save" data-ui="saveTitle"></button>');
+    $('#start-save').addEventListener('click',openSaveManager);
     $('#save-export').addEventListener('click',downloadSave);$('#save-import').addEventListener('click',()=>$('#save-file').click());
     $('#save-file').addEventListener('change',selectSaveFile);$('#save-import-confirm').addEventListener('click',installSave);
     $('#save-close').addEventListener('click',()=>$('#save-dialog').close());
@@ -406,7 +406,6 @@
       'result-star-icon': ['quest', 20],
       'continue-arrow': ['arrow', 18],
       'play-again-icon': ['refresh', 18],
-      'end-download-icon': ['download', 20],
       'mobile-menu-button': ['menu', 21]
     };
     Object.entries(staticIcons).forEach(([id, [name, size]]) => {
@@ -516,8 +515,14 @@
     updateChallengePreview();
   }
 
-  function toggleLanguage() {
-    language = window.GovernorGame.I18n.ready()?({ru:'en',en:'zh',zh:'ru'}[language]||'ru'):(language==='ru'?'en':'ru');
+  async function toggleLanguage() {
+    const i18n=window.GovernorGame.I18n;
+    const next=i18n.ready()?({ru:'en',en:'zh',zh:'ru'}[language]||'ru'):(language==='ru'?'en':'ru');
+    if(next==='zh'){
+      try{await i18n.ensureCatalog();}
+      catch{toast('Chinese could not load', 'Reconnect and try again.', 'warning');return;}
+    }
+    language=next;
     savePrefs({ language });
     applyTranslations();
   }
@@ -709,7 +714,7 @@
         if (record) showResolution(record);
       } else if (state.completed) {
         showEndScreen();
-      } else if (!(!Agenda.persistent(state) && Agenda.mode(state)==='agenda' && state.turnIndex===5 && state.activeView==='agenda')) { Presentation.maybeChapter(); }
+      } else if (Agenda.mode(state)==='guided' && !state.campaignStrategy) Presentation.maybeChapter();
     });
   }
 
@@ -727,10 +732,16 @@
   function chooseAgendaTopic(id) {
     if (!writerReady || blockedByOtherTab || !state || state.awaitingContinue || state.completed) return;
     try {
-      Engine.chooseAgenda(state,id);selectedActionId=null;selectedFundingMode=null;selectedPlacementId=null;
+      Engine.chooseAgenda(state,id);clearNotice();selectedActionId=null;selectedFundingMode=null;selectedPlacementId=null;
+      if (id === Agenda.OPERATIONS.id) {
+        selectedActionId=Agenda.OPERATIONS.actions[0].id;
+        selectedFundingMode='treasury';
+        commitSelectedAction();
+        return;
+      }
       saveState(false);renderGame();
       $('#mission-title').setAttribute('tabindex','-1');$('#mission-title').focus({preventScroll:true});
-      if(innerWidth<=900)$('#mission-panel').scrollIntoView({block:'start',behavior:'auto'});
+
     } catch(e) { toast(globalThis.GovernorGame.I18n.choose(language,()=>('Вопрос недоступен'),()=>('Issue unavailable')),financialReason(e.message,language)||e.message,'warning'); }
   }
 
@@ -756,7 +767,7 @@
     if (!state) return;
     const content = StoriesUI.briefHtml(state, language);
     let mobile = $('#stories-mobile-brief');
-    if (!mobile) { mobile=document.createElement('div');mobile.id='stories-mobile-brief';$('#resident-brief-container').after(mobile); }
+    if (!mobile) { mobile=document.createElement('div');mobile.id='stories-mobile-brief';$('#mission-context').append(mobile); }
     mobile.innerHTML=content;StoriesUI.attachBrief(mobile);
     const tip=$('.footer-tip');
     if(content){tip.innerHTML=content;tip.classList.add('story-footer-tip');StoriesUI.attachBrief(tip);}
@@ -766,7 +777,8 @@
   function renderTopbar() {
     const previous = state.history[state.history.length - 1];
     const finance = Engine.getFinanceSummary(state);
-    $('#budget-value').textContent = formatBudget(finance.treasury, true);
+    $('#treasury-shortcut .stat-copy small').textContent=copy('Казна','Treasury','财政');
+    $('#budget-value').textContent = formatBudget(finance.treasury,false);
     const balancePrefix = finance.operatingBalance > 0 ? '+' : finance.operatingBalance < 0 ? '−' : '';
     const balanceValue = formatNumber(Math.abs(finance.operatingBalance), 1);
     $('#budget-income').textContent = `${balancePrefix}${balanceValue} · ${t('reserve')} ${formatNumber(finance.reserve, 1)}`;
@@ -811,7 +823,10 @@
     const incompleteQuests = DATA.quests.filter(quest => !Engine.questStatus(state, quest).complete).length;
     $('#quest-badge').textContent = String(incompleteQuests);
     $('#badge-count').textContent = String(state.badges.length);
+    const decisionView=view==='mission'||(view==='agenda'&&Agenda.open(state)&&!state.completed);
     $('#game-shell').classList.toggle('secondary-active', view !== 'mission');
+    $('#game-shell').classList.toggle('turn-scene', decisionView);
+    $('#game-shell').classList.toggle('agenda-scene', decisionView&&view==='agenda');
   }
 
   function worldCallbacks() {
@@ -843,7 +858,7 @@
           const record=Engine.renewProgramme(state,id);
           const saved=saveState(false);renderGame();showProjectDialog(id);
           toast(globalThis.GovernorGame.I18n.choose(language,()=>('Контракт продлён на три года'),()=>('Contract renewed for three years')),
-            (globalThis.GovernorGame.I18n.choose(language,()=>('Расход сейчас: '),()=>('Charged now: ')))+formatBudget(record.fee,true)+(saved===false?(globalThis.GovernorGame.I18n.choose(language,()=>(' · Скачайте сохранение: запись на устройство не удалась.'),()=>(' · Export a save: writing to the device failed.'))) : ''),'check');
+            (globalThis.GovernorGame.I18n.choose(language,()=>('Расход сейчас: '),()=>('Charged now: ')))+formatBudget(record.fee,false)+(saved===false?(globalThis.GovernorGame.I18n.choose(language,()=>(' · Скачайте сохранение: запись на устройство не удалась.'),()=>(' · Export a save: writing to the device failed.'))) : ''),'check');
         } catch(error){submitted=false;const m=$('.renew-error');if(m){m.hidden=false;m.textContent=error.message;}}
       }
     });
@@ -874,7 +889,20 @@
   }
 
   function renderMapStage() {
-    WorldUI.mount($('#main-world'),state,language,worldCallbacks());
+    const main=$('#main-world');
+    if ($('#game-shell').classList.contains('turn-scene')) {
+      let moment=$('#turn-world');
+      if (!moment) {
+        moment=document.createElement('div');moment.id='turn-world';
+        main.after(moment);
+      }
+      const options={phase:state.awaitingContinue?'decision':'year',callbacks:worldCallbacks()};
+      if (state.activeView==='mission' && !state.awaitingContinue) options.focusId=Engine.getCurrentMission(state)?.districtId;
+      if (WorldUI.mountMoment) WorldUI.mountMoment(moment,state,language,options);
+      else WorldUI.mount(moment,state,language,worldCallbacks());
+      return;
+    }
+    WorldUI.mount(main,state,language,worldCallbacks());
     const advisorContainer = $('#advisor-portraits');
     advisorContainer.innerHTML = DATA.advisors.map(advisor => {
       const trust = Number(state.advisorTrust[advisor.id] || 50);
@@ -946,7 +974,7 @@
     if (!governanceBrief) { governanceBrief = document.createElement('div'); governanceBrief.id='governance-brief-container'; $('#mission-context').append(governanceBrief); }
     governanceBrief.innerHTML = GovUI.briefing(state, language); GovUI.attach(governanceBrief);
     $('#mission-context').querySelector('summary').after($('#mission-objective'));
-    $('#mission-context').append(governanceBrief);
+    $('#mission-context').append($('#resident-brief-container'),governanceBrief);
 
     const confirm = $('#confirm-action');
     const preview = selectedActionId ? Engine.previewAction(state, selectedActionId, selectedFundingMode, selectedPlacementId) : null;
@@ -1004,11 +1032,11 @@
       const kind=WorldModel.kind({actionId:action.id,districtId:mission.districtId});
       const artSource=Art.image({...preview.project,actionId:action.id,districtId:mission.districtId},{thumb:true,phase:'planned'});
       const art = `<div class="action-art illustrated-action ${artSource.contextual?'programme-art':'direct-programme-art'}">${Art.tag(artSource)}${artSource.contextual?`<span class="programme-art-symbol" title="${globalThis.GovernorGame.I18n.choose(language,()=>('Программа без нового здания'),()=>('Programme, not a new building'))}">${icon(action.icon||mission.icon,{size:27})}</span>`:''}</div>`;
-      const contribution = preview.affordable ? preview.minimumTreasuryCost : Math.abs(Number(effective.cost) || 0);
+      const contribution = preview.plan ? preview.plan.treasuryCost + (preview.plan.firstYearOpex || 0) : Math.abs(Number(effective.cost) || 0);
       const interactionBadge = preview.interactions.length
         ? `<span class="interaction-mini ${preview.interactions.some(item => item.type === 'conflict') ? 'conflict' : 'synergy'}">${icon(preview.interactions.some(item => item.type === 'conflict') ? 'conflict' : 'link', { size: 12 })}${preview.interactions.length}</span>`
         : '';
-      const costText = hideExact ? `${icon('eye', { size: 13 })} ${esc(t('exactForecastHidden'))}` : `${icon('coins', { size: 14 })} ${globalThis.GovernorGame.I18n.choose(language,()=>('от'),()=>('from'))} ${formatBudget(contribution, true)}`;
+      const costText = hideExact ? `${icon('eye', { size: 13 })} ${esc(t('exactForecastHidden'))}` : `${icon('coins', { size: 14 })} ${fundingName(preview.plan?.id, true)} · ${formatBudget(contribution, false)}`;
       const futureText = `${icon('clock', { size: 13 })} ${esc(formatTurns(preview.project?.startsIn||0))}`;
       if(action.deferred)return `<button class="action-card defer-action ${selected?'selected':''}" type="button" role="radio" aria-checked="${selected}" data-action="${action.id}"><span>${icon('clock',{size:19})}</span><div><strong>${esc(l(action.title))}</strong><small>${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Без нового проекта и новых расходов; проблема остаётся.'),()=>('No new project or spending; the problem remains.')))}</small></div></button>`;
       return `<button class="action-card ${selected ? 'selected' : ''} ${preview.affordable ? '' : 'disabled'}" type="button" role="radio" aria-checked="${selected}" aria-disabled="${!preview.affordable}" data-action="${action.id}">
@@ -1039,19 +1067,16 @@
       return;
     }
     selectedActionId = actionId;
-    selectedFundingMode = preview.recommendedFundingMode || (preview.plan && preview.plan.id) || 'treasury';
+    selectedFundingMode = preview.plan.id;
     selectedPlacementId = preview.recommendedPlacementId || null;
     playSound('select');
     renderMissionPanel();
     CampaignUI.refresh(Boolean(selectedActionId));
     const mission = Engine.getCurrentMission(state);
     const index = mission.actions.findIndex(item => item.id === actionId);
-    const card = $(`[data-action="${CSS.escape(actionId)}"]`);
-    if (card && window.innerWidth <= 900) card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     requestAnimationFrame(() => {
-      scrollMissionToTop('smooth');
-      const panel = $('#mission-panel');
-      if (panel && window.innerWidth <= 900) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollMissionToTop();
+      $('#selected-preview .change-decision')?.focus({preventScroll:true});
     });
     $('#screen-reader-live').textContent = `${t('selected')}: ${l(mission.actions[index].title)}. ${t('fundingTitle')}: ${fundingName(selectedFundingMode)}`;
     saveState(false);
@@ -1059,6 +1084,9 @@
 
   function renderSelectedPreview() {
     const container = $('#selected-preview');
+    const editingSource=container.querySelector('.plan-options')?.open && container.dataset.action===selectedActionId;
+    const readingForecast=container.querySelector('.plan-forecast')?.open && container.dataset.action===selectedActionId;
+    container.dataset.action=selectedActionId||'';
     if (!selectedActionId) {
       container.innerHTML = `<div class="preview-placeholder"><span>${icon('coins', { size: 18 })}</span><span>${esc(t('noDecisionYet'))}</span></div>`;
       return;
@@ -1105,7 +1133,7 @@
       const selected = plan && plan.id === option.id;
       const recommendation = option.recommended ? `<b>${esc(t('fundingRecommended'))}</b>` : '';
       const stateLabel = option.available
-        ? `${formatBudget(option.treasuryCost, true)} ${globalThis.GovernorGame.I18n.choose(language,()=>('сейчас'),()=>('now'))}`
+        ? `${formatBudget(option.treasuryCost + (option.firstYearOpex || 0), false)} ${globalThis.GovernorGame.I18n.choose(language,()=>('сейчас'),()=>('now'))}`
         : financialReason(option.reasonCode,language) || (option.reasonCode==='agenda-window' ? (globalThis.GovernorGame.I18n.choose(language,()=>('Срок предложения истёк'),()=>('Offer deadline passed'))) : t('fundingUnavailable'));
       return `<button class="funding-option ${selected ? 'selected' : ''} ${option.available ? '' : 'unavailable'}" type="button" data-funding-mode="${option.id}" ${option.available ? '' : 'disabled'} aria-pressed="${selected}">
         <span class="funding-option-icon">${icon(meta.icon, { size: 18 })}</span>
@@ -1145,18 +1173,35 @@
       return `<span class="reaction-pill ${reaction.stance}"><img src="${esc(assetURL(advisor.image))}" alt=""><b>${esc(l(advisor.role))}</b><small>${esc(t(reaction.stance === 'support' ? 'advisorApproved' : reaction.stance === 'oppose' ? 'advisorOpposed' : 'advisorCautious'))}</small></span>`;
     }).join('')}</div>` : '';
 
-    container.innerHTML = `<div class="preview-content preview-content-stage3">
-      <div class="preview-summary"><span class="preview-title">${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Прямой эффект решения'),()=>('Direct policy effect')))}</span><span class="preview-effects">${effectChips}</span><button class="change-decision" type="button">${icon('arrowLeft', { size: 14 })}<span>${esc(t('changeDecision'))}</span></button></div>
+    const forecastYear=state.population.baseYear+state.turnIndex+launch;
+    const currentCost=plan.treasuryCost+(plan.firstYearOpex||0);
+    const financialParts=[
+      [copy('Из казны сейчас','Treasury now','本期财政支出'),formatBudget(currentCost,false)],
+      [copy('Содержание в год','Annual operation','每年运行费'),formatBudget(opex,false)],
+      [copy('Запуск по плану','Planned opening','预计启用'),String(forecastYear)]
+    ];
+    if(plan.debtIssue) financialParts.push([t('debtIssue'),formatBudget(plan.debtIssue,false)]);
+    if(plan.reserveUse) financialParts.push([t('reserveUse'),formatBudget(plan.reserveUse,false)]);
+    const edit=copy('Изменить условия','Change terms','更改条件');
+    const place=preview.placement?l(preview.placement.title):'';
+    const head=`<div class="plan-heading"><strong>${esc(l(preview.action.title))}</strong><button class="change-decision" type="button">${icon('arrowLeft',{size:14})} ${esc(t('changeDecision'))}</button></div>`;
+    const terms=preview.action.deferred?'':`<dl class="plan-stakes">${financialParts.map(([label,value])=>`<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>
+      <details class="plan-options" ${editingSource?'open':''}><summary>${esc(edit)} <span>${esc([fundingName(plan.id,true),place].filter(Boolean).join(' · '))}</span></summary>
+      ${placementSelector}
+      <div class="funding-selector"><div class="funding-selector-title"><span>${icon('coins',{size:17})}</span><strong>${esc(t('fundingTitle'))}</strong></div><div class="funding-options">${fundingOptions}</div></div>
+      <div class="funding-explainer"><span>${icon(fundingMeta(plan.id).icon,{size:18})}</span><p>${esc(fundingReason(plan.id))}</p></div></details>`;
+    container.innerHTML = `<div class="preview-content preview-content-stage3">${head}${terms}
+      ${preview.action.deferred?`<p class="defer-summary">${esc(copy('Новый расход из казны — 0. Уже принятые обязательства остаются.','No new treasury spending. Existing commitments continue.','本期无新增财政支出，已作出的承诺继续执行。'))}</p>`:''}
+      <details class="plan-forecast" ${readingForecast?'open':''}><summary>${esc(copy('Прогноз и последствия','Forecast and effects','预测与影响'))}</summary>
+      <div class="preview-summary"><span class="preview-title">${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Прямой эффект решения'),()=>('Direct policy effect')))}</span><span class="preview-effects">${effectChips}</span></div>
       ${hideExact ? `<div class="fog-notice">${icon('eye', { size: 16 })}<span>${esc(t('exactForecastHidden'))}</span></div>` : ''}
       <p class="forecast-scope">${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Диапазон возможного прямого эффекта, не доверительный интервал. Изменения услуг за год и кризисы рассчитываются отдельно.'),()=>('Possible direct-effect bounds, not a confidence interval. Annual service changes and crises are calculated separately.')))}</p>
       ${preview.action.deferred?'':PeopleUI.preview(preview, state, language)}
-      ${placementSelector}
-      <div class="funding-selector"><div class="funding-selector-title"><span>${icon('coins', { size: 17 })}</span><strong>${esc(t('fundingTitle'))}</strong></div><div class="funding-options">${fundingOptions}</div></div>
-      <div class="funding-explainer"><span>${icon(fundingMeta(plan.id).icon, { size: 18 })}</span><p>${esc(fundingReason(plan.id))}</p></div>
       <div class="commitment-summary">${commitmentParts.map(item => `<div class="commitment-chip"><span>${icon(item.icon, { size: 16 })}</span><small>${esc(item.label)}</small><strong>${esc(item.value)}</strong></div>`).join('')}</div>
       <div class="preview-risk-row">${risk}<div class="implementation-status ${readiness.cls}">${icon(readiness.icon, { size: 17 })}<span>${esc(readiness.text)}</span>${plan.implementationFactor < 0.99 && plan.implementationFactor > 0 ? `<small>${globalThis.GovernorGame.I18n.choose(language,()=>('Ожидаемый эффект снижен до'),()=>('Expected effect reduced to'))} ${formatNumber(plan.implementationFactor * 100, 0)}%</small>` : ''}</div></div>
       ${interactions}${reactionStrip}
       <span class="preview-future"><b>${esc(t('strategicEffect'))}:</b> ${esc(l(preview.action.future))}</span>
+      </details>
     </div>`;
 
     const changeDecision = container.querySelector('.change-decision');
@@ -1177,6 +1222,7 @@
         selectedFundingMode = button.dataset.fundingMode;
         playSound('select');
         renderMissionPanel();
+        container.querySelector(`[data-funding-mode="${CSS.escape(selectedFundingMode)}"]`)?.focus({preventScroll:true});
         $('#screen-reader-live').textContent = `${t('fundingTitle')}: ${fundingName(selectedFundingMode)}`;
         saveState(false);
       });
@@ -1188,6 +1234,7 @@
         if (updated && updated.plan && updated.plan.available) selectedFundingMode = updated.plan.id;
         playSound('select');
         renderMissionPanel();
+        container.querySelector(`[data-placement-id="${CSS.escape(selectedPlacementId)}"]`)?.focus({preventScroll:true});
         $('#screen-reader-live').textContent = `${t('location')}: ${l(updated.placement.title)}`;
         saveState(false);
       });
@@ -1226,6 +1273,7 @@
 
   function setView(view) {
     if (!state) return;
+    clearNotice();
     if (view==='mission' && Agenda.needsChoice(state)) view='agenda';
     state.activeView = view;
     if (state.awaitingContinue) {
@@ -1235,17 +1283,17 @@
     }
     saveState(false);
     renderNavigation();
+    if ($('#game-shell').classList.contains('turn-scene')) renderMapStage();
     scrollMissionToTop('auto');
     window.scrollTo({ top: 0, behavior: 'auto' });
     if (view === 'mission') {
       showMissionView();
-      if (window.innerWidth <= 900) $('#mission-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
       $('#map-stage').classList.add('hidden');
       $('#secondary-stage').classList.remove('hidden');
       renderSecondaryStage(view);
       $('#secondary-stage').scrollTop = 0;
-      if (window.innerWidth <= 900) $('#secondary-stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (view!=='agenda' && window.innerWidth <= 900) $('#secondary-stage').scrollIntoView({ behavior:'auto', block:'start' });
     }
     playSound('select');
     CampaignUI.refresh(Boolean(selectedActionId));
@@ -1261,7 +1309,7 @@
   }
 
   function renderSecondaryStage(view) {
-    $('#map-stage').classList.add('hidden');
+    $('#map-stage').classList.toggle('hidden', !$('#game-shell').classList.contains('agenda-scene'));
     $('#secondary-stage').classList.remove('hidden');
     $('#game-shell').classList.add('secondary-active');
     const stage = $('#secondary-stage');
@@ -1275,6 +1323,14 @@
       const agendaContent=stage.querySelector('.agenda-board')||stage.querySelector('.agenda-heading');
       agendaContent?.insertAdjacentHTML('afterend',CampaignUI.agendaHtml(state,language));
       CampaignUI.attachAgenda(stage);
+      const previous=state.history.at(-1);
+      if(previous&&!state.awaitingContinue){
+        const button=document.createElement('button');button.type='button';
+        button.className='agenda-year-review';button.dataset.lastYear='';
+        button.textContent=copy('Разобрать прошлый год','Review last year','回顾上一年');
+        button.onclick=()=>showResolution(previous);
+        stage.querySelector('.agenda-heading')?.after(button);
+      }
       const overview=window.GovernorGame.DeliveryDesk.snapshot(state);
       if(overview.items.length){
         const button=document.createElement('button');
@@ -1481,17 +1537,17 @@
     stage.innerHTML = `${secondaryHeader('settings', t('settingsTitle'), `${t('session')}: ${state.sessionId} · ${t('scenario')}: ${l(scenario.name)}`)}
       <section class="meta-campaign-card"><span>${icon('trophy', { size: 29 })}</span><div><small>${esc(t('replayProgress'))}</small><h3>${metaState.campaignsCompleted} ${esc(t('campaignsCompleted').toLowerCase())}</h3><p>${esc(t(challenge.descriptionKey))}</p></div><b>×${formatNumber(challenge.rewardMultiplier, 1)}</b></section>
       <div class="settings-stack">
-        <div class="settings-row"><span>${icon('quest', { size: 22 })}</span><div><strong>${esc(t('challengeActive'))}</strong><small>${esc(t(challenge.nameKey))} · ${esc(t(challenge.descriptionKey))}</small></div><b class="settings-version">${esc(t('modelStage'))}</b></div>
+        <div class="settings-row"><span>${icon('quest', { size: 22 })}</span><div><strong>${esc(t('challengeActive'))}</strong><small>${esc(t(challenge.nameKey))} · ${esc(t(challenge.descriptionKey))}</small></div></div>
         <div class="settings-row"><span>${icon(currentSoundEnabled() ? 'sound' : 'mute', { size: 22 })}</span><div><strong>${esc(t('sound'))}</strong><small>${globalThis.GovernorGame.I18n.choose(language,()=>('Короткие сигналы выбора, подтверждения и предупреждения.'),()=>('Short selection, confirmation and warning cues.'))}</small></div><button id="settings-sound" class="switch ${currentSoundEnabled() ? 'on' : ''}" type="button" role="switch" aria-checked="${currentSoundEnabled()}"></button></div>
         <div class="settings-row"><span>${icon('globe', { size: 22 })}</span><div><strong>${esc(t('language'))}</strong><small>Русский / English / 中文</small></div><button id="settings-language" class="language-button" type="button">${window.GovernorGame.I18n.ready()?{ru:'EN',en:'中文',zh:'RU'}[language]:language==='ru'?'EN':'RU'}</button></div>
-        <div class="settings-row"><span>${icon('download', { size: 22 })}</span><div><strong>${esc(t('export'))}</strong><small>${globalThis.GovernorGame.I18n.choose(language,()=>('JSON-отчёт содержит версии, seed, размещение проектов, реализацию, связи и последствия.'),()=>('The JSON report includes versions, seed, locations, delivery, interactions and consequences.'))}</small></div><button id="settings-export" class="secondary-button" type="button" style="min-height:42px;padding:0 14px">${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Скачать'),()=>('Download')))}</button></div>
+        <div class="settings-row"><span>${icon('download', { size: 22 })}</span><div><strong>${esc(copy('Перенести или восстановить партию','Transfer or restore a game','转移或恢复游戏'))}</strong></div><button id="settings-saves" class="secondary-button" type="button">${esc(copy('Открыть','Open','打开'))}</button></div>
         <div class="settings-row"><span>${icon('refresh', { size: 22 })}</span><div><strong>${esc(t('restart'))}</strong><small>${globalThis.GovernorGame.I18n.choose(language,()=>('Автосохранение кампании будет удалено, но открытые режимы сохранятся.'),()=>('The campaign autosave will be deleted, while unlocked modes remain.'))}</small></div><button id="settings-restart" class="secondary-button" type="button" style="min-height:42px;padding:0 14px;color:#a63b3b">${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Сбросить'),()=>('Restart')))}</button></div>
       </div>`;
     window.GovernorGame.ReleaseUI.reportButton(stage.querySelector('.settings-stack'));
     $('#settings-sound').setAttribute('aria-label', t('sound'));
     $('#settings-sound').addEventListener('click', () => { toggleSound(); renderSettingsView(stage); });
     $('#settings-language').addEventListener('click', toggleLanguage);
-    $('#settings-export').addEventListener('click', downloadReport);
+    $('#settings-saves').addEventListener('click', openSaveManager);
     $('#settings-restart').addEventListener('click', restartCampaign);
   }
 
@@ -1517,10 +1573,8 @@
       selectedPlacementId = state.selectedPlacementId;
       saveState(false);
       playSound('confirm');
-      // A construction approval is not a completed facility; celebrate only the finale.
-      renderGame();
-      showBadgeToasts(result.newBadges);
-      showResolution(result.record, result.preview);
+      $('#negotiation-dialog')?.close();
+      continueAfterResolution(result.newBadges);
     } catch (error) {
       toast(globalThis.GovernorGame.I18n.choose(language,()=>('Решение не принято'),()=>('Decision not confirmed')), error.message, 'warning');
       playSound('warning');
@@ -1530,13 +1584,9 @@
   function completeBudgetTransition(result){
     state=result.state;
     selectedActionId=state.selectedActionId;selectedFundingMode=state.selectedFundingMode;selectedPlacementId=state.selectedPlacementId;
-    resolutionShown=false;saveState(false);renderGame();showBadgeToasts(result.newBadges||[]);
-    if(result.budgetOperation==='commit'){showResolution(result.record,result.preview);return;}
-    $('#resolution-dialog').close();
-    if(result.completed){recordCompletedCampaign();showEndScreen();return;}
-    if(state.activeView==='agenda') $('#secondary-stage').scrollTop=0;
-    Presentation.yearNote(state,result.lifecycle?.events||[]);
-    if(!(!Agenda.persistent(state)&&Agenda.mode(state)==='agenda'&&state.turnIndex===5))Presentation.maybeChapter();
+    if(result.budgetOperation==='commit'){saveState(false);continueAfterResolution(result.newBadges);return;}
+    finishYear(result);
+
   }
 
   function showResolution(record, previewArg) {
@@ -1602,7 +1652,7 @@
     Presentation.decorateResolution(record,state);
     $('#resolution-content').insertAdjacentHTML('afterbegin',CampaignUI.resultHtml(record,state,language));
     const isLast = state.turnIndex >= DATA.missions.length - 1;
-    $('#continue-turn').querySelector('[data-ui]').textContent = isLast ? (globalThis.GovernorGame.I18n.choose(language,()=>('Завершить кампанию'),()=>('Complete campaign'))) : t('nextTurn');
+    $('#continue-turn').querySelector('[data-ui]').textContent = !state.awaitingContinue ? copy('Закрыть','Close','关闭') : isLast ? (globalThis.GovernorGame.I18n.choose(language,()=>('Завершить кампанию'),()=>('Complete campaign'))) : t('nextTurn');
     $('#resolution-content').insertAdjacentHTML('beforeend',window.GovernorGame.ConsolidationUI.results(state,record,language));
     const dialog = $('#resolution-dialog');
     dialog.dataset.delivery = delivery.id;
@@ -1610,40 +1660,42 @@
     if (!dialog.open) dialog.showModal();
   }
 
-  function continueAfterResolution() {
+  function continueAfterResolution(earnedBadges = []) {
+    if (!state?.awaitingContinue || blockedByOtherTab || !writerReady) { $('#resolution-dialog').close();return; }
     try {
       if(BudgetReview.locked(state)){ $('#resolution-dialog').close();BudgetReviewUI.open();return; }
       const result = Engine.advanceTurn(state);
       state = result.state;
-      if(result.pendingBudgetReview){saveState(false);$('#resolution-dialog').close();renderGame();BudgetReviewUI.open();return;}
-      selectedActionId = null;
-      selectedFundingMode = null;
-      selectedPlacementId = null;
-      resolutionShown = false;
-      saveState(false);
-      $('#resolution-dialog').close();
-      showBadgeToasts(result.newBadges);
-      if (result.completed) {
-        const unlocked = recordCompletedCampaign();
-        playSound('confirm');
-        launchConfetti(70);
-        renderGame();
-        unlocked.forEach((id, index) => {
-          const challenge = DATA.challenges.find(item => item.id === id);
-          setTimeout(() => toast(t('newChallengeUnlocked'), challenge ? t(challenge.nameKey) : id, 'trophy'), index * 500);
-        });
-        showEndScreen();
-      } else {
-        renderGame();
-        if (state.activeView === 'agenda') $('#secondary-stage').scrollTop = 0;
-        const lifecycleEvents = result.lifecycle?.events || [];
-        Presentation.yearNote(state,lifecycleEvents);
-        if (!(!Agenda.persistent(state) && Agenda.mode(state)==='agenda' && state.turnIndex===5)) Presentation.maybeChapter();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      if(result.pendingBudgetReview){saveState(false);$('#resolution-dialog').close();renderGame();BudgetReviewUI.open();showBadgeToasts(earnedBadges);return;}
+      finishYear(result, earnedBadges);
     } catch (error) {
       toast(globalThis.GovernorGame.I18n.choose(language,()=>('Не удалось продолжить'),()=>('Could not continue')), error.message, 'warning');
     }
+  }
+
+  function finishYear(result, earnedBadges = []) {
+    clearNotice();
+    const badges = earnedBadges.concat(result.newBadges || []);
+    selectedActionId=null;selectedFundingMode=null;selectedPlacementId=null;
+    resolutionShown=false;
+    saveState(false);
+    $('#resolution-dialog').close();
+    renderGame();
+    if(result.completed){
+      const unlocked=recordCompletedCampaign();
+      playSound('confirm');launchConfetti(70);
+      showEndScreen();
+      showBadgeToasts(badges, unlocked);
+      return;
+    }
+    const next=state.activeView==='agenda'?$('#agenda-heading'):$('#mission-title');
+    next.setAttribute('tabindex','-1');next.focus({preventScroll:true});
+    if(state.activeView==='agenda')$('#secondary-stage').scrollTop=0;
+    Presentation.yearNote(state,result.lifecycle?.events||[]);
+    if(result.strategyReview)CampaignUI.openCourse(true);
+    else if(!state.campaignStrategy && Agenda.mode(state)==='guided')Presentation.maybeChapter();
+    showBadgeToasts(badges);
+    window.scrollTo({top:0,behavior:'auto'});
   }
 
   function showAdvisorDialog(advisorId) {
@@ -1693,7 +1745,7 @@
       <div class="result-future"><b>${esc(t('scenario'))}:</b> ${esc(l(scenario.description))}<br><b>${esc(t('challengeActive'))}:</b> ${esc(t(challenge.descriptionKey))}</div>`;
     const settingsLink=document.createElement('button');
     settingsLink.type='button';settingsLink.id='profile-settings-link';settingsLink.className='secondary-button';settingsLink.style.marginTop='18px';
-    settingsLink.textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Настройки, язык и экспорт'),()=>('Settings, language and export'));
+    settingsLink.textContent=t('navSettings');
     settingsLink.addEventListener('click',()=>{$('#profile-dialog').close();setView('settings');$('#settings-language').focus({preventScroll:true});});
     $('#profile-dialog-content').appendChild(settingsLink);
     $('#profile-dialog').showModal();
@@ -1728,32 +1780,60 @@
     if (!dialog.open) dialog.showModal();
   }
 
-  function showBadgeToasts(ids) {
-    (ids || []).forEach((id, index) => {
-      const badge = DATA.badges.find(item => item.id === id);
-      if (!badge) return;
-      setTimeout(() => {
-        toast(globalThis.GovernorGame.I18n.choose(language,()=>('Новая награда'),()=>('New award')), l(badge.title), badge.icon);
-        launchConfetti(16);
-      }, index * 450);
+  function showBadgeToasts(ids = [], unlocked = []) {
+    const badges = DATA.badges.filter(badge => ids.includes(badge.id));
+    const challenges = unlocked.map(id => {
+      const challenge = DATA.challenges.find(item => item.id === id);
+      return challenge ? t(challenge.nameKey) : id;
     });
+    if (!badges.length && !challenges.length) return;
+    const awardTitle = globalThis.GovernorGame.I18n.choose(language,()=>('Новая награда'),()=>('New award'));
+    const title = badges.length ? awardTitle : t('newChallengeUnlocked');
+    const entries = badges.map(badge => l(badge.title));
+    if (challenges.length) {
+      const names = challenges.join(' · ');
+      entries.push(badges.length ? `${t('newChallengeUnlocked')} · ${names}` : names);
+    }
+    // Announce the whole turn together, before the player can start the next action.
+    toast(title, entries.join(' · '), badges[0]?.icon || 'trophy');
+    if (badges.length) launchConfetti(16);
   }
 
-  let toastTimer = null;
+  function clearNotice() {
+    $('#toast-region')?.replaceChildren();
+  }
+
   function toast(title, message, iconName) {
-    if(!String(title||'').trim()&&!String(message||'').trim())return;
-    let region=$('#toast-region');
-    if(!region){region=document.createElement('div');region.id='toast-region';region.className='toast-region';region.setAttribute('role','status');region.setAttribute('aria-live','polite');}
-    const target=Array.from(document.querySelectorAll('dialog[open]')).at(-1)
-      ||(!$('#secondary-stage')?.classList.contains('hidden')?$('#secondary-stage'):$('.mission-panel'))||$('#start-form');
-    if(!target)return;
-    if(region.parentElement!==target)target.prepend(region);
-    clearTimeout(toastTimer);
-    // A normal-flow notice takes its own space; it can never cover an answer.
+    if (!String(title || '').trim() && !String(message || '').trim()) return;
+    const previousFocus = document.activeElement;
+    const dialog = previousFocus?.closest('dialog[open]') || Array.from(document.querySelectorAll('dialog[open]')).at(-1);
+    const stage = $('#secondary-stage');
+    const target = dialog?.querySelector('.end-content') || dialog
+      || ($('#game-shell').classList.contains('hidden') ? $('#start-form') : stage.classList.contains('hidden') ? $('#mission-scroll') : stage);
+    let region = $('#toast-region');
+    if (!region) {
+      region = document.createElement('div');
+      region.id = 'toast-region';
+      region.className = 'toast-region';
+    }
+    region.setAttribute('role', 'status');
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('aria-atomic', 'true');
+    if (region.parentElement !== target) {
+      if (dialog) {
+        target.append(region);
+        dialog.addEventListener('close', () => {
+          if (!dialog.open && dialog.contains(region)) region.replaceChildren();
+        }, {once:true});
+      } else target.prepend(region);
+    }
     region.innerHTML=`<div class="toast"><span class="toast-icon">${icon(iconName||'info',{size:19})}</span><div><strong>${esc(title)}</strong>${message?`<span>${esc(message)}</span>`:''}</div><button class="toast-close" type="button" aria-label="${globalThis.GovernorGame.I18n.choose(language,()=>('Скрыть уведомление'),()=>('Dismiss notification'))}">${icon('close',{size:16})}</button></div>`;
-    const clear=()=>{clearTimeout(toastTimer);region.innerHTML='';};
-    region.querySelector('.toast-close').addEventListener('click',clear);
-    toastTimer=setTimeout(clear,3200);
+    region.querySelector('.toast-close').addEventListener('click', () => {
+      if (region.contains(document.activeElement) && previousFocus?.isConnected && !region.contains(previousFocus)) {
+        previousFocus.focus({preventScroll:true});
+      }
+      region.replaceChildren();
+    });
   }
 
   function launchConfetti(count) {
@@ -1785,24 +1865,6 @@
     showStartScreen();
   }
 
-  function downloadReport() {
-    if (!state) return;
-    const report = Engine.buildReport(state, language);
-    report.applicationVersion=Presentation.build;
-    report.campaignStatus=state.completed?'completed':BudgetReview.stopped(state)?'financial-handover':'in-progress';
-    report.completedDecisions=state.history.length;
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `governor-${state.sessionId}-${language}.json`;
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    URL.revokeObjectURL(url);
-    toast(globalThis.GovernorGame.I18n.choose(language,()=>('Отчёт подготовлен'),()=>('Report ready')), anchor.download, 'download');
-  }
-
   function bindEvents() {
     const projectDialog=$('#district-dialog');
     projectDialog.addEventListener('close',()=>{if(projectOrigin?.isConnected)projectOrigin.focus({preventScroll:true});});
@@ -1812,8 +1874,13 @@
       const i=nodes.indexOf(document.activeElement);
       if(nodes.length&&(i<0||(event.shiftKey&&i===0)||(!event.shiftKey&&i===nodes.length-1))){event.preventDefault();nodes[event.shiftKey?nodes.length-1:0].focus();}
     });
-    $('#resolution-dialog').addEventListener('cancel', event => event.preventDefault());
+    $('#resolution-dialog').addEventListener('cancel', event => {if(state?.awaitingContinue)event.preventDefault();});
     $('#end-dialog').addEventListener('cancel', event => event.preventDefault());
+    const courseHeader=$('.platform-bar'),courseStatus=$('#platform-status');
+    if(courseHeader&&courseStatus&&window.ResizeObserver){
+      const resizeCourse=()=>document.documentElement.style.setProperty('--course-top', (courseHeader.offsetHeight+courseStatus.offsetHeight)+'px');
+      const observer=new ResizeObserver(resizeCourse);observer.observe(courseHeader);observer.observe(courseStatus);resizeCourse();
+    }
     $('#start-form').addEventListener('submit', startCampaign);
     $('#recovery-case').addEventListener('change',updateRecoverySetup);
     $('#continue-campaign').addEventListener('click', continueSavedCampaign);
@@ -1825,9 +1892,8 @@
     $('#start-sound').addEventListener('click', toggleSound);
     $('#sound-toggle').addEventListener('click', toggleSound);
     $('#confirm-action').addEventListener('click', confirmSelectedAction);
-    $('#continue-turn').addEventListener('click', continueAfterResolution);
+    $('#continue-turn').addEventListener('click', () => continueAfterResolution());
     $('#profile-button').addEventListener('click', showProfileDialog);
-    $('#download-report-end').addEventListener('click', downloadReport);
     $('#review-region').addEventListener('click',()=>{$('#end-dialog').close();setView('journal');$('.secondary-view [data-open-promises]')?.focus({preventScroll:true});});
     $('#play-again').addEventListener('click', restartCampaign);
     $('#mobile-menu-button').addEventListener('click', () => window.GovernorGame.ReleaseUI.openMenu());
@@ -1877,7 +1943,7 @@
     StoriesUI.init({state:()=>state, language:()=>language, save:()=>saveState(false), navigate:view=>setView(view), refreshBrief:()=>renderStoryBrief(), refreshList:()=>{if(state?.activeView==='stories')StoriesUI.render($('#secondary-stage'));}, notice:message=>toast(globalThis.GovernorGame.I18n.choose(language,()=>('История жителей'),()=>('Residents’ stories')),message,'info')});
     Presentation.init({state:()=>state,language:()=>language,map:()=>setView('map'),delivery:()=>showDeliveryDesk(),onClose:()=>{WorldUI.refreshVisible();const focus=state?.activeView==='agenda'?$('#agenda-heading'):$('#mission-title');if(focus){focus.tabIndex=-1;focus.focus({preventScroll:true});}}});
     GovUI.init({getState:()=>state, getLanguage:()=>language, save:()=>saveState(false), refresh:()=>renderGame(), commit:()=>commitSelectedAction(), toast:message=>toast(globalThis.GovernorGame.I18n.choose(language,()=>('Проверьте условия'),()=>('Check the terms')),message,'warning')});
-    window.GovernorGame.ReleaseUI.init({state:()=>state,language:()=>language,navigate:setView,save:downloadSave,report:downloadReport});
+    window.GovernorGame.ReleaseUI.init({state:()=>state,language:()=>language,navigate:setView,save:downloadSave});
     CampaignUI.init({state:()=>state,language:()=>language,selected:()=>Boolean(selectedActionId),navigate:setView,save:()=>saveState(false),delivery:showDeliveryDesk});
     mountConsolidationUI();
   setupAgendaUI();

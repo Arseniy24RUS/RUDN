@@ -58,23 +58,40 @@ const abort=signal=>signal?.throwIfAborted();
 async function hash(bytes){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(x=>x.toString(16).padStart(2,'0')).join('');}
 function inside(value){const u=new URL(value,siteRoot),root=new URL(siteRoot);if(u.origin!==root.origin||!u.pathname.startsWith(root.pathname))throw failure('release/url-outside-scope');return u;}
 function validateTarget(target){if(!target||!/^[a-f0-9]{32}$/.test(target.buildId||'')||!HEX.test(target.manifestSha256||''))throw failure('release/invalid-target');const runtime=new URL(`_releases/${target.buildId}/`,siteRoot);if(inside(target.manifestURL).href!==new URL('manifest.json',runtime).href||!inside(target.entryURL).pathname.startsWith(runtime.pathname))throw failure('release/invalid-target-path');return target;}
-async function verified(url,sha256,{signal}={}){
-  abort(signal);const response=await fetch(inside(url),{cache:'reload',credentials:'same-origin',signal});
+async function verified(url,sha256,{signal,cache='reload'}={}){
+  abort(signal);const response=await fetch(inside(url),{cache,credentials:'same-origin',signal});
   if(!response.ok)throw failure('release/resource-unavailable');const bytes=await response.arrayBuffer();abort(signal);
   if(await hash(bytes)!==sha256)throw failure('release/integrity');abort(signal);
   return {bytes,response:new Response(bytes,{status:200,headers:response.headers})};
 }
-async function readManifest(target,{signal}={}){
-  validateTarget(target);const {bytes}=await verified(target.manifestURL,target.manifestSha256,{signal});
+async function readManifest(target,{signal,governorEntry=false}={}){
+  validateTarget(target);
+  let bytes,projected=false;
+  if(governorEntry&&target.governorManifest){
+    const index=target.governorManifest;
+    if(inside(index.url).href!==new URL(`_releases/${target.buildId}/governor-manifest.json`,siteRoot).href||!HEX.test(index.sha256||''))throw failure('release/invalid-governor-manifest');
+    try{({bytes}=await verified(index.url,index.sha256,{signal,cache:'default'}));projected=true;}
+    catch(error){
+      // Never bind a damaged or unavailable index. A full verified manifest
+      // is sufficient, including on devices prepared by an earlier worker.
+      if(!['release/resource-unavailable','release/integrity'].includes(error?.code)&&!(error instanceof TypeError))throw error;
+    }
+  }
+  if(!bytes)({bytes}=await verified(target.manifestURL,target.manifestSha256,{signal}));
   const manifest=JSON.parse(new TextDecoder().decode(bytes));
   if(manifest.schema!==SCHEMA||manifest.buildId!==target.buildId||!manifest.resources||!manifest.packs?.shell)throw failure('release/invalid-manifest');
+  if(projected&&(manifest.fullManifestSha256!==target.manifestSha256||!manifest.packs.governor||
+      !manifest.resources['apps/governor/index.html']))throw failure('release/invalid-governor-manifest');
   if(target.retention==='current-only'&&manifest.retention!=='current-only')throw failure('release/invalid-retention');
   validateContracts(manifest.contracts);if(!manifest.resources['data/platform-contracts.json'])throw failure('release/contracts-missing');
   const exactRoot=new URL(`_releases/${target.buildId}/`,siteRoot);if(inside(manifest.runtimeRoot).href!==exactRoot.href)throw failure('release/invalid-runtime-root');
   for(const [path,item] of Object.entries(manifest.resources)){
     if(path.startsWith('/')||path.includes('..')||!HEX.test(item.sha256||'')||!Number.isSafeInteger(item.bytes)||item.bytes<0)throw failure('release/invalid-resource');const url=inside(item.url);if(item.kind==='runtime'&&!url.pathname.startsWith(exactRoot.pathname))throw failure('release/mutable-runtime');
   }
-  manifestBytes.set(target.buildId,bytes);while(manifestBytes.size>2)manifestBytes.delete(manifestBytes.keys().next().value);
+  if(!projected){
+    manifestBytes.set(target.buildId,bytes);
+    while(manifestBytes.size>2)manifestBytes.delete(manifestBytes.keys().next().value);
+  }
   return {...manifest,siteRoot,runtimeRoot:new URL(manifest.runtimeRoot,siteRoot).href,manifestURL:new URL(target.manifestURL,siteRoot).href,manifestSha256:target.manifestSha256,entryURL:new URL(target.entryURL,siteRoot).href};
 }
 export async function checkRelease({signal}={}){
@@ -187,13 +204,15 @@ export async function bootRelease(){
     if(descriptor.ok)target=await descriptor.json();
   }
   if(!target||target.buildId!==expected)throw failure('release/requested-build-unavailable');
-  const context=setReleaseContext(await readManifest(target));
+  const governorEntry=/\/apps\/governor\/(?:index\.html)?$/.test(location.pathname);
+  const context=setReleaseContext(await readManifest(target,{governorEntry}));
   currentOnlyBoot=context.retention==='current-only';
   try{sessionStorage.setItem('rudn.release.last-ready.v1',JSON.stringify(target));}catch{}
   const workers=navigator.serviceWorker;
   const announce=()=>workers?.controller?.postMessage({type:'BIND_BUILD',buildId:context.buildId,manifestURL:context.manifestURL,manifestSha256:context.manifestSha256});
   workers?.addEventListener('controllerchange',announce);announce();
-  if(workers)void workers.register(new URL('service-worker.js',siteRoot),{updateViaCache:'none'}).then(registration=>registration.update()).catch(()=>{});
+  // Governor schedules the same worker once its landing and first choice are usable.
+  if(workers&&!governorEntry)void workers.register(new URL('service-worker.js',siteRoot),{updateViaCache:'none'}).then(registration=>registration.update()).catch(()=>{});
   await executePlan(context);
 }
 if(typeof document!=='undefined'&&[...document.querySelectorAll('script[data-platform-bootstrap]')].some(script=>script.src===import.meta.url)){

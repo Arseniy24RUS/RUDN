@@ -40,13 +40,19 @@
     if(!state.campaignStrategy)state.campaignStrategy=S.create(state,options.strategyId);
     state.onboarding={version:1,enabled:options.tutorialEnabled,seen:[],allSections:false};
   }
-  function openCourse(){
+  function openCourse(reviewComplete=false){
     const state=hooks.state(),l=hooks.language();if(!state?.campaignStrategy)return;
     let d=$('#campaign-course-dialog');
     if(!d){d=document.createElement('dialog');d.id='campaign-course-dialog';d.className='release-dialog';document.body.append(d);}
-    d.innerHTML=`<button type="button" class="secondary-button release-close" data-course-close>${tr(l,'Закрыть','Close','关闭')}</button><h2>${tr(l,'Ваш курс и обязательства','Your course and commitments','您的战略与承诺')}</h2>${agendaHtml(state,l)}${reportHtml(state,l)}`;
+    const reviewed=reviewComplete===true;
+    const course=agendaHtml(state,l),reviews=reportHtml(state,l);
+    const title=reviewed?tr(l,'Пятилетняя проверка курса','Five-year course review','五年战略评估'):tr(l,'Ваш курс и обязательства','Your course and commitments','您的战略与承诺');
+    const latest=state.campaignStrategy.reviews?.at(-1);
+    const verdict=reviewed&&latest?`<section class="review-verdict"><p>${state.population.baseYear+latest.year-1}</p><h3>${statusText(latest.status,l)}</h3><p>${tr(l,'Изменение мощности аппарата на следующее пятилетие','Administrative capacity change for the next five years','下一个五年行政能力的变化')} <b>${latest.capacityDelta>0?'+':''}${latest.capacityDelta}</b></p></section>`:'';
+    d.innerHTML=`<button type="button" class="secondary-button release-close" data-course-close>${tr(l,'Закрыть','Close','关闭')}</button><h2>${title}</h2>${verdict}${course}${reviews}`;
     d.setAttribute('aria-label',tr(l,'Курс и обязательства','Course and commitments','战略与承诺'));
     d.querySelector('[data-course-close]').onclick=()=>d.close();
+    attachPromiseLinks(d);
     d.querySelector('[data-campaign-delivery]')?.addEventListener('click',()=>{d.close();hooks.delivery();});
     if(!d.open)d.showModal();
   }
@@ -77,13 +83,13 @@
     reveal.hidden=!collapsed;reveal.textContent=tr(l,'Показать все разделы','Show all sections','显示所有栏目');
     if(!onboarding?.enabled||state.completed||state.awaitingContinue||!['agenda','mission'].includes(state.activeView))return;
     const step=coach(state,l,selected);if(!step||(onboarding.seen||[]).includes(step.key))return;
-    const el=document.createElement('aside');el.className='campaign-coach';el.setAttribute('aria-label',tr(l,'Подсказка','Coaching','引导'));
-    el.innerHTML=`<div><strong>${esc(step.title)}</strong><p>${esc(step.text)}</p></div><div class="campaign-coach-actions">${step.view?`<button type="button" data-coach-link>${esc(step.link)}</button>`:''}<button type="button" data-coach-done>${tr(l,'Понятно','Got it','明白了')}</button><button type="button" data-coach-skip>${tr(l,'Без подсказок','Skip coaching','跳过引导')}</button></div>`;
+    const el=document.createElement('details');el.className='campaign-coach';el.setAttribute('aria-label',tr(l,'Подсказка','Coaching','引导'));
+    el.innerHTML=`<summary>${esc(step.title)}</summary><p>${esc(step.text)}</p><div class="campaign-coach-actions">${step.view?`<button type="button" data-coach-link>${esc(step.link)}</button>`:''}<button type="button" data-coach-done>${tr(l,'Понятно','Got it','明白了')}</button><button type="button" data-coach-skip>${tr(l,'Без подсказок','Skip coaching','跳过引导')}</button></div>`;
     el.querySelector('[data-coach-link]')?.addEventListener('click',()=>hooks.navigate(step.view));
     el.querySelector('[data-coach-done]').onclick=()=>{(onboarding.seen=onboarding.seen||[]).push(step.key);hooks.save();refresh(selected);};
     el.querySelector('[data-coach-skip]').onclick=()=>{onboarding.enabled=false;hooks.save();refresh(selected);};
     if(state.activeView==='agenda')$('#secondary-stage .agenda-board')?.after(el);
-    else $('#mission-description')?.after(el);
+    else $('#mission-context')?.append(el);
   }
   function statusText(id,l){return id==='secured'?tr(l,'Курс подтверждён','Mandate secured','战略得到确认'):id==='at-risk'?tr(l,'Курс требует пересмотра','Mandate at risk','战略需要调整'):tr(l,'Условное доверие','Conditional confidence','有条件信任');}
   function agendaHtml(state,l){
@@ -95,10 +101,24 @@
     const year=state.population.baseYear+state.turnIndex;
     const commitments=G.DeliveryDesk.snapshot(state),items=commitments.items.filter(x=>(x.status==='delivery'&&x.launchYear<=year+3)||x.reason==='ending').slice(0,3);
     const promises=(state.governance?.promises||[]).filter(p=>p.status==='pending'&&p.dueTurn<=state.turnIndex+4).sort((a,b)=>a.dueTurn-b.dueTurn).slice(0,2);
-    const milestones=items.map(p=>`<p><b>${p.status==='delivery'?p.launchYear:p.lastFundedYear}</b><span>${esc(local(p.title,l))} · ${p.status==='delivery'?tr(l,'запуск','opening','启用'):tr(l,'истекает финансирование','funding expires','资金到期')}</span></p>`).join('')+promises.map(p=>`<p><b>${state.population.baseYear+p.dueTurn-1}</b><span>${tr(l,'Срок публичного обязательства','Public commitment due','公共承诺到期')} · ${esc(local(p.title||p.description||{ru:'проверьте журнал обещаний',en:'check the promise register',zh:'查看承诺记录'},l))}</span></p>`).join('');
-    return `<section class="campaign-overview" aria-label="${tr(l,'Курс и ближайшие события','Course and upcoming events','战略与近期事项')}"><details class="campaign-mandate" ${state.turnIndex===0?'open':''}><summary><span>${tr(l,'Курс','Course','方向')}: <strong>${esc(local(s.course.title,l))}</strong></span><span>${tr(l,'Проверка','Review','检查')} ${nextYear}</span></summary><div class="campaign-goals">${goals}</div><p class="campaign-guardrails">${tr(l,'Дополнительно: поддержка не ниже 40, долг не выше 90% лимита и покрытие трёх будущих бюджетов.','Also: support at least 40, debt within 90% of its limit, and three funded future budgets.','其他条件：支持度至少40，债务不超过上限的90%，未来三年预算有资金覆盖。')}</p><p class="campaign-guardrails">${tr(l,'Итог: +1 / 0 / −1 к мощности аппарата на следующее пятилетие; эффекты не накапливаются.','Result: +1 / 0 / −1 administrative capacity for the next five years; effects do not stack.','结果：下一个五年行政能力 +1 / 0 / −1，效果不叠加。')}</p></details>${review?`<p class="campaign-review-status ${review.status}">${esc(reviewText)}</p>`:''}<details class="campaign-milestones" ${items.some(p=>p.reason==='ending')?'open':''}><summary>${tr(l,'Ближайшие обязательства','Upcoming commitments','近期承诺')} <span>${year}–${year+3}</span></summary>${milestones||`<p>${tr(l,'Новых запусков и сроков пока нет. После первого решения здесь появится горизонт вашего плана.','No upcoming openings or deadlines yet. Your first decision will start this planning horizon.','目前没有启用计划或截止日期。首次决策后将在这里显示计划。')}</p>`}<button type="button" class="campaign-text-button" data-campaign-delivery>${tr(l,'Открыть все обязательства и продления','Open all commitments and renewals','查看所有承诺与续期')}</button></details></section>`;
+    const milestones=items.map(p=>`<p><b>${p.status==='delivery'?p.launchYear:p.lastFundedYear}</b><span>${esc(local(p.title,l))} · ${p.status==='delivery'?tr(l,'запуск','opening','启用'):tr(l,'истекает финансирование','funding expires','资金到期')}</span></p>`).join('')+promises.map(p=>{
+      const due=state.population.baseYear+p.dueTurn-1;
+      const project=state.finance.portfolio.find(item=>item.id===p.projectId);
+      const action=p.kind==='report'?tr(l,'Отчёт по обещанию','Promised report','承诺的报告'):tr(l,'Публичное обязательство','Public commitment','公共承诺');
+      return `<p><b>${due}</b><button type="button" class="campaign-text-button" data-campaign-promise="${esc(p.id)}">${esc(action)}${project?' · '+esc(local(project.title,l)):''}</button></p>`;
+    }).join('');
+    return `<section class="campaign-overview" aria-label="${tr(l,'Курс и ближайшие события','Course and upcoming events','战略与近期事项')}"><details class="campaign-mandate"><summary><span>${tr(l,'Курс','Course','方向')}: <strong>${esc(local(s.course.title,l))}</strong></span><span>${tr(l,'Проверка','Review','检查')} ${nextYear}</span></summary><div class="campaign-goals">${goals}</div><p class="campaign-guardrails">${tr(l,'Дополнительно: поддержка не ниже 40, долг не выше 90% лимита и покрытие трёх будущих бюджетов.','Also: support at least 40, debt within 90% of its limit, and three funded future budgets.','其他条件：支持度至少40，债务不超过上限的90%，未来三年预算有资金覆盖。')}</p><p class="campaign-guardrails">${tr(l,'Итог: +1 / 0 / −1 к мощности аппарата на следующее пятилетие; эффекты не накапливаются.','Result: +1 / 0 / −1 administrative capacity for the next five years; effects do not stack.','结果：下一个五年行政能力 +1 / 0 / −1，效果不叠加。')}</p></details>${review?`<p class="campaign-review-status ${review.status}">${esc(reviewText)}</p>`:''}<details class="campaign-milestones" ${items.some(p=>p.reason==='ending')||promises.some(p=>p.dueTurn<=state.turnIndex+1)?'open':''}><summary>${tr(l,'Ближайшие обязательства','Upcoming commitments','近期承诺')} <span>${year}–${year+3}</span></summary>${milestones||`<p>${tr(l,'Новых запусков и сроков пока нет. После первого решения здесь появится горизонт вашего плана.','No upcoming openings or deadlines yet. Your first decision will start this planning horizon.','目前没有启用计划或截止日期。首次决策后将在这里显示计划。')}</p>`}<button type="button" class="campaign-text-button" data-campaign-delivery>${tr(l,'Проекты и продление финансирования','Projects and funding renewals','项目与经费续期')}</button></details></section>`;
+  }
+  function attachPromiseLinks(host){
+    host.querySelectorAll('[data-campaign-promise]').forEach(button=>{
+      button.onclick=()=>{
+        if(host instanceof HTMLDialogElement)host.close();
+        G.GovernanceUI.openPromises(button.dataset.campaignPromise);
+      };
+    });
   }
   function attachAgenda(host){
+    attachPromiseLinks(host);
     host.querySelector('[data-agenda-course]')?.addEventListener('click',openCourse);
     host.querySelector('[data-campaign-delivery]')?.addEventListener('click',()=>hooks.delivery());
   }
