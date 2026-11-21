@@ -732,7 +732,7 @@
   function chooseAgendaTopic(id) {
     if (!writerReady || blockedByOtherTab || !state || state.awaitingContinue || state.completed) return;
     try {
-      Engine.chooseAgenda(state,id);selectedActionId=null;selectedFundingMode=null;selectedPlacementId=null;
+      Engine.chooseAgenda(state,id);clearNotice();selectedActionId=null;selectedFundingMode=null;selectedPlacementId=null;
       if (id === Agenda.OPERATIONS.id) {
         selectedActionId=Agenda.OPERATIONS.actions[0].id;
         selectedFundingMode='treasury';
@@ -1273,6 +1273,7 @@
 
   function setView(view) {
     if (!state) return;
+    clearNotice();
     if (view==='mission' && Agenda.needsChoice(state)) view='agenda';
     state.activeView = view;
     if (state.awaitingContinue) {
@@ -1573,8 +1574,7 @@
       saveState(false);
       playSound('confirm');
       $('#negotiation-dialog')?.close();
-      showBadgeToasts(result.newBadges);
-      continueAfterResolution();
+      continueAfterResolution(result.newBadges);
     } catch (error) {
       toast(globalThis.GovernorGame.I18n.choose(language,()=>('Решение не принято'),()=>('Decision not confirmed')), error.message, 'warning');
       playSound('warning');
@@ -1584,7 +1584,7 @@
   function completeBudgetTransition(result){
     state=result.state;
     selectedActionId=state.selectedActionId;selectedFundingMode=state.selectedFundingMode;selectedPlacementId=state.selectedPlacementId;
-    if(result.budgetOperation==='commit'){saveState(false);showBadgeToasts(result.newBadges||[]);continueAfterResolution();return;}
+    if(result.budgetOperation==='commit'){saveState(false);continueAfterResolution(result.newBadges);return;}
     finishYear(result);
 
   }
@@ -1660,34 +1660,32 @@
     if (!dialog.open) dialog.showModal();
   }
 
-  function continueAfterResolution() {
+  function continueAfterResolution(earnedBadges = []) {
     if (!state?.awaitingContinue || blockedByOtherTab || !writerReady) { $('#resolution-dialog').close();return; }
     try {
       if(BudgetReview.locked(state)){ $('#resolution-dialog').close();BudgetReviewUI.open();return; }
       const result = Engine.advanceTurn(state);
       state = result.state;
-      if(result.pendingBudgetReview){saveState(false);$('#resolution-dialog').close();renderGame();BudgetReviewUI.open();return;}
-      finishYear(result);
+      if(result.pendingBudgetReview){saveState(false);$('#resolution-dialog').close();renderGame();BudgetReviewUI.open();showBadgeToasts(earnedBadges);return;}
+      finishYear(result, earnedBadges);
     } catch (error) {
       toast(globalThis.GovernorGame.I18n.choose(language,()=>('Не удалось продолжить'),()=>('Could not continue')), error.message, 'warning');
     }
   }
 
-  function finishYear(result) {
+  function finishYear(result, earnedBadges = []) {
+    clearNotice();
+    const badges = earnedBadges.concat(result.newBadges || []);
     selectedActionId=null;selectedFundingMode=null;selectedPlacementId=null;
     resolutionShown=false;
     saveState(false);
     $('#resolution-dialog').close();
     renderGame();
-    showBadgeToasts(result.newBadges);
     if(result.completed){
       const unlocked=recordCompletedCampaign();
       playSound('confirm');launchConfetti(70);
-      unlocked.forEach((id,index)=>{
-        const challenge=DATA.challenges.find(item=>item.id===id);
-        setTimeout(()=>toast(t('newChallengeUnlocked'),challenge?t(challenge.nameKey):id,'trophy'),index*500);
-      });
       showEndScreen();
+      showBadgeToasts(badges, unlocked);
       return;
     }
     const next=state.activeView==='agenda'?$('#agenda-heading'):$('#mission-title');
@@ -1696,6 +1694,7 @@
     Presentation.yearNote(state,result.lifecycle?.events||[]);
     if(result.strategyReview)CampaignUI.openCourse(true);
     else if(!state.campaignStrategy && Agenda.mode(state)==='guided')Presentation.maybeChapter();
+    showBadgeToasts(badges);
     window.scrollTo({top:0,behavior:'auto'});
   }
 
@@ -1781,32 +1780,60 @@
     if (!dialog.open) dialog.showModal();
   }
 
-  function showBadgeToasts(ids) {
-    (ids || []).forEach((id, index) => {
-      const badge = DATA.badges.find(item => item.id === id);
-      if (!badge) return;
-      setTimeout(() => {
-        toast(globalThis.GovernorGame.I18n.choose(language,()=>('Новая награда'),()=>('New award')), l(badge.title), badge.icon);
-        launchConfetti(16);
-      }, index * 450);
+  function showBadgeToasts(ids = [], unlocked = []) {
+    const badges = DATA.badges.filter(badge => ids.includes(badge.id));
+    const challenges = unlocked.map(id => {
+      const challenge = DATA.challenges.find(item => item.id === id);
+      return challenge ? t(challenge.nameKey) : id;
     });
+    if (!badges.length && !challenges.length) return;
+    const awardTitle = globalThis.GovernorGame.I18n.choose(language,()=>('Новая награда'),()=>('New award'));
+    const title = badges.length ? awardTitle : t('newChallengeUnlocked');
+    const entries = badges.map(badge => l(badge.title));
+    if (challenges.length) {
+      const names = challenges.join(' · ');
+      entries.push(badges.length ? `${t('newChallengeUnlocked')} · ${names}` : names);
+    }
+    // Announce the whole turn together, before the player can start the next action.
+    toast(title, entries.join(' · '), badges[0]?.icon || 'trophy');
+    if (badges.length) launchConfetti(16);
   }
 
-  let toastTimer = null;
+  function clearNotice() {
+    $('#toast-region')?.replaceChildren();
+  }
+
   function toast(title, message, iconName) {
-    if(!String(title||'').trim()&&!String(message||'').trim())return;
-    let region=$('#toast-region');
-    if(!region){region=document.createElement('div');region.id='toast-region';region.className='toast-region';region.setAttribute('role','status');region.setAttribute('aria-live','polite');}
-    const target=Array.from(document.querySelectorAll('dialog[open]')).at(-1)
-      ||(!$('#secondary-stage')?.classList.contains('hidden')?$('#secondary-stage'):$('.mission-panel'))||$('#start-form');
-    if(!target)return;
-    if(region.parentElement!==target)target.prepend(region);
-    clearTimeout(toastTimer);
-    // A normal-flow notice takes its own space; it can never cover an answer.
+    if (!String(title || '').trim() && !String(message || '').trim()) return;
+    const previousFocus = document.activeElement;
+    const dialog = previousFocus?.closest('dialog[open]') || Array.from(document.querySelectorAll('dialog[open]')).at(-1);
+    const stage = $('#secondary-stage');
+    const target = dialog?.querySelector('.end-content') || dialog
+      || ($('#game-shell').classList.contains('hidden') ? $('#start-form') : stage.classList.contains('hidden') ? $('#mission-scroll') : stage);
+    let region = $('#toast-region');
+    if (!region) {
+      region = document.createElement('div');
+      region.id = 'toast-region';
+      region.className = 'toast-region';
+    }
+    region.setAttribute('role', 'status');
+    region.setAttribute('aria-live', 'polite');
+    region.setAttribute('aria-atomic', 'true');
+    if (region.parentElement !== target) {
+      if (dialog) {
+        target.append(region);
+        dialog.addEventListener('close', () => {
+          if (!dialog.open && dialog.contains(region)) region.replaceChildren();
+        }, {once:true});
+      } else target.prepend(region);
+    }
     region.innerHTML=`<div class="toast"><span class="toast-icon">${icon(iconName||'info',{size:19})}</span><div><strong>${esc(title)}</strong>${message?`<span>${esc(message)}</span>`:''}</div><button class="toast-close" type="button" aria-label="${globalThis.GovernorGame.I18n.choose(language,()=>('Скрыть уведомление'),()=>('Dismiss notification'))}">${icon('close',{size:16})}</button></div>`;
-    const clear=()=>{clearTimeout(toastTimer);region.innerHTML='';};
-    region.querySelector('.toast-close').addEventListener('click',clear);
-    toastTimer=setTimeout(clear,3200);
+    region.querySelector('.toast-close').addEventListener('click', () => {
+      if (region.contains(document.activeElement) && previousFocus?.isConnected && !region.contains(previousFocus)) {
+        previousFocus.focus({preventScroll:true});
+      }
+      region.replaceChildren();
+    });
   }
 
   function launchConfetti(count) {
@@ -1865,7 +1892,7 @@
     $('#start-sound').addEventListener('click', toggleSound);
     $('#sound-toggle').addEventListener('click', toggleSound);
     $('#confirm-action').addEventListener('click', confirmSelectedAction);
-    $('#continue-turn').addEventListener('click', continueAfterResolution);
+    $('#continue-turn').addEventListener('click', () => continueAfterResolution());
     $('#profile-button').addEventListener('click', showProfileDialog);
     $('#review-region').addEventListener('click',()=>{$('#end-dialog').close();setView('journal');$('.secondary-view [data-open-promises]')?.focus({preventScroll:true});});
     $('#play-again').addEventListener('click', restartCampaign);
