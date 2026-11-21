@@ -125,3 +125,78 @@ test('only the same owner’s valid legacy Career review can reopen the knowledg
     assert.equal(result.reviewComplete,false);
   }
 });
+
+const studentKey='12345678';
+const cloudOwner='student:'+studentKey;
+const archiveAttemptId=versionedWorkspace(priorBuild);
+const signedIn=()=>({user:{uid:'fixture-browser'},generation:3,getProfile:()=>({studentKey})});
+function archivedReview(headChanges={},envelopeChanges={}){
+  return {
+    schemaVersion:1,activitySlug:progressScope.activitySlug,mode:progressScope.mode,studentKey,attemptId:archiveAttemptId,
+    current:reviewedWorkspace({studentKey,owner:cloudOwner,attemptId:archiveAttemptId,releaseBuildId:priorBuild,...headChanges}),
+    ...envelopeChanges
+  };
+}
+
+test('same-owner versioned review survives a newer workspace without loading an old quiz',async t=>{
+  releaseFixture(t);
+  const current=reviewedWorkspace({owner:cloudOwner,attemptId:versionedWorkspace(currentBuild),personalityComplete:false});
+  const unchanged=structuredClone(current);
+  const history={[archiveAttemptId]:archivedReview()};
+  const savedHistory=structuredClone(history);
+  const backend={...signedIn(),
+    loadDraft:async scope=>{
+      assert.deepEqual(scope,{...progressScope,owner:cloudOwner,attemptId:legacyWorkspace});
+      return null;
+    },
+    readCloud:async (resource,options)=>{
+      assert.equal(resource,`checkpoints/${studentKey}/career-workspace`);
+      assert.deepEqual(options,{authoritative:true});
+      return history;
+    }
+  };
+  const progress=await readCareerSeminarProgress({backend,owner:cloudOwner,workspace:current});
+  assert.equal(progress.reviewComplete,true);
+  assert.equal(progress.stage,'personality');
+  assert.deepEqual(current,unchanged);
+  assert.deepEqual(history,savedHistory);
+});
+
+test('versioned cloud recovery rejects wrong owners, scope, malformed IDs and conflicts',async t=>{
+  releaseFixture(t);
+  const current=reviewedWorkspace({owner:cloudOwner,attemptId:versionedWorkspace(currentBuild),personalityComplete:false});
+  const cases=[
+    {[archiveAttemptId]:archivedReview({owner:'student:87654321'})},
+    {[archiveAttemptId]:archivedReview({mode:'free'})},
+    {[archiveAttemptId]:archivedReview({studentKey:'87654321'})},
+    {[archiveAttemptId]:archivedReview({attemptId:versionedWorkspace(currentBuild)})},
+    {[archiveAttemptId]:archivedReview({releaseBuildId:currentBuild})},
+    {[archiveAttemptId]:archivedReview({saveStatus:{state:'conflict'}})},
+    {[archiveAttemptId]:archivedReview({}, {studentKey:'87654321'})},
+    {[archiveAttemptId]:archivedReview({}, {attemptId:versionedWorkspace(currentBuild)})},
+    {[archiveAttemptId]:archivedReview({}, {activitySlug:'career-freeplay'})},
+    {[archiveAttemptId]:archivedReview({}, {mode:'free'})},
+    {[archiveAttemptId]:archivedReview({}, {conflicts:{draft:{}}})},
+    {'malformed-workspace-id':archivedReview()}
+  ];
+  for(const history of cases){
+    const backend={...signedIn(),loadDraft:async()=>null,readCloud:async()=>history};
+    assert.equal((await readCareerSeminarProgress({backend,owner:cloudOwner,workspace:current})).reviewComplete,false);
+  }
+  let archiveReads=0;
+  const backend={...signedIn(),loadDraft:async()=>null,readCloud:async()=>{
+    archiveReads++;
+    return {[archiveAttemptId]:archivedReview()};
+  }};
+  assert.equal((await readCareerSeminarProgress({backend,owner:'student:87654321',workspace:null})).reviewComplete,false);
+  assert.equal(archiveReads,0);
+});
+
+test('an account change while reading versioned Career proof cannot grant eligibility',async t=>{
+  releaseFixture(t);
+  const backend={...signedIn(),loadDraft:async()=>null,readCloud:async()=>{
+    backend.generation++;
+    return {[archiveAttemptId]:archivedReview()};
+  }};
+  assert.equal((await readCareerSeminarProgress({backend,owner:cloudOwner,workspace:null})).reviewComplete,false);
+});

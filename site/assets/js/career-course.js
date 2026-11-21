@@ -99,14 +99,39 @@ export async function readCareerSeminarProgress({backend,owner,workspace}={}){
     (await backend.loadDraft({...scope,attemptId:gameWorkspaceId(legacyAttemptId)})||(build?await backend.loadDraft(scope):null));
   const matches=candidate=>candidate&&Object.entries(scope).every(([key,value])=>candidate[key]===value);
   const progress=seminar5ProgressFromWorkspace(matches(draft)?draft.state:null);
-  if(!build||progress.reviewComplete||matches(draft)&&draft.attemptId===legacyAttemptId)return progress;
+  if(!build||progress.reviewComplete)return progress;
 
-  // A newer workspace can retain only the compatible vacancy data. The
-  // validated completed course review in the original workspace still counts.
-  const legacy=await backend.loadDraft({...scope,attemptId:legacyAttemptId});
-  if(!matches(legacy)||legacy.attemptId!==legacyAttemptId||legacy.conflictId||legacy.saveStatus?.state==='conflict')return progress;
-  const previous=seminar5ProgressFromWorkspace(legacy.state,progress.stage);
-  return previous.reviewComplete?previous:progress;
+  // Restore the original device checkpoint first so this also works offline.
+  const legacy=matches(draft)&&draft.attemptId===legacyAttemptId?draft:
+    await backend.loadDraft({...scope,attemptId:legacyAttemptId});
+  if(matches(legacy)&&legacy.attemptId===legacyAttemptId&&!legacy.conflictId&&legacy.saveStatus?.state!=='conflict'){
+    const previous=seminar5ProgressFromWorkspace(legacy.state,progress.stage);
+    if(previous.reviewComplete)return previous;
+  }
+
+  // A newer release can mask a completed review saved under another build ID.
+  // Read only this signed-in student's workspace history without restoring it.
+  const studentKey=backend.getProfile?.()?.studentKey;
+  const uid=backend.user?.uid, generation=backend.generation;
+  if(!uid||!/^\d{5,20}$/.test(studentKey||'')||durableOwner!==`student:${studentKey}`||
+    typeof backend.readCloud!=='function')return progress;
+  let archived;
+  try{archived=await backend.readCloud(`checkpoints/${studentKey}/${scope.activitySlug}`,{authoritative:true});}
+  catch{return progress;}
+  if(backend.user?.uid!==uid||backend.generation!==generation||backend.getProfile?.()?.studentKey!==studentKey)return progress;
+
+  for(const [attemptId,envelope] of Object.entries(archived||{})){
+    const version=attemptId.match(/^workspace-v1-([a-f0-9]{32})$/);
+    if(!version||envelope?.schemaVersion!==1||envelope.studentKey!==studentKey||
+      envelope.activitySlug!==scope.activitySlug||envelope.mode!==scope.mode||envelope.attemptId!==attemptId||
+      Object.keys(envelope.conflicts||{}).length)continue;
+    const prior=envelope.current;
+    if(!matches(prior)||prior.studentKey!==studentKey||prior.attemptId!==attemptId||prior.releaseBuildId!==version[1]||
+      prior.conflictId||prior.saveStatus?.state==='conflict')continue;
+    const previous=seminar5ProgressFromWorkspace(prior.state,progress.stage);
+    if(previous.reviewComplete)return previous;
+  }
+  return progress;
 }
 
 export async function readCareerKnowledgeCompletion({backend,owner,activitySlug}){
