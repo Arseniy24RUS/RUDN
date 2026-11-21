@@ -30,8 +30,9 @@ w.ResizeObserver=class{observe(){}unobserve(){}disconnect(){}};
 Object.defineProperty(w,'crypto',{value:webcrypto});
 w.localStorage.setItem('rudn-governor-stage9-prefs',JSON.stringify({language,soundEnabled:false}));
 for(const match of html.matchAll(/<script src="([^"]+)"/g))w.eval(fs.readFileSync(path.join(dir,match[1]),'utf8')+'\n//# sourceURL='+match[1]);
+if(language==='zh')w.eval(fs.readFileSync(path.join(dir,'locales/zh-Hans.js'),'utf8'));
 const G=w.GovernorGame;
-G.WorldUI.mount=()=>{};G.WorldUI.refreshVisible=()=>{};G.WorldUI.disposeWithin=()=>{};
+G.WorldUI.mountMoment=()=>{};G.WorldUI.mount=()=>{};G.WorldUI.refreshVisible=()=>{};G.WorldUI.disposeWithin=()=>{};
 G.resolveAsset=p=>new URL(p,w.location.href).href;
 w.document.querySelector('#app').hidden=false;w.document.querySelector('#app').inert=false;
 w.eval(fs.readFileSync(path.join(dir,'src/app.js'),'utf8')+'\n//# sourceURL=src/app.js');
@@ -58,7 +59,6 @@ assert.ok($('#secondary-stage').textContent.includes('Что важнее'));
 assert.ok($('.campaign-coach').textContent.includes('Начните с проблемы'));
 assert.ok($('.campaign-mandate').textContent.includes('Услуги рядом'));
 await click('[data-agenda-topic="rural-healthcare"]');
-await click('[data-agenda-explore="rural-healthcare"]');
 assert.equal($('#mission-panel').dataset.missionId,'rural-healthcare');
 assert.ok($('.campaign-coach').textContent.includes('Сравните способы'));
 
@@ -75,10 +75,14 @@ await click('#confirm-action');
 assert.ok($('#negotiation-dialog').open);
 assert.ok(!$('#negotiation-dialog').textContent.includes('три ФАПа'));
 await click('[data-sign-agreement]');
-assert.ok($('#resolution-dialog').open);
+assert.equal($('#resolution-dialog').open,false);
 assert.equal(state().history.length,1);
-assert.equal($('#resolution-content > .campaign-result')?.tagName,'SECTION','Main annual feedback must not be inside collapsed details');
-await click('#continue-turn');closePresentations();
+assert.equal(state().turnIndex,1);
+await click('[data-last-year]');
+assert.ok($('#resolution-dialog').open);
+assert.equal($('#resolution-content > .campaign-result')?.tagName,'SECTION','Optional annual feedback is readable');
+await click('#continue-turn');
+assert.equal(state().turnIndex,1,'Closing the year in review does not spend another turn');
 const completed=[];
 for(let year=2;year<=20;year++){
   const before=state();
@@ -91,29 +95,31 @@ for(let year=2;year<=20;year++){
   const topicButton=$(`[data-agenda-topic="${topic}"]`);assert.ok(topicButton,'Topic exists '+topic);
   topicButton.closest('details')?.setAttribute('open','');
   await click(`[data-agenda-topic="${topic}"]`);
-  await click(`[data-agenda-explore="${topic}"]`);
-  const current=state(),mission=G.Engine.getCurrentMission(current);
-  const candidates=mission.actions.map(a=>G.Engine.previewAction(current,a.id)).filter(p=>p?.affordable);
-  const chosen=candidates.find(p=>!p.action.deferred)||candidates.find(p=>p.action.deferred);
-  assert.ok(chosen,'An available choice in year '+year);
-  await click(`[data-action="${chosen.action.id}"]`);
-  await click('#confirm-action');
-  if($('#negotiation-dialog')?.open)await click('[data-sign-agreement]');
+  let actionId='defer-agenda-operations';
+  if(topic!== 'agenda-operations'){
+    const current=state(),mission=G.Engine.getCurrentMission(current);
+    const candidates=mission.actions.map(a=>G.Engine.previewAction(current,a.id)).filter(p=>p?.affordable);
+    const chosen=candidates.find(p=>!p.action.deferred)||candidates.find(p=>p.action.deferred);
+    assert.ok(chosen,'An available choice in year '+year);
+    actionId=chosen.action.id;
+    await click(`[data-action="${actionId}"]`);
+    await click('#confirm-action');
+    if($('#negotiation-dialog')?.open)await click('[data-sign-agreement]');
+  }
   for(let attempt=0;attempt<6&&G.BudgetReview.pending(state());attempt++){
     const choice=$('#budget-review-dialog [data-budget-choice]:not([disabled])');assert.ok(choice,'Budget recovery option');
     await click(`#budget-review-dialog [data-budget-choice="${choice.dataset.budgetChoice}"]`);
     await click('#budget-review-dialog [data-budget-confirm]');
   }
   assert.equal(state().history.length,year,JSON.stringify(logs));
-  assert.ok($('#resolution-dialog').open,'Year result '+year);
-  assert.ok(G.Engine.validateState(state()),'Valid committed '+year);
-  await click('#continue-turn');closePresentations();
-  for(let attempt=0;attempt<6&&G.BudgetReview.pending(state());attempt++){
-    const choice=$('#budget-review-dialog [data-budget-choice]:not([disabled])');assert.ok(choice,'Budget recovery option');
-    await click(`#budget-review-dialog [data-budget-choice="${choice.dataset.budgetChoice}"]`);
-    await click('#budget-review-dialog [data-budget-confirm]');
+  assert.equal($('#resolution-dialog').open,false);
+  assert.ok(G.Engine.validateState(state()),'Valid year '+year);
+  if([5,10,15].includes(year)){
+    assert.ok($('#campaign-course-dialog')?.open,'Course review '+year);
+    assert.ok($('#campaign-course-dialog .review-verdict'));
+    await click('[data-course-close]');
   }
-  completed.push({year,topic,action:chosen.action.id,chapter:$('#chapter-number').textContent});
+  completed.push({year,topic,action:actionId,chapter:$('#chapter-number').textContent});
 }
 const end=state();assert.equal(end.completed,true);assert.equal(end.campaignStrategy.reviews.length,4);
 assert.ok(G.Engine.validateState(end));assert.ok($('#end-summary .campaign-report'));
@@ -140,7 +146,6 @@ async function smoke(language,mode){
   assert.equal($('.side-nav [data-view="journal"]').hidden,false);
   if(mode==='agenda'){
     await click('[data-agenda-topic="rural-healthcare"]');
-    await click('[data-agenda-explore="rural-healthcare"]');
   }
   assert.equal($('#campaign-course-shortcut').hidden,false);
   await click('#campaign-course-shortcut');
@@ -158,7 +163,7 @@ async function smoke(language,mode){
   assert.ok(action);await click(`[data-action="${action.id}"]`);await click('#confirm-action');
   if($('#negotiation-dialog')?.open)await click('[data-sign-agreement]');
   assert.equal(state().history.length,1);assert.ok(G.Engine.validateState(state()));
-  assert.ok($('#resolution-content > .campaign-result'));
+  assert.equal(state().turnIndex,1);assert.equal($('#resolution-dialog').open,false);
   assert.deepEqual(logs,[]);
   const result={language,mode,course:'generations',firstDecision:true,courseDialog:true,reopenCoaching:true,errors:logs};
   dom.window.close();return result;

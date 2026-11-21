@@ -8,7 +8,7 @@
     { id:'industrial', x:-13, z:7, name:{ru:'Промышленный пояс',en:'Industrial belt'}, icon:'factory', service:'employment' },
     { id:'river', x:11, z:-6, name:{ru:'Речная долина',en:'River valley'}, icon:'flood', service:'floodProtection' },
     { id:'capital', x:0, z:9, name:{ru:'Областной центр',en:'Regional capital'}, icon:'digital', service:'digitalAccess' },
-    { id:'suburb', x:14, z:8, name:{ru:'Новый берег',en:'Novy Bereg'}, icon:'school', service:'schoolAccess' }
+    { id:'suburb', x:14, z:8, name:{ru:'Новый берег',en:'New Bank'}, icon:'school', service:'schoolAccess' }
   ];
   const STATUS = {
     delivery:{ru:'В реализации',en:'In delivery'},active:{ru:'Работает',en:'Operating'},
@@ -82,12 +82,55 @@
       flows:baseline?[]:(state.population.lastYear?.transfers||[]).slice().sort((a,b)=>b.count-a.count).slice(0,4),
       places,projects,decisions:history.length,signature:JSON.stringify([baseline,state.turnIndex,state.awaitingContinue,state.completed,projects.map(p=>[p.id,p.status,p.startsIn,p.yearsRemaining,p.delivery]),places.map(p=>p.serviceValue)])};
   }
-  function updates(state){
-    const base=state.population.baseYear;
-    return (state.finance.lastLifecycleEvents||[]).filter(e=>['activated','completed'].includes(e.type)).map(e=>{
-      const p=state.finance.portfolio.find(p=>p.id===e.projectId||p.id===e.id||local(p.title,'ru')===local(e.title,'ru'));
-      return {id:p?.id||e.projectId||String(e.type)+local(e.title,'ru'),type:e.type,title:e.title||p?.title,districtId:p?.districtId||'north',year:base+state.turnIndex};
+  function updates(state, events = state.finance.lastLifecycleEvents || []) {
+    const year = state.population.baseYear + state.turnIndex;
+    return events.flatMap(event => {
+      const project = state.finance.portfolio.find(p => p.id === (event.projectId || event.id));
+      if (!project || !['activated', 'completed', 'operating'].includes(event.type)) return [];
+      return [{id:project.id, type:event.type, title:project.title, districtId:projectDistrict(project), year}];
     });
+  }
+  function moments(state, options = {}) {
+    const record = options.record === undefined ? state.history.at(-1) : options.record;
+    const phase = state.awaitingContinue ? 'decision' : (options.phase || 'year');
+    // A stopped, pending or final transition has no new lifecycle; the preceding
+    // year's events must never be attributed to a decision still on the desk.
+    const advanced = phase === 'year' && !state.completed && record?.turn === state.turnIndex;
+    const lifecycle = advanced ? updates(state, options.events) : [];
+    const operated = lifecycle.filter(e => e.type === 'operating');
+    const changes = lifecycle.filter(e => e.type !== 'operating');
+    if (!record) return changes.concat(operated);
+    const project = record.project;
+    // The decision's immutable copy predates registration of population targets.
+    const placed = project && state.finance.portfolio.find(p => p.id === project.id);
+    const districtId = project ? projectDistrict(placed || project) : record.missionId === G.Agenda?.OPERATIONS?.id ? null : record.districtId;
+    const year = state.population.baseYear + record.turn - 1;
+    const decision = {id:project?.id || null, districtId, year, title:project?.title || G.Agenda?.byId(record.missionId)?.title,
+      type:record.deferred ? 'deferred' : (project?.status === 'active' ? 'immediate' : 'approved'),
+      outcome:record.delivery?.id, startsIn:project?.startsIn || 0};
+    return [...changes, decision, ...operated];
+  }
+  const outputMetrics = {
+    health:'healthAccess', healthStaff:'healthAccess', school:'schoolAccess', schoolStaff:'schoolAccess', schoolReach:'schoolAccess',
+    jobs:'employment', housing:'housingAccess', childcare:'childcareAccess', mobility:'mobility',
+    floodProtection:'floodProtection', digital:'digitalAccess', digitalProtection:'digitalProtection',
+    flexWork:'flexWork', elderCare:'elderCare', familySupport:'familySupport'
+  };
+  function districtMetric(state, districtId, projectId, eventType){
+    const place = PLACES.find(p => p.id === districtId);
+    if (!place) return null;
+    const project = state.finance.portfolio.find(p => p.id === projectId);
+    const output = Object.keys(project?.people?.outputs || {}).find(key => outputMetrics[key]);
+    const metric = output ? outputMetrics[output] : project ? null : place.service;
+    const current = state.population.derived?.municipalities?.[districtId]?.[metric];
+    if (!Number.isFinite(current)) return null;
+    const record = state.history.at(-1);
+    // The closed year's population ledger is the last observation before the
+    // portfolio advances. This is a district trend, including other projects.
+    const before = ['activated','completed'].includes(eventType)
+      ? record?.population?.after?.municipalities?.[districtId]?.[metric]
+      : record?.serviceResponse?.before?.municipalities?.[districtId]?.[metric];
+    return {metric, before:Number.isFinite(before)?before:null, current};
   }
   function chapterCard(state){
     const mission=G.Agenda.mission(state);
@@ -106,6 +149,6 @@
     const valid=saved&&saved.campaignId===id;
     return {version:1,campaignId:id,seenChapters:valid&&Array.isArray(saved.seenChapters)?saved.seenChapters.filter(x=>Number.isInteger(x)&&x>=1&&x<=4):[],visited:valid&&Array.isArray(saved.visited)?saved.visited.filter(id=>PLACES.some(p=>p.id===id)):[],skipChapters:!!saved?.skipChapters};
   }
-  G.WorldModel={PLACES,STATUS,CHAPTERS,local,hash,kind,projectDistrict,snapshot,updates,chapterCard,initialiseJourney};
+  G.WorldModel={PLACES,STATUS,CHAPTERS,local,hash,kind,projectDistrict,snapshot,updates,moments,districtMetric,chapterCard,initialiseJourney};
   if(typeof module!=='undefined'&&module.exports)module.exports=G.WorldModel;
 })(typeof window!=='undefined'?window:globalThis);

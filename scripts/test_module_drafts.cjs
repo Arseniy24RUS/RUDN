@@ -103,8 +103,9 @@ const requested=(process.env.MODULES||'reception,career,puzzle,governor').split(
       await page.locator('#campaign-options > summary').click();await page.locator('#campaign-mode').selectOption('guided');await page.locator('#scenario-select').selectOption('balanced');await page.locator('#session-seed').fill('DURABLE-QA');await page.locator('#start-form [type="submit"]').click();
       for(let i=1;i<=20;i++){
        const chapter=page.locator('[data-enter-chapter]:visible');if(await chapter.count())await chapter.click();
-       await page.locator('#action-cards .defer-action').click();await page.locator('#confirm-action').click();await page.locator('#resolution-dialog[open]').waitFor();
-       await page.locator('#continue-turn').click();await flush(page);
+       await page.locator('#action-cards .defer-action').click();await page.locator('#confirm-action').click();
+       if([5,10,15].includes(i))await page.locator('#campaign-course-dialog[open] [data-course-close]').click();
+       await flush(page);
        if(i===2){const before=await draft(page,'seminar-7','campaign');assert.equal(before.state.campaign.history.length,2);await shot(page,name+'-governor-middle');await page.reload();await page.locator('#platform-loading').waitFor({state:'hidden'});await page.locator('#continue-campaign').click();const after=await draft(page,'seminar-7','campaign');assert.equal(after.attemptId,before.attemptId);assert.equal(after.state.campaign.history.length,2);assert.equal(after.state.run.submissionId,before.state.run.submissionId);}
       }
       await page.locator('#end-dialog[open]').waitFor();await poll(async()=> (await draft(page,'seminar-7','campaign'))?.phase==='completed','Governor completion not persisted');await flush(page);

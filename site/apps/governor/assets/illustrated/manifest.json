@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "description": "Prepared from supplied image-generation assets, not UI screenshots. No new artwork generated in this iteration. Normalised floor anchor for seven freestanding models. State symbols are supporting UI, not simulated facility counts.",
+  "description": "Illustrated region and programme sprites. School construction and opening share one site and ground anchor.",
   "files": [
     {
       "id": "school",
@@ -388,6 +388,40 @@
       "sha256": "17587583653deccf4bc6fc2ab0bae05eefe1965743489b13ef4bd383cbec51dc",
       "source": "изометрическая_карта_города_и_природы.png",
       "sourceSha256": "1b3b86441cb6c14373efcb134bd80c9aaa06439f973c1b8f7474da8894d6396b"
+    },
+    {
+      "id": "school-site",
+      "path": "assets/illustrated/school-site.webp",
+      "size": [
+        768,
+        768
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 132312,
+      "sha256": "8749a40baaf22d8bed726ac886826800f8136d9fd70e11ccb9f96c9955b2b186",
+      "source": "Native ImageGen edit of school.webp, construction phase",
+      "sourceSha256": "6b9dec97473966c32c90a555d257e5dcc35264e33bc1b709c8c2f30c766543c6"
+    },
+    {
+      "id": "school-site-thumb",
+      "path": "assets/illustrated/school-site-thumb.webp",
+      "size": [
+        288,
+        288
+      ],
+      "anchor": [
+        0.5,
+        0.9479166666666666
+      ],
+      "alpha": true,
+      "bytes": 26546,
+      "sha256": "794e461f3241ae629af2f441a0ff9138d8e264b90ebbb703a49346a62fe8ff9e",
+      "source": "Native ImageGen edit of school.webp, construction phase",
+      "sourceSha256": "6b9dec97473966c32c90a555d257e5dcc35264e33bc1b709c8c2f30c766543c6"
     }
   ]
 }

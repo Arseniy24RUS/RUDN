@@ -268,8 +268,12 @@ const GOVERNOR_ASSETS=[
   "./apps/governor/assets/illustrated/industry.webp",
   "./apps/governor/assets/illustrated/manifest.json",
   "./apps/governor/assets/illustrated/region.webp",
+  "./apps/governor/assets/illustrated/region-cover-640.webp",
+  "./apps/governor/assets/illustrated/region-cover-1024.webp",
   "./apps/governor/assets/illustrated/school-thumb.webp",
   "./apps/governor/assets/illustrated/school.webp",
+  "./apps/governor/assets/illustrated/school-site.webp",
+  "./apps/governor/assets/illustrated/school-site-thumb.webp",
   "./apps/governor/assets/illustrated/stage-decision-thumb.webp",
   "./apps/governor/assets/illustrated/stage-decision.webp",
   "./apps/governor/assets/illustrated/stage-delivery-thumb.webp",
@@ -751,6 +755,12 @@ async function platformPublishedTarget(){
   }catch{}
   return null;
 }
+function governorIndex(target){
+  const index=target.governorManifest;
+  const exact=new URL(`_releases/${target.buildId}/governor-manifest.json`,SCOPE);
+  if(platformURL(index.url).href!==exact.href||!/^[a-f0-9]{64}$/.test(index.sha256))throw new Error('release/invalid-governor-manifest');
+  return index;
+}
 async function platformPrepare(target,module,extras=[]){
   const manifest=await platformManifest(target),queue=[...new Set([...manifest.packs.shell,...(manifest.packs[module]||[]),...extras])];
   if(queue.some(name=>!manifest.resources[name]))throw new Error('release/unknown-resource');
@@ -758,6 +768,10 @@ async function platformPrepare(target,module,extras=[]){
   // Preparation promises persisted bytes, even if the manifest is already in RAM.
   // Ordinary online reads continue when optional cache storage is unavailable.
   await platformChecked(target.manifestURL,target.manifestSha256,cacheName,true);
+  if(module==='governor'&&target.governorManifest){
+    const index=governorIndex(target);
+    await platformChecked(index.url,index.sha256,cacheName,true);
+  }
   const descriptor=new Response(JSON.stringify(manifest.target),{headers:{'content-type':'application/json'}});
   await platformPersist(cacheName,new URL(`_releases/${manifest.buildId}/release.json`,SCOPE).href,descriptor,await platformHash(await descriptor.clone().arrayBuffer()));
   await Promise.all(Array.from({length:Math.min(3,queue.length)},async()=>{while(queue.length){const item=manifest.resources[queue.shift()];await platformChecked(item.url,item.sha256,cacheName,true);}}));
@@ -796,6 +810,10 @@ async function platformServe(event){
       }
       const manifest=navigation&&navigationTarget.buildId===physical[1]?await platformManifest(navigationTarget):await platformFind(physical[1]);
       if(physical[2]==='release.json')return new Response(JSON.stringify(manifest.target),{headers:{'content-type':'application/json'}});
+      if(physical[2]==='governor-manifest.json'&&manifest.target.governorManifest){
+        const index=governorIndex(manifest.target);
+        return platformChecked(index.url,index.sha256,platformCache(manifest.buildId));
+      }
       if(physical[2]==='manifest.json')return platformChecked(manifest.target.manifestURL,manifest.target.manifestSha256,platformCache(manifest.buildId));
       const item=manifest.byURL.get(url.href)||(navigation&&manifest.publicEntries?.includes(name)?manifest.resources[name]:null);
       if(!item)throw new Error('release/unknown-resource');

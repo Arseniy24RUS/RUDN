@@ -61,3 +61,109 @@ button.agenda-time:hover,button.agenda-time:focus-visible{background:#e9f6fc}
   .resolution-dialog .result-check{width:40px;height:40px}
   .resolution-dialog .result-reward{grid-column:2;justify-self:start;min-height:0;max-width:100%;font-size:12px}
 }
+
+/* Decisions share one persistent map and one scrollable working surface. */
+.turn-scene #main-world,.turn-scene #map-stage .advisor-dock,.turn-scene>.mission-footer{display:none!important}
+.turn-scene #turn-world{width:100%;min-width:0;height:100%;overflow:auto}
+.turn-scene #map-stage{min-height:0!important;max-height:none!important;height:100%!important;aspect-ratio:auto;isolation:isolate}
+.agenda-scene .stage-column{display:contents}
+.turn-scene .game-grid{min-height:0}
+.turn-scene .agenda-stage{background:#fffcf6!important;border-color:#d7ddd9}
+.turn-scene .agenda-board{display:block}
+.turn-scene .agenda-heading{margin-bottom:12px}
+.turn-scene .agenda-heading h2{font-family:Georgia,serif;font-weight:650;color:#203e40}
+.turn-scene .agenda-heading p{letter-spacing:.04em;color:#38635f}
+.turn-scene button.agenda-time{background:#edf3ee;color:#254d46;border:0;border-radius:10px;padding:7px 10px;flex:0 0 100px}
+.turn-scene .agenda-time b{color:#335c51;font-size:22px}
+.turn-scene .agenda-time span{font-size:11px;color:#32584e}
+.turn-scene .agenda-topic{border-color:#d9e1d9;border-radius:12px;min-height:55px;padding:8px 10px;background:#fffefb}
+.turn-scene .agenda-topic:hover,.turn-scene .agenda-topic:focus-visible{border-color:#3a7061;background:#edf5ee}
+.turn-scene .agenda-topic-icon{background:#e8f1e9;color:#305e50}
+.turn-scene .agenda-hold{min-height:49px;border-style:solid;background:#edf3ef;color:#315249}
+.agenda-year-review{border:0;background:none;color:#275c61;cursor:pointer;text-decoration:underline;padding:4px 0;min-height:36px;font:600 12px/1.35 system-ui}
+.plan-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.plan-heading>strong{font-size:18px;line-height:1.2;color:#244c46}
+.plan-heading .change-decision{font-size:12px;min-height:40px;flex-shrink:0;margin:0}
+.plan-stakes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
+.plan-stakes>div{min-width:0;background:#edf4ec;border-radius:9px;padding:8px}
+.plan-stakes dt,.plan-stakes dd{margin:0;line-height:1.3;overflow-wrap:anywhere}
+.plan-stakes dt{font-size:11px;color:#416354}
+.plan-stakes dd{color:#254b39;font-size:15px;font-weight:700}
+.plan-options,.plan-forecast{color:#355867;text-align:left}
+.plan-options>summary,.plan-forecast>summary,.campaign-coach>summary{cursor:pointer;font:650 13px/1.4 system-ui;padding:10px 2px}
+.plan-options>summary span{font-weight:400;color:#526d77}
+.plan-forecast>summary{border-top:1px solid #d1e2e3}
+.campaign-coach:not([open]){display:block;padding:0 12px}
+.campaign-coach[open]{display:block}
+.review-verdict{padding:14px 18px;background:#edf4ec;color:#234b3d;border-left:4px solid #547e55;border-radius:10px}
+.review-verdict p,.review-verdict h3{margin:4px 0}
+.turn-scene .mission-context,.turn-scene .agenda-context{margin:4px 0}
+.turn-scene .preview-content{display:block}
+.turn-scene .mission-panel:not(.funding-step) #confirm-action,.turn-scene .preview-placeholder{display:none}
+.turn-scene .funding-step .choice-heading,.turn-scene .funding-step #action-cards,.turn-scene .funding-step .mission-heading{display:none}
+.turn-scene .mission-heading h2{font-family:Georgia,serif;color:#244641}
+.turn-scene #campaign-course-shortcut{margin:0}
+@media(min-width:901px){
+  .game-shell.turn-scene,.game-shell.turn-scene.secondary-active{grid-template-rows:auto minmax(0,1fr)}
+  .game-shell.turn-scene .game-grid,.game-shell.agenda-scene.secondary-active .game-grid{grid-template-columns:minmax(72px,6.5%) minmax(0,1.5fr) minmax(335px,1fr);grid-template-rows:minmax(0,1fr)}
+  .agenda-scene #map-stage{grid-column:2;grid-row:1}.agenda-scene #secondary-stage{grid-column:3;grid-row:1;min-height:0}
+  .turn-scene .agenda-stage{padding:clamp(15px,1.5vw,24px)!important}
+}
+@media(max-width:900px){
+  .game-shell.turn-scene{display:grid;grid-template-rows:auto minmax(0,1fr) auto;height:calc(100dvh - var(--course-top,90px));min-height:310px;padding:0;overflow:visible}
+  .game-shell.turn-scene>.topbar{grid-template-columns:44px minmax(0,1fr) 42px;min-height:46px;gap:5px;padding:2px 7px}
+  .game-shell.turn-scene>.topbar .topbar-brand{width:44px!important;min-width:0;grid-column:1}
+  .game-shell.turn-scene>.topbar .core-stats{grid-row:1;grid-column:2;gap:3px;min-width:0}
+  .turn-scene .stat-card{min-height:38px;padding:2px 4px;border:0;border-radius:8px;box-shadow:none}
+  .turn-scene .stat-copy small{font-size:10px;line-height:1.1}
+  .turn-scene .stat-copy strong{font-size:13px;line-height:1.2}
+  .turn-scene .stat-copy em{display:none!important}
+  .game-shell.turn-scene>.topbar .profile-box{grid-column:3;grid-row:1;justify-content:center}
+  .game-shell.turn-scene>.topbar #language-toggle,.turn-scene>.topbar #sound-toggle,.turn-scene .profile-copy{display:none}
+  .turn-scene>.topbar .profile-avatar{width:34px;height:34px}
+  .turn-scene .game-grid{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:clamp(130px,27dvh,250px) minmax(0,1fr);gap:5px;overflow:hidden;padding:4px 6px}
+  .turn-scene .stage-column{display:contents}
+  .turn-scene #map-stage{grid-row:1;grid-column:1;border-radius:16px;order:0}
+  .turn-scene #mission-panel,.turn-scene #secondary-stage:not(.hidden){grid-row:2;grid-column:1;margin:0;height:100%;min-height:0!important;max-height:none!important;border-radius:15px;order:0}
+  .turn-scene #mission-panel{display:grid;grid-template-rows:minmax(0,1fr) auto;overflow:hidden;padding:0!important}
+  .agenda-scene #mission-panel{display:none}
+  .turn-scene .mission-scroll{overflow-y:auto;overscroll-behavior:contain;padding:9px 12px}
+  .turn-scene #secondary-stage:not(.hidden){padding:10px 12px!important;overflow:auto;overscroll-behavior:contain}
+  .turn-scene .mission-description{margin:4px 0;font-size:13px!important}
+  .turn-scene .mission-heading{padding:0;margin:0;gap:7px}.turn-scene .mission-heading h2{font-size:20px!important}
+  .turn-scene .mission-icon,.turn-scene .mission-ribbon,.turn-scene .mission-kicker{display:none}
+  .turn-scene .agenda-context{background:none;border:0;padding:0;min-height:30px}
+  .turn-scene #campaign-course-shortcut{padding:3px 0;min-height:34px}
+  .turn-scene .agenda-heading{align-items:center;gap:6px;margin-bottom:6px}
+  .turn-scene .agenda-heading h2{font-size:20px;line-height:1.1;margin:0}
+  .turn-scene .agenda-heading p{margin:0 0 3px;font-size:10px}
+  .turn-scene button.agenda-time{flex-basis:75px;display:flex;gap:4px;align-items:center;padding:4px 5px;min-height:42px}
+  .turn-scene button.agenda-time b{margin:0;font-size:19px}.turn-scene button.agenda-time span{font-size:10px;text-align:left}
+  .turn-scene .agenda-topic-list{gap:4px}.turn-scene .agenda-topic{min-height:47px;padding:5px 7px;gap:7px}
+  .turn-scene .agenda-topic-icon{min-width:27px;height:29px}.turn-scene .agenda-topic-icon svg{width:17px}
+  .turn-scene .agenda-topic small{margin:2px 0 0}
+  .turn-scene .agenda-hold{margin-top:8px}
+  .turn-scene #confirm-action:not([disabled]){width:calc(100% - 16px);position:static;min-height:45px;margin:3px 8px 6px;border-radius:11px;box-shadow:none;font-size:14px}
+  .turn-scene .mobile-bottom-nav{position:static;inset:auto;display:flex;width:100%;height:auto;min-height:0;border-radius:0;box-shadow:none;justify-content:space-evenly;padding:2px 4px max(2px,env(safe-area-inset-bottom))}
+  .turn-scene .mobile-bottom-nav button,.turn-scene .mobile-bottom-nav .mobile-primary{flex:1;position:static;transform:none;height:auto;min-height:42px;border:0;gap:1px;box-shadow:none}
+  .turn-scene .mobile-bottom-nav button>span{width:19px;height:19px}.turn-scene .mobile-bottom-nav svg{width:17px;height:17px}
+  .turn-scene .mobile-bottom-nav small{font-size:10px;line-height:1.15}
+  .turn-scene .plan-stakes{gap:4px}.turn-scene .plan-stakes>div{padding:6px}.turn-scene .plan-stakes dd{font-size:13px}
+  .turn-scene .plan-heading>strong{font-size:16px}
+}
+@media(max-width:900px) and (orientation:landscape){
+  .turn-scene .game-grid{grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);grid-template-rows:minmax(0,1fr)}
+  .turn-scene #mission-panel,.turn-scene #secondary-stage:not(.hidden){grid-column:2;grid-row:1}
+  .game-shell.turn-scene{min-height:240px}
+}
+
+@media(max-width:900px){
+  .game-shell.turn-scene .budget-stat .stat-copy strong::after{content:none}
+  .turn-scene .mobile-bottom-nav .mobile-primary{border-radius:12px}
+}
+
+#game-shell .budget-stat .stat-copy strong::after{content:none}
+@media(max-width:900px){
+  .game-shell.turn-scene>.topbar .core-stats{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,.85fr)}
+  .game-shell.turn-scene .budget-stat .stat-copy strong{font-size:clamp(10px,3vw,13px);line-height:1.15;white-space:normal}
+}

@@ -56,3 +56,7 @@ html[lang^="zh"] .budget-stat .stat-copy strong::after{content:' 十亿'}
  .mission-panel,.secondary-stage{scroll-margin-top:calc(var(--platform-bar) + 14px)}
  .action-cards,.action-card{scroll-margin-top:calc(var(--platform-bar) + 14px);scroll-margin-bottom:100px}
 }
+
+@media (max-width:900px){
+  body:has(#game-shell.turn-scene:not(.hidden)) #platform-status.routine-status{display:none}
+}

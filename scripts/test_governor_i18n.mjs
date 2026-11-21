@@ -15,8 +15,8 @@ const placeholders=value=>(value.match(/\{\d+\}/g)||[]).sort();
 const cyrillic=value=>/[\u0400-\u04ff]/.test(value);
 const allowAutonym=value=>!cyrillic(value.replaceAll('Русский','').replaceAll('ГГУбд-01-26',''));
 
-test('Chinese catalog covers all 2,031 source messages, including template placeholders',()=>{
- assert.equal(G.ChineseCatalog.length,2031);assert.equal(new Set(G.ChineseCatalog.map(x=>x.id)).size,2031);
+test('Chinese catalog covers all 2,026 source messages, including template placeholders',()=>{
+ assert.equal(G.ChineseCatalog.length,2026);assert.equal(new Set(G.ChineseCatalog.map(x=>x.id)).size,2026);
  for(const entry of G.ChineseCatalog){
   assert.ok(entry.zh.trim(),entry.id+' empty');
   assert.deepEqual(placeholders(entry.zh),placeholders(entry.ru),entry.id+' placeholders changed');
@@ -99,7 +99,7 @@ test('RU, EN and ZH produce identical decisions, IDs, balances and results acros
   assert.deepEqual(comparable(states[2]),comparable(states[0]),'ZH changed turn '+turn);
  }
  for(const state of states){assert.equal(state.history.length,20);assert.equal(state.completed,true);assert.ok(E.validateState(state));}
- const zh=G.Learning.documentHtml(states[2],'zh');assert.ok(zh.includes('lang="zh"'));
+ const zh=G.Learning.reportBody(states[2],'zh');assert.ok(zh.includes('2045'));
  assert.ok(!cyrillic(zh),'Chinese HTML report has untranslated Russian: '+zh.match(/[^<>]*[\u0400-\u04ff][^<>]*/g)?.join('\n'));
- const ru=G.Learning.documentHtml(states[0],'ru'),en=G.Learning.documentHtml(states[1],'en');assert.ok(ru.includes('Ресурсы и результаты'));assert.ok(en.includes('Resources and outcomes'));
+ const ru=G.Learning.reportBody(states[0],'ru'),en=G.Learning.reportBody(states[1],'en');assert.ok(ru.includes('Ресурсы и результаты'));assert.ok(en.includes('Resources and outcomes'));
 });

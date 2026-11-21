@@ -28,7 +28,8 @@ function paint(ctx,w,h,built,view={}){
   const xy=screen([p.x,0,p.z],w,h,view);
   const im=A.peek(p.visualSrc),site=!!p.structural;
   // Non-building interventions stay a small symbol, never a fabricated new school.
-  const width=(site?112:p.visual?.direct?86:48)*t.scale,height=width;
+  const spotlight=view.spotlight===p.id;
+  const width=(site?(spotlight?148:112):p.visual?.direct?(spotlight?100:86):48)*t.scale,height=width;
   ctx.save();
   ctx.fillStyle=p.status==='delivery'?'rgba(204,145,35,.38)':p.status==='completed'?'rgba(76,101,112,.32)':'rgba(0,126,200,.3)';
   ctx.beginPath();ctx.ellipse(xy.x,xy.y,34*t.scale,12*t.scale,0,0,Math.PI*2);ctx.fill();

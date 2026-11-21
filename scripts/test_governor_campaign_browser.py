@@ -91,9 +91,12 @@ def run(browser, base, output, width, height, language, full=False):
         visible(page, "html[data-app-ready='true']").wait_for(state="attached")
         visible(page, "#start-form").wait_for()
         for _ in range(3):
-            if page.locator("html").get_attribute("lang").split("-")[0] == language:
+            current_language = page.locator("html").get_attribute("lang").split("-")[0]
+            if current_language == language:
                 break
             tap(page, "#start-language", touch)
+            page.wait_for_function("previous => document.documentElement.lang.split('-')[0] !== previous",
+                                   arg=current_language)
         assert page.locator("html").get_attribute("lang").split("-")[0] == language
         result["title"] = page.title()
         assert result["title"] and ("RUDN" in result["title"] or "РУДН" in result["title"])
@@ -105,7 +108,7 @@ def run(browser, base, output, width, height, language, full=False):
         result["startImage"] = image_ok(page, "#start-screen figure img")
         snap("start")
         tap(page, '#start-form button[type="submit"]', touch)
-        close_chapter(page, touch, expected=True)
+        assert not visible(page, "#chapter-dialog[open]").count()
         visible(page, "#agenda-heading").wait_for()
         result["stages"]["agenda"] = layout(page)
         result["agendaHeading"] = visible(page, "#agenda-heading").inner_text()
@@ -130,44 +133,51 @@ def run(browser, base, output, width, height, language, full=False):
                 disclosure.click()
             tap(page, f'[data-agenda-topic="{topic}"]', touch)
             if year == 1:
-                result["topicImage"] = image_ok(page, "#agenda-focus img")
-            tap(page, f'[data-agenda-explore="{topic}"]', touch)
-            visible(page, "#mission-panel[data-mission-id]").wait_for()
-            if year == 1:
-                visible(page, "#main-world canvas").wait_for(state="attached")
-                result["stages"]["mission"] = layout(page)
-                tap(page, "#campaign-course-shortcut", touch)
-                visible(page, "#campaign-course-dialog[open]").wait_for()
-                course = visible(page, "#campaign-course-dialog").inner_text()
-                if language != "ru":
-                    assert not CYRILLIC.search(course), course
-                result["stages"]["course"] = layout(page)
-                if not touch:
-                    page.keyboard.press("Escape")
-                    assert visible(page, "#campaign-course-dialog").is_hidden()
-                else:
-                    tap(page, "[data-course-close]", touch)
-            selector = f'[data-action="{action}"]' if action else (
-                "#action-cards .defer-action" if topic == "agenda-operations"
-                else "#action-cards [data-action]:not(.defer-action):not([disabled])")
-            tap(page, selector, touch)
-            if year == 1:
-                assert ".." not in visible(page, ".people-preview").inner_text()
-                snap("project")
-            tap(page, "#confirm-action", touch)
-            if visible(page, "#negotiation-dialog[open]").count():
+                assert visible(page, "#turn-world canvas").is_visible()
+            if topic != "agenda-operations":
+                visible(page, "#mission-panel[data-mission-id]").wait_for()
                 if year == 1:
-                    result["stages"]["negotiation"] = layout(page)
-                    snap("negotiation")
-                tap(page, "[data-sign-agreement]", touch)
-            visible(page, "#resolution-dialog[open]").wait_for()
-            assert visible(page, "#resolution-content > .campaign-result").is_visible()
+                    visible(page, "#turn-world canvas").wait_for(state="attached")
+                    result["stages"]["mission"] = layout(page)
+                    tap(page, "#campaign-course-shortcut", touch)
+                    visible(page, "#campaign-course-dialog[open]").wait_for()
+                    course = visible(page, "#campaign-course-dialog").inner_text()
+                    if language != "ru":
+                        assert not CYRILLIC.search(course), course
+                    result["stages"]["course"] = layout(page)
+                    if not touch:
+                        page.keyboard.press("Escape")
+                        assert visible(page, "#campaign-course-dialog").is_hidden()
+                    else:
+                        tap(page, "[data-course-close]", touch)
+                selector = f'[data-action="{action}"]' if action else (
+                    "#action-cards .defer-action" if topic == "agenda-operations"
+                    else "#action-cards [data-action]:not(.defer-action):not([disabled])")
+                tap(page, selector, touch)
+                if year == 1:
+                    assert visible(page, ".plan-stakes").is_visible()
+                    tap(page, ".plan-forecast > summary", touch)
+                    assert ".." not in visible(page, ".people-preview").inner_text()
+                    tap(page, ".plan-forecast > summary", touch)
+                    snap("project")
+                tap(page, "#confirm-action", touch)
+                if visible(page, "#negotiation-dialog[open]").count():
+                    if year == 1:
+                        result["stages"]["negotiation"] = layout(page)
+                        snap("negotiation")
+                    tap(page, "[data-sign-agreement]", touch)
+            assert visible(page, "#resolution-dialog").is_hidden()
             if year == 1:
+                assert visible(page, "#turn-world .moment-caption").is_visible()
                 result["stages"]["annualResult"] = layout(page)
                 snap("result")
-            tap(page, "#continue-turn", touch)
+                tap(page, "[data-last-year]", touch)
+                assert visible(page, "#resolution-content > .campaign-result").is_visible()
+                tap(page, "#continue-turn", touch)
             if year < 20:
-                close_chapter(page, touch, expected=year in (5, 10, 15))
+                if year in (5, 10, 15):
+                    assert visible(page, "#campaign-course-dialog[open] .review-verdict").is_visible()
+                    tap(page, "[data-course-close]", touch)
                 visible(page, "#agenda-heading").wait_for()
                 if year == 1 and width > 900:
                     assert visible(page, "#secondary-stage").evaluate("node=>node.scrollTop") <= 2
@@ -189,10 +199,16 @@ def run(browser, base, output, width, height, language, full=False):
             if language != "ru":
                 assert not CYRILLIC.search(result["final"]), result["final"]
             snap("ending")
-            with page.expect_download() as download:
-                tap(page, "#download-report-end", touch)
-            result["reportDownload"] = download.value.suggested_filename
-            download.value.save_as(output / f"{name}-report.html")
+            tap(page, "#end-summary [data-learning-report]", touch)
+            debrief = visible(page, "#learning-report[open]")
+            assert "20/20" in debrief.locator(".report-heading").inner_text()
+            assert debrief.locator(".report-table").nth(2).locator("tbody tr").count() == 20
+            assert debrief.locator("button").count() == 1
+            if language != "ru":
+                assert not CYRILLIC.search(debrief.inner_text())
+            result["reportRows"] = 20
+            snap("debrief")
+            tap(page, "#learning-report .release-close", touch)
         assert not result["pageErrors"], result["pageErrors"]
         failed_assets = [e for e in result["networkErrors"] if e["type"] in ("image", "script", "stylesheet")]
         assert not failed_assets, failed_assets

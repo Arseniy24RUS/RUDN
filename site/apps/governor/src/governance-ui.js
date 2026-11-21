@@ -12,6 +12,8 @@
   'on-time':txt('по плану','on plan'),delayed:txt('задержка','delayed'),overrun:txt('удорожание','cost overrun'),partial:txt('неполное исполнение','partial delivery')
  })[id]||id;
  const money=x=>`${n(x)} ${txt('млрд ₽','bn RUB')}`;
+ const copy=(ru,en,zh)=>lang()==='zh'?zh:txt(ru,en);
+ const ownCost=plan=>plan.treasuryCost+(plan.firstYearOpex||0);
  const year=(s,t)=>s.population.baseYear+t-1;
  const statusLabel=s=>({agreed:txt('Пакет согласован','Agreement reached'),qualified:txt('Есть замечания','Qualified agreement'),open:txt('Разногласия сохраняются','Dissent remains')})[s];
  const stanceLabel=s=>({support:txt('Поддерживает','Supports'),cautious:txt('С условиями','Conditional'),oppose:txt('Возражает','Objects')})[s];
@@ -62,8 +64,17 @@
    const picked=a.termIds.includes(t.id),same=chosen.some(x=>x.actor===t.actor);
    const disabled=(!picked&&!same&&chosen.length>=2)||(t.requires&&t.requires!==selection.mode);
    const unavailable=t.requires&&t.requires!==selection.mode?txt('Нужен источник «Софинансирование»','Select cofinancing first'):txt('Сначала снимите одно из двух условий','Remove one of the two terms first');
+   let price=t.cost?`+${money(t.cost)} ${copy('к стоимости проекта','project cost','项目总成本')}`:txt('Без дополнительных затрат сейчас','No extra upfront cost');
+   if(!disabled && t.cost){
+    const others=a.termIds.filter(id=>G.termFor(id).actor!==t.actor);
+    const quote=ids=>E.previewAction(s,selection.actionId,selection.mode,selection.placementId,ids).plan;
+    const withTerm=picked?v.plan:quote([...others,t.id]);
+    const withoutTerm=quote(others);
+    const difference=Math.round((ownCost(withTerm)-ownCost(withoutTerm))*100)/100;
+    price+=` · ${copy('из казны сейчас','treasury share now','本期财政负担')} ${difference>0?'+':''}${money(difference)}`;
+   }
    return `<button type="button" class="gov-term ${picked?'selected':''}" data-term="${t.id}" aria-pressed="${picked}" ${disabled?'disabled':''}>
-    <span class="gov-term-indicator">${icon(picked?'check':'plus',{size:20})}</span><span><strong>${esc(l(t.title))}</strong><span class="gov-term-text">${esc(l(t.line))}</span><small>${t.cost?`+${money(t.cost)} ${txt('сейчас','now')}`:txt('Без дополнительных затрат сейчас','No extra upfront cost')}${t.opex?` · +${money(t.opex)} / ${txt('год','year')}`:''}</small>${disabled?`<em>${esc(unavailable)}</em>`:''}</span></button>`;
+    <span class="gov-term-indicator">${icon(picked?'check':'plus',{size:20})}</span><span><strong>${esc(l(t.title))}</strong><span class="gov-term-text">${esc(l(t.line))}</span><small>${esc(price)}${t.opex?` · +${money(t.opex)} / ${txt('год','year')}`:''}</small>${disabled?`<em>${esc(unavailable)}</em>`:''}</span></button>`;
   }).join('');
   const pledgeList=a.promises.length?a.promises.map(p=>`<li>${icon('calendar',{size:16})}<span>${esc(promiseTitle(p,s))}${p.conditionalGrant?`<small>${txt('Условный дополнительный транш','Conditional extra tranche')}: ${money(p.conditionalGrant)}</small>`:''}</span></li>`).join(''):`<li>${esc(txt('Дополнительных обещаний нет. Возражения останутся в протоколе.','No extra promises. Objections will remain in the minutes.'))}</li>`;
   d.innerHTML=`<header class="gov-header"><div class="gov-header-copy"><small>${txt('ПЕРЕГОВОРЫ','NEGOTIATION')} · ${year(s,s.turnIndex+1)}</small><h2 id="negotiation-title">${esc(l(scene.title))}</h2><p>${esc(l(scene.setting))}</p></div><img class="gov-header-art" src="${esc(asset(scene.image||'assets/scenes/negotiation-room.webp'))}" alt=""><button class="gov-close" type="button" data-meeting-back aria-label="${txt('Вернуться к проекту','Return to proposal')}">${icon('close',{size:23})}</button></header>
@@ -81,7 +92,7 @@
       <details class="gov-obligations" open><summary>${txt('Что проверят позже','What will be checked later')}</summary><ul>${pledgeList}</ul></details>
       <p class="gov-procedure">${a.status==='open'?txt('Разногласия означают дополнительный год согласования и потерю поддержки. Законная процедура остаётся доступной.','Dissent adds a year of coordination and reduces support. A lawful procedure remains available.'):txt('Согласие помогает исполнению, но не отменяет закупки, бюджетные процедуры или риск задержки.','Agreement helps delivery but does not remove procurement, budget procedures or delay risk.')}</p>
      </aside>
-    </div><footer class="gov-footer"><div><small>${txt('Собственные средства сейчас','Own funds now')}</small><strong>${money(v.plan.treasuryCost+(v.plan.firstYearOpex||0))}</strong><span>${txt('Запуск','Opening')}: ${year(s,s.turnIndex+1+(v.project?.startsIn||0))}</span></div><button class="primary-button gov-sign" type="button" data-sign-agreement ${v.affordable?'':'disabled'}>${esc(v.affordable?txt('Утвердить пакет','Approve package'):txt('Пакет не обеспечен ресурсами','Package lacks resources'))}${icon('arrow',{size:18})}</button></footer>`;
+    </div><footer class="gov-footer"><div><small>${txt('Собственные средства сейчас','Own funds now')}</small><strong>${money(ownCost(v.plan))}</strong><span>${txt('Запуск','Opening')}: ${year(s,s.turnIndex+1+(v.project?.startsIn||0))}</span></div><button class="primary-button gov-sign" type="button" data-sign-agreement ${v.affordable?'':'disabled'}>${esc(v.affordable?txt('Утвердить пакет','Approve package'):txt('Пакет не обеспечен ресурсами','Package lacks resources'))}${icon('arrow',{size:18})}</button></footer>`;
   d.setAttribute('aria-labelledby','negotiation-title');
   d.querySelector('[data-meeting-back]').onclick=()=>{d.close();host.refresh();host.save();};
   d.querySelectorAll('[data-participant]').forEach(b=>b.onclick=()=>{actorId=b.dataset.participant;inquiry=false;renderMeeting();d.querySelector(`[data-participant="${actorId}"]`).focus({preventScroll:true});});
@@ -114,7 +125,7 @@
   return `<section class="gov-legacy"><h3>${ru?'Какой вес имело ваше слово':'What your word was worth'}</h3><p>${ru?`Выполнено без переноса: ${q.kept}. После согласованного переноса: ${q.revisedKept}. Не выполнено: ${q.broken}. Остаётся проверить: ${q.pending}.`:`Kept on the original terms: ${q.kept}. Kept after renegotiation: ${q.revisedKept}. Broken: ${q.broken}. Still pending: ${q.pending}.`}</p>${q.returnedGrants?`<p>${ru?'Возвращено условных траншей':'Conditional tranches repaid'}: ${q.returnedGrants.toFixed(2)} ${ru?'млрд ₽':'bn RUB'}.</p>`:''}<small>${ru?'Поздний ввод не стирает нарушенный срок. Обязательства за пределами кампании не засчитываются ни как успех, ни как провал.':'Late delivery does not erase a missed deadline. Commitments beyond the campaign count as neither success nor failure.'}</small><button class="secondary-button" type="button" data-open-promises>${icon('journal',{size:17})}${ru?'Протоколы и обещания':'Minutes and promises'}</button></section>`;
  }
  function attach(container){container.querySelectorAll('[data-open-promises]').forEach(b=>b.onclick=()=>openPromises());}
- function openPromises(){returnFocus=document.activeElement;renderPromises();createDialog('promises-dialog',txt('Протоколы и обещания','Minutes and promises')).showModal();}
+ function openPromises(reportId){returnFocus=document.activeElement;renderPromises(reportId);createDialog('promises-dialog',txt('Протоколы и обещания','Minutes and promises')).showModal();}
  function renderPromises(reportId){
   const s=host.getState(),d=createDialog('promises-dialog',txt('Протоколы и обещания','Minutes and promises')),ru=lang()==='ru';
   const turn=s.turnIndex+1;
