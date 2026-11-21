@@ -237,7 +237,7 @@ jobs:
               'scripts/build_reception_reader.mjs',
               '.github/workflows/platform-checks.yml', '.gitignore', 'docs/RECEPTION_AI_BROWSER_QA.md',
               'firebase/database.rules.json', 'firebase/functions/index.mjs', 'site/assets/js/backend.js',
-              'tests/reception-ai-api-client.test.mjs', 'tests/reception-messenger-media.test.mjs',
+              'tests/reception-ai-api-client.test.mjs', 'tests/reception-messenger-media.test.mjs', 'tests/reception-software-motion.test.mjs',
               'tests/reception-workbench.test.mjs', 'tests/reception-session-storage.test.mjs',
               'tests/reception-ai-qa-cases.test.mjs', 'tests/reception-learning-review.test.mjs',
               'scripts/test-reception-workbench-dom.mjs',
@@ -807,7 +807,7 @@ jobs:
           node scripts/build-reception-correspondence-profiles.mjs --check
           node scripts/check-reception-control-workflow.mjs --out "${{ runner.temp }}/reception-workspace-qa/execution-coverage.json"
           node scripts/build-reception-reader-translations.mjs --check
-          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs tests/reception-workbook-view.test.mjs tests/reception-game-copy.test.mjs tests/reception-correspondence-editor.test.mjs tests/reception-control-workspace.test.mjs scripts/check-reception-correspondence-catalog.test.mjs
+          node --test firebase/functions/reception-ai/*.test.mjs tests/reception-ai-api-client.test.mjs tests/reception-messenger-media.test.mjs tests/reception-software-motion.test.mjs tests/reception-workbench.test.mjs tests/reception-session-storage.test.mjs tests/reception-ai-qa-cases.test.mjs tests/reception-learning-review.test.mjs tests/reception-authority-picker.test.mjs tests/reception-workbook-view.test.mjs tests/reception-game-copy.test.mjs tests/reception-correspondence-editor.test.mjs tests/reception-control-workspace.test.mjs scripts/check-reception-correspondence-catalog.test.mjs
       - name: Verify Reception document and calendar workflow
         if: contains(github.event.head_commit.message, '[reception-ai-release]')
         run: |

@@ -356,23 +356,25 @@ button.rxt-case-step:hover, .rxt-case-step[aria-current=step] { background: #dee
   }
   .reception-ai-root.rxa-cabinet .rxa-chat-dialogs > .rxa-btn {
     flex-basis: auto;
-    gap: 1px 4px;
-    padding: 4px 3px;
+    gap: 1px 3px;
+    padding: 4px 2px;
     font-size: .75rem;
   }
+  .reception-ai-root .rxa-chat-dialogs > button strong { letter-spacing: -.025em; }
   .reception-ai-root .rxa-chat-dialogs > button small { font-size: .6875rem; font-weight: 550; }
-  .reception-ai-root.rxa-cabinet .rxa-chat-dialogs > button > :is(img, .rxa-chat-portrait) { width: 26px; height: 26px; }
+  .reception-ai-root.rxa-cabinet .rxa-chat-dialogs > button > :is(img, .rxa-chat-portrait) { width: 25px; height: 25px; }
 }
 @media (max-width: 389px) {
   .reception-ai-root.rxa-cabinet .rxa-chat-dialogs > .rxa-btn { grid-template-areas: "name name" "portrait role"; }
   .reception-ai-root .rxa-chat-dialogs > button small { align-self: center; }
-  .reception-ai-root.rxa-cabinet .rxa-chat-dialogs > button > :is(img, .rxa-chat-portrait) { width: 25px; height: 25px; }
 }
 @media (max-width: 350px) {
   .reception-ai-root.rxa-cabinet:has(.rxa-chat-toolbar) .rxa-top {
-    padding-inline: max(8px,env(safe-area-inset-left)) max(5px,env(safe-area-inset-right));
+    gap: 2px;
+    padding-inline: max(7px,env(safe-area-inset-left)) max(5px,env(safe-area-inset-right));
   }
-  .reception-ai-root.rxa-cabinet:has(.rxa-chat-toolbar) .rxa-brand-copy strong { font-size: .8125rem; }
+  .reception-ai-root.rxa-cabinet:has(.rxa-chat-toolbar) .rxa-brand-copy strong { font-size: .75rem; }
   .reception-ai-root .rxa-chat-toolbar { gap: 2px; padding-inline: 2px; }
-  .reception-ai-root.rxa-cabinet .rxa-chat-dialogs > .rxa-btn { padding-inline: 2px; }
+  .reception-ai-root .rxa-chat-dialogs { gap: 2px; }
+  .reception-ai-root .rxa-chat-dialogs > button strong { letter-spacing: -.04em; }
 }

@@ -1,4 +1,5 @@
 import {resourceURL} from '../../../assets/js/release-resources.js';
+import {createDecodedMotion} from './decoded-motion.js';
 
 // Stable, conflict-free cast from the platform's existing GFX passports and
 // visualCast([...pilot case IDs], 'reception-ai-pilot-v1'). These are the user's
@@ -44,7 +45,7 @@ const ACTOR_FRAMES = Object.freeze({
 const SHEET_TIMEOUT_MS = 15000;
 const LOOP_TIMEOUT_MS = 30000;
 
-function createActorMotion(root, view, actorId) {
+function createActorMotion(root, view, actorId, onFrame) {
   const document = root.ownerDocument;
   const {width, height, columns, rows, sheets, interval} = ACTOR_FRAMES;
   const framesPerSheet = columns * rows;
@@ -86,7 +87,10 @@ function createActorMotion(root, view, actorId) {
   function showFrame() {
     if (!shouldDraw()) return;
     retryDelay = IMAGE_RETRY_DELAY_MS;
-    stage.setAttribute('data-rxa-motion-ready', '');
+    if (!stage.hasAttribute('data-rxa-motion-ready')) {
+      stage.setAttribute('data-rxa-motion-ready', '');
+      onFrame();
+    }
   }
   function clearImage() {
     view.clearTimeout(imageTimeout);
@@ -289,55 +293,6 @@ function createActorMotion(root, view, actorId) {
 export function createMessengerMedia(root, {signal} = {}) {
   const document = root.ownerDocument, view = document?.defaultView;
   if (!view || signal?.aborted) return {refresh() {}, destroy() {}};
-  if (!view.Image || !document.createElementNS) return createVideoMedia(root, view, signal);
-
-  let actor = '', player = null, stage = null, visible = false, destroyed = false;
-  const render = () => player?.refresh(stage, visible && !document.hidden);
-  const retry = () => player?.retry();
-  const observer = typeof view.IntersectionObserver === 'function' ? new view.IntersectionObserver(entries => {
-    for (const entry of entries) if (entry.target === stage) {
-      visible = entry.isIntersecting;
-      render();
-    }
-  }) : null;
-  function refresh() {
-    if (destroyed) return;
-    const target = root.querySelector('[data-rxa-actor], [data-rxa-chat-actor]');
-    const nextActor = target?.dataset.rxaActor || target?.dataset.rxaChatActor || '';
-    const next = ACTOR.test(nextActor) ? target : null;
-    if (next === stage && (!next || actor === nextActor)) { render(); return; }
-    if (stage) observer?.unobserve(stage);
-    stage = next;
-    if (!stage) { visible = false; render(); return; }
-    if (actor !== nextActor) {
-      player?.destroy();
-      actor = nextActor;
-      player = createActorMotion(root, view, actor);
-    }
-    const bounds = stage.getBoundingClientRect();
-    visible = !observer || bounds.width > 0 && bounds.height > 0 && bounds.bottom > 0 && bounds.top < view.innerHeight;
-    observer?.observe(stage);
-    render();
-  }
-  function destroy() {
-    if (destroyed) return;
-    destroyed = true;
-    observer?.disconnect();
-    document.removeEventListener('visibilitychange', render);
-    view.removeEventListener('online', retry);
-    signal?.removeEventListener('abort', destroy);
-    player?.destroy();
-    player = stage = null;
-  }
-  document.addEventListener('visibilitychange', render);
-  view.addEventListener('online', retry);
-  signal?.addEventListener('abort', destroy, {once:true});
-  return {refresh, destroy};
-}
-
-// Older embedded browsers can still use the original transparent video or animated image.
-function createVideoMedia(root, view, signal) {
-  const document = root.ownerDocument;
   const video = document.createElement('video');
   const supportsVideo = Boolean(video.canPlayType?.('video/webm; codecs="vp9"'));
   video.className = 'rxa-citizen-video';
@@ -358,10 +313,13 @@ function createVideoMedia(root, view, signal) {
   motionImage.setAttribute('aria-hidden', 'true');
   motionImage.alt = '';
   motionImage.decoding = 'async';
+  const hasAtlas = typeof view.Image === 'function' && typeof document.createElementNS === 'function';
   const reduce = view.matchMedia?.('(prefers-reduced-motion: reduce)') || {matches:false};
   const failedVideo = new Set(), imageFailures = new Map();
-  let stage = null, actor = '', visible = false, ready = false, supportsAlpha, frame, destroyed = false, imageReady = false;
-  let watchdog, imageRetry, lastVideoTime = 0, lastProgressAt = 0, sourceVersion = 0;
+  let stage = null, actor = '', visible = false, ready = false, verifiedAlpha = false, frame, destroyed = false, imageReady = false;
+  let watchdog, imageRetry, lastVideoTime, decodedFrames = 0, lastProgressAt = 0, sourceVersion = 0;
+  let sampleContext, lastSample;
+  let attempt = null, decoded = null, decodedFailed = false, atlas = null, heldPoster = null;
   const schedule = view.setTimeout?.bind(view) || globalThis.setTimeout;
   const unschedule = view.clearTimeout?.bind(view) || globalThis.clearTimeout;
   const now = () => view.performance?.now?.() ?? Date.now();
@@ -373,35 +331,67 @@ function createVideoMedia(root, view, signal) {
     if (watchdog !== undefined) unschedule(watchdog);
     watchdog = undefined;
   }
-  // Some mobile browsers accept play() but never present a frame, or leave its
-  // promise pending. A poster must not be the final result of either failure.
-  // Measure progress only while visible; the original animated WebP is the
-  // recovery path, without changing the animation or its quality.
+  function legacyFrameChanged() {
+    try {
+      if (!sampleContext) {
+        const sample = document.createElement('canvas');
+        sample.width = sample.height = 16;
+        sampleContext = sample.getContext('2d', {willReadFrequently:true});
+      }
+      if (!sampleContext) return false;
+      sampleContext.clearRect(0, 0, 16, 16);
+      sampleContext.drawImage(video, 0, 0, 16, 16);
+      const pixels = sampleContext.getImageData(0, 0, 16, 16).data;
+      const changed = !lastSample || pixels.some((value, index) => value !== lastSample[index]);
+      lastSample = pixels;
+      return changed;
+    } catch { return false; }
+  }
+  // A successful play() or a moving playhead does not prove compositing.
   function checkProgress() {
     watchdog = undefined;
-    if (!shouldPlay() || useImage() || !video.hasAttribute('src')) return;
+    if (!shouldPlay() || useFallback() || !video.hasAttribute('src')) return;
     const at = now();
-    if (ready && video.currentTime !== lastVideoTime) {
-      lastVideoTime = video.currentTime; lastProgressAt = at;
+    if (!video.requestVideoFrameCallback && !video.paused && video.videoWidth) {
+      const quality = video.getVideoPlaybackQuality?.();
+      const shown = quality && quality.totalVideoFrames - quality.droppedVideoFrames;
+      if (quality ? shown > decodedFrames : legacyFrameChanged()) {
+        decodedFrames = shown ?? 0;
+        recordFrame(video.currentTime);
+      }
     }
-    // Give the smaller video time to arrive before launching the larger image.
-    // Once data is available, a decoder that cannot draw still falls back quickly.
+    if (useFallback()) return;
+    // Give an active network transfer time to reach the decoder.
     const loading = !ready && video.networkState === video.NETWORK_LOADING && video.readyState < video.HAVE_CURRENT_DATA;
-    if (at - lastProgressAt >= (loading ? LOADING_TIMEOUT_MS : FRAME_TIMEOUT_MS)) { error(); return; }
+    if (at - lastProgressAt >= (loading ? LOADING_TIMEOUT_MS : FRAME_TIMEOUT_MS)) { fallbackVideo(); return; }
     watchdog = schedule(checkProgress, 750);
   }
   function watchPlayback() {
     if (watchdog !== undefined) return;
-    lastVideoTime = video.currentTime; lastProgressAt = now();
+    lastProgressAt = now();
     watchdog = schedule(checkProgress, 750);
   }
 
   function portrait() { ready = false; stage?.removeAttribute('data-rxa-motion-ready'); }
-  function pause() { stopWatchdog(); cancelFrame(); video.pause(); }
-  function clearSource() {
+  function pause() {
+    stopWatchdog(); cancelFrame();
+    if (attempt || !video.paused) video.pause();
+    attempt = null;
+  }
+  function clearVideo() {
     pause();
-    sourceVersion++; portrait();
+    sourceVersion++;
+    verifiedAlpha = false;
+    decodedFrames = 0;
+    lastVideoTime = undefined;
+    lastSample = undefined;
     if (video.hasAttribute('src')) { video.removeAttribute('src'); video.load(); }
+    if (heldPoster) {
+      heldPoster.style.removeProperty('opacity');
+      video.style.removeProperty('opacity');
+      heldPoster = null;
+    }
+    video.remove();
   }
   function clearImage() {
     if (imageRetry !== undefined) unschedule(imageRetry);
@@ -410,11 +400,14 @@ function createVideoMedia(root, view, signal) {
     if (motionImage.hasAttribute('src')) motionImage.removeAttribute('src');
     motionImage.remove();
   }
-  const shouldPlay = () => !destroyed && stage && visible && !document.hidden && !reduce.matches;
-  const useImage = () => !supportsVideo || supportsAlpha === false || failedVideo.has(actor);
+  // Keep the authored character movement in the full player, including in
+  // case chat. Legacy embeds retain their reduced-motion behavior.
+  const motionAllowed = () => hasAtlas || !reduce.matches;
+  const shouldPlay = () => !destroyed && stage && visible && !document.hidden && motionAllowed();
+  const useFallback = () => !supportsVideo || failedVideo.has(actor);
+  const videoURL = () => url(`assets/gfx1/motion/${actor}.webm`);
   function imagePlayback(retrying = false) {
     if (!shouldPlay()) { clearImage(); portrait(); return; }
-    pause(); video.remove();
     if (motionImage.hasAttribute('src')) {
       if (motionImage.parentNode !== stage) stage.append(motionImage);
       if (imageReady) stage.setAttribute('data-rxa-motion-ready', '');
@@ -434,7 +427,7 @@ function createVideoMedia(root, view, signal) {
     motionImage.src = url(`assets/gfx1/motion/${actor}.webp`);
   }
   function imageLoaded() {
-    if (!shouldPlay() || !useImage() || !motionImage.hasAttribute('src')) return;
+    if (!shouldPlay() || !useFallback() || !motionImage.hasAttribute('src')) return;
     if (motionImage.naturalWidth > 0) {
       imageFailures.delete(actor);
       imageReady = true; stage.setAttribute('data-rxa-motion-ready', '');
@@ -447,50 +440,138 @@ function createVideoMedia(root, view, signal) {
     imagePlayback();
   }
   function networkRestored() {
-    if (!imageFailures.delete(actor)) return;
-    clearImage(); playback();
-  }
-  function presentFrame() {
-    frame = undefined;
-    if (!shouldPlay() || video.paused || !video.videoWidth) return;
-    if (supportsAlpha === undefined) {
-      // VP9 decoding support alone does not guarantee transparent WebM support.
-      const sample = document.createElement('canvas'); sample.width = sample.height = 1;
-      try {
-        const context = sample.getContext('2d', {willReadFrequently:true});
-        context?.drawImage(video, 0, 0, 1, 1, 0, 0, 1, 1);
-        supportsAlpha = (context?.getImageData(0, 0, 1, 1).data[3] ?? 255) < 32;
-      } catch { supportsAlpha = false; }
+    if (decodedFailed && actor) {
+      // A temporary network error can take both readers of the same WebM
+      // offline. Give the full-resolution source first choice on reconnection.
+      decodedFailed = false;
+      failedVideo.delete(actor);
+      atlas?.destroy();
+      atlas = null;
+      clearVideo();
+      portrait();
+      playback();
+      return;
     }
-    if (!supportsAlpha) { clearSource(); video.remove(); imagePlayback(); return; }
-    ready = true; stage.setAttribute('data-rxa-motion-ready', '');
+    if (imageFailures.delete(actor)) { clearImage(); playback(); }
+  }
+  function hasVideoAlpha() {
+    // Some engines advertise VP9 but render its transparent pixels as black.
+    const sample = document.createElement('canvas');
+    sample.width = sample.height = 1;
+    try {
+      const context = sample.getContext('2d', {willReadFrequently:true});
+      if (!context) return false;
+      context.drawImage(video, 0, 0, 1, 1, 0, 0, 1, 1);
+      if (context.getImageData(0, 0, 1, 1).data[3] > 32) return false;
+      // A blank frame is transparent too. Verify the authored figure exists.
+      const x = Math.floor(video.videoWidth / 2), y = Math.floor(video.videoHeight / 2);
+      context.clearRect(0, 0, 1, 1);
+      context.drawImage(video, x, y, 1, 1, 0, 0, 1, 1);
+      return context.getImageData(0, 0, 1, 1).data[3] >= 224;
+    } catch { return false; }
+  }
+  function recordFrame(time) {
+    if (!Number.isFinite(time) || time === lastVideoTime) return;
+    if (!verifiedAlpha) {
+      verifiedAlpha = hasVideoAlpha();
+      if (!verifiedAlpha) { fallbackVideo(); return; }
+    }
+    if (!ready && lastVideoTime !== undefined) {
+      ready = true;
+      stage.setAttribute('data-rxa-motion-ready', '');
+    }
+    lastVideoTime = time;
+    lastProgressAt = now();
+  }
+  function presentFrame(_time, metadata) {
+    frame = undefined;
+    if (!shouldPlay() || useFallback() || video.paused || !video.videoWidth) return;
+    recordFrame(metadata?.mediaTime ?? video.currentTime);
+    if (!useFallback()) watchFrame();
+  }
+  function watchFrame() {
+    if (frame === undefined && video.requestVideoFrameCallback) frame = video.requestVideoFrameCallback(presentFrame);
   }
   function playing() {
-    if (ready || frame !== undefined) return;
-    if (video.requestVideoFrameCallback) frame = video.requestVideoFrameCallback(presentFrame);
-    else presentFrame();
+    if (shouldPlay() && !useFallback()) watchFrame();
   }
-  function error() { if (actor) failedVideo.add(actor); clearSource(); video.remove(); imagePlayback(); }
+  function fallbackVideo(holdFrame = true) {
+    if (!video.hasAttribute('src') || useFallback()) return;
+    failedVideo.add(actor);
+    // Keep the last verified frame visible while the other decoder warms up.
+    const canHoldFrame = holdFrame && video.readyState >= video.HAVE_CURRENT_DATA;
+    const poster = canHoldFrame && hasAtlas && ready && shouldPlay() && stage.querySelector('.rxa-citizen-poster');
+    if (poster) {
+      heldPoster = poster;
+      poster.style.opacity = '0';
+      video.style.opacity = '1';
+      pause();
+    } else clearVideo();
+    portrait();
+    playback();
+  }
+  const error = () => fallbackVideo();
+  function fallbackFrame() {
+    if (!shouldPlay() || !useFallback()) return;
+    stage.setAttribute('data-rxa-motion-ready', '');
+    if (heldPoster) clearVideo();
+  }
+  function disposeDecoded() {
+    const player = decoded;
+    decoded = null;
+    player?.destroy();
+  }
+  function playFallback() {
+    if (!hasAtlas) { imagePlayback(); return; }
+    if (!decodedFailed) {
+      if (!decoded) {
+        const player = createDecodedMotion(root, view, videoURL(), {
+          onFrame() { if (decoded === player) fallbackFrame(); },
+          onFailure() {
+            if (decoded !== player) return;
+            decodedFailed = true;
+            disposeDecoded();
+            portrait();
+            playback();
+          }
+        });
+        decoded = player;
+      }
+      decoded.refresh(stage, true);
+      return;
+    }
+    atlas ??= createActorMotion(root, view, actor, fallbackFrame);
+    atlas.refresh(stage, true);
+  }
   function playback() {
     if (!shouldPlay()) {
       pause();
+      if (ready) stage?.removeAttribute('data-rxa-motion-ready');
+      if (decoded) {
+        decoded.refresh(stage, false);
+        portrait();
+      }
+      atlas?.refresh(stage, false);
+      if (heldPoster) clearVideo();
       if (motionImage.hasAttribute('src') || imageRetry !== undefined) { clearImage(); portrait(); }
       return;
     }
-    if (useImage()) { imagePlayback(); return; }
+    if (useFallback()) { playFallback(); return; }
     if (video.parentNode !== stage) stage.append(video);
-    if (!video.hasAttribute('src')) video.src = url(`assets/gfx1/motion/${actor}.webm`);
-    if (video.paused) {
-      const requestedActor = actor, requestedVersion = sourceVersion;
-      const attempt = video.play();
-      attempt?.catch(problem => {
-        if (!destroyed && problem?.name !== 'AbortError' && actor === requestedActor && sourceVersion === requestedVersion) {
-          failedVideo.add(actor); clearSource(); video.remove(); imagePlayback();
-        }
+    if (!video.hasAttribute('src')) video.src = videoURL();
+    if (ready) stage.setAttribute('data-rxa-motion-ready', '');
+    if (video.paused && !attempt) {
+      const version = sourceVersion;
+      const requested = video.play();
+      attempt = requested;
+      requested?.then(() => { if (attempt === requested) attempt = null; }, problem => {
+        if (attempt !== requested || version !== sourceVersion || !shouldPlay()) return;
+        attempt = null;
+        if (problem?.name !== 'AbortError') fallbackVideo(false);
       });
     }
     // Reacquire a frame callback after a rerender moves the retained video.
-    if (!ready && !video.paused && video.videoWidth) playing();
+    watchFrame();
     watchPlayback();
   }
   const observer = typeof view.IntersectionObserver === 'function' ? new view.IntersectionObserver(entries => {
@@ -501,23 +582,31 @@ function createVideoMedia(root, view, signal) {
     if (destroyed) return;
     const candidate = root.querySelector('[data-rxa-actor]') || root.querySelector('[data-rxa-chat-actor]');
     const nextActor = candidate?.dataset.rxaActor || candidate?.dataset.rxaChatActor || '';
-    const next = ACTOR.test(nextActor) && !reduce.matches ? candidate : null;
+    const next = ACTOR.test(nextActor) && motionAllowed() ? candidate : null;
     if (next === stage) { playback(); return; }
     const returning = !stage;
-    if (stage) { cancelFrame(); observer?.unobserve(stage); stage.removeAttribute('data-rxa-motion-ready'); }
+    if (stage) {
+      cancelFrame(); observer?.unobserve(stage);
+      stage.removeAttribute('data-rxa-motion-ready');
+      if (heldPoster) clearVideo();
+    }
     stage = next;
     if (!stage) {
-      if (reduce.matches) clearSource(); else pause();
+      if (!motionAllowed()) { clearVideo(); portrait(); }
+      else pause();
+      decoded?.refresh(null, false);
+      atlas?.refresh(null);
       clearImage(); video.remove(); return;
     }
     if (nextActor !== actor) {
-      clearSource(); clearImage(); actor = nextActor;
-      const state = actor.startsWith('S') ? 'S-N' : 'C-N';
-      video.poster = url(`assets/gfx1/characters/${actor}/${actor}__${state}__w512.webp`);
+      clearVideo(); clearImage(); portrait();
+      disposeDecoded(); decodedFailed = false;
+      atlas?.destroy(); atlas = null;
+      actor = nextActor;
     }
     // Reopening the scene is an explicit way to retry after a lasting outage.
     if (returning) imageFailures.delete(actor);
-    if ((ready && !useImage()) || (imageReady && useImage())) stage.setAttribute('data-rxa-motion-ready', '');
+    if ((ready && !useFallback()) || (imageReady && useFallback())) stage.setAttribute('data-rxa-motion-ready', '');
     const bounds = stage.getBoundingClientRect();
     visible = !observer || bounds.width > 0 && bounds.height > 0 && bounds.bottom > 0 && bounds.top < view.innerHeight;
     observer?.observe(stage); playback();
@@ -531,7 +620,7 @@ function createVideoMedia(root, view, signal) {
     signal?.removeEventListener('abort', destroy);
     video.removeEventListener('playing', playing); video.removeEventListener('error', error);
     motionImage.removeEventListener('load', imageLoaded); motionImage.removeEventListener('error', imageError);
-    clearSource(); clearImage(); video.remove(); stage = null;
+    clearVideo(); clearImage(); disposeDecoded(); atlas?.destroy(); portrait(); stage = null;
   }
   document.addEventListener('visibilitychange', playback);
   view.addEventListener?.('online', networkRestored);

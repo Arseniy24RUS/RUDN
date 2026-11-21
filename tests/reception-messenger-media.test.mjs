@@ -90,7 +90,7 @@ test('illustrated document text retains evidentiary details and date variants',(
   assert.equal(illustratedDocumentText('river-observation',{id:'observation',text:'A previously unseen document.'},'en'),'A previously unseen document.');
 });
 
-function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=true,offscreen=false,hidden=false,frameCallbacks=false}={}){
+function fixture({reduced=false,supported=true,alpha=0,bodyAlpha=255,observer=true,autoplay=true,offscreen=false,hidden=false,frameCallbacks=false,quality=true}={}){
   let clock=0,nextTimer=0,nextFrame=0;const timers=new Map(),frames=new Map();
   function tick(ms){const end=clock+ms;for(let count=0;count<1000;count++){const entry=[...timers.entries()].sort((a,b)=>a[1].at-b[1].at)[0];if(!entry||entry[1].at>end)break;clock=entry[1].at;timers.delete(entry[0]);entry[1].fn();}clock=end;}
   class Element extends EventTarget{
@@ -104,7 +104,7 @@ function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=tr
     getBoundingClientRect(){return {width:110,height:132,top:offscreen?1000:50,bottom:offscreen?1132:182};}
   }
   class Video extends Element{
-    constructor(){super();this.paused=true;this.currentTime=0;this.videoWidth=512;this.playCalls=0;this.pauseCalls=0;this.loadCalls=0;this.srcWrites=0;}
+    constructor(){super();this.paused=true;this.currentTime=0;this.videoWidth=400;this.videoHeight=544;this.playCalls=0;this.pauseCalls=0;this.loadCalls=0;this.srcWrites=0;}
     canPlayType(){return supported?'probably':'';}
     set src(value){this.srcWrites++;this.setAttribute('src',value);}
     get src(){return this.getAttribute('src');}
@@ -112,6 +112,9 @@ function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=tr
     pause(){this.paused=true;this.pauseCalls++;}
     load(){this.loadCalls++;this.currentTime=0;}
   }
+  if(quality)Video.prototype.getVideoPlaybackQuality=function(){
+    return {totalVideoFrames:Math.floor(this.currentTime*24)+1,droppedVideoFrames:0};
+  };
   class Image extends Element{
     constructor(){super();this.srcWrites=0;this.naturalWidth=360;}
     set src(value){this.srcWrites++;this.setAttribute('src',value);}
@@ -119,23 +122,33 @@ function fixture({reduced=false,supported=true,alpha=0,observer=true,autoplay=tr
   }
   const document=new EventTarget(),reduce=new EventTarget();reduce.matches=reduced;
   document.hidden=hidden;let video,image,io;
-  document.createElement=kind=>kind==='video'?(video=new Video()):kind==='img'?(image=new Image()):{getContext:()=>({drawImage(){},getImageData:()=>({data:[0,0,0,alpha]})})};
+  document.createElement=kind=>kind==='video'?(video=new Video()):kind==='img'?(image=new Image()):{getContext(){
+    let sample;
+    return {clearRect(){},drawImage(_video,x){sample=x===0?alpha:bodyAlpha;},getImageData:()=>({data:[0,0,0,sample]})};
+  }};
   document.defaultView=Object.assign(new EventTarget(),{innerHeight:900,matchMedia:()=>reduce,performance:{now:()=>clock},setTimeout:(fn,ms)=>{const id=++nextTimer;timers.set(id,{fn,at:clock+ms});return id;},clearTimeout:id=>timers.delete(id),...(observer?{IntersectionObserver:class{
     constructor(callback){this.callback=callback;this.disconnected=false;io=this;}
     observe(target){this.target=target;}unobserve(){}disconnect(){this.disconnected=true;}
     visible(value){this.callback([{target:this.target,isIntersecting:value}]);}
   }}:{})});
   if(frameCallbacks){Video.prototype.requestVideoFrameCallback=callback=>{const id=++nextFrame;frames.set(id,callback);return id;};Video.prototype.cancelVideoFrameCallback=id=>frames.delete(id);}
+  function present(mediaTime){
+    for(const [id,callback] of [...frames]){
+      frames.delete(id);
+      callback(clock,{mediaTime});
+    }
+  }
   const stage=id=>{const node=new Element();node.dataset.rxaActor=id;return node;};
   const root={ownerDocument:document,stage:stage('C05'),querySelector(){return this.stage;}};
-  return {root,document,reduce,stage,tick,timers,frames,get video(){return video;},get image(){return image;},get observer(){return io;}};
+  return {root,document,reduce,stage,tick,present,timers,frames,get video(){return video;},get image(){return image;},get observer(){return io;}};
 }
 
 test('rerender retains the video and playhead; hiding, leaving view and destroying pause it',()=>{
-  const f=fixture(),media=createMessengerMedia(f.root);media.refresh();const video=f.video;
+  const f=fixture({frameCallbacks:true}),media=createMessengerMedia(f.root);media.refresh();const video=f.video;
   assert.ok(video.muted&&video.loop&&video.playsInline&&video.autoplay);assert.equal(video.preload,'none');
   assert.ok(video.src.endsWith('/C05.webm'));video.currentTime=1.75;
-  video.dispatchEvent(new Event('playing'));assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),true);
+  f.present(1.7);assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),false);
+  f.present(1.75);assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),true);
   const firstSourceWrites=video.srcWrites;f.root.stage=f.stage('C05');media.refresh();
   assert.equal(f.root.stage.children[0],video);assert.equal(video.currentTime,1.75);assert.equal(video.srcWrites,firstSourceWrites);
   assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),true);
@@ -153,10 +166,12 @@ test('reduced motion never fetches a loop; changing actor uses the new existing 
   media.destroy();
 });
 
-test('unsupported alpha and playback errors select the animated fallback; unsafe IDs never load either format',()=>{
-  const opaque=fixture({alpha:255}),media=createMessengerMedia(opaque.root);media.refresh();opaque.video.dispatchEvent(new Event('playing'));
-  assert.equal(opaque.root.stage.hasAttribute('data-rxa-motion-ready'),false);assert.equal(opaque.video.hasAttribute('src'),false);assert.equal(opaque.video.parent,null);
-  assert.ok(opaque.image.src.endsWith('/C05.webp'));opaque.image.dispatchEvent(new Event('load'));assert.equal(opaque.root.stage.hasAttribute('data-rxa-motion-ready'),true);media.destroy();
+test('opaque or blank video and playback errors select the animated fallback; unsafe IDs never load either format',()=>{
+  for(const pixels of [{alpha:255},{bodyAlpha:0}]){
+    const f=fixture({frameCallbacks:true,...pixels}),media=createMessengerMedia(f.root);media.refresh();f.present(0);
+    assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),false);assert.equal(f.video.hasAttribute('src'),false);assert.equal(f.video.parent,null);
+    assert.ok(f.image.src.endsWith('/C05.webp'));f.image.dispatchEvent(new Event('load'));assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),true);media.destroy();
+  }
   const failed=fixture(),other=createMessengerMedia(failed.root);other.refresh();failed.video.dispatchEvent(new Event('error'));other.refresh();assert.equal(failed.video.hasAttribute('src'),false);assert.ok(failed.image.src.endsWith('/C05.webp'));other.destroy();
   const unsafe=fixture();unsafe.root.stage=unsafe.stage('../../secret');const guard=createMessengerMedia(unsafe.root);guard.refresh();assert.equal(unsafe.video.hasAttribute('src'),false);assert.equal(unsafe.image.hasAttribute('src'),false);guard.destroy();
 });
@@ -207,14 +222,25 @@ test('a decoder that accepts playback without presenting a first frame recovers 
   assert.equal(f.timers.size,0);media.destroy();
 });
 
+test('an older decoder with neither frame callbacks nor counters must show changing pixels',()=>{
+  const f=fixture({quality:false}),media=createMessengerMedia(f.root);media.refresh();
+  for(let i=0;i<5;i++){f.video.currentTime+=.75;f.tick(750);}
+  assert.equal(f.root.stage.hasAttribute('data-rxa-motion-ready'),false);
+  assert.ok(f.image.src.endsWith('/C05.webp'));
+  media.destroy();
+});
+
 test('a pending play request and a frozen visible loop both recover without a media error event',()=>{
   for(const pending of [true,false]){
-    const f=fixture(),media=createMessengerMedia(f.root);
+    const f=fixture({frameCallbacks:true}),media=createMessengerMedia(f.root);
     // The controller creates its own retained node; override play before refresh.
     if(pending)f.video.play=()=>new Promise(()=>{});
     media.refresh();
-    if(!pending){f.video.dispatchEvent(new Event('playing'));f.video.currentTime=1;f.tick(750);}
-    f.tick(3000);assert.ok(f.image.src?.endsWith('/C05.webp'));
+    if(!pending){
+      f.present(0);f.present(.04);assert.ok(f.root.stage.hasAttribute('data-rxa-motion-ready'));
+      for(let i=0;i<3;i++){f.video.currentTime+=.75;f.present(.04);f.tick(750);}
+    }
+    f.tick(pending?3000:750);assert.ok(f.image.src?.endsWith('/C05.webp'));
     assert.equal(f.timers.size,0);media.destroy();
   }
 });
@@ -226,7 +252,7 @@ test('an original video still transferring can present its first frame after the
   assert.ok(f.video.src.endsWith('/C05.webm'));
   assert.equal(f.image.hasAttribute('src'),false);
   f.video.readyState=2;f.video.currentTime=.25;f.video.videoWidth=512;
-  f.video.dispatchEvent(new Event('playing'));
+  f.tick(750);f.video.currentTime=.34;f.tick(750);
   assert.ok(f.root.stage.hasAttribute('data-rxa-motion-ready'));
   media.destroy();
 });
@@ -274,8 +300,8 @@ test('rerender reacquires a suspended frame callback without restarting the reta
   const f=fixture({frameCallbacks:true}),media=createMessengerMedia(f.root);media.refresh();
   const oldId=[...f.frames.keys()][0],writes=f.video.srcWrites;
   f.root.stage=f.stage('C05');media.refresh();assert.equal(f.frames.has(oldId),false);assert.equal(f.frames.size,1);
-  const callback=[...f.frames.values()][0];f.frames.clear();callback();
+  f.present(0);f.present(.04);
   assert.ok(f.root.stage.hasAttribute('data-rxa-motion-ready'));assert.equal(f.video.srcWrites,writes);
-  for(let i=0;i<8;i++){f.video.currentTime+=.75;f.tick(750);}
+  for(let i=0;i<8;i++){f.video.currentTime+=.75;f.present(f.video.currentTime);f.tick(750);}
   assert.equal(f.image.hasAttribute('src'),false);media.destroy();assert.equal(f.timers.size,0);
 });

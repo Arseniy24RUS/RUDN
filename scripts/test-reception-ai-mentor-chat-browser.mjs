@@ -274,6 +274,10 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
       await nav('chat').click();
       await seeCitizen();
       await checkHeader(root);
+      const portraitMotion=citizenTab.locator('[data-rxa-chat-actor][data-rxa-motion-ready] > .rxa-citizen-video');
+      await portraitMotion.waitFor();
+      assert.equal(await citizenTab.locator('video[controls]').count(),0);
+      evidence.checks.push('citizen-portrait-autoplays-in-active-contact');
       const chatMenu=toolbar.locator('.rxa-chat-menu');
       await chatMenu.locator('summary').click();
       await chatMenu.locator('[data-panel="documents"]').waitFor();

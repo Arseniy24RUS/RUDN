@@ -156,12 +156,20 @@ try{
   assert.deepEqual(await page.locator('.rxa-mobile-nav [data-action="page"]').evaluateAll(buttons=>buttons.map(button=>button.dataset.page)),['reception','chat','documents','calendar','decision']);
   await page.locator('[data-rxa-actor]').waitFor({state:'visible'});
   await page.waitForFunction(()=>{const image=document.querySelector('.rxa-citizen-poster');return image?.complete&&image.naturalWidth>0;});
-  const actorScene=page.locator('[data-rxa-actor][data-rxa-motion-ready] canvas');
+  const actorScene=page.locator('[data-rxa-actor][data-rxa-motion-ready] > .rxa-citizen-video');
   await actorScene.waitFor({state:'visible'});
+  const sceneTransport=await actorScene.evaluate(layer=>({
+    element:layer.localName,
+    ...(layer instanceof HTMLVideoElement?{width:layer.videoWidth,height:layer.videoHeight,controls:layer.controls}:{})
+  }));
+  if(sceneTransport.element==='video'){
+    assert.ok(sceneTransport.width>=720&&sceneTransport.height>=970);
+    assert.equal(sceneTransport.controls,false);
+  }
   const initialFrame=await actorScene.screenshot({animations:'allow'});
   await page.waitForTimeout(420);
   assert.ok(!initialFrame.equals(await actorScene.screenshot({animations:'allow'})),'The reception actor must visibly move');
-  check('Reception actor moves on entry and the chat has one unread badge');
+  check('Reception actor moves on entry and the chat has one unread badge',{sceneTransport});
   await screenshot('02-phone-reception.png');await noOverflow('reception 390');
   await screenshot('02b-phone-case-context.png');
   stage='chat-and-navigation';
