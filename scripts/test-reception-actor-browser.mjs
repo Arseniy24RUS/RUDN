@@ -267,7 +267,7 @@ async function runActorCase(browser,engine,sample,preference,syntheticDirectory)
       const controls='button, [role="button"], video[controls]';
       await assertIdentity();
       assert.equal(await character.locator(controls).count(),0,'The scene has no playback controls.');
-      let recoveryMs, movingPixels, chatMovingPixels, returnedMovingPixels;
+      let recoveryMs, movingPixels, chatMovingPixels, returnedMovingPixels, keyboardMovingPixels, afterKeyboardMovingPixels;
       if(blockedMotion){
         await blockedMotion;
         await checkStill(page,character,poster,capture('blocked-poster'));
@@ -309,6 +309,9 @@ async function runActorCase(browser,engine,sample,preference,syntheticDirectory)
       await character.waitFor({state:'detached'});
       const avatarPoster=avatar.locator('.rxa-citizen-poster');
       await avatar.scrollIntoViewIfNeeded();
+      const contact=journeyStage==='mentor'?'[data-chat-dialog="citizen"][aria-pressed="true"]':'.rxa-person';
+      assert.equal(await page.locator(contact).locator(avatarSelector).count(),1,
+        'The citizen portrait belongs to the visible active contact.');
       assert.ok((await avatarPoster.getAttribute('src')).endsWith(`/avatars/${actor}.webp`));
       assert.equal(await avatar.locator(controls).count(),0,'The chat portrait has no playback controls.');
       if(posterOnly)await checkStill(page,avatar,avatarPoster,capture('chat-poster'));
@@ -317,6 +320,35 @@ async function runActorCase(browser,engine,sample,preference,syntheticDirectory)
         chatMovingPixels=await checkMovement(page,avatar,{label:'Chat portrait',threshold:10,
           screenshotStem:preference==='default'?path.join(output,base+'-chat-portrait'):undefined});
         if(preference==='default')await page.screenshot({path:capture('chat')});
+      }
+
+      if(journeyStage==='mentor'){
+        await page.locator('[data-chat-dialog="mentor"]').tap();
+        await avatar.waitFor({state:'detached'});
+        await page.locator('[data-chat-dialog="citizen"] .rxa-chat-portrait .rxa-citizen-poster').waitFor();
+        await page.locator('[data-chat-dialog="citizen"]').tap();
+        await avatar.waitFor();
+        if(!posterOnly)await avatarReady.waitFor();
+        if(preference==='default'){
+          const editor=page.locator('[data-message-draft]');
+          await editor.focus();
+          // Drive the viewport events used by the app when a device IME appears.
+          await page.evaluate(()=>{
+            Object.defineProperty(visualViewport,'height',{configurable:true,value:innerHeight-220});
+            visualViewport.dispatchEvent(new Event('resize'));
+          });
+          await page.locator('#receptionAI[data-keyboard-open=true]').waitFor();
+          await avatarReady.waitFor();
+          keyboardMovingPixels=await checkMovement(page,avatar,{label:'Chat portrait with keyboard',threshold:10});
+          await page.evaluate(()=>{
+            delete visualViewport.height;
+            visualViewport.dispatchEvent(new Event('resize'));
+          });
+          await editor.blur();
+          await page.locator('#receptionAI[data-keyboard-open=false]').waitFor();
+          await avatarReady.waitFor();
+          afterKeyboardMovingPixels=await checkMovement(page,avatar,{label:'Chat portrait after keyboard',threshold:10});
+        }
       }
 
       await page.locator('.rxa-mobile-nav [data-page="reception"]').tap();
@@ -337,7 +369,7 @@ async function runActorCase(browser,engine,sample,preference,syntheticDirectory)
       assert.equal(actorClicks,0,'The player must never require a click on the visitor.');
       assert.deepEqual(errors,[]);
       const result={engine,journeyStage,caseId,viewport,preference,status:'pass',actor,actorClicks,movingPixels,
-        chatMovingPixels,returnedMovingPixels,posterOnly,recoveryMs,sheets:new Set(sheetURLs()).size};
+        chatMovingPixels,keyboardMovingPixels,afterKeyboardMovingPixels,returnedMovingPixels,posterOnly,recoveryMs,sheets:new Set(sheetURLs()).size};
       results.push(result);
       console.log(JSON.stringify(result));
     }catch(error){

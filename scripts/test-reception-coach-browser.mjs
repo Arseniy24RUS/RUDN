@@ -25,6 +25,7 @@ const legacy=process.argv.includes('--legacy');
 const stories=process.argv.includes('--stories');
 const seminarStoryVersion=stories?SEMINAR_STORY_VERSION:null;
 const scored=process.argv.includes('--scored')||process.argv.includes('--teacher');
+const practicePartial=process.argv.includes('--practice-partial');
 const anonymous=process.argv.includes('--anonymous');
 const teacherExample=process.argv.includes('--teacher-example');
 const teacherAccepted=process.argv.includes('--teacher-accepted');
@@ -32,11 +33,12 @@ const teacher=process.argv.includes('--teacher')||teacherExample||teacherAccepte
 assert.ok([legacy,scored,teacherExample,teacherAccepted].filter(Boolean).length<=1,'Select just one browser scenario.');
 assert.ok(!stories||!legacy&&!teacher,'Stories require the current student seminar.');
 assert.ok(!anonymous||stories&&scored,'The anonymous case requires --stories --scored.');
+assert.ok(!practicePartial||stories&&!scored,'The practice deduction check requires --stories without --scored.');
 const coreStepsVersion=legacy?null:'mfc-referral-v2';
 assert.ok(['chromium','webkit'].includes(engine));
 const modulePath=arg('--playwright-module',process.env.RECEPTION_PLAYWRIGHT_MODULE);
 const {[engine]:launcher}=await import(modulePath?pathToFileURL(path.resolve(modulePath)).href:'playwright');
-const out=path.resolve(arg('--out',path.join(os.tmpdir(),'reception-coach-browser')),engine,anonymous?'anonymous':stories&&scored?'independent':'.');
+const out=path.resolve(arg('--out',path.join(os.tmpdir(),'reception-coach-browser')),engine,anonymous?'anonymous':stories&&scored?'independent':practicePartial?'practice-partial':'.');
 const sizes=[
   {width:1440,height:900,locale:'ru',full:true},
   {width:390,height:844,locale:'en',full:false},
@@ -53,6 +55,12 @@ const mentorAnswer={ru:'Отсчитайте срок ответа от край
 const retainedDraft={ru:'Сохранённый вывод по обращению.',en:'A saved conclusion on the appeal.',zh:'已保存的诉求结论。'};
 const draftSectionIds=['facts','legalBasis','resolution','nextSteps'];
 const learnerAddition={ru:'Проверил номера опор по схеме из первого письма.',en:'I checked the pole numbers against the map in the first letter.',zh:'我已根据首次来信的示意图核对灯杆编号。'};
+const practiceResolution={ru:'Прошу проверить расписание и сообщить о результатах.',en:'Please check the timetable and report the findings.',zh:'请核查时刻表并告知核查结果。'};
+const practiceReason={ru:'Вы предложили проверить расписание. В проекте остался открытым вопрос о публикации данных.',en:'You proposed checking the timetable. The draft leaves the publication of personal data unresolved.',zh:'您建议核查时刻表，草稿尚未处理个人数据公开事项。'};
+const practiceCorrection={ru:'Укажите отдельный вывод по публикации персональных данных.',en:'Give a separate conclusion about the publication of personal data.',zh:'请就个人数据公开单独给出结论。'};
+const practiceSubmit={ru:'Отправить решение на разбор',en:'Submit your response for review',zh:'提交答复以获取评阅'};
+const practiceCheck={ru:'Проверить мой проект',en:'Check my draft',zh:'检查我的答复草稿'};
+const exampleConfirm={ru:'Подтвердить проект',en:'Confirm draft',zh:'确认草稿'};
 const independentText={
   ru:{
     facts:'В одном письме заявитель просит проверить сокращение движения автобуса и публикацию его телефона и сведений о здоровье. Именно эти два вопроса зафиксированы в материале дела.',
@@ -86,7 +94,17 @@ async function run({width,height,locale,full}) {
   const row={key,status:'running',sessionId:null,checks:[],screenshots:[],errors:[]};
   report.push(row);
   let journalWrites=0;
-  const provider={...createScriptedCorrespondenceReviewer({reviews:[explicitQAReview,explicitQAReview]}),name:'mock',
+  const practiceReview=context=>{
+    const review=explicitQAReview(context);
+    if(practicePartial){
+      const resolution=review.criteria.find(criterion=>criterion.id==='resolution');
+      resolution.level=1;
+      resolution.reason=practiceReason[locale];
+      resolution.findings.push({type:'missing',section:'resolution',quote:'',sourceIds:['case-author-explanation'],explanation:practiceCorrection[locale]});
+    }
+    return review;
+  };
+  const provider={...createScriptedCorrespondenceReviewer({reviews:[stories&&!scored?practiceReview:explicitQAReview,explicitQAReview]}),name:'mock',
     async generate(){throw Error('The practice tests use the prepared case records.');},
     async answerMentor(){return {reply:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
     async reviewMentorWork(){return {ready:true,feedback:mentorAnswer[locale],usage:{inputTokens:0,outputTokens:0}};},
@@ -553,8 +571,8 @@ async function run({width,height,locale,full}) {
     else assert.ok((await letter.innerText()).includes(applicant));
     if(!leavePreview)await root.locator('[data-response-action="edit"]').click();
   }
-  async function fillIndependentReply(model,{omitConclusion=false,applicant}={}) {
-    const {facts,legalBasis,resolution,nextSteps}=independentText[locale];
+  async function fillIndependentReply(model,{omitConclusion=false,applicant,resolution=independentText[locale].resolution}={}) {
+    const {facts,legalBasis,nextSteps}=independentText[locale];
     const draft=root.locator('[data-correspondence-editor]');
     await draft.waitFor();
     const recipients=model.workbook.routing.recipientIds.map(id=>
@@ -943,6 +961,7 @@ async function run({width,height,locale,full}) {
     await checkDocumentKind(answer.kind,view.case.citizen.name,{leavePreview:stories});
     if(stories)for(const citation of view.coreSteps.values.citations)await verifyLinkedProvision(citation);
     await inspectHint('draftSubmit','draft-filled');
+    if(stories)await root.getByRole('button',{name:exampleConfirm[locale],exact:true}).waitFor();
     view=await operation('tutorial-step',root.locator('[data-tour-target="draft-submit"]'));
     assert.equal(view.status,stories?'complete':'followup',view.guidance.finding?.explanation);
     assert.equal(view.decision.correspondence.subject,expected.subject);
@@ -1040,6 +1059,7 @@ async function run({width,height,locale,full}) {
     }
     async function checkMentor(view) {
       assert.equal(view.result.points,undefined);
+      assert.equal(await root.locator('[data-practice-score]').count(),0,'Worked examples have no practice score.');
       assert.ok(view.seminarProgress.exampleCompleted);
       if(stories){
         assert.equal(await root.locator('[data-action="start-journey"][data-stage="independent"]').count(),0);
@@ -1090,11 +1110,15 @@ async function run({width,height,locale,full}) {
         await setRecipients(practice.workbook.routing.recipientIds);
         view=await operation('tutorial-step',root.locator('[data-action="core-step"][data-step="route"]'));
         if(stories){await verifyNoControl(view,{draft:true});await verifyEmptyDraft();}
-        await fillIndependentReply(practice,{applicant:view.case.citizen.name});
+        const resolution=practicePartial?practiceResolution[locale]:independentText[locale].resolution;
+        await fillIndependentReply(practice,{applicant:view.case.citizen.name,resolution});
         const inserted=stories?await verifyLegalInsertion(view):null;
-        view=await operation('tutorial-step',root.locator('[data-tour-target="draft-submit"]'));
+        const submit=root.getByRole('button',{name:(stories?practiceSubmit:practiceCheck)[locale],exact:true});
+        await submit.scrollIntoViewIfNeeded();
+        if(stories)await shot('mentor-submit');
+        view=await operation('tutorial-step',submit);
         assert.equal(view.status,stories?'complete':'followup',JSON.stringify(view.guidance.finding));
-        assert.equal(view.decision.correspondence.sections.resolution,independentText[locale].resolution);
+        assert.equal(view.decision.correspondence.sections.resolution,resolution);
         if(!stories)assert.equal(view.result,null);
         if(inserted){
           assert.equal(view.decision.correspondence.citations.filter(item=>item.id===inserted.id).length,1);
@@ -1105,10 +1129,32 @@ async function run({width,height,locale,full}) {
         if(stories){
           await verifyNoControl(view);
           assert.equal(view.result.points,undefined);
+          assert.equal(view.result.practiceAssessment,true);
           assert.ok(view.seminarProgress.mentorCompleted);
           assert.equal(journalWrites,0);
-          row.mentorComplete={status:view.status,graded:false,journalWrites};
+          const practiceResult=root.locator('[data-practice-result]');
+          await practiceResult.waitFor();
+          const heading=await practiceResult.getByRole('heading',{level:1}).boundingBox();
+          assert.ok(heading&&heading.y>=0&&heading.y+heading.height<=height,'The result heading must be in the viewport immediately after submission.');
+          const score=practicePartial?60:100;
+          assert.equal(view.result.total,score);
+          assert.equal((await practiceResult.locator('[data-practice-score]').innerText()).replace(/\s+/g,' ').trim(),`${score} / 100`);
+          assert.equal(await practiceResult.locator('[data-practice-perfect]').count(),practicePartial?0:1);
+          assert.equal(await practiceResult.locator('[data-practice-cap]').count(),practicePartial?1:0);
+          assert.equal(await practiceResult.locator('[data-practice-deduction]').count(),practicePartial?1:0);
+          if(practicePartial){
+            const deduction=practiceResult.locator('[data-practice-deduction="resolution"]');
+            await deduction.getByText(practiceReason[locale],{exact:true}).waitFor();
+            await deduction.getByText(practiceCorrection[locale],{exact:true}).waitFor();
+          }
+          row.mentorComplete={status:view.status,practiceScore:score,journalWrites};
           await shot('mentor-complete');
+          await page.reload();
+          await practiceResult.locator('[data-practice-score]').waitFor();
+          assert.equal(await root.getAttribute('data-session-id'),view.id);
+          assert.equal((await practiceResult.locator('[data-practice-score]').innerText()).replace(/\s+/g,' ').trim(),`${score} / 100`);
+          assert.equal(journalWrites,0);
+          row.mentorComplete.reloaded=true;
           const independent=await operation('start',root.locator('[data-action="start-journey"][data-stage="independent"]'));
           assert.equal(independent.journeyStage,'independent');
           assert.ok(independent.seminarProgress.exampleCompleted&&independent.seminarProgress.mentorCompleted);
@@ -1131,7 +1177,7 @@ try {
   for (const size of sizes)await run(size);
 }finally {
   await browser.close();
-  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherAccepted?'teacher-accepted':teacherExample?'teacher-example':teacher?'teacher':anonymous?'anonymous':stories&&scored?'stories-independent':scored?'independent':stories?'stories':'mfc',browserPath:'Bundled Playwright engine matrix after interactive Browser smoke',report},null,2)+'\n');
+  await writeFile(path.join(out,`coach-report-${arg('--viewport','all')}.json`),JSON.stringify({engine,scenario:legacy?'legacy':teacherAccepted?'teacher-accepted':teacherExample?'teacher-example':teacher?'teacher':anonymous?'anonymous':stories&&scored?'stories-independent':scored?'independent':practicePartial?'stories-practice-partial':stories?'stories':'mfc',browserPath:'Playwright with the real app and local fixture service',report},null,2)+'\n');
 }
 for (const result of report)console.log(result.key,result.status,result.error||`${result.checks.length} rendered hints`);
 if(report.some(result=>result.status!=='pass'))process.exitCode=1;

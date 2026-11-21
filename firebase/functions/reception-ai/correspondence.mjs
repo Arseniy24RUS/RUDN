@@ -20,6 +20,11 @@ const missingMfcResolution = {
   en:'The draft score is capped at 60. Passing requires a reasoned substantive decision or a specific interim action by the competent recipient.',
   zh:'草稿评分上限为60分。通过须给出有依据的实质决定，或主管接收方应采取的明确阶段性措施。'
 };
+const missingPracticeResolution = {
+  ru:'Тренировочный результат ограничен 60 баллами. В ответе нужно обосновать решение по существу или назвать конкретный промежуточный шаг компетентного адресата.',
+  en:'The practice score is capped at 60. Explain a substantive decision or identify a specific interim action by the competent recipient.',
+  zh:'练习得分上限为60分。请说明有依据的实质决定，或指出主管接收方应采取的明确阶段性措施。'
+};
 const ORDER_KINDS = new Set(['request','referral','execution','review','notification','control']);
 const STATUS = new Set(['pending','resolved','referred']);
 const REVIEW_LABELS={
@@ -476,7 +481,7 @@ export function validateCorrespondenceReview(review,context) {
   }
 }
 
-export function scoreCorrespondenceReview(rawReview,context) {
+export function scoreCorrespondenceReview(rawReview,context,{practice=false}={}) {
   const review=validateCorrespondenceReview(rawReview,context);
   const criteria=review.criteria.map(row=>({id:row.id,label:labels[row.id],earned:context.criteria.find(item=>item.id===row.id).max*row.level/4,
     max:context.criteria.find(item=>item.id===row.id).max,level:row.level,reason:row.reason,findings:row.findings}));
@@ -495,7 +500,7 @@ export function scoreCorrespondenceReview(rawReview,context) {
     criticalIds:review.criticalErrors.map(row=>row.ruleId),
     ...(context.operational?.workbook?{workbook:clone(context.operational.workbook)}:{}),
     correspondence:{version:1,rubricVersion:CORRESPONDENCE_RUBRIC_VERSION,phase:context.phase,displayFormat:1,rawScore:raw,score,cap,
-      ...(lacksResolution&&!review.criticalErrors.length?{capExplanation:missingMfcResolution}:{}),
+      ...(lacksResolution&&!review.criticalErrors.length?{capExplanation:practice?missingPracticeResolution:missingMfcResolution}:{}),
       criteria:clone(criteria),criticalErrors:review.criticalErrors,summary:review.summary,
       citations:context.resolvedCitations.map(({id,kind,sourceId,title,url,locator,quote,contentSha256,unitIds,language})=>({
         id,kind,sourceId,title,url:url||'',locator:locator||'',quote,contentSha256:contentSha256||'',...(unitIds?{unitIds}:{}),

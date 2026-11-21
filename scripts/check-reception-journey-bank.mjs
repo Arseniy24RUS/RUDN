@@ -133,17 +133,26 @@ async function checkCase(c, locale, stage) {
     assert.deepEqual(view.decision.correspondence.orders,[]);
     assert.ok(!view.control&&!view.controlWorkflow&&!view.followup);
     assert.equal(writes,scored?1:0);
-    if(scored){
+    if(stage!=='example'){
       const feedback=view.result.cases[0].feedback;
       assert.equal(feedback.correspondence.phase,'initial');
       assert.equal(view.result.total,exactCaseScore(feedback));
+      assert.ok(Number.isFinite(view.result.total)&&view.result.total>=0&&view.result.total<=100);
+    }
+    if(scored){
       assert.equal(view.result.points,seminarPointsAt(view.result.total));
       counts.scoredCases++;
     }else{
       assert.equal(view.result.points,undefined);
       assert.ok((await store.get(progressPath))[SEMINAR_STORY_PROGRESS_KEY][stage].completed);
-      if(stage==='example')counts.examples++;
-      else counts.mentoredCases++;
+      if(stage==='example'){
+        assert.equal(view.result.total,undefined);
+        counts.examples++;
+      }else{
+        assert.equal(view.result.practiceAssessment,true);
+        assert.equal(view.result.journalStatus,'local');
+        counts.mentoredCases++;
+      }
     }
     return;
   }

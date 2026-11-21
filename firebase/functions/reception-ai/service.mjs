@@ -58,6 +58,7 @@ const caseHistory = (progress,s) => isCurrentStoryJourney(s)?(progress.storyCase
 const currentSeminarContract = s => s.context==='seminar'&&isCurrentStoryJourney(s)&&s.coreStepsVersion===MFC_SEMINAR_VERSION&&
   s.workbookVersion===WORKBOOK_VERSION&&s.decisionVersion===DECISION_VERSION&&s.controlVersion==='execution-v1'&&
   JOURNEY_STAGES.includes(s.journeyStage)&&s.mode===(s.journeyStage==='independent'?'independent':'training');
+const scoredPractice = s => currentSeminarContract(s)&&s.journeyStage==='mentor';
 const fixedKindFor = (s,profile) => currentSeminarContract(s)
   ? (profile?.acceptedKinds?.includes(MFC_REPLY_KIND) ? MFC_REPLY_KIND : profile?.acceptedKinds?.[0])
   : undefined;
@@ -251,6 +252,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       p.decisionVersion=DECISION_VERSION;
     }
     const result = s.status === 'complete' ? {...(guide?{}:{points:s.result.points,maxPoints:5}), total: s.result.total, cap:s.result.cap||null, attemptId: s.result.attemptId,
+      ...(s.result.practiceAssessment?{practiceAssessment:true}:{}),
       ...(s.context==='seminar'?{...s.seminarProgress,...(guide?{}:{passScore:s.result.passScore??100})}:{}),
       ...(s.result.gradingVersion?{gradingVersion:s.result.gradingVersion}:{}),
       journalStatus: s.teacher || s.mode === 'training' || provider.name === 'mock' || typeof saveResult !== 'function' ? 'local' : s.journalSaved ? 'saved' : 'pending',
@@ -329,6 +331,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       ...(initialOnly?{assessmentVersion:SEMINAR_REPLY_GRADING_VERSION}:{})};
     if(isTutorial(s)){
       s.result={...receipt,completedAt:timestamp};
+      const feedback=s.results[0];
+      if(scoredPractice(s)&&feedback?.correspondence){
+        Object.assign(s.result,{practiceAssessment:true,total:exactCaseScore(feedback),cap:feedback.cap});
+      }
       return;
     }
     const seminar=s.context==='seminar';
@@ -1035,9 +1041,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     }
   }
 
-  async function reviewCorrespondence(body,identity) {
+  async function reviewCorrespondence(body,identity,{practice=false}={}) {
     const requestId=identifier(body.requestId),requestDigest=hash(body),timestamp=clock(),leaseId=randomUUID();
     const phase=body.op==='followup'?'control':'initial';
+    const pendingPhase=practice?'mentor-draft':phase;
     let failure;
     const acquired=await store.transaction('sessions/'+identifier(body.sessionId),old=>{
       const s=normalizeSession(old);
@@ -1052,9 +1059,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         }
         if(s.lease&&s.lease.until>timestamp)fail('busy',409);
         if(s.status!==(phase==='control'?'followup':'active'))fail('not_active',409);
-        if(body.expectedRevision!==undefined&&(!Number.isSafeInteger(body.expectedRevision)||s.revision!==body.expectedRevision))fail('revision_conflict',409);
+        if((practice||body.expectedRevision!==undefined)&&(!Number.isSafeInteger(body.expectedRevision)||s.revision!==body.expectedRevision))fail('revision_conflict',409);
         const c=s.caseData[s.caseIndex],state=s.caseStates[s.caseIndex],profile=correspondenceProfiles.private(c);
         if(!profile)fail('invalid_case',503);
+        if(practice&&(!scoredPractice(s)||guideFor(s,c,profile).steps[state.tutorialStepIndex]?.id!=='draft'))fail('tutorial_step_locked',409);
         if(phase==='initial'){
           if(state.decision)fail('not_active',409);
           const raw=copy(body.decision);let workbook;
@@ -1065,7 +1073,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
             fixedKind:fixedKindFor(s,profile),initialOnly:initialOnlyFor(s)});
           if(workbook)decision.workbook=workbook;
           if(s.coreStepsVersion)assertCoreDecision(state,decision);
-          if(s.coreStepsVersion===MFC_SEMINAR_VERSION&&!decision.correspondence.sections.resolution)fail('invalid_correspondence');
+          const sections=decision.correspondence.sections;
+          if(practice&&!Object.values(sections).some(Boolean))fail('invalid_correspondence');
+          if(!practice&&s.coreStepsVersion===MFC_SEMINAR_VERSION&&!sections.resolution)fail('invalid_correspondence');
           state.correspondenceDraft=decision;
         }else{
           if(body.choiceId!==undefined||!state.decision||state.control)fail('invalid_control');
@@ -1083,9 +1093,9 @@ export function createReceptionService({store, cases, provider, clock = Date.now
             }
           }
         }
-        state.reviewPending={requestId,phase,status:'pending'};
+        state.reviewPending={requestId,phase:pendingPhase,status:'pending'};
         s.lease={id:leaseId,requestId,until:timestamp+limits.reviewLeaseMs};
-        s.requests[requestId]={digest:requestDigest,status:'pending',phase,attempt:prior ? (prior.attempt||1)+1 : 1};
+        s.requests[requestId]={digest:requestDigest,status:'pending',phase:pendingPhase,attempt:prior ? (prior.attempt||1)+1 : 1};
         return s;
       }catch(error){failure=error;return undefined;}
     });
@@ -1130,7 +1140,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       finally{clearTimeout(timeout);}
       usage=generated?.usage;
       if(generated?.verified!==true)fail('review_unconfirmed',503);
-      const feedback=scoreCorrespondenceReview(generated.review,context);
+      const feedback=scoreCorrespondenceReview(generated.review,context,{practice});
       const finished=await store.transaction('sessions/'+s.id,old=>{
         const current=normalizeSession(old);
         if(!current||current.lease?.id!==leaseId||current.caseIndex!==s.caseIndex)return undefined;
@@ -1138,7 +1148,11 @@ export function createReceptionService({store, cases, provider, clock = Date.now
         if(phase==='initial'){
           st.decision=copy(decision);st.correspondenceEvidence=copy(evidence);
           st.correspondenceInitialFeedback=copy(feedback);st.correspondenceDraft=null;
-          if(initialOnlyFor(current))completeCurrentReply(current,feedback,timestamp);
+          if(practice){
+            st.tutorialFinding=null;
+            st.tutorialStepIndex=guideFor(current,c,profile).steps.length;
+            completeCurrentReply(current,feedback,timestamp);
+          }else if(initialOnlyFor(current))completeCurrentReply(current,feedback,timestamp);
           else if(c.followup){
             if(current.controlVersion==='execution-v1')st.controlWorkflow=copy(preparedControl);
             st.feedback=null;current.status='followup';
@@ -1152,7 +1166,7 @@ export function createReceptionService({store, cases, provider, clock = Date.now
           current.results.push(st.feedback);current.status='review';
         }
         st.reviewPending=null;
-        current.requests[requestId]={digest:requestDigest,status:'done',phase,attempt,reviewContextHash:hash(context),
+        current.requests[requestId]={digest:requestDigest,status:'done',phase:pendingPhase,attempt,reviewContextHash:hash(context),
           ...(generated.reviewModels?.assessment && generated.reviewModels?.verification ? {reviewModels:generated.reviewModels} : {})};
         current.lease=null;current.revision++;current.updatedAt=clock();return current;
       });
@@ -1163,8 +1177,8 @@ export function createReceptionService({store, cases, provider, clock = Date.now
       await store.transaction('sessions/'+s.id,old=>{
         const current=normalizeSession(old);
         if(!current||current.lease?.id!==leaseId)return undefined;
-        current.requests[requestId]={digest:requestDigest,status:'failed',phase,attempt};
-        current.caseStates[current.caseIndex].reviewPending={requestId,phase,status:'retry',code:safe.code};
+        current.requests[requestId]={digest:requestDigest,status:'failed',phase:pendingPhase,attempt};
+        current.caseStates[current.caseIndex].reviewPending={requestId,phase:pendingPhase,status:'retry',code:safe.code};
         current.lease=null;return current;
       });
       throw safe;
@@ -1318,6 +1332,10 @@ export function createReceptionService({store, cases, provider, clock = Date.now
     if(session.coreStepsVersion&&Object.hasOwn(CORE_STEP_FIELDS,body.stepId))return coreStep(body,identity,session);
     if(Object.values(CORE_STEP_FIELDS).some(field=>Object.hasOwn(body,field)))fail('invalid_core_step');
     const draft=Object.hasOwn(body,'decision'), control=Object.hasOwn(body,'control');
+    if(scoredPractice(session)&&body.stepId==='draft'&&draft&&!control&&
+      body.useExample===undefined&&body.confirmOwn===undefined&&body.choiceId===undefined){
+      return reviewCorrespondence(body,identity,{practice:true});
+    }
     if(draft!==control&&body.useExample===undefined&&body.confirmOwn===undefined&&body.choiceId===undefined){
       const state=session.caseStates[session.caseIndex], prior=session.requests[requestId];
       if(prior){

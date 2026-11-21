@@ -642,7 +642,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         <p>${esc(text(message.text))}</p>${message.at||waiting?`<footer class="rxa-message-meta">${messageTime(message.at)}${waiting?`<span class="rxa-delivery" data-delivery-state="pending">${esc(delivery)}</span>`:''}</footer>`:''}
       </div></article>`;
   }
-  function mentorConversation() {
+  function mentorConversation(toolbar) {
     const messages=view.mentorMessages||[];
     const waiting=pending?.op==='mentor-question'&&pending.sessionId===view.id&&!messages.some(message=>message.id===`${pending.requestId}-user`);
     const thinking=busy&&operation==='mentor-question';
@@ -650,12 +650,8 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const status=!thinking&&failedOperation==='mentor-question'&&error&&needsResume&&!pending&&mentorDraft.trim()
       ? `<div class="rxa-alert rxa-operation-status" role="alert"><p>${esc(errorText(error))}</p>${button(t('retry'),'mentor-retry-question',{quiet:true})}</div>`
       : thinking?'':actionStatus('mentor-question');
-    return `<section class="rxa-conversation rxa-mentor-conversation" data-mentor-conversation aria-labelledby="rxaMentorHeading">
-      <header class="rxa-person"><div class="rxa-person-info"><div class="rxa-person-heading">
-        ${mentorPortrait()}<div><h2 class="rxa-mentor-chat-heading" id="rxaMentorHeading" tabindex="-1">${esc(l('mentorPerson'))}</h2>
-        <p class="rxa-presence">${esc(l('mentorRole'))}</p></div></div></div>
-        ${button(l('mentorReturnCase'),'mentor-return',{quiet:true,glyph:'reception'})}
-      </header>
+    return `<section class="rxa-conversation rxa-mentor-conversation" id="rxaMentorConversation" data-mentor-conversation aria-labelledby="rxaMentorDialog">
+      ${toolbar}
       <div class="rxa-messages rxa-mentor-chat-log" data-mentor-messages data-case-id="${esc(view.case.id)}" role="log" aria-label="${esc(l('mentorRole'))}" aria-live="polite" aria-relevant="additions text">
         ${mentorMessage({id:'greeting',role:'assistant',text:l('mentorGreeting')},{greeting:true})}
         ${messages.map(message=>mentorMessage(message)).join('')}
@@ -669,32 +665,54 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
         </div><div class="rxa-compose-actions"><small>${esc(t('enterHint'))}</small><small data-message-count aria-hidden="true"></small></div>
       </form></section>`;
   }
+  function chatPortrait(appearance,{animated=true}={}) {
+    return `<span class="rxa-avatar rxa-chat-portrait" ${animated?`data-rxa-chat-actor="${esc(appearance.actorId)}"`:''}><img class="rxa-citizen-poster" src="${esc(appearance.avatar)}" alt=""></span>`;
+  }
+  function chatMenu(c) {
+    const label=esc(t('receptionInfo'));
+    return `<details class="rxa-chat-menu" data-details="chat-menu">
+      <summary aria-label="${label}" title="${label}">${icon('menu')}</summary>
+      <div class="rxa-chat-menu-panel"><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p>
+      ${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div>
+    </details>`;
+  }
   function chatWorkspace() {
     if(!mentorAvailable())return conversation();
-    const citizen=view.case.citizen;
-    const appearance=characterMedia(view.case.id,citizen?.portrait);
-    const dialog=(id,label,role,avatar)=>`<button type="button" class="rxa-btn quiet" data-action="chat-dialog"
-      data-chat-dialog="${id}" data-focus="chat-dialog-${id}" aria-pressed="${chatDialog===id}" aria-label="${esc(label+' · '+role)}">
-      <img src="${esc(avatar)}" alt=""><span><strong>${esc(label)}</strong><small>${esc(role)}</small></span></button>`;
-    return `<div class="rxa-chat-workspace"><div class="rxa-chat-dialogs" data-chat-dialogs role="group" aria-label="${esc(l('chatDialogs'))}">
-      ${dialog('citizen',text(citizen?.name)||t('citizen'),t('citizen'),appearance.avatar)}${dialog('mentor',l('mentorPerson'),l('mentorRole'),mentorAvatar())}</div>
-      ${inMentorChat()?mentorConversation():conversation()}</div>`;
+    const c=view.case, citizen=c.citizen;
+    const mentoring=inMentorChat();
+    const appearance=characterMedia(c.id,citizen?.portrait);
+    const dialog=(id,elementId,label,role,portrait)=>`<button type="button" class="rxa-btn quiet" id="${elementId}" data-action="chat-dialog"
+      data-chat-dialog="${id}" data-focus="chat-dialog-${id}" aria-pressed="${chatDialog===id}" aria-label="${esc(label+' · '+role)}" title="${esc(label)}">
+      ${portrait}<strong>${esc(label)}</strong><small>${esc(role)}</small></button>`;
+    const returnLabel=esc(l('mentorReturnCase'));
+    const toolbar=`<header class="rxa-chat-toolbar">
+      <div class="rxa-chat-dialogs" data-chat-dialogs role="group" aria-label="${esc(l('chatDialogs'))}">
+        ${dialog('citizen','rxaCitizenDialog',text(citizen?.name)||t('citizen'),t('citizen'),chatPortrait(appearance,{animated:!mentoring}))}
+        ${dialog('mentor','rxaMentorDialog',l('mentorPerson'),l('mentorRole'),`<img src="${esc(mentorAvatar())}" alt="">`)}
+      </div>
+      ${mentoring?`<button type="button" class="rxa-btn quiet" data-action="mentor-return" aria-label="${returnLabel}" title="${returnLabel}">${icon('reception')}</button>`:chatMenu(c)}
+    </header>`;
+    return mentoring?mentorConversation(toolbar):conversation(toolbar);
   }
-  function conversation() {
+  function conversation(toolbar='') {
     const c=view.case||{}, citizen=c.citizen||{}, messages=Array.isArray(view.messages)?view.messages:[];
     const question=guidedQuestion(), locked=busy||!!pending||paused||needsResume;
     const questionActions=question?'<aside class="rxt-chat-workflow">'+(question.completed?
       button(l('nextStep'),'core-opening',{primary:true,disabled:locked,glyph:'arrow',extra:'data-tour-target="advance"'}):
       `<p>${esc(l(messages.length>1?'askVisitorAgain':'askVisitorPrompt'))}</p>${button(l('useSuggestedQuestion'),'example-question',{quiet:true,disabled:locked,glyph:'talk'})}`)+'</aside>':'';
-    const appearance=characterMedia(c.id,citizen.portrait), opening=authoredText(c.opening);
+    const opening=authoredText(c.opening);
     const items=!messages.length&&opening?[{id:'opening',role:'assistant',text:opening}]:messages;
     const waiting=pending?.op==='message'&&pending.sessionId===view.id&&!items.some(m=>m.id===`${pending.requestId}-user`);
     const typing=busy&&operation==='message', status=typing?t('typing'):error||needsResume?t('connectionPaused'):active()?t('available'):t('conversationClosed');
     const day=items[0]?.at?new Date(items[0].at):null;
     const dateLabel=day&&Number.isFinite(day.getTime())?t('chatDate',{date:new Intl.DateTimeFormat(locale,{day:'numeric',month:'long'}).format(day)}):t('conversation');
-    const avatar = `<span class="rxa-avatar rxa-chat-portrait" data-rxa-chat-actor="${esc(appearance.actorId)}"><img class="rxa-citizen-poster" src="${esc(appearance.avatar)}" alt=""></span>`;
+    const header = toolbar || `<header class="rxa-person"><div class="rxa-person-info"><div class="rxa-person-heading">
+      ${chatPortrait(characterMedia(c.id,citizen.portrait))}<div><h2>${esc(text(citizen.name)||t('citizen'))}</h2>
+      <p class="rxa-presence ${typing?'typing':''} ${error||needsResume?'paused':''}" aria-live="polite"><span aria-hidden="true"></span>${esc(status)}</p></div></div></div>
+      ${chatMenu(c)}</header>`;
     // Illustrations belong to their named case documents, not to the opening message.
-    return `<section class="rxa-conversation" id="rxaConversation" aria-label="${esc(t('chat'))}"><header class="rxa-person"><div class="rxa-person-info"><div class="rxa-person-heading">${avatar}<div><h2>${esc(text(citizen.name)||t('citizen'))}</h2><p class="rxa-presence ${typing?'typing':''} ${error||needsResume?'paused':''}" aria-live="polite"><span aria-hidden="true"></span>${esc(status)}</p></div></div></div><details class="rxa-chat-menu" data-details="chat-menu"><summary aria-label="${esc(t('receptionInfo'))}" title="${esc(t('receptionInfo'))}">${icon('menu')}</summary><div class="rxa-chat-menu-panel"><strong>${esc(authoredText(c.role?.title))}</strong><p>${esc(authoredText(c.role?.text))}</p>${button(t('caseMaterials'),'workspace',{quiet:true,extra:'data-panel="documents"',glyph:'docs'})}</div></details></header>${seminar&&active()&&!tutorial()?`<aside class="rxt-chat-workflow"><p>${esc(l('chatPurpose'))}</p>${button(l('openDraft'),'page',{quiet:true,extra:'data-page="decision"',glyph:'decision'})}</aside>`:''}<div class="rxa-messages" data-case-id="${esc(c.id)}" role="log" aria-label="${esc(t('reviewChat'))}" aria-live="polite" aria-relevant="additions text"><div class="rxa-chat-date">${esc(dateLabel)}</div>${items.map(message=>messageMarkup(message)).join('')}${waiting?messageMarkup({id:`pending-${pending.requestId}`,role:'user',text:pending.text,at:pendingAt},true):''}${typing?`<div class="rxa-typing" data-typing role="status"><span class="rxa-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>${esc(t('typing'))}</span></div>`:''}</div>${questionActions}${active()&&(view.journeyStage!=='example'||question&&!question.completed)?`<form class="rxa-compose" data-chat-form><div class="rxa-composer-box"><label class="rxa-sr" for="rxaMessage">${esc(t('messageLabel'))}</label><textarea id="rxaMessage" data-message-draft data-focus="message" placeholder="${esc(t('messagePlaceholder'))}" maxlength="2000" rows="1" ${paused?'disabled':''}>${esc(draftMessage)}</textarea><button class="rxa-send" type="submit" aria-label="${esc(t('send'))}" title="${esc(t('send'))}" ${busy||pending||paused||needsResume?'disabled':''}>${icon('send')}</button></div><div class="rxa-compose-actions"><small>${esc(t('enterHint'))}</small><small data-message-count aria-hidden="true">${draftMessage.length?`${draftMessage.length} / 2000`:''}</small></div></form>`:active()?'':`<div class="rxa-fixed">${icon('check')}<span>${esc(t('fixed'))}</span></div>`}</section>`;
+    const label = toolbar ? 'aria-labelledby="rxaCitizenDialog"' : `aria-label="${esc(t('chat'))}"`;
+    return `<section class="rxa-conversation" id="rxaConversation" ${label}>${header}${seminar&&active()&&!tutorial()?`<aside class="rxt-chat-workflow"><p>${esc(l('chatPurpose'))}</p>${button(l('openDraft'),'page',{quiet:true,extra:'data-page="decision"',glyph:'decision'})}</aside>`:''}<div class="rxa-messages" data-case-id="${esc(c.id)}" role="log" aria-label="${esc(t('reviewChat'))}" aria-live="polite" aria-relevant="additions text"><div class="rxa-chat-date">${esc(dateLabel)}</div>${items.map(message=>messageMarkup(message)).join('')}${waiting?messageMarkup({id:`pending-${pending.requestId}`,role:'user',text:pending.text,at:pendingAt},true):''}${typing?`<div class="rxa-typing" data-typing role="status"><span class="rxa-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>${esc(t('typing'))}</span></div>`:''}</div>${questionActions}${active()&&(view.journeyStage!=='example'||question&&!question.completed)?`<form class="rxa-compose" data-chat-form><div class="rxa-composer-box"><label class="rxa-sr" for="rxaMessage">${esc(t('messageLabel'))}</label><textarea id="rxaMessage" data-message-draft data-focus="message" placeholder="${esc(t('messagePlaceholder'))}" maxlength="2000" rows="1" ${paused?'disabled':''}>${esc(draftMessage)}</textarea><button class="rxa-send" type="submit" aria-label="${esc(t('send'))}" title="${esc(t('send'))}" ${busy||pending||paused||needsResume?'disabled':''}>${icon('send')}</button></div><div class="rxa-compose-actions"><small>${esc(t('enterHint'))}</small><small data-message-count aria-hidden="true">${draftMessage.length?`${draftMessage.length} / 2000`:''}</small></div></form>`:active()?'':`<div class="rxa-fixed">${icon('check')}<span>${esc(t('fixed'))}</span></div>`}</section>`;
   }
   function documents(reading=false) {
     const docs=view.documents||[],opened=view.openedDocumentIds||[];
@@ -917,6 +935,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const commonReply=mfcJourney() && (view.case.workbook.sharedReply ?? (view.case.workbook.recipientLimit > 1));
     const internal=currentDocumentKind()==='internal';
     const filled=view.journeyStage==='example'&&!!exampleDraftSeed;
+    const submitLabel=filled?'confirmExample':view.journeyStage==='mentor'&&replyOnly()?'submitPractice':mentorDraft?'checkOwnDraft':'submitProject';
     return `<section class="rxa-panel rxc-workspace"><h1 data-core-heading>${esc(internal?l('internalTitle'):cl('draft'))}</h1>
       <p class="rxa-panel-intro">${esc(filled?l('filledDraftHint'):internal?l('internalNext'):cl('draftHint'))}</p>
       <p class="rxa-draft-status">${icon('cloud')}<span data-save-note>${esc(t(storageOkay?'savedDraft':'storageError'))}</span></p>
@@ -928,7 +947,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       <form id="rxaDecisionForm" data-decision-form>
         ${responsePreview?correspondencePreviewView(responseOptions()):correspondenceEditorView({...responseOptions(),guidedCore:true,showOrders:!currentDocumentKind()&&!commonReply})}
         <div class="rxa-decision-footer"><button class="rxa-btn primary" type="submit" data-tour-target="draft-submit" ${locked?'disabled':''}>
-          ${icon('decision')}${esc(l(filled?'confirmExample':mentorDraft?'checkOwnDraft':'submitProject'))}</button></div>
+          ${icon('decision')}${esc(l(submitLabel))}</button></div>
         ${actionStatus('decide')}
       </form>
     </section>`;
@@ -1153,12 +1172,47 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       </div>${(result.cases||[]).map((row,index)=>`<details class="rxa-case-review" data-details="result-${index}"><summary>${esc(authoredText(row.title))}</summary>${feedbackMarkup(row.feedback,row)}${responseRecord(row,index)}${replyOnly()?'':executionRecord(row)}</details>`).join('')}
       ${pathSetup()}${options.onExit?`<div class="rxa-actions">${button(t('back'),'exit',{})}</div>`:''}</section>`;
   }
+  function mentorPracticeResult(result) {
+    const row=result.cases?.[0];
+    const score=result.total;
+    const number=new Intl.NumberFormat(locale,{maximumFractionDigits:4});
+    const feedback=presentCorrespondenceFeedback(row?.feedback,{
+      locale,issues:row?.correspondenceProfile?.issues||view.case.correspondence?.issues,
+      sources:responseSources(row),actions:view.case.actions,recipients:responseRecipients(row?.decision||decisionDraft),
+    });
+    const protocol=feedback?.correspondence;
+    const deductions=(protocol?.criteria||feedback?.criteria||[]).filter(criterion=>criterion.earned<criterion.max);
+    const capApplied=Number.isFinite(protocol?.cap)&&protocol.rawScore>protocol.cap;
+    return `<section class="rxa-complete rxt-lesson-complete rxt-practice-result" data-practice-result>
+      <div class="rxa-complete-head">
+        <h1 tabindex="-1" data-stage-heading>${esc(l('practiceResult'))}</h1>
+        <div class="rxa-score" data-practice-score><strong>${esc(number.format(score))}</strong><span>/ 100</span></div>
+        <p class="rxa-journal">${esc(l('practiceJournal'))}</p>
+        ${score===100?`<p data-practice-perfect>${esc(l('practicePerfect'))}</p>`:''}
+      </div>
+      ${score<100?`<section class="rxt-practice-deductions" aria-labelledby="rxtPracticeDeductions"><h2 id="rxtPracticeDeductions">${esc(l('practiceDeductions'))}</h2>
+        ${deductions.map(criterion=>`<article class="rxc-protocol-criterion" data-practice-deduction="${esc(criterion.id)}">
+          <div class="rxt-deduction-heading"><h3>${esc(text(criterion.label))}</h3><strong>${esc(number.format(criterion.earned-criterion.max))} · ${esc(number.format(criterion.earned))} / ${esc(number.format(criterion.max))}</strong></div>
+          ${criterion.reason?`<p>${esc(text(criterion.reason))}</p>`:''}
+          ${(criterion.findings||[]).filter(finding=>finding.type==='missing'||finding.type==='incorrect').map(finding=>`${finding.quote?`<blockquote>${esc(finding.quote)}</blockquote>`:''}<p>${esc(text(finding.explanation))}</p>`).join('')}
+          ${['route','calendar'].includes(criterion.id)?workbookFeedbackView(feedback,{locale,practiceCriterion:criterion.id,
+            selectedAuthority:authoritySelectionLabel(row?.decision?.workbook?.routing,{locale})}):''}
+        </article>`).join('')}
+        ${capApplied?`<article class="rxc-protocol-criterion rxt-practice-cap" data-practice-cap>
+          <div class="rxt-deduction-heading"><h3>${esc(l('practiceCap'))} · ${esc(number.format(protocol.cap))} / 100</h3><strong>${esc(number.format(protocol.cap-protocol.rawScore))}</strong></div>
+          ${protocol.capExplanation?`<p>${esc(text(protocol.capExplanation))}</p>`:''}
+          ${(protocol.criticalErrors||[]).map(({finding})=>`${finding?.quote?`<blockquote>${esc(finding.quote)}</blockquote>`:''}${finding?.explanation?`<p>${esc(text(finding.explanation))}</p>`:''}`).join('')}
+        </article>`:''}
+      </section>`:''}
+      ${responseRecord(row,0)}${replyOnly()?'':lessonControlRecord()}${pathSetup()}</section>`;
+  }
   function complete() {
     if(tutorial()){
       const example=view.journeyStage==='example';
+      if(!example&&view.result?.practiceAssessment===true&&Number.isFinite(view.result.total))return mentorPracticeResult(view.result);
       return `<section class="rxa-complete rxt-lesson-complete"><div class="rxa-complete-head">
         <div class="rxa-review-icon">${icon('check')}</div><h1 tabindex="-1" data-stage-heading>${esc(l(example?'exampleDone':'mentorDone'))}</h1>
-        <p>${esc(l('noPoints'))}</p></div>${responseRecord()}${replyOnly()?'':lessonControlRecord()}${pathSetup()}</section>`;
+        <p>${esc(l(example?'noPoints':'practiceJournal'))}</p></div>${responseRecord()}${replyOnly()?'':lessonControlRecord()}${pathSetup()}</section>`;
     }
     const result = view.result;
     if (!result) return `<section class="rxa-complete"><h1>${esc(t('complete'))}</h1><p class="rxa-panel-intro">${esc(t('noResult'))}</p>${button(t('refresh'),'refresh',{primary:true,disabled:busy})}</section>`;
@@ -1223,7 +1277,10 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
       const heading=root.querySelector('[data-stage-heading], [data-core-heading]');
       stageFocus=false;
       if(content)content.scrollTop=0;
-      if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+      if(heading){
+        heading.tabIndex=-1;heading.focus({preventScroll:true});
+        if(heading.closest('[data-practice-result]'))window.scrollTo({top:0,behavior:'instant'});
+      }
     }
     if(resetReceptionScroll){
       const sessionId=view.id,caseId=view.case.id;
@@ -1840,7 +1897,7 @@ export async function mountReceptionAI(root, options = {}, config = {}) {
     const target=event.target.closest('[data-action]');if(!target||!root.contains(target)||target.disabled||disposed)return;
     const action=target.dataset.action;
     if(action==='mentor-open-chat'&&mentorAvailable()){
-      goPage('chat',{dialog:'mentor'});root.querySelector('#rxaMentorHeading')?.focus({preventScroll:true});return;
+      goPage('chat',{dialog:'mentor'});root.querySelector('#rxaMentorDialog')?.focus({preventScroll:true});return;
     }
     if(action==='mentor-dismiss-welcome'&&mentorAvailable()){
       mentorWelcomeSeen=true;persist();render();root.querySelector(`[data-focus="nav-${page}"]`)?.focus({preventScroll:true});return;

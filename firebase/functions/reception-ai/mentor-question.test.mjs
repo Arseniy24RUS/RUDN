@@ -45,10 +45,13 @@ async function fixture(answerMentor, {locale='ru',ready=true,acceptedKinds,revie
 test('current mentor drafts default to the accepted reply or internal form without a selector',async()=>{
   for(const [acceptedKinds,expected] of [[['special','reply'],'reply'],[['internal'],'internal']]){
     let input;
-    const {view,send}=await fixture(undefined,{acceptedKinds,async reviewMentorWork(value){
-      input=value;
-      return {ready:true,feedback:'Проект принят.',usage:{inputTokens:5,outputTokens:5}};
-    }});
+    const {view,send}=await fixture(undefined,{acceptedKinds,
+      reviewMentorWork(){assert.fail('Current practice uses the verified correspondence rubric');},
+      reviewDecision({context}){
+        input=context;
+        return {verified:true,review:explicitQAReview(context),usage:{inputTokens:5,outputTokens:5}};
+      }
+    });
     assert.equal(view.case.correspondence.fixedKind,expected);
     assert.equal(view.case.correspondence.kind,expected);
     if(expected==='internal')assert.match(view.case.correspondence.task,/служебный документ/);
@@ -65,10 +68,11 @@ test('current mentor drafts default to the accepted reply or internal form witho
     await perform({op:'tutorial-step',stepId:'route',routing:decision.workbook.routing});
     delete decision.correspondence.kind;
     await perform({op:'tutorial-step',stepId:'draft',decision});
-    assert.equal(input.guide.fixedKind,expected);
-    assert.equal(input.work.decision.correspondence.kind,expected);
+    assert.equal(input.mfcReception.fixedKind,expected);
+    assert.equal(input.sections.kind,undefined);
     assert.equal(current.decision.correspondence.kind,expected);
     assert.equal(current.status,'complete');
+    assert.equal(current.result.practiceAssessment,true);
     assert.equal(current.seminarProgress.mentorCompleted,true);
     assert.equal(current.controlWorkflow,undefined);
   }

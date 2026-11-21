@@ -24,7 +24,12 @@ const authoredActor='C07';
 const report=[];
 const viewports=[
   {width:320,height:568,isMobile:true},
+  {width:360,height:800,isMobile:true},
   {width:390,height:844,isMobile:true},
+  {width:393,height:852,isMobile:true},
+  {width:412,height:915,isMobile:true},
+  {width:430,height:932,isMobile:true},
+  {width:844,height:390,isMobile:true},
   {width:1440,height:900,isMobile:false},
 ];
 const citizenQuestion='Какие материалы вы сохранили перед тем, как пришли в приёмную?';
@@ -66,13 +71,15 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
   const evidence={engine,stage,viewport:{width:size.width,height:size.height},status:'running',checks:[],screenshots:[]};
   report.push(evidence);
   const calls=[];
-  let resolveMentor;
+  let resolveMentor, resolveCitizen;
   const mentorDelay=new Promise(resolve=>{resolveMentor=resolve;});
+  const citizenDelay=new Promise(resolve=>{resolveCitizen=resolve;});
   const provider={
     name:'mock',
     async generate(input){
       assert.equal(input.text,citizenQuestion);
       calls.push({op:'message',text:input.text});
+      await citizenDelay;
       return {reply:citizenReply,revealedFactIds:[],releasedDocumentIds:[],usage:{inputTokens:0,outputTokens:0}};
     },
     async answerMentor(input){
@@ -106,6 +113,7 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
   const nav=name=>root.locator(`.rxa-mobile-nav [data-page="${name}"]`);
   const welcome=root.locator('[data-mentor-welcome]');
   const chats=root.locator('[data-chat-dialogs]');
+  const toolbar=root.locator('.rxa-chat-toolbar');
   const citizenTab=chats.locator('[data-chat-dialog="citizen"]');
   const mentorTab=chats.locator('[data-chat-dialog="mentor"]');
   const citizenLog=root.locator('.rxa-messages[role="log"]:not([data-mentor-messages])');
@@ -113,6 +121,8 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
   const mentorLog=mentorChat.locator('[data-mentor-messages][role="log"]');
   const mentorForm=mentorChat.locator('[data-mentor-form]');
   const citizenForm=root.locator('[data-chat-form]');
+  const citizenChat=root.locator('#rxaConversation');
+  const returnToCase=toolbar.locator('[data-action="mentor-return"]');
   const mentorUI='[data-mentor-welcome],[data-mentor-conversation],[data-chat-dialog="mentor"],[data-mentor-draft],'+
     '[data-action="mentor-toggle"],[data-action="mentor-open-chat"],[data-mentor-greeting],.rxa-tour-toggle';
   const responseFor=op=>page.waitForResponse(response=>response.url()===origin+'/api/reception'&&
@@ -129,12 +139,50 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
     await page.screenshot({path:path.join(output,filename),animations:'disabled'});
     evidence.screenshots.push(filename);
   }
+  async function checkContactLabels() {
+    const layout=await toolbar.evaluate(async node=>{
+      await document.fonts.ready;
+      return {
+        height:node.getBoundingClientRect().height,
+        labels:[...node.querySelectorAll('[data-chat-dialog] :is(strong,small)')].map(label=>{
+          const text=document.createRange();
+          text.selectNodeContents(label);
+          return {value:label.textContent,visible:label.getBoundingClientRect().width,
+            needed:text.getBoundingClientRect().width,lines:text.getClientRects().length};
+        })
+      };
+    });
+    assert.ok(layout.height<=(size.width<=430?60:64),JSON.stringify(layout));
+    assert.equal(layout.labels.length,4);
+    for(const label of layout.labels){
+      assert.equal(label.lines,1,JSON.stringify(label));
+      assert.ok(label.visible+1>=label.needed,JSON.stringify(label));
+    }
+    if(size.width<=430){
+      const title=await root.locator('.rxa-brand-copy strong').evaluate(label=>{
+        const text=document.createRange();
+        text.selectNodeContents(label);
+        return {visible:label.getBoundingClientRect().width,needed:text.getBoundingClientRect().width,
+          lines:text.getClientRects().length};
+      });
+      assert.equal(title.lines,1,JSON.stringify(title));
+      assert.ok(title.visible+1>=title.needed,JSON.stringify(title));
+    }
+  }
   async function seeCitizen({withTabs=true}={}) {
     await citizenLog.waitFor();
     assert.equal(await mentorChat.count(),0);
     if(withTabs){
+      await checkContactLabels();
+      assert.equal(await citizenChat.locator('.rxa-person,.rxa-presence').count(),0);
+      assert.ok(await citizenChat.getAttribute('aria-labelledby'));
+      await toolbar.locator('.rxa-chat-menu summary').waitFor();
+      await citizenTab.locator('[data-rxa-chat-actor]').waitFor();
       assert.equal(await citizenTab.getAttribute('aria-pressed'),'true');
       assert.equal(await mentorTab.getAttribute('aria-pressed'),'false');
+    }else{
+      assert.equal(await toolbar.count(),0);
+      await citizenChat.locator('.rxa-person .rxa-presence').getByText('На связи',{exact:true}).waitFor();
     }
     assert.equal(await citizenLog.getByText(mentorQuestion,{exact:true}).count(),0);
     assert.equal(await citizenLog.getByText(mentorReply,{exact:true}).count(),0);
@@ -143,8 +191,13 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
   }
   async function seeMentor({answered=false}={}) {
     await mentorLog.waitFor();
+    await checkContactLabels();
     assert.equal(await citizenTab.getAttribute('aria-pressed'),'false');
     assert.equal(await mentorTab.getAttribute('aria-pressed'),'true');
+    assert.equal(await mentorChat.locator('.rxa-person,.rxa-presence,[data-rxa-chat-actor]').count(),0);
+    assert.ok(await mentorChat.getAttribute('aria-labelledby'));
+    await returnToCase.waitFor();
+    assert.ok(await returnToCase.getAttribute('aria-label'));
     assert.equal(await citizenLog.count(),0);
     assert.equal(await mentorLog.getByText(citizenQuestion,{exact:true}).count(),0);
     assert.equal(await mentorLog.getByText(citizenReply,{exact:true}).count(),0);
@@ -152,6 +205,31 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
       assert.equal(await mentorLog.getByText(mentorQuestion,{exact:true}).count(),1);
       assert.equal(await mentorLog.getByText(mentorReply,{exact:true}).count(),1);
     }
+  }
+  async function checkKeyboard() {
+    const field=mentorForm.locator('[data-mentor-draft]');
+    await field.focus();
+    // Desktop-hosted touch contexts have no system IME. Drive the same viewport event.
+    await page.evaluate(()=>{
+      Object.defineProperty(visualViewport,'height',{configurable:true,value:innerHeight-220});
+      visualViewport.dispatchEvent(new Event('resize'));
+    });
+    try{
+      await page.locator('#receptionAI[data-keyboard-open=true]').waitFor();
+      await citizenTab.waitFor();
+      await mentorTab.waitFor();
+      assert.equal(await mentorTab.getAttribute('aria-pressed'),'true');
+      await shot('mentor-keyboard');
+      await citizenTab.click();
+      await seeCitizen();
+    }finally{
+      await page.evaluate(()=>{
+        delete visualViewport.height;
+        visualViewport.dispatchEvent(new Event('resize'));
+      });
+    }
+    await mentorTab.click();
+    await seeMentor();
   }
   try {
     const loaded=await page.goto(origin+'/__qa/reception.html?context=seminar&lang=ru');
@@ -190,15 +268,23 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
       assert.match(greetingText,/начать|сверить|помо[гщ]|вопрос|подска/i);
       await checkHeader(root);
       await shot('mentor-greeting');
-      await mentorChat.locator('[data-action="mentor-return"]').click();
+      if(size.isMobile&&size.width<=820)await checkKeyboard();
+      await returnToCase.click();
       await page.locator('#receptionAI[data-page="reception"]').waitFor();
       await nav('chat').click();
       await seeCitizen();
       await checkHeader(root);
+      const chatMenu=toolbar.locator('.rxa-chat-menu');
+      await chatMenu.locator('summary').click();
+      await chatMenu.locator('[data-panel="documents"]').waitFor();
+      await chatMenu.locator('summary').click();
 
       await citizenForm.locator('[data-message-draft]').fill(citizenQuestion);
       const citizenResult=responseFor('message');
       await citizenForm.locator('button[type="submit"]').click();
+      await citizenLog.locator('[data-delivery-state="pending"]').waitFor();
+      await citizenLog.locator('[data-typing]').waitFor();
+      resolveCitizen();
       const citizen=await receipt(citizenResult);
       assert.deepEqual(citizen.messages.slice(-2).map(message=>message.text),[citizenQuestion,citizenReply]);
       await citizenLog.getByText(citizenReply,{exact:true}).waitFor();
@@ -215,6 +301,8 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
       await mentorForm.locator('button[type="submit"]').click();
       assert.equal((await requesting).postDataJSON().text,mentorQuestion);
       await mentorLog.getByText(mentorQuestion,{exact:true}).waitFor();
+      await mentorLog.locator('[data-delivery-state="pending"]').waitFor();
+      await mentorLog.locator('[data-op-wait="mentor-question"]').waitFor();
       assert.equal(await citizenLog.count(),0);
       resolveMentor();
       const mentored=await receipt(answer);
@@ -243,7 +331,7 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
       await checkHeader(root);
       await shot('mentor-after-reload');
 
-      await mentorChat.locator('[data-action="mentor-return"]').click();
+      await returnToCase.click();
       await page.locator('#receptionAI[data-page="reception"]').waitFor();
       await nav('chat').click();
       await seeCitizen();
@@ -270,14 +358,16 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
       const withFollowup=await receipt(recoverFollowup);
       assert.deepEqual(withFollowup.mentorMessages,followedUp.mentorMessages);
       assert.equal(await mentorLog.getByText(followupReply,{exact:true}).count(),1);
-      await mentorChat.locator('[data-action="mentor-return"]').click();
+      await returnToCase.click();
       await calendarPage.waitFor();
       await checkHeader(root);
       await shot('returned-calendar');
       assert.deepEqual(calls,[{op:'message',text:citizenQuestion},{op:'mentor-question',text:mentorQuestion},
         {op:'mentor-question',text:followupQuestion}]);
       evidence.checks.push('welcome','separate-citizen-and-mentor','freeform-question','pending-in-mentor-only',
-        'return-to-citizen','welcome-shortcut','history-across-reload','calendar-origin-and-return','followup-after-reload','header-unobstructed');
+        'return-to-citizen','welcome-shortcut','history-across-reload','calendar-origin-and-return','followup-after-reload',
+        'header-unobstructed','single-contact-row','contact-names-fit-on-one-line','citizen-menu','pending-and-typing-in-both-logs');
+      if(size.isMobile&&size.width<=820)evidence.checks.push('keyboard-keeps-both-contact-switches');
     }
     assert.deepEqual(errors,[]);
     evidence.status='pass';
@@ -289,6 +379,7 @@ async function run(browser,engine,size,stage,fixtureDirectory) {
     await shot('failure').catch(()=>{});
   }finally{
     resolveMentor();
+    resolveCitizen();
     await context.close();
     await new Promise(resolve=>fixture.server.close(resolve));
   }
@@ -305,7 +396,7 @@ try {
   const engine=option('--browser',null),width=option('--viewport',null);
   const engines=engine?[engine]:['chromium','webkit'];
   const sizes=viewports.filter(size=>!width||width===String(size.width));
-  assert.ok(sizes.length,'Choose 320, 390, or 1440.');
+  assert.ok(sizes.length,'Choose 320, 360, 390, 393, 412, 430, 844, or 1440.');
   for(const name of engines){
     assert.ok(['chromium','webkit'].includes(name),'Choose chromium or webkit.');
     const browser=await browsers[name].launch();

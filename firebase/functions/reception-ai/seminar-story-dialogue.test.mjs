@@ -5,9 +5,11 @@ import {createReceptionService} from './service.mjs';
 import {createMemoryStore} from './store.mjs';
 import {hash} from './schema.mjs';
 import {MFC_SEMINAR_VERSION} from './mfc-seminar.mjs';
+import {requiredSeminarExamples} from './normative-acts.mjs';
 import {LEGACY_SEMINAR_STORY_VERSION,SEMINAR_STORY_VERSION,SEMINAR_STORY_PROGRESS_KEY} from './seminar-stories.mjs';
 import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-cases.mjs';
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
+import {explicitQAReview} from '../../../scripts/reception-correspondence-qa-cases.mjs';
 
 const learner={uid:'story-dialogue-qa',studentKey:'12345'};
 const stage={context:'seminar',mode:'training',journeyStage:'example',workbookVersion:2,
@@ -196,6 +198,81 @@ test('new independent work opens the projected dossier with no tutorial question
     {code:'tutorial_step_required'});
 });
 
+test('current mentor practice accepts an incomplete answer and saves only a verified training score',async()=>{
+  let reviewCalls=0,journalWrites=0,announce,release;
+  const started=new Promise(resolve=>{announce=resolve;});
+  const {store,build}=fixture({name:'scripted-practice',
+    reviewMentorWork(){assert.fail('Final practice uses the scored reviewer only');},
+    async reviewDecision({context}){
+      assert.equal(context.mfcReception.initialOnly,true);
+      assert.equal(context.sections.resolution,'');
+      reviewCalls++;
+      if(reviewCalls===1){
+        return new Promise(resolve=>{release=resolve;announce();});
+      }
+      const review=explicitQAReview(context,{initialLevel:0});
+      review.criteria.find(row=>row.id==='resolution').findings[0].explanation=
+        'Укажите, как орган проверит наличие согласия на рекламную рассылку и что сделает при его отсутствии.';
+      return {verified:true,review,usage:{inputTokens:12,outputTokens:10}};
+    }
+  });
+  const handle=build({requireCurrentSeminarTraining:true,saveResult:async()=>{journalWrites++;}}).handle;
+  const use=body=>handle(body,learner);
+  const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
+  await store.transaction(ledger,()=>({bestPoints:4,[SEMINAR_STORY_PROGRESS_KEY]:{example:{completed:true}}}));
+  let view=(await use({...storyStage,journeyStage:'mentor',op:'start',requestId:'score-practice',locale:'ru'})).view;
+  let sequence=0;
+  const step=(stepId,input)=>use(messages(view,{op:'tutorial-step',stepId,requestId:'practice-'+(++sequence),...input}));
+  await assert.rejects(step('draft',{decision:{}}),{code:'tutorial_step_locked'});
+  view=(await step('reception',{choiceId:'role'})).view;
+  const model=structuredClone(view.guidance.decision);
+  const citations=requiredSeminarExamples((await store.get('sessions/'+view.id)).caseData[0]);
+  view=(await step('materials',{citations})).view;
+  view=(await step('calendar',{calendar:{deadline:model.deadline,referralDeadline:model.workbook.referralDeadline,
+    registrationTimely:model.workbook.registrationTimely}})).view;
+  view=(await step('route',{routing:model.workbook.routing})).view;
+  assert.equal(view.guidance.steps[view.guidance.stepIndex].id,'draft');
+  const decision={...model,correspondence:{...model.correspondence,subject:'',citations,orders:[],
+    sections:{facts:'Заявитель сообщил о рассылке.',legalBasis:'',resolution:'',nextSteps:''}}};
+  const body=messages(view,{op:'tutorial-step',stepId:'draft',requestId:'submit-practice',decision});
+  const empty=structuredClone(decision);
+  empty.correspondence.sections.facts=' ';
+  await assert.rejects(use({...body,requestId:'empty-practice',decision:empty}),{code:'invalid_correspondence'});
+  await assert.rejects(use({...body,requestId:'wrong-revision',expectedRevision:view.revision-1}),{code:'revision_conflict'});
+  const first=assert.rejects(use(body),{code:'review_unconfirmed'});
+  await Promise.race([started,first.then(()=>assert.fail('The reviewer was not called'))]);
+  await assert.rejects(use(body),{code:'busy'});
+  assert.equal(reviewCalls,1);
+  release({verified:false,usage:{inputTokens:12,outputTokens:10}});
+  await first;
+  const resume=async()=>(await use({op:'resume',sessionId:view.id,context:'seminar'})).view;
+  const failed=await resume();
+  assert.equal(failed.status,'active');
+  assert.equal(failed.result,null);
+  assert.equal(failed.reviewPending.phase,'mentor-draft');
+  assert.equal(failed.reviewPending.status,'retry');
+  assert.deepEqual(failed.draftDecision.correspondence,decision.correspondence);
+  const completed=(await use(body)).view;
+  assert.equal(completed.status,'complete');
+  assert.equal(completed.result.practiceAssessment,true);
+  assert.equal(completed.result.total,30);
+  assert.equal(completed.result.points,undefined);
+  assert.equal(completed.result.maxPoints,undefined);
+  assert.equal(completed.result.gradingVersion,undefined);
+  assert.equal(completed.result.journalStatus,'local');
+  assert.equal(completed.seminarProgress.mentorCompleted,true);
+  assert.equal(completed.seminarProgress.seminarPoints,undefined);
+  assert.equal((await store.get(ledger)).bestPoints,4);
+  assert.equal(completed.draftDecision,null);
+  assert.deepEqual(completed.decision.correspondence,decision.correspondence);
+  assert.match(completed.result.cases[0].feedback.correspondence.criteria.find(row=>row.id==='resolution').findings[0].explanation,/наличие согласия/);
+  assert.deepEqual((await resume()).result,completed.result);
+  assert.deepEqual((await use(body)).view.result,completed.result);
+  assert.equal(reviewCalls,2);
+  assert.equal(journalWrites,0);
+  assert.equal(Object.values((await store.get('budget')).reservations).length,2);
+});
+
 test('the production contract archives legacy work and gates assessment on current example and mentor receipts',async()=>{
   const {start,store,build}=fixture();
   const ledger='seminarProgress/'+hash('student:'+learner.studentKey);
@@ -273,7 +350,10 @@ test('the production contract archives legacy work and gates assessment on curre
   assert.equal(practice.view.id,duplicate.view.id);
   await assert.rejects(call(startBody(scored,'existing-attempt')),{code:'journey_stage_locked'});
   await reviewed(practice.view);
-  assert.equal((await finish(practice.view)).seminarProgress.mentorCompleted,true);
+  const unscoredPractice=await finish(practice.view);
+  assert.equal(unscoredPractice.seminarProgress.mentorCompleted,true);
+  assert.equal(unscoredPractice.view.result.practiceAssessment,undefined);
+  assert.equal(unscoredPractice.view.result.total,undefined);
   const assessment=await call(startBody(scored,'existing-attempt'));
   assert.notEqual(assessment.view.id,legacy.id);
   assert.equal((await again({...scored,op:'recover'})).view.id,assessment.view.id);
