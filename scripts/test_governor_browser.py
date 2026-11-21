@@ -308,7 +308,9 @@ class Suite:
         assert tables.nth(2).locator("tr").count() == 20
         rendered_years = tables.nth(2).locator("th").all_text_contents()
         assert rendered_years == [str(row["year"]) for row in record["governor"]["decisionRegister"]]
-        assert debrief.locator("button").count() == 1
+        assert debrief.locator("button.release-close").is_visible()
+        # Unlock notifications may appear inside the active modal with their own dismiss button.
+        assert debrief.locator("button:not(.release-close):not(.toast-close), a[download]").count() == 0
         assert page.locator("#download-report-end, #settings-export").count() == 0
         debrief.locator(".release-close").click()
         page.locator("#review-region").click()

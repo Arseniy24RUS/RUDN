@@ -203,7 +203,9 @@ def run(browser, base, output, width, height, language, full=False):
             debrief = visible(page, "#learning-report[open]")
             assert "20/20" in debrief.locator(".report-heading").inner_text()
             assert debrief.locator(".report-table").nth(2).locator("tbody tr").count() == 20
-            assert debrief.locator("button").count() == 1
+            assert debrief.locator("button.release-close").is_visible()
+            # Unlock notifications may appear inside the active modal with their own dismiss button.
+            assert debrief.locator("button:not(.release-close):not(.toast-close), a[download]").count() == 0
             if language != "ru":
                 assert not CYRILLIC.search(debrief.inner_text())
             result["reportRows"] = 20
