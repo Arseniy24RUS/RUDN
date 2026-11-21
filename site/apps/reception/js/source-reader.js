@@ -20,9 +20,9 @@ const BASE=new URL('../',import.meta.url);
 const SHARED_BASE=new URL('../../legal-lab/',import.meta.url);
 const EXISTING={'48601':'civil79','82959':'corruption273','34661':'koap'};
 const localizedReaderCopy={
-  ru:{original:'Русский оригинал',translation:'Показать перевод',translatedSelection:'В черновике сохранится соответствующий фрагмент русского оригинала.',tooLong:'Откройте русский оригинал и выделите фрагмент до 4 000 знаков.',switchFailed:'Не удалось переключить язык документа. Повторите попытку.'},
-  en:{original:'Russian original',translation:'Show translation',studyTranslation:'Study translation',machineTranslation:'Machine-assisted study translation',translatedSelection:'Your draft will cite the corresponding passage in the Russian original.',tooLong:'Open the Russian original and select a passage of up to 4,000 characters.',switchFailed:'Could not switch the document language. Try again.'},
-  zh:{original:'俄文原文',translation:'显示译文',studyTranslation:'学习译文',machineTranslation:'机器辅助学习译文',translatedSelection:'草稿中将引用对应的俄文原文段落。',tooLong:'请打开俄文原文，选择不超过 4,000 个字符的片段。',switchFailed:'无法切换文件语言，请重试。'},
+  ru:{original:'Русский оригинал',translation:'Показать перевод',tooLong:'Откройте русский оригинал и выделите фрагмент до 4 000 знаков.',switchFailed:'Не удалось переключить язык документа. Повторите попытку.'},
+  en:{original:'Russian original',translation:'Show translation',studyTranslation:'Study translation',machineTranslation:'Machine-assisted study translation',tooLong:'Open the Russian original and select a passage of up to 4,000 characters.',switchFailed:'Could not switch the document language. Try again.'},
+  zh:{original:'俄文原文',translation:'显示译文',studyTranslation:'学习译文',machineTranslation:'机器辅助学习译文',tooLong:'请打开俄文原文，选择不超过 4,000 个字符的片段。',switchFailed:'无法切换文件语言，请重试。'},
 };
 const LOCAL_LAWS=new Set(['59999','61801','103023','182661','8559','8585','58968','13744','6719','19671','165795','19109','71450','155986','34823','34683','107289','121895','37318','305','491941','140174','39570','363263','64871']);
 const ALIASES=[
@@ -185,8 +185,8 @@ export function createSourceReader(host,{signal,locale=()=>document.documentElem
     const tray=dialog.querySelector('[data-source-reference-tray]');if(!tray)return;
     tray.hidden=!selectionEnabled();
     const text=cabinetLabels(),selected=Boolean(selectedReference);
-    tray.dataset.sourceReferenceFeedback=String(selected&&selectedReference.displayLocale!=='ru');
-    tray.querySelector('[data-source-reference-hint]').textContent=selected?(selectedReference.displayLocale==='ru'?text.selected:readerCopy().translatedSelection):text.selectHint;
+    tray.dataset.sourceReferenceFeedback='false';
+    tray.querySelector('[data-source-reference-hint]').textContent=selected?text.selected:text.selectHint;
     tray.dataset.selected=String(selected);
     tray.querySelector('[data-source-reference-title]').textContent=selectedReference?.locator||'';
     tray.querySelector('[data-source-reference-preview]').textContent=selectedReference?.text.slice(0,160)||'';
