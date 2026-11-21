@@ -11,7 +11,7 @@ import {createSyntheticReceptionCases} from '../../../scripts/reception-ai-qa-ca
 import {executionQAProfiles} from '../../../scripts/reception-execution-qa.mjs';
 import {explicitQAReview} from '../../../scripts/reception-correspondence-qa-cases.mjs';
 import {createFirebaseResultWriter} from './firebase.mjs';
-import {SEMINAR_REPLY_GRADING_VERSION} from './seminar-journey.mjs';
+import {publicTutorialGuide,SEMINAR_REPLY_GRADING_VERSION} from './seminar-journey.mjs';
 import {deterministicMaterialsHint,mentorEvidence} from './mentor-evidence.mjs';
 import {requiredSeminarExamples} from './normative-acts.mjs';
 import {inspectCoreStep} from './seminar-core.mjs';
@@ -299,4 +299,29 @@ test('a materials checklist bypasses the model and remains in mentor history wit
   assert.equal(checked.mentorMessages.length,current.mentorMessages.length+2);
   assert.match(checked.mentorMessages.at(-1).text,/38-ФЗ[^\n]+ст\. 18/);
   assert.match(checked.mentorMessages.at(-1).text,/«К срокам»/);
+});
+
+test('a rejected bailiff citation names the exact replacement even after resuming the active case',async()=>{
+  const {template}=JSON.parse(readFileSync(new URL(
+    '../../../site/apps/reception/content/cases/bailiff-specific-petition.json',import.meta.url),'utf8'));
+  const c={id:template.id,seminarStory:{},documents:template.documents.map(({id,title,text})=>({id,title:{ru:title},text:{ru:text},factIds:[]})),
+    facts:[],rubric:{authored:{knowledge:template.knowledge,calendar:{rule:'calendar30'}}}};
+  const state={releasedDocumentIds:c.documents.map(doc=>doc.id),openedDocumentIds:['d1','d2'],messages:[],
+    tutorialFinding:{stepId:'materials',explanation:'Привяжите правовое основание к применимому положению.'}};
+  const guide={coreStepsVersion:MFC_SEMINAR_VERSION,currentStep:'materials',decision:{},
+    steps:[{id:'materials',documentIds:['d1','d2'],choices:[]}]};
+  const [citation]=requiredSeminarExamples(c);
+  assert.deepEqual(citation.unitIds,['law71450-u667']);
+  assert.equal((await inspectCoreStep({stepId:'materials',citations:[citation]},c,state,'ru',{
+    guide:true,resolveLegalCitation,coreStepsVersion:MFC_SEMINAR_VERSION
+  })).field,'citations');
+  const shown=publicTutorialGuide(guide,{caseIndex:0,caseData:[c],caseStates:[state],locale:'ru',journeyStage:'mentor',status:'active'});
+  assert.match(shown.finding.explanation,/ст\. 64\.1[^«]+«5\. Если иное не предусмотрено/);
+  assert.match(shown.finding.explanation,/сохраните фрагмент/);
+  assert.match(state.tutorialFinding.explanation,/^Привяжите/);
+
+  guide.evidence=mentorEvidence(c,state,'ru',guide,null,'active');
+  const reply=deterministicMaterialsHint({guide,text:'еовему то не перекидывает к срокам',locale:'ru'});
+  assert.ok(reply.includes(citation.quote));
+  assert.match(reply,/«К срокам»/);
 });

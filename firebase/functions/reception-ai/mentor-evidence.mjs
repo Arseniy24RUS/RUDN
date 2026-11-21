@@ -129,7 +129,9 @@ export function deterministicMaterialsHint({guide, text, locale}) {
   const evidence = guide.evidence;
   if (!guide.coreStepsVersion || evidence?.stage !== 'materials') return null;
   const question = text.trim().toLowerCase().replace(/[?？。.!！]+$/u, '').trim();
-  if (!materialsIntent[locale].test(question) && !questions[locale].legal.test(question)) return null;
+  const blockedOnDeadlines = locale==='ru' &&
+    /(?:не\s+(?:перекидывает|переводит|пускает|да[её]т|могу|получается|переходит|открывается)|заблокирован[ао]?)[^?!]*(?:к срокам|календар)/u.test(question);
+  if (!blockedOnDeadlines && !materialsIntent[locale].test(question) && !questions[locale].legal.test(question)) return null;
   const {legalSources, unreadRequiredDocuments, documents} = evidence;
   if (!legalSources.length || legalSources.some(source => !source.exactPassage)) return null;
   const copy = materialsCopy[locale];

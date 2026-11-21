@@ -6,7 +6,7 @@ import {mfcRoutingAlternatives,publicMfcRouting} from './mfc-routing.mjs';
 import {MFC_SEMINAR_VERSION,MFC_CALENDAR_VERSION,MFC_DATES_ONLY_CALENDAR_VERSION,isMfcChainedCalendar,mfcAuthorityName,mfcRole,mfcUsesSharedReply,mfcLegacyDispatchActions,mfcSharedReplyInstruction,mfcSharedMerits,mfcCalendarAction,mfcCalendarMerits} from './mfc-seminar.mjs';
 import {CORRESPONDENCE_WEIGHTS} from './correspondence.mjs';
 import {applyControlAction, validateControlSubmission} from './control-workflow.mjs';
-import {acceptableLegalProvisions, applicableLegalUnits, requiredSeminarExamples} from './normative-acts.mjs';
+import {acceptableLegalProvisions, applicableLegalUnits, hasApplicableLegalCitation, requiredSeminarActs, requiredSeminarExamples, requiredSeminarProvisions} from './normative-acts.mjs';
 
 export const JOURNEY_STAGES = Object.freeze(['example', 'mentor', 'independent']);
 export const SEMINAR_EXAMPLE = Object.freeze({caseId:'complaint-routing', datePackId:'a'});
@@ -424,6 +424,31 @@ export function missingCoreMaterials(c, state, steps) {
     .map(id=>c.documents.find(doc=>doc.id===id&&state.releasedDocumentIds.includes(id))).filter(Boolean);
 }
 
+function mentorCitationCorrection(c, locale) {
+  const examples = requiredSeminarExamples(c), provisions = requiredSeminarProvisions(c);
+  const suggestions = [];
+  for (const act of requiredSeminarActs(c)) {
+    const example = examples.find(row => row.sourceId === act.id);
+    if (!example) continue;
+    const candidate = {docId:act.id, unitIds:example.unitIds, text:example.quote};
+    const article = provisions[act.id].find(item => hasApplicableLegalCitation(c, candidate, {[act.id]:[item]}));
+    if (!article) continue;
+    const start = example.quote.match(/^.{1,96}(?=\s|$)/u)?.[0] || example.quote.slice(0,96);
+    const excerpt = start === example.quote ? start : start+'…';
+    suggestions.push(localized(T(
+      `${act.title}, ст. ${article}. Начало абзаца — «${excerpt}».`,
+      `${act.title}, art. ${article}. The paragraph starts with “${excerpt}”.`,
+      `${act.title} 第${article}条。请选择以「${excerpt}」开头的段落。`
+    ),locale));
+  }
+  if (!suggestions.length) return '';
+  return localized(T(
+    'Замените выделение на подходящий абзац. Нажмите на него в полном тексте и сохраните фрагмент. ',
+    'Replace the selection with a relevant paragraph. Tap it in the full text and save the passage. ',
+    '请在法规全文中点击对应段落，并保存选段。'
+  ),locale)+suggestions.join(' ');
+}
+
 export function publicTutorialGuide(guide, session) {
   const state = session.caseStates[session.caseIndex], example = session.journeyStage==='example';
   const stepIndex = state.tutorialStepIndex || 0;
@@ -440,6 +465,9 @@ export function publicTutorialGuide(guide, session) {
         'To continue to deadlines, open '+names.map(name=>'“'+name+'”').join(', ')+' in Case materials.',
         '进入期限步骤前，请在「案件材料」中打开'+names.map(name=>'《'+name+'》').join('、')+'。'),session.locale);
       finding={stepId:'materials',explanation:instruction};
+    } else if (finding?.stepId==='materials') {
+      const correction=mentorCitationCorrection(c,session.locale);
+      if (correction) finding={...finding,explanation:correction};
     }
   }
   const question=example&&story?.exampleDialogue;
