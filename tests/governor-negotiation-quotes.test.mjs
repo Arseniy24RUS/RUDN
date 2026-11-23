@@ -43,6 +43,10 @@ test('meeting receipts and every selectable alternative quote the same package t
       assert.ok(dialog.innerHTML.includes('Planned opening <strong>'+(2026+v.project.startsIn)+'</strong>'));
       assert.ok(dialog.innerHTML.includes(v.agreement.positions.filter(p=>p.stance==='support').length+' of 3 support'));
       if(v.agreement.delay)assert.ok(dialog.innerHTML.includes('Coordination +1 year · support -1.5'));
+      if(ids.length){
+        assert.ok(dialog.innerHTML.includes('Added to project cost '+signed(delta(v.plan.totalCost,quote([]).plan.totalCost))));
+        if(v.agreement.annualOpex)assert.ok(dialog.innerHTML.includes('upkeep '+signed(v.agreement.annualOpex)+'/year'));
+      }
       for(const p of v.agreement.promises)assert.ok(dialog.innerHTML.includes('data-remove-term="'+p.termId+'"'));
       for(const actor of actors){
         actor.onclick();

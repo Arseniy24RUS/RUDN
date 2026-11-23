@@ -115,6 +115,14 @@
    return `<button type="button" class="gov-participant ${x.id===actorId?'selected':''}" data-participant="${x.id}" aria-pressed="${x.id===actorId}"><span class="gov-avatar">${avatar(x)}</span><span><strong>${esc(l(x.name))}</strong><small>${esc(sideName(x.id))}</small><b class="gov-stance ${p.stance}">${esc(stanceLabel(p.stance))}</b></span></button>`;
   }).join('');
   const terms=C.terms.filter(t=>t.actor===actorId).map(t=>offer(t,s,v)).join('');
+  let premium='';
+  if(a.termIds.length){
+   const empty=E.previewAction(s,selection.actionId,selection.mode,selection.placementId,[]);
+   const added=Math.round((v.plan.totalCost-empty.plan.totalCost)*100)/100;
+   const costs=[copy(`К цене проекта ${signedMoney(added)}`,`Added to project cost ${signedMoney(added)}`,`项目总成本变化 ${signedMoney(added)}`)];
+   if(a.annualOpex)costs.push(copy(`содержание ${signedMoney(a.annualOpex)}/год`,`upkeep ${signedMoney(a.annualOpex)}/year`,`年运营费 ${signedMoney(a.annualOpex)}`));
+   premium=costs.join(' · ');
+  }
   const pledges=a.promises.map(p=>{
    const label=sideName(p.actorId)+' · '+commitment(p,s);
    return `<button type="button" data-remove-term="${p.termId}" aria-label="${esc(txt('Снять условие','Remove term')+' · '+label)}"><span>${esc(label)}</span>${icon('close',{size:16})}</button>`;
@@ -129,7 +137,7 @@
      <button class="gov-question" type="button" data-inquiry>${inquiry?txt('Вернуться к вопросу','Back to the question'):txt('Что для вас принципиально?','What matters most to you?')}</button>
      <p><strong>${esc(l(actor.role))}.</strong> ${esc(l(actor.remit))}</p></details></section></div>
    <footer class="meeting-contract"><div class="meeting-receipt"><p class="meeting-stance ${a.status}" role="status">${esc(coalition(a))}</p>
-    <div class="meeting-pledges">${pledges||`<span>${copy('Без дополнительных обещаний','No extra promises','无额外承诺')}</span>`}</div></div>
+    <div class="meeting-pledges">${pledges||`<span>${copy('Без дополнительных обещаний','No extra promises','无额外承诺')}</span>`}</div>${premium?`<p class="meeting-premium">${esc(premium)}</p>`:''}</div>
     <div class="meeting-sign"><div><span>${txt('Собственные средства сейчас','Own funds now')} <strong>${money(ownCost(v.plan))}</strong></span><span>${copy('Плановый запуск','Planned opening','计划启用')} <strong>${opening}</strong></span></div>
     <button class="primary-button gov-sign" type="button" data-sign-agreement ${v.affordable?'':'disabled'}>${esc(v.affordable?txt('Утвердить пакет','Approve package'):txt('Пакет не обеспечен ресурсами','Package lacks resources'))}${icon('arrow',{size:18})}</button></div></footer>`;
   d.setAttribute('aria-labelledby','negotiation-title');

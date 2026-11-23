@@ -98,3 +98,5 @@
  #negotiation-dialog .gov-participants {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.15rem),1fr))}
  #negotiation-dialog .gov-participant {width:100%}
 }
+
+.meeting-premium {margin:.2rem 0 .35rem;font-size:.8rem;line-height:1.35;color:#335c70}
