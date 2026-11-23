@@ -23,6 +23,11 @@
     const s=hooks.state();if(!s)return;
     s.onboarding=s.onboarding||{enabled:true,seen:[]};s.onboarding.enabled=true;s.onboarding.seen=[];
     hooks.save();hooks.navigate('mission');refresh();
+    const step=$('.campaign-coach');
+    if(!step){G.ReleaseUI.openGuide(true);return;}
+    step.open=true;
+    step.querySelector('summary').focus({preventScroll:true});
+    step.scrollIntoView({block:'center'});
   }
   function translate(){
     const l=hooks.language(),selected=$('#campaign-strategy')?.value||'services';

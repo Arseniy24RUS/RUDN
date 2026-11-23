@@ -100,3 +100,10 @@
 }
 
 .meeting-premium {margin:.2rem 0 .35rem;font-size:.8rem;line-height:1.35;color:#335c70}
+
+@media(max-width:700px) and (min-height:36rem){
+ #negotiation-dialog {container:negotiation / inline-size}
+ @container negotiation (min-width:22rem){
+  #negotiation-dialog:has(.gov-transcript[open]) .meeting-contract {position:sticky;bottom:0;z-index:1}
+ }
+}

@@ -170,7 +170,8 @@ async function smoke(language,mode){
   if(language!=='ru')assert.ok(!/[А-Яа-яЁё]/.test(text),'No Russian text in localized course overview');
   await click('[data-course-close]');
   await click('[data-coach-skip]');assert.equal($('.campaign-coach'),null);
-  await click('#campaign-coach-toggle');assert.ok($('.campaign-coach'),'Coaching can be reopened');
+  await click('#campaign-coach-toggle');assert.ok($('.campaign-coach').open,'Reopened coaching exposes the current lesson');
+  assert.equal(w.document.activeElement,$('.campaign-coach summary'));
   await click('[data-coach-skip]');await click('#mobile-menu-button');
   assert.ok($('#section-menu').open);await click('[data-reopen-coaching]');
   assert.equal($('#section-menu').open,false);assert.ok($('.campaign-coach'),'Mobile menu reopens coaching');
