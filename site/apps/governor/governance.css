@@ -7,7 +7,7 @@
 .gov-header-art{width:180px;height:96px;object-fit:cover;border-radius:14px;border:1px solid #d6e8f3;box-shadow:0 4px 16px #204a6d12;flex:0 0 180px}
 
 .gov-close{display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border:1px solid #c5dfef;border-radius:50%;background:#fff;color:#007cbe;cursor:pointer}
-.gov-meeting-body{display:grid;grid-template-columns:215px minmax(0,1fr) 290px;overflow:auto;min-height:0;flex:1}
+.gov-meeting-body{display:grid;grid-template-columns:215px minmax(0,1fr);overflow:auto;min-height:0;flex:1}
 .gov-participants{padding:20px 12px;background:#f6fbff;border-right:1px solid #e3eef6}
 .gov-participant{width:100%;display:flex;align-items:center;gap:10px;text-align:left;border:1px solid transparent;border-radius:14px;padding:14px 8px;background:transparent;color:inherit;cursor:pointer;margin:0 0 8px;}
 .gov-participant.selected{background:white;border-color:#a9d9f1;box-shadow:0 3px 9px #2546710b}.gov-participant strong{font-size:13px;display:block;line-height:1.4}.gov-participant small{display:block;font-size:11px;color:#53738f;margin:2px 0 7px}.gov-stance{font-size:11px;font-weight:650;display:inline-block;line-height:1.4}
@@ -42,3 +42,59 @@
 @media(prefers-reduced-motion:reduce){.gov-dialog *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 .end-review{grid-column:1/-1}
+
+
+/* The meeting keeps the terms and the signature in one reading order. */
+#negotiation-dialog {width:min(55rem,94vw)}
+#negotiation-dialog .gov-header {align-items:center}
+.gov-conversation h3 {margin:0;font-size:.875rem;color:#42667c}
+.gov-opening {font-size:1.28rem;line-height:1.35;font-weight:620;margin:.35rem 0 1rem}
+.gov-conversation .gov-term {min-height:0;padding:.75rem;align-items:center}
+.gov-conversation .gov-term-text {font-size:.875rem;line-height:1.35;margin:.15rem 0}
+.gov-conversation .gov-term small,.gov-conversation .gov-term em {font-size:.775rem;line-height:1.35}
+.gov-transcript {font-size:.875rem;margin:.55rem 0 0}
+.gov-transcript summary {padding:.6rem 0;color:#305d75}
+.gov-transcript blockquote {min-height:0;font-size:1rem;line-height:1.5}
+.meeting-contract {flex:none;border-top:1px solid #cbdde6;background:#f6fbfd;padding:.75rem 1.4rem .85rem;overflow-wrap:anywhere}
+.meeting-stance {margin:0;font-size:.875rem;font-weight:680;line-height:1.35;color:#245066}
+.meeting-stance.open {color:#834516}
+.meeting-pledges {display:flex;flex-wrap:wrap;gap:.25rem;margin:.25rem 0 .45rem;font-size:.8rem;color:#4d6576}
+.meeting-pledges button {display:flex;align-items:center;gap:.5rem;text-align:start;background:#fff;min-height:2rem;border:1px solid #accddc;border-radius:.5rem;color:#244f65;padding:.25rem .55rem;font:inherit;cursor:pointer}
+.meeting-pledges button svg {flex:none}
+.meeting-sign {display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.meeting-sign>div {display:flex;flex-wrap:wrap;gap:.2rem 1.2rem}
+.meeting-sign span {font-size:.84rem;color:#3c596a}
+.meeting-sign strong {color:#183d56;white-space:nowrap}
+.meeting-sign .primary-button {flex:none;margin:0;min-height:2.75rem}
+@media(max-width:700px){
+ #negotiation-dialog {width:100%}
+ #negotiation-dialog .gov-header {padding:.65rem .9rem}
+ #negotiation-dialog .gov-header h2 {font-size:1.12rem;line-height:1.25;margin:.1rem 0}
+ #negotiation-dialog .gov-close {width:44px;height:44px;flex-basis:44px}
+ .gov-meeting-body .gov-participants {padding:.45rem .65rem;align-items:stretch}
+ .gov-participants .gov-participant {padding:.3rem .12rem;gap:.15rem}
+ .gov-participants .gov-participant small {font-size:.75rem;min-height:0;margin:0}
+ .gov-participants .gov-stance {font-size:.73rem}
+ .gov-conversation {padding:.7rem .85rem}
+ .gov-opening {font-size:1.07rem;margin:.2rem 0 .65rem}
+ .gov-terms {gap:.4rem}
+ .gov-conversation .gov-term {padding:.5rem .65rem;gap:.4rem}
+ .gov-term strong {font-size:.94rem}
+ .meeting-contract {padding:.5rem .85rem max(.6rem,env(safe-area-inset-bottom))}
+ .meeting-sign {display:grid;gap:.4rem}
+ .meeting-sign>div {justify-content:space-between;gap:.2rem .6rem}
+ .meeting-sign .primary-button {width:100%}
+}
+@media(max-height:32rem),(max-width:360px) and (max-height:650px){
+ #negotiation-dialog[open] {overflow:auto;display:block;overscroll-behavior:contain}
+ #negotiation-dialog .gov-meeting-body {overflow:visible}
+}
+/* Give zoomed text the same continuous reading path as a short screen. */
+#negotiation-dialog {overflow:auto}
+#negotiation-dialog .gov-header {position:static}
+#negotiation-dialog .gov-meeting-body {flex:1 0 auto;overflow:visible}
+#negotiation-dialog .gov-participant {overflow-wrap:anywhere}
+@media(max-width:700px){
+ #negotiation-dialog .gov-participants {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,6.15rem),1fr))}
+ #negotiation-dialog .gov-participant {width:100%}
+}

@@ -134,6 +134,22 @@ return result;
 async function smoke(language,mode){
   const {dom,w,G,$,click,state,logs,closePresentations}=await boot(language);
   assert.equal(w.document.documentElement.lang,language);
+  await click('#start-guide');
+  await click('[data-practice-start]');
+  assert.equal(w.document.activeElement,$('[data-practice] h3'));
+  for(const correct of [1,0,1,0,1]){
+    const buttons=w.document.querySelectorAll('.practice-choices button');
+    buttons[1-correct].click();
+    assert.ok($('[data-practice] [role="status"]').textContent.length>12);
+    assert.equal($('[data-practice-next]'),null);
+    buttons[correct].click();
+    if(language!=='ru')assert.doesNotMatch($('[data-practice]').textContent,/[А-Яа-яЁё]/);
+    await click('[data-practice-next]');
+  }
+  assert.equal($('#learning-dialog').open,false);
+  assert.equal(state(),null,'Completing practice never starts a campaign');
+  assert.match($('#campaign-pace').textContent,/80/);
+
   $('#campaign-mode').value=mode;$('#campaign-mode').dispatchEvent(new w.Event('change'));
   $('#campaign-strategy').value='generations';$('#campaign-strategy').dispatchEvent(new w.Event('change'));
   $('#player-name').value='Campaign QA';
