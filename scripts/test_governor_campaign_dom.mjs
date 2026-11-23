@@ -68,6 +68,7 @@ assert.ok($('#campaign-course-dialog').textContent.includes('Медицина в
 await click('[data-course-close]');
 await click('[data-action="train-staff"]');
 assert.ok($('.campaign-coach').textContent.includes('Проверьте цену'));
+assert.equal($('.campaign-coach').closest('#mission-context'),null,'Funding controls keep coaching outside the collapsed adviser panel');
 await click('.change-decision');
 assert.ok($('.campaign-coach').textContent.includes('Сравните способы'));
 await click('[data-action="train-staff"]');

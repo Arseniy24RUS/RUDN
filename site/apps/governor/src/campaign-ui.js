@@ -109,7 +109,7 @@
     el.querySelector('[data-coach-done]').onclick=()=>{(onboarding.seen=onboarding.seen||[]).push(step.key);hooks.save();refresh(selected);};
     el.querySelector('[data-coach-skip]').onclick=()=>{onboarding.enabled=false;hooks.save();refresh(selected);};
     if(state.activeView==='agenda')$('#secondary-stage .agenda-board')?.after(el);
-    else $('#mission-context')?.append(el);
+    else $('#mission-context')?.after(el);
   }
   function statusText(id,l){return id==='secured'?tr(l,'Курс подтверждён','Mandate secured','战略得到确认'):id==='at-risk'?tr(l,'Курс требует пересмотра','Mandate at risk','战略需要调整'):tr(l,'Условное доверие','Conditional confidence','有条件信任');}
   function agendaHtml(state,l){

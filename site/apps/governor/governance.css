@@ -107,3 +107,7 @@
   #negotiation-dialog:has(.gov-transcript[open]) .meeting-contract {position:sticky;bottom:0;z-index:1}
  }
 }
+
+.gov-terms {grid-template-columns:minmax(0,1fr)}
+.gov-term>span:last-child {min-width:0;overflow-wrap:anywhere}
+.meeting-pledges button {min-width:0;max-width:100%}
