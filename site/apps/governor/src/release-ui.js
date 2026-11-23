@@ -8,7 +8,7 @@
  function button(label,fn,cls='secondary-button'){const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=label;b.onclick=fn;return b;}
  function dialog(id,title){const d=document.createElement('dialog');d.id=id;d.className='release-dialog';d.setAttribute('aria-label',title);document.body.append(d);return d;}
  function closeButton(d){return button(tr('Закрыть','Close'),()=>d.close(),'secondary-button release-close');}
- function openGuide(){const d=$('#learning-dialog');d.innerHTML=G.Learning.guide(language);d.prepend(closeButton(d));if(!d.open)d.showModal();}
+ function openGuide(startPractice=false){const d=$('#learning-dialog');d.innerHTML=G.Learning.guide(language);d.prepend(closeButton(d));G.Learning.practice(d,language);if(!d.open)d.showModal();if(startPractice===true)d.querySelector('[data-practice-start]').click();}
  function openReport(){
   const state=hooks.state();
   if(!state)return;

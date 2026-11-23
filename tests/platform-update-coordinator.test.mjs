@@ -146,14 +146,41 @@ test('destroy during recovery read never enters the retired adapter',async()=>{
   const pending=h.coordinator.restorePending();h.coordinator.destroy();resolve();assert.equal((await pending).status,'defer');assert.equal(entered,0);assert.ok(h.storage.getItem(UPDATE_PENDING_KEY));
 });
 
+test('a failed release lookup keeps the guest URL and any checkpoint created during the lookup',async()=>{
+  const href='https://example.test/RUDN/apps/governor/index.html?context=free&source=seminar%207%2fguest#agenda';
+  const replaced=[];
+  const win={location:{href},history:{replaceState(_state,_title,url){replaced.push(url);win.location.href=url}}};
+  const h=harness({window:win});
+  assert.equal((await h.coordinator.check()).status,'switching');
+  const checkpoint=h.storage.getItem(UPDATE_PENDING_KEY);
+  const token=JSON.parse(checkpoint).token;
+  h.coordinator.destroy();
+  h.storage.removeItem(UPDATE_PENDING_KEY);
+  const reopened=h.restart();
+  try{
+    h.release.checkRelease=async()=>{
+      // A different recovery completes its write while this check is waiting for the network.
+      h.storage.setItem(UPDATE_PENDING_KEY,checkpoint);
+      throw new TypeError('Network unavailable');
+    };
+    assert.deepEqual(await reopened.check(),{status:'defer',code:'update/preparation-failed'});
+    assert.equal(win.location.href,href);
+    assert.deepEqual(replaced,[]);
+    assert.equal(h.storage.getItem(UPDATE_PENDING_KEY),checkpoint);
+    assert.equal(h.storage.getItem(UPDATE_PENDING_KEY+':'+token),checkpoint);
+    assert.ok(h.snapshots.has(token));
+  }finally{reopened.destroy()}
+});
+
 test('process restart recovers marker from the local pointer without assigning another owner',async()=>{
   const values=new Map(),persistentStorage={getItem:k=>values.get(k)||null,setItem:(k,v)=>values.set(k,v),removeItem:k=>values.delete(k)};
   const win={location:{href:'https://example.test/_releases/b/index.html#activity/x'},history:{replaceState(_state,_title,url){win.location.href=url}}};
   const h=harness({persistentStorage,window:win});await h.coordinator.check();
   const marker=JSON.parse(h.storage.getItem(UPDATE_PENDING_KEY));h.storage.removeItem(UPDATE_PENDING_KEY);
-  win.location.href='https://example.test/_releases/b/index.html?rudnResume='+marker.token+'#activity/x';h.setBuild('b');
+  const restoredURL='https://example.test/_releases/b/index.html?context=free&source=seminar%207%2fguest#activity/x';
+  win.location.href=restoredURL.replace('&source=','&rudnResume='+marker.token+'&source=');h.setBuild('b');
   assert.equal((await h.coordinator.restorePending()).status,'restored');assert.equal(h.counts().restored,1);
-  assert.equal(values.has(UPDATE_PENDING_KEY+':'+marker.token),false);assert.equal(new URL(win.location.href).searchParams.has('rudnResume'),false);h.coordinator.destroy();
+  assert.equal(values.has(UPDATE_PENDING_KEY+':'+marker.token),false);assert.equal(win.location.href,restoredURL);h.coordinator.destroy();
 });
 
 test('deadline thaws a hung recovery write and discards its late completion',async()=>{

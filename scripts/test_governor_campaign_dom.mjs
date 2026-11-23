@@ -68,6 +68,7 @@ assert.ok($('#campaign-course-dialog').textContent.includes('Медицина в
 await click('[data-course-close]');
 await click('[data-action="train-staff"]');
 assert.ok($('.campaign-coach').textContent.includes('Проверьте цену'));
+assert.equal($('.campaign-coach').closest('#mission-context'),null,'Funding controls keep coaching outside the collapsed adviser panel');
 await click('.change-decision');
 assert.ok($('.campaign-coach').textContent.includes('Сравните способы'));
 await click('[data-action="train-staff"]');
@@ -134,6 +135,22 @@ return result;
 async function smoke(language,mode){
   const {dom,w,G,$,click,state,logs,closePresentations}=await boot(language);
   assert.equal(w.document.documentElement.lang,language);
+  await click('#start-guide');
+  await click('[data-practice-start]');
+  assert.equal(w.document.activeElement,$('[data-practice] h3'));
+  for(const correct of [1,0,1,0,1]){
+    const buttons=w.document.querySelectorAll('.practice-choices button');
+    buttons[1-correct].click();
+    assert.ok($('[data-practice] [role="status"]').textContent.length>12);
+    assert.equal($('[data-practice-next]'),null);
+    buttons[correct].click();
+    if(language!=='ru')assert.doesNotMatch($('[data-practice]').textContent,/[А-Яа-яЁё]/);
+    await click('[data-practice-next]');
+  }
+  assert.equal($('#learning-dialog').open,false);
+  assert.equal(state(),null,'Completing practice never starts a campaign');
+  assert.match($('#campaign-pace').textContent,/80/);
+
   $('#campaign-mode').value=mode;$('#campaign-mode').dispatchEvent(new w.Event('change'));
   $('#campaign-strategy').value='generations';$('#campaign-strategy').dispatchEvent(new w.Event('change'));
   $('#player-name').value='Campaign QA';
@@ -154,7 +171,8 @@ async function smoke(language,mode){
   if(language!=='ru')assert.ok(!/[А-Яа-яЁё]/.test(text),'No Russian text in localized course overview');
   await click('[data-course-close]');
   await click('[data-coach-skip]');assert.equal($('.campaign-coach'),null);
-  await click('#campaign-coach-toggle');assert.ok($('.campaign-coach'),'Coaching can be reopened');
+  await click('#campaign-coach-toggle');assert.ok($('.campaign-coach').open,'Reopened coaching exposes the current lesson');
+  assert.equal(w.document.activeElement,$('.campaign-coach summary'));
   await click('[data-coach-skip]');await click('#mobile-menu-button');
   assert.ok($('#section-menu').open);await click('[data-reopen-coaching]');
   assert.equal($('#section-menu').open,false);assert.ok($('.campaign-coach'),'Mobile menu reopens coaching');

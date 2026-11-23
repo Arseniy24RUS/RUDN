@@ -29,6 +29,7 @@ export function bootstrapUpdateCoordinator({getAdapters=()=>[],backend,diagnosti
   }catch{return null}};
   const writePending=value=>{const json=JSON.stringify(value);storage.setItem(UPDATE_PENDING_KEY,json);if(storage.getItem(UPDATE_PENDING_KEY)!==json)throw fail('update/marker-not-durable');if(persistentStorage){const key=UPDATE_PENDING_KEY+':'+value.token;persistentStorage.setItem(key,json);if(persistentStorage.getItem(key)!==json)throw fail('update/marker-not-durable')}};
   const clearPending=token=>{
+    if(!token)return;
     storage?.removeItem(UPDATE_PENDING_KEY);
     persistentStorage?.removeItem(UPDATE_PENDING_KEY+':'+token);
     if(!win?.location?.href)return;

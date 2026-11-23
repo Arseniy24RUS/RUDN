@@ -24,7 +24,7 @@ test('all fifteen negotiable measures have authored action-specific dialogue in 
       const dialogue = scene.actionDialogue[action.id];
       assert.ok(dialogue, `${scene.missionId}/${action.id} has no conversation`);
       assert.equal(dialogue.speeches.length, governance.CONFIG.actors.length);
-      for (const line of [...dialogue.speeches, ...Object.values(dialogue.questions || {})]) {
+      for (const line of [...dialogue.short, ...dialogue.speeches, ...Object.values(dialogue.questions || {})]) {
         for (const language of ['ru', 'en', 'zh']) assert.ok(line[language]?.trim(), `${action.id}/${language}`);
         assert.doesNotMatch(line.en, /[\u0400-\u04ff]/);
         assert.doesNotMatch(line.zh, /[\u0400-\u04ff]/);
@@ -73,15 +73,18 @@ test('the negotiation UI follows the selected action and actor in all three lang
     querySelector: node, querySelectorAll: selector => selector === '[data-participant]' ? participants : []};
   sandbox.document = {activeElement: null, getElementById: id => id === 'negotiation-dialog' ? dialog : null};
   let currentMission, language = 'ru';
-  const state = {turnIndex: 0, population: {baseYear: 2026}, governance: {trust: {municipality: 0, finance: 0, residents: 0}}};
+  const state = {turnIndex: 0, population: {baseYear: 2026}, finance: {reserve: 1}, governance: {trust: {municipality: 0, finance: 0, residents: 0}}};
   G.icon = () => '';
   G.resolveAsset = input => 'https://example.test/RUDN/' + input;
   G.Engine = {
     localise: local, setAgreementTerms() {},
-    previewAction(_state, actionId) {
-      return {mission: currentMission, action: currentMission.actions.find(action => action.id === actionId),
-        agreement: {termIds: [], promises: [], status: 'open', positions: governance.CONFIG.actors.map(actor => ({actorId: actor.id, stance: 'cautious'}))},
-        plan: {id: 'treasury', treasuryCost: 1, firstYearOpex: 0}, project: {startsIn: 1}, affordable: true};
+    previewAction(state, actionId, mode, placement, ids = []) {
+      const plan = {id: mode, treasuryCost: 1, firstYearOpex: 0, totalCost: 1};
+      const action = currentMission.actions.find(item => item.id === actionId);
+      const project = {startsIn: 1};
+      const agreement = governance.preview(state, currentMission, action, mode, placement, ids);
+      return {mission: currentMission, action, agreement: governance.describePromises(state, agreement, plan, project),
+        plan, project, affordable: true};
     }
   };
   vm.runInContext(await readFile(new URL('src/governance-ui.js', source), 'utf8'), sandbox, {filename: 'governance-ui.js'});
@@ -95,6 +98,7 @@ test('the negotiation UI follows the selected action and actor in all three lang
         const selected = governance.sceneFor(scene.missionId, action.id);
         for (let actor = 0; actor < participants.length; actor++) {
           participants[actor].onclick();
+          assert.ok(dialog.innerHTML.includes(esc(selected.actionDialogue[action.id].short[actor][language])));
           assert.ok(dialog.innerHTML.includes(`<blockquote aria-live="polite">${esc(local(selected.speeches[actor], language))}</blockquote>`), `${action.id}/${language}/${actor}`);
           node('[data-inquiry]').onclick();
           assert.ok(dialog.innerHTML.includes(`<blockquote aria-live="polite">${esc(local(selected.questions[actor], language))}</blockquote>`), `${action.id}/${language}/${actor}/inquiry`);

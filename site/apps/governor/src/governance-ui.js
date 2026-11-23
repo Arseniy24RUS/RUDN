@@ -53,59 +53,112 @@
   actorId='municipality';inquiry=false;returnFocus=document.activeElement;
   host.save();renderMeeting();document.getElementById('negotiation-dialog').showModal();
  }
- function renderMeeting(focusTerm){
+ const signedMoney=value=>(value>0?'+':'')+money(value);
+ const sideName=id=>({
+  municipality:copy('Муниципалитет','Municipality','市政团队'),
+  finance:copy('Финансовый блок','Finance','财政部门'),
+  residents:copy('Жители','Residents','居民')
+ })[id];
+ function commitment(p,s){
+  const due=year(s,p.dueTurn);
+  switch(p.kind){
+   case 'launch':return copy(`Запустить к ${due}`,`Open by ${due}`,`最晚于 ${due} 年启用`);
+   case 'report':return copy(`Опубликовать отчёт до конца ${due}`,`Publish the report by the end of ${due}`,`${due} 年底前发布报告`);
+   case 'reserve':return copy(`Резерв ≥ ${money(p.floor)} на конец каждого года по ${due}`,`Keep ≥ ${money(p.floor)} in reserve each year-end through ${due}`,`截至 ${due} 年，每年年底储备金 ≥ ${money(p.floor)}`);
+   case 'continuity':return copy(`${p.requiredYears} года работы подряд к концу ${due}`,`${p.requiredYears} consecutive operating years by the end of ${due}`,`到 ${due} 年底连续运行 ${p.requiredYears} 年`);
+  }
+ }
+ function coalition(a){
+  const count=a.positions.filter(p=>p.stance==='support').length;
+  const opponents=a.positions.filter(p=>p.stance==='oppose').map(p=>sideName(p.actorId)).join(', ');
+  const status=copy(`Поддерживают ${count} из ${a.positions.length}`,`${count} of ${a.positions.length} support`,`${a.positions.length} 方中有 ${count} 方支持`);
+  const dissent=opponents?copy(`Против: ${opponents}`,`Opposed: ${opponents}`,`反对方：${opponents}`):'';
+  const penalty=a.delay?copy(`Согласование +${a.delay} год · поддержка ${n(a.supportDelta)}`,`Coordination +${a.delay} year · support ${n(a.supportDelta)}`,`协调延长 ${a.delay} 年 · 支持度 ${n(a.supportDelta)}`):'';
+  return [status,dissent,penalty].filter(Boolean).join(' · ');
+ }
+ function offer(t,s,v){
+  const ids=v.agreement.termIds, picked=ids.includes(t.id),other=ids.filter(id=>G.termFor(id).actor!==t.actor);
+  let reason='';
+  if(t.requires&&t.requires!==selection.mode)reason=txt('Нужен источник «Софинансирование»','Select cofinancing first');
+  else if(other.length>=2)reason=txt('Сначала снимите одно из двух условий','Remove one of the two terms first');
+  let detail='',price='',refund='';
+  if(!reason){
+   const quote=terms=>E.previewAction(s,selection.actionId,selection.mode,selection.placementId,terms);
+   const base=other.length===ids.length?v:quote(other),withTerm=picked?v:quote([...other,t.id]);
+   const promise=withTerm.agreement.promises.find(p=>p.termId===t.id);
+   detail=commitment(promise,s);
+   const diff=(x,y)=>Math.round((x-y)*100)/100;
+   const now=signedMoney(diff(ownCost(withTerm.plan),ownCost(base.plan)));
+   const annual=diff(withTerm.agreement.annualOpex,base.agreement.annualOpex);
+   const parts=[copy(`Из казны сейчас ${now}`,`Treasury now ${now}`,`本期财政支出 ${now}`)];
+   if(selection.mode==='cofinance'){
+    const project=signedMoney(diff(withTerm.plan.totalCost,base.plan.totalCost));
+    parts.unshift(copy(`К проекту ${project}`,`Project cost ${project}`,`项目总成本 ${project}`));
+   }
+   if(annual)parts.push(copy(`${signedMoney(annual)}/год работы`,`${signedMoney(annual)}/operating year`,`每个运营年 ${signedMoney(annual)}`));
+   price=parts.join(' · ');
+   if(promise.conditionalGrant)refund=copy(`Без отчёта вернуть ${money(promise.conditionalGrant)}`,`Repay ${money(promise.conditionalGrant)} if unreported`,`未提交报告须退还 ${money(promise.conditionalGrant)}`);
+  }else detail=l(t.line);
+  return `<button type="button" class="gov-term ${picked?'selected':''}" data-term="${t.id}" aria-pressed="${picked}" ${reason?'disabled':''}>
+   <span class="gov-term-indicator">${icon(picked?'check':'plus',{size:18})}</span><span><strong>${esc(l(t.title))}</strong><span class="gov-term-text">${esc(detail)}</span>${price?`<small>${esc(price)}</small>`:''}${reason||refund?`<em>${esc(reason||refund)}</em>`:''}</span></button>`;
+ }
+ function renderMeeting(){
   const s=host.getState(),v=E.previewAction(s,selection.actionId,selection.mode,selection.placementId),a=v.agreement;
   const scene=G.sceneFor(v.mission.id,selection.actionId),actor=C.actors.find(x=>x.id===actorId),index=C.actors.indexOf(actor);
   const d=createDialog('negotiation-dialog',txt('Переговоры о проекте','Project negotiations'));
-  const chosen=a.termIds.map(G.termFor),stance=a.positions.find(p=>p.actorId===actorId);
+  const oldBody=d.querySelector('.gov-meeting-body'),scroll=d.open?oldBody?.scrollTop:0;
   const memory=s.governance.trust[actorId];
   const memoryText=memory>0?txt('«Прежние обещания вы выполняли. Это имеет значение».','“You kept earlier promises. That matters.”'):memory<0?txt('«Сначала вспомним прежние обещания. Не все они были выполнены».','“Let us remember your earlier promises. Not all were kept.”'):'';
-  const terms=C.terms.filter(t=>t.actor===actorId).map(t=>{
-   const picked=a.termIds.includes(t.id),same=chosen.some(x=>x.actor===t.actor);
-   const disabled=(!picked&&!same&&chosen.length>=2)||(t.requires&&t.requires!==selection.mode);
-   const unavailable=t.requires&&t.requires!==selection.mode?txt('Нужен источник «Софинансирование»','Select cofinancing first'):txt('Сначала снимите одно из двух условий','Remove one of the two terms first');
-   let price=t.cost?`+${money(t.cost)} ${copy('к стоимости проекта','project cost','项目总成本')}`:txt('Без дополнительных затрат сейчас','No extra upfront cost');
-   if(!disabled && t.cost){
-    const others=a.termIds.filter(id=>G.termFor(id).actor!==t.actor);
-    const quote=ids=>E.previewAction(s,selection.actionId,selection.mode,selection.placementId,ids).plan;
-    const withTerm=picked?v.plan:quote([...others,t.id]);
-    const withoutTerm=quote(others);
-    const difference=Math.round((ownCost(withTerm)-ownCost(withoutTerm))*100)/100;
-    price+=` · ${copy('из казны сейчас','treasury share now','本期财政负担')} ${difference>0?'+':''}${money(difference)}`;
-   }
-   return `<button type="button" class="gov-term ${picked?'selected':''}" data-term="${t.id}" aria-pressed="${picked}" ${disabled?'disabled':''}>
-    <span class="gov-term-indicator">${icon(picked?'check':'plus',{size:20})}</span><span><strong>${esc(l(t.title))}</strong><span class="gov-term-text">${esc(l(t.line))}</span><small>${esc(price)}${t.opex?` · +${money(t.opex)} / ${txt('год','year')}`:''}</small>${disabled?`<em>${esc(unavailable)}</em>`:''}</span></button>`;
+  const opening=year(s,s.turnIndex+1+(v.project?.startsIn||0));
+  const participants=C.actors.map(x=>{
+   const p=a.positions.find(p=>p.actorId===x.id);
+   return `<button type="button" class="gov-participant ${x.id===actorId?'selected':''}" data-participant="${x.id}" aria-pressed="${x.id===actorId}"><span class="gov-avatar">${avatar(x)}</span><span><strong>${esc(l(x.name))}</strong><small>${esc(sideName(x.id))}</small><b class="gov-stance ${p.stance}">${esc(stanceLabel(p.stance))}</b></span></button>`;
   }).join('');
-  const pledgeList=a.promises.length?a.promises.map(p=>`<li>${icon('calendar',{size:16})}<span>${esc(promiseTitle(p,s))}${p.conditionalGrant?`<small>${txt('Условный дополнительный транш','Conditional extra tranche')}: ${money(p.conditionalGrant)}</small>`:''}</span></li>`).join(''):`<li>${esc(txt('Дополнительных обещаний нет. Возражения останутся в протоколе.','No extra promises. Objections will remain in the minutes.'))}</li>`;
-  d.innerHTML=`<header class="gov-header"><div class="gov-header-copy"><small>${txt('ПЕРЕГОВОРЫ','NEGOTIATION')} · ${year(s,s.turnIndex+1)}</small><h2 id="negotiation-title">${esc(l(scene.title))}</h2><p>${esc(l(scene.setting))}</p></div><img class="gov-header-art" src="${esc(asset(scene.image||'assets/scenes/negotiation-room.webp'))}" alt=""><button class="gov-close" type="button" data-meeting-back aria-label="${txt('Вернуться к проекту','Return to proposal')}">${icon('close',{size:23})}</button></header>
-    <div class="gov-meeting-body">
-     <aside class="gov-participants" aria-label="${txt('Участники переговоров','Negotiation participants')}">${C.actors.map(x=>{const p=a.positions.find(p=>p.actorId===x.id);return `<button type="button" class="gov-participant ${x.id===actorId?'selected':''}" data-participant="${x.id}" aria-pressed="${x.id===actorId}"><span class="gov-avatar">${avatar(x)}</span><span><strong>${esc(l(x.name))}</strong><small>${esc(l(x.role))}</small><b class="gov-stance ${p.stance}">${esc(stanceLabel(p.stance))}</b></span></button>`;}).join('')}<p class="gov-synthetic">${txt('Вымышленные собеседники. Это переговоры об исполнении, не голосование вместо органов власти.','Fictional counterparts. This is a delivery meeting, not a vote replacing public authorities.')}</p></aside>
-     <main class="gov-conversation"><div class="gov-speaker"><span class="gov-avatar large">${avatar(actor,36)}</span><div><small>${esc(l(actor.role))}</small><h3>${esc(l(actor.name))}</h3></div></div>
-      <blockquote aria-live="polite">${esc(l((inquiry?scene.questions:scene.speeches)[index]))}</blockquote>
-      ${memoryText?`<p class="gov-memory">${esc(memoryText)}</p>`:''}
-      <button class="gov-question" type="button" data-inquiry>${icon('info',{size:17})}${inquiry?txt('Вернуться к вопросу','Back to the question'):txt('Что для вас принципиально?','What matters most to you?')}</button>
-      <div class="gov-choice-label"><strong>${txt('Что предложим?','What can we offer?')}</strong><small>${txt('До двух условий на весь пакет','At most two terms for the whole package')}</small></div>
-      <div class="gov-terms">${terms}</div><details class="gov-remit"><summary>${txt('Полномочия участника','This participant’s remit')}</summary><p>${esc(l(actor.remit))}</p></details>
-     </main>
-     <aside class="gov-contract"><p class="gov-contract-title">${txt('НА СТОЛЕ ПЕРЕГОВОРОВ','ON THE TABLE')}</p><h3>${esc(l(v.action.title))}</h3><div class="gov-contract-state ${a.status}">${icon(a.status==='agreed'?'check':'info',{size:18})}${esc(statusLabel(a.status))}</div>
-      <div class="gov-slots">${[0,1].map(i=>chosen[i]?`<button type="button" data-remove-term="${chosen[i].id}" aria-label="${txt('Снять условие','Remove term')}: ${esc(l(chosen[i].title))}">${esc(l(chosen[i].title))}${icon('close',{size:15})}</button>`:`<span>${txt('Место для условия','Available term slot')}</span>`).join('')}</div>
-      <details class="gov-obligations" open><summary>${txt('Что проверят позже','What will be checked later')}</summary><ul>${pledgeList}</ul></details>
-      <p class="gov-procedure">${a.status==='open'?txt('Разногласия означают дополнительный год согласования и потерю поддержки. Законная процедура остаётся доступной.','Dissent adds a year of coordination and reduces support. A lawful procedure remains available.'):txt('Согласие помогает исполнению, но не отменяет закупки, бюджетные процедуры или риск задержки.','Agreement helps delivery but does not remove procurement, budget procedures or delay risk.')}</p>
-     </aside>
-    </div><footer class="gov-footer"><div><small>${txt('Собственные средства сейчас','Own funds now')}</small><strong>${money(ownCost(v.plan))}</strong><span>${txt('Запуск','Opening')}: ${year(s,s.turnIndex+1+(v.project?.startsIn||0))}</span></div><button class="primary-button gov-sign" type="button" data-sign-agreement ${v.affordable?'':'disabled'}>${esc(v.affordable?txt('Утвердить пакет','Approve package'):txt('Пакет не обеспечен ресурсами','Package lacks resources'))}${icon('arrow',{size:18})}</button></footer>`;
+  const terms=C.terms.filter(t=>t.actor===actorId).map(t=>offer(t,s,v)).join('');
+  let premium='';
+  if(a.termIds.length){
+   const empty=E.previewAction(s,selection.actionId,selection.mode,selection.placementId,[]);
+   const added=Math.round((v.plan.totalCost-empty.plan.totalCost)*100)/100;
+   const costs=[copy(`К цене проекта ${signedMoney(added)}`,`Added to project cost ${signedMoney(added)}`,`项目总成本变化 ${signedMoney(added)}`)];
+   if(a.annualOpex)costs.push(copy(`содержание ${signedMoney(a.annualOpex)}/год`,`upkeep ${signedMoney(a.annualOpex)}/year`,`年运营费 ${signedMoney(a.annualOpex)}`));
+   premium=costs.join(' · ');
+  }
+  const pledges=a.promises.map(p=>{
+   const label=sideName(p.actorId)+' · '+commitment(p,s);
+   return `<button type="button" data-remove-term="${p.termId}" aria-label="${esc(txt('Снять условие','Remove term')+' · '+label)}"><span>${esc(label)}</span>${icon('close',{size:16})}</button>`;
+  }).join('');
+  d.innerHTML=`<header class="gov-header"><div class="gov-header-copy"><small>${txt('ПЕРЕГОВОРЫ','NEGOTIATION')} · ${year(s,s.turnIndex+1)}</small><h2 id="negotiation-title">${esc(l(v.action.title))}</h2></div><button class="gov-close" type="button" data-meeting-back aria-label="${txt('Вернуться к проекту','Return to proposal')}">${icon('close',{size:23})}</button></header>
+   <div class="gov-meeting-body"><aside class="gov-participants" aria-label="${txt('Участники переговоров','Negotiation participants')}">${participants}</aside>
+   <section class="gov-conversation"><h3>${esc(l(actor.name))}</h3><p class="gov-opening">${esc(l(scene.actionDialogue[selection.actionId].short[index]))}</p>
+    <div class="gov-terms">${terms}</div>
+    <details class="gov-remit gov-transcript"><summary>${copy('Разговор и полномочия','Conversation and remit','对话与职责')}</summary>
+     <p>${esc(l(scene.setting))}</p><blockquote aria-live="polite">${esc(l((inquiry?scene.questions:scene.speeches)[index]))}</blockquote>
+     ${memoryText?`<p>${esc(memoryText)}</p>`:''}
+     <button class="gov-question" type="button" data-inquiry>${inquiry?txt('Вернуться к вопросу','Back to the question'):txt('Что для вас принципиально?','What matters most to you?')}</button>
+     <p><strong>${esc(l(actor.role))}.</strong> ${esc(l(actor.remit))}</p></details></section></div>
+   <footer class="meeting-contract"><div class="meeting-receipt"><p class="meeting-stance ${a.status}" role="status">${esc(coalition(a))}</p>
+    <div class="meeting-pledges">${pledges||`<span>${copy('Без дополнительных обещаний','No extra promises','无额外承诺')}</span>`}</div>${premium?`<p class="meeting-premium">${esc(premium)}</p>`:''}</div>
+    <div class="meeting-sign"><div><span>${txt('Собственные средства сейчас','Own funds now')} <strong>${money(ownCost(v.plan))}</strong></span><span>${copy('Плановый запуск','Planned opening','计划启用')} <strong>${opening}</strong></span></div>
+    <button class="primary-button gov-sign" type="button" data-sign-agreement ${v.affordable?'':'disabled'}>${esc(v.affordable?txt('Утвердить пакет','Approve package'):txt('Пакет не обеспечен ресурсами','Package lacks resources'))}${icon('arrow',{size:18})}</button></div></footer>`;
   d.setAttribute('aria-labelledby','negotiation-title');
+  if(scroll)d.querySelector('.gov-meeting-body').scrollTop=scroll;
   d.querySelector('[data-meeting-back]').onclick=()=>{d.close();host.refresh();host.save();};
   d.querySelectorAll('[data-participant]').forEach(b=>b.onclick=()=>{actorId=b.dataset.participant;inquiry=false;renderMeeting();d.querySelector(`[data-participant="${actorId}"]`).focus({preventScroll:true});});
-  d.querySelector('[data-inquiry]').onclick=()=>{inquiry=!inquiry;renderMeeting();d.querySelector('[data-inquiry]').focus({preventScroll:true});};
-  const change=id=>{
-   let ids=[...a.termIds];const t=G.termFor(id);
-   if(ids.includes(id))ids=ids.filter(x=>x!==id);else ids=[...ids.filter(x=>G.termFor(x).actor!==t.actor),id];
-   try{E.setAgreementTerms(s,selection.actionId,selection.mode,selection.placementId,ids);host.save();renderMeeting(id);}catch(e){host.toast(e.message);}
+  d.querySelector('[data-inquiry]').onclick=()=>{inquiry=!inquiry;renderMeeting();d.querySelector('.gov-transcript').open=true;d.querySelector('[data-inquiry]').focus();};
+  const change=(id,fromReceipt)=>{
+   const t=G.termFor(id),ids=a.termIds.filter(x=>G.termFor(x).actor!==t.actor);
+   if(!a.termIds.includes(id))ids.push(id);
+   const expanded=d.querySelector('.gov-transcript').open;
+   try{
+    E.setAgreementTerms(s,selection.actionId,selection.mode,selection.placementId,ids);host.save();renderMeeting();
+    d.querySelector('.gov-transcript').open=expanded;
+    const target=fromReceipt?(d.querySelector('[data-remove-term]')||d.querySelector('[data-sign-agreement]')):d.querySelector(`[data-term="${id}"]`);
+    target.focus({preventScroll:true});
+   }catch(e){host.toast(e.message);}
   };
-  d.querySelectorAll('[data-term]').forEach(b=>b.onclick=()=>change(b.dataset.term));
-  d.querySelectorAll('[data-remove-term]').forEach(b=>b.onclick=()=>change(b.dataset.removeTerm));
+  d.querySelectorAll('[data-term]').forEach(b=>b.onclick=()=>change(b.dataset.term,false));
+  d.querySelectorAll('[data-remove-term]').forEach(b=>b.onclick=()=>change(b.dataset.removeTerm,true));
   d.querySelector('[data-sign-agreement]').onclick=()=>{host.commit();if(host.getState().awaitingContinue)d.close();};
-  if(focusTerm)d.querySelector(`[data-term="${focusTerm}"]`)?.focus({preventScroll:true});
  }
  function briefing(s,language){
   const scene=G.sceneFor(E.getCurrentMission(s)?.id),due=s.governance.promises.filter(p=>p.status==='pending'&&p.createdTurn<s.turnIndex+1&&p.dueTurn<=s.turnIndex+2);

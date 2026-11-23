@@ -168,3 +168,11 @@ button.agenda-time:hover,button.agenda-time:focus-visible{background:#e9f6fc}
   .game-shell.turn-scene>.topbar .core-stats{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) minmax(0,.85fr)}
   .game-shell.turn-scene .budget-stat .stat-copy strong{font-size:clamp(10px,3vw,13px);line-height:1.15;white-space:normal}
 }
+
+.practice-intro {margin:1rem 0}
+.practice-intro [data-practice]:not([hidden]) {padding:1rem;margin:.65rem 0;background:#f2f8fb;border-radius:.8rem}
+.practice-intro h3 {margin:0 0 .4rem}
+.practice-intro p {font-size:1rem;line-height:1.5}
+.practice-choices {display:grid;gap:.45rem}
+.practice-choices button {min-height:44px;text-align:start;white-space:normal}
+#campaign-pace {line-height:1.4}

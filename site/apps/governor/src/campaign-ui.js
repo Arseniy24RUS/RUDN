@@ -23,6 +23,11 @@
     const s=hooks.state();if(!s)return;
     s.onboarding=s.onboarding||{enabled:true,seen:[]};s.onboarding.enabled=true;s.onboarding.seen=[];
     hooks.save();hooks.navigate('mission');refresh();
+    const step=$('.campaign-coach');
+    if(!step){G.ReleaseUI.openGuide(true);return;}
+    step.open=true;
+    step.querySelector('summary').focus({preventScroll:true});
+    step.scrollIntoView({block:'center'});
   }
   function translate(){
     const l=hooks.language(),selected=$('#campaign-strategy')?.value||'services';
@@ -32,6 +37,8 @@
     $('#campaign-strategy').value=selected;
     $('#campaign-strategy-hint').textContent=local(S.course(selected).description,l);
     $('#campaign-coach-label').textContent=tr(l,'Пошаговые подсказки по ходу кампании','Introduce the mechanics as I play','游戏过程中逐步介绍机制');
+    const pace=$('#campaign-pace');
+    pace.textContent=tr(l,'План занятия: около 80 минут на 20 лет. Можно продолжить с сохранённого года.','Seminar plan: about 80 minutes for 20 years. You can resume from a saved year.','研讨课安排：约 80 分钟完成 20 年，可从保存的年份继续。');
     $('#campaign-stakes-hint').textContent=tr(l,'Каждые пять лет проверяется результат курса. Дефицит требует решения; облегчённый бюджет можно выбрать в параметрах.','Your course is reviewed every five years. Shortfalls require a decision; an assisted budget is available in campaign options.','每五年检查战略成效。预算缺口需要决策；可在设置中选择辅助预算模式。');
     $('#campaign-coach-toggle').textContent=tr(l,'Подсказки по ходу игры','In-game coaching','游戏引导');
   }
@@ -39,6 +46,18 @@
   function start(state,options){
     if(!state.campaignStrategy)state.campaignStrategy=S.create(state,options.strategyId);
     state.onboarding={version:1,enabled:options.tutorialEnabled,seen:[],allSections:false};
+  }
+  function seminarFocus(state,l){
+    if(state.completed||!state.onboarding?.enabled)return '';
+    const block=Math.min(3,Math.floor(state.turnIndex/5));
+    const tasks=[
+      tr(l,'Выберите район, сравните две меры и проверьте на карте, когда жители действительно получат услугу.','Choose a district, compare two measures and check on the map when residents actually receive the service.','选择一个地区，比较两项措施，然后在地图上核查居民何时真正获得服务。'),
+      tr(l,'Найдите обещание или проект из первого пятилетия. Сверьте срок, фактический результат и расходы на продолжение работы.','Find an earlier promise or project. Compare its deadline, actual result and continuing cost.','找出第一个五年的一项承诺或项目，对照期限、实际结果和后续成本。'),
+      tr(l,'Сравните два района после кризиса. Проверьте, кому помогло прежнее решение и за счёт чего можно поддержать отстающих.','Compare two districts after a crisis. Check who benefited from earlier decisions and what could support those left behind.','危机后比较两个地区：先前决策帮助了谁，还能怎样支持落后地区？'),
+      tr(l,'Проверьте услуги, письма и неоплаченные будущие обязательства перед последним решением. Выберите один результат, который хотите оставить жителям.','Review services, letters and future commitments before your last decision. Choose one result you want to leave residents.','最后一次决策前检查服务、居民来信和未来财政责任，选定一项想留给居民的成果。')
+    ];
+    const first=state.population.baseYear+block*5;
+    return `<p class="campaign-seminar-focus"><strong>${first}–${first+4} · ${tr(l,'ориентир 20 минут','about 20 minutes','建议约 20 分钟')}</strong><br>${esc(tasks[block])}</p>`;
   }
   function openCourse(reviewComplete=false){
     const state=hooks.state(),l=hooks.language();if(!state?.campaignStrategy)return;
@@ -49,7 +68,7 @@
     const title=reviewed?tr(l,'Пятилетняя проверка курса','Five-year course review','五年战略评估'):tr(l,'Ваш курс и обязательства','Your course and commitments','您的战略与承诺');
     const latest=state.campaignStrategy.reviews?.at(-1);
     const verdict=reviewed&&latest?`<section class="review-verdict"><p>${state.population.baseYear+latest.year-1}</p><h3>${statusText(latest.status,l)}</h3><p>${tr(l,'Изменение мощности аппарата на следующее пятилетие','Administrative capacity change for the next five years','下一个五年行政能力的变化')} <b>${latest.capacityDelta>0?'+':''}${latest.capacityDelta}</b></p></section>`:'';
-    d.innerHTML=`<button type="button" class="secondary-button release-close" data-course-close>${tr(l,'Закрыть','Close','关闭')}</button><h2>${title}</h2>${verdict}${course}${reviews}`;
+    d.innerHTML=`<button type="button" class="secondary-button release-close" data-course-close>${tr(l,'Закрыть','Close','关闭')}</button><h2>${title}</h2>${verdict}${seminarFocus(state,l)}${course}${reviews}`;
     d.setAttribute('aria-label',tr(l,'Курс и обязательства','Course and commitments','战略与承诺'));
     d.querySelector('[data-course-close]').onclick=()=>d.close();
     attachPromiseLinks(d);
@@ -84,12 +103,13 @@
     if(!onboarding?.enabled||state.completed||state.awaitingContinue||!['agenda','mission'].includes(state.activeView))return;
     const step=coach(state,l,selected);if(!step||(onboarding.seen||[]).includes(step.key))return;
     const el=document.createElement('details');el.className='campaign-coach';el.setAttribute('aria-label',tr(l,'Подсказка','Coaching','引导'));
-    el.innerHTML=`<summary>${esc(step.title)}</summary><p>${esc(step.text)}</p><div class="campaign-coach-actions">${step.view?`<button type="button" data-coach-link>${esc(step.link)}</button>`:''}<button type="button" data-coach-done>${tr(l,'Понятно','Got it','明白了')}</button><button type="button" data-coach-skip>${tr(l,'Без подсказок','Skip coaching','跳过引导')}</button></div>`;
+    el.innerHTML=`<summary>${esc(step.title)}</summary><p>${esc(step.text)}</p><div class="campaign-coach-actions">${state.turnIndex===0?`<button type="button" data-coach-practice>${tr(l,'Потренироваться перед решением','Practise before deciding','先练习再决策')}</button>`:''}${step.view?`<button type="button" data-coach-link>${esc(step.link)}</button>`:''}<button type="button" data-coach-done>${tr(l,'Понятно','Got it','明白了')}</button><button type="button" data-coach-skip>${tr(l,'Без подсказок','Skip coaching','跳过引导')}</button></div>`;
+    el.querySelector('[data-coach-practice]')?.addEventListener('click',()=>G.ReleaseUI.openGuide(true));
     el.querySelector('[data-coach-link]')?.addEventListener('click',()=>hooks.navigate(step.view));
     el.querySelector('[data-coach-done]').onclick=()=>{(onboarding.seen=onboarding.seen||[]).push(step.key);hooks.save();refresh(selected);};
     el.querySelector('[data-coach-skip]').onclick=()=>{onboarding.enabled=false;hooks.save();refresh(selected);};
     if(state.activeView==='agenda')$('#secondary-stage .agenda-board')?.after(el);
-    else $('#mission-context')?.append(el);
+    else $('#mission-context')?.after(el);
   }
   function statusText(id,l){return id==='secured'?tr(l,'Курс подтверждён','Mandate secured','战略得到确认'):id==='at-risk'?tr(l,'Курс требует пересмотра','Mandate at risk','战略需要调整'):tr(l,'Условное доверие','Conditional confidence','有条件信任');}
   function agendaHtml(state,l){
