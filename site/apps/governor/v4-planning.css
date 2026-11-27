@@ -1,0 +1,28 @@
+.v4-plan-list,.v4-kpi-list{margin:0;padding:0;list-style:none}
+.v4-plan-list li{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.65rem 0;border-bottom:1px solid var(--v3-line,#475547)}
+.v4-plan-list small,.v4-kpi-list small{display:block;margin:.18rem 0;color:#4b6e85}
+.v4-plan-list .v3-button{min-width:44px;min-height:44px}
+.v4-plan-name{color:inherit;font:inherit;font-weight:700;text-align:start;border:0;background:none;padding:.25rem 0;text-decoration:underline;text-underline-offset:.18em;cursor:pointer}
+.v4-money-warning{color:#73380d;padding:.6rem;background:#fff1de;border-radius:8px}
+.v4-catalog-filter{margin:0 0 1rem}
+#v4-tax-rate{min-height:44px;width:100%;accent-color:var(--v3-blue);cursor:ew-resize}
+.v4-tax-ticks{display:flex;justify-content:space-between;gap:.3rem;color:#4b6e85;font-size:.8rem;margin:-.35rem 0 .5rem}
+.v4-kpi-list{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr))}
+.v4-kpi-list li{padding:.6rem;border:1px solid var(--v3-line,#475547);border-radius:10px;min-width:0}
+.v4-kpi-list li div{display:flex;justify-content:space-between;gap:.5rem;margin:.25rem 0}
+.v4-kpi-list meter{display:block;width:100%;height:.55rem}
+.v4-kpi-list li .positive{color:#197346}
+.v4-goals{margin-bottom:1rem}
+.v4-goals details{margin-top:.75rem}
+.v4-map-workspace{position:relative}
+.v4-map-inspector{padding:.875rem;margin-top:.55rem;border:1px solid var(--v3-line);border-radius:14px;background:var(--v3-paper)}
+.v4-map-inspector h2{margin:.25rem 0 .55rem}
+.v4-map-inspector .v3-button{min-height:44px}
+.v4-map-districts{display:flex;overflow:auto;gap:.4rem;margin:.6rem 0;scrollbar-width:thin}
+.v4-map-districts button{flex:0 0 auto;min-height:44px}
+@media(min-width:820px){.v4-map-workspace:has(.v4-map-inspector){display:grid;grid-template-columns:minmax(0,1.8fr) minmax(15rem,1fr);gap:.8rem;align-items:start}.v4-map-inspector{margin:0}}
+.v3-event-visual:has(.v4-event-gif){position:relative;overflow:hidden}
+.v4-event-gif{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;visibility:hidden}
+.v4-event-gif.is-ready{visibility:visible}
+.v4-event-gif-full{object-fit:contain}
+.v3-navigation.v4-complete{grid-template-columns:repeat(5,minmax(0,1fr))}

@@ -21,20 +21,20 @@ def click(page, css):
     page.wait_for_function("document.querySelector('#governor-v3').getAttribute('aria-busy') !== 'true'", timeout=WAIT)
 
 
-def data(page, profile, context):
+def data(page, profile, context, edition="v3"):
     owner = 'student:' + profile['studentKey'] if profile else 'guest:governor'
-    return page.evaluate("""([owner,context])=>new Promise((resolve,reject)=>{
+    return page.evaluate("""([owner,context,edition])=>new Promise((resolve,reject)=>{
       const req=indexedDB.open('rudn-governor-v3',1);
       req.onupgradeneeded=()=>{req.result.createObjectStore('attempts')};
       req.onerror=()=>reject(req.error);
       req.onsuccess=()=>{
         const db=req.result,tx=db.transaction('attempts','readonly');
-        const get=tx.objectStore('attempts').get(JSON.stringify([owner,context,'governor-v3']));
+        const get=tx.objectStore('attempts').get(JSON.stringify([owner,context,'governor-'+edition]));
         get.onsuccess=()=>resolve(get.result??null);
         get.onerror=()=>reject(get.error);
         tx.oncomplete=()=>db.close();
       };
-    })""", [owner,context])
+    })""", [owner,context,edition])
 
 
 def fit(page):
@@ -45,14 +45,17 @@ def fit(page):
     }""")
 
 
-def course_entry(page, server):
+def course_entry(page, server, edition="v3"):
     page.goto(server.base + '#activity/seminar-7', wait_until='domcontentloaded')
     link=page.get_by_role('link',name='Открыть симулятор',exact=True)
     assert link.get_attribute('target') != '_blank'
     assert link.evaluate('node=>node.href')==server.base+'apps/governor/index.html'
     cover=page.locator('#app .governor-seminar .activity-header img')
     assert cover.evaluate("async image=>{await image.decode();return image.naturalWidth>0&&getComputedStyle(image).objectFit==='contain'}")
-    link.click()
+    if edition == "v3":
+        page.goto(link.get_attribute("href") + "?edition=v3")
+    else:
+        link.click()
     page.locator(READY).wait_for(state='attached',timeout=WAIT)
 
 
@@ -176,7 +179,7 @@ def main():
                 course.screenshot(path=args.output/'course-final.png')
                 ctx=suite.context(390,844,profile=None);contexts.append(ctx)
                 guest=ctx.new_page()
-                guest.goto(server.base+'apps/governor/index.html?context=free')
+                guest.goto(server.base+'apps/governor/index.html?context=free&edition=v3')
                 guest.locator(READY).wait_for(state='attached')
                 toggle_menu_return(guest,'[data-v3-action="start"]')
                 click(guest,'[data-v3-action=start]')
@@ -200,7 +203,7 @@ def main():
 
 
 def access_gates(suite, server):
-    url=server.base+'apps/governor/index.html'
+    url=server.base+'apps/governor/index.html?edition=v3'
     checks=[]
     for kind,profile,role,access in (
         ('guest',None,'student','open'),

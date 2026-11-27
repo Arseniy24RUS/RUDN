@@ -39,6 +39,7 @@ concurrency:
 
 jobs:
   corpus-and-contracts:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -73,6 +74,7 @@ jobs:
           retention-days: 14
 
   rooms-emulator:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

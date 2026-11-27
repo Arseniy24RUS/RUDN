@@ -114,11 +114,16 @@ function resolveStatic(value,logical,resources,base){
 function rewriteCSS(source,logical,resources,base){return source.replace(/url\(\s*(['"]?)([^)'"\s]+)\1\s*\)/g,(_,quote,url)=>`url(${quote}${resolveStatic(url,logical,resources,base)}${quote})`);}
 function recoveryMarkup(source){return `<script data-platform-recovery>${source.replace(/<\/script/gi,'<\\/script')}</script>`;}
 const governorEntry='apps/governor/index.html';
-const GOVERNOR_ENTRY_INDEX_VERSION=2;
-const governorOnDemandMedia=new Set([
+const GOVERNOR_ENTRY_INDEX_VERSION=3;
+const governorV3Clips=new Set([
   'apps/governor/assets/v3/river-card-720.webm',
   'apps/governor/assets/v3/river-card-720.mp4'
 ]);
+function governorOnDemandMedia(name,version=GOVERNOR_ENTRY_INDEX_VERSION){
+  if(version>=2&&governorV3Clips.has(name))return true;
+  if(version<3||!name.startsWith('apps/governor/assets/v4/'))return false;
+  return /\.(?:webm|mp4|gif|apng)$/.test(name);
+}
 function aliasHTML(logical,base,recovery,target){
   // The exact Governor entry still verifies the entire manifest before executing
   // its plan. This hint avoids fetching it twice on a fresh canonical navigation.
@@ -231,8 +236,8 @@ function governorManifest(manifest,fullDigest){
   const preview='assets/course/previews/seminar_07_simulator.jpg';
   if(manifest.resources[preview])names.add(preview);
   // The entry index resolves media on demand. The offline pack stays smaller.
-  if(manifest.governorEntryIndex===GOVERNOR_ENTRY_INDEX_VERSION){
-    for(const name of governorOnDemandMedia)if(manifest.resources[name])names.add(name);
+  for(const name of Object.keys(manifest.resources)){
+    if(governorOnDemandMedia(name,manifest.governorEntryIndex))names.add(name);
   }
   return {schema:manifest.schema,retention:manifest.retention,buildId:manifest.buildId,baselineId:manifest.baselineId,
     runtimeRoot:manifest.runtimeRoot,entryURL:manifest.entryURL,contracts:manifest.contracts,fullManifestSha256:fullDigest,
@@ -248,7 +253,7 @@ function packsFor(resources){
     if(sharedCareerProgress||name==='index.html'||name==='manifest.webmanifest'||/^assets\/img\/(?:rudn-logo(?:-en)?|icon-192|icon-512)\.png$/.test(name)||(item.kind==='runtime'&&!name.startsWith('apps/'))||/^data\/(?:platform-contracts|course|questions|exam_questions|question_media|symbol_manifest|legacy-en|legacy-zh)\.json$/.test(name)||name==='apps/legal-lab/data/catalog.json')packs.shell.push(name);
     for(const mod of Object.keys(packs).filter(x=>x!=='shell')){
       const prefix=mod==='puzzle'?'assets/puzzle/':`apps/${mod}/`;
-      if(mod==='governor'&&name.startsWith(prefix+'assets/')){if(!governorOnDemandMedia.has(name))packs.governor.push(name);continue;}
+      if(mod==='governor'&&name.startsWith(prefix+'assets/')){if(!governorOnDemandMedia(name))packs.governor.push(name);continue;}
       if((name.startsWith(prefix)&&item.kind==='runtime')||(mod==='puzzle'&&name==='apps/puzzle.html'))packs[mod].push(name);
       // Vacancy descriptors and pages are requested only for an opened employer.
       // They must never become part of a complete career/offline pack.
@@ -273,7 +278,7 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     if(manifest.governorEntryIndex||target.governorManifest){
       const expectedPath=`_releases/${target.buildId}/governor-manifest.json`;
       const projection=json(governorManifest(manifest,target.manifestSha256));
-      if(![1,GOVERNOR_ENTRY_INDEX_VERSION].includes(manifest.governorEntryIndex)||target.governorManifest?.url!==base+expectedPath||
+      if(![1,2,GOVERNOR_ENTRY_INDEX_VERSION].includes(manifest.governorEntryIndex)||target.governorManifest?.url!==base+expectedPath||
           target.governorManifest.sha256!==digest(projection)||
           await fs.readFile(path.join(out,expectedPath),'utf8')!==projection)fail('release/governor-manifest-integrity');
       expectedFiles.add(expectedPath);
@@ -305,7 +310,7 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     for(const name of Object.keys(manifest.resources))identity.update(name+'\0'+canonicalHashes.get(name)+'\n');
     collectionIdentity(identity,collections);
     const adaptive=adaptiveIdentity(identity,manifest.resources);if(adaptive)externalCollections.add(adaptive.collectionRoot);
-    if(manifest.governorEntryIndex===GOVERNOR_ENTRY_INDEX_VERSION)identity.update(`governor-entry-index:${manifest.governorEntryIndex}\n`);
+    if(manifest.governorEntryIndex>=2)identity.update(`governor-entry-index:${manifest.governorEntryIndex}\n`);
     if(!/^[a-f0-9]{64}$/.test(manifest.workerTemplateSha256||'')||identity.update(manifest.workerTemplateSha256).digest('hex').slice(0,32)!==target.buildId)fail('release/build-identity');
     if(target===pointer.current){const worker=await fs.readFile(path.join(out,'service-worker.js'),'utf8'),template=worker.replace(/^const PLATFORM_RELEASE=.*;$/m,'const PLATFORM_RELEASE=null;');if(digest(template)!==manifest.workerTemplateSha256)fail('release/worker-integrity');}
     for(const names of Object.values(manifest.packs))for(const name of names)if(!manifest.resources[name])fail('release/unknown-pack-resource');

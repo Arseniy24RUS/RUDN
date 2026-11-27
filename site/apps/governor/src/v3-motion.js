@@ -87,12 +87,29 @@
       }
       if(item.video.paused)item.video.play().catch(()=>item.video.classList.remove('v3-scene-playing'));
     }
+    function showGif(host,item) {
+      if(item.gif)return;
+      const image=document.createElement('img');
+      const name=host.dataset.v4EventGif;
+      image.className='v4-event-gif '+(name==='river-flow'?'v4-event-gif-full':'');
+      image.setAttribute('aria-hidden','true');
+      image.alt='';
+      image.addEventListener('load',()=>image.classList.add('is-ready'),{once:true});
+      image.addEventListener('error',()=>{item.failed=true;hideGif(item);},{once:true});
+      image.src=G.resolveAsset('assets/v4/motion/'+name+'.gif');
+      host.append(image);
+      item.gif=image;
+    }
+    function hideGif(item) {
+      item.gif?.remove();
+      item.gif=null;
+    }
     function update() {
-      const wanted=new Set(scene.querySelectorAll('[data-v3-motion=river], [data-v3-construction], .v3-overview'));
+      const wanted=new Set(scene.querySelectorAll('[data-v3-motion=river], [data-v4-event-gif], [data-v3-construction], .v3-overview'));
       for(const [host,item] of scenes){
         if(wanted.has(host))continue;
         observer?.unobserve(host);
-        item.video?.pause();item.layer?.remove();scenes.delete(host);
+        item.video?.pause();item.layer?.remove();hideGif(item);scenes.delete(host);
       }
       for(const host of wanted){
         if(!scenes.has(host)){
@@ -108,6 +125,9 @@
         } else if(host.matches('[data-v3-construction]')){
           if(item.visible&&!item.layer)item.layer=workLayer(host);
           item.layer?.classList.toggle('v3-building-active',enabled()&&item.visible);
+        } else if(host.hasAttribute('data-v4-event-gif')) {
+          if(enabled()&&item.visible&&!item.failed)showGif(host,item);
+          else hideGif(item);
         } else if(enabled()&&item.visible&&!item.failed) {
           play(host,item);
         } else if(item.video) {
@@ -127,7 +147,7 @@
       motion.removeEventListener('change',update);
       document.removeEventListener('visibilitychange',update);
       connection?.removeEventListener?.('change',update);
-      for(const {video,layer} of scenes.values()){video?.pause();layer?.remove();}
+      for(const item of scenes.values()){item.video?.pause();item.layer?.remove();hideGif(item);}
       scenes.clear();
     }};
   }

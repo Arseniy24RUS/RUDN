@@ -114,6 +114,26 @@ test('Governor on-demand video resolves from the entry index without entering th
     globalThis.__RUDN_RELEASE__=prior;
   }
 });
+test('Governor on-demand map motion stays lazy while static district backgrounds remain offline',async t=>{
+  const f=await fixture(t),out=path.join(f.root,'governor-map-on-demand');
+  await write(f.site,'apps/governor/index.html','<html><head></head><body>Governor map</body></html>');
+  const prefix='apps/governor/assets/v4/';
+  const lazy=['motion/work-foundation.gif','motion/work-frame.gif','motion/work-finishing.gif','motion/clinic.webm','motion/clinic.mp4',
+    'motion/clinic.gif','motion/clinic.apng'];
+  const offline=['terrain-north.webp','terrain-river.webp','clinic-poster.webp'];
+  for(const name of [...lazy,...offline])await write(f.site,prefix+name,'test resource: '+name);
+  const built=await buildRelease({...f,out});
+  const index=JSON.parse(await fs.readFile(path.join(out,built.target.governorManifest.url.slice('/RUDN/'.length))));
+  const full=JSON.parse(await fs.readFile(path.join(out,built.target.manifestURL.slice('/RUDN/'.length))));
+  assert.equal(full.governorEntryIndex,3);
+  for(const name of [...lazy,...offline]){
+    const logical=prefix+name;
+    assert.deepEqual(index.resources[logical],full.resources[logical]);
+    assert.equal(await fs.readFile(path.join(out,index.resources[logical].url.slice('/RUDN/'.length)),'utf8'),'test resource: '+name);
+    assert.equal(index.packs.governor.includes(logical),offline.includes(name));
+    assert.equal(full.packs.governor.includes(logical),offline.includes(name));
+  }
+});
 test('current-only publication retires historical runtime and replaced resources while preserving public aliases',async t=>{
   const f=await fixture(t),out=path.join(f.root,'first');await write(f.site,'data/course.json','{"v":2}');
   await write(f.site,'apps/demo/module.html','<html><body><script type="module">import "./script.js";</script></body></html>');

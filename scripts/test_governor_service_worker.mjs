@@ -199,7 +199,7 @@ test('module manifest includes runtime files; platform and puzzle entry are inst
   assert.equal(new Set(worker.precache).size,worker.precache.length,'No duplicate precache URLs');
   const nativeFiles=await runtimeFiles(path.join(siteRoot,modulePath));
   for(const file of nativeFiles){
-    const optionalMotion=/^assets\/v3\/river-card-720\.(mp4|webm)$/.test(file);
+    const optionalMotion=/^assets\/(v3\/river-card-720\.(mp4|webm)|v4\/motion\/[^/]+\.gif)$/.test(file);
     assert.equal(worker.precache.includes('./'+modulePath+file),!optionalMotion,
       optionalMotion?`Motion should load only on demand: ${file}`:`Missing native runtime file: ${file}`);
   }

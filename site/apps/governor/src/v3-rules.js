@@ -4,11 +4,17 @@
 
   const G = root.GovernorGame ||= {};
   const RULES_VERSION = 'governor-v3.1';
+  const V4_RULES_VERSION = 'governor-v4.0';
   const FIRST_YEAR = 2026;
   const LAST_YEAR = 2045;
   const TAX_MODES = Object.freeze({low: 88, moderate: 100, high: 112});
+  const TAX_RATE_LIMITS = Object.freeze({min:88,max:112,step:1,default:100});
+  const INVESTMENT_TERMS = Object.freeze({min:2,max:5,annualPercent:4});
   const GROUP_WEIGHTS = Object.freeze({families: 25, seniors: 20, business: 20, youth: 15, publicStaff: 10, activists: 10});
   const SITE_METRICS = Object.freeze({north:'health', river:'flood', industrial:'employment', capital:'digital'});
+  const OUTPUT_METRICS = Object.freeze({health:'health',healthStaff:'health',childcare:'childcare',school:'school',
+    schoolStaff:'school',schoolReach:'school',floodProtection:'flood',jobs:'employment',housing:'housing',digital:'digital'});
+  const SCHOOL_OUTPUTS = Object.freeze(['school','schoolStaff','schoolReach']);
   const SECTOR_SHARES = Object.freeze({education: 27, health: 25, transport: 12, economy: 9, social: 12, housingUtilities: 10, administration: 5});
   const EVENT_SECTORS = Object.freeze({edu:'education', health:'health', transport:'transport', utility:'housingUtilities', ecology:'housingUtilities', economy:'economy', social:'social', housing:'housingUtilities', public:'administration', budget:'administration'});
   const DISTRICTS = Object.freeze({
@@ -28,6 +34,8 @@
   const integer = value => Number.isSafeInteger(value) && value >= 0;
   const objectSum = values => sum(Object.values(values));
   const pay = (id, year, direction, type, amount, sector = null) => ({id, year, direction, type, amount, sector});
+  const isV4 = state => state.rulesVersion === V4_RULES_VERSION;
+  const validTaxRate = rate => integer(rate) && rate >= TAX_RATE_LIMITS.min && rate <= TAX_RATE_LIMITS.max;
 
   function measure(id, districtId, sector, labels, cost, annualOpex, years, lag = 0, siteIds = []) {
     return {id, districtId, sector, labels, cost, annualOpex, years, lag, siteIds, kind:lag ? 'capital' : 'service'};
@@ -88,6 +96,16 @@
       remaining -= amount;
       return {year:issueYear+1+i, opening, principal:amount, interest, total:amount+interest, remaining};
     });
+  }
+
+  function investmentQuote(principal, termYears, placedYear) {
+    if (!integer(principal) || principal === 0 || !integer(termYears) || termYears < INVESTMENT_TERMS.min ||
+        termYears > INVESTMENT_TERMS.max || !integer(placedYear) || placedYear < FIRST_YEAR ||
+        placedYear + termYears > LAST_YEAR) return null;
+    const income = money(principal * INVESTMENT_TERMS.annualPercent * termYears / 100);
+    if (!Number.isSafeInteger(principal + income)) return null;
+    return {id:'investment:'+placedYear, principal, termYears, placedYear, maturityYear:placedYear+termYears,
+      annualPercent:INVESTMENT_TERMS.annualPercent, income, payout:principal+income};
   }
 
   function reconcile({cash, debt, reserve, operations}) {
@@ -216,19 +234,24 @@
     return Object.keys(SECTOR_SHARES).map((sector,i) => pay(`base:${year}:${sector}`,year,'out','mandatory',amounts[i],sector));
   }
 
-  function emptyDraft(taxMode = 'moderate') {
+  function emptyDraft(taxMode = 'moderate', rulesVersion = RULES_VERSION) {
+    if (rulesVersion===V4_RULES_VERSION) {
+      const taxRate = validTaxRate(taxMode) ? taxMode : Object.hasOwn(TAX_MODES,taxMode) ? TAX_MODES[taxMode] : TAX_RATE_LIMITS.default;
+      return {eventChoice:null,measures:[],taxRate,loan:null,investment:null,reserveDraw:0,reserveContribution:0,sectorLimits:{}};
+    }
     return {eventChoice:null,measureId:null,siteId:null,districtId:null,taxMode,loan:null,
       reserveDraw:0,reserveContribution:0,sectorLimits:{},promise:null};
   }
 
-  function create({attemptId, schoolMap}) {
+  function create({attemptId, schoolMap, rulesVersion = RULES_VERSION}) {
     if (!attemptId || !schoolMap?.sites) throw new Error('governor-v3/missing-start-data');
+    if (![RULES_VERSION,V4_RULES_VERSION].includes(rulesVersion)) throw new Error('governor/unsupported-rules');
     const scenario = G.DATA?.scenarios?.find(row => row.id === 'balanced');
     const opening = scenario?.finance || {openingTreasury:4.5,reserve:2.5,debt:6,debtLimit:16,debtRate:.07,
       ownTaxRevenue:35,nonTaxRevenue:3,equalizationGrant:2.5,mandatoryCosts:37.4};
     const population = G.Population.create('balanced'), debt = money(opening.debt*1000), annualPercent = cents(opening.debtRate*100);
-    const start = {rulesVersion:RULES_VERSION,attemptId,scenarioId:'balanced',schoolMap,population,year:FIRST_YEAR,revision:0,completed:false,
-      draft:emptyDraft(),event:null,projects:[],history:[],promises:[],closedRoads:[],
+    const start = {rulesVersion,attemptId,scenarioId:'balanced',schoolMap,population,year:FIRST_YEAR,revision:0,completed:false,
+      draft:emptyDraft('moderate',rulesVersion),event:null,projects:[],history:[],promises:[],closedRoads:[],
       finance:{cash:money(opening.openingTreasury*1000),reserve:money(opening.reserve*1000),debt,initialDebt:debt,debtLimit:money(opening.debtLimit*1000),
         annualPercent,base:{taxes:money(opening.ownTaxRevenue*1000),nonTax:money(opening.nonTaxRevenue*1000),
           grant:money(opening.equalizationGrant*1000),mandatory:money(opening.mandatoryCosts*1000)},
@@ -237,9 +260,17 @@
     const initial = calculateStats(start,groups,{},[]);
     start.stats = initial;
     start.initialStats = clone(initial);
+    if (isV4(start)) {
+      start.finance.investments = [];
+      start.campaignKpis = G.V4Campaign.initial(start);
+      start.initialCampaignKpis = clone(start.campaignKpis);
+      start.campaignTerms = (G.V4Campaign.CHAPTERS??[]).map(({number,targets,weight,satisfactionTarget})=>
+        ({number,targets:clone(targets),weight,satisfactionTarget}));
+    }
     // The common assignment uses no externally supplied seed. The baseline
     // receives the saved event sequence and applies the documented base option.
     start.baseline = {finance:clone(start.finance), population:clone(start.population), stats:clone(initial), closedRoads:[]};
+    if (isV4(start)) start.baseline.campaignKpis = clone(start.campaignKpis);
     return start;
   }
 
@@ -255,7 +286,8 @@
 
   function availableMeasures(state) {
     const adopted = new Set(state.projects.map(p => p.measureId));
-    const choices = MEASURES.filter(m => !adopted.has(m.id));
+    const catalog = isV4(state) ? G.V4Campaign.available(state.year) : MEASURES;
+    const choices = catalog.filter(m => !adopted.has(m.id));
     for (const p of state.projects) {
       if (state.year < p.endYear || state.year < p.openingYear) continue;
       const closed = state.year > p.endYear;
@@ -265,6 +297,12 @@
         cost:money(p.annualOpex*(closed?.5:.12)), annualOpex:p.annualOpex, lag:closed?1:0, years:3, siteIds:[]});
     }
     return choices;
+  }
+
+  function sitesFor(state, choice) {
+    const school = choice?.id==='school-campus';
+    return (choice?.siteIds || []).map(id => school ? state.schoolMap.sites.find(site => site.id===id) :
+      (isV4(state) ? G.V4Campaign.site?.(id) : undefined) ?? SITES.find(site => site.id===id)).filter(Boolean);
   }
 
   function applicableSchoolData(state, population, staffedFactor = 1) {
@@ -291,9 +329,8 @@
     return schoolComparison(applicableSchoolData(state,local.school,adultsFactor),siteId,{year:state.year,closedRoads:state.closedRoads});
   }
 
-  function draftProject(state, errors) {
-    const {draft,year} = state;
-    const choice = availableMeasures(state).find(m => m.id === draft.measureId);
+  function draftProject(state, errors, choice, draft, occupied) {
+    const {year} = state;
     if (!choice) {errors.push({code:'measure-required',tab:'decisions'});return null;}
     if (choice.kind === 'defer') return null;
     if (choice.projectId) {
@@ -309,12 +346,16 @@
       errors.push({code:'site-required',tab:'map'});
       return null;
     }
-    if (chosen && state.projects.some(p => p.siteId === chosen)) {
+    if (chosen && occupied.has(chosen)) {
       errors.push({code:'site-occupied',tab:'map'});
       return null;
     }
-    const placement = SITES.find(s => s.id === chosen);
+    const placement = isV4(state) ? sitesFor(state,choice).find(site=>site.id===chosen) : SITES.find(s => s.id === chosen);
     const projection = choice.id === 'school-campus' ? schoolQuote(state,chosen) : null;
+    if (isV4(state) && chosen && !placement) {
+      errors.push({code:'invalid-site',tab:'map'});
+      return null;
+    }
     const capex = projection?.capexMillion ?? choice.cost+(placement?.cost || 0);
     const annualOpex = projection?.annualOpexMillion ?? choice.annualOpex+(placement?.opex || 0);
     const lag = projection ? projection.firstServiceYear-year : choice.lag+(placement?.delay || 0);
@@ -323,8 +364,70 @@
     const project = {id:`project:${year}:${choice.id}`,measureId:choice.id, action:'new', facilityId:choice.id === 'school-campus' ? 'new-campus-01' : null,
       labels:choice.labels,sector:choice.sector,districtId:choice.districtId,siteId:chosen,kind:choice.kind,approvedYear:year,openingYear,endYear:openingYear+choice.years-1,
       capex,costNow:schedule[0],annualOpex,durationYears:choice.years,payments:schedule.map((amount,i)=>({year:year+i,amount})),
-      targets:placement?.targets || {[choice.districtId]:1},outputFactor:placement?.output || 1, paidYears:[],changes:[]};
-    return {...project,status:projectPhase(project,year),projection:projection || territoryProjection(state,project)};
+      targets:placement?.targets || choice.serviceEffect?.targets || {[choice.districtId]:1},outputFactor:placement?.output || 1,
+      paidYears:[],changes:[]};
+    // The school graph owns capacity and expense for its three fixed locations.
+    if (isV4(state)) {
+      if (projection) {
+        project.targets = {[choice.districtId]:1};
+        project.outputFactor = 1;
+      }
+      if (choice.serviceEffect) project.serviceEffect = choice.serviceEffect;
+      if (choice.kpiEffects) project.kpiEffects = choice.kpiEffects;
+      if (choice.artFamily) project.artFamily = choice.artFamily;
+    }
+    return {...project,status:projectPhase(project,year),projection:projection || (!isV4(state)?territoryProjection(state,project):null)};
+  }
+
+  function draftProjects(state, errors, eventPlan) {
+    const choices = new Map(availableMeasures(state).map(choice=>[choice.id,choice]));
+    const occupied = new Set(state.projects.map(project=>project.siteId).filter(Boolean));
+    if (!isV4(state)) {
+      const project = draftProject(state,errors,choices.get(state.draft.measureId),state.draft,occupied);
+      return project?[project]:[];
+    }
+    if (!Array.isArray(state.draft.measures)) {
+      errors.push({code:'invalid-measures',tab:'decisions'});
+      return [];
+    }
+    const seen = new Set();
+    const renewed = new Set();
+    const projects = [];
+    let promisedReserve = false;
+    for (const entry of state.draft.measures) {
+      const measureId = entry?.measureId;
+      const choice = choices.get(measureId);
+      if (!choice || choice.kind==='defer') {
+        errors.push({code:'measure-unavailable',tab:'decisions',measureId});
+        continue;
+      }
+      if (seen.has(measureId) || (choice.projectId && renewed.has(choice.projectId))) {
+        errors.push({code:'duplicate-measure',tab:'decisions',measureId});
+        continue;
+      }
+      seen.add(measureId);
+      if (choice.projectId) renewed.add(choice.projectId);
+      const localErrors = [];
+      const {promise,siteId} = entry;
+      if (siteId!=null && !choice.siteIds.includes(siteId)) localErrors.push({code:'invalid-site',tab:'map'});
+      if (promise) {
+        const valid = integer(promise.dueYear) && promise.dueYear>=state.year && promise.dueYear<=LAST_YEAR &&
+          (['open','operate'].includes(promise.type) ||
+            (promise.type==='reserve' && !promisedReserve && integer(promise.amount) && promise.amount>0));
+        if (!valid) localErrors.push({code:'invalid-promise',tab:'decisions'});
+        if (promise.type==='reserve') promisedReserve = true;
+      }
+      const project = !localErrors.some(row=>row.code==='invalid-site') &&
+        draftProject(state,localErrors,choice,entry,occupied);
+      errors.push(...localErrors.map(row=>({...row,measureId,siteId:siteId??null})));
+      if (!project) continue;
+      if (project.siteId) occupied.add(project.siteId);
+      projects.push({...project,draftMeasureId:measureId});
+    }
+    // Project projections share the same portfolio. Their individual effects are
+    // conditional comparisons, so overlapping access gains are never added up.
+    return projects.map(project=>project.projection?project:{...project,projection:
+      territoryProjection(state,project,projects.filter(other=>other!==project),eventPlan)});
   }
 
   function dueProject(project, year) {
@@ -335,7 +438,7 @@
 
   function mergeProject(projects, selected, year) {
     if (!selected) return projects;
-    const {projection,...project} = selected;
+    const {projection,draftMeasureId,...project} = selected;
     if (project.action === 'new') return [...projects,project];
     return projects.map(p => p.id !== project.id ? p : {...project,payments:[...p.payments,{year,amount:project.costNow}],
       changes:[...p.changes,{year,type:project.action,openingYear:project.openingYear,endYear:project.endYear}]});
@@ -366,11 +469,13 @@
     return rows;
   }
 
-  function buildFinance(state, project, eventPlan, errors) {
+  function buildFinance(state, selected, eventPlan, errors) {
     const {draft, finance, year} = state;
+    const modern = isV4(state);
     const demo = G.Population.fiscalFactors(state);
-    const taxBase = money(finance.base.taxes*(1+(year-FIRST_YEAR)*.004)*demo.taxFactor);
-    const taxFactor = TAX_MODES[draft.taxMode];
+    const regularTaxBase = finance.base.taxes*(1+(year-FIRST_YEAR)*.004);
+    const taxBase = money(regularTaxBase*demo.taxFactor);
+    const taxFactor = modern ? (validTaxRate(draft.taxRate) ? draft.taxRate : null) : TAX_MODES[draft.taxMode];
     if (!taxFactor) errors.push({code:'invalid-tax',tab:'budget'});
     const taxes = money(taxBase*(taxFactor || 100)/100);
     const nonTax = money(finance.base.nonTax*(1+(year-FIRST_YEAR)*.003));
@@ -378,7 +483,10 @@
     const due = debtRows.filter(row => row.year === year);
     const principalDue = sum(due.map(row => row.principal));
     const annualPercent = finance.annualPercent;
-    const loans = [...finance.loans], projects = mergeProject(state.projects,project,year);
+    const loans = [...finance.loans];
+    const projects = selected.reduce((all,project)=>mergeProject(all,project,year),state.projects);
+    const investments = [...(finance.investments || [])];
+    const matured = modern ? investments.filter(row=>row.maturityYear===year) : [];
     const operations = [
       pay('tax:'+year,year,'in','tax',taxes),
       pay('non-tax:'+year,year,'in','non-tax',nonTax),
@@ -386,7 +494,9 @@
       ...baseOperations(state),
       ...projects.flatMap(p => dueProject(p,year)),
       ...due.flatMap(row => [pay(row.loanId+':interest:'+year,year,'out','interest',row.interest),
-        pay(row.loanId+':principal:'+year,year,'out','principal',row.principal)])
+        pay(row.loanId+':principal:'+year,year,'out','principal',row.principal)]),
+      ...matured.flatMap(row => [pay(row.id+':principal',year,'in','investment-principal',row.principal),
+        pay(row.id+':income',year,'in','investment-income',row.income)])
     ];
     if (draft.loan) {
       const requested = draft.loan;
@@ -411,14 +521,33 @@
       if (draft.reserveContribution) operations.push(pay('reserve-out:'+year,year,'out','reserve-contribution',draft.reserveContribution));
     }
     const afterEvents = applyEventRows(operations,eventPlan,year);
+    const canInvest = !draft.loan && !draft.reserveDraw;
+    const investmentHeadroom = modern && canInvest ? Math.max(0,finance.cash+sum(afterEvents.map(row=>
+      row.direction==='in' ? row.amount : -row.amount))) : 0;
+    let investmentDraft = null;
+    let investmentContribution = 0;
+    if (modern && draft.investment!==null && draft.investment!==undefined) {
+      investmentDraft = investmentQuote(draft.investment.principal,draft.investment.termYears,year);
+      if (!investmentDraft) errors.push({code:'invalid-investment',tab:'budget'});
+      else if (!canInvest) errors.push({code:'investment-funding-conflict',tab:'budget'});
+      else if (investmentDraft.principal>investmentHeadroom) {
+        errors.push({code:'investment-unfunded',tab:'budget',amount:investmentDraft.principal-investmentHeadroom});
+      } else {
+        investmentContribution = investmentDraft.principal;
+        investments.push(investmentDraft);
+        afterEvents.push(pay(investmentDraft.id+':contribution',year,'out','investment-contribution',investmentContribution));
+      }
+    }
     const result = reconcile({...finance,operations:afterEvents});
-    const optional = afterEvents.filter(row => row.direction === 'out' && row.sector && ['start','capex','oneOff'].includes(row.type))
-      .filter(row => project?.id && row.id.startsWith(project.id+':'));
+    const optionalTypes = modern ? ['start','capex','oneOff','operation'] : ['start','capex','oneOff'];
+    const optional = afterEvents.filter(row => row.direction === 'out' && row.sector && optionalTypes.includes(row.type))
+      .filter(row => selected.some(project => row.id.startsWith(project.id+':') &&
+        (row.type!=='operation' || project.action==='new')));
     const mandatoryBySector = Object.fromEntries(Object.keys(SECTOR_SHARES).map(id => [id,(result.sectors[id]?.total || 0)-
       sum(optional.filter(row => row.sector === id).map(row => row.amount))]));
-    const overLimit = Object.entries(draft.sectorLimits || {}).some(([key, ceiling]) => !Object.hasOwn(SECTOR_SHARES,key) ||
+    const overLimits = Object.entries(draft.sectorLimits || {}).filter(([key, ceiling]) => !Object.hasOwn(SECTOR_SHARES,key) ||
       !integer(ceiling) || ceiling < mandatoryBySector[key] || ceiling < (result.sectors[key]?.total || 0));
-    if (overLimit) errors.push({code:'sector-limit',tab:'budget'});
+    if (overLimits.length) errors.push({code:'sector-limit',tab:'budget',...(modern?{sectors:overLimits.map(([key])=>key)}:{})});
     if (result.cashEnd<0) errors.push({code:'budget-deficit',tab:'budget',amount:-result.cashEnd});
     const debtSchedule = outstanding({loans},year+1);
     const horizon = Math.max(year+3,LAST_YEAR,...debtSchedule.map(row => row.year),
@@ -434,25 +563,52 @@
       const projectedBase = money(finance.base.mandatory*(1+(y-FIRST_YEAR)*.008)*demo.mandatoryFactor);
       const projectedIncome = money(finance.base.taxes*(1+(y-FIRST_YEAR)*.004)*demo.taxFactor*(taxFactor || 100)/100) +
         money(finance.base.nonTax*(1+(y-FIRST_YEAR)*.003)) + finance.base.grant;
-      cash += projectedIncome - projectedBase - debtExpense - projectExpense - eventExpense;
-      futureRows.push({year:y, debtExpense,projectExpense,eventExpense, protectedExpenses:projectedBase, projectedIncome, cash});
+      const payouts = modern?investments.filter(row=>row.maturityYear===y):[];
+      const investmentPrincipal = sum(payouts.map(row=>row.principal));
+      const investmentIncome = sum(payouts.map(row=>row.income));
+      cash += projectedIncome + investmentPrincipal + investmentIncome - projectedBase - debtExpense - projectExpense - eventExpense;
+      futureRows.push({year:y, debtExpense,projectExpense,eventExpense, protectedExpenses:projectedBase, projectedIncome, cash,
+        ...(modern?{investmentPrincipal,investmentIncome}:{})});
     }
     if (draft.loan && futureRows.some(row=>row.year<=year+draft.loan.termYears && row.cash<0 && row.debtExpense>0)) errors.push({code:'loan-unfunded-schedule',tab:'budget'});
+    const shortfall = modern ? futureRows.find(row=>row.cash<0) : null;
     return {...result,taxes,taxBase,taxDelta:taxes-taxBase,nonTax,annualPercent,
       loanHeadroom:Math.max(0,finance.debtLimit-finance.debt+principalDue),debtSchedule,futureRows,loans,projects,mandatoryBySector,
-      interest:sum(due.map(row=>row.interest)),principalDue};
+      interest:sum(due.map(row=>row.interest)),principalDue,
+      ...(modern?{taxRate:taxFactor,employmentTaxDelta:taxBase-money(regularTaxBase),investmentHeadroom,investmentDraft,investments,investmentContribution,
+        investmentPrincipal:sum(matured.map(row=>row.principal)),investmentIncome:sum(matured.map(row=>row.income)),
+        firstShortfall:shortfall?{...shortfall,amount:-shortfall.cash}:null}:{})};
   }
 
   function quote(state, {eventPlan} = {}) {
     const errors = [];
     if (state.completed) errors.push({code:'campaign-finished',tab:'stats'});
     if (!['a','b','base'].includes(state.draft.eventChoice) || !state.event || !eventPlan) errors.push({code:'event-required',tab:'decisions'});
-    const project = draftProject(state,errors);
-    const finance = buildFinance(state,project,eventPlan,errors);
+    const projects = draftProjects(state,errors,eventPlan);
+    const project = projects[0] || null;
+    const finance = buildFinance(state,projects,eventPlan,errors);
     const signature = JSON.stringify([state.attemptId,state.year,state.revision,state.event?.id || state.event?.eventId,state.draft,
-      project?.id,project?.openingYear,project?.projection?.served,project?.projection?.districts,finance.cashEnd,finance.debtEnd,finance.reserveEnd,
+      ...(isV4(state)?[projects.map(row=>[row.id,row.openingYear,row.projection?.served,row.projection?.districts])]:
+        [project?.id,project?.openingYear,project?.projection?.served,project?.projection?.districts]),finance.cashEnd,finance.debtEnd,finance.reserveEnd,
       finance.operations.map(row=>[row.id,row.amount])]);
-    return {ok:!errors.length,errors,finance,project,signature};
+    return {ok:!errors.length,errors,finance,project,signature,...(isV4(state)?{projects}:{})};
+  }
+
+  function previewMeasure(state, measureId, siteId, {eventPlan} = {}) {
+    if (!isV4(state)) return quote({...state,draft:{...state.draft,measureId,siteId}},{eventPlan});
+    if (!Array.isArray(state.draft.measures)) return quote(state,{eventPlan});
+    const current = state.draft.measures.find(row=>row.measureId===measureId);
+    const other = state.draft.measures.filter(row=>row.measureId!==measureId);
+    const draft = {...state.draft,measures:[...other,{measureId,siteId,promise:current?.promise??null}]};
+    const baseline = quote({...state,draft:{...state.draft,measures:other}},{eventPlan});
+    const preview = quote({...state,draft},{eventPlan});
+    const project = preview.projects.find(row=>row.draftMeasureId===measureId) || null;
+    const spending = finance => project ? sum(finance.operations.filter(row=>row.direction==='out' &&
+      row.id.startsWith(project.id+':')).map(row=>row.amount)) : 0;
+    const kpi = project?.measureId==='school-campus' ?
+      territoryProjection(state,project,preview.projects.filter(row=>row!==project),eventPlan) : project?.projection ?? null;
+    return {...preview,project,marginal:{cashEnd:preview.finance.cashEnd,cashChange:preview.finance.cashEnd-baseline.finance.cashEnd,
+      spentNow:spending(preview.finance)-spending(baseline.finance),kpi}};
   }
 
   function previousSchoolState(state, year, municipalities) {
@@ -462,14 +618,21 @@
     const localProjects = state.projects.filter(p => p.districtId === 'suburb' && projectPhase(p,year) === 'open');
     const shift = localProjects.some(p=>p.measureId==='second-shift');
     const shiftPlaces = shift ? G.Population.OUTPUTS['second-shift'].schoolStaff : 0;
+    const additional = isV4(state) ? state.projects.filter(project=>projectPhase(project,year)==='open' &&
+      project.targets?.suburb && !['school-campus','second-shift','school-bus'].includes(project.measureId)) : [];
+    const schoolSupport = field => money(sum(additional.map(project=>
+      (populationOutputs(project)[field] || 0) * project.targets.suburb * project.outputFactor)));
     const schools = map.baselineSchools.map(row => row.id !== 'old-school' ? row : {
-      ...row,physicalSeats:row.physicalSeats+shiftPlaces,staffedSeats:row.staffedSeats+shiftPlaces});
+      ...row,physicalSeats:row.physicalSeats+shiftPlaces+schoolSupport('school'),
+      staffedSeats:row.staffedSeats+shiftPlaces+schoolSupport('schoolStaff')});
     const campus = state.projects.find(p=>p.measureId==='school-campus' && (year>=p.openingYear || p.paidYears.length));
     if (campus) schools.push({...map.newSchool,node:map.sites.find(site=>site.id===campus.siteId).node,
       staffedSeats:projectPhase(campus,year)==='open'?map.newSchool.staffedSeats:0,status:projectPhase(campus,year)});
     const local = schoolAllocation(map,{closedRoads:state.closedRoads,schools});
     const remaining = Object.fromEntries(Object.entries(local.demandByZone).map(([z,n])=>[z,n-local.servedByZone[z]]));
-    let routeDemand = Math.min(local.unserved,Math.floor(local.demand*(localProjects.some(p=>p.measureId==='school-bus') ? G.Population.OUTPUTS['school-bus'].schoolReach : 0)));
+    const busReach = localProjects.some(p=>p.measureId==='school-bus') ? G.Population.OUTPUTS['school-bus'].schoolReach : 0;
+    const extraReach = sum(additional.map(project=>(populationOutputs(project).schoolReach || 0)*project.targets.suburb*project.outputFactor));
+    let routeDemand = Math.min(local.unserved,Math.floor(local.demand*clamp(busReach+extraReach,0,1)));
     const routes = [];
     const destinations = Object.values(municipalities).filter(m=>m.id!=='suburb' && G.Population.travelMinutes('suburb',m.id)<=60)
       .sort((a,b)=>G.Population.travelMinutes('suburb',a.id)-G.Population.travelMinutes('suburb',b.id) || a.id.localeCompare(b.id));
@@ -532,12 +695,14 @@
   const TAX_REACTIONS = [.11,.06,.70,.22,.08,.14];
 
   function taxSupportEffects(mode) {
-    const direction=mode==='high'?-1:mode==='low'?1:0;
+    const direction = validTaxRate(mode) ? (TAX_RATE_LIMITS.default-mode)/(TAX_RATE_LIMITS.max-TAX_RATE_LIMITS.default) :
+      mode==='high'?-1:mode==='low'?1:0;
     return Object.fromEntries(Object.keys(GROUP_WEIGHTS).map((id,index)=>[id,direction*TAX_REACTIONS[index]]));
   }
 
-  function reactions(state, nextStats, eventPlan) {
-    const taxes=taxSupportEffects(state.draft.taxMode);
+  function reactions(state, nextStats, eventPlan, projects) {
+    const taxes=taxSupportEffects(isV4(state)?state.draft.taxRate:state.draft.taxMode);
+    const policy = isV4(state) ? G.V4Campaign.satisfactionEffects(projects,nextStats.year) : null;
     const population = Math.max(1,nextStats.population);
     const eventEffect = sum(Object.entries(eventPlan?.supportByDistrict || {}).map(([id,bps]) =>
       bps/100*(nextStats.districts[id]?.population || 0)/population));
@@ -547,6 +712,7 @@
         source:metric,delta:weight*((nextStats.kpis[metric].value || 0)-(state.stats.kpis[metric].value || 0))
       }));
       changes.push({source:'tax',delta:taxes[id]},{source:'event',delta:eventEffect});
+      if (policy) changes.push({source:'policy',delta:policy[id]});
       groups[id] = cents(clamp(state.stats.groups[id]+sum(changes.map(row=>row.delta))));
       reasons[id] = changes.sort((a,b)=>Math.abs(b.delta)-Math.abs(a.delta))[0];
       if (!reasons[id].delta) reasons[id] = {source:'stable',delta:0};
@@ -554,41 +720,69 @@
     return {groups,reasons};
   }
 
-  function peopleProject(project, year) {
+  function populationOutputs(project) {
+    return project.serviceEffect?.outputs || G.Population.outputsFor(project.serviceEffect?.measureId || project.measureId);
+  }
+
+  function peopleProject(project, year, modern) {
     // The local school graph owns school capacity and route matching. The
     // population engine still handles the region's other services, jobs and ageing.
-    const outputs = {...G.Population.outputsFor(project.measureId)};
-    if (project.districtId === 'suburb') {
-      delete outputs.school;
-      delete outputs.schoolStaff;
-      delete outputs.schoolReach;
-    }
+    const outputs = {...populationOutputs(project)};
+    if (modern?project.targets.suburb:project.districtId==='suburb') for (const key of SCHOOL_OUTPUTS) delete outputs[key];
     const phase = projectPhase(project,year);
     const status = phase==='open' ? 'active' : phase==='closed' ? 'completed' : 'delivery';
     return {id:project.id,actionId:project.measureId,kind:project.kind,status,activatedTurn:project.openingYear-FIRST_YEAR+1,
       completedTurn:project.endYear-FIRST_YEAR+2,people:{outputs,factor:project.outputFactor,targets:project.targets}};
   }
 
-  function territoryProjection(state,project) {
-    const metric = SITE_METRICS[project.districtId];
+  function populationPortfolio(projects,year,modern) {
+    return projects.flatMap(project=>{
+      const normal = peopleProject(project,year,modern);
+      if (!modern || !project.targets.suburb) return [normal];
+      const targets = Object.fromEntries(Object.entries(project.targets).filter(([id])=>id!=='suburb'));
+      if (!Object.keys(targets).length) return [normal];
+      const outputs = Object.fromEntries(Object.entries(populationOutputs(project)).filter(([key])=>SCHOOL_OUTPUTS.includes(key)));
+      if (!Object.keys(outputs).length) return [normal];
+      return [normal,{...normal,id:normal.id+':schools',people:{...normal.people,outputs,targets}}];
+    });
+  }
+
+  function territoryProjection(state,project,additional = [],eventPlan) {
+    const modern = isV4(state);
+    const output = modern ? populationOutputs(project) : {};
+    const metric = Object.entries(OUTPUT_METRICS).find(([key])=>Object.hasOwn(output,key))?.[1] || SITE_METRICS[project.districtId];
     if (!metric) return null;
-    const year = project.openingYear;
-    const projects = state.projects.map(p=>peopleProject(p,year));
+    const year = modern && project.action==='renew' ? project.endYear-project.durationYears+1 : project.openingYear;
+    const baseProjects = additional.reduce((all,draft)=>mergeProject(all,draft,state.year),state.projects);
+    const projects = populationPortfolio(baseProjects,year,modern);
     const model = {scenarioId:state.scenarioId, turnIndex:year-FIRST_YEAR, population:state.population, finance:{portfolio:projects}};
     const before = G.Population.derive(model);
-    const after = G.Population.derive({...model,finance:{portfolio:[...projects,peopleProject(project,year)]}});
+    const afterProjects = modern ? mergeProject(baseProjects,project,state.year) : [...baseProjects,project];
+    const combined = populationPortfolio(afterProjects,year,modern);
+    const after = G.Population.derive({...model,finance:{portfolio:combined}});
     function indicator(row) {
       if (metric === 'employment') return kpi(row.employed,row.labour);
       if (metric === 'flood') return kpi(money(row.floodProtection*row.population),row.population);
       if (metric === 'digital') return kpi(money(row.digitalAccess*row.population),row.population);
+      if (metric === 'childcare') return kpi(money(row.childcareAccess*row.childcare),row.childcare);
+      if (metric === 'housing') return kpi(Math.min(row.population,money(row.housingCapacity)),row.population);
+      if (metric === 'school') return kpi(money(row.schoolAccess*row.school),row.school);
       return kpi(money(row.healthAccess*row.health),row.health);
     }
+    const closedRoads = modern ? Object.entries(updatedRoads(state,eventPlan).roadExpiry)
+      .filter(([,throughYear])=>throughYear>=year).map(([id])=>id).sort() : state.closedRoads;
+    const beforeSchool = metric==='school' && project.targets.suburb ?
+      previousSchoolState({...state,closedRoads,projects:baseProjects},year,clone(before.municipalities)) : null;
+    const afterSchool = beforeSchool ?
+      previousSchoolState({...state,closedRoads,projects:afterProjects},year,clone(after.municipalities)) : null;
     const districts = Object.keys(project.targets).map(id => {
-      const a = indicator(before.municipalities[id]), b = indicator(after.municipalities[id]);
+      const a = id==='suburb' && beforeSchool?kpi(beforeSchool.served,beforeSchool.demand):indicator(before.municipalities[id]);
+      const b = id==='suburb' && afterSchool?kpi(afterSchool.served,afterSchool.demand):indicator(after.municipalities[id]);
       return {districtId:id, before:a, after:b, servedChange:b.served-a.served};
     });
     return {districts,metric,firstServiceYear:year,served:sum(districts.map(d=>d.after.served)),
-      demand:sum(districts.map(d=>d.after.demand)),servedChange:sum(districts.map(d=>d.servedChange))};
+      demand:sum(districts.map(d=>d.after.demand)),servedChange:sum(districts.map(d=>d.servedChange)),
+      ...(modern?{closedRoads}:{})};
   }
 
   function updatedRoads(state,eventPlan) {
@@ -607,12 +801,13 @@
     const projects = finance.projects.map(p=>({...p,status:projectPhase(p,year),paidYears:
       projectPhase(p,year)==='open' ? [...p.paidYears,year] : p.paidYears}));
     const routes = updatedRoads(state,eventPlan);
-    const adapter = {population,scenarioId:state.scenarioId,turnIndex:year-FIRST_YEAR,finance:{portfolio:projects.map(p=>peopleProject(p,year))}};
+    const adapter = {population,scenarioId:state.scenarioId,turnIndex:year-FIRST_YEAR,
+      finance:{portfolio:populationPortfolio(projects,year,isV4(state))}};
     const populationLedger = G.Population.advanceYear(adapter);
     const outcomes = eventPlan?.outcomes || [];
     const updated = {...state,projects,population,...routes};
     const preliminary = calculateStats(updated,state.stats.groups,{},outcomes);
-    const {groups,reasons} = reactions(state,preliminary,eventPlan);
+    const {groups,reasons} = reactions(state,preliminary,eventPlan,projects);
     const stats = {...preliminary,groups,groupReasons:reasons,support:aggregateSupport(groups)};
     const schoolCount = stats.kpis.school;
     population.derived.schoolAccess = schoolCount.demand ? schoolCount.served/schoolCount.demand : 0;
@@ -624,32 +819,43 @@
     }
     population.derived.municipalities.suburb.schoolTravel = stats.school.transported;
     populationLedger.after = clone(population.derived);
-    return {projects,population,stats,...routes,finance:{...state.finance,cash:finance.cashEnd,reserve:finance.reserveEnd,debt:finance.debtEnd,loans:finance.loans}};
+    const fiscal = {...state.finance,cash:finance.cashEnd,reserve:finance.reserveEnd,debt:finance.debtEnd,loans:finance.loans};
+    if (isV4(state)) fiscal.investments = finance.investments;
+    const result = {projects,population,stats,...routes,finance:fiscal};
+    if (isV4(state)) result.campaignKpis = G.V4Campaign.advance(state,{...state,...result},{taxIndex:state.draft.taxRate,eventPlan});
+    return result;
   }
 
-  function checkPromises(promises,draft,project,finance,year) {
-    const result = promises.map(p=>({...p}));
-    if (draft.promise && integer(draft.promise.dueYear) && draft.promise.dueYear>=year) {
-      const {type,dueYear} = draft.promise;
+  function checkPromises(state,selected,finance,year) {
+    const modern = isV4(state);
+    const result = state.promises.map(p=>({...p}));
+    const planned = modern ? state.draft.measures.map(row=>[row.promise,selected.find(p=>p.draftMeasureId===row.measureId)]) :
+      [[state.draft.promise,selected[0]]];
+    for (const [promise,project] of planned) {
+      if (!promise || !integer(promise.dueYear) || promise.dueYear<year) continue;
+      const {type,dueYear} = promise;
       if ((type==='open' || type==='operate') && project) {
-        result.push({id:'promise:'+year,type,dueYear,projectId:project.id,status:'pending'});
+        result.push({id:'promise:'+year+(modern?':'+project.id:''),type,dueYear,projectId:project.id,status:'pending',
+          ...(modern?{approvalYear:year}:{})});
       }
-      if (type==='reserve' && integer(draft.promise.amount) && draft.promise.amount>0)
-        result.push({id:'promise:'+year,type,dueYear,amount:draft.promise.amount,status:'pending'});
+      if (type==='reserve' && integer(promise.amount) && promise.amount>0)
+        result.push({id:'promise:'+year+(modern?':reserve':''),type,dueYear,amount:promise.amount,status:'pending'});
     }
     for (const promise of result) {
       if (promise.status!=='pending' || promise.dueYear>year) continue;
       const p = finance.projects.find(row=>row.id===promise.projectId);
-      if (promise.type==='open') promise.status=p?.paidYears.some(paid=>paid<=year)?'kept':'missed';
+      if (promise.type==='open') promise.status=p?.paidYears.some(paid=>paid<=year &&
+        (!modern || paid>=promise.approvalYear))?'kept':'missed';
       if (promise.type==='operate') promise.status=p && projectPhase(p,year)==='open'?'kept':'missed';
       if (promise.type==='reserve') promise.status=finance.reserveEnd>=promise.amount?'kept':'missed';
     }
     return result;
   }
 
-  function projectSnapshot(project) {
+  function projectSnapshot(project, modern) {
     const {id, status, approvedYear, openingYear, endYear, paidYears, siteId, labels, districtId, measureId, annualOpex} = project;
-    return {id, status, approvedYear, openingYear, endYear, paidYears:[...paidYears], siteId, labels, districtId, measureId, annualOpex};
+    return {id, status, approvedYear, openingYear, endYear, paidYears:[...paidYears], siteId, labels, districtId, measureId, annualOpex,
+      ...(modern?{artFamily:project.artFamily,capex:project.capex,sector:project.sector}:{})};
   }
 
   function financeRecord(projection) {
@@ -679,25 +885,29 @@
     if (!review.ok) throw new Error('governor-v3/invalid-plan');
     if (review.signature !== signature) throw new Error('governor-v3/quote-changed');
     const year = state.year;
-    const referenceDraft = {...emptyDraft(),measureId:'defer',eventChoice:'base'};
+    const modern = isV4(state);
+    const selected = modern ? review.projects : review.project?[review.project]:[];
+    const referenceDraft = {...emptyDraft('moderate',state.rulesVersion),...(!modern?{measureId:'defer'}:{}),eventChoice:'base'};
     const referenceState = {...state,...state.baseline,draft:referenceDraft,projects:[]};
-    const baselineFinance = buildFinance(referenceState,null,baselineEventPlan,[]);
+    const baselineFinance = buildFinance(referenceState,[],baselineEventPlan,[]);
     const reference = advanceProjection(referenceState,baselineFinance,baselineEventPlan);
     const settled = settleEvent(state,eventPlan,review.finance.operations,settledEventPlan);
-    const fiscalResult = settled === eventPlan ? review.finance : buildFinance(state,review.project,settled,[]);
+    const fiscalResult = settled === eventPlan ? review.finance : buildFinance(state,selected,settled,[]);
     const actual = advanceProjection(state,fiscalResult,settled);
-    const promises = checkPromises(state.promises,state.draft,review.project,fiscalResult,year);
-    const history = [...state.history,{year,revision:state.revision,measure:review.project ? {id:review.project.id,
-      measureId:review.project.measureId,districtId:review.project.districtId,siteId:review.project.siteId,labels:review.project.labels,
-      action:review.project.action,openingYear:review.project.openingYear,annualOpex:review.project.annualOpex,
-      deliveryWindowStart:review.project.action==='renew' ? review.project.endYear-review.project.durationYears+1 : review.project.openingYear,
-      deliveryWindowEnd:review.project.endYear, holdYears:review.project.durationYears} : null,
-      event:{...state.event,choice:state.draft.eventChoice},projects:actual.projects.map(projectSnapshot),
-      finance:{...financeRecord(fiscalResult),newMeasureCost:review.project?.costNow || 0},stats:actual.stats,reference:reference.stats}];
+    const promises = checkPromises(state,selected,fiscalResult,year);
+    const measures = selected.map(project=>({id:project.id,measureId:project.measureId,districtId:project.districtId,
+      siteId:project.siteId,labels:project.labels,action:project.action,openingYear:project.openingYear,annualOpex:project.annualOpex,
+      deliveryWindowStart:project.action==='renew' ? project.endYear-project.durationYears+1 : project.openingYear,
+      deliveryWindowEnd:project.endYear, holdYears:project.durationYears,
+      ...(modern?{costNow:project.costNow,draftMeasureId:project.draftMeasureId,capex:project.capex}:{})}));
+    const history = [...state.history,{year,revision:state.revision,
+      ...(modern?{measures,campaignKpis:actual.campaignKpis,referenceCampaignKpis:reference.campaignKpis}:{measure:measures[0]||null}),
+      event:{...state.event,choice:state.draft.eventChoice},projects:actual.projects.map(project=>projectSnapshot(project,modern)),
+      finance:{...financeRecord(fiscalResult),newMeasureCost:sum(selected.map(project=>project.costNow))},stats:actual.stats,reference:reference.stats}];
     const completed = year === LAST_YEAR;
     return {...state,...actual,promises,history,baseline:{finance:reference.finance,population:reference.population,stats:reference.stats,
-      closedRoads:reference.closedRoads,roadExpiry:reference.roadExpiry},completed,year:completed ? year : year+1,
-      lastClosedYear:year,revision:state.revision+1,event:null,draft:emptyDraft(state.draft.taxMode)};
+      closedRoads:reference.closedRoads,roadExpiry:reference.roadExpiry,...(modern?{campaignKpis:reference.campaignKpis}:{})},completed,year:completed ? year : year+1,
+      lastClosedYear:year,revision:state.revision+1,event:null,draft:emptyDraft(modern?state.draft.taxRate:state.draft.taxMode,state.rulesVersion)};
   }
 
   function handoverStatus(state) {
@@ -705,18 +915,19 @@
     const ledger = [...state.history.map(row=>row.event),state.event];
     const picks = Object.fromEntries(ledger.map(row=>[row.year,row.choice || 'base']));
     const executionHistory = state.history.flatMap(row=>row.stats.eventOutcomes);
-    const candidate = {...state,draft:{...emptyDraft('high'),reserveDraw:state.finance.reserve,measureId:'defer'}};
+    const candidate = {...state,draft:{...emptyDraft('high',state.rulesVersion),reserveDraw:state.finance.reserve,
+      ...(!isV4(state)?{measureId:'defer'}:{})}};
     const deficits = [];
     for (const choice of ['base','a','b']) {
       const eventPlan = G.V3Events.year({attemptId:state.attemptId,year:state.year,ledger,picks:{...picks,[state.year]:choice},executionHistory});
-      const basic = buildFinance(candidate,null,eventPlan,[]);
+      const basic = buildFinance(candidate,[],eventPlan,[]);
       if (basic.cashEnd>=0) return {available:false};
       deficits.push(-basic.cashEnd);
       if (-basic.cashEnd>basic.loanHeadroom) continue;
       for (let termYears=1;termYears<=10;termYears++) {
         candidate.draft.loan = {principal:-basic.cashEnd,termYears};
         const errors = [];
-        buildFinance(candidate,null,eventPlan,errors);
+        buildFinance(candidate,[],eventPlan,errors);
         if (!errors.length) return {available:false};
       }
       candidate.draft.loan = null;
@@ -744,6 +955,7 @@
   ];
 
   function assess(state) {
+    if (isV4(state)) return G.V4Campaign.score(state);
     const rows = state.history, count = rows.length, completionRatio = count/20;
     const last = rows.at(-1);
     const {support,development,districts} = state.initialStats;
@@ -790,7 +1002,8 @@
           `Years confirmed ${count}/20, factor ${cents(raw[i])}.`,`已结算${count}/20年，系数${cents(raw[i])}。`)}))};
   }
 
-  G.V3Rules = {RULES_VERSION,FIRST_YEAR,LAST_YEAR,TAX_MODES,GROUP_WEIGHTS,SECTOR_SHARES,DISTRICTS,MEASURES,SITES,
-    create,emptyDraft,availableMeasures,projectPhase,loanSchedule,reconcile,aggregateSupport,taxSupportEffects,baseOperations,schoolAllocation,
-    schoolComparison,schoolQuote,quote,commit,handoverStatus,handover,assess};
+  G.V3Rules = {RULES_VERSION,V4_RULES_VERSION,FIRST_YEAR,LAST_YEAR,TAX_MODES,TAX_RATE_LIMITS,INVESTMENT_TERMS,
+    GROUP_WEIGHTS,SECTOR_SHARES,DISTRICTS,MEASURES,SITES,create,emptyDraft,availableMeasures,sitesFor,projectPhase,loanSchedule,
+    investmentQuote,reconcile,aggregateSupport,taxSupportEffects,baseOperations,schoolAllocation,schoolComparison,schoolQuote,
+    quote,previewMeasure,commit,handoverStatus,handover,assess};
 })(globalThis);
