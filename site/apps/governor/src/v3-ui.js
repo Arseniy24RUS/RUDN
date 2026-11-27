@@ -811,6 +811,7 @@
     coursePoints:['До 5 баллов','Up to 5 points','最高5分'],
     historyMap:['Карта за этот год','Map for this year','本年度地图'],
     historyStageUnknown:['Стадия не записана','Stage not recorded','未记录阶段'],
+    illustrationUnavailable:['Иллюстрация не загрузилась','Illustration could not load','插图未能加载'],
     staffedPlaces:['Мест с персоналом','Staffed places','配有教职员工的学位'],
     history:['История решений','Decision history','决策记录'], noExtra:['Без новых расходов','No additional expenditure','无新增支出'],
     translatedFallback:['Ситуация доступна на русском','This situation is available in Russian','此情况目前提供俄文'],
@@ -866,6 +867,7 @@
     const phaseLabel = value => t({open:'running',foundation:'foundation',frame:'frame',finishing:'finishing',construction:'building',building:'building',closed:'closed',ended:'closed',restoring:'restoring',preparing:'approved',approved:'approved'}[value] || 'approved');
     const moneyInput = (name,value,title,max) => '<label class="v3-field"><span>'+esc(title)+'</span><input inputmode="decimal" type="number" min="0" step="1" '+(Number.isFinite(max)?'max="'+max+'" ':'')+'name="'+name+'" value="'+esc(value || 0)+'"></label>';
     const picture = (src,alt,cls = '') => '<img class="'+cls+'" src="'+esc(asset(src))+'" alt="'+esc(alt)+'" decoding="async">';
+    const regionalArt = 'assets/illustrated/region-cover-1024.webp';
 
     async function perform(operation, after) {
       if (busy || controller.meta?.readOnly) return;
@@ -923,13 +925,41 @@
       return rows[step-1]?.[{ru:0,en:1,zh:2}[language()]] || '';
     }
     function eventIllustration(event, detailed = false) {
-      const art=controller.eventArt?.(event,language());
-      if (!art) return '';
-      if (typeof art==='string') return picture(art,'','v3-event-art');
-      return '<div'+(detailed&&art.motion==='river'?' data-v3-motion="river"':'')+'><picture>'+
-        (art.small?'<source media="(max-width: 600px)" srcset="'+esc(asset(art.small))+'">':'')+
-        picture(art.poster||art.src,'','v3-event-art'+(art.emblem?' v3-event-emblem':''))+'</picture></div>'+
+      const illustration=controller.eventArt?.(event,language());
+      if (!illustration) return '';
+      const art=typeof illustration==='string'?{poster:illustration}:illustration;
+      const poster=art.poster||art.src;
+      const lowerSubject=/\/(mobile-medical-unit|commuter-transport)-800\.webp$/.test(poster);
+      const classes='v3-event-art'+(art.emblem?' v3-event-emblem':'')+(lowerSubject?' v3-event-subject-low':'');
+      return '<div class="v3-event-visual"'+(detailed&&art.motion==='river'?' data-v3-motion="river"':'')+'><picture>'+
+        (art.small&&asset(art.small)!==asset(poster)?'<source media="(max-width: 600px)" srcset="'+esc(asset(art.small))+'">':'')+
+        picture(poster,'',classes)+'</picture></div>'+
         (detailed&&art.contextOnly?'<p class="v3-art-note">'+esc({ru:'Иллюстрация темы',en:'Topic illustration',zh:'主题插图'}[language()])+'</p>':'');
+    }
+    function imageError(event) {
+      const image=event.target;
+      if (!(image instanceof HTMLImageElement)) return;
+      const visual=image.closest('.v3-event-visual');
+      if (visual) {
+        const selected=image.currentSrc;
+        const sources=Array.from(image.parentElement.querySelectorAll('source'));
+        sources.forEach(source=>source.remove());
+        if (sources.length&&selected!==image.src) return;
+        const fallback=asset(regionalArt);
+        if (image.getAttribute('src')!==fallback) {
+          image.classList.remove('v3-event-subject-low','v3-event-emblem');
+          image.alt=t('whole');
+          image.src=fallback;
+          return;
+        }
+        const notice=document.createElement('p');
+        notice.className='v3-event-visual-error';
+        notice.textContent=t('illustrationUnavailable');
+        image.closest('picture').replaceWith(notice);
+        return;
+      }
+      image.classList.add('v3-image-unavailable');
+      image.alt='';
     }
     function heading(text,sub = '') {
       return '<div class="v3-heading-row"><h1 id="v3-heading" tabindex="-1">'+esc(text)+'</h1>'+sub+'</div>';
@@ -939,7 +969,7 @@
     }
 
     function startView() {
-      return '<section class="v3-start">'+picture('assets/illustrated/region-cover-1024.webp',t('whole'),'v3-start-art')+
+      return '<section class="v3-start">'+picture(regionalArt,t('whole'),'v3-start-art')+
         '<h1>'+esc(t('title'))+'</h1><p class="v3-start-subtitle">'+esc(t('subtitle'))+'</p><p>'+esc(t('twenty'))+'</p>'+
         (controller.meta?.context==='course'?'<p>'+esc(t('coursePoints'))+'</p>':'')+
         button(esc(t(controller.meta?.canResume?'resume':'opening')),'start','primary')+
@@ -1317,7 +1347,6 @@
         if (target&&!target.matches('button,input,select,textarea,a,[tabindex]')) target.tabIndex=-1;
         target?.focus({preventScroll:true});target?.scrollIntoView({block:'nearest'});focusAfter=null;
       } else if (focusSelector) host.querySelector(focusSelector)?.focus({preventScroll:true});
-      host.querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>{img.classList.add('v3-image-unavailable');img.alt='';},{once:true}));
       main.addEventListener('scroll',scheduleCoach,{passive:true});
       observer?.disconnect();observer=new ResizeObserver(scheduleCoach);observer.observe(main);
       scheduleCoach();
@@ -1508,11 +1537,13 @@
       scheduleCoach();
     }
     host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('input',input);host.addEventListener('submit',submit);
+    host.addEventListener('error',imageError,true);
     window.addEventListener('popstate',popstate);window.addEventListener('resize',viewportChanged);window.visualViewport?.addEventListener('resize',viewportChanged);
     viewportChanged();render();
     return {render,navigate,destroy(){
       destroyed=true;observer?.disconnect();cancelAnimationFrame(frame);
       host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('input',input);host.removeEventListener('submit',submit);
+      host.removeEventListener('error',imageError,true);
       window.removeEventListener('popstate',popstate);window.removeEventListener('resize',viewportChanged);window.visualViewport?.removeEventListener('resize',viewportChanged);
       document.body.classList.remove('governor-v3-active');
     }};

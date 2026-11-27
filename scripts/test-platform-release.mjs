@@ -88,6 +88,32 @@ async function fixture(t){const root=await fs.mkdtemp(path.join(os.tmpdir(),'rud
   files['404.html']='<html><body>Legacy missing page</body></html>';
   for(const [name,text] of Object.entries(files)){await write(site,name,text);await write(baseline,name,text);}return {root,site,baseline};
 }
+test('Governor on-demand video resolves from the entry index without entering the offline pack',async t=>{
+  const f=await fixture(t),out=path.join(f.root,'governor-on-demand');
+  await write(f.site,'apps/governor/index.html','<html><head></head><body>Governor</body></html>');
+  const videos=['webm','mp4'].map(ext=>[`apps/governor/assets/v3/river-card-720.${ext}`,`river video ${ext}`]);
+  for(const [name,bytes] of videos)await write(f.site,name,bytes);
+
+  const built=await buildRelease({...f,out});
+  const index=JSON.parse(await fs.readFile(path.join(out,built.target.governorManifest.url.slice('/RUDN/'.length))));
+  const full=JSON.parse(await fs.readFile(path.join(out,built.target.manifestURL.slice('/RUDN/'.length))));
+  const {resourceURL}=await import('../site/assets/js/release-resources.js');
+  const prior=globalThis.__RUDN_RELEASE__;
+  globalThis.__RUDN_RELEASE__={...index,siteRoot:'https://test.invalid/RUDN/'};
+  try{
+    for(const [name,bytes] of videos){
+      const local=name.slice('apps/governor/'.length);
+      const url=resourceURL(local,`https://test.invalid${index.runtimeRoot}apps/governor/index.html`);
+      assert.deepEqual(index.resources[name],full.resources[name]);
+      assert.match(url.pathname,/^\/RUDN\/_objects\/[a-f0-9]{64}\.(?:webm|mp4)$/);
+      assert.equal(await fs.readFile(path.join(out,url.pathname.slice('/RUDN/'.length)),'utf8'),bytes);
+      assert.ok(!index.packs.governor.includes(name));
+      assert.ok(!full.packs.governor.includes(name));
+    }
+  }finally{
+    globalThis.__RUDN_RELEASE__=prior;
+  }
+});
 test('current-only publication retires historical runtime and replaced resources while preserving public aliases',async t=>{
   const f=await fixture(t),out=path.join(f.root,'first');await write(f.site,'data/course.json','{"v":2}');
   await write(f.site,'apps/demo/module.html','<html><body><script type="module">import "./script.js";</script></body></html>');
