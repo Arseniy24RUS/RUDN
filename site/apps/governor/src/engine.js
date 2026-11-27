@@ -1300,18 +1300,37 @@
     const assistance=state.finance.totalEmergencyTransfers;
     const fiscalStatus=assistance>0?'assistance-used':future.unfunded?'future-gap':'covered-under-assumptions';
     const recoveryReport=Recovery.report(state);
-    const ruParts=[`Новых мер: ${launched.length}; годов без новой меры: ${deferred}. Капитальные проекты составили ${Math.round(capitalShare*100)}% расходов на меры. Запущено капитальных объектов: ${actualCapital}. Средний индекс доступности услуг изменился на ${serviceChange>0?'+':''}${serviceChange} п. п. `,
+    const restoredYears=records.filter(record=>record.restoration).length;
+    const ongoingOnly=deferred-restoredYears;
+    const newMeasures=launched.length;
+    const decisionCounts=restoredYears?{
+      ru:`Годы с новой мерой — ${newMeasures}, с восстановлением службы — ${restoredYears}, без запуска и восстановления — ${ongoingOnly}. `,
+      en:`New measures — ${newMeasures}. Service restorations — ${restoredYears}. Years with neither — ${ongoingOnly}. `,
+      zh:`任期内有${newMeasures}年采取新措施，${restoredYears}年恢复服务，${ongoingOnly}年既未启动新措施也未恢复服务。`
+    }:{
+      ru:`Новых мер: ${newMeasures}; годов без новой меры: ${deferred}. `,
+      en:`New measures: ${newMeasures}; years without a new measure: ${deferred}. `,
+      zh:`新增措施：${newMeasures}；没有新增措施的年数：${deferred}。`
+    };
+    const capitalPercent=Math.round(capitalShare*100);
+    const changeText=(serviceChange>0?'+':'')+serviceChange;
+    const spending={
+      ru:`Капитальные проекты составили ${capitalPercent}% расходов на меры. Запущено капитальных объектов: ${actualCapital}. Средний индекс доступности услуг изменился на ${changeText} п. п. `,
+      en:`Capital projects account for ${capitalPercent}% of policy spending; ${actualCapital} capital projects opened. Mean service-access index changed by ${changeText} pp. `,
+      zh:`资本项目占措施支出的${capitalPercent}%。已投用资本设施：${actualCapital}。服务平均可及性指数变化了${changeText}个百分点。 `
+    };
+    const ruParts=[
       assistance>0?`Для завершения срока понадобилось ${round2(assistance)} млрд ₽ экстренной учебной помощи. `:'Экстренная учебная помощь не использовалась. ',
       future.unfunded?'При продолжении действующих обязательств есть дефицит следующего бюджета. ':'Условный прогноз следующих трёх лет не требует помощи. ',
       recoveryReport?`В учебном кейсе старый счёт: ${recoveryReport.bill} млрд ₽; целевая помощь: ${recoveryReport.grantReceived}; возврат помощи: ${recoveryReport.grantReturned}; остаток займа: ${recoveryReport.principalOutstanding}. `:'',
       'Название описывает ваш курс, а не оценку знаний и не доказательство успешности управления.'];
-    const ru=ruParts.join('');
-    const en=`New measures: ${launched.length}; years without a new measure: ${deferred}. Capital projects account for ${Math.round(capitalShare*100)}% of policy spending; ${actualCapital} capital projects opened. Mean service-access index changed by ${serviceChange>0?'+':''}${serviceChange} pp. `+
+    const ru=decisionCounts.ru+spending.ru+ruParts.join('');
+    const en=decisionCounts.en+spending.en+
       (assistance>0?`Completing the term required ${round2(assistance)} bn RUB in emergency classroom support. `:'No emergency classroom support was used. ')+
       (future.unfunded?'Existing commitments imply a future cash shortfall. ':'The conditional three-year projection requires no support. ')+
       (recoveryReport?`Classroom inherited bill: ${recoveryReport.bill} bn RUB; conditional grant: ${recoveryReport.grantReceived}; grant returned: ${recoveryReport.grantReturned}; loan still outstanding: ${recoveryReport.principalOutstanding}. `:'')+
       'The title describes your course, not learning attainment or proof of governance success.';
-    return {id,title:{ru:titles[id][0],en:titles[id][1]},description:{ru,en,...(root.GovernorGame.I18n?{zh:ruParts.map(part=>localise(part,'zh')).join('')}:{})},future,
+    return {id,title:{ru:titles[id][0],en:titles[id][1]},description:{ru,en,...(root.GovernorGame.I18n?{zh:decisionCounts.zh+spending.zh+ruParts.map(part=>localise(part,'zh')).join('')}:{})},future,
       evidence:{advisorAverage:round1(advisorAverage),actualCapital,assistance,deferred,launched:launched.length,capitalShare:round2(capitalShare),serviceShare:round2(serviceShare),protectionShare:round2(protectionShare),coverage,serviceChange,fiscalStatus,promises,future},
       lessons:[
        {ru:'Ввод объекта, доступность услуги и бюджетная устойчивость проверяются отдельно.',en:'Facility opening, service access and fiscal resilience are assessed separately.'},

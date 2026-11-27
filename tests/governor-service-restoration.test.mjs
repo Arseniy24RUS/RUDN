@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import vm from 'node:vm';
-import {G, E, F, A, fresh, json, valid, advance, defer} from './helpers/governor-gameplay.mjs';
+import {G, E, F, A, fresh, json, valid, advance, defer, firstPlan} from './helpers/governor-gameplay.mjs';
 
 const browser = {GovernorGame:G};
 browser.window = browser;
@@ -191,4 +191,42 @@ test('reopening preserves the original activation and construction bonuses', () 
   assert.equal(lifecycle.effects.development,F.round2(p.annualEffects.development * .30));
   assert.deepEqual(json(lifecycle.resilience),{});
   assert.equal(p.activatedTurn,seed.finance.portfolio[0].activatedTurn);
+});
+
+test('ending and report count annual launches, restored services and other years separately in all languages', () => {
+  for (const holdLastYear of [false,true]) {
+    const state=busState({seed:'RUDN-2026'});
+    let restorations=0;
+    while(!state.completed){
+      if(holdLastYear && state.turnIndex===19){ defer(state); continue; }
+      if(restorations<2 && reopenQuote(state).available){
+        E.restoreProgramme(state,state.finance.portfolio[0].id);
+        restorations++;
+      } else {
+        let plan=null;
+        for(const topic of A.pending(state)){
+          E.chooseAgenda(state,topic.id);
+          plan=firstPlan(state);
+          if(plan)break;
+        }
+        assert.ok(plan);
+        E.commitAction(state,plan.action.id,plan.plan.id,plan.placement?.id);
+      }
+      advance(state);
+    }
+    const idle=holdLastYear?1:0,starts=18-idle;
+    assert.equal(state.history.length,20);
+    assert.equal(restorations,2);
+    assert.equal(state.history.filter(row=>!row.deferred).length,starts);
+    const expected={
+      ru:`Годы с новой мерой — ${starts}, с восстановлением службы — 2, без запуска и восстановления — ${idle}.`,
+      en:`New measures — ${starts}. Service restorations — 2. Years with neither — ${idle}.`,
+      zh:`任期内有${starts}年采取新措施，2年恢复服务，${idle}年既未启动新措施也未恢复服务。`
+    };
+    const ending=E.getEnding(state);
+    for(const [locale,intro] of Object.entries(expected)){
+      assert.ok(ending.description[locale].startsWith(intro));
+      assert.equal(E.buildReport(state,locale).final.ending.description,ending.description[locale]);
+    }
+  }
 });

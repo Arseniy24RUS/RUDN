@@ -143,9 +143,12 @@ def run_management(browser, base, output, width, height, language):
                                       "evidence":evidence}
                 capture("contract")
                 click("[data-restore-cancel]")
+                page.locator("#district-dialog").wait_for(state="hidden")
+                assert not page.locator("dialog[open]").count(), "Returning should close the proposal"
                 header.wait_for()
                 choose(restore, touch)
-                click("[data-restore-confirm]")
+                review.wait_for()
+                choose(review.locator("[data-restore-confirm]"), touch)
                 review.wait_for(state="hidden")
                 restored_year = year
                 action = "restore"
@@ -233,7 +236,9 @@ def run_management(browser, base, output, width, height, language):
     finally:
         ctx.close()
         (output/f"{name}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2))
-    print(result["status"], name, result.get("failure","").splitlines()[-1:], flush=True)
+    print(result["status"], name, flush=True)
+    if result.get("failure"):
+        print(result["failure"].rstrip(), flush=True)
     return result["status"] == "pass"
 
 
