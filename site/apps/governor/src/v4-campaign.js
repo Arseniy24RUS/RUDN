@@ -274,6 +274,7 @@
 
   G.V4Campaign={
     VERSION,METRICS,CHAPTERS,chapter,initial,advance,satisfactionEffects,status,score,
+    journalPoints:points=>Math.ceil(points),
     available:year=>phases[chapter(year).number-1],
     measure:id=>measures.get(id),
     site:id=>locations.get(id)

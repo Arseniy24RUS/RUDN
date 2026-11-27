@@ -1102,6 +1102,7 @@
       return '<section class="v3-start">'+picture(regionalArt,t('whole'),'v3-start-art')+
         '<h1>'+esc(t('title'))+'</h1><p class="v3-start-subtitle">'+esc(t('subtitle'))+'</p><p>'+esc(t('twenty'))+'</p>'+
         (controller.meta?.context==='course'?'<p>'+esc(t('coursePoints'))+'</p>':'')+
+        (modern()&&controller.meta?.graded?'<p>'+esc(v4.tr('journalRounding'))+'</p>':'')+
         (modern()?'<details><summary>'+esc(v4.tr('ratings'))+'</summary><p>'+esc(v4.tr('scoreHelp'))+'</p></details>':'')+
         button(esc(t(controller.meta?.canResume?'resume':'opening')),'start','primary')+
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
@@ -1680,6 +1681,7 @@
       const result=rules.assess(state()),status=controller.meta?.status||{},key=typeof status==='string'?status:status.key;
       return heading(t(controller.meta?.context==='course'?'seminarFinal':'final'))+
         '<section class="v3-card v3-card-body"><p class="v3-eyebrow">'+esc(t('score'))+'</p><p class="v3-score">'+esc(number(result.points,2))+'<small>'+esc(t('points'))+'</small></p>'+
+        (modern()&&controller.meta?.graded?label(v4.tr('journalScore'),number(G.V4Campaign.journalPoints(result.points),0)+' / 5'):'')+
         '<p class="v3-submission" role="status">'+esc(t({sent:'sent',sending:'sending',error:'saved',offline:'saved',saved:'saved',preview:'saved'}[key]||'saved'))+'</p>'+
         (key==='error'?button(esc(t('retry')),'retry','secondary'):'')+'</section>'+
         (modern()?'<section class="v3-card v3-card-body">'+label(v4.tr('reportKpi'),number(result.paths?.kpi,2)+' / 5')+

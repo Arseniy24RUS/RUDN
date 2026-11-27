@@ -166,9 +166,9 @@ jobs:
               reviewed['scripts'] = '81a5c0e7a2756347e6852c24a4d7958665202213'
               reviewed['firebase'] = 'dc4aff2a5e0344910d27103cdd004dac79ed68c2'
           if base == portfolio_base:
-              reviewed['site'] = '52f2e21083f7bcf3229dc409d9e32f1feb73db41'
-              reviewed['scripts'] = '863e26be5bb18811fe6de4343b078f391e7891df'
-              reviewed['tests'] = 'b2502cb5f4fce6d466a506daa3344f6d5b470912'
+              reviewed['site'] = '8ed064724868fab301aee58d801ff7f69c55c4d8'
+              reviewed['scripts'] = '75c03b0c27153ed0fe9da7230fb352df5fce7716'
+              reviewed['tests'] = '98411f3c2fbe1880d07738bc9552a97f0a606510'
               reviewed['.github/workflows/platform-checks.yml'] = '9666cc56209926a1f4ac7263574bf9c698691982'
               reviewed['.github/workflows/legal-lab-checks.yml'] = 'baca07b408691f48a53dbd4069d261cf07dd25cf'
               reviewed['.github/workflows/puzzle-checks.yml'] = '1afa713ad087583796a3eead1daf421ae6cc3b8d'

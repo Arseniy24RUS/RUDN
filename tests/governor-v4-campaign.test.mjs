@@ -44,6 +44,11 @@ test('four distinct phase portfolios contain 89 localized playable policies',()=
   }
 });
 
+test('the gradebook rounds fractional campaign points up and preserves integers',()=>{
+  const points=[0,0.01,0.8,3,4,4.01,4.83,5];
+  assert.deepEqual(points.map(C.journalPoints),[0,1,1,3,4,5,5,5]);
+});
+
 function gradeFixture({goodKpi,goodSupport}) {
   const state=make();
   const bad=Object.fromEntries(C.METRICS.map(m=>[m.id,m.inverse?m.max:m.min]));

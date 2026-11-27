@@ -108,6 +108,7 @@
   function submission(record, isCourse) {
     const state = record.state;
     const assessment = G.V3Rules.assess(state);
+    const points = isCourse && isV4(state) ? G.V4Campaign.journalPoints(assessment.points) : assessment.points;
     const millis = Date.parse(record.closedAt)-Date.parse(record.createdAt);
     const {cash,debt,reserve} = state.finance;
     const final = {support:state.stats.support, development:state.stats.development, fiscalSpace:cash/1000, reserve:reserve/1000, debt:debt/1000,
@@ -123,7 +124,7 @@
       id:state.attemptId, ...(isCourse?{studentKey:record.owner.slice('student:'.length)}:{}),
       source:'native-v1',type:'governor-simulator',activitySlug:isCourse?'seminar-7':'governor-freeplay',
       schemaVersion:1,draftMode:isV4(state)?V4_ASSIGNMENT:DRAFT_MODE, recordGrade:isCourse, reviewStatus:isCourse?'auto-scored':'practice',
-      points:assessment.points,maxPoints:5,createdAt:record.closedAt,startedAt:record.createdAt,durationMs:Math.max(0,millis),
+      points,maxPoints:5,createdAt:record.closedAt,startedAt:record.createdAt,durationMs:Math.max(0,millis),
       governor:{applicationVersion:isV4(state)?'4.0.0':'3.0.0',modelVersion:state.rulesVersion,campaignStatus:state.handover?'stopped':'completed',
         decisions:state.history.length,scenario:'Сбалансированный старт',assessment,final,territories,
         decisionRegister:state.history.map(turn => {
@@ -376,7 +377,7 @@
         const key=error?.code==='tutorial-required'?error.code:code(error);
         return rows[key][{ru:0,en:1,zh:2}[locale]??0];
       },
-      meta:{context:bridge.context,edition:assignment===V4_ASSIGNMENT?'v4':'v3',legacyURL:bridge.legacyURL,getStatus:()=>status,get status(){return status;},
+      meta:{context:bridge.context,graded:isCourse,edition:assignment===V4_ASSIGNMENT?'v4':'v3',legacyURL:bridge.legacyURL,getStatus:()=>status,get status(){return status;},
         get canResume(){return Boolean(record);},get readOnly(){return !active();}}
     };
 

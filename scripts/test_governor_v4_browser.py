@@ -1,5 +1,6 @@
 """Real-browser acceptance of the four-term Governor campaign on loopback."""
 from argparse import ArgumentParser
+from math import ceil
 from pathlib import Path
 import json
 import time
@@ -118,7 +119,7 @@ def first_year(page, profile, output):
     return campus['id']
 
 
-def full_campaign(page, profile, output, campus):
+def full_campaign(page, profile, output, campus, locale):
     stages = []
     checkpoints = []
     for year in range(2027, 2046):
@@ -158,15 +159,26 @@ def full_campaign(page, profile, output, campus):
     screenshot(page, output, 'final')
     score = record['submission']['governor']['assessment']
     assert abs(score['points'] - max(score['paths'].values())) < .011
+    journal_score = None
     if profile:
+        # This seeded campaign must exercise a fractional result end to end.
+        assert score['points'] != ceil(score['points'])
+        journal_score = ceil(score['points'])
+        assert record['submission']['points'] == journal_score
         page.wait_for_function("Object.keys(JSON.parse(localStorage.getItem('rudn.grades.v2')||'{}')).length === 1")
+        grades = page.evaluate("student => JSON.parse(localStorage.getItem('rudn.grades.v2'))[student]", profile['studentKey'])
+        assert grades['seminar-7']['points'] == journal_score
+        label = {'ru': 'Балл в журнале', 'en': 'Gradebook score', 'zh': '成绩册分数'}[locale]
+        row = page.locator('.v3-line').filter(has_text=label)
+        assert row.locator('strong').inner_text() == f'{journal_score} / 5'
+        assert float(page.locator('.v3-score').evaluate('element => element.firstChild.textContent').replace(',', '.')) == score['points']
     first_attempt = state['attemptId']
     click(page, '[data-v3-action="v4-restart"]')
     assert load_record(page, profile)['state']['attemptId'] != first_attempt
     choose_event(page)
     assert load_record(page, profile)['state']['draft']['eventChoice'] == 'base'
     return {'years': 20, 'checkpoints': checkpoints, 'construction': stages, 'score': score['points'],
-            'scores': score['paths'], 'replay_first_decision': True}
+            'scores': score['paths'], 'journal_score': journal_score, 'replay_first_decision': True}
 
 
 def main():
@@ -195,7 +207,7 @@ def main():
             click(page, '[data-v3-action="start"]')
         set_locale(page, args.locale)
         campus = first_year(page, profile, output)
-        report = full_campaign(page, profile, output, campus) if args.full else {'years': 1}
+        report = full_campaign(page, profile, output, campus, args.locale) if args.full else {'years': 1}
         assert not suite.current.get('page_errors'), suite.current
         report.update(status='pass', browser=browser.version, engine=args.engine, seconds=round(time.monotonic()-started, 2),
                       locale=args.locale, profile='synthetic local student' if profile else 'guest')
