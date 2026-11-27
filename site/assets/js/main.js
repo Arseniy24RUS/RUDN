@@ -554,7 +554,13 @@ async function renderSeminar(topic,view){
   if(module==='governor') return renderSeminar7(topic);
   if(module==='final') return renderSeminar8(topic);
 }
-function seminarShell(topic,body){return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,topic.number===2?'assets/course/previews/seminar_02_puzzle.png':topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.number===7?'assets/course/previews/seminar_07_simulator.jpg':topic.lecture.preview)}${body}</section>`}
+function seminarShell(topic,body){
+  const preview=topic.number===7
+    ?resourceURL('assets/course/previews/seminar_07_simulator.jpg',new URL('../../',import.meta.url)).href
+    :topic.number===2?'assets/course/previews/seminar_02_puzzle.png'
+    :topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.lecture.preview;
+  return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,preview)}${body}</section>`;
+}
 function renderSeminar4(topic,view){
   // RUDN_LEGAL_LAB_1_0_0: native replacement; old question bank is untouched.
   const owner=attemptOwner(),controller=new AbortController(),scope=routeDiagnostics;

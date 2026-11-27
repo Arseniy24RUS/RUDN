@@ -125,7 +125,8 @@ jobs:
           base = os.environ['GOVERNOR_BASE']
           release_base = '8b25c9be60ee2c6ce5d8d97a3d42a8421eb86643'
           image_hotfix_base = '5828b851c4ad9efdbff0aaa890d67c9ed1599bfc'
-          if base not in (release_base, image_hotfix_base):
+          cover_hotfix_base = '0770c5946dc76335d34d0707665400ff5209dbba'
+          if base not in (release_base, image_hotfix_base, cover_hotfix_base):
               raise SystemExit('Governor publication requires a reviewed base on main')
           if re.findall(r'\[[^\]\r\n]+\]', os.environ['GOVERNOR_PUSH_MESSAGE']) != ['[governor-v3-publish]']:
               raise SystemExit('Do not combine the Governor publication marker with other markers')
@@ -141,6 +142,9 @@ jobs:
           }
           if base == image_hotfix_base:
               reviewed['site'] = 'f303f3874fcee7e3b04484928c5f80dda03f1d34'
+              reviewed['scripts'] = '45365771b3324263edc184af064c1d3862920a60'
+          if base == cover_hotfix_base:
+              reviewed['site'] = '011dd7ab2932fd059a3e41e326c4ff84d0e4f8b3'
               reviewed['scripts'] = '45365771b3324263edc184af064c1d3862920a60'
           for path, expected in reviewed.items():
               if git('rev-parse', 'HEAD:' + path) != expected:
@@ -160,6 +164,9 @@ jobs:
                   'scripts/build-platform-release.mjs',
                   'scripts/test-platform-release.mjs',
               }
+              unexpected = sorted(set(changed) - allowed_files)
+          elif base == cover_hotfix_base:
+              allowed_files = {workflow, 'site/assets/js/main.js'}
               unexpected = sorted(set(changed) - allowed_files)
           else:
               allowed_roots = (*reviewed, workflow)
