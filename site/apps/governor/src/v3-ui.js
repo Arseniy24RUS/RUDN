@@ -808,6 +808,18 @@
     opening:['Начать','Start','开始'], resume:['Продолжить','Continue','继续'],
     twenty:['2026–2045 · 20 лет','2026–2045 · 20 years','2026–2045 · 20年'],
     title:['Губернатор','Governor','州长'], subtitle:['Новая область','New region','新的地区'],
+    welcome1Title:['Добро пожаловать','Welcome','欢迎上任'],
+    welcome1First:['Поздравляю с назначением губернатором!','Congratulations on your appointment as governor!','祝贺您出任州长！'],
+    welcome1Second:['Я Илья Орлов, ваш советник.','I’m Ilya Orlov, your adviser.','我是您的顾问伊利亚·奥尔洛夫。'],
+    welcome2Title:['Ваши задачи','Your priorities','您的职责'],
+    welcome2First:['Жителям разных районов нужны школы, врачи и рабочие места.','People in each district need schools, health care and jobs.','各区居民都需要学校、医疗服务和就业机会。'],
+    welcome2Second:['Каждый год вы выбираете, что улучшить и сколько на это потратить.','Each year, you choose what to improve and how much to spend.','每年由您决定优先改善什么、投入多少资金。'],
+    welcome3Title:['Первый год','Your first year','任期第一年'],
+    welcome3First:['На карте можно познакомиться с пятью районами области.','Use the map to get to know the region’s five districts.','您可以在地图上了解本州的五个区。'],
+    welcome3Second:['Когда будете готовы, вместе разберём первую ситуацию.','When you’re ready, we’ll look at your first situation together.','准备好后，我们一起看看第一件要处理的事。'],
+    welcomeProgress:['{step} из 3','{step} of 3','第 {step} 步，共 3 步'],
+    welcomeNext:['Дальше','Continue','继续'], welcomeStart:['К первому году','Start the first year','进入第一年'],
+    welcomeReplay:['Вступление Орлова','Orlov’s introduction','奥尔洛夫的开场介绍'], welcomeReturn:['В меню','Back to menu','返回菜单'],
     coursePoints:['До 5 баллов','Up to 5 points','最高5分'],
     historyMap:['Карта за этот год','Map for this year','本年度地图'],
     historyStageUnknown:['Стадия не записана','Stage not recorded','未记录阶段'],
@@ -839,9 +851,9 @@
     const rules = G.V3Rules;
     let busy = false, destroyed = false, errorText = '', optionDraft = null, focusAfter = null;
     let chatDraft = '', chatPending = false, chatError = '', loanDraft = null, review = null;
-    let observer = null, frame = 0;
+    let observer = null, frame = 0, replayWelcome = 0;
     const navigation = ['decisions','budget','map','stats','advisor'];
-    const defaultUI = {started:false,tab:'decisions',panel:null,tutorialStep:1,districtId:'suburb',motion:'auto'};
+    const defaultUI = {started:false,tab:'decisions',panel:null,tutorialStep:1,welcomeStep:4,districtId:'suburb',motion:'auto'};
     const language = () => {
       const selected = typeof controller.language === 'function' ? controller.language() : 'ru';
       return selected === 'zh-Hans' || selected?.startsWith('zh') ? 'zh' : selected?.startsWith('en') ? 'en' : 'ru';
@@ -853,6 +865,7 @@
     };
     const ui = () => ({...defaultUI,...(controller.getUI?.() || {})});
     const state = () => controller.getState();
+    const welcomeStep = current => replayWelcome || (current.welcomeStep>=1&&current.welcomeStep<=3?current.welcomeStep:0);
     const quote = () => controller.getQuote();
     const asset = path => G.resolveAsset ? G.resolveAsset(path) : path;
     const number = (value,digits = 0) => Number.isFinite(Number(value)) ? new Intl.NumberFormat({ru:'ru-RU',en:'en-GB',zh:'zh-CN'}[language()],{maximumFractionDigits:digits}).format(value) : '—';
@@ -976,6 +989,16 @@
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
         (controller.meta?.legacyURL?'<a class="v3-link" href="'+esc(controller.meta.legacyURL)+'">'+esc(t('legacy'))+'</a>':'')+
         '<p id="offline-status" role="status" class="v3-muted"></p></section>';
+    }
+    function welcomeView(step) {
+      const key='welcome'+step;
+      const action=step<3?'welcomeNext':replayWelcome?'welcomeReturn':'welcomeStart';
+      return '<section class="v3-card v3-welcome" data-v3-welcome="'+step+'" aria-labelledby="v3-heading">'+
+        picture(regionalArt,'','v3-welcome-art')+
+        '<div class="v3-welcome-copy"><div class="v3-welcome-speaker">'+picture('assets/characters/ilya-avatar.webp','')+
+        '<div><strong>'+esc(t('localAdvisor'))+'</strong><small>'+esc(t('nav.advisor'))+'</small></div></div>'+
+        heading(t(key+'Title'))+'<p>'+esc(t(key+'First'))+'</p><p>'+esc(t(key+'Second'))+'</p>'+
+        '<div class="v3-welcome-actions"><span>'+esc(t('welcomeProgress',{step}))+'</span>'+button(esc(t(action)),'welcome-next','primary')+'</div></div></section>';
     }
     function decisions() {
       const event=card(),draft=state().draft,choice=event?.options.find(row=>row.id===draft.eventChoice),measure=selectedMeasure(),project=quote()?.project;
@@ -1309,6 +1332,7 @@
         '<label class="v3-check"><input type="checkbox" name="large" '+(ui().largeText?'checked':'')+'>'+esc(t('large'))+'</label>'+
         '<details><summary>'+esc(t('help'))+'</summary><p>'+esc(t('helpText'))+'</p></details>'+
         '<p id="offline-status" role="status"></p></section>'+
+        (state()&&ui().started&&!welcomeStep(ui())?button(esc(t('welcomeReplay')),'welcome-replay','secondary full'):'')+
         (controller.meta?.legacyURL?'<a class="v3-button secondary full" href="'+esc(controller.meta.legacyURL)+'">'+esc(language()==='ru'?'Открыть прежнюю партию':language()==='en'?'Open an earlier game':'打开之前的游戏')+'</a>':'')+
         button(esc(exitLabel()),'exit','primary full');
     }
@@ -1320,23 +1344,27 @@
       const focusAttr=focused&&['name','data-v3-action','data-v3-tab','data-v3-site','data-v3-object','data-v3-measure','data-v3-option','data-v3-tax'].find(key=>focused.hasAttribute(key));
       const focusSelector=focused?.id?'#'+CSS.escape(focused.id):focusAttr?'['+focusAttr+'="'+CSS.escape(focused.getAttribute(focusAttr))+'"]':null;
       const active=!!s&&current.started;
+      const welcome=active?welcomeStep(current):0;
+      const showWelcome=welcome&&(replayWelcome||current.panel!=='menu');
       host.className='governor-v3'+(current.largeText?' v3-large-text':'')+(current.motion==='still'?' v3-still':'');
       host.dataset.v3Tab=current.tab;
       document.body.classList.toggle('governor-v3-active',active);
       const panels={event:eventView,measures:measuresView,project:projectView,sites:sitesView,object:objectView,loan:loanView,review:reviewView,result:resultView,history:historyView,'history-map':historyMapView,menu:menuView};
       let content;
-      if (current.panel==='menu') content=menuView();
+      if (showWelcome) content=welcomeView(welcome);
+      else if (current.panel==='menu') content=menuView();
       else if (!active) content=startView();
       else if (s.completed&&['result','review'].includes(current.panel)) content=finalView();
       else if (current.panel&&panels[current.panel]) content=panels[current.panel]();
       else if (s.completed&&current.tab==='decisions') content=finalView();
       else content=({decisions,budget:budgetView,map:mapView,stats:statsView,advisor:adviserView}[current.tab]||decisions)();
-      host.innerHTML='<header class="v3-header"><a href="#" data-v3-action="decisions" aria-label="'+esc(t('title'))+'"><span class="v3-emblem" aria-hidden="true">♜</span><strong>'+esc(t('subtitle'))+'</strong></a>'+
+      const brand='<span class="v3-emblem" aria-hidden="true">♜</span><strong>'+esc(t('subtitle'))+'</strong>';
+      host.innerHTML='<header class="v3-header">'+(welcome?'<div class="v3-welcome-brand">'+brand+'</div>':'<a href="#" data-v3-action="decisions" aria-label="'+esc(t('title'))+'">'+brand+'</a>')+
         (s?'<time>'+s.year+'</time>':'')+'<button type="button" class="v3-menu-button" data-v3-action="menu" aria-label="'+esc(t('menu'))+'">☰</button></header>'+
-        '<main class="v3-content '+(current.tab==='advisor'&&!current.panel?'v3-chat-content':'')+'" id="v3-main">'+
+        '<main class="v3-content '+(current.tab==='advisor'&&!current.panel&&!showWelcome?'v3-chat-content':'')+'" id="v3-main">'+
         (errorText?'<div class="v3-alert" role="alert">'+esc(errorText)+button(esc(t('retry')),'retry','link')+'</div>':'')+
         (controller.meta?.readOnly?'<div class="v3-alert" role="status">'+esc(t('system.otherTab'))+'</div>':'')+content+'</main>'+
-        (active?'<nav class="v3-navigation" aria-label="'+esc(t('menu'))+'">'+navigation.map(tab=>
+        (active&&!welcome?'<nav class="v3-navigation" aria-label="'+esc(t('menu'))+'">'+navigation.map(tab=>
           '<button type="button" data-v3-tab="'+tab+'" aria-current="'+(current.tab===tab?'page':'false')+'">'+navIcon(tab)+'<span>'+esc(t('nav.'+tab))+'</span></button>').join('')+
           '<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+esc(t('turn.next'))+'" '+(s.completed?'disabled':'')+'><span aria-hidden="true">'+advanceIcon+'</span><small>'+esc(t('turn.next'))+'</small></button></nav>':'')+
         '<div class="v3-coach-layer" aria-live="polite"></div>';
@@ -1353,7 +1381,7 @@
     }
     function tutorialTarget() {
       const current=ui(),step=current.tutorialStep,tab=current.tab,panel=current.panel;
-      if (!current.started||!state()||step>10||state().completed||panel==='menu') return null;
+      if (!current.started||!state()||step>10||state().completed||panel==='menu'||welcomeStep(current)) return null;
       const locate=selector=>host.querySelector(selector);
       const tabButton=name=>locate('[data-v3-tab="'+name+'"]');
       if (step===1) return tab==='decisions'?(locate('[data-anchor="event.open"]')||tabButton('decisions')):tabButton('decisions');
@@ -1450,7 +1478,18 @@
       return perform(async()=>{
         if (navigation.includes(action)) return navigate(action);
         if (action==='start') {await controller.start();focusAfter='v3-heading';}
-        else if (action==='menu') await pushPanel('menu');
+        else if (action==='menu') {
+          if (replayWelcome) {replayWelcome=0;focusAfter='v3-heading';}
+          else await pushPanel('menu');
+        }
+        else if (action==='welcome-replay') {replayWelcome=1;focusAfter='v3-heading';}
+        else if (action==='welcome-next') {
+          const step=welcomeStep(ui());
+          if (!step) return;
+          if (replayWelcome) replayWelcome=step<3?step+1:0;
+          else await storeUI(step<3?{welcomeStep:step+1}:{welcomeStep:4,tutorialStep:1,tab:'decisions',panel:null});
+          focusAfter='v3-heading';
+        }
         else if (action==='back') await closePanel();
         else if (action==='exit') await controller.exit();
         else if (action==='retry') await controller.retry?.();
@@ -1527,6 +1566,7 @@
       if (event.target.id==='v3-loan-form') event.preventDefault();
     }
     function popstate(event) {
+      replayWelcome=0;
       if (event.state?.governorV3) perform(()=>storeUI({tab:event.state.tab,panel:event.state.panel}));
       else if (ui().panel) perform(()=>closePanel());
     }

@@ -5,9 +5,9 @@
   const SAVE_VERSION = 1;
   const ASSIGNMENT = 'governor-v3';
   const DRAFT_MODE = 'governor-v3';
-  const uiDefaults = {tab:'decisions', tutorialStep:1, motion:'auto', panel:null, started:false};
+  const uiDefaults = {tab:'decisions', tutorialStep:1, welcomeStep:1, motion:'auto', panel:null, started:false};
   const allowedUI = new Set(['tab','tutorialStep','eventOpen','measureOpen','panel','districtId','objectId','inspectedSiteId',
-    'budgetYear','statsYear','motion','largeText','started','scroll','sourceTab','returnPanel','lesson','projectOpen','statsDistrict','mapYear']);
+    'budgetYear','statsYear','motion','largeText','started','scroll','sourceTab','returnPanel','lesson','projectOpen','statsDistrict','mapYear','welcomeStep']);
   const patchState = (to, patch, fields) => ({...to, ...Object.fromEntries(
     Object.entries(patch).filter(([key]) => fields.has(key))
   )});
@@ -35,6 +35,15 @@
     return record?.schema === SAVE_VERSION && record.owner === owner && record.context === context &&
       record.assignment === ASSIGNMENT && typeof record.state?.attemptId === 'string' &&
       Array.isArray(record.state.history) && Array.isArray(record.draws);
+  }
+  function viewUI({ui,state}) {
+    if (ui.welcomeStep !== undefined) return ui;
+    // Earlier attempts may have opened the event card without making a choice.
+    const draft = state.draft;
+    const fresh = !state.completed && !state.history.length && ui.tutorialStep <= 2 &&
+      !draft.eventChoice && !draft.measureId && !draft.loan && !draft.promise &&
+      draft.taxMode === 'moderate' && !draft.reserveDraw && !draft.reserveContribution && !Object.keys(draft.sectorLimits || {}).length;
+    return {...ui,welcomeStep:fresh?1:4};
   }
   async function loadSchoolMap() {
     const response = await fetch(G.resolveAsset('data/v3-school-map.json'));
@@ -230,7 +239,7 @@
       getState:()=>record?.state ?? null,
       getQuote:()=>quote,
       eventArt:G.V3EventArt,
-      getUI:()=>record?.ui ?? ui,
+      getUI:()=>record?viewUI(record):ui,
       language:()=>language,
       async setLanguage(next) {
         if (G.I18n.normalize(next)==='zh') await G.I18n.ensureCatalog();

@@ -126,7 +126,8 @@ jobs:
           release_base = '8b25c9be60ee2c6ce5d8d97a3d42a8421eb86643'
           image_hotfix_base = '5828b851c4ad9efdbff0aaa890d67c9ed1599bfc'
           cover_hotfix_base = '0770c5946dc76335d34d0707665400ff5209dbba'
-          if base not in (release_base, image_hotfix_base, cover_hotfix_base):
+          welcome_cover_base = '93eeae40c670d1d6814cc0859777ab6076900102'
+          if base not in (release_base, image_hotfix_base, cover_hotfix_base, welcome_cover_base):
               raise SystemExit('Governor publication requires a reviewed base on main')
           if re.findall(r'\[[^\]\r\n]+\]', os.environ['GOVERNOR_PUSH_MESSAGE']) != ['[governor-v3-publish]']:
               raise SystemExit('Do not combine the Governor publication marker with other markers')
@@ -146,6 +147,9 @@ jobs:
           if base == cover_hotfix_base:
               reviewed['site'] = '011dd7ab2932fd059a3e41e326c4ff84d0e4f8b3'
               reviewed['scripts'] = '45365771b3324263edc184af064c1d3862920a60'
+          if base == welcome_cover_base:
+              reviewed['site'] = '5f8d55d552ab233f66ac029c58021d25b90479de'
+              reviewed['scripts'] = 'd33b590f781ed9d9c8b8c165237e0fd130696ffc'
           for path, expected in reviewed.items():
               if git('rev-parse', 'HEAD:' + path) != expected:
                   raise SystemExit('Content differs from the reviewed Governor V3 candidate: ' + path)
@@ -167,6 +171,18 @@ jobs:
               unexpected = sorted(set(changed) - allowed_files)
           elif base == cover_hotfix_base:
               allowed_files = {workflow, 'site/assets/js/main.js'}
+              unexpected = sorted(set(changed) - allowed_files)
+          elif base == welcome_cover_base:
+              allowed_files = {
+                  workflow,
+                  'site/assets/js/main.js',
+                  'site/assets/css/site.css',
+                  'site/assets/course/previews/seminar_07_simulator.jpg',
+                  'site/apps/governor/src/v3-ui.js',
+                  'site/apps/governor/src/v3-runtime.js',
+                  'site/apps/governor/v3.css',
+                  'scripts/test_governor_v3_browser.py',
+              }
               unexpected = sorted(set(changed) - allowed_files)
           else:
               allowed_roots = (*reviewed, workflow)

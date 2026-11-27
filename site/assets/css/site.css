@@ -347,6 +347,20 @@ html:has(.career-course-progress) { scroll-padding-top: calc(var(--top) + var(--
 .games-guest-note{margin:20px 0;max-width:900px;line-height:1.6}
 @media(max-width:680px){.games-grid{grid-template-columns:1fr}.game-card h2{font-size:20px}}
 
+.governor-seminar .activity-header {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr);
+  align-items: center;
+}
+.governor-seminar .activity-header img {
+  display: block;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;
+}
+@media (max-width: 760px) {
+  .governor-seminar .activity-header { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* SETTLEMENTS_PRESENTATION_BEGIN */
 html.settlements-playing,html.settlements-playing body{overflow:hidden;overscroll-behavior:none}
 .settlements-playing .topbar,.settlements-playing .sidebar,.settlements-playing .mobile-nav{display:none!important}

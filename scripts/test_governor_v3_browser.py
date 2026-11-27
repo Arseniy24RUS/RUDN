@@ -50,8 +50,39 @@ def course_entry(page, server):
     link=page.get_by_role('link',name='Открыть симулятор',exact=True)
     assert link.get_attribute('target') != '_blank'
     assert link.evaluate('node=>node.href')==server.base+'apps/governor/index.html'
+    cover=page.locator('#app .governor-seminar .activity-header img')
+    assert cover.evaluate("async image=>{await image.decode();return image.naturalWidth>0&&getComputedStyle(image).objectFit==='contain'}")
     link.click()
     page.locator(READY).wait_for(state='attached',timeout=WAIT)
+
+
+def complete_welcome(page, profile, context, output, reload_welcome=False):
+    before=data(page,profile,context)
+    for step in range(1,4):
+        if step==2 and reload_welcome:
+            page.reload(wait_until='domcontentloaded')
+            page.locator(READY).wait_for(state='attached',timeout=WAIT)
+        screen=visible(page,f'[data-v3-welcome="{step}"]')
+        screen.wait_for(timeout=WAIT)
+        assert not visible(page,'[data-v3-action="event"]').count()
+        assert not visible(page,'.v3-navigation').count()
+        if reload_welcome:
+            page.screenshot(path=output/f'welcome-step-{step}.png')
+        click(page,'[data-v3-action="welcome-next"]')
+    visible(page,'[data-v3-action="event"]').wait_for(timeout=WAIT)
+    after=data(page,profile,context)
+    assert after['ui']['welcomeStep']==4
+    assert before['state']==after['state'] and before['draws']==after['draws']
+    if reload_welcome:
+        click(page,'[data-v3-action="menu"]')
+        click(page,'[data-v3-action="welcome-replay"]')
+        for step in range(1,4):
+            visible(page,f'[data-v3-welcome="{step}"]').wait_for(timeout=WAIT)
+            click(page,'[data-v3-action="welcome-next"]')
+        visible(page,'[data-v3-action="welcome-replay"]').wait_for(timeout=WAIT)
+        click(page,'[data-v3-action="back"]')
+        assert data(page,profile,context)['state']==before['state']
+    return {'steps':3,'savedStep':after['ui']['welcomeStep'],'reloaded':reload_welcome}
 
 
 def validate_year(row):
@@ -112,6 +143,7 @@ def main():
             assert left['economy']==right['economy'] and left['initial']==right['initial']
             first_saved=data(course,STUDENT_A,'course')
             assert first_saved['state']['draft']['eventChoice'] is None
+            receipts['courseWelcome']=complete_welcome(course,STUDENT_A,'course',args.output,reload_welcome=True)
             play(course,args.first_year,args.output,data,STUDENT_A,'course',offline_final=args.offline_final,first_measure=args.first_measure)
             if not args.first_year:
                 final=data(course,STUDENT_A,'course')
@@ -132,6 +164,7 @@ def main():
                 guest.goto(server.base+'apps/governor/index.html?context=free')
                 guest.locator(READY).wait_for(state='attached')
                 click(guest,'[data-v3-action=start]')
+                receipts['guestWelcome']=complete_welcome(guest,None,'free',args.output)
                 play(guest,False,args.output,data,None,'free')
                 receipts['guestFinal']=verify_completed(guest,data(guest,None,'free'),None)
                 guest.screenshot(path=args.output/'guest-final.png')

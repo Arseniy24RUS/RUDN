@@ -283,9 +283,9 @@ function requireProfile({open=true}={}){
 function contentPage(title,lead,body,actions=''){
   return `<section class="page"><header class="page-head"><div><h1>${esc(title)}</h1>${lead?`<p>${esc(lead)}</p>`:''}</div>${actions?`<div class="page-actions">${actions}</div>`:''}</header>${body}</section>`;
 }
-function activityHeader(item,kind,preview){
+function activityHeader(item,kind,preview,previewAlt=''){
   const grade=backend.localGrades()[item.slug];
-  return `<div class="activity-header">${preview?`<img src="${esc(preview)}" alt="">`:''}<div><span class="badge">${esc(kind)}</span><h1>${esc(loc(item,'title',item.title))}</h1><div class="activity-meta"><span class="badge success">${ui('max')}: ${esc(String(item.points))}</span><span class="badge dark">${ui('result')}: ${grade?`${number(grade.points)}/5`:`${ui('notPassed')}`}</span></div></div></div>`;
+  return `<div class="activity-header">${preview?`<img src="${esc(preview)}" alt="${esc(previewAlt)}">`:''}<div><span class="badge">${esc(kind)}</span><h1>${esc(loc(item,'title',item.title))}</h1><div class="activity-meta"><span class="badge success">${ui('max')}: ${esc(String(item.points))}</span><span class="badge dark">${ui('result')}: ${grade?`${number(grade.points)}/5`:`${ui('notPassed')}`}</span></div></div></div>`;
 }
 function externalCard(title,description,url,button=ui('openNewTab')){
   return `<div class="panel external-card"><div><span class="badge">${ui('externalResource')}</span><h2>${esc(title)}</h2><p class="muted">${esc(description||'')}</p></div><a class="btn btn-primary" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(button)} ↗</a></div>`;
@@ -555,11 +555,13 @@ async function renderSeminar(topic,view){
   if(module==='final') return renderSeminar8(topic);
 }
 function seminarShell(topic,body){
-  const preview=topic.number===7
+  const governor=topic.number===7;
+  const preview=governor
     ?resourceURL('assets/course/previews/seminar_07_simulator.jpg',new URL('../../',import.meta.url)).href
     :topic.number===2?'assets/course/previews/seminar_02_puzzle.png'
     :topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.lecture.preview;
-  return `<section class="page"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,preview)}${body}</section>`;
+  const previewAlt=governor?{ru:'Карта региона и нижняя панель игры «Губернатор»',en:'Governor game map and bottom navigation',zh:'《州长》游戏的地区地图和底部导航'}[getLocale()]:'';
+  return `<section class="page${governor?' governor-seminar':''}"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,preview,previewAlt)}${body}</section>`;
 }
 function renderSeminar4(topic,view){
   // RUDN_LEGAL_LAB_1_0_0: native replacement; old question bank is untouched.
