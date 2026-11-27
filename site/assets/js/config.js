@@ -1,7 +1,7 @@
 export const CONFIG = {
   version: '1.3.10-pages',
   repository: 'https://github.com/Arseniy24RUS/RUDN',
-  governorAdvisorUrl: null,
+  governorAdvisorUrl: 'https://europe-west1-rudn-gmu-learning-platform.cloudfunctions.net/governorV3Advisor',
   pagesUrl: 'https://arseniy24rus.github.io/RUDN/',
   firebaseGateway: 'https://europe-west1-rudn-gmu-learning-platform.cloudfunctions.net/networkGateway/',
   adminEmails: ['omnistat@yandex.ru'],

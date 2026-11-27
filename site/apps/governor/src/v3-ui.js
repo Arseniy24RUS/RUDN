@@ -735,6 +735,7 @@
     'dec.defer':['Год без нового проекта','Year without a new project','本年不启动新项目'],
     advisorChanged:['План изменился. Задайте вопрос снова.','The plan has changed. Ask your question again.','计划已更改。请重新提问。'],
     advisorRetry:['Повторить запрос','Retry question','重试提问'],
+    advisorGuest:['Справка работает локально. Для вопросов ИИ-советнику войдите в профиль РУДН.','Built-in help is available. Sign in to your RUDN account to ask the AI advisor.','访客可使用内置帮助。登录俄罗斯人民友谊大学账号后可向 AI 顾问提问。'],
     legacy:['Открыть прежнюю партию','Open an earlier game','打开之前的游戏'],
     factYear:['Факт за {year}','Actual for {year}','{year}年实际情况'],
     foundation:['Фундамент','Foundation','地基'],frame:['Каркас','Frame','主体框架'],finishing:['Подготовка к открытию','Preparing to open','启用准备'],
@@ -765,7 +766,8 @@
     building:['Строится','Under construction','建设中'], closed:['Финансирование завершено','Funding ended','资助期已结束'],
     restoring:['Восстанавливается','Restarting','恢复中'], approved:['Подготовка','Preparing','准备中'],
     noBuilding:['Новых объектов пока нет','No new facilities yet','暂无新设施'],
-    min:['мин','min','分钟'], served:['Место в пределах пути','Places within reach','通行范围内的学位'],
+    min:['мин','min','分钟'], served:['Ученики в пределах допустимого времени в пути','Pupils within the travel-time limit','通勤时间达标的学生'],
+    schoolTrip:['Среднее время дороги в одну сторону','Average one-way travel time','平均单程时间'],
     bridgeRisk:['При закрытии переправы','If the crossing closes','若渡口关闭'],
     loanAmount:['Сумма займа, млн ₽','Loan amount, m RUB','借款金额，百万卢布'],
     loanTerm:['Срок, лет','Term, years','期限，年'], rate:['Годовая ставка','Annual interest rate','年利率'],
@@ -777,7 +779,11 @@
     projection:['После планируемого ввода','After the planned opening','计划启用后'],
     period:['Период','Period','期间'], groups:['Поддержка групп','Support by group','各群体支持度'],
     actual:['Факт','Actual','实际'], facilities:['Учреждения','Facilities','设施'], noHistory:['Первый год ещё не завершён','The first year has not ended','第一年尚未结束'],
-    future:['Следующие три года','Next three years','未来三年'], reasons:['Что повлияло','What affected this','影响因素'],
+    futureBalance:['Прогноз остатка средств на {from}–{to} годы','Projected cash balance for {from}–{to}','{from}–{to}年预计资金余额'],
+    futureBalanceYear:['Прогноз остатка средств на {year} год','Projected cash balance for {year}','{year}年预计资金余额'],
+    futureMore:['Остальные годы до {year}','Other years through {year}','其余年份（至{year}年）'],
+    futureMoreYear:['Прогноз на {year} год','Forecast for {year}','{year}年预测'],
+    reasons:['Что повлияло','What affected this','影响因素'],
     promise:['Обещание','Promise','承诺'], noPromise:['Без дополнительного обещания','No extra promise','不作额外承诺'],
     promiseOpen:['Открыть услугу к сроку','Open the service by a deadline','按期限启用服务'],
     promiseRun:['Сохранить работу к сроку','Keep the service operating','维持服务运行'],
@@ -841,7 +847,8 @@
     coachSchoolResult:['На карте видно, какие объекты работают сейчас. Посмотрите это на примере школы.','The map shows which facilities are operating now. Take a look at an example school.','地图显示目前哪些设施在运行。请查看学校示例。'],
     schoolExample:['Посмотреть действующую школу на Новом берегу','See the existing school in New Bank','查看新岸正在运行的学校'],
     toProjects:['К проектам','View projects','查看项目'], toStats:['К статистике','View statistics','查看统计'], toMap:['К карте','View the map','打开地图'],
-    taxPractice:['Что изменилось после смены налога','What changed when you adjusted taxes','调整税负带来的变化'],
+    taxPractice:['Пробный расчёт','Trial calculation','试算结果'],
+    taxRestored:['Исходная нагрузка восстановлена','Original tax level restored','已恢复原来的税负'],
     restoreTax:['Вернуть исходную нагрузку','Restore original tax level','恢复原来的税负'],
     loanHelp:['Заём даёт деньги сейчас. В следующих бюджетах нужно будет вернуть долг и выплатить проценты.','A loan adds money now. Later budgets must repay the principal and interest.','借款会增加当前可用资金。以后的预算必须偿还本金和利息。'],
     reserveHelp:['Резерв нужен на непредвиденные расходы. Изъятие добавляет деньги в план, пополнение откладывает их на будущее.','The reserve covers unexpected costs. A withdrawal adds money to the plan, while a contribution sets money aside.','储备金用于意外开支。提取会增加计划可用资金，存入则为今后留出资金。'],
@@ -1163,6 +1170,7 @@
           '<p class="v3-muted">'+esc(t('budget.tax.'+trial.from))+' → '+esc(t('budget.tax.'+trial.to))+'</p>'+
           label(t('ownTax'),money(trial.taxesBefore)+' → '+money(trial.taxesAfter))+
           label(t('budget.remaining'),money(trial.cashBefore)+' → '+money(trial.cashAfter))+
+          (selected===trial.from?'<p class="v3-muted">'+esc(t('taxRestored'))+'</p>':'')+
           (current.tutorialStep===6?button(esc(t('toStats')),'tutorial-next','primary full'):'')+
           (selected!==trial.from?button(esc(t('restoreTax')),'restore-tutorial-tax','link'):'')+'</section>'
           :current.tutorialStep===5?'<div class="v3-card v3-card-body">'+label(t('ownTax'),money(finance.taxes))+
@@ -1172,6 +1180,8 @@
     function budgetView() {
       const current=ui(),s=state(),past=s.history.find(row=>row.year===Number(current.budgetYear));
       const finance=past?.finance || quote().finance;
+      const nearTerm=finance.futureRows.slice(0,3),later=finance.futureRows.slice(3);
+      const forecastRows=rows=>rows.map(row=>label(String(row.year),money(row.cash))).join('');
       const taxes=past?'':taxesView(finance,current);
       const startWithTaxes=!past&&!s.history.length&&(current.tutorialStep===5||Boolean(current.taxPractice));
       const period='<label class="v3-period"><span class="v3-sr">'+esc(t('period'))+'</span><select name="budget-year"><option value="">'+esc(t('freshYear',{year:s.year}))+'</option>'+
@@ -1190,7 +1200,11 @@
         (sector.entries||[]).map(op=>label(operationName(op),money(op.amount))).join('')+(!past?moneyInput('sector:'+id,s.draft.sectorLimits[id]??sector.total,t('allocation')):'')+'</details>').join('')+
         label(t('interest'),money(finance.operations.filter(op=>op.type==='interest').reduce((sum,row)=>sum+row.amount,0)))+
         label(t('principal'),money(finance.operations.filter(op=>op.type==='principal').reduce((sum,row)=>sum+row.amount,0)))+'</section>'+
-        '<section class="v3-card v3-card-body"><h2>'+esc(t('future'))+'</h2>'+finance.futureRows.map(row=>label(String(row.year),money(row.cash))).join('')+'</section>'+
+        (nearTerm.length?'<section class="v3-card v3-card-body" aria-labelledby="v3-future-balance"><h2 id="v3-future-balance">'+
+          esc(nearTerm.length===1?t('futureBalanceYear',{year:nearTerm[0].year}):
+            t('futureBalance',{from:nearTerm[0].year,to:nearTerm.at(-1).year}))+'</h2>'+forecastRows(nearTerm)+
+          (later.length?'<details><summary>'+esc(t(later.length===1?'futureMoreYear':'futureMore',{year:later.at(-1).year}))+
+            '</summary>'+forecastRows(later)+'</details>':'')+'</section>':'')+
         '<section><h2>'+esc(t('operational'))+'</h2><div class="v3-card">'+s.projects.map(project=>'<button type="button" class="v3-measure" data-v3-object="'+esc(project.id)+'"><span><strong>'+esc(local(project.labels))+'</strong><small>'+esc(phaseLabel(phase(project)))+' · '+esc(money(project.annualOpex))+' '+esc(t('annual'))+'</small></span><span aria-hidden="true">›</span></button>').join('')+(s.projects.length?'':'<p class="v3-card-body">'+esc(t('noBuilding'))+'</p>')+'</div></section></div></div>';
     }
     function loanView() {
@@ -1302,7 +1316,8 @@
         '<div><section class="v3-card v3-card-body"><h2>'+esc(local(selected.labels))+'</h2>'+
         (school?label(t('served'),number(prospective.served)+' / '+number(prospective.demand))+
           label(t('plannedOpen'),prospective.firstServiceYear)+label(t('construction'),money(prospective.capexMillion))+label(t('budget.annual'),money(prospective.annualOpexMillion))+
-          label(t('bridgeRisk'),number(prospective.servedWithBridgeClosed)+' / '+number(prospective.demand))+label(t('min'),number(prospective.meanTripMinutesServed,2)):
+          label(t('bridgeRisk'),number(prospective.servedWithBridgeClosed)+' / '+number(prospective.demand))+
+          label(t('schoolTrip'),prospective.meanTripMinutesServed===null?'—':number(prospective.meanTripMinutesServed,2)+' '+t('min')):
           label(t('plannedOpen'),s.year+measure.lag+selected.delay)+label(t('construction'),money(measure.cost+selected.cost))+
           label(t('budget.annual'),money(measure.annualOpex+selected.opex))+
           (prospective?.districts||[]).map(row=>label(districtLabel(row.districtId),number(row.before.served)+' → '+number(row.after.served)+' / '+number(row.after.demand))).join(''))+
@@ -1345,10 +1360,16 @@
     function kpiRows(stats,previous,exercise) {
       return Object.entries(stats.kpis||{}).map(([id,kpi])=>{
         const title=t(id==='school'?'stats.schoolAccess':id);
-        const delta=kpi.value!==null&&previous?.kpis?.[id]?.value!==null?kpi.value-Number(previous?.kpis?.[id]?.value):null;
-        const value=id==='school'&&controller.schoolCoverage?controller.schoolCoverage(stats):kpi.value;
+        const displayed=row=>{
+          if(id==='school'&&controller.schoolCoverage)return controller.schoolCoverage(row);
+          const value=row?.kpis?.[id]?.value;
+          return Number.isFinite(value)?Math.round(value*10)/10:null;
+        };
+        const value=displayed(stats),baseline=displayed(previous);
+        const delta=Number.isFinite(value)&&Number.isFinite(baseline)?Math.round((value-baseline)*10)/10:null;
         return '<div class="v3-kpi" data-v3-kpi="'+esc(id)+'"><div><strong>'+esc(title)+'</strong><small>'+esc(number(kpi.served))+' / '+esc(number(kpi.demand))+'</small></div><div><b>'+esc(value===null?t('noDemand'):number(value,1)+'%')+'</b>'+
-          (Number.isFinite(delta)?'<small class="'+(delta>=0?'positive':'negative')+'">'+(delta>0?'+':'')+esc(number(delta,1))+' '+esc(language()==='ru'?'п.п.':language()==='zh'?'百分点':'pp')+'</small>':'')+'</div></div>'+(id==='school'?exercise:'');
+          (Number.isFinite(delta)?'<small'+(delta?' class="'+(delta>0?'positive':'negative')+'"':'')+'>'+
+            (delta>0?'+':'')+esc(number(delta,1))+' '+esc(language()==='ru'?'п.п.':language()==='zh'?'百分点':'pp')+'</small>':'')+'</div></div>'+(id==='school'?exercise:'');
       }).join('');
     }
     function statsView() {
@@ -1400,6 +1421,7 @@
       const messages=controller.advisor?.messages?.()||[];
       return heading(t('nav.advisor'))+'<div class="v3-advisor-person">'+picture('assets/characters/ilya-avatar.webp','','')+
         '<div><strong>'+esc(t('localAdvisor'))+'</strong><span>'+esc(t('advisorRole'))+'</span></div></div>'+
+        (controller.advisor?.cloudAccount?'':'<p class="v3-muted">'+esc(t('advisorGuest'))+'</p>')+
         '<div class="v3-conversation" role="log" aria-live="polite" aria-label="'+esc(t('answerLabel'))+'">'+messages.map((message,index)=>
           '<p class="v3-chat-question">'+esc(message.question)+'</p><div class="v3-chat-answer"><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+
           (message.target?'<button type="button" class="v3-button secondary" data-v3-advice="'+index+'">'+esc(t('advisor.show'))+'</button>':'')+
@@ -1535,9 +1557,17 @@
     async function submitChat(question,options) {
       if (!question.trim()||chatPending) return;
       chatDraft='';chatPending=true;chatError='';render();
-      try {await controller.advisor.ask(question.trim(),options);} catch (_) {chatError=t('unavailable');}
-      chatPending=false;render();host.querySelector('#v3-question')?.focus();
-      const main=host.querySelector('.v3-content');main.scrollTop=main.scrollHeight;
+      try {await controller.advisor.ask(question.trim(),options);}
+      catch (error) {
+        chatDraft=question;
+        chatError=t(error.message==='advisor/context-changed'?'advisorChanged':'unavailable');
+      }
+      chatPending=false;render();
+      const composer=host.querySelector('#v3-question');
+      if (composer) {
+        composer.focus();
+        const main=host.querySelector('.v3-content');main.scrollTop=main.scrollHeight;
+      }
     }
     async function click(event) {
       const item=event.target.closest('button,a[data-v3-action]');

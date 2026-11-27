@@ -1,5 +1,5 @@
 import {randomUUID} from 'node:crypto';
-import {AdvisorError,hash,providerFacts,readRequest,readResult,requestSignature} from './contract.mjs';
+import {AdvisorError,hash,identityMarkers,providerFacts,readRequest,readResult,requestSignature} from './contract.mjs';
 
 const attemptsLimit = 50;
 const userDailyLimit = 16;
@@ -13,8 +13,11 @@ export function createAdvisorService({store,provider,now=()=>Date.now(),limits={
   const perDay = bounded(limits.perDay,globalDailyLimit);
   return async (body,identity) => {
     const request = readRequest(body);
-    if (!identity?.uid || !identity.studentKey || request.studentKey!==(identity.requestedKey || identity.studentKey)) throw new AdvisorError('forbidden',403);
-    const owner = hash(identity.uid+'|'+identity.studentKey);
+    const matchingIdentity = identity?.teacher===true ? request.studentKey===null :
+      Boolean(identity?.studentKey) && request.studentKey===(identity.requestedKey ?? identity.studentKey);
+    if (!identity?.uid || !matchingIdentity) throw new AdvisorError('forbidden',403);
+    const owner = hash(identity.uid+'|'+(identity.teacher ? 'teacher' : identity.studentKey));
+    const redactions = identityMarkers(request,identity);
     const attempt = 'attempts/'+hash(request.attemptId);
     const requestKey = hash(request.requestId);
     const signature = requestSignature(request);
@@ -32,7 +35,7 @@ export function createAdvisorService({store,provider,now=()=>Date.now(),limits={
     const claim = record?.requests?.[requestKey];
     if (!claim) throw new AdvisorError('attempt-quota',429);
     if (claim.signature!==signature) throw new AdvisorError('request-conflict',409);
-    if (claim.phase==='complete') return readResult(claim.reply);
+    if (claim.phase==='complete') return readResult(claim.reply,redactions);
     if (claim.phase==='failed') throw new AdvisorError(claim.failure,claim.status);
     if (claim.claimId!==claimId) throw new AdvisorError('request-pending',409);
 
@@ -57,8 +60,7 @@ export function createAdvisorService({store,provider,now=()=>Date.now(),limits={
         return {count:count+1,users:{...row?.users,[userKey]:used+1}};
       });
       if (!admitted) throw new AdvisorError('daily-quota',429);
-      const context = providerFacts(request);
-      const reply = readResult(context.terms.length ? await provider(context) : {intent:'unknown'});
+      const reply = readResult(await provider(providerFacts(request,redactions)),redactions);
       await finish({phase:'complete',reply});
       return reply;
     } catch (cause) {

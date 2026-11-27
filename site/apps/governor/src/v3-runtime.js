@@ -366,9 +366,11 @@
         }
       });
     } catch {}
+    const advisorStudentKey=bridge.owner.startsWith('teacher:')?null:
+      bridge.owner.startsWith('student:')?bridge.owner.slice('student:'.length):undefined;
     controller.advisor = G.V3Advisor?.create({
       state:controller.getState,language:controller.language,quote:controller.getQuote, credential:bridge.credential,
-      studentKey:isCourse?bridge.owner.slice('student:'.length):undefined,
+      studentKey:advisorStudentKey,
       messages:()=>record?.messages || [],save:messages=>change(before=>({...before,messages}),false),
       navigate:(tab,anchor)=>runtime.navigate(tab,anchor),enabled:bridge.advisorEnabled
     });

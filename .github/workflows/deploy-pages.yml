@@ -129,7 +129,8 @@ jobs:
           welcome_cover_base = '93eeae40c670d1d6814cc0859777ab6076900102'
           first_year_guide_base = '9bb503f8a3f423c279595fcd96aa8399ce01c09a'
           menu_toggle_base = '28f3b5ddcdfc21576ea0b99aa3fd3ceee78e280f'
-          if base not in (release_base, image_hotfix_base, cover_hotfix_base, welcome_cover_base, first_year_guide_base, menu_toggle_base):
+          advisor_base = '030f5e6b73d7bfe78b5d24e81b0cfc94abc686b8'
+          if base not in (release_base, image_hotfix_base, cover_hotfix_base, welcome_cover_base, first_year_guide_base, menu_toggle_base, advisor_base):
               raise SystemExit('Governor publication requires a reviewed base on main')
           if re.findall(r'\[[^\]\r\n]+\]', os.environ['GOVERNOR_PUSH_MESSAGE']) != ['[governor-v3-publish]']:
               raise SystemExit('Do not combine the Governor publication marker with other markers')
@@ -158,6 +159,10 @@ jobs:
           if base == menu_toggle_base:
               reviewed['site'] = '9360a4d39eeb6cce325f746f69bbbef229960a7d'
               reviewed['scripts'] = '0325dda43da4f61cfc437af133cd6de5e8a737ba'
+          if base == advisor_base:
+              reviewed['site'] = '60d8bc912ee7fa416984b94d724d37d46c80481a'
+              reviewed['scripts'] = '81a5c0e7a2756347e6852c24a4d7958665202213'
+              reviewed['firebase'] = 'dc4aff2a5e0344910d27103cdd004dac79ed68c2'
           for path, expected in reviewed.items():
               if git('rev-parse', 'HEAD:' + path) != expected:
                   raise SystemExit('Content differs from the reviewed Governor V3 candidate: ' + path)
@@ -205,6 +210,24 @@ jobs:
               unexpected = sorted(set(changed) - allowed_files)
           elif base == menu_toggle_base:
               allowed_files = {workflow, 'site/apps/governor/src/v3-ui.js', 'scripts/test_governor_v3_browser.py'}
+              unexpected = sorted(set(changed) - allowed_files)
+          elif base == advisor_base:
+              allowed_files = {
+                  workflow,
+                  'site/assets/js/config.js',
+                  'site/apps/governor/src/v3-advisor.js',
+                  'site/apps/governor/src/v3-runtime.js',
+                  'site/apps/governor/src/v3-ui.js',
+                  'scripts/test_governor_terra_browser.py',
+                  'firebase/functions/index.mjs',
+                  'firebase/functions/governor-v3-advisor/README.md',
+                  'firebase/functions/governor-v3-advisor/advisor.test.mjs',
+                  'firebase/functions/governor-v3-advisor/contract.mjs',
+                  'firebase/functions/governor-v3-advisor/emulator-check.mjs',
+                  'firebase/functions/governor-v3-advisor/http.mjs',
+                  'firebase/functions/governor-v3-advisor/provider.mjs',
+                  'firebase/functions/governor-v3-advisor/service.mjs',
+              }
               unexpected = sorted(set(changed) - allowed_files)
           else:
               allowed_roots = (*reviewed, workflow)
@@ -825,6 +848,7 @@ jobs:
         run: |
           python scripts/test_governor_v3_browser.py --engine chromium --offline-final --lost-receipt --output "${{ runner.temp }}/governor-browser-qa"
           python scripts/test_governor_v3_browser.py --engine webkit --first-year --output "${{ runner.temp }}/governor-webkit-qa"
+          python scripts/test_governor_terra_browser.py
       - name: Verify the first year from a district without map objects
         if: env.GOVERNOR_V3_PUBLISH == 'true' && (github.event.before == '9bb503f8a3f423c279595fcd96aa8399ce01c09a' || github.event.before == '28f3b5ddcdfc21576ea0b99aa3fd3ceee78e280f')
         run: python scripts/test_governor_v3_browser.py --engine webkit --first-year --first-measure=outreach --output "${{ runner.temp }}/governor-webkit-qa/river"

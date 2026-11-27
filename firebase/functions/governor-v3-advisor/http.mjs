@@ -4,9 +4,10 @@ import {getDatabase} from 'firebase-admin/database';
 import {AdvisorError,PRIVATE_ROOT,readRequest} from './contract.mjs';
 import {createProvider,mockProvider} from './provider.mjs';
 import {createAdvisorService} from './service.mjs';
+import {resolveReceptionIdentity} from '../reception-ai/firebase.mjs';
+import {RECEPTION_OPENAI_SECRET} from '../reception-ai/http.mjs';
 import {createFirebaseStore} from '../reception-ai/store.mjs';
 
-export const GOVERNOR_V3_ADVISOR_SECRET = 'RUDN_GOVERNOR_V3_OPENAI_KEY';
 const PLATFORM = 'rudn-platform/v1';
 const PAGES_ORIGIN = 'https://arseniy24rus.github.io';
 const PRODUCTION_PROJECT = 'rudn-gmu-learning-platform';
@@ -15,7 +16,15 @@ const LOOPBACK = /^(127\.0\.0\.1|localhost)(:[1-9]\d{0,4})?$/;
 const studentKeyIsValid = key => typeof key==='string' && /^\d{5,20}$/.test(key);
 
 export async function resolveIdentity(db,decoded,requestedKey) {
-  if (!decoded?.uid || !studentKeyIsValid(requestedKey)) throw new AdvisorError('forbidden',403);
+  if (!decoded?.uid) throw new AdvisorError('forbidden',403);
+  if (requestedKey===null) {
+    if (decoded.firebase?.sign_in_provider==='anonymous') throw new AdvisorError('forbidden',403);
+    // Use the same instructor recognition as Reception with an already verified ID token.
+    const identity = await resolveReceptionIdentity({},decoded,{db}).catch(()=>null);
+    if (!identity?.teacher) throw new AdvisorError('forbidden',403);
+    return {...identity,studentKey:null};
+  }
+  if (!studentKeyIsValid(requestedKey)) throw new AdvisorError('forbidden',403);
   const requested = await db.ref(`${PLATFORM}/studentAliases/${requestedKey}`).get();
   const canonical = requested.val() ?? requestedKey;
   if (!studentKeyIsValid(canonical)) throw new AdvisorError('forbidden',403);
@@ -49,7 +58,7 @@ function runtime() {
   const provider = demo
     ? (env.GOVERNOR_V3_ADVISOR_MOCK==='true' ? mockProvider : null)
     : (env.GOVERNOR_V3_ADVISOR_ENABLED==='true'
-      ? createProvider({model:env.GOVERNOR_V3_ADVISOR_MODEL,key:env[GOVERNOR_V3_ADVISOR_SECRET]?.trim()})
+      ? createProvider({key:env[RECEPTION_OPENAI_SECRET]?.trim()})
       : null);
   const privateStore = createFirebaseStore(db,PRIVATE_ROOT);
   const store = {async transaction(path,mutator) {return (await privateStore.transaction(path,mutator)).value;}};
@@ -80,7 +89,7 @@ export function createHandler({getRuntime=runtime,env=process.env}={}) {
     try {
       if (req.method!=='POST') throw new AdvisorError('method',405);
       if (!/^application\/json(?:;|$)/i.test(req.headers['content-type'] || '')) throw new AdvisorError('content-type',415);
-      if ((req.rawBody?.length || 0)>12_288) throw new AdvisorError('body-too-large',413);
+      if ((req.rawBody?.length || 0)>32_768) throw new AdvisorError('body-too-large',413);
       const body=readRequest(req.body);
       const token=String(req.headers.authorization || '').match(/^Bearer ([A-Za-z0-9._-]+)$/)?.[1];
       if (!token) throw new AdvisorError('auth',401);

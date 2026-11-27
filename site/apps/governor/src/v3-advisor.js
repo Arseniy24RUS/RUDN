@@ -1,9 +1,32 @@
 (function (root) {
   'use strict';
   const G=root.GovernorGame;
+  const MODEL='gpt-6.1-terra';
   const TARGETS={tax:['budget','budget.tax'],loan:['budget','budget.loan'],budget:['budget','budget.review'],
     route:['map','map.inspectOrPlace'],sites:['map','map.inspectOrPlace'],compare:['budget','budget.review'],event:['decisions','event.open']};
   const INTENTS=new Set([...Object.keys(TARGETS),'unknown']);
+  const UNAVAILABLE={
+    ru:'ИИ-советник сейчас недоступен. Повторите запрос.',
+    en:'The AI advisor is unavailable right now. Try your question again.',
+    zh:'AI 顾问暂时无法回答，请重试。'
+  };
+  const QUOTA={
+    'daily-quota':{
+      ru:'На сегодня лимит вопросов ИИ-советнику исчерпан. Попробуйте завтра.',
+      en:'You’ve reached today’s limit for AI advisor questions. Try again tomorrow.',
+      zh:'今天向 AI 顾问提问的次数已用完，请明天再试。'
+    },
+    'attempt-quota':{
+      ru:'Лимит вопросов ИИ-советнику для этой кампании исчерпан.',
+      en:'You’ve reached the limit for AI advisor questions in this campaign.',
+      zh:'本次战役中向 AI 顾问提问的次数已用完。'
+    }
+  };
+  const SCHOOL_SITES={
+    yard:{ru:'Во дворах',en:'In the courtyards',zh:'居民院落'},
+    bridge:{ru:'У моста',en:'By the bridge',zh:'桥边'},
+    south:{ru:'Южная развилка',en:'Southern junction',zh:'南部路口'}
+  };
   const GUIDES={
     year:{
       ru:'Сначала ответьте на ситуацию года. Затем решите, нужно ли отдельное улучшение.\nНа карте проверьте, где проект поможет людям. В бюджете посмотрите, сколько денег останется.\nКнопка ▶ открывает проверку плана. После подтверждения увидите итог года.',
@@ -42,6 +65,81 @@
       reserve:finance?.reserveEnd??state.finance.reserve,principal:finance?.principalDue??0,interest:finance?.interest??0,
       annualPercent:finance?.annualPercent??state.finance.annualPercent}};
   }
+  function limitText(value,n) {
+    return Array.from(String(value??'').trim()).slice(0,n).join('').trim();
+  }
+  function planContext(state,quote,lang) {
+    const {draft,year}=state, rules=G.V3Rules;
+    const local=value=>value?.[lang]??value?.en??value?.ru??value;
+    const district=id=>local(rules.DISTRICTS[id]?.labels);
+    const event=G.V3Events.card(state.event,lang);
+    const lines=[];
+    if(event){
+      lines.push('Current event — '+[event.title,event.situation,event.circumstance?.summary].filter(Boolean).join(' '));
+      for(const option of event.options){
+        const cost=option.effects?.treasury, outcome=option.effects?.localOutcome;
+        lines.push('Event option'+(draft.eventChoice===option.id?' (selected)':'')+' — '+option.label+
+          ' · one-off '+(cost?.oneOffMlnRub??0)+' million RUB, annual '+(cost?.operatingMlnRubPerYear??0)+' million RUB'+
+          (outcome?.units?' · '+outcome.units+' '+event.localIndicator.unitLabel+' from '+(year+(outcome.firstYearOffset??0)):'')+
+          ' · '+option.tradeoff);
+      }
+      if(!draft.eventChoice)lines.push('Event response: not selected.');
+    }
+    const measure=rules.availableMeasures(state).find(row=>row.id===draft.measureId), project=quote?.project;
+    const siteId=project?.siteId??draft.siteId;
+    const site=local(SCHOOL_SITES[siteId]??rules.SITES.find(row=>row.id===siteId)?.labels);
+    const projectCaption=[local(measure?.labels),district(measure?.districtId),site].filter(Boolean).join(' · ');
+    const siteComparison=measure?.siteIds?.length&&measure.id!=='school-campus'
+      ?measure.siteIds.map(id=>{
+        const label=local(rules.SITES.find(row=>row.id===id)?.labels);
+        const candidate=rules.quote({...state,draft:{...draft,siteId:id}}).project;
+        return candidate?
+          label+' opens '+candidate.openingYear+', investment '+candidate.capex+', annual cost '+candidate.annualOpex:
+          label+' unavailable';
+      }).join('; ')
+      :'';
+    lines.push('Project draft — '+(projectCaption||'not selected')+
+      (measure?.siteIds?.length&&!site?' · site not selected':'')+
+      (project?' · planned opening '+project.openingYear+', payment now '+project.costNow+
+        ' million RUB, running cost '+project.annualOpex+' million RUB/year':'')+
+      (siteComparison?' · site comparison (million RUB): '+siteComparison:''));
+    const finance=quote?.finance;
+    if(finance){
+      lines.push('Draft budget forecast for '+year+' (million RUB): tax level '+draft.taxMode+
+        ', tax receipts '+finance.taxes+', closing cash '+finance.cashEnd+', closing reserve '+finance.reserveEnd+
+        ', closing debt '+finance.debtEnd+(quote.ok?' · plan ready':' · plan needs work: '+quote.errors.map(error=>error.code).join(', ')));
+      const loan=finance.loans.find(row=>row.issueYear===year);
+      const firstPayment=loan?.schedule[0];
+      const limits=Object.entries(draft.sectorLimits??{}).map(([id,amount])=>id+' '+amount).join(', ');
+      lines.push('Draft financing (million RUB) — reserve draw '+draft.reserveDraw+', reserve contribution '+
+        draft.reserveContribution+', room to borrow '+finance.loanHeadroom+'; '+(firstPayment?
+          'new loan '+draft.loan.principal+' at '+finance.annualPercent+'% for '+draft.loan.termYears+
+          ' years, first payment '+firstPayment.total+' in '+firstPayment.year:'no approved new loan in the draft')+
+        (limits?'; sector ceilings: '+limits:''));
+      const near=finance.futureRows.slice(0,3), end=finance.futureRows.at(-1);
+      if(end)lines.push('Forecast if commitments and settings stay as planned (million RUB) — closing balances '+
+        near.map(row=>row.year+' '+row.cash).join(', ')+
+        (end.year!==near.at(-1)?.year?'; full schedule to '+end.year+', final closing cash '+end.cash:''));
+    }
+    const describeKpis=stats=>Object.entries(stats?.kpis??{}).map(([id,kpi])=>
+      id+' '+(kpi.value===null?'no demand':Number(kpi.value.toFixed(1))+'% ('+kpi.served+'/'+kpi.demand+')')).join(', ');
+    lines.push('Last measured region indicators: '+describeKpis(state.stats)+' · support '+state.stats.support+'/100');
+    if(measure?.districtId)lines.push('Last measured indicators in '+district(measure.districtId)+': '+describeKpis(state.stats.districts[measure.districtId]));
+    const last=state.history.at(-1);
+    if(last){
+      const previousEvent=G.V3Events.card(last.event,lang);
+      const choice=previousEvent?.options.find(option=>option.id===last.event.choice);
+      lines.push('Last committed year '+last.year+' — '+[
+        previousEvent?.title,choice?.label,local(last.measure?.labels),'closing cash '+last.finance.cashEnd+' million RUB'
+      ].filter(Boolean).join(' · '));
+    }
+    let room=3600;
+    return lines.slice(0,12).map(line=>{
+      const text=limitText(line.replace(/\s+/gu,' '),Math.min(600,room));
+      room-=Array.from(text).length;
+      return text;
+    }).filter(Boolean);
+  }
   function explain(kind,state,quote,textLanguage){
     const l=(r,e,z)=>({ru:r,en:e,zh:z}[textLanguage]||r);
     const n=value=>new Intl.NumberFormat(l('ru-RU','en-GB','zh-CN'),{maximumFractionDigits:2}).format(value);
@@ -72,9 +170,7 @@
         const fastest=[...facts.sites].sort((a,b)=>a.year-b.year||a.capex-b.capex)[0];
         const reach=[...facts.sites].sort((a,b)=>b.served-a.served||a.capex-b.capex)[0];
         const equity=[...facts.sites].sort((a,b)=>b.south-a.south||a.capex-b.capex)[0];
-        const siteNames={yard:l('Во дворах','In the courtyards','居民院落'),bridge:l('У моста','By the bridge','桥边'),
-          south:l('Южная развилка','Southern junction','南部路口')};
-        const label=row=>siteNames[row.id]||row.id;
+        const label=row=>SCHOOL_SITES[row.id]?.[textLanguage]||row.id;
         const line=(caption,row)=>caption+' '+label(row)+' · '+row.year+' · '+n(row.served)+'/'+n(row.demand)+' · '+fmt(row.capex);
         return years+[line(l('Быстрее','Soonest','最早投入使用'),fastest),line(l('Больше мест','Widest coverage','覆盖最多'),reach),
           l('Южный квартал','Southern quarter','南部街区')+' · '+label(equity)+' · '+n(equity.south),l('Для площадки наибольшего охвата при закрытом мосте расчёт даёт','With the bridge closed the highest-reach site would serve','假设桥梁关闭，最高覆盖地块预计服务')+' '+n(reach.bridgeClosed)].join('\n');
@@ -87,11 +183,14 @@
       case 'event':
         return l('Откройте ситуацию на вкладке «Решения» и сравните действие сейчас со сроком результата.','Open the event under Decisions and compare each immediate action with the timing of its result.','在“决策”打开年度情境，比较当下行动和结果出现的时间。');
       default:
-        return l('Уточните цель — где найти команду, сравнить две площадки, оценить заём или проверить остаток.','Ask where to find a control, compare two sites, review a loan or check cash.','可询问如何找到操作、比较两个地块、评估贷款或核对结余。');
+        return l('Справка подскажет про налоги, заём, площадки или бюджет. Для беседы с ИИ-советником войдите в профиль РУДН.',
+          'Built-in help covers taxes, loans, sites and the budget. Sign in to your RUDN account to talk to the AI advisor.',
+          '内置帮助可解答税收、贷款、选址和预算问题。登录俄罗斯人民友谊大学账号可与 AI 顾问交流。');
     }
   }
   function create(api) {
     let pending=null;
+    const cloudAccount=api.studentKey!==undefined;
     function navigate(target) {
       const state=api.state();
       if(!state||state.attemptId!==target?.attemptId||state.revision!==target.revision||state.year!==target.year||
@@ -101,50 +200,75 @@
       return api.navigate(target.tab,target.anchor);
     }
     async function ask(raw,{retry=false,guide} = {}) {
-      const state=api.state(), question=String(raw).trim().slice(0,480);
+      const state=api.state(), question=limitText(raw,1200);
       if (!state||state.completed||!question) return null;
       if(pending)return pending;
       const localGuide=Object.hasOwn(GUIDES,guide)?guide:undefined;
-      const signature=api.quote()?.signature;
-      const same=api.messages().findLast(row=>row.question===question&&row.year===state.year&&row.signature===signature&&row.guide===localGuide);
+      const q=api.quote(),signature=q?.signature,l=api.language(),useCloud=cloudAccount&&!localGuide;
+      const messages=api.messages();
+      const isCloudAnswer=row=>row.mode==='cloud'&&row.model===MODEL&&row.status==='ok';
+      const same=messages.findLast(row=>row.question===question&&row.year===state.year&&row.signature===signature&&
+        row.guide===localGuide&&(!row.language||row.language===l)&&
+        (useCloud?isCloudAnswer(row)||row.status==='unavailable':row.mode==='local'&&row.status==='ok'));
       if(same&&(!retry||same.status==='ok'))return same;
       pending=(async()=>{
-        const requestId=same?.id??crypto.randomUUID(), l=api.language(), q=api.quote();
-        let kind=localGuide?'event':intent(question), mode='local', status='ok';
-        const localNavigation=localGuide||/^(где|как (открыть|найти)|where|how (do i find|to open)|怎么打开|在哪里)/iu.test(question);
-        if(api.enabled&&api.studentKey&&!localNavigation&&navigator.onLine){
+        const requestId=(!same?.newRequest&&same?.id)||crypto.randomUUID(),mode=useCloud?'cloud':'local';
+        let kind='unknown',status='ok',text,model,retryHistory,newRequest=false,failureCode;
+        if(useCloud){
+          retryHistory=same?.retryHistory??messages.filter(isCloudAnswer).slice(-3).map(row=>({
+            question:limitText(row.question,600),answer:limitText(row.text,900)
+          }));
           try{
+            if(!api.enabled||!navigator.onLine)throw Error('advisor/offline');
             const credential=await api.credential();
             if(!credential)throw Error('advisor/auth');
             const endpoint=new URL(api.enabled,location.href);
             if(endpoint.protocol!=='https:'&&endpoint.hostname!=='127.0.0.1'&&endpoint.hostname!=='localhost')throw Error('advisor/endpoint');
-            const model=factual(state,q);
+            const forecast=factual(state,q);
             const facts={
-              taxes:model.taxes.map(row=>({mode:row.id,annualMln:row.value})),
-              sites:model.sites.map(row=>({id:row.id,capex:row.capex,annualOpex:row.opex,openingYear:row.year,served:row.served,demand:row.demand})),
-              budget:{cash:state.finance.cash,cashEnd:model.budget.cash,reserve:model.budget.reserve,debt:model.budget.debt,
-                debtLimit:state.finance.debtLimit,shortfall:Math.max(0,-model.budget.cash)}
+              taxes:forecast.taxes.map(row=>({mode:row.id,annualMln:row.value})),
+              sites:(!state.draft.measureId||['defer','school-campus'].includes(state.draft.measureId)?forecast.sites:[]).map(row=>({
+                id:row.id,capex:row.capex,annualOpex:row.opex,openingYear:row.year,served:row.served,demand:row.demand
+              })),
+              budget:{cash:state.finance.cash,cashEnd:forecast.budget.cash,reserve:forecast.budget.reserve,debt:forecast.budget.debt,
+                debtLimit:state.finance.debtLimit,shortfall:Math.max(0,-forecast.budget.cash)}
             };
             const res=await fetch(endpoint,{method:'POST',headers:{authorization:'Bearer '+credential,'content-type':'application/json'},
-              signal:AbortSignal.timeout(9000),body:JSON.stringify({requestId,attemptId:state.attemptId,studentKey:api.studentKey,
-                revision:state.revision,year:state.year,language:l,question,facts})});
-            const data=res.ok?await res.json():null;
-            if(!INTENTS.has(data?.intent))throw Error('advisor/unavailable');
-            kind=data.intent;mode='cloud';
-          }catch{status='unavailable';}
+              signal:AbortSignal.timeout(26000),body:JSON.stringify({requestId,attemptId:state.attemptId,studentKey:api.studentKey,
+                revision:state.revision,year:state.year,language:l,question,facts,gameContext:planContext(state,q,l),history:retryHistory})});
+            const data=await res.json();
+            if(!res.ok){
+              failureCode=data?.error?.code;
+              throw Error('advisor/unavailable');
+            }
+            if(data?.model!==MODEL||typeof data.answer!=='string'||!data.answer.trim())throw Error('advisor/unavailable');
+            text=data.answer.trim();model=data.model;
+            if(INTENTS.has(data.intent))kind=data.intent;
+          }catch{
+            const quota=Object.hasOwn(QUOTA,failureCode)?QUOTA[failureCode]:null;
+            status=quota?'quota':'unavailable';
+            text=quota?.[l]??UNAVAILABLE[l]??UNAVAILABLE.ru;
+            newRequest=failureCode==='provider-unavailable'||failureCode==='provider-invalid';
+          }
+        }else{
+          kind=localGuide?'event':intent(question);
+          text=localGuide?(GUIDES[localGuide][l]||GUIDES[localGuide].ru):explain(kind,state,q,l);
         }
-        if(api.state()?.attemptId!==state.attemptId||api.state()?.year!==state.year||api.quote()?.signature!==signature)return null;
+        if(api.state()?.attemptId!==state.attemptId||api.state()?.revision!==state.revision||
+          api.state()?.year!==state.year||api.quote()?.signature!==signature)throw Error('advisor/context-changed');
         const [tab,anchor]=TARGETS[kind]||[];
         const target=tab?{tab,anchor,attemptId:state.attemptId,revision:state.revision,year:state.year,signature}:null;
-        const text=localGuide?(GUIDES[localGuide][l]||GUIDES[localGuide].ru):explain(kind,state,q,l);
-        const row={id:requestId,question,text,target,year:state.year,signature,mode,status};
+        const row={id:requestId,question,text,target,year:state.year,signature,mode,status,language:l};
+        if(model)row.model=model;
+        if(status==='unavailable')row.retryHistory=retryHistory;
+        if(newRequest)row.newRequest=true;
         if(localGuide)row.guide=localGuide;
-        await api.save([...api.messages().filter(message=>message.id!==row.id),row].slice(-12));
+        await api.save([...api.messages().filter(message=>message.id!==row.id&&message.id!==same?.id),row].slice(-12));
         return row;
       })();
       try{return await pending;}finally{pending=null;}
     }
-    return {messages:api.messages,ask,navigate,isPending:()=>Boolean(pending)};
+    return {messages:api.messages,ask,navigate,cloudAccount,isPending:()=>Boolean(pending)};
   }
   G.V3Advisor={create,intent,explain,factual};
 })(globalThis);

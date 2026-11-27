@@ -1,7 +1,8 @@
 import {createHash} from 'node:crypto';
 
 export const PRIVATE_ROOT = 'rudn-platform/v1/governorV3Advisor';
-export const INTENTS = ['tax','sites','loan','budget','route','compare','unknown'];
+export const MODEL = 'gpt-6.1-terra';
+export const INTENTS = ['tax','sites','loan','budget','route','compare','event','unknown'];
 export class AdvisorError extends Error {
   constructor(code,status) {super(code);this.code=code;this.status=status;}
 }
@@ -20,6 +21,8 @@ const district = value => ['suburb','north','river','industrial','capital'].incl
 const taxMode = value => ['low','moderate','high'].includes(value);
 const optional = (value, rule) => value===undefined || rule(value);
 const rows = (value, length, check) => Array.isArray(value) && value.length<=length && value.every(check);
+const length = value => Array.from(value).length;
+const shortText = (value, limit) => typeof value==='string' && value.trim().length>0 && length(value)<=limit;
 export function hash(text) {return createHash('sha256').update(text).digest('hex');}
 function matches(value, schema) {
   return isObject(value) && Object.keys(value).every(key=>Object.hasOwn(schema,key)) &&
@@ -34,13 +37,16 @@ const validFacts = value => matches(value,{
   budget:value=>optional(value,b=>matches(b,budgetFields)),
   route:value=>optional(value,r=>matches(r,{from:district,to:district,pupils:quantity,minutes:n=>number(n,0,240)}))
 });
+const validGameContext = value => rows(value,12,line=>shortText(line,600)) &&
+  value.reduce((total,line)=>total+length(line),0)<=3600;
+const validTurn = value => matches(value,{question:question=>shortText(question,600),answer:answer=>shortText(answer,900)});
 
 export function readRequest(body) {
-  if (!matches(body,{requestId:id,attemptId:id,studentKey:student,
+  if (!matches(body,{requestId:id,attemptId:id,studentKey:value=>value===null || student(value),
       year:value=>int(value,2026,2045),revision:value=>int(value,0,100_000),
       language:value=>['ru','en','zh'].includes(value),
-      question:value=>typeof value==='string' && value.trim().length>0 && Array.from(value).length<=1200,
-      facts:validFacts})) invalid();
+      question:value=>shortText(value,1200),facts:validFacts,
+      gameContext:value=>optional(value,validGameContext),history:value=>optional(value,history=>rows(history,3,validTurn))})) invalid();
   return {...body,question:body.question.trim()};
 }
 
@@ -54,23 +60,44 @@ export function requestSignature(request) {
   return hash(JSON.stringify(sorted(data)));
 }
 
-export function readResult(reply) {
-  if (!matches(reply,{intent:value=>INTENTS.includes(value)})) throw new AdvisorError('provider-invalid',502);
-  return reply;
+export function readResult(reply,privateValues=[]) {
+  if (!matches(reply,{intent:value=>INTENTS.includes(value),answer:value=>shortText(value,1800),model:value=>value===MODEL})) {
+    throw new AdvisorError('provider-invalid',502);
+  }
+  const answer = redact(reply.answer,privateValues);
+  if (!answer.replaceAll('[—]','').trim()) throw new AdvisorError('provider-invalid',502);
+  return {...reply,answer};
 }
 
-// These are published gameplay words and not a bag of student-entered tokens.
-// The provider never sees arbitrary identifiers, pasted profiles or raw chat.
-const gameplayWords = {
-  tax: ['налог','ставк','налоговая нагрузка','tax','levy','taxation','税','税负','税率'],
-  sites: ['участ','площад','школ','стро','здание','site','plot','school','build','construction','选址','学校','建设'],
-  loan: ['заём','заем','займ','долг','кредит','процент','погаш','loan','debt','borrow','repay','interest','贷款','借款','债务','利息'],
-  budget: ['бюджет','казн','резерв','дефицит','расход','остат','бюджета','budget','reserve','cash','deficit','expend','funds','财政','预算','赤字','储备'],
-  route: ['дорог','маршрут','мост','переправ','подвоз','карта','транспорт','route','bridge','bus','road','map','transport','道路','过河','路线','桥','校车','地图'],
-  compare: ['сравн','альтернатив','лучш','стратег','один или','дешев','быстр','compare','alternative','tradeoff','versus','strategy','best','比较','方案','策略','更好','区别']
-};
-export function providerFacts(request) {
-  const text = request.question.normalize('NFKC').toLocaleLowerCase(request.language);
-  const terms = Object.entries(gameplayWords).flatMap(([intent,words])=>words.filter(word=>text.includes(word)).map(word=>({intent,word})));
-  return {language:request.language, year:request.year, facts:request.facts, terms:terms.slice(0,24)};
+const privatePatterns = [
+  /[\p{L}\p{N}._%+-]+@[\p{L}\p{N}.-]+\.[\p{L}]{2,}/gu,
+  /\b(?:https?:\/\/|www\.)[^\s<>"'()]+/giu,
+  /\bBearer\s+[\w.~+\/=:-]+/gi,
+  /\b(?:sk|rk|pk)-[\w-]{10,}\b|\beyJ[\w-]+\.[\w-]+\.[\w-]+\b/g,
+  /(?:\b(?:api[ _-]?key|token|password|secret|uid|email|student[ _-]?key)\b|ключ\s+(?:API|доступа)|пароль|токен|учётный\s+номер|номер\s+(?:зач[её]тки|студ(?:енческого)?(?:\s+билета)?)|密码|令牌|密钥|学号)\s*[:=：]\s*(?:"[^"]*"|'[^']*'|[^\s,;，；]+)/giu,
+  /(?:\b(?:home address|full name)\b|домашний\s+адрес|адрес\s+проживания|ФИО|姓名|家庭地址|住址)\s*[:=：]\s*[^.!?;。！？；]{2,150}/giu,
+  /(?<!\d)\+\d(?:[\s()（）.-]*\d){9,14}(?!\d)|(?<!\d)(?:\+?7|8)\s*[(（]\d{3}[)）](?:[\s-]*\d){7}(?!\d)|\b\d{8,20}\b/g
+];
+function redact(value,privateValues) {
+  let text = Array.from(value.normalize('NFC'),char=>/[！，。？；：（）]/u.test(char)?char:char.normalize('NFKC')).join('')
+    .replace(/\p{Cf}/gu,'').replace(/\p{Cc}/gu,' ');
+  for (const marker of privateValues) {
+    text = text.replaceAll(marker,'[—]');
+  }
+  for (const pattern of privatePatterns) text = text.replace(pattern,'[—]');
+  return text.replace(/\s+/gu,' ').trim();
+}
+
+export function identityMarkers(request,identity) {
+  return [...new Set([request.attemptId,request.requestId,request.studentKey,identity.studentKey,identity.uid]
+    .filter(value=>typeof value==='string' && value.length>0))];
+}
+
+export function providerFacts(request,privateValues=[]) {
+  const clean = value => redact(value,privateValues);
+  return {
+    language:request.language,year:request.year,facts:request.facts,question:clean(request.question),
+    gameContext:(request.gameContext??[]).map(clean).filter(Boolean),
+    history:(request.history??[]).map(({question,answer})=>({question:clean(question),answer:clean(answer)}))
+  };
 }

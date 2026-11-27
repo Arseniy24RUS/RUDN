@@ -5,9 +5,9 @@ import {handle} from './gateway.mjs';
 import {onValueWritten} from 'firebase-functions/v2/database';
 import {diagnosticsHandler,diagnosticsRuntime} from './diagnostics-http.mjs';
 import {receptionHandler,RECEPTION_OPENAI_SECRET} from './reception-ai/http.mjs';
-import {governorV3AdvisorHandler,GOVERNOR_V3_ADVISOR_SECRET} from './governor-v3-advisor/http.mjs';
+import {governorV3AdvisorHandler} from './governor-v3-advisor/http.mjs';
 
-export const governorV3Advisor=onRequest({region:'europe-west1',memory:'256MiB',cpu:1,concurrency:12,minInstances:0,maxInstances:2,timeoutSeconds:25,invoker:'public',cors:false,secrets:[GOVERNOR_V3_ADVISOR_SECRET]},governorV3AdvisorHandler);
+export const governorV3Advisor=onRequest({region:'europe-west1',memory:'256MiB',cpu:1,concurrency:12,minInstances:0,maxInstances:2,timeoutSeconds:30,invoker:'public',cors:false,secrets:[RECEPTION_OPENAI_SECRET]},governorV3AdvisorHandler);
 
 export const receptionApi=onRequest({region:'europe-west1',memory:'512MiB',cpu:1,concurrency:16,minInstances:0,maxInstances:2,timeoutSeconds:120,invoker:'public',cors:false,secrets:[RECEPTION_OPENAI_SECRET]},receptionHandler);
 
