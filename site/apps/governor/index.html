@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="release.css">
   <link rel="stylesheet" href="platform.css">
   <link rel="stylesheet" href="campaign.css">
+  <link rel="stylesheet" href="v3.css">
+  <link rel="stylesheet" href="v3-motion.css">
 </head>
 <body>
   <header class="platform-bar" aria-label="Образовательная платформа РУДН">
@@ -50,7 +52,6 @@
         </div>
         <div class="start-utilities">
           <button class="icon-button" id="start-language" type="button" aria-label="Переключить язык">EN</button>
-          <button class="icon-button" id="start-sound" type="button" aria-label="Звуки интерфейса"></button>
         </div>
       </header>
 
@@ -151,7 +152,6 @@
         </div>
 
         <div class="profile-box">
-          <button class="icon-button" id="sound-toggle" type="button" aria-label="Звуки интерфейса"></button>
           <button class="language-button" id="language-toggle" type="button" aria-label="Переключить язык">EN</button>
           <button class="profile-button" id="profile-button" type="button" aria-label="Профиль игрока">
             <span class="profile-avatar" id="profile-avatar">Г</span>
@@ -355,6 +355,7 @@
   <script src="src/learning.js"></script>
   <script src="src/release-ui.js"></script>
   <script src="src/campaign-ui.js"></script>
+<div id="governor-v3" hidden></div>
   <script type="module" src="src/resource-url.js"></script>
   <script type="module" src="platform-bridge.js"></script>
 </body>

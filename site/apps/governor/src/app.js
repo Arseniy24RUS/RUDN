@@ -48,7 +48,6 @@
   let selectedPlacementId = null;
   let resolutionShown = false;
   const copy = (ru, en, zh) => language === 'zh' ? zh : language === 'en' ? en : ru;
-  let audioContext = null;
   let savedState = loadSavedState();
   let metaState = loadMetaState();
   const toastQueue = [];
@@ -423,8 +422,6 @@
       'support-icon': ['people', 23],
       'development-icon': ['development', 23],
       'turn-icon': ['hourglass', 25],
-      'start-sound': ['sound', 20],
-      'sound-toggle': ['sound', 20],
       'reward-xp-icon': ['sparkles', 17],
       'reward-stars-icon': ['quest', 17],
       'confirm-arrow': ['arrow', 18],
@@ -472,7 +469,6 @@
     populateChallengeOptions();
     updateStartScenarioPreview();
     updateChallengePreview();
-    updateSoundButtons();
     updateRecoverySetup();
     if (state) {
       state.language = language;
@@ -530,7 +526,7 @@
     const scenarioId = $('#scenario-select').value || 'random';
     const seed = $('#session-seed').value.trim() || 'RUDN-2026';
     const challengeId = $('#challenge-select') ? $('#challenge-select').value : 'standard';
-    const preview = Engine.createState({ name: '', group: '', scenarioId, challengeId, seed, language, soundEnabled: true });
+    const preview = Engine.createState({ name: '', group: '', scenarioId, challengeId, seed, language });
     return Engine.getScenario(preview);
   }
 
@@ -552,60 +548,6 @@
     language=next;
     savePrefs({ language });
     applyTranslations();
-  }
-
-  function currentSoundEnabled() {
-    if (state) return state.soundEnabled !== false;
-    const prefs = getPrefs();
-    return prefs.soundEnabled !== false;
-  }
-
-  function toggleSound() {
-    const next = !currentSoundEnabled();
-    savePrefs({ soundEnabled: next });
-    if (state) {
-      state.soundEnabled = next;
-      saveState(false);
-    }
-    updateSoundButtons();
-    if (next) playSound('select');
-  }
-
-  function updateSoundButtons() {
-    const enabled = currentSoundEnabled();
-    ['start-sound', 'sound-toggle'].forEach(id => {
-      const button = document.getElementById(id);
-      if (!button) return;
-      button.innerHTML = icon(enabled ? 'sound' : 'mute', { size: 20 });
-      button.setAttribute('aria-pressed', String(enabled));
-      button.setAttribute('title', t('sound'));
-    });
-  }
-
-  function playSound(type) {
-    if (!currentSoundEnabled()) return;
-    try {
-      audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
-      if (audioContext.state === 'suspended') audioContext.resume().catch(() => {});
-      const now = audioContext.currentTime;
-      const notes = type === 'confirm'
-        ? [{ f: 440, d: 0 }, { f: 554, d: 0.07 }, { f: 659, d: 0.14 }]
-        : type === 'warning'
-          ? [{ f: 210, d: 0 }, { f: 165, d: 0.08 }]
-          : [{ f: 520, d: 0 }];
-      notes.forEach((note, index) => {
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        oscillator.type = type === 'warning' ? 'triangle' : 'sine';
-        oscillator.frequency.value = note.f;
-        gain.gain.setValueAtTime(0.0001, now + note.d);
-        gain.gain.exponentialRampToValueAtTime(index === 0 ? 0.06 : 0.045, now + note.d + 0.01);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + note.d + 0.13);
-        oscillator.connect(gain).connect(audioContext.destination);
-        oscillator.start(now + note.d);
-        oscillator.stop(now + note.d + 0.15);
-      });
-    } catch (_) {}
   }
 
   function setupAgendaUI() {
@@ -671,7 +613,7 @@
       error.textContent = globalThis.GovernorGame.I18n.choose(language,()=>('Укажите имя персонажа. Учебная группа необязательна.'),()=>('Enter a character name. A student group is optional.'));
       $('#player-name').setAttribute('aria-invalid','true');
       $('#player-name').focus();
-      playSound('warning');
+
       return;
     }
     $('#player-name').removeAttribute('aria-invalid');
@@ -687,8 +629,7 @@
       challengeId: $('#challenge-select').value,
       campaignMode: $('#campaign-mode').value,
       seed: $('#session-seed').value.trim(),
-      language,
-      soundEnabled: currentSoundEnabled()
+      language
     });
     CampaignUI.start(nextState,campaignOptions);
     try{await store.replaceDurably(nextState,Platform?.currentRun?.());}
@@ -704,7 +645,7 @@
     resolutionShown = false;
     saveState(false);
     showGame();
-    playSound('confirm');
+
   }
 
   function continueSavedCampaign(options={}) {
@@ -845,7 +786,6 @@
     $('#profile-avatar').textContent = initials(state.profile.name);
     $('#profile-name').textContent = state.profile.name;
     $('#profile-level').textContent = `${t('level')} ${Engine.getLevel(state)} · ${state.stars} ★`;
-    updateSoundButtons();
   }
 
   function renderNavigation() {
@@ -895,7 +835,7 @@
           selectedPlacementId=state.selectedPlacementId;
           d.close();saveState(false);
           if(result.pendingBudgetReview){renderGame();BudgetReviewUI.open();return;}
-          playSound('confirm');continueAfterResolution(result.newBadges);
+          continueAfterResolution(result.newBadges);
         }catch(e){
           const note=host.querySelector('.renew-error');note.hidden=false;note.textContent=financialReason(e.message,language)||e.message;
         }
@@ -1144,13 +1084,13 @@
     if (!preview) return;
     if (!preview.affordable) {
       toast(t('fundingUnavailable'), financialReason(preview.plan?.reasonCode,language)||`${t('budget')}: ${formatBudget(state.stats.budget, false)}`, 'warning');
-      playSound('warning');
+
       return;
     }
     selectedActionId = actionId;
     selectedFundingMode = preview.plan.id;
     selectedPlacementId = preview.recommendedPlacementId || null;
-    playSound('select');
+
     renderMissionPanel();
     CampaignUI.refresh(Boolean(selectedActionId));
     const mission = Engine.getCurrentMission(state);
@@ -1291,7 +1231,7 @@
         selectedActionId = null;
         selectedFundingMode = null;
         selectedPlacementId = null;
-        playSound('select');
+
         renderMissionPanel();
         requestAnimationFrame(() => scrollMissionToTop('smooth'));
         saveState(false);
@@ -1301,7 +1241,7 @@
     container.querySelectorAll('[data-funding-mode]').forEach(button => {
       button.addEventListener('click', () => {
         selectedFundingMode = button.dataset.fundingMode;
-        playSound('select');
+
         renderMissionPanel();
         container.querySelector(`[data-funding-mode="${CSS.escape(selectedFundingMode)}"]`)?.focus({preventScroll:true});
         $('#screen-reader-live').textContent = `${t('fundingTitle')}: ${fundingName(selectedFundingMode)}`;
@@ -1313,7 +1253,7 @@
         selectedPlacementId = button.dataset.placementId;
         const updated = Engine.previewAction(state, selectedActionId, selectedFundingMode, selectedPlacementId);
         if (updated && updated.plan && updated.plan.available) selectedFundingMode = updated.plan.id;
-        playSound('select');
+
         renderMissionPanel();
         container.querySelector(`[data-placement-id="${CSS.escape(selectedPlacementId)}"]`)?.focus({preventScroll:true});
         $('#screen-reader-live').textContent = `${t('location')}: ${l(updated.placement.title)}`;
@@ -1377,7 +1317,7 @@
       $('#secondary-stage').scrollTop = 0;
       if (view!=='agenda' && window.innerWidth <= 900) $('#secondary-stage').scrollIntoView({ behavior:'auto', block:'start' });
     }
-    playSound('select');
+
     CampaignUI.refresh(Boolean(selectedActionId));
   }
 
@@ -1635,14 +1575,11 @@
       <section class="meta-campaign-card"><span>${icon('trophy', { size: 29 })}</span><div><small>${esc(t('replayProgress'))}</small><h3>${metaState.campaignsCompleted} ${esc(t('campaignsCompleted').toLowerCase())}</h3><p>${esc(t(challenge.descriptionKey))}</p></div><b>×${formatNumber(challenge.rewardMultiplier, 1)}</b></section>
       <div class="settings-stack">
         <div class="settings-row"><span>${icon('quest', { size: 22 })}</span><div><strong>${esc(t('challengeActive'))}</strong><small>${esc(t(challenge.nameKey))} · ${esc(t(challenge.descriptionKey))}</small></div></div>
-        <div class="settings-row"><span>${icon(currentSoundEnabled() ? 'sound' : 'mute', { size: 22 })}</span><div><strong>${esc(t('sound'))}</strong><small>${globalThis.GovernorGame.I18n.choose(language,()=>('Короткие сигналы выбора, подтверждения и предупреждения.'),()=>('Short selection, confirmation and warning cues.'))}</small></div><button id="settings-sound" class="switch ${currentSoundEnabled() ? 'on' : ''}" type="button" role="switch" aria-checked="${currentSoundEnabled()}"></button></div>
         <div class="settings-row"><span>${icon('globe', { size: 22 })}</span><div><strong>${esc(t('language'))}</strong><small>Русский / English / 中文</small></div><button id="settings-language" class="language-button" type="button">${window.GovernorGame.I18n.ready()?{ru:'EN',en:'中文',zh:'RU'}[language]:language==='ru'?'EN':'RU'}</button></div>
         <div class="settings-row"><span>${icon('download', { size: 22 })}</span><div><strong>${esc(copy('Перенести или восстановить партию','Transfer or restore a game','转移或恢复游戏'))}</strong></div><button id="settings-saves" class="secondary-button" type="button">${esc(copy('Открыть','Open','打开'))}</button></div>
         <div class="settings-row"><span>${icon('refresh', { size: 22 })}</span><div><strong>${esc(t('restart'))}</strong><small>${globalThis.GovernorGame.I18n.choose(language,()=>('Автосохранение кампании будет удалено, но открытые режимы сохранятся.'),()=>('The campaign autosave will be deleted, while unlocked modes remain.'))}</small></div><button id="settings-restart" class="secondary-button" type="button" style="min-height:42px;padding:0 14px;color:#a63b3b">${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Сбросить'),()=>('Restart')))}</button></div>
       </div>`;
     window.GovernorGame.ReleaseUI.reportButton(stage.querySelector('.settings-stack'));
-    $('#settings-sound').setAttribute('aria-label', t('sound'));
-    $('#settings-sound').addEventListener('click', () => { toggleSound(); renderSettingsView(stage); });
     $('#settings-language').addEventListener('click', toggleLanguage);
     $('#settings-saves').addEventListener('click', openSaveManager);
     $('#settings-restart').addEventListener('click', restartCampaign);
@@ -1664,7 +1601,7 @@
   function commitSelectedAction() {
     if (blockedByOtherTab || !writerReady || !selectedActionId || state.awaitingContinue || state.completed) {
       toast(t('noDecisionYet'), '', 'warning');
-      playSound('warning');
+
       return;
     }
     try {
@@ -1673,12 +1610,12 @@
       if(result.pendingBudgetReview){saveState(false);$('#negotiation-dialog')?.close();renderGame();BudgetReviewUI.open();return;}
       selectedPlacementId = state.selectedPlacementId;
       saveState(false);
-      playSound('confirm');
+
       $('#negotiation-dialog')?.close();
       continueAfterResolution(result.newBadges);
     } catch (error) {
       toast(globalThis.GovernorGame.I18n.choose(language,()=>('Решение не принято'),()=>('Decision not confirmed')), error.message, 'warning');
-      playSound('warning');
+
     }
   }
 
@@ -1783,7 +1720,7 @@
     renderGame();
     if(result.completed){
       const unlocked=recordCompletedCampaign();
-      playSound('confirm');launchConfetti(70);
+      launchConfetti(70);
       showEndScreen();
       showBadgeToasts(badges, unlocked);
       return;
@@ -1806,7 +1743,7 @@
     const memories = (state.advisorMemories[advisorId] || []).slice().reverse();
     $('#advisor-dialog-content').innerHTML = `<div class="advisor-dialog-card stage3"><div class="advisor-dialog-profile"><div class="advisor-dialog-portrait"><img src="${esc(assetURL(advisor.image))}" alt=""><span style="--trust:${trust}%"><b>${formatNumber(trust, 0)}</b></span></div><div><p class="dialog-eyebrow">${esc(l(advisor.role))}</p><h2>${esc(l(advisor.name))}</h2><p class="principle">${esc(l(advisor.principle))}</p></div></div><div class="advisor-quote">«${esc(l(mission.advisors?.[advisor.id] || advisor.principle))}»</div><div class="advisor-memory-section"><p class="dialog-eyebrow">${esc(t('advisorMemory'))}</p><p class="advisor-memory-principle">${esc(l(advisor.memory || advisor.principle))}</p>${memories.length ? memories.map(memory => { const pair = actionForRecord(memory); return `<div class="advisor-memory-row ${memory.stance}"><span>${icon(memory.stance === 'support' ? 'check' : memory.stance === 'oppose' ? 'conflict' : 'info', { size: 15 })}</span><div><small>${esc(pair.mission ? l(pair.mission.title) : memory.missionId)} · ${esc(deliveryLabel(memory.delivery))}</small><strong>${esc(pair.action ? l(pair.action.title) : memory.actionId)}</strong></div><b>${formatSigned(memory.trustDelta)}</b></div>`; }).join('') : `<div class="interaction-empty">${icon('journal', { size: 15 })}<span>${esc(globalThis.GovernorGame.I18n.choose(language,()=>('Советник ещё не видел ваших решений.'),()=>('The adviser has not observed a decision yet.')))}</span></div>`}</div></div>`;
     $('#advisor-dialog').showModal();
-    playSound('select');
+
   }
 
   function showDistrictDialog(districtId) {
@@ -1831,7 +1768,7 @@
     peopleButton.addEventListener('click', () => { $('#district-dialog').close(); state.residentSelection = districtId; setView('residents'); });
     $('#district-dialog-content').appendChild(peopleButton);
     $('#district-dialog').showModal();
-    playSound('select');
+
   }
 
   function showProfileDialog() {
@@ -1993,8 +1930,6 @@
     $('#session-seed').addEventListener('input', updateStartScenarioPreview);
     $('#start-language').addEventListener('click', toggleLanguage);
     $('#language-toggle').addEventListener('click', toggleLanguage);
-    $('#start-sound').addEventListener('click', toggleSound);
-    $('#sound-toggle').addEventListener('click', toggleSound);
     $('#confirm-action').addEventListener('click', confirmSelectedAction);
     $('#continue-turn').addEventListener('click', () => continueAfterResolution());
     $('#profile-button').addEventListener('click', showProfileDialog);

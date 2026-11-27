@@ -2,6 +2,7 @@ import {createUpdateAdapter,captureUpdateView,restoreUpdateView} from '../../ass
 import {bootstrapUpdateCoordinator,UPDATE_PENDING_KEY} from '../../assets/js/platform-update-coordinator.js';
 import {getSharedPlatformDiagnostics} from '../../assets/js/diagnostics.js';
 import {resourceURL,getReleaseContext} from '../../assets/js/release-resources.js';
+import {CONFIG} from '../../assets/js/config.js?v=1.3.10';
 import {backend} from '../../assets/js/backend.js?v=1.3.10';
 import {attemptOwner} from '../../assets/js/attempt-session.js?v=1.3.10';
 import {getLocale,setLocale} from '../../assets/js/i18n.js?v=1.3.10';
@@ -31,6 +32,7 @@ const free=context==='free',activitySlug=free?'governor-freeplay':'seminar-7';
 const courseUrl=new URL(free?'../../#games':'../../#activity/seminar-7',import.meta.url).href;
 const currentOwner=()=>attemptOwner()==='guest'&&free?'guest:governor':attemptOwner();
 let owner=null,active=false,storage=null,run=null,runtime=null,started=false,submissionBusy=false,reflectionBusy=false;
+let v3Runtime;
 let reflectionFailure='';
 const storageValues=new Map(),pendingCheckpoints=new Set();
 let latestSaveStatus=null,updateAdapter=null,updateCoordinator=null,updatePaused=false;
@@ -122,15 +124,21 @@ function renderAssessment(assessment){
 function block(reason){
   if(runtime?.state())checkpointCampaign(runtime.state());
   active=false;
+  v3Runtime?.freeze();
+  const v3=$('#governor-v3');
+  if(v3)v3.hidden=true;
+  document.body.classList.remove('governor-v3-active');
   runtime?.freeze();
   document.querySelectorAll('dialog[open]').forEach(d=>d.close());
-  $('#app').hidden=true;$('#app').inert=true;
+  const historic=$('#app');if(historic){historic.hidden=true;historic.inert=true;}
   $('#platform-loading').hidden=false;$('#platform-loading-text').textContent=reason;
   $('#platform-report').disabled=true;message(reason);
 }
 function identityChanged(){
   if(!started){tryStart();return;}
+  if(!active)return;
   if(!sameOwner())block(free?tr('Профиль изменился. Вернитесь к играм; партия прежнего пользователя сохранена отдельно.','Your profile changed. Return to Games; the previous user’s campaign is stored separately.','账号已更改。请返回游戏目录；此前玩家的进度已单独保存。'):tr('Профиль или доступ изменился. Вернитесь в раздел 7; партия прежнего пользователя сохранена отдельно.','Your profile or access changed. Return to section 7; the previous user’s campaign is stored separately.'));
+  else if(v3Runtime)v3Runtime.refresh();
   else refresh();
 }
 function reflectionParent(){return run?stored('submission:'+run.submissionId)||backend.localAttempts().find(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner):null;}
@@ -296,6 +304,12 @@ async function tryStart(){
   const restored=await backend.loadDraft({owner,activitySlug,mode:'campaign'});
   if(!sameOwner())return;
   const localStore=new G.Saves.Store(storage),localResult=localStore.inspect(),localRaw=localStore.raw();
+  const hasHistoric=Boolean(localRaw||restored?.state?.campaign||run);
+  const useHistoric=hasHistoric&&(!free||gameRoute.get('edition')==='legacy');
+  if(!useHistoric){
+    await startV3(loadEnd,hasHistoric);
+    return;
+  }
   // Authored fields in existing reports can have been saved in any language.
   if(localRaw||restored?.state?.campaign||run)await G.I18n.ensureCatalog();
   if(!sameOwner())return;
@@ -344,6 +358,54 @@ async function tryStart(){
   await loadApplication(loadEnd);
 }
 
+let v3Dependencies;
+function loadV3(){
+  if(!v3Dependencies){
+    const list=['v3-event-bank','v3-event-copy','v3-event-art','v3-events','v3-rules','v3-store','v3-advisor','v3-motion','v3-runtime','v3-ui'];
+    v3Dependencies=Promise.all(list.map(name=>new Promise((resolve,reject)=>{
+      const script=document.createElement('script');
+      script.async=false;
+      script.src=resourceURL('./src/'+name+'.js',import.meta.url).href;
+      script.onload=resolve;
+      script.onerror=()=>reject(Error('governor-v3/load:'+name));
+      document.head.append(script);
+    })));
+  }
+  return v3Dependencies;
+}
+
+async function startV3(loadEnd,hasHistoric){
+  try{
+    await loadV3();
+    if(!sameOwner())return;
+    const current=await backend.loadDraft({owner,activitySlug,mode:G.V3Runtime.draftMode});
+    if(!sameOwner())return;
+    let legacyURL;
+    if(free&&hasHistoric){
+      const archive=new URL(location.href);archive.searchParams.set('edition','legacy');legacyURL=archive.href;
+    }
+    v3Runtime=await G.V3Runtime.mount($('#governor-v3'),{
+      owner,context,language,backend,preview:backend.isAdmin()&&!free,
+      canWrite:sameOwner,setLanguage:next=>{language=next;setLocale(next);G.I18n.shell(document,next);},
+      credential:()=>backend.user?.getIdToken(),advisorEnabled:CONFIG.governorAdvisorUrl,
+      legacyURL,exit:()=>location.assign(courseUrl)
+    }, current?.state?.governorV3);
+    if(!sameOwner()){v3Runtime.freeze();return;}
+    document.body.classList.add('governor-v3-active');
+    $('#app')?.remove();
+    $('#platform-loading').hidden=true;
+    $('#governor-v3').hidden=false;
+    document.querySelector('.skip-link').href='#v3-heading';
+    document.documentElement.dataset.appReady='true';
+    loadEnd({success:true});diagnostics.record('module-ready',{success:true});
+    window.dispatchEvent(new Event('governor:playable'));
+  }catch(error){
+    loadEnd({success:false,code:'load-failed'});
+    diagnostics.error(error,{event:'module-error',operation:'load'});
+    block(tr('Не удалось открыть сохранённую попытку. Обновите страницу или вернитесь в раздел 7.','Could not open the saved attempt. Reload or return to section 7.','无法打开已保存的尝试。请重新加载页面或返回第7节。'));
+  }
+}
+
 async function loadApplication(loadEnd){
   try{
     await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=resourceURL('./src/app.js',import.meta.url).href;script.onload=resolve;script.onerror=reject;document.body.append(script);});
@@ -385,13 +447,14 @@ if('serviceWorker'in navigator){
   let preparing=false,moduleReady=false,canPrepare=false;
   const updateOfflineStatus=()=>{
     const element=$('#offline-status');if(!element)return;
-    element.dataset.platformOffline=moduleReady?'ready':'pending';
+    const desired=moduleReady?'ready':'pending';if(element.dataset.platformOffline===desired)return;
+    element.dataset.platformOffline=desired;
     element.textContent=moduleReady
       ?tr('Готово к работе без сети','Ready for offline use')
       :tr('Автономное приложение · ресурсы загружаются','Standalone app · resources loading');
   };
   // Cached resources may be acknowledged before Auth has mounted the game UI.
-  const statusMount=new MutationObserver(()=>{if($('#offline-status')){updateOfflineStatus();statusMount.disconnect();}});
+  const statusMount=new MutationObserver(()=>{if($('#offline-status'))updateOfflineStatus();});
   statusMount.observe(document.body,{childList:true,subtree:true});
   const prepare=()=>{
     if(!canPrepare||preparing||moduleReady||!navigator.serviceWorker.controller)return;

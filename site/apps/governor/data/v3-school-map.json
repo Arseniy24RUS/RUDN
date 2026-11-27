@@ -1,0 +1,354 @@
+{
+  "schemaVersion": "1.0",
+  "id": "school-siting-method-v1",
+  "locale": "ru",
+  "usage": "Синтетический проверочный район из 1000 школьников. Проверяет ценность выбора участка. Не заданная партия РУДН, не отображение современной статистики и не реальные нормативы. Денежные цены в миллионах условных рублей.",
+  "decisionYear": 2026,
+  "horizonEndYear": 2031,
+  "policy": {
+    "walkingLimitMinutes": 20,
+    "thresholdInclusive": true,
+    "route": "кратчайшее время по действующему симметричному графу, минуты в одну сторону; для контрольного примера общий учебный порог для 7–17 лет",
+    "objective": "максимизировать число получивших место, затем минимизировать суммарные минуты в одну сторону, повторяемые равенства по ID",
+    "annualAssumptions": "фиксированные когорты, одинаковые во все годы. Все желающие имеют одну заявку; переезды, подвоз и вторая смена отключены. Муниципальный ID всех микрорайонов — suburb.",
+    "accounting": "капитальные платежи по числу строительных лет, первая выплата в конце 2026; полное содержание начиная с года ввода. При пропуске ставки дисконтирования суммы номинальные."
+  },
+  "nodes": [
+    {
+      "id": "w",
+      "name": "Старый квартал",
+      "x01": 0.75,
+      "y01": 0.28
+    },
+    {
+      "id": "c",
+      "name": "Центральные дворы",
+      "x01": 0.48,
+      "y01": 0.43
+    },
+    {
+      "id": "e",
+      "name": "Заречье",
+      "x01": 0.8,
+      "y01": 0.7
+    },
+    {
+      "id": "s",
+      "name": "Южный квартал",
+      "x01": 0.16,
+      "y01": 0.87
+    },
+    {
+      "id": "b",
+      "name": "Западный въезд на мост",
+      "x01": 0.52,
+      "y01": 0.54
+    },
+    {
+      "id": "j",
+      "name": "Южная развилка",
+      "x01": 0.29,
+      "y01": 0.73
+    },
+    {
+      "id": "old",
+      "name": "Старая школа",
+      "x01": 0.77,
+      "y01": 0.23
+    },
+    {
+      "id": "other",
+      "name": "Действующая школа за рекой",
+      "x01": 0.84,
+      "y01": 0.67
+    },
+    {
+      "id": "yard",
+      "name": "Участок во дворах",
+      "x01": 0.69,
+      "y01": 0.24
+    },
+    {
+      "id": "bridge",
+      "name": "Участок у моста",
+      "x01": 0.52,
+      "y01": 0.49
+    },
+    {
+      "id": "south",
+      "name": "Участок у южной развилки",
+      "x01": 0.26,
+      "y01": 0.77
+    }
+  ],
+  "roads": [
+    {
+      "id": "w-c",
+      "from": "w",
+      "to": "c",
+      "minutes": 12
+    },
+    {
+      "id": "c-b",
+      "from": "c",
+      "to": "b",
+      "minutes": 8
+    },
+    {
+      "id": "bridge-crossing",
+      "from": "b",
+      "to": "e",
+      "minutes": 12
+    },
+    {
+      "id": "c-j",
+      "from": "c",
+      "to": "j",
+      "minutes": 13
+    },
+    {
+      "id": "j-s",
+      "from": "j",
+      "to": "s",
+      "minutes": 10
+    },
+    {
+      "id": "old-gate",
+      "from": "w",
+      "to": "old",
+      "minutes": 3
+    },
+    {
+      "id": "east-gate",
+      "from": "e",
+      "to": "other",
+      "minutes": 4
+    },
+    {
+      "id": "yard-gate",
+      "from": "w",
+      "to": "yard",
+      "minutes": 2
+    },
+    {
+      "id": "bridge-gate",
+      "from": "b",
+      "to": "bridge",
+      "minutes": 2
+    },
+    {
+      "id": "south-gate",
+      "from": "j",
+      "to": "south",
+      "minutes": 1
+    }
+  ],
+  "zones": [
+    {
+      "id": "west",
+      "name": "Старый квартал",
+      "municipalityId": "suburb",
+      "node": "w",
+      "pupilsByAge": {
+        "7-10": 96,
+        "11-17": 184
+      }
+    },
+    {
+      "id": "core",
+      "name": "Центральные дворы",
+      "municipalityId": "suburb",
+      "node": "c",
+      "pupilsByAge": {
+        "7-10": 70,
+        "11-17": 110
+      }
+    },
+    {
+      "id": "east",
+      "name": "Заречье",
+      "municipalityId": "suburb",
+      "node": "e",
+      "pupilsByAge": {
+        "7-10": 155,
+        "11-17": 265
+      }
+    },
+    {
+      "id": "southern",
+      "name": "Южный квартал",
+      "municipalityId": "suburb",
+      "node": "s",
+      "pupilsByAge": {
+        "7-10": 48,
+        "11-17": 72
+      }
+    }
+  ],
+  "baselineSchools": [
+    {
+      "id": "old-school",
+      "name": "Старая школа",
+      "node": "old",
+      "physicalSeats": 450,
+      "staffedSeats": 420
+    },
+    {
+      "id": "east-school",
+      "name": "Школа Заречья",
+      "node": "other",
+      "physicalSeats": 180,
+      "staffedSeats": 160
+    }
+  ],
+  "newSchool": {
+    "id": "new-campus-01",
+    "name": "Новая школа",
+    "physicalSeats": 380,
+    "staffedSeats": 340
+  },
+  "sites": [
+    {
+      "id": "yard",
+      "label": "Во дворах",
+      "node": "yard",
+      "capexMillion": {
+        "campus": 1600,
+        "sitePreparation": 30,
+        "connections": 40
+      },
+      "annualOpexMillion": {
+        "core": 72,
+        "siteOverhead": 4
+      },
+      "paymentScheduleMillion": [
+        668,
+        1002
+      ],
+      "marker": "A"
+    },
+    {
+      "id": "bridge",
+      "label": "У моста",
+      "node": "bridge",
+      "capexMillion": {
+        "campus": 1600,
+        "sitePreparation": 320,
+        "connections": 240
+      },
+      "annualOpexMillion": {
+        "core": 72,
+        "siteOverhead": 10
+      },
+      "paymentScheduleMillion": [
+        432,
+        648,
+        648,
+        432
+      ],
+      "marker": "B"
+    },
+    {
+      "id": "south",
+      "label": "Южная развилка",
+      "node": "south",
+      "capexMillion": {
+        "campus": 1600,
+        "sitePreparation": 140,
+        "connections": 200
+      },
+      "annualOpexMillion": {
+        "core": 72,
+        "siteOverhead": 8
+      },
+      "paymentScheduleMillion": [
+        582,
+        776,
+        582
+      ],
+      "marker": "C"
+    }
+  ],
+  "sensitivity": {
+    "closedRoad": "bridge-crossing",
+    "description": "После ввода перекрыта единственная переправа. Время на дороге не заменяется прямой линией на рисунке."
+  },
+  "expected": {
+    "baseline": {
+      "served": 580,
+      "demand": 1000,
+      "coveragePct": 58.0,
+      "servedByZone": {
+        "west": 280,
+        "core": 140,
+        "east": 160,
+        "southern": 0
+      },
+      "pupilMinutesOneWay": 3580,
+      "meanTripMinutesServed": 6.17,
+      "lowestZoneCoveragePct": 0.0
+    },
+    "sites": {
+      "yard": {
+        "served": 620,
+        "demand": 1000,
+        "coveragePct": 62.0,
+        "servedByZone": {
+          "west": 280,
+          "core": 180,
+          "east": 160,
+          "southern": 0
+        },
+        "pupilMinutesOneWay": 3840,
+        "meanTripMinutesServed": 6.19,
+        "lowestZoneCoveragePct": 0.0,
+        "firstServiceYear": 2028,
+        "capexMillion": 1670,
+        "annualOpexMillion": 76,
+        "spendThrough2031Million": 1974,
+        "extraPupilYearsThrough2031": 160,
+        "servedWithBridgeClosed": 620
+      },
+      "bridge": {
+        "served": 880,
+        "demand": 1000,
+        "coveragePct": 88.0,
+        "servedByZone": {
+          "west": 280,
+          "core": 180,
+          "east": 420,
+          "southern": 0
+        },
+        "pupilMinutesOneWay": 7420,
+        "meanTripMinutesServed": 8.43,
+        "lowestZoneCoveragePct": 0.0,
+        "firstServiceYear": 2030,
+        "capexMillion": 2160,
+        "annualOpexMillion": 82,
+        "spendThrough2031Million": 2324,
+        "extraPupilYearsThrough2031": 600,
+        "servedWithBridgeClosed": 620
+      },
+      "south": {
+        "served": 740,
+        "demand": 1000,
+        "coveragePct": 74.0,
+        "servedByZone": {
+          "west": 280,
+          "core": 180,
+          "east": 160,
+          "southern": 120
+        },
+        "pupilMinutesOneWay": 5320,
+        "meanTripMinutesServed": 7.19,
+        "lowestZoneCoveragePct": 38.1,
+        "firstServiceYear": 2029,
+        "capexMillion": 1940,
+        "annualOpexMillion": 80,
+        "spendThrough2031Million": 2180,
+        "extraPupilYearsThrough2031": 480,
+        "servedWithBridgeClosed": 740
+      }
+    }
+  }
+}
