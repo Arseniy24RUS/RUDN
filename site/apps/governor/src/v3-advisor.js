@@ -4,6 +4,18 @@
   const TARGETS={tax:['budget','budget.tax'],loan:['budget','budget.loan'],budget:['budget','budget.review'],
     route:['map','map.inspectOrPlace'],sites:['map','map.inspectOrPlace'],compare:['budget','budget.review'],event:['decisions','event.open']};
   const INTENTS=new Set([...Object.keys(TARGETS),'unknown']);
+  const GUIDES={
+    year:{
+      ru:'Сначала ответьте на ситуацию года. Затем решите, нужно ли отдельное улучшение.\nНа карте проверьте, где проект поможет людям. В бюджете посмотрите, сколько денег останется.\nКнопка ▶ открывает проверку плана. После подтверждения увидите итог года.',
+      en:'First, respond to this year’s event. Then decide whether to start a separate project.\nUse the map to see where the project will help. Check how much money will be left in Budget.\nUse ▶ to review the plan. Confirm it to see the year’s results.',
+      zh:'先回应年度事件，再决定是否另行启动项目。\n用地图查看项目能帮到哪个地区，再到“预算”查看还剩多少钱。\n点击▶核对计划，确认后就能看到本年的结果。'
+    },
+    choices:{
+      ru:'Для ответа на ситуацию сравните, кому он поможет и как скоро.\nУ проектов сравните цену запуска, расходы каждый год и срок начала работы. Место тоже важно: на карте видно, где появится услуга.',
+      en:'For each response to an event, check who it helps and how soon.\nFor projects, compare the upfront price, running costs and opening year. Use the map to see where the service will reach people.',
+      zh:'比较事件的应对方案时，先看能帮助谁、何时见效。\n比较项目时，看启动成本、每年开支和启用年份。再用地图查看服务会覆盖哪里。'
+    }
+  };
   const CHOICES={
     tax:/налог|tax(?:es)?|税/iu,loan:/за[её]м|займ|кредит|долг|loan|debt|借|贷款|债/iu,
     sites:/участ|площадк|строи|site|plot|build|选址|地块|建校/iu,
@@ -88,17 +100,18 @@
       if(!allowed)return false;
       return api.navigate(target.tab,target.anchor);
     }
-    async function ask(raw,{retry=false} = {}) {
+    async function ask(raw,{retry=false,guide} = {}) {
       const state=api.state(), question=String(raw).trim().slice(0,480);
       if (!state||state.completed||!question) return null;
       if(pending)return pending;
+      const localGuide=Object.hasOwn(GUIDES,guide)?guide:undefined;
       const signature=api.quote()?.signature;
-      const same=api.messages().findLast(row=>row.question===question&&row.year===state.year&&row.signature===signature);
+      const same=api.messages().findLast(row=>row.question===question&&row.year===state.year&&row.signature===signature&&row.guide===localGuide);
       if(same&&(!retry||same.status==='ok'))return same;
       pending=(async()=>{
         const requestId=same?.id??crypto.randomUUID(), l=api.language(), q=api.quote();
-        let kind=intent(question), mode='local', status='ok';
-        const localNavigation=/^(где|как (открыть|найти)|where|how (do i find|to open)|怎么打开|在哪里)/iu.test(question);
+        let kind=localGuide?'event':intent(question), mode='local', status='ok';
+        const localNavigation=localGuide||/^(где|как (открыть|найти)|where|how (do i find|to open)|怎么打开|在哪里)/iu.test(question);
         if(api.enabled&&api.studentKey&&!localNavigation&&navigator.onLine){
           try{
             const credential=await api.credential();
@@ -123,7 +136,9 @@
         if(api.state()?.attemptId!==state.attemptId||api.state()?.year!==state.year||api.quote()?.signature!==signature)return null;
         const [tab,anchor]=TARGETS[kind]||[];
         const target=tab?{tab,anchor,attemptId:state.attemptId,revision:state.revision,year:state.year,signature}:null;
-        const row={id:requestId,question,text:explain(kind,state,q,l),target,year:state.year,signature,mode,status};
+        const text=localGuide?(GUIDES[localGuide][l]||GUIDES[localGuide].ru):explain(kind,state,q,l);
+        const row={id:requestId,question,text,target,year:state.year,signature,mode,status};
+        if(localGuide)row.guide=localGuide;
         await api.save([...api.messages().filter(message=>message.id!==row.id),row].slice(-12));
         return row;
       })();

@@ -624,9 +624,9 @@
     "下载地图"
   ],
   "stats.schoolAccess": [
-    "Доступность школьных мест",
-    "School-place coverage",
-    "学位需求满足率"
+    "Доступность школы",
+    "School access",
+    "学校可及性"
   ],
   "stats.development": [
     "Развитие",
@@ -742,8 +742,11 @@
     save:['Сохранить','Save','保存'], cancel:['Вернуться к плану','Return to plan','返回计划'],
     close:['Закрыть','Close','关闭'], current:['Текущий год','Current year','本年度'],
     newProject:['Проект года','Project of the year','年度项目'], otherProjects:['Другие проекты','Other projects','其他项目'],
-    choose:['Выбрать меру','Choose a measure','选择措施'], selected:['В плане','In the plan','已列入计划'],
-    event:['Ситуация года','This year’s situation','年度情况'], reply:['Выбрать ответ','Choose a response','选择回应'],
+    choose:['Выбрать проект','Choose a project','选择项目'], selected:['В плане','In the plan','已列入计划'],
+    projectChange:['Изменить проект','Change project','更换项目'], projectDefer:['Отложить проект','Defer project','暂缓新项目'],
+    projectPurpose:['Отдельное улучшение для района, например школа или подвоз.','A separate improvement for a district, such as a school or a bus service.','单独改善某个地区的服务，例如新建学校或开通校车。'],
+    eventOpen:['Открыть ситуацию','Open the situation','查看情况'], eventChange:['Изменить ответ','Change response','修改回应'],
+    event:['Ситуация года','This year’s situation','年度情况'],
     open:['Открыть','Open','打开'], baseline:['На начало срока','At the start of the term','任期开始时'],
     people:['Обеспечены','People served','已覆盖人数'], demand:['Потребность','Demand','需求'],
     noDemand:['Нет потребности','No demand','无需求'], unserved:['Без доступной услуги','Without access','未获得服务'],
@@ -754,7 +757,8 @@
     billion:['млрд ₽','bn RUB','十亿卢布'], annual:['в год','per year','每年'],
     months:['Модельное ограничение пути','Model travel limit','模型通行时间限制'],
     oldSchool:['Действующая школа','Existing school','现有学校'], otherSchool:['Школа за рекой','School across the river','河对岸学校'],
-    sites:['Посмотреть участки','View sites','查看地块'], district:['Территория','District','地区'],
+    district:['Район','District','地区'],
+    site:['Участок','Site','地块'], siteChange:['Изменить участок','Change site','更换用地'],
     whole:['Вся область','Whole region','全地区'], inspect:['Осмотреть','Inspect','查看'],
     locations:['Объекты и участки','Facilities and sites','设施与地块'], details:['Подробнее','Details','详情'],
     plannedOpen:['План начала работы','Planned opening','计划启用年份'], running:['Работает','Operating','运营中'],
@@ -784,10 +788,10 @@
     residents:['Жители','Residents','居民'], financeTeam:['Финансовый блок','Finance team','财政部门'],
     menu:['Меню игры','Game menu','游戏菜单'], lang:['Язык','Language','语言'],
     large:['Увеличенный текст','Larger text','大号文字'], still:['Статичные иллюстрации','Still illustrations','静态插图'],
-    help:['Как проходит год','How a year works','年度流程'], helpText:['Выберите ответ на ситуацию и одну меру. Проверьте участок и средства. Кнопка ▶ открывает сводку; деньги списываются после подтверждения года.','Choose a response and one measure. Check the site and funds. ▶ opens a review; money is spent when you confirm the year.','选择情况回应和一项措施。核对地块与资金。▶打开年度汇总，确认年度后才结算资金。'],
+    help:['Как проходит год','How a year works','年度流程'], helpText:['Ответьте на срочную задачу. Выберите проект для района или отложите его. Проверьте бюджет и исходные показатели. Кнопка ▶ открывает сводку плана перед подтверждением года.','Respond to the urgent issue. Choose a district project or defer it. Check the budget and starting figures. ▶ opens the plan for review before you close the year.','先处理紧急任务，再决定启动或暂缓地区项目。核对预算和基准数据。点击 ▶ 可查看年度计划，确认后才结算。'],
     localAdvisor:['Илья Орлов','Ilya Orlov','伊利亚·奥尔洛夫'], advisorRole:['Стратегическое развитие','Strategic development','战略发展'],
     ask:['Спросить советника…','Ask your adviser…','询问顾问…'], send:['Отправить','Send','发送'],
-    navigation:['Куда нажать?','Where do I click?','应该点击哪里？'], compare:['Как сравнить варианты?','How can I compare options?','如何比较方案？'],
+    navigation:['Что делать в этом году?','What should I do this year?','今年要做什么？'], compare:['Как сравнить варианты?','How can I compare options?','如何比较方案？'],
     awaiting:['Подготовка ответа…','Preparing an answer…','正在准备回答…'], unavailable:['Консультация сейчас недоступна. Можно продолжить год.','Consultation is unavailable. You can continue the year.','咨询暂不可用，可以继续年度决策。'],
     answerLabel:['Ответ советника','Adviser’s reply','顾问回复'], ready:['План готов к проверке','Plan ready for review','计划可供核查'],
     confirm:['Завершить {year} год','Close {year}','结束{year}年'],
@@ -800,7 +804,7 @@
     sent:['В журнале','In the gradebook','已记入成绩簿'], retry:['Повторить отправку','Retry submission','重新提交'],
     yearNumber:['{n} из 20','{n} of 20','第{n}年，共20年'], saveError:['Не удалось сохранить изменение. Попробуйте ещё раз.','Could not save this change. Try again.','无法保存修改，请重试。'],
     reviewError:['Проверьте план','Check the plan','检查计划'], eventRequired:['Выберите ответ на ситуацию года','Choose a response to this year’s situation','请选择年度情况回应'],
-    measureRequired:['Выберите проект или год без новой меры','Choose a project or a year without a new measure','请选择项目或本年不采取新措施'],
+    measureRequired:['Выберите проект или отложите его','Choose or defer a project','选择项目或暂缓启动'],
     siteRequired:['Выберите свободный участок','Choose an available site','选择可用地块'],
     loanError:['Проверьте сумму и срок займа','Check the loan amount and term','核对借款金额与期限'],
     budgetError:['Измените план расходов или источники финансирования','Review expenditure or financing','调整支出计划或资金来源'],
@@ -820,6 +824,35 @@
     welcomeProgress:['{step} из 3','{step} of 3','第 {step} 步，共 3 步'],
     welcomeNext:['Дальше','Continue','继续'], welcomeStart:['К первому году','Start the first year','进入第一年'],
     welcomeReplay:['Вступление Орлова','Orlov’s introduction','奥尔洛夫的开场介绍'], welcomeReturn:['В меню','Back to menu','返回菜单'],
+    coachEvent:['Ситуация года — срочная задача. Откройте её, чтобы узнать, что случилось.','This year’s situation is urgent. Open it to see what happened.','年度情况是一项紧急任务。打开看看发生了什么。'],
+    coachAnswer:['Сравните, кому поможет каждый ответ и сколько он стоит. Сохраните свой выбор.','Compare who benefits from each response and what it costs. Save your choice.','比较每种回应能帮助谁、需要多少钱，再保存选择。'],
+    coachProject:['Проект — отдельное улучшение для района. Его можно начать или отложить на этот год.','A project is a separate improvement for a district. You can start one or defer it for the year.','项目用于单独改善一个地区。您可以今年启动，也可以暂缓。'],
+    coachSites:['Место влияет на срок, расходы и число людей, которым поможет проект. Сравните участки на карте.','The location affects timing, costs and how many people benefit. Compare the sites on the map.','选址会影响工期、开支和受益人数。请在地图上比较地块。'],
+    coachSchool:['В карточке школы видно, сколько детей она уже обслуживает. Этот пример поможет читать карту.','The school card shows how many children it already serves. Use it to learn how to read the map.','学校详情显示目前服务了多少学生。用这个例子熟悉地图。'],
+    coachBudget:['Попробуйте изменить налоговую нагрузку в бюджете. Сравните доход от налогов и остаток денег.','Try a different tax level in the budget. Compare tax revenue and the money left over.','在预算中换一个税负水平，比较税收和年底余额。'],
+    coachTaxResult:['Сверьте доходы и остаток до и после изменения. Можно вернуть исходную нагрузку.','Compare the revenue and balance before and after the change. You can restore the original tax level.','比较变更前后的税收和余额。如有需要，可以恢复原来的税负。'],
+    coachStats:['Найдите «Доступность школы» в статистике и выберите процент на начало срока. С ним мы сравним итог года.','Find School access in Statistics and pick the percentage at the start of your term. We’ll compare it with your year-end result.','在统计中找到“学校可及性”，选择任期开始时的百分比。我们会用它和年终结果比较。'],
+    coachReview:['▶ открывает сводку вашего плана. Год изменится только после подтверждения.','▶ opens your plan for review. The year advances when you confirm it.','点击 ▶ 查看计划汇总。确认后才会进入下一年。'],
+    coachConfirm:['Сверьте ответ, проект и остаток бюджета. Подтвердите план, чтобы завершить год.','Check the response, project and remaining funds. Confirm the plan to close the year.','核对回应、项目和预算余额。确认计划即可结束本年。'],
+    coachFixPlan:['В плане ещё кое-чего не хватает. Откройте отмеченный пункт.','Something is missing from your plan. Open the highlighted item.','计划仍有缺项。请打开标出的项目。'],
+    coachResults:['В статистике сравните доступность школы с началом срока. Стала она выше, ниже или не изменилась?','In Statistics, compare school access with the start of your term. Did it rise, fall or stay the same?','在统计中把学校可及性与任期开始时比较。它上升了、下降了，还是没有变化？'],
+    coachMap:['На карте видно, какие объекты работают и что изменилось. Посмотрите один из них.','The map shows which facilities are operating and what changed. Inspect one of them.','地图显示哪些设施在运行，以及发生了哪些变化。请选择一处查看。'],
+    coachSchoolResult:['На карте видно, какие объекты работают сейчас. Посмотрите это на примере школы.','The map shows which facilities are operating now. Take a look at an example school.','地图显示目前哪些设施在运行。请查看学校示例。'],
+    schoolExample:['Посмотреть действующую школу на Новом берегу','See the existing school in New Bank','查看新岸正在运行的学校'],
+    toProjects:['К проектам','View projects','查看项目'], toStats:['К статистике','View statistics','查看统计'], toMap:['К карте','View the map','打开地图'],
+    taxPractice:['Что изменилось после смены налога','What changed when you adjusted taxes','调整税负带来的变化'],
+    restoreTax:['Вернуть исходную нагрузку','Restore original tax level','恢复原来的税负'],
+    loanHelp:['Заём даёт деньги сейчас. В следующих бюджетах нужно будет вернуть долг и выплатить проценты.','A loan adds money now. Later budgets must repay the principal and interest.','借款会增加当前可用资金。以后的预算必须偿还本金和利息。'],
+    reserveHelp:['Резерв нужен на непредвиденные расходы. Изъятие добавляет деньги в план, пополнение откладывает их на будущее.','The reserve covers unexpected costs. A withdrawal adds money to the plan, while a contribution sets money aside.','储备金用于意外开支。提取会增加计划可用资金，存入则为今后留出资金。'],
+    sectorHelpTitle:['Как читать расходы отрасли','How to read sector spending','如何查看部门支出'],
+    sectorHelp:['В сумме видны все запланированные выплаты. Лимит ограничивает расходы отрасли и должен покрывать обязательные выплаты.','The total lists all planned payments. The sector limit caps spending and must cover mandatory payments.','合计包含所有计划支出。部门支出不得超过限额，限额也必须覆盖必要支出。'],
+    schoolQuestion:['Какой процент указан на начало срока?','What is the percentage at the start of the term?','任期开始时的百分比是多少？'],
+    schoolWrong:['Проверьте процент в строке «Доступность школы» за всю область.','Check the percentage in the School access row for the whole region.','请查看全州“学校可及性”一行的百分比。'],
+    schoolChangeQuestion:['Как изменилась доступность школы?','How did school access change?','学校可及性有何变化？'],
+    schoolWrongChange:['Сравните два процента в строке «Доступность школы».','Compare the two percentages in the School access row.','请比较“学校可及性”一行的两个百分比。'],
+    higher:['Стала выше','It rose','上升'], same:['Не изменилась','It stayed the same','没有变化'], lower:['Стала ниже','It fell','下降'],
+    schoolUnknown:['Данных для сравнения нет','No data to compare','没有可比较的数据'],
+    launchCost:['На запуск','To start','启动费用'],
     coursePoints:['До 5 баллов','Up to 5 points','最高5分'],
     historyMap:['Карта за этот год','Map for this year','本年度地图'],
     historyStageUnknown:['Стадия не записана','Stage not recorded','未记录阶段'],
@@ -851,7 +884,7 @@
     const rules = G.V3Rules;
     let busy = false, destroyed = false, errorText = '', optionDraft = null, focusAfter = null;
     let chatDraft = '', chatPending = false, chatError = '', loanDraft = null, review = null;
-    let observer = null, frame = 0, replayWelcome = 0;
+    let replayWelcome = 0, practiceError = '';
     const navigation = ['decisions','budget','map','stats','advisor'];
     const defaultUI = {started:false,tab:'decisions',panel:null,tutorialStep:1,welcomeStep:4,districtId:'suburb',motion:'auto'};
     const language = () => {
@@ -876,6 +909,12 @@
     const measures = () => rules.availableMeasures?.(state()) || rules.MEASURES;
     const selectedMeasure = () => measures().find(row => row.id === state()?.draft.measureId) || rules.MEASURES.find(row => row.id === state()?.draft.measureId);
     const districtLabel = id => local(rules.DISTRICTS[id]?.labels) || id;
+    const districtCaption = id => t('district')+' · '+districtLabel(id);
+    const needsSite = () => {
+      const sites=selectedMeasure()?.siteIds;
+      return Boolean(sites?.length&&!sites.includes(state().draft.siteId));
+    };
+    const projectArt = measure => 'assets/illustrated/'+({north:'clinic',river:'barrier',industrial:'industry',capital:'digital'}[measure.districtId]||'school')+'.webp';
     const phase = project => project.status || rules.projectPhase(project,state().year);
     const phaseLabel = value => t({open:'running',foundation:'foundation',frame:'frame',finishing:'finishing',construction:'building',building:'building',closed:'closed',ended:'closed',restoring:'restoring',preparing:'approved',approved:'approved'}[value] || 'approved');
     const moneyInput = (name,value,title,max) => '<label class="v3-field"><span>'+esc(title)+'</span><input inputmode="decimal" type="number" min="0" step="1" '+(Number.isFinite(max)?'max="'+max+'" ':'')+'name="'+name+'" value="'+esc(value || 0)+'"></label>';
@@ -906,11 +945,11 @@
     }
     async function navigate(tab,anchor) {
       if (!navigation.includes(tab)) return;
-      await storeUI({tab,panel:null});
-      if (tab==='budget') await finishStep(5);
-      if (tab==='stats') {
-        await finishStep(state().history.length ? 9 : 6);
-      }
+      const step=ui().tutorialStep;
+      const filters=tab==='stats'&&[6,9].includes(step)
+        ? {statsDistrict:'all',statsYear:step===6?'initial':String(state().history.at(-1)?.year||'')} : {};
+      practiceError='';
+      await storeUI({tab,panel:null,...filters});
       focusAfter = anchor || 'v3-heading';
       render();
     }
@@ -922,20 +961,45 @@
     function closePanel() {
       return storeUI({panel:null});
     }
-    function tutorialMessages(step) {
-      const rows = [
-        ['Откройте ситуацию года.','Open this year’s situation.','打开年度情况。'],
-        ['Выберите, как поступить.','Choose how to respond.','选择如何应对。'],
-        ['Выберите меру для района.','Choose a measure for the district.','选择地区措施。'],
-        ['Откройте объект на карте.','Inspect a facility on the map.','查看地图上的设施。'],
-        ['Проверьте, хватит ли средств.','Check that funds cover the plan.','核对资金是否充足。'],
-        ['Посмотрите исходные показатели.','Look at the starting indicators.','查看初始指标。'],
-        ['Нажмите ▶, когда план готов.','Press ▶ when your plan is ready.','计划就绪后点击▶。'],
-        ['Подтвердите переход.','Confirm the year.','确认年度结算。'],
-        ['Вот итог первого года.','Here are the first year’s results.','查看第一年结果。'],
-        ['Посмотрите, что изменилось в районе.','See what changed in the district.','查看地区发生了哪些变化。']
-      ];
-      return rows[step-1]?.[{ru:0,en:1,zh:2}[language()]] || '';
+    async function openEvent() {
+      optionDraft=state().draft.eventChoice;
+      await pushPanel('event',{tab:'decisions'});
+      await finishStep(1);
+      focusAfter='v3-heading';
+    }
+    async function openSites() {
+      await storeUI({tab:'map',panel:'sites',districtId:selectedMeasure()?.districtId||'suburb'});
+      focusAfter='v3-heading';
+    }
+    function practiceStep(current) {
+      if (!current.started||!state()||state().completed||current.panel==='menu'||welcomeStep(current)) return 0;
+      return current.tutorialStep<=10?current.tutorialStep:0;
+    }
+    function schoolExampleNeeded(step,current) {
+      if (step===4) return !needsSite();
+      const district=current.districtId||'suburb';
+      return step===10&&district!=='suburb'&&!state().projects.some(project=>project.districtId===district);
+    }
+    function practiceView(step,current) {
+      const {tab,panel}=current;
+      const example=schoolExampleNeeded(step,current);
+      const taxResult=step===6&&tab==='budget'&&!panel&&current.taxPractice;
+      const reviewBlocked=step===8&&panel==='review'&&!quote().ok;
+      const keys=['coachEvent','coachAnswer','coachProject',example?'coachSchool':'coachSites','coachBudget',
+        taxResult?'coachTaxResult':'coachStats','coachReview',reviewBlocked?'coachFixPlan':'coachConfirm','coachResults',example?'coachSchoolResult':'coachMap'];
+      let action='';
+      if (example) action=button(esc(t('schoolExample')),'tutorial-school','secondary');
+      else {
+        const sitesShown=['project','sites'].includes(panel)||!panel&&['decisions','map'].includes(tab);
+        const routes={1:[tab!=='decisions'||panel,'eventOpen'],2:[panel!=='event','eventOpen'],
+          3:[panel!=='measures','toProjects'],4:[!sitesShown,'map.chooseSite'],
+          5:[tab!=='budget'||panel,'budget.review'],6:[!taxResult&&!controller.schoolPractice?.()?.visible,'toStats'],
+          9:[panel!=='result'&&!controller.schoolPractice?.()?.visible,'resultStats'],10:[tab!=='map'||panel,'toMap']};
+        const route=routes[step];
+        if (route?.[0]) action=button(esc(t(route[1])),'tutorial-next','secondary');
+      }
+      return '<aside class="v3-coach" aria-label="'+esc(t('localAdvisor'))+'">'+picture('assets/characters/ilya-avatar.webp','','')+
+        '<div><strong>'+esc(t('localAdvisor'))+'</strong><p>'+esc(t(keys[step-1]))+'</p>'+action+'</div></aside>';
     }
     function eventIllustration(event, detailed = false) {
       const illustration=controller.eventArt?.(event,language());
@@ -1005,14 +1069,15 @@
       return heading(t('nav.decisions'))+'<div class="v3-decision-grid"><section class="v3-card v3-event">'+
         (event?eventIllustration(event):'')+'<div class="v3-card-body"><p class="v3-eyebrow">'+esc(t('event'))+'</p>'+
         '<h2>'+esc(event?.title || t('eventRequired'))+'</h2>'+ (choice?'<p class="v3-selected-copy">✓ '+esc(choice.label)+'</p>':'')+
-        button(esc(t(choice?'change':'reply')),'event','primary','data-anchor="event.open"')+'</div></section>'+
+        button(esc(t(choice?'eventChange':'eventOpen')),'event','primary','data-anchor="event.open"')+'</div></section>'+
         '<section class="v3-project-summary"><h2>'+esc(t('newProject'))+'</h2><div class="v3-card v3-card-body">'+
-        '<div class="v3-project-heading">'+picture('assets/illustrated/school.webp','','v3-project-thumb')+'<div><h3>'+esc(measure?local(measure.labels):t('choose'))+'</h3>'+
-        '<p class="v3-muted">'+esc(districtLabel(measure?.districtId||'suburb'))+'</p></div></div>'+
+        (measure?'<div class="v3-project-heading">'+(measure.districtId?picture(projectArt(measure),'','v3-project-thumb'):'')+'<div><h3>'+esc(local(measure.labels))+'</h3>'+
+          (measure.districtId?'<p class="v3-muted">'+esc(districtCaption(measure.districtId))+'</p>':'')+'</div></div>':
+          '<p>'+esc(t('projectPurpose'))+'</p>')+
         (project?label(t('budget.now'),money(project.costNow))+label(t('plannedOpen'),project.openingYear):'')+
-        button(esc(t(measure?'change':'choose')),'measures','link','data-anchor="measure.select"')+
+        button(esc(t(measure?'projectChange':'choose')),'measures','link','data-anchor="measure.select"')+
         (measure&&measure.id!=='defer'?button(esc(t('details')),'project','secondary'):'')+
-        (measure?.siteIds?.length?button(esc(t(draft.siteId?'change':'map.chooseSite')),'sites','secondary'):'')+
+        (measure?.siteIds?.length?button(esc(t(draft.siteId?'siteChange':'map.chooseSite')),'sites','secondary'):'')+
         '</div></section></div>';
     }
     function eventView() {
@@ -1035,53 +1100,71 @@
     }
     function measuresView() {
       const all=measures(),selected=state().draft.measureId;
-      return back('back',t('nav.decisions'))+heading(t('choose'))+
-        '<div class="v3-measures">'+Object.entries(rules.DISTRICTS).map(([id,district])=>{
+      return back('back',t('nav.decisions'))+heading(t('choose'))+button(esc(t('projectDefer')),'defer','secondary full')+
+        '<div class="v3-measures">'+Object.keys(rules.DISTRICTS).map(id=>{
           const rows=all.filter(row=>row.districtId===id);
           if (!rows.length) return '';
-          return '<section><h2>'+esc(local(district.labels))+'</h2><div class="v3-card">'+rows.map(row=>
-            '<button class="v3-measure" type="button" data-v3-measure="'+esc(row.id)+'" aria-pressed="'+(selected===row.id)+'"><span><strong>'+esc(local(row.labels))+'</strong><small>'+esc(money(row.cost))+
+          return '<section><h2>'+esc(districtCaption(id))+'</h2><div class="v3-card">'+rows.map(row=>
+            '<button class="v3-measure" type="button" data-v3-measure="'+esc(row.id)+'" aria-pressed="'+(selected===row.id)+'"><span><strong>'+esc(local(row.labels))+'</strong><small>'+esc(t('launchCost')+' '+money(row.cost))+
             (row.annualOpex?' · '+esc(money(row.annualOpex))+' '+esc(t('annual')):'')+'</small></span><span aria-hidden="true">'+(selected===row.id?'✓':'›')+'</span></button>').join('')+'</div></section>';
-        }).join('')+'</div>'+button(esc(local(all.find(row=>row.id==='defer')?.labels)||t('dec.defer')),'defer','secondary full');
+        }).join('')+'</div>';
     }
     function projectView() {
       const measure=selectedMeasure(),project=quote()?.project,draft=state().draft;
       if (!measure) return measuresView();
       const promise=draft.promise;
       return back('back',t('nav.decisions'))+heading(local(measure.labels))+
-        '<section class="v3-card v3-card-body">'+picture('assets/illustrated/'+({clinics:'clinic','industrial-park':'industry',defenses:'barrier','single-window':'digital'}[measure.id]||'school')+'.webp','','v3-project-art')+
-        '<p class="v3-eyebrow">'+esc(districtLabel(measure.districtId))+'</p>'+
+        (measure.siteIds?.length?button(esc(t(draft.siteId?'siteChange':'map.chooseSite')),'sites','primary full'):'')+
+        '<section class="v3-card v3-card-body">'+picture(projectArt(measure),'','v3-project-art')+
+        '<p class="v3-eyebrow">'+esc(districtCaption(measure.districtId))+'</p>'+
         (project?label(t('budget.now'),money(project.costNow))+label(t('budget.annual'),money(project.annualOpex))+label(t('plannedOpen'),project.openingYear):
           label(t('construction'),money(measure.cost))+label(t('budget.annual'),money(measure.annualOpex)))+
-        (measure.siteIds?.length?button(esc(t(draft.siteId?'change':'map.chooseSite')),'sites','primary full'):'')+'</section>'+
+        '</section>'+
         '<section class="v3-card v3-card-body"><h2>'+esc(t('promise'))+'</h2>'+
         '<label class="v3-field"><span>'+esc(t('promise'))+'</span><select name="promise-type"><option value="">'+esc(t('noPromise'))+'</option>'+
         [['open','promiseOpen'],['operate','promiseRun'],['reserve','promiseReserve']].map(([id,key])=>'<option value="'+id+'" '+(promise?.type===id?'selected':'')+'>'+esc(t(key))+'</option>').join('')+'</select></label>'+
         (promise?label(t('promiseWho'),t(promise.type==='reserve'?'financeTeam':promise.type==='operate'?'residents':'municipality'))+
           '<label class="v3-field"><span>'+esc(t('promiseDue'))+'</span><input type="number" name="promise-year" min="'+state().year+'" max="2045" value="'+promise.dueYear+'"></label>'+
           (promise.type==='reserve'?moneyInput('promise-amount',promise.amount,t('promiseAmount')):''):'')+
-        '</section>'+button(esc(t('budget.review')),'budget','secondary full');
+        '</section>'+(practiceStep(ui())===4?'':button(esc(t('budget.review')),'budget','secondary full'));
     }
     function operationName(operation) {
       const keys={tax:'ownTax','non-tax':'nonTax',equalization:'transfers',loan:'borrowing',interest:'interest',principal:'principal',operation:'operational',capex:'construction',mandatory:'locked','reserve-draw':'budget.reserve','reserve-add':'budget.reserve',event:'event',start:'construction'};
       const project=state().projects.find(row=>operation.id.startsWith(row.id));
       return project?local(project.labels):t(keys[operation.type] || 'spend');
     }
+    function taxesView(finance,current) {
+      const selected=state().draft.taxMode,trial=current.taxPractice;
+      return '<section><h2>'+esc(t('budget.taxes'))+'</h2><div class="v3-segments" data-anchor="budget.tax">'+
+        ['low','moderate','high'].map(id=>'<button type="button" data-v3-tax="'+id+'" aria-pressed="'+(selected===id)+'">'+esc(t('budget.tax.'+id))+'</button>').join('')+'</div>'+
+        (trial&&!state().history.length?'<section class="v3-card v3-card-body v3-tax-practice" id="v3-tax-practice"><h3>'+esc(t('taxPractice'))+'</h3>'+
+          '<p class="v3-muted">'+esc(t('budget.tax.'+trial.from))+' → '+esc(t('budget.tax.'+trial.to))+'</p>'+
+          label(t('ownTax'),money(trial.taxesBefore)+' → '+money(trial.taxesAfter))+
+          label(t('budget.remaining'),money(trial.cashBefore)+' → '+money(trial.cashAfter))+
+          (current.tutorialStep===6?button(esc(t('toStats')),'tutorial-next','primary full'):'')+
+          (selected!==trial.from?button(esc(t('restoreTax')),'restore-tutorial-tax','link'):'')+'</section>'
+          :current.tutorialStep===5?'<div class="v3-card v3-card-body">'+label(t('ownTax'),money(finance.taxes))+
+            label(t('budget.remaining'),money(finance.cashEnd))+'</div>'
+          :'<p class="v3-muted">'+esc((finance.taxDelta>=0?'+':'')+money(finance.taxDelta))+' · '+esc(t('ownTax'))+'</p>')+'</section>';
+    }
     function budgetView() {
       const current=ui(),s=state(),past=s.history.find(row=>row.year===Number(current.budgetYear));
       const finance=past?.finance || quote().finance;
+      const taxes=past?'':taxesView(finance,current);
+      const startWithTaxes=!past&&!s.history.length&&(current.tutorialStep===5||Boolean(current.taxPractice));
       const period='<label class="v3-period"><span class="v3-sr">'+esc(t('period'))+'</span><select name="budget-year"><option value="">'+esc(t('freshYear',{year:s.year}))+'</option>'+
         s.history.map(row=>'<option value="'+row.year+'" '+(past?.year===row.year?'selected':'')+'>'+esc(t('budget.sectorActual',{year:row.year}))+'</option>').join('')+'</select></label>';
-      return heading(t('nav.budget'),period)+'<div class="v3-budget-grid"><div><section class="v3-card v3-card-body v3-balance" data-anchor="budget.review">'+
+      return heading(t('nav.budget'),period)+'<div class="v3-budget-grid"><div>'+(startWithTaxes?taxes:'')+'<section class="v3-card v3-card-body v3-balance" data-anchor="budget.review">'+
         '<p class="v3-eyebrow">'+esc(t(past?'actual':'budget.remaining'))+'</p><strong class="v3-total '+(finance.cashEnd<0?'negative':'')+'">'+esc(money(finance.cashEnd))+'</strong>'+
         label(t('cashStart'),money(finance.cash))+label(t('totalIn'),money(finance.totalIn))+label(t('totalOut'),money(finance.totalOut))+
         '<details><summary>'+esc(t('disclose'))+'</summary>'+finance.operations.map(op=>label(operationName(op),(op.direction==='in'?'+':'−')+money(op.amount))).join('')+'</details></section>'+
-        (!past?'<section><h2>'+esc(t('budget.taxes'))+'</h2><div class="v3-segments" data-anchor="budget.tax">'+['low','moderate','high'].map(id=>'<button type="button" data-v3-tax="'+id+'" aria-pressed="'+(s.draft.taxMode===id)+'">'+esc(t('budget.tax.'+id))+'</button>').join('')+'</div>'+
-          '<p class="v3-muted">'+esc((finance.taxDelta>=0?'+':'')+money(finance.taxDelta))+' · '+esc(t('ownTax'))+'</p></section>'+
-          '<section class="v3-card v3-card-body">'+button('<span><strong>'+esc(t('budget.loan'))+'</strong><small>'+esc(s.draft.loan?money(s.draft.loan.principal):t('noLoan'))+'</small></span><span aria-hidden="true">›</span>','loan','v3-row-button','data-anchor="budget.loan"')+
-          '<details><summary>'+esc(t('budget.reserve'))+'</summary>'+label(t('cashStart'),money(s.finance.reserve))+
+        (startWithTaxes?'':taxes)+
+        (!past?'<section class="v3-card v3-card-body">'+button('<span><strong>'+esc(t('budget.loan'))+'</strong><small>'+esc(s.draft.loan?money(s.draft.loan.principal):t('noLoan'))+'</small></span><span aria-hidden="true">›</span>','loan','v3-row-button','data-anchor="budget.loan"')+
+          '<details><summary>'+esc(t('budget.reserve'))+'</summary><p>'+esc(t('reserveHelp'))+'</p>'+label(t('cashStart'),money(s.finance.reserve))+
           moneyInput('reserveDraw',s.draft.reserveDraw,t('reserveTake'),s.finance.reserve)+moneyInput('reserveContribution',s.draft.reserveContribution,t('reserveAdd'))+label(t('after'),money(finance.reserveEnd))+'</details></section>':'')+
-        '</div><div><h2>'+esc(t('budget.sectors'))+'</h2><section class="v3-card v3-card-body">'+Object.entries(finance.sectors||{}).map(([id,sector])=>'<details class="v3-sector"><summary><span>'+esc(t(id))+'</span><strong>'+esc(money(sector.total))+'</strong></summary>'+
+        '</div><div><h2>'+esc(t('budget.sectors'))+'</h2><section class="v3-card v3-card-body">'+
+        (!past?'<details><summary>'+esc(t('sectorHelpTitle'))+'</summary><p>'+esc(t('sectorHelp'))+'</p></details>':'')+
+        Object.entries(finance.sectors||{}).map(([id,sector])=>'<details class="v3-sector"><summary><span>'+esc(t(id))+'</span><strong>'+esc(money(sector.total))+'</strong></summary>'+
         (sector.entries||[]).map(op=>label(operationName(op),money(op.amount))).join('')+(!past?moneyInput('sector:'+id,s.draft.sectorLimits[id]??sector.total,t('allocation')):'')+'</details>').join('')+
         label(t('interest'),money(finance.operations.filter(op=>op.type==='interest').reduce((sum,row)=>sum+row.amount,0)))+
         label(t('principal'),money(finance.operations.filter(op=>op.type==='principal').reduce((sum,row)=>sum+row.amount,0)))+'</section>'+
@@ -1093,6 +1176,7 @@
       let schedule=[];
       try {schedule=rules.loanSchedule(Number(draft.principal),finance.annualPercent,Number(draft.termYears),state().year);} catch (_) {}
       return back('back',t('nav.budget'))+heading(t('budget.loan'))+'<form id="v3-loan-form" class="v3-card v3-card-body">'+
+        '<p>'+esc(t('loanHelp'))+'</p>'+
         label(t('budget.debt'),money(finance.debt))+label(t('budget.debtLimit'),money(finance.debtLimit))+
         moneyInput('loan-principal',draft.principal,t('loanAmount'),(quote().finance.loanHeadroom??finance.debtLimit-finance.debt))+
         '<label class="v3-field"><span>'+esc(t('loanTerm'))+'</span><select name="loan-term">'+Array.from({length:10},(_,i)=>'<option value="'+(i+1)+'" '+(draft.termYears===i+1?'selected':'')+'>'+(i+1)+'</option>').join('')+'</select></label>'+
@@ -1174,13 +1258,13 @@
     function mapView() {
       const district=ui().districtId||'suburb',s=state(),projects=s.projects.filter(row=>row.districtId===district);
       return heading(t('nav.map'))+'<section class="v3-overview" aria-label="'+esc(t('whole'))+'">'+picture('assets/illustrated/region-cover-1024.webp',t('whole'))+
-        Object.entries(rules.DISTRICTS).map(([id,row])=>'<button type="button" class="v3-region-pin '+(id===district?'selected':'')+'" style="--x:'+row.x+';--y:'+row.y+'" data-v3-district="'+id+'" aria-label="'+esc(local(row.labels))+'"></button>').join('')+'</section>'+
-        '<label class="v3-field v3-district-picker"><span class="v3-sr">'+esc(t('district'))+'</span><select name="district">'+Object.entries(rules.DISTRICTS).map(([id,row])=>'<option value="'+id+'" '+(id===district?'selected':'')+'>'+esc(local(row.labels))+'</option>').join('')+'</select></label>'+
+        Object.entries(rules.DISTRICTS).map(([id,row])=>'<button type="button" class="v3-region-pin '+(id===district?'selected':'')+'" style="--x:'+row.x+';--y:'+row.y+'" data-v3-district="'+id+'" aria-label="'+esc(districtCaption(id))+'"></button>').join('')+'</section>'+
+        '<label class="v3-field v3-district-picker"><span>'+esc(t('district'))+'</span><select name="district">'+Object.entries(rules.DISTRICTS).map(([id,row])=>'<option value="'+id+'" '+(id===district?'selected':'')+'>'+esc(local(row.labels))+'</option>').join('')+'</select></label>'+
         '<p class="v3-muted">'+esc(s.history.length?t('factYear',{year:s.history.at(-1).year}):t('baseline'))+'</p><div class="v3-map-grid">'+locationArt(district,false)+'<div><div class="v3-card">'+
         (district==='suburb'?'<button class="v3-measure" type="button" data-v3-object="old-school" data-anchor="map.inspectResult"><span><strong>'+esc(t('oldSchool'))+'</strong><small>'+esc(t('running'))+'</small></span><span aria-hidden="true">›</span></button>':'')+
         projects.map(project=>'<button class="v3-measure" type="button" data-v3-object="'+esc(project.id)+'"><span><strong>'+esc(local(project.labels))+'</strong><small>'+esc(phaseLabel(phase(project)))+' · '+(project.siteId?esc(local(siteData(rules.MEASURES.find(row=>row.id===project.measureId)).find(site=>site.id===project.siteId)?.labels)||project.siteId):esc(districtLabel(district)))+'</small></span><span aria-hidden="true">›</span></button>').join('')+
         (!projects.length&&district!=='suburb'?'<div class="v3-card-body">'+esc(t('noBuilding'))+'</div>':'')+'</div>'+
-        (selectedMeasure()?.siteIds?.length?button(esc(t('sites')),'sites','secondary full'):'')+
+        (selectedMeasure()?.siteIds?.length?button(esc(t(s.draft.siteId?'siteChange':'map.chooseSite')),'sites','secondary full'):'')+
         (s.history.length?button(esc(t('history')),'history','link'):'')+'</div></div>';
     }
     function sitesView() {
@@ -1190,9 +1274,10 @@
       const s=state(),school=measure.id==='school-campus';
       const prospective=school?rules.schoolQuote(s,selected.id):rules.quote({...s,draft:{...s.draft,siteId:selected.id}},{eventPlan:G.V3Events.plan({record:s.event,choice:s.draft.eventChoice||'base'})}).project?.projection;
       const occupied=s.projects.some(project=>project.siteId===selected.id);
-      return back('project-back',t('newProject'))+heading(t('map.chooseSite'))+'<div class="v3-placement-grid">'+locationArt(measure.districtId,true)+
-        '<div><div class="v3-segments v3-site-choices">'+sites.map((site,index)=>'<button type="button" data-v3-site="'+esc(site.id)+'" aria-pressed="'+(selected.id===site.id)+'">'+esc((site.marker||String.fromCharCode(65+index))+' '+local(site.labels))+'</button>').join('')+'</div>'+
-        '<section class="v3-card v3-card-body"><h2>'+esc(local(selected.labels))+'</h2>'+
+      return back('project-back',t('newProject'))+heading(t('map.chooseSite'))+
+        '<div class="v3-segments v3-site-choices">'+sites.map((site,index)=>'<button type="button" data-v3-site="'+esc(site.id)+'" aria-pressed="'+(selected.id===site.id)+'">'+esc((site.marker||String.fromCharCode(65+index))+' '+local(site.labels))+'</button>').join('')+'</div>'+
+        '<div class="v3-placement-grid">'+locationArt(measure.districtId,true)+
+        '<div><section class="v3-card v3-card-body"><h2>'+esc(local(selected.labels))+'</h2>'+
         (school?label(t('served'),number(prospective.served)+' / '+number(prospective.demand))+
           label(t('plannedOpen'),prospective.firstServiceYear)+label(t('construction'),money(prospective.capexMillion))+label(t('budget.annual'),money(prospective.annualOpexMillion))+
           label(t('bridgeRisk'),number(prospective.servedWithBridgeClosed)+' / '+number(prospective.demand))+label(t('min'),number(prospective.meanTripMinutesServed,2)):
@@ -1205,22 +1290,43 @@
       const id=ui().objectId,s=state(),project=s.projects.find(row=>row.id===id),baseline=!project,school=s.stats.school?.facilities?.find(row=>row.id===(id==='other-school'?'east-school':id));
       const name=project?local(project.labels):t(id==='other-school'?'otherSchool':'oldSchool');
       const restore=measures().filter(row=>row.id.includes(id)&&row.id!==project?.measureId);
-      return back('back',t('nav.map'))+heading(name)+locationArt(project?.districtId||'suburb',false)+
+      return back('back',t('nav.map'))+heading(name)+'<p class="v3-muted">'+esc(districtCaption(project?.districtId||'suburb'))+'</p>'+locationArt(project?.districtId||'suburb',false)+
         '<section class="v3-card v3-card-body" data-anchor="map.inspectResult">'+
         '<p class="v3-eyebrow">'+esc(s.history.length?t('factYear',{year:s.history.at(-1).year}):t('baseline'))+'</p>'+
         '<p class="v3-state '+esc(project?phase(project):'open')+'">'+esc(project?phaseLabel(phase(project)):t('running'))+'</p>'+
         (project?label(t('plannedOpen'),project.openingYear)+label(t('budget.annual'),money(project.annualOpex))+label(t('period'),project.openingYear+'–'+project.endYear):
           label(t('people'),number(school?.served))+label(t('demand'),number(Math.min(school?.physicalSeats,school?.staffedSeats))))+
-        (project?.siteId?label(t('district'),local(siteData(rules.MEASURES.find(row=>row.id===project.measureId)).find(row=>row.id===project.siteId)?.labels)||project.siteId):'')+
+        (project?.siteId?label(t('site'),local(siteData(rules.MEASURES.find(row=>row.id===project.measureId)).find(row=>row.id===project.siteId)?.labels)||project.siteId):'')+
         restore.map(row=>'<button type="button" class="v3-button primary full" data-v3-measure="'+esc(row.id)+'">'+esc(local(row.labels))+'</button>').join('')+
         '</section>'+button(esc(t('nav.decisions')),'decisions','secondary full');
     }
-    function kpiRows(stats,previous) {
+    function schoolExercise() {
+      const practice=controller.schoolPractice?.();
+      if (!practice?.visible) return '';
+      const comparison=ui().tutorialStep===9,initial=practice.initial;
+      const question=t(comparison?'schoolChangeQuestion':'schoolQuestion');
+      let options;
+      if (comparison) {
+        options=initial===null||practice.recent===null?['higher','same','lower','unknown']:['higher','same','lower'];
+      } else {
+        const choices=initial===null?[0,'no-demand',100]:initial<8?[initial,initial+4,initial+8]:initial>92?[initial-8,initial-4,initial]:[initial-4,initial,initial+6];
+        const offset=(Number.parseInt(state().attemptId.at(-1),16)||0)%choices.length;
+        options=[...choices.slice(offset),...choices.slice(0,offset)].map(value=>typeof value==='number'?Number(value.toFixed(1)):value);
+      }
+      const answerText=value=>comparison?t(value==='unknown'?'schoolUnknown':value):value==='no-demand'?t('noDemand'):number(value,1)+'%';
+      return '<section class="v3-school-exercise" data-v3-school-question>'+
+        (comparison?label(t('baseline'),initial===null?t('noDemand'):number(initial,1)+'%'):'')+
+        '<h3>'+esc(question)+'</h3><div class="v3-practice-options" role="group" aria-label="'+esc(question)+'">'+options.map(value=>
+          button(esc(answerText(value)),comparison?'tutorial-kpi-change':'tutorial-kpi','secondary','data-v3-value="'+esc(value)+'"')).join('')+'</div>'+
+        (practiceError?'<p class="v3-practice-feedback" role="status">'+esc(t(practiceError))+'</p>':'')+'</section>';
+    }
+    function kpiRows(stats,previous,exercise) {
       return Object.entries(stats.kpis||{}).map(([id,kpi])=>{
         const title=t(id==='school'?'stats.schoolAccess':id);
         const delta=kpi.value!==null&&previous?.kpis?.[id]?.value!==null?kpi.value-Number(previous?.kpis?.[id]?.value):null;
-        return '<div class="v3-kpi"><div><strong>'+esc(title)+'</strong><small>'+esc(number(kpi.served))+' / '+esc(number(kpi.demand))+'</small></div><div><b>'+esc(kpi.value===null?t('noDemand'):number(kpi.value,1)+'%')+'</b>'+
-          (Number.isFinite(delta)?'<small class="'+(delta>=0?'positive':'negative')+'">'+(delta>0?'+':'')+esc(number(delta,1))+' '+esc(language()==='ru'?'п.п.':language()==='zh'?'百分点':'pp')+'</small>':'')+'</div></div>';
+        const value=id==='school'&&controller.schoolCoverage?controller.schoolCoverage(stats):kpi.value;
+        return '<div class="v3-kpi" data-v3-kpi="'+esc(id)+'"><div><strong>'+esc(title)+'</strong><small>'+esc(number(kpi.served))+' / '+esc(number(kpi.demand))+'</small></div><div><b>'+esc(value===null?t('noDemand'):number(value,1)+'%')+'</b>'+
+          (Number.isFinite(delta)?'<small class="'+(delta>=0?'positive':'negative')+'">'+(delta>0?'+':'')+esc(number(delta,1))+' '+esc(language()==='ru'?'п.п.':language()==='zh'?'百分点':'pp')+'</small>':'')+'</div></div>'+(id==='school'?exercise:'');
       }).join('');
     }
     function statsView() {
@@ -1232,7 +1338,7 @@
         s.history.map(entry=>'<option value="'+entry.year+'" '+((current.statsYear?Number(current.statsYear)===entry.year:last?.year===entry.year)?'selected':'')+'>'+entry.year+'</option>').join('')+'</select></label>'+
         '<label><span class="v3-sr">'+esc(t('district'))+'</span><select name="stats-district"><option value="all">'+esc(t('whole'))+'</option>'+Object.keys(rules.DISTRICTS).map(id=>'<option value="'+id+'" '+(district===id?'selected':'')+'>'+esc(districtLabel(id))+'</option>').join('')+'</select></label></div>'+
         '<p class="v3-muted">'+esc(current.statsYear==='initial'||!row?t('baseline'):t('stats.after',{year:row.year}))+'</p>'+
-        '<div class="v3-stats-grid"><section class="v3-card v3-card-body" data-anchor="'+(row?'stats.actual':'stats.baseline')+'"><h2>'+esc(t('stats.kpi'))+'</h2>'+kpiRows(current.statsYear==='initial'?previous:projection,previous)+'</section>'+
+        '<div class="v3-stats-grid"><section class="v3-card v3-card-body" data-anchor="'+(row?'stats.actual':'stats.baseline')+'"><h2>'+esc(t('stats.kpi'))+'</h2>'+kpiRows(current.statsYear==='initial'?previous:projection,previous,schoolExercise())+'</section>'+
         '<section class="v3-card v3-card-body"><h2>'+esc(t('stats.support'))+'</h2>'+label(t('support'),number(stats.support,1)+' / 100')+
         Object.entries(stats.groups||{}).map(([id,value])=>'<div class="v3-group"><div>'+label(t(id),number(value,1))+'</div><meter min="0" max="100" value="'+value+'" aria-label="'+esc(t(id))+'">'+value+'</meter></div>').join('')+
         '<details><summary>'+esc(t('reasons'))+'</summary>'+Object.entries(stats.groupReasons||{}).map(([id,value])=>'<p><strong>'+esc(t(id))+'</strong> '+esc(typeof value==='number'?(value>0?'+':'')+number(value,1):value?.delta!==undefined?(value.delta>0?'+':'')+number(value.delta,1):local(value))+'</p>').join('')+'</details></section></div>'+
@@ -1297,7 +1403,6 @@
         '<hr><p class="v3-eyebrow">'+esc(t('newProject'))+'</p><h2>'+esc(local(selectedMeasure()?.labels)||t('measureRequired'))+'</h2>'+
         (current.project?label(t('plannedOpen'),current.project.openingYear)+label(t('budget.now'),money(current.project.costNow))+label(t('budget.annual'),money(current.project.annualOpex)):'')+
         '<hr>'+label(t('budget.remaining'),money(current.finance.cashEnd))+label(t('budget.debt'),money(current.finance.debtEnd))+label(t('budget.reserve'),money(current.finance.reserveEnd))+'</section>'+
-        (state().year===2026&&ui().tutorialStep<8?button(esc(tutorialMessages(ui().tutorialStep))+' →','tutorial-next','secondary full'):'')+
         button(esc(t('confirm',{year})),'commit','primary full','data-anchor="year.commit" '+(!current.ok||busy||(state().year===2026&&ui().tutorialStep<8)?'disabled':''))+
         (controller.handoverStatus?.()?.available?button(esc(language()==='ru'?'Передать управление':language()==='en'?'Hand over administration':'移交管理'),'handover','secondary full'):'');
     }
@@ -1341,11 +1446,12 @@
       const current=ui(),s=state();
       const previousScroll=host.querySelector('.v3-content')?.scrollTop||0;
       const focused=host.contains(document.activeElement)?document.activeElement:null;
-      const focusAttr=focused&&['name','data-v3-action','data-v3-tab','data-v3-site','data-v3-object','data-v3-measure','data-v3-option','data-v3-tax'].find(key=>focused.hasAttribute(key));
+      const focusAttr=focused&&['name','data-v3-value','data-v3-action','data-v3-tab','data-v3-site','data-v3-object','data-v3-measure','data-v3-option','data-v3-tax'].find(key=>focused.hasAttribute(key));
       const focusSelector=focused?.id?'#'+CSS.escape(focused.id):focusAttr?'['+focusAttr+'="'+CSS.escape(focused.getAttribute(focusAttr))+'"]':null;
       const active=!!s&&current.started;
       const welcome=active?welcomeStep(current):0;
       const showWelcome=welcome&&(replayWelcome||current.panel!=='menu');
+      const step=practiceStep(current);
       host.className='governor-v3'+(current.largeText?' v3-large-text':'')+(current.motion==='still'?' v3-still':'');
       host.dataset.v3Tab=current.tab;
       document.body.classList.toggle('governor-v3-active',active);
@@ -1363,11 +1469,11 @@
         (s?'<time>'+s.year+'</time>':'')+'<button type="button" class="v3-menu-button" data-v3-action="menu" aria-label="'+esc(t('menu'))+'">☰</button></header>'+
         '<main class="v3-content '+(current.tab==='advisor'&&!current.panel&&!showWelcome?'v3-chat-content':'')+'" id="v3-main">'+
         (errorText?'<div class="v3-alert" role="alert">'+esc(errorText)+button(esc(t('retry')),'retry','link')+'</div>':'')+
-        (controller.meta?.readOnly?'<div class="v3-alert" role="status">'+esc(t('system.otherTab'))+'</div>':'')+content+'</main>'+
+        (controller.meta?.readOnly?'<div class="v3-alert" role="status">'+esc(t('system.otherTab'))+'</div>':'')+
+        (step?practiceView(step,current):'')+content+'</main>'+
         (active&&!welcome?'<nav class="v3-navigation" aria-label="'+esc(t('menu'))+'">'+navigation.map(tab=>
           '<button type="button" data-v3-tab="'+tab+'" aria-current="'+(current.tab===tab?'page':'false')+'">'+navIcon(tab)+'<span>'+esc(t('nav.'+tab))+'</span></button>').join('')+
-          '<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+esc(t('turn.next'))+'" '+(s.completed?'disabled':'')+'><span aria-hidden="true">'+advanceIcon+'</span><small>'+esc(t('turn.next'))+'</small></button></nav>':'')+
-        '<div class="v3-coach-layer" aria-live="polite"></div>';
+          '<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+esc(t('turn.next'))+'" '+(s.completed?'disabled':'')+'><span aria-hidden="true">'+advanceIcon+'</span><small>'+esc(t('turn.next'))+'</small></button></nav>':'');
       const main=host.querySelector('.v3-content');
       main.scrollTop=focusAfter?0:previousScroll;
       if (focusAfter) {
@@ -1375,57 +1481,32 @@
         if (target&&!target.matches('button,input,select,textarea,a,[tabindex]')) target.tabIndex=-1;
         target?.focus({preventScroll:true});target?.scrollIntoView({block:'nearest'});focusAfter=null;
       } else if (focusSelector) host.querySelector(focusSelector)?.focus({preventScroll:true});
-      main.addEventListener('scroll',scheduleCoach,{passive:true});
-      observer?.disconnect();observer=new ResizeObserver(scheduleCoach);observer.observe(main);
-      scheduleCoach();
+      if (step) tutorialTarget(step,current)?.classList.add('v3-coach-target');
     }
-    function tutorialTarget() {
-      const current=ui(),step=current.tutorialStep,tab=current.tab,panel=current.panel;
-      if (!current.started||!state()||step>10||state().completed||panel==='menu'||welcomeStep(current)) return null;
+    function tutorialTarget(step,current) {
+      const {tab,panel}=current;
       const locate=selector=>host.querySelector(selector);
       const tabButton=name=>locate('[data-v3-tab="'+name+'"]');
-      if (step===1) return tab==='decisions'?(locate('[data-anchor="event.open"]')||tabButton('decisions')):tabButton('decisions');
-      if (step===2) return panel==='event'?(optionDraft?locate('[data-v3-action="save-event"]'):locate('[data-anchor="event.option"]')):tabButton('decisions');
-      if (step===3) return panel==='measures'?locate('.v3-measures'):tab==='decisions'?locate('[data-anchor="measure.select"]'):tabButton('decisions');
-      if (step===4||step===10) {
-        if (tab!=='map') return tabButton('map');
-        if (panel==='sites') return locate('[data-v3-action="accept-site"]');
-        if (step===4&&selectedMeasure()?.siteIds.length) return locate('[data-v3-action="sites"]')||locate('[data-v3-action="project-back"]');
-        return locate('[data-v3-object]')||locate('[data-anchor="map.inspectResult"]');
-      }
-      if (step===5) return tabButton('budget');
-      if (step===6||step===9) return locate('[data-v3-action="result-next"]')||tabButton('stats');
+      const route=locate('[data-v3-action="tutorial-next"]');
+      if (step===1) return locate('[data-anchor="event.open"]')||route;
+      if (step===2) return panel==='event'?locate(optionDraft?'[data-v3-action="save-event"]':'[data-v3-option]'):route;
+      if (step===3) return panel==='measures'?locate('[data-v3-measure]'):route||locate('[data-anchor="measure.select"]');
+      if (schoolExampleNeeded(step,current)) return locate('[data-v3-action="tutorial-school"]');
+      if (step===4) return panel==='sites'?locate(current.inspectedSiteId?'[data-v3-action="accept-site"]':'.v3-site-choices'):locate('[data-v3-action="sites"]')||route;
+      if (step===5) return locate('[data-anchor="budget.tax"]')||tabButton('budget');
+      if (step===6||step===9) return locate('[data-v3-school-question]')||locate('#v3-tax-practice')||locate('[data-v3-action="result-next"]')||tabButton('stats');
       if (step===7) return locate('[data-v3-action="advance"]');
-      if (step===8) return locate('[data-v3-action="commit"]')||locate('[data-v3-action="advance"]');
+      if (step===8) return locate('[data-v3-fix]')||locate('[data-v3-action="commit"]')||locate('[data-v3-action="advance"]');
+      if (step===10) return tab==='map'&&!panel?locate('.v3-map-grid .v3-measure[data-v3-object]'):tabButton('map');
       return null;
-    }
-    function drawCoach() {
-      const layer=host.querySelector('.v3-coach-layer'),target=tutorialTarget();
-      if (!layer) return;
-      layer.replaceChildren();
-      if (!target) return;
-      const rect=target.getBoundingClientRect(),width=window.innerWidth,height=window.visualViewport?.height||window.innerHeight;
-      if (rect.bottom<54||rect.top>height-10) return;
-      const cut=document.createElement('div');cut.className='v3-coach-cut';
-      const top=Math.max(54,rect.top-4),bottom=Math.min(height-6,rect.bottom+4),left=Math.max(4,rect.left-4),right=Math.min(width-4,rect.right+4);
-      Object.assign(cut.style,{top:top+'px',left:left+'px',width:Math.max(0,right-left)+'px',height:Math.max(0,bottom-top)+'px'});
-      const voice=document.createElement('div');voice.className='v3-coach';
-      voice.innerHTML=picture('assets/characters/ilya-avatar.webp','','')+'<div><strong>'+esc(t('localAdvisor'))+'</strong><p>'+esc(tutorialMessages(ui().tutorialStep))+'</p></div>';
-      layer.append(cut,voice);
-      const below=height-bottom>130,at=below?bottom+18:Math.max(60,top-92);
-      voice.style.top=at+'px';
-      const arrow=document.createElement('span');arrow.className='v3-coach-arrow';arrow.textContent=below?'↑':'↓';
-      arrow.style.left=Math.max(18,Math.min(width-24,(left+right)/2))+'px';arrow.style.top=(below?bottom:top-24)+'px';layer.append(arrow);
-    }
-    function scheduleCoach() {
-      cancelAnimationFrame(frame);frame=requestAnimationFrame(drawCoach);
     }
     async function chooseMeasure(id) {
       const measure=measures().find(row=>row.id===id);
       if (!measure) return;
       await controller.patchDraft({measureId:id,siteId:null,districtId:measure.districtId,promise:null});
-      await storeUI({panel:id==='defer'?null:'project',tab:'decisions',inspectedSiteId:null,districtId:measure.districtId||'suburb'});
+      await storeUI({panel:id==='defer'?null:'project',tab:'decisions',inspectedSiteId:null,districtId:measure.districtId||ui().districtId});
       await finishStep(3);
+      focusAfter='v3-heading';
     }
     async function submitChat(question,options) {
       if (!question.trim()||chatPending) return;
@@ -1454,7 +1535,15 @@
         if (!state().history.some(row=>row.year===year&&Array.isArray(row.projects))) return;
         await pushPanel('history-map',{mapYear:year});focusAfter='v3-heading';
       });
-      if (item.dataset.v3Tax) return perform(()=>controller.patchDraft({taxMode:item.dataset.v3Tax}));
+      if (item.dataset.v3Tax) {
+        const taxMode=item.dataset.v3Tax;
+        if (taxMode===state().draft.taxMode) return;
+        return perform(async()=>{
+          const wasTaxPractice=ui().tutorialStep===5;
+          await controller.patchDraft({taxMode});
+          if (wasTaxPractice&&ui().tutorialStep===6) focusAfter='v3-tax-practice';
+        });
+      }
       if (item.dataset.v3Tab) return perform(()=>navigate(item.dataset.v3Tab));
       if (item.dataset.v3District) return perform(()=>storeUI({districtId:item.dataset.v3District}));
       if (item.dataset.v3Site) return perform(()=>storeUI({inspectedSiteId:item.dataset.v3Site}));
@@ -1464,6 +1553,7 @@
         await storeUI({tab:'map',panel:'object',objectId:item.dataset.v3Object,districtId:project?.districtId||'suburb'});
         if (!selectedMeasure()?.siteIds.length) await finishStep(4);
         await finishStep(10);
+        focusAfter='v3-heading';
       });
       if (item.dataset.v3Fix) return perform(async()=>{
         const code=item.dataset.v3Fix;
@@ -1474,7 +1564,10 @@
       });
       const action=item.dataset.v3Action;
       if (!action) return;
-      if (action==='ask-navigation'||action==='ask-compare') return submitChat(t(action==='ask-navigation'?'navigation':'compare'));
+      if (action==='ask-navigation'||action==='ask-compare') {
+        const year=action==='ask-navigation';
+        return submitChat(t(year?'navigation':'compare'),{guide:year?'year':'choices'});
+      }
       return perform(async()=>{
         if (navigation.includes(action)) return navigate(action);
         if (action==='start') {await controller.start();focusAfter='v3-heading';}
@@ -1493,17 +1586,23 @@
         else if (action==='back') await closePanel();
         else if (action==='exit') await controller.exit();
         else if (action==='retry') await controller.retry?.();
-        else if (action==='event') {optionDraft=state().draft.eventChoice;await pushPanel('event');await finishStep(1);focusAfter='v3-heading';}
-        else if (action==='save-event') {await controller.patchDraft({eventChoice:optionDraft??state().draft.eventChoice});await closePanel();await finishStep(2);optionDraft=null;}
+        else if (action==='event') await openEvent();
+        else if (action==='save-event') {await controller.patchDraft({eventChoice:optionDraft??state().draft.eventChoice});await closePanel();await finishStep(2);optionDraft=null;focusAfter='v3-heading';}
         else if (action==='measures') {await pushPanel('measures');focusAfter='v3-heading';}
         else if (action==='project') await pushPanel('project');
         else if (action==='defer') await chooseMeasure('defer');
         else if (action==='project-back') await storeUI({tab:'decisions',panel:'project'});
-        else if (action==='sites') {
-          await storeUI({tab:'map',panel:'sites',districtId:selectedMeasure()?.districtId||'suburb'});focusAfter='v3-heading';
-        }
+        else if (action==='sites') await openSites();
         else if (action==='accept-site') {
-          await controller.patchDraft({siteId:item.dataset.siteId});await storeUI({tab:'decisions',panel:'project'});await finishStep(4);
+          await controller.patchDraft({siteId:item.dataset.siteId});await storeUI({tab:'decisions',panel:'project'});await finishStep(4);focusAfter='v3-heading';
+        }
+        else if (action==='restore-tutorial-tax'&&ui().taxPractice) {
+          await controller.patchDraft({taxMode:ui().taxPractice.from});focusAfter='v3-tax-practice';
+        }
+        else if (action==='tutorial-kpi'||action==='tutorial-kpi-change') {
+          const correct=await controller.answerSchoolPractice(item.dataset.v3Value);
+          practiceError=correct?'':action==='tutorial-kpi'?'schoolWrong':'schoolWrongChange';
+          if (correct) focusAfter='v3-heading';
         }
         else if (action==='loan') {loanDraft={...(state().draft.loan||{principal:0,termYears:3})};await pushPanel('loan');}
         else if (action==='save-loan') {
@@ -1521,11 +1620,17 @@
         }
         else if (action==='tutorial-next') {
           const step=ui().tutorialStep;
-          if (step<=3) await storeUI({tab:'decisions',panel:step===2?'event':step===3?'measures':null});
-          else if (step===4||step===10) await storeUI({tab:'map',panel:null});
+          if (step<=2) await openEvent();
+          else if (step===3) {await pushPanel('measures',{tab:'decisions'});focusAfter='v3-heading';}
+          else if (step===4) await openSites();
           else if (step===5) await navigate('budget');
           else if (step===6||step===9) await navigate('stats');
-          else await storeUI({tab:'decisions',panel:null});
+          else if (step===10) await navigate('map');
+        }
+        else if (action==='tutorial-school') {
+          if (!schoolExampleNeeded(ui().tutorialStep,ui())) return;
+          await pushPanel('object',{tab:'map',objectId:'old-school'});
+          focusAfter='v3-heading';
         }
         else if (action==='handover') {await controller.handover({revision:state().revision});await storeUI({tab:'decisions',panel:null});}
         else if (action==='result-next') {
@@ -1548,8 +1653,8 @@
         else if (name==='still') await storeUI({motion:input.checked?'still':'auto'});
         else if (name==='large') await storeUI({largeText:input.checked});
         else if (name==='budget-year') await storeUI({budgetYear:input.value});
-        else if (name==='stats-year') await storeUI({statsYear:input.value});
-        else if (name==='stats-district') await storeUI({statsDistrict:input.value});
+        else if (name==='stats-year') {practiceError='';await storeUI({statsYear:input.value});}
+        else if (name==='stats-district') {practiceError='';await storeUI({statsDistrict:input.value});}
         else if (name==='district') await storeUI({districtId:input.value});
         else if (name==='reserveDraw'||name==='reserveContribution') await controller.patchDraft({[name]:Number(input.value)});
         else if (name.startsWith('sector:')) await controller.patchDraft({sectorLimits:{...state().draft.sectorLimits,[name.split(':')[1]]:Number(input.value)}});
@@ -1574,14 +1679,13 @@
       const visual=window.visualViewport;
       host.style.setProperty('--v3-height',(visual?.height||window.innerHeight)+'px');
       host.classList.toggle('v3-keyboard-open',ui().tab==='advisor'&&!!visual&&window.innerHeight-visual.height>140);
-      scheduleCoach();
     }
     host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('input',input);host.addEventListener('submit',submit);
     host.addEventListener('error',imageError,true);
     window.addEventListener('popstate',popstate);window.addEventListener('resize',viewportChanged);window.visualViewport?.addEventListener('resize',viewportChanged);
     viewportChanged();render();
     return {render,navigate,destroy(){
-      destroyed=true;observer?.disconnect();cancelAnimationFrame(frame);
+      destroyed=true;
       host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('input',input);host.removeEventListener('submit',submit);
       host.removeEventListener('error',imageError,true);
       window.removeEventListener('popstate',popstate);window.removeEventListener('resize',viewportChanged);window.visualViewport?.removeEventListener('resize',viewportChanged);

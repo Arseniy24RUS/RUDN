@@ -15,16 +15,19 @@
   function lesson(record) {
     const {ui,state} = record;
     if(state.handover||ui.tutorialStep>=11)return record;
+    const measure=state.draft.measureId&&G.V3Rules.availableMeasures(state).find(row=>row.id===state.draft.measureId);
+    const requiredSites=measure?.siteIds||[];
+    const practicedMap=requiredSites.length?requiredSites.includes(state.draft.siteId):ui.tab==='map'&&ui.panel==='object';
     const completed=[
       ui.panel==='event',
       ['a','b','base'].includes(state.draft.eventChoice),
       Boolean(state.draft.measureId),
-      Boolean(state.draft.siteId)||ui.tab==='map'&&ui.panel==='object',
-      ui.tab==='budget'&&ui.panel===null,
-      ui.tab==='stats'&&ui.panel===null,
+      practicedMap,
+      Boolean(ui.taxPractice),
+      false,
       ui.panel==='review',
       state.history.length>0,
-      state.history.length>0&&ui.tab==='stats'&&ui.panel===null,
+      false,
       state.history.length>0&&ui.tab==='map'&&ui.panel==='object'
     ];
     let step=ui.tutorialStep;
@@ -44,6 +47,19 @@
       !draft.eventChoice && !draft.measureId && !draft.loan && !draft.promise &&
       draft.taxMode === 'moderate' && !draft.reserveDraw && !draft.reserveContribution && !Object.keys(draft.sectorLimits || {}).length;
     return {...ui,welcomeStep:fresh?1:4};
+  }
+  function schoolCoverage(stats) {
+    const value=stats?.kpis?.school?.value;
+    return Number.isFinite(value)?Number(value.toFixed(1)):null;
+  }
+  function schoolPractice({state,ui}) {
+    const row=state.history.at(-1),step=ui.tutorialStep;
+    const initial=schoolCoverage(state.initialStats),recent=schoolCoverage(row?.stats);
+    const whole=(ui.statsDistrict||'all')==='all';
+    const initialPeriod=ui.statsYear==='initial'||!row;
+    const recentPeriod=row&&ui.statsYear!=='initial'&&(!ui.statsYear||Number(ui.statsYear)===row.year);
+    const visible=whole&&ui.tab==='stats'&&ui.panel===null&&(step===6?initialPeriod:step===9&&recentPeriod);
+    return {initial,recent,visible};
   }
   async function loadSchoolMap() {
     const response = await fetch(G.resolveAsset('data/v3-school-map.json'));
@@ -240,6 +256,7 @@
       getQuote:()=>quote,
       eventArt:G.V3EventArt,
       getUI:()=>record?viewUI(record):ui,
+      schoolCoverage,schoolPractice:()=>record?schoolPractice(record):null,
       language:()=>language,
       async setLanguage(next) {
         if (G.I18n.normalize(next)==='zh') await G.I18n.ensureCatalog();
@@ -252,8 +269,25 @@
       exit:async () => {await busy;if (active()) bridge.exit();},
       patchDraft:patch => change(before => {
         if (before.state.completed) throw Error('governor-v3/stale-year');
-        return {...before,state:{...before.state,draft:patchState(before.state.draft,patch,draftFields)}};
+        const draft=patchState(before.state.draft,patch,draftFields),state={...before.state,draft};
+        const from=before.state.draft.taxMode,to=draft.taxMode;
+        const ui=before.ui;
+        if (ui.tutorialStep!==5||ui.tab!=='budget'||ui.panel!==null||from===to||!Object.hasOwn(G.V3Rules.TAX_MODES,to)) return {...before,state};
+        const eventPlan=settlementPlan(before,before.state).plan;
+        const after=G.V3Rules.quote(state,{eventPlan}).finance;
+        const taxPractice={from,to,taxesBefore:quote.finance.taxes,taxesAfter:after.taxes,cashBefore:quote.finance.cashEnd,cashAfter:after.cashEnd};
+        return {...before,state,ui:{...ui,taxPractice}};
       }),
+      async answerSchoolPractice(answer) {
+        if (!record) return false;
+        const {initial,recent,visible}=schoolPractice(record),step=record.ui.tutorialStep;
+        if (!visible) return false;
+        const direction=initial===null||recent===null?'unknown':recent>initial?'higher':recent<initial?'lower':'same';
+        const expected=step===6?String(initial??'no-demand'):direction;
+        if (answer!==expected) return false;
+        await change(before=>({...before,ui:{...before.ui,tutorialStep:step+1}}),false);
+        return true;
+      },
       saveUI:patch => {
         if (!record) {
           ui=patchState(ui,patch,allowedUI);
@@ -296,7 +330,7 @@
       errorMessage(error,locale){
         const rows={
           'concurrent-change':['В другой вкладке появились изменения. Открыта свежая версия года. Проверьте свой план.','Another tab saved changes. Review the latest annual plan.','另一标签页保存了更改。请检查最新年度计划。'],
-          'tutorial-required':['Завершите подсказки Орлова о карте, бюджете и исходных показателях.','Follow Orlov’s prompts for the map, budget and starting indicators.','请按奥尔洛夫的提示查看地图、预算和初始指标。'],
+          'tutorial-required':['Выполните задания Орлова по карте, бюджету и статистике.','Complete Orlov’s exercises on the map, budget and statistics.','请完成奥尔洛夫安排的地图、预算和统计练习。'],
           'event-recovery':['Ситуация ещё не показана. Повторите чтение сохранения.','The event is still hidden. Retry reading the saved attempt.','年度情境尚未显示。请重试读取已保存的进度。'],
           'save-error':['Запись не подтверждена. Проверьте сохранённый план перед повтором.','Saving was not confirmed. Review the saved plan before retrying.','尚未确认保存。重试前请检查已保存的计划。']
         };

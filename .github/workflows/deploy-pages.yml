@@ -127,7 +127,8 @@ jobs:
           image_hotfix_base = '5828b851c4ad9efdbff0aaa890d67c9ed1599bfc'
           cover_hotfix_base = '0770c5946dc76335d34d0707665400ff5209dbba'
           welcome_cover_base = '93eeae40c670d1d6814cc0859777ab6076900102'
-          if base not in (release_base, image_hotfix_base, cover_hotfix_base, welcome_cover_base):
+          first_year_guide_base = '9bb503f8a3f423c279595fcd96aa8399ce01c09a'
+          if base not in (release_base, image_hotfix_base, cover_hotfix_base, welcome_cover_base, first_year_guide_base):
               raise SystemExit('Governor publication requires a reviewed base on main')
           if re.findall(r'\[[^\]\r\n]+\]', os.environ['GOVERNOR_PUSH_MESSAGE']) != ['[governor-v3-publish]']:
               raise SystemExit('Do not combine the Governor publication marker with other markers')
@@ -150,6 +151,9 @@ jobs:
           if base == welcome_cover_base:
               reviewed['site'] = '5f8d55d552ab233f66ac029c58021d25b90479de'
               reviewed['scripts'] = 'd33b590f781ed9d9c8b8c165237e0fd130696ffc'
+          if base == first_year_guide_base:
+              reviewed['site'] = 'a0de456d1dc652d30799d6b0e37ad853edea5fb9'
+              reviewed['scripts'] = '5dcde3b8dcbcbe0abd6e39c90918067d733226ff'
           for path, expected in reviewed.items():
               if git('rev-parse', 'HEAD:' + path) != expected:
                   raise SystemExit('Content differs from the reviewed Governor V3 candidate: ' + path)
@@ -180,6 +184,17 @@ jobs:
                   'site/assets/course/previews/seminar_07_simulator.jpg',
                   'site/apps/governor/src/v3-ui.js',
                   'site/apps/governor/src/v3-runtime.js',
+                  'site/apps/governor/v3.css',
+                  'scripts/test_governor_v3_browser.py',
+              }
+              unexpected = sorted(set(changed) - allowed_files)
+          elif base == first_year_guide_base:
+              allowed_files = {
+                  workflow,
+                  'site/apps/governor/src/v3-advisor.js',
+                  'site/apps/governor/src/v3-ui.js',
+                  'site/apps/governor/src/v3-runtime.js',
+                  'site/apps/governor/src/v3-rules.js',
                   'site/apps/governor/v3.css',
                   'scripts/test_governor_v3_browser.py',
               }
@@ -803,6 +818,9 @@ jobs:
         run: |
           python scripts/test_governor_v3_browser.py --engine chromium --offline-final --lost-receipt --output "${{ runner.temp }}/governor-browser-qa"
           python scripts/test_governor_v3_browser.py --engine webkit --first-year --output "${{ runner.temp }}/governor-webkit-qa"
+      - name: Verify the first year from a district without map objects
+        if: env.GOVERNOR_V3_PUBLISH == 'true' && github.event.before == '9bb503f8a3f423c279595fcd96aa8399ce01c09a'
+        run: python scripts/test_governor_v3_browser.py --engine webkit --first-year --first-measure=outreach --output "${{ runner.temp }}/governor-webkit-qa/river"
       - name: Test native Settlements, all locales and one-region loading
         if: (env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true') && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true'
         run: python scripts/test-settlements-browser.py --output "${{ runner.temp }}/settlements-browser-qa"

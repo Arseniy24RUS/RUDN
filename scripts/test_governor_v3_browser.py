@@ -100,7 +100,7 @@ def main():
     parse.add_argument('--first-year', action='store_true')
     parse.add_argument('--offline-final', action='store_true')
     parse.add_argument('--lost-receipt', action='store_true')
-    parse.add_argument('--first-measure',choices=['school-campus','school-bus','second-shift','defer'],default='school-campus')
+    parse.add_argument('--first-measure',choices=['school-campus','school-bus','second-shift','outreach','defer'],default='school-campus')
     args=parse.parse_args()
     args.output.mkdir(parents=True,exist_ok=True)
     receipts={}
@@ -144,6 +144,10 @@ def main():
             first_saved=data(course,STUDENT_A,'course')
             assert first_saved['state']['draft']['eventChoice'] is None
             receipts['courseWelcome']=complete_welcome(course,STUDENT_A,'course',args.output,reload_welcome=True)
+            click(course,'[data-v3-tab=advisor]')
+            click(course,'[data-v3-action=ask-navigation]')
+            course.get_by_text('Сначала ответьте на ситуацию года.',exact=False).wait_for(timeout=WAIT)
+            click(course,'[data-v3-tab=decisions]')
             play(course,args.first_year,args.output,data,STUDENT_A,'course',offline_final=args.offline_final,first_measure=args.first_measure)
             if not args.first_year:
                 final=data(course,STUDENT_A,'course')
@@ -165,6 +169,10 @@ def main():
                 guest.locator(READY).wait_for(state='attached')
                 click(guest,'[data-v3-action=start]')
                 receipts['guestWelcome']=complete_welcome(guest,None,'free',args.output)
+                click(guest,'[data-v3-tab=advisor]')
+                click(guest,'[data-v3-action=ask-compare]')
+                guest.get_by_text('У проектов сравните цену запуска',exact=False).wait_for(timeout=WAIT)
+                click(guest,'[data-v3-tab=decisions]')
                 play(guest,False,args.output,data,None,'free')
                 receipts['guestFinal']=verify_completed(guest,data(guest,None,'free'),None)
                 guest.screenshot(path=args.output/'guest-final.png')
@@ -234,36 +242,81 @@ def verify_completed(page, record, profile):
 def play(page, first_year, out, snapshot, profile, context, offline_final=False, first_measure='school-campus'):
     """Close years by exercising the same review and confirmation controls as a player."""
     number=1 if first_year else 20
+    def current(): return snapshot(page,profile,context)
     for index in range(number):
         if offline_final and index==19:
             click(page,'[data-v3-action=menu]')
             page.locator('#offline-status[data-platform-offline=ready]').wait_for(timeout=120000)
             click(page,'[data-v3-action=back]')
             page.context.set_offline(True)
-        close_year(page,index,out,first_measure)
-        record=snapshot(page,profile,context)
+        close_year(page,index,out,first_measure,current)
+        record=current()
         assert len(record['state']['history'])==index+1,record['state']['year']
-        validate_year(record['state']['history'][-1])
+        year=record['state']['history'][-1]
+        validate_year(year)
+        if index==0 and first_measure=='outreach':
+            assert year['measure']['measureId']=='outreach' and year['measure']['districtId']=='river'
 
 
-def close_year(page, index, out, first_measure):
+def school_percent(page, stats):
+    value=stats['kpis']['school']['value']
+    return page.evaluate('(value)=>Number(value.toFixed(1))',value)
+
+
+def practice_budget_and_stats(page, out, current):
+    click(page,'[data-v3-tab=budget]')
+    before=current()
+    original=before['state']['draft']['taxMode']
+    change='high' if original!='high' else 'moderate'
+    click(page,f'[data-v3-tax="{original}"]')
+    assert current()['ui']['tutorialStep']==5
+    click(page,f'[data-v3-tax="{change}"]')
+    after=current()
+    assert after['state']['draft']['taxMode']==change and after['ui']['tutorialStep']==6
+    exercise=after['ui']['taxPractice']
+    assert exercise['from']==original and exercise['to']==change
+    assert exercise['taxesBefore']!=exercise['taxesAfter'] and exercise['cashBefore']!=exercise['cashAfter']
+    page.screenshot(path=out/'first-budget.png')
+    click(page,'[data-v3-action="restore-tutorial-tax"]')
+    assert current()['state']['draft']['taxMode']==original
+
+    click(page,'[data-v3-tab=stats]')
+    assert current()['ui']['tutorialStep']==6
+    percentage=school_percent(page,before['state']['initialStats'])
+    answer='[data-v3-action="tutorial-kpi"]'
+    click(page,answer+f':not([data-v3-value="{percentage:g}"])')
+    assert current()['ui']['tutorialStep']==6
+    click(page,answer+f'[data-v3-value="{percentage:g}"]')
+    assert current()['ui']['tutorialStep']==7
+    page.screenshot(path=out/'first-stats-practice.png')
+
+
+def close_year(page, index, out, first_measure, current=None):
     click(page,'[data-v3-action=event]')
     click(page,'[data-v3-option=base]')
     click(page,'[data-v3-action=save-event]')
     click(page,'[data-v3-action=measures]')
     measure=first_measure if index==0 else 'defer'
+    if measure=='outreach':
+        page.get_by_role('heading',name='Район · Речная долина',exact=True).wait_for(timeout=WAIT)
     click(page,'[data-v3-action=defer]' if measure=='defer' else '[data-v3-measure='+measure+']')
     if index == 0:
+        current=current or (lambda: data(page,None,'free'))
+        assert not visible(page,'[data-v3-action=budget]').count()
         if measure=='school-campus':
-            click(page,'[data-v3-action=sites]')
+            click(page,'[data-v3-tab=map]')
+            click(page,'[data-v3-object=old-school]')
+            incomplete=current()
+            assert incomplete['ui']['tutorialStep']==4 and incomplete['state']['draft']['siteId'] is None
+            click(page,'[data-v3-action=advance]')
+            assert not visible(page,'[data-v3-action=commit]').is_enabled()
+            click(page,'[data-v3-fix=site-required]')
             click(page,'[data-v3-site=yard]')
             click(page,'[data-v3-action=accept-site]')
         else:
             click(page,'[data-v3-tab=map]')
-            click(page,'[data-v3-object=old-school]')
-        click(page,'[data-v3-tab=budget]')
-        page.screenshot(path=out/'first-budget.png')
-        click(page,'[data-v3-tab=stats]')
+            click(page,'[data-v3-action=tutorial-school]' if measure=='outreach' else '[data-v3-object=old-school]')
+        practice_budget_and_stats(page,out,current)
     click(page,'[data-v3-action=advance]')
     if index == 0:
         page.screenshot(path=out/'first-review.png')
@@ -277,8 +330,20 @@ def close_year(page, index, out, first_measure):
     if index < 19:
         click(page,'[data-v3-action=result-next]')
         if index==0:
+            after=current()
+            state=after['state']
+            previous=school_percent(page,state['initialStats'])
+            actual=school_percent(page,state['history'][-1]['stats'])
+            direction='higher' if actual>previous else 'lower' if actual<previous else 'same'
+            assert after['ui']['tutorialStep']==9
+            click(page,f'[data-v3-action="tutorial-kpi-change"][data-v3-value="{direction}"]')
+            assert current()['ui']['tutorialStep']==10
             click(page,'[data-v3-tab=map]')
-            click(page,'[data-v3-object=old-school]')
+            if measure=='outreach':
+                project_id=state['history'][-1]['measure']['id']
+                click(page,f'[data-v3-object="{project_id}"]')
+            else:
+                click(page,'[data-v3-object=old-school]')
         click(page,'[data-v3-tab=decisions]')
 
 

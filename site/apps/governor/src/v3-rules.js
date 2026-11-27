@@ -13,9 +13,9 @@
   const EVENT_SECTORS = Object.freeze({edu:'education', health:'health', transport:'transport', utility:'housingUtilities', ecology:'housingUtilities', economy:'economy', social:'social', housing:'housingUtilities', public:'administration', budget:'administration'});
   const DISTRICTS = Object.freeze({
     suburb: {labels: {ru:'Новый берег', en:'New Bank', zh:'新岸'}, x:.80, y:.65},
-    north: {labels: {ru:'Северные поселения', en:'Northern villages', zh:'北部村落'}, x:.45, y:.23},
-    river: {labels: {ru:'Речной', en:'Riverside', zh:'河滨镇'}, x:.69, y:.42},
-    industrial: {labels: {ru:'Заводской город', en:'Industrial city', zh:'工业城'}, x:.26, y:.52},
+    north: {labels: {ru:'Северные районы', en:'Northern districts', zh:'北部地区'}, x:.45, y:.23},
+    river: {labels: {ru:'Речная долина', en:'River valley', zh:'河谷'}, x:.69, y:.42},
+    industrial: {labels: {ru:'Промышленный пояс', en:'Industrial belt', zh:'工业带'}, x:.26, y:.52},
     capital: {labels: {ru:'Областной центр', en:'Regional centre', zh:'州中心'}, x:.57, y:.73}
   });
   const L = (ru, en, zh) => ({ru, en, zh});
