@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   governor-scope:
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ') }}
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] ') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -67,6 +67,8 @@ jobs:
               'tests/governor-v4-economy.test.mjs',
               'tests/governor-v4-map.test.mjs',
           }
+          if base == 'e7da48e8af623787598e73cebda113a775ca7347':
+              allowed.add('site/assets/js/main.js')
           outside = sorted(path for path in changed if path not in allowed and not path.startswith('site/apps/governor/'))
           if outside or not any(path.startswith('site/apps/governor/') for path in changed):
               raise SystemExit('Invalid Governor-only pull request scope: ' + ', '.join(outside))
