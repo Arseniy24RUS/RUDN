@@ -206,9 +206,13 @@ test('the last good current revision and the previous campaign can each recover 
     const restored=await reopen.replaceDurably(selected,run);
     assert.equal(restored.submissionId,choice==='current'?run.submissionId:oldRun.submissionId);
     assert.equal(reopen.inspect().state.storiesRunId,selected.storiesRunId);
-    assert.equal(db.getItem(S.Previous),pinned);assert.equal(db.getItem(S.Backup),rolling);
+    assert.equal(reopen.previous().state.storiesRunId,choice==='current'?'earlier':'now');
+    if(choice==='current')assert.equal(db.getItem(S.Previous),pinned);
+    assert.equal(db.getItem(S.Backup),rolling);
     assert.ok(reopen.recovery().some(entry=>entry.key===S.Key&&entry.raw==='{damaged current'));
-    db.setItem(S.Backup,pinned);assert.equal(reopen.recoverableRevision('corrupt',null),null);
+    defer(selected);reopen.write(selected);
+    assert.equal(reopen.previous().state.storiesRunId,choice==='current'?'earlier':'now','the other healthy campaign survives autosave');
+    db.setItem(S.Backup,db.getItem(S.Previous));assert.equal(reopen.recoverableRevision('corrupt',null),null);
     db.removeItem(S.Previous);assert.equal(reopen.recoverableRevision('corrupt',null),null);
   }
 });

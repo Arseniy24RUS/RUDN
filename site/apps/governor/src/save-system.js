@@ -84,7 +84,8 @@
    const previous=this.previous().state,revision=this.inspect(Backup).state;
    if(!previous||!revision)return null;
    const older=previous.storiesRunId,current=revision.storiesRunId;
-   if(!older||!current||older===current||(run?.campaignToken&&current!==run.campaignToken))return null;
+   const distinct=older&&current?older!==current:previous.sessionId!==revision.sessionId;
+   if(!distinct||(run?.campaignToken&&current!==run.campaignToken))return null;
    return revision;
   }
   legacy(){return this.inspect('rudn-governor-stage8-state');}
@@ -123,9 +124,14 @@
    if(run?.submissionId&&run.campaignToken&&run.campaignToken===old.state.storiesRunId)data.archivedRun=run;
    this.storage.setItem(Previous,JSON.stringify(data));
   }
-  replaceCurrent(raw,run,commit,durable){
+  replaceCurrent(raw,run,commit,durable,goodRevision){
    const prior=this.storage.getItem(Previous);
-   this.pinCampaign(raw,run);
+   if(goodRevision){
+    this.preserve(raw,Key,inspectAutosave(raw).reason);
+    // Restoring the older campaign must not strand the newer campaign's last
+    // surviving revision in the rolling slot, which will rotate on the next save.
+    this.pinCampaign(goodRevision,run);
+   }else this.pinCampaign(raw,run);
    const pinned=this.storage.getItem(Previous);
    const finish=()=>{
     if(this.storage.getItem(Key)!==raw)throw error('other-tab');
@@ -146,13 +152,16 @@
   replace(state,run,durable=false){
    if(state?.practiceOf)throw error('practice-only');
    const pinned=this.storage.getItem(Previous),previous=inspectAutosave(pinned);
-   let restoredRun=null;
-   if(previous.status==='ok'&&JSON.stringify(previous.state)===JSON.stringify(state))restoredRun=JSON.parse(pinned).archivedRun;
-   else if(run?.campaignToken&&run.campaignToken===state?.storiesRunId&&inspectAutosave(this.storage.getItem(Key)).status==='corrupt'){
+   let restoredRun=null,goodRevision=null;
+   const primaryStatus=inspectAutosave(this.storage.getItem(Key)).status;
+   if(previous.status==='ok'&&JSON.stringify(previous.state)===JSON.stringify(state)){
+    restoredRun=JSON.parse(pinned).archivedRun;
+    if(this.recoverableRevision(primaryStatus,run))goodRevision=this.storage.getItem(Backup);
+   }else if(run?.campaignToken&&run.campaignToken===state?.storiesRunId&&primaryStatus==='corrupt'){
     const revision=this.inspect(Backup).state;
     if(revision&&JSON.stringify(revision)===JSON.stringify(state))restoredRun=run;
    }
-   const saved=this.write(state,{replace:true,run,durable});
+   const saved=this.write(state,{replace:true,run,durable,goodRevision});
    return durable?Promise.resolve(saved).then(()=>restoredRun||null):restoredRun||null;
   }
   async replaceDurably(state,run){
@@ -165,7 +174,7 @@
    this.replacing=true;
    try{return await this.clear(run,true);}finally{this.replacing=false;}
   }
-  write(state,{replace=false,run=null,durable=false}={}){
+  write(state,{replace=false,run=null,durable=false,goodRevision=null}={}){
    if(!E().validateState(state))throw error('invalid-state');
    const raw=this.storage.getItem(Key);
    if(this.token!==undefined&&raw!==this.token)throw error('other-tab');
@@ -175,7 +184,7 @@
    const revision=Number.isSafeInteger(previous?.revision)?previous.revision+1:1;
    const next=JSON.stringify(releasePolicy.mark({format:'rudn-autosave',schema:SCHEMA,model:state.version,revision,savedAt:new Date().toISOString(),state}));
    const commit=()=>{this.storage.setItem(Key,next);this.token=next;return true;};
-   if(replace)return this.replaceCurrent(raw,run,commit,durable);
+   if(replace)return this.replaceCurrent(raw,run,commit,durable,goodRevision);
    this.preservePrevious(raw);return commit();
   }
   clear(run,durable=false){
