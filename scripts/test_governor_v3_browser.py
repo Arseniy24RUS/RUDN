@@ -56,6 +56,15 @@ def course_entry(page, server):
     page.locator(READY).wait_for(state='attached',timeout=WAIT)
 
 
+def toggle_menu_return(page, return_to):
+    toggle='.v3-header [data-v3-action=menu]'
+    click(page,toggle)
+    visible(page,toggle+'[aria-expanded="true"]').wait_for(timeout=WAIT)
+    click(page,toggle)
+    visible(page,toggle+'[aria-expanded="false"]').wait_for(timeout=WAIT)
+    visible(page,return_to).wait_for(timeout=WAIT)
+
+
 def complete_welcome(page, profile, context, output, reload_welcome=False):
     before=data(page,profile,context)
     for step in range(1,4):
@@ -67,6 +76,8 @@ def complete_welcome(page, profile, context, output, reload_welcome=False):
         assert not visible(page,'[data-v3-action="event"]').count()
         assert not visible(page,'.v3-navigation').count()
         if reload_welcome:
+            if step==1:
+                toggle_menu_return(page,'[data-v3-welcome="1"]')
             page.screenshot(path=output/f'welcome-step-{step}.png')
         click(page,'[data-v3-action="welcome-next"]')
     visible(page,'[data-v3-action="event"]').wait_for(timeout=WAIT)
@@ -167,6 +178,7 @@ def main():
                 guest=ctx.new_page()
                 guest.goto(server.base+'apps/governor/index.html?context=free')
                 guest.locator(READY).wait_for(state='attached')
+                toggle_menu_return(guest,'[data-v3-action="start"]')
                 click(guest,'[data-v3-action=start]')
                 receipts['guestWelcome']=complete_welcome(guest,None,'free',args.output)
                 click(guest,'[data-v3-tab=advisor]')
@@ -294,6 +306,8 @@ def practice_budget_and_stats(page, out, current):
 def close_year(page, index, out, first_measure, current=None):
     click(page,'[data-v3-action=event]')
     click(page,'[data-v3-option=base]')
+    if index==0:
+        toggle_menu_return(page,'[data-v3-option="base"][aria-pressed="true"]')
     click(page,'[data-v3-action=save-event]')
     click(page,'[data-v3-action=measures]')
     measure=first_measure if index==0 else 'defer'
@@ -302,6 +316,11 @@ def close_year(page, index, out, first_measure, current=None):
     click(page,'[data-v3-action=defer]' if measure=='defer' else '[data-v3-measure='+measure+']')
     if index == 0:
         current=current or (lambda: data(page,None,'free'))
+        if measure!='defer':
+            before_menu=current()
+            toggle_menu_return(page,'.v3-project-art')
+            after_menu=current()
+            assert after_menu['ui']['panel']=='project' and before_menu['state']==after_menu['state']
         assert not visible(page,'[data-v3-action=budget]').count()
         if measure=='school-campus':
             click(page,'[data-v3-tab=map]')
@@ -326,6 +345,9 @@ def close_year(page, index, out, first_measure, current=None):
     else:
         click(page,'[data-v3-action=commit]')
     if index == 0:
+        report=current()
+        toggle_menu_return(page,'.v3-year-result')
+        assert current()['state']==report['state']
         page.screenshot(path=out/'first-result.png')
     if index < 19:
         click(page,'[data-v3-action=result-next]')

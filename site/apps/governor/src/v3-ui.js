@@ -787,6 +787,7 @@
     promiseWho:['Адресат','Recipient','承诺对象'], municipality:['Муниципалитет','Municipality','市政府'],
     residents:['Жители','Residents','居民'], financeTeam:['Финансовый блок','Finance team','财政部门'],
     menu:['Меню игры','Game menu','游戏菜单'], lang:['Язык','Language','语言'],
+    menuClose:['Закрыть меню','Close menu','关闭菜单'], menuReturn:['Вернуться в игру','Return to the game','返回游戏'],
     large:['Увеличенный текст','Larger text','大号文字'], still:['Статичные иллюстрации','Still illustrations','静态插图'],
     help:['Как проходит год','How a year works','年度流程'], helpText:['Ответьте на срочную задачу. Выберите проект для района или отложите его. Проверьте бюджет и исходные показатели. Кнопка ▶ открывает сводку плана перед подтверждением года.','Respond to the urgent issue. Choose a district project or defer it. Check the budget and starting figures. ▶ opens the plan for review before you close the year.','先处理紧急任务，再决定启动或暂缓地区项目。核对预算和基准数据。点击 ▶ 可查看年度计划，确认后才结算。'],
     localAdvisor:['Илья Орлов','Ilya Orlov','伊利亚·奥尔洛夫'], advisorRole:['Стратегическое развитие','Strategic development','战略发展'],
@@ -884,7 +885,7 @@
     const rules = G.V3Rules;
     let busy = false, destroyed = false, errorText = '', optionDraft = null, focusAfter = null;
     let chatDraft = '', chatPending = false, chatError = '', loanDraft = null, review = null;
-    let replayWelcome = 0, practiceError = '';
+    let replayWelcome = 0, practiceError = '', menuReturnPending = false, scrollAfterMenu = null;
     const navigation = ['decisions','budget','map','stats','advisor'];
     const defaultUI = {started:false,tab:'decisions',panel:null,tutorialStep:1,welcomeStep:4,districtId:'suburb',motion:'auto'};
     const language = () => {
@@ -960,6 +961,27 @@
     }
     function closePanel() {
       return storeUI({panel:null});
+    }
+    async function openMenu(fromHistory = false) {
+      const current=ui(),scroll=host.querySelector('.v3-content')?.scrollTop||0;
+      await storeUI({panel:'menu',sourceTab:current.tab,returnPanel:current.panel,scroll});
+      if (!fromHistory) history.pushState({governorV3Menu:true},'');
+      focusAfter='v3-menu-toggle';
+    }
+    async function closeMenu(fromHistory = false) {
+      const current=ui();
+      // An open menu from an older build may only have its origin in the history entry.
+      const previous=history.state?.governorV3?history.state:null;
+      const tab=current.sourceTab||previous?.tab||current.tab;
+      const panel=Object.hasOwn(current,'returnPanel')?current.returnPanel:previous?.panel??null;
+      replayWelcome=0;
+      await storeUI({tab,panel,sourceTab:null,returnPanel:null,scroll:null});
+      scrollAfterMenu=Number.isFinite(current.scroll)?current.scroll:0;
+      focusAfter='v3-menu-toggle';
+      if (!fromHistory&&history.state?.governorV3Menu) {
+        menuReturnPending=true;
+        history.back();
+      }
     }
     async function openEvent() {
       optionDraft=state().draft.eventChoice;
@@ -1431,7 +1453,7 @@
         button(esc(exitLabel()),'exit','primary full');
     }
     function menuView() {
-      return back()+heading(t('menu'))+'<section class="v3-card v3-card-body">'+
+      return back('back',t('menuReturn'))+heading(t('menu'))+'<section class="v3-card v3-card-body">'+
         '<label class="v3-field"><span>'+esc(t('lang'))+'</span><select name="language">'+[['ru','Русский'],['en','English'],['zh','简体中文']].map(([id,title])=>'<option value="'+id+'" '+(language()===id?'selected':'')+'>'+title+'</option>').join('')+'</select></label>'+
         '<label class="v3-check"><input type="checkbox" name="still" '+(ui().motion==='still'?'checked':'')+'>'+esc(t('still'))+'</label>'+
         '<label class="v3-check"><input type="checkbox" name="large" '+(ui().largeText?'checked':'')+'>'+esc(t('large'))+'</label>'+
@@ -1450,7 +1472,8 @@
       const focusSelector=focused?.id?'#'+CSS.escape(focused.id):focusAttr?'['+focusAttr+'="'+CSS.escape(focused.getAttribute(focusAttr))+'"]':null;
       const active=!!s&&current.started;
       const welcome=active?welcomeStep(current):0;
-      const showWelcome=welcome&&(replayWelcome||current.panel!=='menu');
+      const menuOpen=current.panel==='menu';
+      const showWelcome=welcome&&(replayWelcome||!menuOpen);
       const step=practiceStep(current);
       host.className='governor-v3'+(current.largeText?' v3-large-text':'')+(current.motion==='still'?' v3-still':'');
       host.dataset.v3Tab=current.tab;
@@ -1458,7 +1481,7 @@
       const panels={event:eventView,measures:measuresView,project:projectView,sites:sitesView,object:objectView,loan:loanView,review:reviewView,result:resultView,history:historyView,'history-map':historyMapView,menu:menuView};
       let content;
       if (showWelcome) content=welcomeView(welcome);
-      else if (current.panel==='menu') content=menuView();
+      else if (menuOpen) content=menuView();
       else if (!active) content=startView();
       else if (s.completed&&['result','review'].includes(current.panel)) content=finalView();
       else if (current.panel&&panels[current.panel]) content=panels[current.panel]();
@@ -1466,7 +1489,7 @@
       else content=({decisions,budget:budgetView,map:mapView,stats:statsView,advisor:adviserView}[current.tab]||decisions)();
       const brand='<span class="v3-emblem" aria-hidden="true">♜</span><strong>'+esc(t('subtitle'))+'</strong>';
       host.innerHTML='<header class="v3-header">'+(welcome?'<div class="v3-welcome-brand">'+brand+'</div>':'<a href="#" data-v3-action="decisions" aria-label="'+esc(t('title'))+'">'+brand+'</a>')+
-        (s?'<time>'+s.year+'</time>':'')+'<button type="button" class="v3-menu-button" data-v3-action="menu" aria-label="'+esc(t('menu'))+'">☰</button></header>'+
+        (s?'<time>'+s.year+'</time>':'')+'<button type="button" id="v3-menu-toggle" class="v3-menu-button" data-v3-action="menu" aria-label="'+esc(t(menuOpen?'menuClose':'menu'))+'" aria-expanded="'+menuOpen+'" aria-controls="v3-main">'+(menuOpen?'×':'☰')+'</button></header>'+
         '<main class="v3-content '+(current.tab==='advisor'&&!current.panel&&!showWelcome?'v3-chat-content':'')+'" id="v3-main">'+
         (errorText?'<div class="v3-alert" role="alert">'+esc(errorText)+button(esc(t('retry')),'retry','link')+'</div>':'')+
         (controller.meta?.readOnly?'<div class="v3-alert" role="status">'+esc(t('system.otherTab'))+'</div>':'')+
@@ -1475,7 +1498,8 @@
           '<button type="button" data-v3-tab="'+tab+'" aria-current="'+(current.tab===tab?'page':'false')+'">'+navIcon(tab)+'<span>'+esc(t('nav.'+tab))+'</span></button>').join('')+
           '<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+esc(t('turn.next'))+'" '+(s.completed?'disabled':'')+'><span aria-hidden="true">'+advanceIcon+'</span><small>'+esc(t('turn.next'))+'</small></button></nav>':'');
       const main=host.querySelector('.v3-content');
-      main.scrollTop=focusAfter?0:previousScroll;
+      main.scrollTop=scrollAfterMenu??(focusAfter?0:previousScroll);
+      scrollAfterMenu=null;
       if (focusAfter) {
         const target=host.querySelector('[data-anchor="'+CSS.escape(focusAfter)+'"]')||host.querySelector('#'+CSS.escape(focusAfter));
         if (target&&!target.matches('button,input,select,textarea,a,[tabindex]')) target.tabIndex=-1;
@@ -1571,10 +1595,7 @@
       return perform(async()=>{
         if (navigation.includes(action)) return navigate(action);
         if (action==='start') {await controller.start();focusAfter='v3-heading';}
-        else if (action==='menu') {
-          if (replayWelcome) {replayWelcome=0;focusAfter='v3-heading';}
-          else await pushPanel('menu');
-        }
+        else if (action==='menu') {if (ui().panel==='menu') await closeMenu();else await openMenu();}
         else if (action==='welcome-replay') {replayWelcome=1;focusAfter='v3-heading';}
         else if (action==='welcome-next') {
           const step=welcomeStep(ui());
@@ -1583,7 +1604,7 @@
           else await storeUI(step<3?{welcomeStep:step+1}:{welcomeStep:4,tutorialStep:1,tab:'decisions',panel:null});
           focusAfter='v3-heading';
         }
-        else if (action==='back') await closePanel();
+        else if (action==='back') {if (ui().panel==='menu') await closeMenu();else await closePanel();}
         else if (action==='exit') await controller.exit();
         else if (action==='retry') await controller.retry?.();
         else if (action==='event') await openEvent();
@@ -1671,6 +1692,9 @@
       if (event.target.id==='v3-loan-form') event.preventDefault();
     }
     function popstate(event) {
+      if (menuReturnPending) {menuReturnPending=false;return;}
+      if (ui().panel==='menu') {perform(()=>closeMenu(true));return;}
+      if (event.state?.governorV3Menu) {perform(()=>openMenu(true));return;}
       replayWelcome=0;
       if (event.state?.governorV3) perform(()=>storeUI({tab:event.state.tab,panel:event.state.panel}));
       else if (ui().panel) perform(()=>closePanel());
