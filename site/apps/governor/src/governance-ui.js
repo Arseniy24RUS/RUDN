@@ -84,13 +84,17 @@
   let detail='',price='',refund='';
   if(!reason){
    const quote=terms=>E.previewAction(s,selection.actionId,selection.mode,selection.placementId,terms);
-   const base=other.length===ids.length?v:quote(other),withTerm=picked?v:quote([...other,t.id]);
+   const replacing=!picked&&other.length!==ids.length;
+   const base=picked?quote(other):v,withTerm=picked?v:quote([...other,t.id]);
    const promise=withTerm.agreement.promises.find(p=>p.termId===t.id);
    detail=commitment(promise,s);
    const diff=(x,y)=>Math.round((x-y)*100)/100;
    const now=signedMoney(diff(ownCost(withTerm.plan),ownCost(base.plan)));
    const annual=diff(withTerm.agreement.annualOpex,base.agreement.annualOpex);
-   const parts=[copy(`Из казны сейчас ${now}`,`Treasury now ${now}`,`本期财政支出 ${now}`)];
+   const before=money(ownCost(base.plan)),after=money(ownCost(withTerm.plan));
+   const parts=[replacing
+     ?copy(`Из казны при замене: ${before} → ${after}`,`Treasury on replacement: ${before} → ${after}`,`更换后本期支出：${before} → ${after}`)
+     :copy(`Из казны сейчас ${now}`,`Treasury now ${now}`,`本期财政支出 ${now}`)];
    if(selection.mode==='cofinance'){
     const project=signedMoney(diff(withTerm.plan.totalCost,base.plan.totalCost));
     parts.unshift(copy(`К проекту ${project}`,`Project cost ${project}`,`项目总成本 ${project}`));

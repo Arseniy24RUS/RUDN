@@ -11,9 +11,14 @@ import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.10';
 import {durableStore} from '../../assets/js/durable-store.js';
 import {canResumeGameDraft,markGameDraft} from '../../assets/js/game-release-policy.js';
 import {governorReflectionText,isGovernorReflection,latestGovernorReflection,makeGovernorReflection} from '../../assets/js/governor-reflections.js';
-import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign} from './platform-contract.js';
+import {openLocalCampaignSlots} from './src/local-campaign-slots.js';
+import {finalFive,practiceAdapter,addReplayChoice,replayURL} from './src/final-five.js';
+import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign,northernCareComparison} from './platform-contract.js';
 
 const G=window.GovernorGame;
+G.northernCareComparison=state=>northernCareComparison(state,G);
+const gameRoute=new URL(location.href).searchParams;
+const isPractice=gameRoute.get('practice')==='last-five';
 G.I18n.setCatalogLoader(()=>import('./locales/zh-Hans.js'));
 if(G.I18n.normalize(getLocale())==='zh')await G.I18n.ensureCatalog();
 G.Saves.setReleasePolicy({canResume:canResumeGameDraft,mark:markGameDraft});
@@ -63,8 +68,8 @@ function ensureRun(state){
   if(state?.storiesRunId)run.campaignToken=state.storiesRunId;
   persistRun(state);return run;
 }
-function runChanged(state){
-  run=createRunMetadata();run.campaignToken=state?.storiesRunId||null;reflectionFailure='';
+function runChanged(state,restoredRun){
+  run=restoredRun?.submissionId&&restoredRun.campaignToken===state?.storiesRunId?structuredClone(restoredRun):createRunMetadata();run.campaignToken=state?.storiesRunId||null;reflectionFailure='';
   try{persistRun(state);message(tr('Новая партия сохраняется в вашем профиле на этом устройстве.','A new campaign is saved to your profile on this device.'));}
   catch{message(tr('Не удалось сохранить сведения о попытке. Скачайте файл партии.','Attempt metadata could not be saved. Download a campaign save.'));}
 }
@@ -82,6 +87,13 @@ function syncText(){
 }
 function refresh(){
   G.I18n.shell(document,language);
+  if(isPractice && G.Platform?.practice){
+    $('#platform-back').textContent=tr('← К исходным итогам','← Original results','← 原始结果');
+    $('#platform-back').href=replayURL(false,location.href);
+    $('#platform-report').hidden=true;
+    message(tr('Пробная пятилетка · прогресс на этом устройстве · без оценки','Five-year replay · saved on this device · ungraded','五年练习 · 进度保存在本设备 · 不计分'));
+    return;
+  }
   $('#platform-report').textContent=free?tr('Отчёт о кампании','Campaign report','游戏报告'):tr('Отчёт к семинару','Seminar report');
   $('#platform-back').textContent=free?tr('← К играм','← Games','← 游戏'):tr('← Раздел 7','← Section 7');
   $('#platform-course-name').textContent=tr('Введение в специальность','Introduction to the Profession');
@@ -242,10 +254,34 @@ async function tryStart(){
   }
   started=true;active=true;owner=candidate;diagnostics.destroy();diagnostics=diagnosticService.forModule('governor');const loadEnd=diagnostics.span('module-load');
   const scoped=scopedStorage(localStorage,owner,{context});
+  const localSlots=await openLocalCampaignSlots(scoped);
+  if(!sameOwner())return;
+  const practiceSession=finalFive(scoped,G,sameOwner,localSlots);
+  if(isPractice){
+    G.Platform=practiceAdapter(practiceSession,{
+      language,tr,canWrite:sameOwner,onLanguage:next=>{language=G.I18n.normalize(next);refresh();},
+      onError:()=>block(tr('Не удалось открыть пробную пятилетку.','Could not open the five-year replay.','无法打开五年练习。')),
+      reveal:()=>{$('#platform-loading').hidden=true;$('#app').hidden=false;$('#app').inert=false;refresh();window.dispatchEvent(new Event('governor:playable'));}
+    });
+    if(!G.Platform){
+      block(tr('Для этого профиля и завершённой партии нет доступной пробной копии.','No local replay is available for this profile and completed campaign.','当前账号和已完成的游戏没有可用的本地练习进度。'));
+      $('#platform-back').href=replayURL(false,location.href);
+      return;
+    }
+    await G.I18n.ensureCatalog();
+    if(sameOwner())await loadApplication(loadEnd);
+    return;
+  }
   const observed=new Map();
   const remember=key=>{if(!storageValues.has(key)){let value=null;try{value=scoped.getItem(key);}catch{}storageValues.set(key,value);observed.set(key,value);}return storageValues.get(key);};
-  storage={getItem:remember,setItem:(key,value)=>{
-    if(!sameOwner())throw new Error('auth/profile-changed');remember(key);
+  storage={confirmPrevious:async raw=>{
+    if(!sameOwner())throw new Error('auth/profile-changed');
+    try{await localSlots.confirm(G.Saves.Previous,raw);}catch{throw Object.assign(new Error('recovery-unavailable'),{code:'recovery-unavailable'});}
+    if(!sameOwner())throw new Error('auth/profile-changed');
+  },getItem:key=>key===G.Saves.Previous?localSlots.getItem(key):remember(key),setItem:(key,value)=>{
+    if(!sameOwner())throw new Error('auth/profile-changed');
+    if(key===G.Saves.Previous){localSlots.setItem(key,value);return;}
+    remember(key);
     let actual;try{actual=scoped.getItem(key);}catch{actual=observed.get(key);}
     if(actual!==observed.get(key))throw Object.assign(new Error('other-tab'),{code:'other-tab'});
     try{scoped.setItem(key,String(value));observed.set(key,String(value));}catch(error){
@@ -255,7 +291,7 @@ async function tryStart(){
       /* The onSaved boundary commits regular state to IndexedDB when localStorage is full. */
     }
     storageValues.set(key,String(value));
-  },removeItem:key=>{if(!sameOwner())throw new Error('auth/profile-changed');storageValues.set(key,null);try{scoped.removeItem(key);observed.set(key,null);}catch{}}};
+  },removeItem:key=>{if(!sameOwner())throw new Error('auth/profile-changed');if(key===G.Saves.Previous){localSlots.removeItem(key);return;}try{scoped.removeItem(key);observed.set(key,null);}catch(error){if(key===G.Saves.Key)throw error;}storageValues.set(key,null);}};
   run=stored('platform-run');
   const restored=await backend.loadDraft({owner,activitySlug,mode:'campaign'});
   if(!sameOwner())return;
@@ -278,10 +314,13 @@ async function tryStart(){
       if(entries?.every(entry=>typeof entry?.raw==='string'&&typeof entry?.key==='string'))for(const entry of entries)localStore.preserve(entry.raw,entry.key,entry.reason);
       else localStore.preserve(recoveryRaw,G.Saves.Recovery,'unreadable-recovery');
     }
-    if(localRaw&&JSON.stringify(localResult.state)!==JSON.stringify(restoredState))localStore.preservePrevious(localRaw);
+    if(localRaw&&JSON.stringify(localResult.state)!==JSON.stringify(restoredState)){
+      if(localResult.status==='ok'&&run?.submissionId&&run.submissionId!==restored.state.run.submissionId)localStore.pinCampaign(localRaw,run);
+      else localStore.preservePrevious(localRaw);
+    }
     const localBackup=storageValues.get(G.Saves.Backup);
     for(const [key,value] of Object.entries(restored.state.storage||{})){
-      if([G.Saves.Key,G.Saves.Recovery,'platform-run'].includes(key)||(key===G.Saves.Backup&&localBackup))continue;
+      if([G.Saves.Key,G.Saves.Recovery,G.Saves.Previous,'platform-run'].includes(key)||(key===G.Saves.Backup&&localBackup))continue;
       remember(key);storageValues.set(key,value);
     }
     remember(G.Saves.Key);storageValues.set(G.Saves.Key,JSON.stringify(markGameDraft({format:'rudn-autosave',schema:G.Saves.SCHEMA,model:restoredState.version,revision:Math.max(1,localResult.revision||1),savedAt:new Date(restored.updatedAt).toISOString(),state:restoredState})));
@@ -293,14 +332,19 @@ async function tryStart(){
   }else if(localResult.status==='ok'){ensureRun(localResult.state);}
   const profile=backend.getProfile();
   G.Platform={
+    captureFinalFive:practiceSession.capture,currentRun:()=>run,resumeOnEntry:gameRoute.get('returnTo')==='term'&&localStore.inspect().state?.completed===true,
     storage,lockName:scoped.lockName,storageKey:scoped.keyFor(G.Saves.Key),offlineEnabled:false,
     language,freePlay:free,profile:{name:backend.isAdmin()?tr('Преподаватель · пробная кампания','Instructor · preview campaign'):(profile?.fullName||tr('Гость','Guest','访客')),group:profile?.group||''},
     canWrite:()=>!updatePaused&&sameOwner(),onResume:()=>{identityChanged();updateCoordinator?.notifyStateChanged();},onNewRun:runChanged,onError:()=>{loadEnd({success:false,code:'load-failed'});diagnostics.record('module-error',{operation:'load',success:false,code:'load-failed'});block(tr('Не удалось запустить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not start. Reload or return to section 7.'));},
     onSaved:state=>{try{ensureRun(state);refresh();if(runtime&&terminal(state)&&(free||!backend.isAdmin()))submit();}catch{message(tr('Партия сохранена; сведения об отчёте требуют свободного места на устройстве.','Campaign saved; report metadata needs free device storage.'));}},
     onLanguage:next=>{language=G.I18n.normalize(next);setLocale(language);refresh();},
-    onEnd:host=>{if(host.querySelector('[data-platform-submit]'))return;const b=document.createElement('button');b.type='button';b.className='primary-button';b.dataset.platformSubmit='';b.textContent=free?tr('Отчёт о кампании','Campaign report','游戏报告'):tr('Оценка и отчёт к семинару','Seminar grade and report');b.addEventListener('click',submissionDialog);host.append(b);},
+    onEnd:host=>{const finished=runtime?.state();if(finished?.completed)addReplayChoice(host,practiceSession,finished,tr,location.href);if(host.querySelector('[data-platform-submit]'))return;const b=document.createElement('button');b.type='button';b.className='primary-button';b.dataset.platformSubmit='';b.textContent=free?tr('Отчёт о кампании','Campaign report','游戏报告'):tr('Оценка и отчёт к семинару','Seminar grade and report');b.addEventListener('click',submissionDialog);host.append(b);},
     attach:api=>{runtime=api;if(!sameOwner()){block(tr('Профиль изменился во время загрузки. Вернитесь в раздел 7.','Your profile changed while loading. Return to section 7.'));return;}$('#player-name').value=G.Platform.profile.name;$('#player-group').value=G.Platform.profile.group;$('#player-name').readOnly=true;$('#player-group').readOnly=true;$('#platform-loading').hidden=true;$('#app').hidden=false;$('#app').inert=false;$('#platform-report').disabled=!api.canWrite();refresh();installUpdateAdapter();loadEnd({success:true});diagnostics.record('module-ready',{success:true});window.dispatchEvent(new Event('governor:playable'));if(!sessionStorage.getItem(UPDATE_PENDING_KEY)&&terminal(runtime.state())&&(free||!backend.isAdmin()))submit();}
   };
+  await loadApplication(loadEnd);
+}
+
+async function loadApplication(loadEnd){
   try{
     await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=resourceURL('./src/app.js',import.meta.url).href;script.onload=resolve;script.onerror=reject;document.body.append(script);});
   }catch(error){loadEnd({success:false,code:'load-failed'});diagnostics.error(error,{event:'module-error',operation:'load'});started=false;block(tr('Не удалось загрузить симулятор. Обновите страницу или вернитесь в раздел 7.','The simulator could not be loaded. Reload or return to section 7.'));}
@@ -326,7 +370,7 @@ $('#platform-readable').addEventListener('click',()=>{$('#platform-submission').
 $('#platform-submit').addEventListener('click',submit);
 const reflectionSaveButton=document.createElement('button');reflectionSaveButton.type='button';reflectionSaveButton.className='secondary-button';reflectionSaveButton.id='platform-reflection-save';reflectionSaveButton.hidden=true;reflectionSaveButton.addEventListener('click',saveReflection);$('#platform-submit').before(reflectionSaveButton);
 $('#platform-reflection').addEventListener('input',()=>{if(!run||!sameOwner()||backend.isAdmin())return;run.reflection=$('#platform-reflection').value.slice(0,6000);reflectionFailure='';try{persistRun();}catch{reflectionFailure=tr('Не удалось сохранить текст. Скопируйте его перед закрытием страницы.','Text could not be saved. Copy it before closing this page.');message(reflectionFailure);}renderReflectionStatus();});
-$('#platform-back').addEventListener('click',async event=>{event.preventDefault();await flushCampaign();location.href=courseUrl;});
+$('#platform-back').addEventListener('click',async event=>{event.preventDefault();if(isPractice){location.assign(replayURL(false,location.href));return;}await flushCampaign();location.href=courseUrl;});
 window.addEventListener('pagehide',()=>{if(!updatePaused&&runtime?.state())checkpointCampaign(runtime.state());});
 window.addEventListener('rudn:identitychange',identityChanged);
 window.addEventListener('rudn:accesschange',identityChanged);

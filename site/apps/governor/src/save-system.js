@@ -4,7 +4,7 @@
 (function(root){
  'use strict';
  const FORMAT='rudn-governor-save',SCHEMA=1,MAX_BYTES=20*1024*1024;
- const Key='rudn-governor-stage9-state',Backup=Key+'-backup',Recovery=Key+'-recovery';
+ const Key='rudn-governor-stage9-state',Backup=Key+'-backup',Previous=Key+'-previous',Recovery=Key+'-recovery';
  const E=()=>root.GovernorGame?.Engine||(typeof require==='function'?require('./engine.js'):null);
  const I=()=>root.GovernorGame?.Integrity||(typeof require==='function'?require('./state-integrity.js'):null);
  let releasePolicy={canResume:()=>true,mark:value=>value};
@@ -36,6 +36,7 @@
   return Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
  }
  async function pack(state){
+  if(state?.practiceOf)throw error('practice-only');
   if(!E().validateState(state))throw error('invalid-state');
   const payload=JSON.stringify(state);
   const result=releasePolicy.mark({format:FORMAT,schema:SCHEMA,model:state.version,createdAt:new Date().toISOString(),checksum:await hash(payload),payload});
@@ -50,6 +51,7 @@
   if(box.checksum!==await hash(box.payload))throw error('checksum-mismatch');
   let parsed;try{parsed=JSON.parse(box.payload);I().safeTree(parsed);}catch(_){throw error('invalid-state');}
   if(parsed.version!==box.model)throw error('incompatible-model');
+  if(parsed.practiceOf)throw error('practice-only');
   const state=E().restoreState(parsed);if(!state)throw error('invalid-state');
   if(!releasePolicy.canResume(box,{completed:terminal(state),module:'governor',compatible:true}))throw error('retired-build');
   return state;
@@ -72,7 +74,19 @@
    let raw;try{raw=this.storage.getItem(key);if(key===Key)this.token=raw;}catch(_){return{status:'unavailable',state:null};}
    return inspectAutosave(raw);
   }
-  backup(){return this.inspect(Backup);}
+  previous(){return this.inspect(Previous);}
+  backup(){
+   const previous=this.previous();
+   return previous.status==='ok'?previous:this.inspect(Backup);
+  }
+  recoverableRevision(status,run){
+   if(status!=='corrupt')return null;
+   const previous=this.previous().state,revision=this.inspect(Backup).state;
+   if(!previous||!revision)return null;
+   const older=previous.storiesRunId,current=revision.storiesRunId;
+   if(!older||!current||older===current||(run?.campaignToken&&current!==run.campaignToken))return null;
+   return revision;
+  }
   legacy(){return this.inspect('rudn-governor-stage8-state');}
   raw(key=Key){return this.storage.getItem(key);}
   recovery(){
@@ -97,25 +111,81 @@
    if(backup&&backupStatus.status!=='ok')this.preserve(backup,Backup,backupStatus.reason);
    this.storage.setItem(Backup,raw);
   }
-  write(state){
+  // A normal write rotates the current campaign's last good revision. An explicit
+  // replacement pins the former campaign independently, even if both have the same seed.
+  pinCampaign(raw,run){
+   if(!raw)return;
+   const old=inspectAutosave(raw);
+   if(old.status!=='ok'){this.preserve(raw,Key,old.reason);return;}
+   const pinned=this.storage.getItem(Previous),status=inspectAutosave(pinned);
+   if(pinned&&status.status!=='ok')this.preserve(pinned,Previous,status.reason);
+   const data=JSON.parse(raw);
+   if(run?.submissionId&&run.campaignToken&&run.campaignToken===old.state.storiesRunId)data.archivedRun=run;
+   this.storage.setItem(Previous,JSON.stringify(data));
+  }
+  replaceCurrent(raw,run,commit,durable){
+   const prior=this.storage.getItem(Previous);
+   this.pinCampaign(raw,run);
+   const pinned=this.storage.getItem(Previous);
+   const finish=()=>{
+    if(this.storage.getItem(Key)!==raw)throw error('other-tab');
+    return commit();
+   };
+   const failed=cause=>{
+    // Restore the former backup only while this transaction still owns both slots.
+    if(pinned!==prior&&this.storage.getItem(Key)===raw&&this.storage.getItem(Previous)===pinned){
+     if(prior===null)this.storage.removeItem(Previous);else this.storage.setItem(Previous,prior);
+    }
+    throw cause;
+   };
+   if(durable&&pinned&&this.storage.confirmPrevious){
+    return this.storage.confirmPrevious(pinned).then(finish).catch(failed);
+   }
+   try{return finish();}catch(cause){return failed(cause);}
+  }
+  replace(state,run,durable=false){
+   if(state?.practiceOf)throw error('practice-only');
+   const pinned=this.storage.getItem(Previous),previous=inspectAutosave(pinned);
+   let restoredRun=null;
+   if(previous.status==='ok'&&JSON.stringify(previous.state)===JSON.stringify(state))restoredRun=JSON.parse(pinned).archivedRun;
+   else if(run?.campaignToken&&run.campaignToken===state?.storiesRunId&&inspectAutosave(this.storage.getItem(Key)).status==='corrupt'){
+    const revision=this.inspect(Backup).state;
+    if(revision&&JSON.stringify(revision)===JSON.stringify(state))restoredRun=run;
+   }
+   const saved=this.write(state,{replace:true,run,durable});
+   return durable?Promise.resolve(saved).then(()=>restoredRun||null):restoredRun||null;
+  }
+  async replaceDurably(state,run){
+   if(this.replacing)throw error('replacement-pending');
+   this.replacing=true;
+   try{return await this.replace(state,run,true);}finally{this.replacing=false;}
+  }
+  async clearDurably(run){
+   if(this.replacing)throw error('replacement-pending');
+   this.replacing=true;
+   try{return await this.clear(run,true);}finally{this.replacing=false;}
+  }
+  write(state,{replace=false,run=null,durable=false}={}){
    if(!E().validateState(state))throw error('invalid-state');
    const raw=this.storage.getItem(Key);
    if(this.token!==undefined&&raw!==this.token)throw error('other-tab');
    let previous=null;try{previous=raw?JSON.parse(raw):null;}catch(_){}
    const stateText=JSON.stringify(state);
-   if(previous?.schema===SCHEMA&&previous.model===state.version&&inspectAutosave(raw).status==='ok'&&JSON.stringify(previous.state)===stateText&&releasePolicy.mark({...previous}).releaseBuildId===previous.releaseBuildId){this.token=raw;return true;}
+   if(!replace&&previous?.schema===SCHEMA&&previous.model===state.version&&inspectAutosave(raw).status==='ok'&&JSON.stringify(previous.state)===stateText&&releasePolicy.mark({...previous}).releaseBuildId===previous.releaseBuildId){this.token=raw;return true;}
    const revision=Number.isSafeInteger(previous?.revision)?previous.revision+1:1;
-   this.preservePrevious(raw);
    const next=JSON.stringify(releasePolicy.mark({format:'rudn-autosave',schema:SCHEMA,model:state.version,revision,savedAt:new Date().toISOString(),state}));
-   this.storage.setItem(Key,next);this.token=next;return true;
+   const commit=()=>{this.storage.setItem(Key,next);this.token=next;return true;};
+   if(replace)return this.replaceCurrent(raw,run,commit,durable);
+   this.preservePrevious(raw);return commit();
   }
-  clear(){
+  clear(run,durable=false){
    const raw=this.storage.getItem(Key);if(this.token!==undefined&&raw!==this.token)throw error('other-tab');
-   this.preservePrevious(raw);
-   this.storage.removeItem(Key);this.token=null;
+   const backup=this.storage.getItem(Backup),status=inspectAutosave(backup);
+   if(backup&&status.status!=='ok')this.preserve(backup,Backup,status.reason);
+   return this.replaceCurrent(raw,run,()=>{this.storage.removeItem(Key);this.token=null;},durable);
   }
  }
- const api={FORMAT,SCHEMA,MAX_BYTES,Key,Backup,Recovery,Store,pack,unpack,inspectAutosave,hash,sha256,setReleasePolicy};
+ const api={FORMAT,SCHEMA,MAX_BYTES,Key,Backup,Previous,Recovery,Store,pack,unpack,inspectAutosave,hash,sha256,setReleasePolicy};
  root.GovernorGame=root.GovernorGame||{};root.GovernorGame.Saves=api;
  if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

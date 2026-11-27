@@ -59,7 +59,9 @@
     b.onclick=()=>{
      const correct=i===item.correct;
      status.textContent=(correct?label('Верно. ','Correct. ','正确。'):label('Посмотрите ещё раз. ','Try again. ','请再看一看。'))+item.explain[l];
-     if(!correct||panel.querySelector('[data-practice-next]'))return;
+     const advance=panel.querySelector('[data-practice-next]');
+     if(!correct){advance?.remove();return;}
+     if(advance)return;
      const next=document.createElement('button');next.type='button';next.className='primary-button';next.dataset.practiceNext='';
      next.textContent=index+1<rehearsal.length?label('Дальше','Next','下一步'):label('Завершить тренировку','Finish practice','完成练习');
      next.onclick=()=>{if(++index<rehearsal.length)draw();else{d.close();}};
@@ -73,15 +75,37 @@
  function guide(l='ru'){
   return `<div class="learning-intro"><small>${tr(l,'СПРАВОЧНИК ГУБЕРНАТОРА','GOVERNOR’S GUIDE')}</small><h2 id="learning-title">${tr(l,'Решение начинается с вопроса','Every decision starts with a question')}</h2><p>${tr(l,'Кому поможет мера, когда она заработает и чем вы оплатите её работу через три года?','Who benefits, when will the service open, and how will you fund it three years from now?')}</p></div><section class="practice-intro"><button type="button" class="secondary-button" data-practice-start>${esc(phrase('Тренировка первого решения','Practise your first decision','练习第一次决策')[l])}</button><div data-practice hidden></div></section><div class="learning-topics">${topics.map((t,i)=>`<details ${i===0?'open':''}><summary>${esc(globalThis.GovernorGame.I18n.choose(l,()=>t[0],()=>t[1]))}</summary><p>${esc(globalThis.GovernorGame.I18n.choose(l,()=>t[2],()=>t[3]))}</p></details>`).join('')}</div><p class="learning-boundary">${tr(l,'Область, карта, персонажи, параметры и правовые условия вымышлены. Коэффициенты не оценены на наблюдаемых данных; результат не является прогнозом субъекта РФ.','The region, map, characters, parameters and legal conditions are fictional. Coefficients were not fitted to observed data; results are not a real-region forecast.')}</p>`;
  }
+ const reportTable=(l,headers,rows)=>`<div class="report-table" tabindex="0" role="region" aria-label="${tr(l,'Таблица: прокрутка по горизонтали','Table: scroll horizontally')}"><table><thead><tr>${headers.map(h=>`<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((v,i)=>i===0?`<th scope="row">${esc(v)}</th>`:`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+ function northernCareHtml(state,l='ru'){
+  const periods=G.northernCareComparison?.(state);
+  if(!periods?.length)return '';
+  const copy=(ru,en,zh)=>phrase(ru,en,zh)[l];
+  const title=copy('Как менялась помощь на севере','How care changed in the north','北部照护如何变化');
+  const note=copy('Доступность медицины равна доле покрытой потребности. Потребность измеряется в условных единицах с учётом возраста жителей. Северный индекс складывается из доступности медицины (80%) и ухода за пожилыми (20%).',
+    'Healthcare access is the share of demand met. Demand is measured in model units weighted for residents’ ages. The northern care index combines healthcare access (80%) and care for older people (20%).',
+    '医疗可及性为医疗需求得到满足的比例。需求按居民年龄加权，以模型单位计量。北部照护指数由医疗可及性（80%）和老年照护（20%）组成。');
+  const comparison=copy('Вторая строка каждого года показывает тот же сценарий с теми же календарными кризисами, если губернатор проживёт весь срок без новых мер. Бюджетные дефициты в этом расчёте покрываются автоматически.',
+    'The second row for each year follows the same scenario and scheduled crises through a full term with no new measures. The model covers budget shortfalls automatically in that comparison.',
+    '每年的第二行展示相同情景与同一危机日程下，整个任期不采取新措施的结果。在此对照路径中，模型自动弥补预算缺口。');
+  const headers=[
+    copy('Год и кампания','Year and campaign','年份及治理路径'),
+    copy('Медицина · покрыто / спрос','Healthcare · met / demand','医疗 · 已满足 / 需求'),copy('Индекс ухода','Care index','照护指数')
+  ];
+  const labels=[copy('Ваши решения','Your decisions','你的决策'),copy('Без новых мер','No new measures','无新措施')];
+  const rows=periods.flatMap(({year,actual,reference})=>[actual,reference].map((v,i)=>[
+    year+'\n'+labels[i],number(v.access*100,l,2)+'%\n'+number(v.covered,l,0)+' / '+number(v.demand,l,0),number(v.care*100,l,2)+'%'
+  ]));
+  return `<details class="campaign-report care-comparison"><summary><strong>${esc(title)}</strong></summary>${reportTable(l,headers,rows)}<p>${esc(note)}</p><p>${esc(comparison)}</p></details>`;
+ }
  function reportBody(state,l='ru'){
   const E=G.Engine||(typeof require==='function'?require('./engine.js'):null),D=G.DATA||(typeof require==='function'?require('./consolidation-data.js'):null);
   const r=E.buildReport(state,l),p=r.population,F=r.final,fmt=(v,d=1)=>number(v,l,d);
   const status=state.completed?tr(l,'Кампания завершена','Campaign complete'):state.budgetReview?.status==='supervised'?tr(l,'Досрочная передача управления','Early financial handover'):tr(l,'Промежуточный отчёт','Interim report');
-  const table=(headers,rows)=>`<div class="report-table" tabindex="0" role="region" aria-label="${tr(l,'Таблица: прокрутка по горизонтали','Table: scroll horizontally')}"><table><thead><tr>${headers.map(h=>`<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((v,i)=>i===0?`<th scope="row">${esc(v)}</th>`:`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const table=(headers,rows)=>reportTable(l,headers,rows);
   const districts=D.districts.map(d=>{const a=p.initial.access[d.id],b=p.current.municipalities[d.id];return[E.localise(d.name,l),fmt(a.population,0),fmt(b.population,0),fmt(b.population-a.population,0),fmt(b.healthAccess*100),fmt(b.schoolAccess*100),fmt(b.employment*100)];});
   const funds={treasury:tr(l,'Казна','Treasury'),cofinance:tr(l,'Софинансирование','Cofinancing'),reserve:tr(l,'Резерв','Reserve'),debt:tr(l,'Заём','Debt')};
   const outcomes={'on-time':tr(l,'По плану','On time'),delayed:tr(l,'Задержка','Delayed'),overrun:tr(l,'Удорожание','Cost overrun'),partial:tr(l,'Неполное исполнение','Partial delivery')};
-  const decisions=r.decisions.map(d=>{const original=state.history[d.turn-1];return[p.baseYear+d.turn-1,d.mission,d.action,funds[d.fundingMode]||d.fundingMode,fmt(d.funding?.actualTotalCost??d.funding?.totalCost??0,2),original.deferred?tr(l,'Без новой меры','No new measure'):outcomes[d.delivery?.id]||'—'];});
+  const decisions=r.decisions.map(d=>{const original=state.history[d.turn-1];return[p.baseYear+d.turn-1,d.mission,d.action,funds[d.fundingMode]||d.fundingMode,fmt(d.funding?.actualTotalCost??d.funding?.totalCost??0,2),original.restoration?phrase('Новый договор на восстановление','Service restoration contract','恢复服务合同')[l]:original.deferred?tr(l,'Без новой меры','No new measure'):outcomes[d.delivery?.id]||'—'];});
   const financial=r.forecast.rows.map(y=>[y.year,fmt(y.programmeOpex,2),fmt((y.reviewPrincipal||0)+(y.recoveryPrincipal||0),2),fmt(y.net,2),fmt(y.cash,2)]);
   const labels=tr(l,['Казна, млрд ₽','Резерв, млрд ₽','Долг, млрд ₽','Экстренная учебная помощь, млрд ₽','Поддержка, индекс 0–100','Развитие, индекс 0–100'],['Treasury, bn RUB','Reserve, bn RUB','Debt, bn RUB','Emergency classroom support, bn RUB','Support, 0–100 index','Development, 0–100 index']);
   const values=[F.fiscalSpace,F.reserve,F.debt,r.finance.totalEmergencyTransfers,F.support,F.development];
@@ -91,8 +115,9 @@
   <section><h2>${tr(l,'Обязательства после текущего года','Commitments after the current year')}</h2>${table(tr(l,['Год','Содержание, млрд ₽','Погашение займов, млрд ₽','Баланс, млрд ₽','Казна на конец, млрд ₽'],['Year','Operation, bn RUB','Loan principal, bn RUB','Balance, bn RUB','Closing cash, bn RUB']),financial)}<p>${tr(l,'Условный расчёт на три года: без новых решений, при фиксированных численности и структуре населения. Резерв не расходуется автоматически. Отрицательная казна означает потребность в дополнительном финансировании.','Conditional three-year projection: no new decisions and a fixed population and age structure. Reserves are not used automatically. Negative cash indicates a financing requirement.')}</p></section>
   <section><h2>${tr(l,'Регистр решений','Decision register')}</h2>${decisions.length?table(tr(l,['Год','Вопрос','Решение','Источник','Стоимость, млрд ₽','Исполнение'],['Year','Issue','Decision','Funding','Cost, bn RUB','Delivery']),decisions):`<p>${tr(l,'Решения ещё не приняты.','No decisions yet.')}</p>`}</section>
   ${G.CampaignUI?.reportHtml(state,l)||''}
+  ${northernCareHtml(state,l)}
   <section><h2>${tr(l,'Вопросы для учебного разбора','Questions for the debrief')}</h2><p>${tr(l,'Какую альтернативу вы отвергли и почему? В какой территории результат оказался слабее среднего? Какие затраты будут нести следующие бюджеты? Как вы разделяете результат решения и влияние начальных условий, предыдущих программ и случайного исхода? Какие обещания удалось выполнить и какой ценой?','Which alternative did you reject, and why? Which district performed below the regional average? What costs remain for future budgets? How do you separate the decision’s result from starting conditions, earlier programmes and chance? Which promises were fulfilled, and at what cost?')}</p></section>
 `;
  }
- const api={guide,practice,reportBody,topics};G.Learning=api;if(typeof module!=='undefined')module.exports=api;
+ const api={guide,practice,reportBody,northernCareHtml,topics};G.Learning=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

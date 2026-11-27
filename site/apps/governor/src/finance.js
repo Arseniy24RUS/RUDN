@@ -115,6 +115,9 @@
   function getAdminLoad(state) {
     if (!state || !state.finance) return 0;
     const load = (state.finance.portfolio || []).reduce((sum, project) => {
+      if (project.status === 'completed' && project.restorations?.at(-1)?.turn === state.turnIndex + 1) {
+        return sum + restartAdminLoad(project);
+      }
       if (project.status === 'delivery') return sum + Math.max(0.35, (Number(project.adminLoad) || 0) * 0.58);
       if (project.status === 'active') return sum + (Number(project.adminMaintenance) || 0);
       return sum;
@@ -463,11 +466,17 @@
       finance.totalFederalFunds = round2(finance.totalFederalFunds + plan.federalTransfer);
       addFlow(ledger.inflows, 'federalCofinance', plan.federalTransfer);
     }
-    addFlow(ledger.outflows, 'actionSpending', plan.totalCost);
+    addFlow(ledger.outflows, plan.restoration ? 'renewalFees' : 'actionSpending', plan.totalCost);
+    if (plan.restoration) {
+      const existing = finance.portfolio.find(item => item.id === plan.restoration.projectId);
+      existing.restorations ??= [];
+      existing.restorations.push(deepClone(plan.restoration));
+    }
     finance.fundingCounts[plan.id] = (finance.fundingCounts[plan.id] || 0) + 1;
     if (plan.implementationFactor < 0.9) finance.overloadCount += 1;
 
     ledger.decisions.push({
+      ...(plan.restoration ? deepClone(plan.restoration) : {}),
       missionId: plan.missionId,
       actionId: plan.actionId,
       fundingMode: plan.id,
@@ -577,10 +586,10 @@
     ledger.shocks.push({
       missionId: meta && meta.missionId,
       totalCost,
-      reserveUsed,
+      reserveUsed: round2(reserveUsed + stabilisation.reserveUsed),
       debtIssued: stabilisation.debtIssued,
       emergencyTransfer: stabilisation.transfer,
-      treasuryImpact: round2(-(totalCost - reserveUsed - stabilisation.debtIssued - stabilisation.transfer))
+      treasuryImpact: round2(-(totalCost - reserveUsed - stabilisation.reserveUsed - stabilisation.debtIssued - stabilisation.transfer))
     });
     ledger.closingReserve = round2(finance.reserve);
     ledger.closingDebt = round2(finance.debt);
@@ -606,9 +615,19 @@
     const events = [];
 
     for (const project of state.finance.portfolio) {
-      if (project.status === 'completed') continue;
       let justActivated = false;
-      if (project.status === 'active') {
+      if (project.status === 'completed') {
+        const restart = project.restorations?.at(-1);
+        if (restart?.reopenTurn !== state.turnIndex + 1) continue;
+        // Keep the original opening and paid years, including the service gap.
+        // The existing service resumes without repeating its construction effects.
+        project.status = 'active';
+        project.completedTurn = null;
+        project.yearsRemaining = restart.extraYears;
+        justActivated = true;
+        events.push({type:'activated', restoration:true, projectId:project.id, title:project.title});
+      }
+      if (project.status === 'active' && !justActivated) {
         project.yearsRemaining = Math.max(0, Number(project.yearsRemaining || 0) - 1);
         if (project.yearsRemaining === 0) {
           project.status = 'completed'; project.completedTurn = state.turnIndex + 1;
@@ -652,6 +671,71 @@
     const reserveGap = round2(Number(ledger.closingReserve) - (Number(ledger.openingReserve) + Number(ledger.outflows?.reserveContribution || 0) - Number(ledger.inflows?.reserveDraw || 0)));
     const valid = [...Object.values(ledger.inflows || {}), ...Object.values(ledger.outflows || {}), ledger.openingTreasury, ledger.openingDebt, ledger.openingReserve, ledger.closingTreasury, ledger.closingDebt, ledger.closingReserve].every(v => Number.isFinite(v) && v >= -EPSILON);
     return { ok: valid && Math.abs(gap) < EPSILON && Math.abs(debtGap) < EPSILON && Math.abs(reserveGap) < EPSILON, gap, debtGap, reserveGap, expected };
+  }
+
+  function verifyRestorations(state) {
+    const projects = state.finance.portfolio;
+    const ledgers = [...state.finance.ledgers, ...(state.finance.currentLedger ? [state.finance.currentLedger] : [])];
+    const history = state.history.filter(r => r.restoration);
+    const contracts = projects.flatMap(p => p.restorations || []);
+    const receipts = ledgers.flatMap(l => l.decisions.filter(d => d.operation === 'restoration'));
+    if (history.length !== contracts.length || history.length !== receipts.length) return false;
+    return history.every(record => {
+      const r = record.restoration;
+      const project = projects.find(p => p.id === r.projectId);
+      const ledger = ledgers[r.turn - 1];
+      const contract = project?.restorations?.find(item => item.turn === r.turn);
+      const receipt = ledger?.decisions.find(d => d.operation === 'restoration' && d.projectId === r.projectId);
+      if (!contract || !receipt || !record.deferred || record.project || r.turn !== record.turn ||
+          r.turn >= DATA.missions.length || r.operation !== 'restoration' ||
+          r.reopenTurn !== r.turn + 1 || r.reopenYear !== state.population.baseYear + r.turn ||
+          !Number.isInteger(r.expiryTurn) || r.expiryTurn <= project.createdTurn || r.expiryTurn > r.turn ||
+          r.expiryYear !== state.population.baseYear + r.expiryTurn - 1 || r.districtId !== project.districtId ||
+          r.annualOpex !== project.annualOpex || r.extraYears !== 3 ||
+          r.futureCommitment !== round2(r.annualOpex * r.extraYears) || r.fee !== round2(r.annualOpex * .75) ||
+          record.funding?.treasuryCost !== r.fee || receipt.totalCost !== r.fee) return false;
+      const fees = ledger.decisions.filter(d => d.operation === 'renewal' || d.operation === 'restoration');
+      if (ledger.outflows.renewalFees !== round2(fees.reduce((sum,d) => sum + d.fee, 0))) return false;
+      if (!Object.keys(r).every(key => contract[key] === r[key] && receipt[key] === r[key])) return false;
+      const paid = project.paidTurns || [];
+      if (!paid.includes(r.expiryTurn - 1) || paid.some(turn => turn >= r.expiryTurn && turn < r.reopenTurn)) return false;
+      const now = state.turnIndex + 1;
+      if (now === r.turn && (project.status !== 'completed' || project.completedTurn !== r.expiryTurn)) return false;
+      if (now >= r.reopenTurn && now < r.reopenTurn + r.extraYears &&
+          (project.status !== 'active' || project.yearsRemaining < r.reopenTurn + r.extraYears - now)) return false;
+      const lastObserved = Math.min(r.reopenTurn + r.extraYears - 1, now);
+      for (let turn = r.reopenTurn; turn <= lastObserved; turn++) if (!paid.includes(turn)) return false;
+      return true;
+    });
+  }
+
+  function restartAdminLoad(project) {
+    return Math.max(0.35, project.adminLoad * 0.58);
+  }
+
+  function restorationQuote(state, projectId) {
+    const project = state.finance.portfolio.find(p => p.id === projectId);
+    const turn = state.turnIndex + 1;
+    const annualOpex = project?.annualOpex || 0;
+    const expiryTurn = project?.completedTurn || null;
+    const eligible = Boolean(project?.status === 'completed' && project.activatedTurn &&
+      annualOpex > 0 && project.kind !== 'emergency' && project.restorations?.at(-1)?.turn !== turn);
+    const fee = round2(annualOpex * 0.75);
+    let reason = '';
+    if (!eligible) reason = 'service-unavailable';
+    else if (BudgetReview.locked(state)) reason = BudgetReview.stopped(state) ? 'review-supervised' : 'review-pending';
+    else if (!state.finance.currentLedger || state.awaitingContinue || state.completed) reason = 'turn-closed';
+    else if (turn >= DATA.missions.length) reason = 'term-ended';
+    else {
+      const service = {kind:project.kind};
+      reason = BudgetReview.blockReason(state, service, 'treasury') || Recovery.blockReason(state, service, 'treasury');
+      if (!reason && state.finance.treasury + EPSILON < fee) reason = 'treasury';
+      if (!reason && getAdminLoad(state) + Math.max(restartAdminLoad(project), project.adminMaintenance) > state.finance.adminCapacity + EPSILON) reason = 'capacity';
+    }
+    return {eligible, available: eligible && !reason, reason, projectId, fee, timelyFee:round2(annualOpex * 0.25),
+      annualOpex, extraYears:3, futureCommitment:round2(annualOpex * 3),
+      expiryTurn, expiryYear:expiryTurn ? state.population.baseYear + expiryTurn - 1 : null,
+      reopenTurn:turn + 1, reopenYear:state.population.baseYear + turn};
   }
 
   function renewalQuote(state, projectId) {
@@ -794,6 +878,8 @@
     getSummary,
     profileFor,
     renewalQuote,
+    restorationQuote,
+    verifyRestorations,
     renewProgramme
   };
 

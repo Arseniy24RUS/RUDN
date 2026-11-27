@@ -144,6 +144,10 @@ async function smoke(language,mode){
     assert.ok($('[data-practice] [role="status"]').textContent.length>12);
     assert.equal($('[data-practice-next]'),null);
     buttons[correct].click();
+    assert.ok($('[data-practice-next]'));
+    buttons[1-correct].click();
+    assert.equal($('[data-practice-next]'),null,'Changing to an incorrect answer keeps this lesson open');
+    buttons[correct].click();
     if(language!=='ru')assert.doesNotMatch($('[data-practice]').textContent,/[А-Яа-яЁё]/);
     await click('[data-practice-next]');
   }

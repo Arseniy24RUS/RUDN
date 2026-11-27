@@ -176,3 +176,14 @@ button.agenda-time:hover,button.agenda-time:focus-visible{background:#e9f6fc}
 .practice-choices {display:grid;gap:.45rem}
 .practice-choices button {min-height:44px;text-align:start;white-space:normal}
 #campaign-pace {line-height:1.4}
+
+.agenda-managed { display: grid; gap: 6px; margin: 12px 0; }
+.agenda-managed h3 { margin: 0; font-size: .92rem; }
+.agenda-managed summary { padding: 8px 2px; cursor: pointer; }
+.managed-service-art { object-fit: cover; width: 44px; height: 38px; border-radius: 7px; flex: none; }
+.service-restore { margin-block: 6px; min-height: 42px; }
+.restore-evidence { padding: 10px 12px; border-inline-start: 3px solid #50836e; background: #eef4ef; }
+.crisis-funding { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 6px 0; }
+.crisis-funding div { display: grid; gap: 2px; }
+.crisis-funding dt { font-size: .82em; }
+.crisis-funding dd { margin: 0; font-weight: 650; }

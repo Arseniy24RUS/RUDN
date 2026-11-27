@@ -239,8 +239,11 @@ def run_matrix(args, base):
                    for i, size in sizes
                    for language in (LANGUAGES if args.all_languages else (LANGUAGES[(i + engine_no) % 3],))]
         if args.full:
+            from test_governor_service_management_browser import run_management
             results.extend(run(browser, base, args.output, 390, 844, language, full=True)
                            for language in (LANGUAGES if args.all_languages else (LANGUAGES[engine_no],)))
+            size = [(390, 844), (320, 568), (1440, 900)][engine_no]
+            results.append(run_management(browser, base, args.output, *size, LANGUAGES[engine_no]))
         browser.close()
         return 0 if all(results) else 1
 

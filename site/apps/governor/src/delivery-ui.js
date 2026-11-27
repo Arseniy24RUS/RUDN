@@ -41,5 +41,62 @@ function confirmation(host,s,id,l,hooks={}){
  host.innerHTML=`<section class="renew-confirm"><p class="dialog-eyebrow">${tr(l,'Решение о действующей программе','An existing programme')}</p><h2 id="project-visit-title">${tr(l,'Продлить, а не открыть заново','Renew, rather than start again')}</h2><div class="renew-project">${A.tag(A.image(p,{thumb:true}),{lazy:false})}<h3>${esc(loc(p.title,l))}</h3></div><p>${tr(l,`Работа в ${x.year} году уже оплачена. Продление добавляет ещё три года: ${base+1}–${base+3}.`,`Operation in ${x.year} is already paid. Renewal adds three years: ${base+1}–${base+3}.`)}</p><dl class="renew-amounts"><div><dt>${tr(l,'Списать сейчас','Charge now')}</dt><dd>${money(q.fee,l)}</dd></div><div><dt>${tr(l,'Содержание в каждый дополнительный год','Operation in each additional year')}</dt><dd>${money(q.annualOpex,l)}</dd></div><div><dt>${tr(l,'Будущие расходы за три года','Future costs over three years')}</dt><dd>${money(q.futureCommitment,l)}</dd></div></dl><p class="renew-separate">${tr(l,'Будущие расходы не списываются сегодня и не считаются уже обеспеченным финансированием. Новый игровой год и награда за открытие не начисляются.','Future operating costs are not charged today or treated as secured funding. This does not add a game year or another opening reward.')}</p><details><summary>${tr(l,'Без продления','Without renewal')}</summary><p>${esc(consequence(x,l))}</p></details><div class="renew-actions"><button type="button" class="secondary-button" data-renew-cancel>${tr(l,'Вернуться без изменений','Return without changes')}</button><button type="button" class="primary-button" data-renew-confirm="${esc(id)}" ${q.available?'':'disabled'}>${tr(l,'Подтвердить продление','Confirm renewal')}</button></div><p class="renew-error" role="alert" hidden></p></section>`;
  host.querySelector('[data-renew-cancel]').onclick=()=>hooks.cancel?.();host.querySelector('[data-renew-confirm]').onclick=()=>hooks.confirm?.();
 }
-G.DeliveryUI={render,projectBlock,confirmation,consequence,title};
+const copy=(l,ru,en,zh)=>l==='zh'?zh:l==='en'?en:ru;
+function managementChoices(s,l){
+ const terms=s.finance.portfolio.map(p=>{
+   if(G.Engine.renewalQuote(s,p.id).eligible)return {p,kind:'renew'};
+   if(G.Engine.restorationQuote(s,p.id).eligible)return {p,kind:'restore'};
+   return null;
+ }).filter(Boolean);
+ if(!terms.length)return '';
+ function choice({p,kind}){
+   const renewal=kind==='renew';
+   const place=G.WorldModel.PLACES.find(x=>x.id===p.districtId);
+   const action=renewal?copy(l,'Продлить','Renew','续期'):copy(l,'Восстановить','Restore','恢复');
+   const status=renewal?copy(l,'Последний оплаченный год','Last funded year','最后一个已付费年度'):copy(l,'Контракт истёк','Contract expired','合同已到期');
+   return `<button class="agenda-topic managed-service" type="button" data-${kind}-service="${esc(p.id)}">${A.tag(A.image(p,{thumb:true}),{className:'managed-service-art'})}<span><strong>${action} · ${esc(loc(G.Engine.serviceName(p),l))}</strong><small>${esc(loc(place?.name,l))} · ${status}</small></span>${G.icon('arrow',{size:16})}</button>`;
+ }
+ const rest=terms.slice(2);
+ return `<section class="agenda-managed"><h3>${copy(l,'Созданные вами службы','Services you established','您创建的服务')}</h3>${terms.slice(0,2).map(choice).join('')}${rest.length?`<details><summary>${copy(l,'Другие службы','Other services','其他服务')} (${rest.length})</summary>${rest.map(choice).join('')}</details>`:''}</section>`;
+}
+function bindManagement(host,hooks){
+ host.querySelectorAll('[data-restore-service]').forEach(b=>b.onclick=()=>hooks.restore(b.dataset.restoreService));
+ host.querySelectorAll('[data-renew-service]').forEach(b=>b.onclick=()=>hooks.renew(b.dataset.renewService));
+}
+function restoreControl(s,p,l){
+ if(s.completed||!G.Engine.restorationQuote(s,p.id).eligible)return '';
+ return `<button type="button" class="secondary-button service-restore" data-restore-service="${esc(p.id)}">${copy(l,'Рассмотреть восстановление','Review restoration','查看恢复方案')}</button>`;
+}
+function restoreReview(host,s,id,l,hooks){
+ const p=s.finance.portfolio.find(p=>p.id===id),q=G.Engine.restorationQuote(s,id);
+ if(!p||!q.eligible)return false;
+ const place=G.WorldModel.PLACES.find(x=>x.id===p.districtId);
+ const theme=G.Agenda.TOPICS.find(t=>t.districtId===p.districtId);
+ const lastPaid=p.paidTurns?.at(-1),last=s.population.ledgers[lastPaid-1]?.after?.municipalities[p.districtId];
+ const now=s.population.derived.municipalities[p.districtId];
+ const base=s.population.baseYear;
+ const pct=v=>new Intl.NumberFormat(G.I18n.intlLocale(l),{style:'percent',maximumFractionDigits:1}).format(v);
+ const lastFundedYear=Number.isInteger(lastPaid)?base+lastPaid-1:null;
+ const lastPayment=lastFundedYear===null?'':copy(l,` Последний оплаченный год — ${lastFundedYear}.`,` The last funded year was ${lastFundedYear}.`,` 最后付费年度为 ${lastFundedYear} 年。`);
+ const evidence=theme&&last&&now&&Number.isFinite(last[theme.metric])&&Number.isFinite(now[theme.metric])
+   ?`<p class="restore-evidence"><strong>${esc(loc(theme.label,l))}</strong> · ${base+lastPaid-1}: ${pct(last[theme.metric])} → ${base+s.turnIndex}: ${pct(now[theme.metric])}</p>`:'';
+ const reasons={
+  treasury:copy(l,'В казне недостаточно средств.','There are insufficient treasury funds.','当前财政资金不足。'),
+  capacity:copy(l,'Аппарату не хватает свободной мощности.','Administrative capacity is insufficient.','行政执行能力不足。'),
+  'term-ended':copy(l,'До конца срока служба уже не успеет открыться.','The service cannot reopen before the end of the term.','本届任期结束前无法重启服务。')
+ };
+ const blocked=reasons[q.reason]||copy(l,'Сначала завершите текущее решение.','Finish the pending decision first.','请先完成当前决策。');
+ host.innerHTML=`<section class="renew-confirm restore-review"><p class="dialog-eyebrow">${esc(loc(place?.name,l))} · ${base+s.turnIndex}</p><h2 id="project-visit-title">${copy(l,'Восстановить службу','Restore the service','恢复服务')}</h2>
+ <div class="renew-project">${A.tag(A.image(p,{thumb:true}),{lazy:false})}<h3>${esc(loc(G.Engine.serviceName(p),l))}</h3></div>
+ <p>${copy(l,'Контракт истёк. Для возобновления нужна команда и новый контракт.','The contract expired. Reopening requires a team and a new contract.','合同已到期，恢复服务需要组建团队并签订新合同。')}${lastPayment}</p>${evidence}
+ <dl class="renew-amounts"><div><dt>${copy(l,'Организация сейчас','Set-up fee now','本期组织费用')}</dt><dd>${money(q.fee,l)}</dd></div><div><dt>${copy(l,'При своевременном продлении','Fee for an on-time renewal','按期续签的费用')}</dt><dd>${money(q.timelyFee,l)}</dd></div>
+ <div><dt>${copy(l,'Содержание каждый год','Operating cost each year','每年运营费')} · ${q.reopenYear}–${q.reopenYear+q.extraYears-1}</dt><dd>${money(q.annualOpex,l)}</dd></div><div><dt>${copy(l,'Содержание за три года','Three-year operating total','三年运营费总额')}</dt><dd>${money(q.futureCommitment,l)}</dd></div></dl>
+ <p>${copy(l,`Это решение займёт текущий год. Работа возобновится в ${q.reopenYear} году.`,`This uses your annual decision. Service resumes in ${q.reopenYear}.`,`这将占用本年度决策，服务将于 ${q.reopenYear} 年恢复。`)}</p>
+ <div class="renew-actions"><button class="secondary-button" data-restore-cancel>${copy(l,'Вернуться','Back','返回')}</button><button class="primary-button" data-restore-confirm ${q.available?'':'disabled'}>${copy(l,'Восстановить за','Restore for','支付并恢复')} ${money(q.fee,l)}</button></div>
+ <p class="renew-error" role="alert" ${q.available?'hidden':''}>${esc(q.available?'':blocked)}</p></section>`;
+ host.querySelector('[data-restore-cancel]').onclick=hooks.cancel;
+ host.querySelector('[data-restore-confirm]').onclick=hooks.confirm;
+ return true;
+}
+G.DeliveryUI={render,projectBlock,confirmation,consequence,title,managementChoices,restoreControl,restoreReview,bindManagement};
 })(typeof window!=='undefined'?window:globalThis);

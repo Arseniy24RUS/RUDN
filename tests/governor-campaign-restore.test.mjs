@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import vm from 'node:vm';
 import {webcrypto} from 'node:crypto';
+import {openLocalCampaignSlots} from '../site/apps/governor/src/local-campaign-slots.js';
+import {finalFive} from '../site/apps/governor/src/final-five.js';
 import {createDurableStore} from '../site/assets/js/durable-store.js';
 import {canResumeGameDraft,markGameDraft} from '../site/assets/js/game-release-policy.js';
 import {scopedStorage,createRunMetadata} from '../site/apps/governor/platform-contract.js';
@@ -21,7 +23,7 @@ function fixture(){
   async function open(){
     const nodes=new Map(),$=selector=>{if(!nodes.has(selector))nodes.set(selector,{});return nodes.get(selector);};
     const diagnostics={destroy(){},span(){return()=>{};},record(){},error(){}};
-    const sandbox=vm.createContext({TextEncoder,Uint8Array,Uint32Array,DataView,crypto:webcrypto,structuredClone,performance,URL,
+    const sandbox=vm.createContext({TextEncoder,Uint8Array,Uint32Array,DataView,crypto:webcrypto,structuredClone,performance,URL,finalFive,openLocalCampaignSlots,isPractice:false,gameRoute:new URLSearchParams(),
       GovernorGame:{Engine:engine,Integrity:{safeTree(){}}},localStorage,scopedStorage,createRunMetadata,canResumeGameDraft,markGameDraft,
       $,diagnostics,diagnosticService:{forModule:()=>diagnostics},resourceURL:()=>new URL('https://example.test/app.js'),
       backend:{authReady:true,isAdmin:()=>false,getProfile:()=>({fullName:'Synthetic',group:'G'}),loadDraft:s=>durable.loadDraft(s),checkpoint:(s,o)=>durable.checkpoint(s,o)},
