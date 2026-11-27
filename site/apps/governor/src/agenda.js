@@ -87,6 +87,7 @@
   const themeFor = m => TOPICS.find(t=>t.districtId===m?.districtId) || TOPICS[0];
   const beforePlaces = (s,turn) => s.population.ledgers[turn-2]?.after?.municipalities || s.population.initial.access;
   function metricFor(m) {
+    if(!m)return null;
     if(m.id==='childcare-queue'||m.id==='generations-city')return 'childcareAccess';
     if(m.id==='digital-procurement'||m.id==='cyberattack')return 'digitalProtection';
     return themeFor(m).metric;
@@ -190,7 +191,7 @@
   function report(s) {
     return {version:s.agenda.version,mode:mode(s),openYears:length(s),
       completedYears:Math.min(length(s),s.history.length),
-      order:(s.history||[]).filter(r=>r.turn<=length(s)).map(r=>({turn:r.turn,missionId:r.missionId,actionId:r.actionId,deferred:r.deferred,fundingMode:r.fundingMode})),
+      order:(s.history||[]).filter(r=>r.turn<=length(s)).map(r=>({turn:r.turn,missionId:r.missionId,actionId:r.actionId,deferred:r.deferred,fundingMode:r.fundingMode,restoredService:r.restoration?s.finance.portfolio.find(p=>p.id===r.restoration.projectId)?.title:null})),
       topics:chapterRows(s),
       interpretation:'Start is not resolution; access indicators describe the whole model year, not a causal estimate of one decision.'};
   }
@@ -238,7 +239,7 @@
     }
     return errors;
   }
-  const api={VERSION,LEGACY_VERSION,LENGTH,FIRST_TERM_LENGTH,TOPICS,OPERATIONS,MODES,mode,persistent,length,open,isFlexibleTurn,needsChoice,create,byId,topic,mission,available,pending,started,select,window,eventForYear,report,chapterRows,continuation,verify};
+  const api={VERSION,LEGACY_VERSION,LENGTH,FIRST_TERM_LENGTH,TOPICS,OPERATIONS,MODES,mode,persistent,length,open,isFlexibleTurn,needsChoice,create,byId,topic,metricFor,mission,available,pending,started,select,window,eventForYear,report,chapterRows,continuation,verify};
   root.GovernorGame=root.GovernorGame||{};root.GovernorGame.Agenda=api;
   if(typeof module!=='undefined')module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);

@@ -73,8 +73,9 @@
         partial:p.deliveryOutcome==='partial',late:p.deliveryOutcome==='delayed'};
     });
     const mission=G.Agenda.mission(state);
-    const hazard=!baseline&&!state.completed&&!state.awaitingContinue&&mission?.threadPhase==='crisis'
-      ? (mission.id==='major-flood'?'flood':mission.id==='cyberattack'?'cyber':mission.id==='flu-wave'?'health':null):null;
+    const calendar=G.Agenda.persistent(state)?G.Agenda.eventForYear(state):mission;
+    const hazard=!baseline&&!state.completed&&!state.awaitingContinue&&calendar?.threadPhase==='crisis'
+      ? (calendar.id==='major-flood'?'flood':calendar.id==='cyberattack'?'cyber':calendar.id==='flu-wave'?'health':null):null;
     return {year:baseline?state.population.baseYear:state.population.baseYear+Math.min(20,state.history.length),
       turn:baseline?0:state.turnIndex,chapter:baseline?1:mission?.chapter||4,baseline,
       population:baseline?state.population.initial.population:totals.population,
@@ -87,7 +88,7 @@
     return events.flatMap(event => {
       const project = state.finance.portfolio.find(p => p.id === (event.projectId || event.id));
       if (!project || !['activated', 'completed', 'operating'].includes(event.type)) return [];
-      return [{id:project.id, type:event.type, title:project.title, districtId:projectDistrict(project), year}];
+      return [{id:project.id, type:event.restoration?'reopened':event.type, title:event.restoration?G.Engine.serviceName(project):project.title, districtId:projectDistrict(project), year}];
     });
   }
   function moments(state, options = {}) {
@@ -100,6 +101,11 @@
     const operated = lifecycle.filter(e => e.type === 'operating');
     const changes = lifecycle.filter(e => e.type !== 'operating');
     if (!record) return changes.concat(operated);
+    if(record.restoration){
+      const service=state.finance.portfolio.find(p=>p.id===record.restoration.projectId);
+      const signed={id:service.id,districtId:projectDistrict(service),year:state.population.baseYear+record.turn-1,title:G.Engine.serviceName(service),type:'restoring'};
+      return [...changes,signed,...operated];
+    }
     const project = record.project;
     // The decision's immutable copy predates registration of population targets.
     const placed = project && state.finance.portfolio.find(p => p.id === project.id);
@@ -127,7 +133,7 @@
     const record = state.history.at(-1);
     // The closed year's population ledger is the last observation before the
     // portfolio advances. This is a district trend, including other projects.
-    const before = ['activated','completed'].includes(eventType)
+    const before = ['activated','reopened','completed'].includes(eventType)
       ? record?.population?.after?.municipalities?.[districtId]?.[metric]
       : record?.serviceResponse?.before?.municipalities?.[districtId]?.[metric];
     return {metric, before:Number.isFinite(before)?before:null, current};

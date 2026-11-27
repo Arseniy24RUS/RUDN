@@ -323,7 +323,7 @@
     if(!state.population||!plan)return null;
     const before=derive(state),extra={outputs:outputsFor(action.id),targets:targets(mission,placement),factor:plan.implementationFactor*plan.effectFactor};
     const after=derive(state,extra);const ids=Object.keys(extra.targets),main=ids.sort((a,b)=>extra.targets[b]-extra.targets[a])[0];
-    const change={};for(const k of ['healthAccess','schoolAccess','childcareAccess','employment','housingAccess'])change[k]=round(after.municipalities[main][k]-before.municipalities[main][k]);
+    const change={};for(const k of ['healthAccess','schoolAccess','childcareAccess','employment','housingAccess','digitalAccess','mobility','floodProtection','digitalProtection','elderCare'])change[k]=round(after.municipalities[main][k]-before.municipalities[main][k]);
     return {municipalityId:main,targets:clone(extra.targets),outputs:clone(extra.outputs),change,lag:plan.delay+(plan.profile.lag||0),
       reason:insight(state,main),affected:ids,conditional:true};
   }

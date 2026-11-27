@@ -60,3 +60,7 @@ html[lang^="zh"] .budget-stat .stat-copy strong::after{content:' 十亿'}
 @media (max-width:900px){
   body:has(#game-shell.turn-scene:not(.hidden)) #platform-status.routine-status{display:none}
 }
+.governor-replay{margin:16px 0;padding:16px;border:1px solid #bfd7e8;border-radius:14px;background:#f6fbfe}
+.governor-replay p,.governor-replay label{display:block;margin:8px 0;line-height:1.45}
+.governor-replay textarea{display:block;width:100%;max-width:100%;margin:6px 0 12px;padding:10px;border:1px solid #8daabd;border-radius:8px;box-sizing:border-box;font:inherit;resize:vertical}
+.governor-replay button{white-space:normal;max-width:100%;min-height:44px}

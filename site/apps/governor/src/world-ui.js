@@ -16,6 +16,8 @@ const labels = {
   construction: {ru:'Строительство началось', en:'Construction started', zh:'已开工'},
   deferred: {ru:'Год без нового проекта', en:'No new project this year', zh:'本年未启动新项目'},
   immediate: {ru:'Программа начала работу', en:'Programme launched', zh:'项目已启用'},
+  restoring: {ru:'Согласован новый контракт',en:'New contract approved',zh:'已批准新合同'},
+  reopened: {ru:'Служба снова работает',en:'Service reopened',zh:'服务已恢复'},
   activated: {ru:'Началась работа', en:'Now operating', zh:'开始运行'},
   operating: {ru:'Продолжает работу', en:'Still operating', zh:'持续运行'},
   completed: {ru:'Финансирование завершено', en:'Funding ended', zh:'资助已结束'},
@@ -238,8 +240,9 @@ function renderLabels(a){
  const lang=a.language,selected=a.focusId||a.model.focus;
  a.host.querySelector('.world-labels').innerHTML=a.model.places.map(p=>`<button type="button" data-world-place="${p.id}" class="world-place ${p.id===selected?'selected':''}" aria-label="${esc(M.local(p.name,lang))}" aria-pressed="${p.id===selected}"><span>${icon(p.icon,18)}</span><b>${esc(M.local(p.name,lang))}</b></button>`).join('');
  a.host.querySelectorAll('[data-world-place]').forEach(b=>b.addEventListener('click',()=>{if(a.options.moment){
-  selectMoment(a,{districtId:b.dataset.worldPlace});a.host.querySelector('[data-world-place="'+b.dataset.worldPlace+'"]')?.focus({preventScroll:true});
+  selectMoment(a,{districtId:b.dataset.worldPlace});
  }else{focus(a,b.dataset.worldPlace,false);renderSelection(a,b.dataset.worldPlace);}
+ a.host.querySelector('[data-world-place="'+b.dataset.worldPlace+'"]')?.focus({preventScroll:true});
  a.callbacks.onVisit?.(b.dataset.worldPlace);}));
  // Detailed project markers are revealed at close view or through a selected place;
  // twenty construction icons must never compete with five district names.
@@ -265,10 +268,11 @@ function update(a,state,language,options={}){
  if(G.IllustratedAssets){const pending=a.model.projects.filter(p=>!G.IllustratedAssets.peek(p.visualSrc)&&!G.IllustratedAssets.failed(p.visualSrc));if(pending.length)Promise.all(pending.map(p=>G.IllustratedAssets.preload(p.visualSrc))).then(()=>{if(!a.disposed){a.signature=null;a.request();}});}
  if(a.focusId&&!M.PLACES.some(p=>p.id===a.focusId))a.focusId=null;
  if(options.moment){updateMoment(a,options);return;}
+ if(!a.focusId&&a.model.places.some(p=>p.id===options.focusId))a.focusId=options.focusId;
  const lang=language;
  a.host.querySelector('.world-toolbar').innerHTML=`<div class="world-view-switch" role="group" aria-label="${text(lang,'Период сравнения','Comparison period')}"><button type="button" data-world-period="now" class="${a.baseline?'':'selected'}" aria-pressed="${!a.baseline}">${text(lang,'Сейчас','Now')} · ${a.model.baseline?M.snapshot(state).year:a.model.year}</button><button type="button" data-world-period="before" class="${a.baseline?'selected':''}" aria-pressed="${a.baseline}">${text(lang,'До начала срока','Before your term')}</button></div><div class="world-tools"><button type="button" data-world-tool="portfolio" class="world-portfolio-tool" aria-label="${text(lang,'Ход проектов','Project delivery')}">${icon('construction',18)}<span>${text(lang,'Проекты','Projects')}</span></button><button type="button" data-world-tool="minus" aria-label="${text(lang,'Отдалить','Zoom out')}">−</button><button type="button" data-world-tool="plus" aria-label="${text(lang,'Приблизить','Zoom in')}">+</button><button type="button" data-world-tool="reset" aria-label="${text(lang,'Показать всю область','Show the whole region')}">${icon('map',18)}</button><button type="button" data-world-tool="photo" aria-label="${text(lang,'Сохранить вид региона','Save a regional postcard')}">${icon('download',18)}</button></div>`;
- a.host.querySelectorAll('[data-world-period]').forEach(b=>b.addEventListener('click',()=>{a.baseline=b.dataset.worldPeriod==='before';a.focusId=null;update(a,a.source,a.language,a.options);a.host.querySelector(`[data-world-period="${a.baseline?'before':'now'}"]`)?.focus({preventScroll:true});}));
- a.host.querySelectorAll('[data-world-tool]').forEach(b=>b.addEventListener('click',()=>{switch(b.dataset.worldTool){case'portfolio':a.callbacks.onPortfolio?.();return;case'plus':a.zoom=Math.min(2.4,a.zoom+.3);break;case'minus':a.zoom=Math.max(.85,a.zoom-.3);break;case'reset':a.zoom=1;a.dx=a.dy=0;a.focusId=null;renderLabels(a);renderSelection(a,a.model.focus);break;case'photo':download(a);return;}a.request();}));
+ a.host.querySelectorAll('[data-world-period]').forEach(b=>b.addEventListener('click',()=>{a.baseline=b.dataset.worldPeriod==='before';update(a,a.source,a.language,a.options);a.host.querySelector(`[data-world-period="${a.baseline?'before':'now'}"]`)?.focus({preventScroll:true});}));
+ a.host.querySelectorAll('[data-world-tool]').forEach(b=>b.addEventListener('click',()=>{switch(b.dataset.worldTool){case'portfolio':a.callbacks.onPortfolio?.();return;case'plus':a.zoom=Math.min(2.4,a.zoom+.3);break;case'minus':a.zoom=Math.max(.85,a.zoom-.3);break;case'reset':a.zoom=1;a.dx=a.dy=0;renderLabels(a);renderSelection(a,a.focusId||a.model.focus);break;case'photo':download(a);return;}a.request();}));
  renderLabels(a);
  a.host.querySelector('.world-key').innerHTML=`${!a.ctx?`<small>${text(lang,'Упрощённый вид: Canvas недоступен. Состояния проектов доступны ниже.','Simplified view: Canvas is unavailable. Project states are listed below.')}</small>`:''}${a.options.flows?`<small class="world-flow-note">${text(lang,'Стрелки – крупнейшие внутренние переезды за год; это не новые жители.','Arrows show the largest internal moves during the year, not new residents.')}</small>`:''}<span><i class="construction"></i>${text(lang,'В реализации','In delivery')}</span><span><i class="open"></i>${text(lang,'Работает','Operating')}</span><span><i class="closed"></i>${text(lang,'Финансирование завершено','Funding ended')}</span><small>${text(lang,'Фоновая застройка – иллюстрация. Выделенные объекты – ваши программы.','Background buildings are illustrative. Highlighted sites are your programmes.')}</small>`;
  const details=a.host.querySelector('.world-accessible');details.querySelector('summary').textContent=text(lang,'Территории и проекты списком','Places and projects as a list');

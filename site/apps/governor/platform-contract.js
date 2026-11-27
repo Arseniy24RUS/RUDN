@@ -59,9 +59,9 @@ export const assessmentRules = [
     en:'Up to 0.75 points: preserve support and development relative to the start and improve on the same scenario without new measures. All elapsed years carry 65% of the weight; the latest five carry 35%. Full preservation earns half the criterion; the other half requires a gain over inaction of 20% of the initial index, at least 5 points.',
     zh:'最高0.75分：保持初始公众支持和发展水平，并优于相同情景下不采取新措施的结果。全部已过年度权重为65%，最近五年为35%。保持初始水平获得本项一半分数；另一半要求优于无行动基准达到初始指标的20%，且至少5点。'}},
   {id:'delivery',title:{ru:'Качество исполнения',en:'Quality of delivery',zh:'执行质量'},detail:{
-    ru:'До 0,75 балла: средний коэффициент фактического исполнения принятых мер. Для программы нужен запуск и оплаченные годы работы — до трёх доступных после запуска лет; разовая мера учитывается по фактическому исполнению. Число строек само по себе не повышает оценку. Без принятых мер — 0.',
-    en:'Up to 0.75 points: mean realised delivery factor of the measures adopted. A programme must open and have paid operating years, up to the first three available years after opening; a one-off measure uses its actual delivery factor. Building more projects does not itself improve the score. No measures earns 0.',
-    zh:'最高0.75分：已采取措施的实际执行系数平均值。项目必须投入运行并支付运营费用，考察开放后最多三个可用年度；一次性措施按实际执行计分。建设数量本身不增加分数。未采取措施得0分。'}},
+    ru:'До 0,75 балла за среднее исполнение решений. Для программы учитываются открытие и оплата работы по договору за первые три года или за весь срок более короткого договора. Учитываются только прошедшие годы. Для восстановления отсчёт начинается с открытия по новому договору. У разовой меры учитывается фактическое исполнение.',
+    en:'Up to 0.75 points for average delivery. A programme must open and its operating costs must be paid for the first three years or its full contract if shorter. Only elapsed years count. A restored service is assessed from its reopening under the new contract. A one-off measure uses its actual delivery factor.',
+    zh:'执行质量按各项决策的平均执行情况计分，最高0.75分。项目须启用并支付前三年的运营费用，合同不足三年则按合同期限计算。只统计已经过去的年度。恢复的服务从按新合同重新启用时算起。一次性措施按实际执行情况计分。'}},
   {id:'territories',title:{ru:'Многолетний результат услуг',en:'Services over the term',zh:'任期服务成效'},detail:{
     ru:'До 2 баллов: преимущество доступности услуг над тем же сценарием без новых мер. Пять территорий имеют равный вес; медицина/школа/уход за детьми/жильё/занятость/цифровые услуги — веса 25/20/15/15/15/10%. Цель полного балла — сокращение 35% исходного среднего разрыва (не менее 2,5 процентного пункта). 65% веса у всего срока, 35% — у последних пяти лет. Ухудшение территории относительно бездействия снижает результат. Рост населения не требуется; демографическое уменьшение спроса само по себе баллов не даёт.',
     en:'Up to 2 points: service access gained over the same scenario without new measures. Five districts have equal weight; health/school/childcare/housing/employment/digital services have weights 25/20/15/15/15/10%. Full credit requires closing 35% of the initial mean gap, at least 2.5 percentage points. All years carry 65% of the weight; the latest five carry 35%. A district doing worse than inaction reduces the result. Population growth is not required; demographic reductions in demand do not themselves earn points.',
@@ -71,9 +71,9 @@ export const assessmentRules = [
     en:'Up to 1 point: average initial-relative debt headroom and the share of three projected years covered by cash and reserves. Multiply by 1 / (1 + emergency aid received / initial cash and reserves). Ordinary project cofinancing is not penalised. Early financial handover earns 0.',
     zh:'最高1分：相对初始债务余量和未来三年现金及储备覆盖比例的平均值。再乘以1/(1+所获紧急援助/初始现金与储备)。正常项目配套资金不扣分。提前移交财政管理得0分。'}},
   {id:'promises',title:{ru:'Проверяемые обязательства',en:'Accountable commitments',zh:'可核验承诺'},detail:{
-    ru:'До 0,5 балла: выполненные обещания / максимум из 3 и числа обещаний, срок которых наступил в пределах кампании. Выполненное после согласованного переноса даёт коэффициент 0,75. Нарушенные и просроченные обещания входят в знаменатель. Обещания за пределами срока не повышают результат.',
-    en:'Up to 0.5 points: kept promises / the larger of 3 and promises due within the campaign. Fulfilment after an agreed revision has factor 0.75. Broken and overdue promises stay in the denominator. Promises beyond the term do not increase the result.',
-    zh:'最高0.5分：已兑现承诺数除以3与任期内应履行承诺数中的较大值。经协商延期后兑现的系数为0.75。违约和逾期承诺计入分母。任期以外的承诺不增加分数。'}},
+    ru:'До 0,5 балла: выполненные обещания / максимум из 3 и числа обещаний, срок которых наступил в пределах кампании. Выполненное после согласованного переноса даёт коэффициент 0,75. Учитываются обещания с согласованным сроком до конца 20-го года включительно. Более поздние обещания остаются в протоколе, в том числе при досрочном исполнении.',
+    en:'Up to 0.5 points: kept promises / the larger of 3 and promises due within the campaign. Fulfilment after an agreed revision has factor 0.75. The calculation includes commitments due by the end of year 20. Commitments due later remain in the record, including those fulfilled early.',
+    zh:'最高0.5分：已兑现承诺数除以3与任期内应履行承诺数中的较大值。经协商延期后兑现的系数为0.75。计分范围为约定期限在第20年年底或之前的承诺。期限在此之后的承诺保留在记录中，包括提前兑现的承诺。'}},
   {id:'overall',title:{ru:'Итоговая оценка',en:'Overall grade',zh:'总评'},detail:{
     ru:'Максимум 5 баллов. Все критерии умножаются на долю подтверждённых лет / 20; прохождение само по себе баллов не даёт. Досрочная передача управления ограничивает сумму 2,5 балла. Эталон без новых мер пересчитывает ту же модель, сценарий и календарные кризисы; это игровое сравнение, не доказательство реального причинного эффекта. Старые сохранения версии повестки 1.0 сохраняют опубликованную для них рубрику.',
     en:'Maximum 5 points. Every criterion is multiplied by confirmed years / 20; completion itself earns no points. Early handover caps the total at 2.5. The no-new-measures baseline runs the same model, scenario and calendar crises; this is an in-model comparison, not evidence of a real causal effect. Agenda version 1.0 saves keep their original published rubric.',
@@ -249,6 +249,32 @@ function policyBaseline(state, G) {
   return value;
 }
 
+/** End-of-term teaching comparison. Covered demand is capped at total demand,
+ * the same limit used by the displayed access ratio. These are modelled units. */
+export function northernCareComparison(state, G) {
+  if (!state?.completed || state.recovery || !G?.CampaignStrategy?.metrics) return [];
+  const baseline = policyBaseline(state, G);
+  if (!baseline) return [];
+  function measure(derived) {
+    const north = derived?.municipalities?.north;
+    if (!north || ![north.health, north.healthAccess, north.elderCare].every(Number.isFinite) || north.health <= 0) return null;
+    return {
+      demand: north.health,
+      covered: north.health * north.healthAccess,
+      access: north.healthAccess,
+      care: G.CampaignStrategy.metrics(state, derived).care
+    };
+  }
+  const rows = [];
+  for (const year of [5, 10, 15, 20]) {
+    const actual = measure(state.history[year - 1]?.population?.after);
+    const reference = measure(baseline.history[year - 1]?.population?.after);
+    if (!actual || !reference) return [];
+    rows.push({year: state.population.baseYear + year - 1, actual, reference});
+  }
+  return rows;
+}
+
 const mean = values => values.reduce((sum,value)=>sum+value,0)/Math.max(1,values.length);
 function annualWeights(count){
   const recent=Math.min(5,count);
@@ -257,6 +283,26 @@ function annualWeights(count){
 function serviceValue(place){
   return SERVICE_KEYS.reduce((sum,key,index)=>sum+clip(finite(place?.[key])??0)*SERVICE_WEIGHTS[index],0);
 }
+// A restored service keeps the original portfolio item. Score only the years
+// belonging to this contract, using the agreed term captured when it was signed.
+function paidContractShare(project, opening, duration, elapsed) {
+  if (!project || !Number.isInteger(opening) || opening < 1 || opening > elapsed) return 0;
+  const years = Math.min(3, Math.max(1, duration), elapsed - opening + 1);
+  const paid = new Set((project.paidTurns || []).filter(year => year >= opening && year < opening + years));
+  return paid.size / years;
+}
+
+function deliveredShare(record, projects, elapsed) {
+  if (record.restoration) {
+    const {projectId, reopenTurn, extraYears} = record.restoration;
+    return paidContractShare(projects.find(item => item.id === projectId), reopenTurn, extraYears, elapsed);
+  }
+  if (!record.project) return clip(record.delivery?.effectFactor ?? 1);
+  const project = projects.find(item => item.id === record.project.id);
+  const duration = finite(record.project.yearsRemaining) ?? finite(record.funding?.profile?.duration) ?? 3;
+  return clip(project?.implementationFactor) * paidContractShare(project, project?.activatedTurn, duration, elapsed);
+}
+
 function assessOutcomeReport(state,G,report){
   const history=(state.history||[]).slice(0,MAX_DECISIONS),count=history.length,completionRatio=clip(count/MAX_DECISIONS);
   const weights=annualWeights(count),baseline=policyBaseline(state,G),handover=campaignStatus(state,G)==='financial-handover';
@@ -289,15 +335,9 @@ function assessOutcomeReport(state,G,report){
   const equityFactor=clip(1+worstDistrictGain/0.1);
   const territories=clip(serviceGain/serviceTarget)*(0.75+0.25*equityFactor);
 
-  const projects=report.finance?.portfolio||[],adopted=history.filter(record=>!record.deferred);
-  const execution=adopted.map(record=>{
-    const project=projects.find(item=>item.id===record.project?.id);
-    if(!record.project)return clip(record.delivery?.effectFactor??1);
-    if(!project||!(finite(project.activatedTurn)>0))return 0;
-    const expected=Math.max(1,Math.min(3,count-project.activatedTurn+1));
-    return clip(project.implementationFactor)*clip((project.paidTurns?.length||0)/expected);
-  });
-  const delivery=mean(execution);
+  const projects = report.finance?.portfolio || [];
+  const adopted = history.filter(record => !record.deferred || record.restoration);
+  const delivery = mean(adopted.map(record => deliveredShare(record, projects, count)));
   const limit=finite(report.final?.debtLimit),debt=finite(report.final?.debt),initialDebt=finite(report.finance?.initialDebt);
   const debtHeadroom=limit===null||debt===null||initialDebt===null?0:clip((limit-debt)/Math.max(0.01,limit-initialDebt));
   const reserve=finite(report.final?.reserve);
@@ -306,11 +346,11 @@ function assessOutcomeReport(state,G,report){
   const initialCushion=Math.max(1,(finite(firstLedger?.openingTreasury)||0)+(finite(firstLedger?.openingReserve)||0));
   const emergencyAid=Math.max(0,finite(report.finance?.totalEmergencyTransfers)||0),aidFactor=1/(1+emergencyAid/initialCushion);
   const finance=handover?0:(debtHeadroom+coveredYears/3)/2*aidFactor;
-  const promises=report.governance?.promises||[];
-  const kept=promises.filter(p=>p.status==='kept'&&!p.revisions?.length&&p.dueTurn<=MAX_DECISIONS).length;
-  const revisedKept=promises.filter(p=>p.status==='kept'&&p.revisions?.length&&p.dueTurn<=MAX_DECISIONS).length;
-  const accountable=promises.filter(p=>['kept','broken'].includes(p.status)||p.status==='pending'&&p.dueTurn<=MAX_DECISIONS).length;
-  const fulfilment=(kept+0.75*revisedKept)/Math.max(3,accountable);
+  const duePromises = (report.governance?.promises || []).filter(p => Number.isInteger(p.dueTurn) && p.dueTurn >= 1 && p.dueTurn <= MAX_DECISIONS);
+  const kept = duePromises.filter(p => p.status === 'kept' && !p.revisions?.length).length;
+  const revisedKept = duePromises.filter(p => p.status === 'kept' && p.revisions?.length).length;
+  const accountable = duePromises.length;
+  const fulfilment = (kept + 0.75 * revisedKept) / Math.max(3, accountable);
   const raw=[mandate,delivery,territories,finance,fulfilment].map(clip);
   const progress=raw.map((score,index)=>score*OUTCOME_WEIGHTS[index]*completionRatio);
   const uncapped=progress.reduce((sum,value)=>sum+value,0),capMultiplier=handover&&uncapped>2.5?2.5/uncapped:1;

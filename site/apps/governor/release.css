@@ -153,3 +153,6 @@ button[data-agenda-back]{color:#075f8d!important}
     background:#075e8c;color:white;border-color:#075e8c
   }
 }
+.care-comparison .report-table{margin-block-start:10px}
+.care-comparison .report-table :is(th,td){min-width:0;padding:7px 5px;white-space:pre-line;overflow-wrap:anywhere}
+.care-comparison .report-table td:last-child{white-space:nowrap;overflow-wrap:normal}

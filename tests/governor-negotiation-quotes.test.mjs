@@ -56,12 +56,16 @@ test('meeting receipts and every selectable alternative quote the same package t
           const t=G.Governance.termFor(id),others=ids.filter(x=>G.Governance.termFor(x).actor!==t.actor);
           if((t.requires&&t.requires!==mode)||others.length===2){assert.match(html,/disabled/);continue;}
           assert.doesNotMatch(html,/disabled/);
-          const base=quote(others),withTerm=quote([...others,id]);
+          const replacing=!ids.includes(id)&&others.length!==ids.length;
+          const base=replacing?v:quote(others),withTerm=quote([...others,id]);
           const p=withTerm.agreement.promises.find(p=>p.termId===id);
           assert.ok(html.includes(String(2025+p.dueTurn)));
-          assert.ok(html.includes('Treasury now '+signed(delta(own(withTerm.plan),own(base.plan)))));
+          const expected=replacing?'Treasury on replacement: '+money(own(base.plan))+' → '+money(own(withTerm.plan))
+            :'Treasury now '+signed(delta(own(withTerm.plan),own(base.plan)));
+          assert.ok(html.includes(expected),id+': '+expected);
           if(mode==='cofinance')assert.ok(html.includes('Project cost '+signed(delta(withTerm.plan.totalCost,base.plan.totalCost))));
-          if(t.opex)assert.ok(html.includes(signed(t.opex)+'/operating year'));
+          const annual=delta(withTerm.agreement.annualOpex,base.agreement.annualOpex);
+          if(annual)assert.ok(html.includes(signed(annual)+'/operating year'));
           if(p.conditionalGrant)assert.ok(html.includes('Repay '+money(p.conditionalGrant)+' if unreported'));
           if(p.kind==='reserve')assert.ok(html.includes(money(p.floor)));
           if(t.id==='delivery-team')assert.equal(p.dueTurn,2+withTerm.project.startsIn);

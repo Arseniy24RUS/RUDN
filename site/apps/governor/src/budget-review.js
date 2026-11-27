@@ -146,7 +146,7 @@
    if(s.finance.totalEmergencyTransfers!==support)errors.push('support-total');
    for(const h of s.history){
     const a=root.GovernorGame?.DATA?.missions.find(m=>m.id===h.missionId)?.actions.find(a=>a.id===h.actionId);
-    if(h.deferred||a?.finance?.kind==='emergency')continue;
+    if((h.deferred && !h.restoration)||a?.finance?.kind==='emergency')continue;
     if(r.events.some(e=>e.grant>0&&e.turn<=h.turn&&e.pauseUntil>=h.turn))errors.push('grant-condition-breach');
     if(loans(s).some(e=>{const target=schedule(e).filter(p=>p.turn<=h.turn).reduce((n,p)=>n+p.amount,0),paid=r.payments.filter(p=>p.eventId===e.id&&p.turn<=h.turn).reduce((n,p)=>n+p.amount,0);return round(target-paid)>0;}))errors.push('arrears-breach');
    }
@@ -160,7 +160,7 @@
    }
    if(r.pending){
     const p=r.pending;
-    if(!keys(p,'operation|args|approvals|event')||!['commit','advance'].includes(p.operation)||!Array.isArray(p.args)||p.args.length!== (p.operation==='advance'?0:4)||!Array.isArray(p.approvals)||p.approvals.length>8||!REASONS.includes(p.event?.reason))errors.push('pending-schema');
+    if(!keys(p,'operation|args|approvals|event')||!Object.hasOwn({commit:4,advance:0,restore:1},p.operation)||!Array.isArray(p.args)||p.args.length!==({commit:4,advance:0,restore:1})[p.operation]||!Array.isArray(p.approvals)||p.approvals.length>8||!REASONS.includes(p.event?.reason))errors.push('pending-schema');
     else if(p.approvals.some(a=>!keys(a,'event|choice')||!['reserve','loan','grant'].includes(a.choice)))errors.push('authorisation-schema');
     if(s.completed)errors.push('pending-completed');
    }

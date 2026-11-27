@@ -611,11 +611,11 @@
     return state;
   }
 
-  function previewAction(state, actionId, fundingMode, placementId, termIds) {
+  function previewAction(state, actionId, fundingMode, placementId, termIds, serviceAction) {
     if (Agenda.needsChoice(state)) return null;
     const mission = getCurrentMission(state);
     if (!mission) return null;
-    const action = mission.actions.find(item => item.id === actionId);
+    const action = serviceAction || mission.actions.find(item => item.id === actionId);
     if (!action) return null;
     const placement = action.deferred ? null : resolvePlacement(mission, placementId);
     const baseEffective = action.deferred ? deepClone(action) : effectiveActionFor(state, mission, action, placement);
@@ -757,10 +757,10 @@
     return newlyUnlocked;
   }
 
-  function commitActionCore(state, actionId, fundingMode, placementId, termIds) {
+  function commitActionCore(state, actionId, fundingMode, placementId, termIds, servicePreview) {
     if (!state || state.completed) throw new Error('Campaign is already complete');
     if (state.awaitingContinue) throw new Error('Resolve the current turn before committing another action');
-    const preview = previewAction(state, actionId, fundingMode, placementId, termIds);
+    const preview = servicePreview || previewAction(state, actionId, fundingMode, placementId, termIds);
     if (!preview) throw new Error('Unknown action');
     if (!preview.affordable || !preview.plan || !preview.plan.available) throw new Error('Funding plan is unavailable');
 
@@ -845,8 +845,9 @@
       chapter: mission.chapter,
       threadPhase: mission.threadPhase || 'design',
       missionId: mission.id,
-      districtId: mission.districtId,
+      districtId: preview.plan.restoration?.districtId || mission.districtId,
       actionId: action.id,
+      ...(preview.plan.restoration ? {restoration:deepClone(preview.plan.restoration)} : {}),
       deferred: Boolean(action.deferred),
       fundingMode: preview.plan.id,
       placement: preview.placement ? deepClone(preview.placement) : null,
@@ -886,7 +887,7 @@
     };
     if (Agenda.open(state)) record.agenda = {mode:'agenda', selectedId:mission.id, year:state.turnIndex+1, offer:Agenda.window(state,mission.id)};
     state.history.push(record);
-    Population.registerDecision(state, mission, action, preview.plan, actualProject, preview.placement, delivery);
+    if (!record.restoration) Population.registerDecision(state, mission, action, preview.plan, actualProject, preview.placement, delivery);
     record.population = deepClone(Population.advanceYear(state));
     const serviceAfter = Outcomes.snapshot(state, record.population.after);
     const response = Outcomes.publicResponse(state.serviceAnchor, serviceAfter);
@@ -915,6 +916,7 @@
     record.effects.development = round1(record.after.development-record.before.development);
     state.storyLog.push({
       type: 'decision', turn: record.turn, chapter: record.chapter, missionId: mission.id,
+      ...(record.restoration ? {operation:'restoration', projectId:record.restoration.projectId} : {}),
       actionId: action.id, delivery: delivery.id, placementId: record.placement && record.placement.id,
       interactions: record.interactions.map(item => item.type)
     });
@@ -928,7 +930,10 @@
   function runBudgetDraft(state,operation,args,approvals){
     const draft=deepClone(state);draft.budgetReview.pending=null;draft.budgetReview.status='active';
     return BudgetReview.run(draft,approvals,()=>{
-      const result=operation==='commit'?commitActionCore(draft,args[0],args[1],args[2],args[3]===null?undefined:args[3]):advanceTurnCore(draft);
+      let result;
+      if (operation === 'restore') result = restoreProgrammeCore(draft, args[0]);
+      else if (operation === 'commit') result = commitActionCore(draft,args[0],args[1],args[2],args[3]===null?undefined:args[3]);
+      else result = advanceTurnCore(draft);
       return {draft,result};
     });
   }
@@ -936,7 +941,7 @@
     try{
       const {draft,result}=runBudgetDraft(state,operation,args,approvals);
       if(!validateState(draft))throw new Error('Invalid financial transition');
-      Object.assign(state,draft);result.state=state;result.budgetOperation=operation;return result;
+      Object.assign(state,draft);result.state=state;result.budgetOperation=operation==='restore'?'commit':operation;return result;
     }catch(e){
       if(!(e instanceof BudgetReview.Shortfall))throw e;
       state.budgetReview.pending={operation,args:deepClone(args),approvals:deepClone(approvals),event:deepClone(e.event)};
@@ -955,7 +960,8 @@
   }
   function verifyBudgetPending(state){
     const p=state.budgetReview.pending;if(!p)return true;
-    if(!['commit','advance'].includes(p.operation)||p.operation==='advance'&&(!state.awaitingContinue||p.args.length)||p.operation==='commit'&&(state.awaitingContinue||p.args.length!==4))return false;
+    const arity={commit:4,advance:0,restore:1};
+    if(!Object.hasOwn(arity,p.operation)||p.args.length!==arity[p.operation]||state.awaitingContinue!==(p.operation==='advance'))return false;
     try{runBudgetDraft(state,p.operation,p.args,p.approvals);return false;}
     catch(e){return e instanceof BudgetReview.Shortfall&&JSON.stringify(e.event)===JSON.stringify(p.event);}
   }
@@ -986,6 +992,79 @@
 
   function publishPromiseReport(state, promiseId) { ensureBudgetWritable(state); return Governance.publishReport(state, promiseId); }
   function renegotiatePromise(state, promiseId) { ensureBudgetWritable(state); return Governance.revise(state, promiseId); }
+
+  const SERVICE_NAMES={
+    'school-bus':['Школьный автобус','School bus service','校车线路'],
+    'second-shift':['Вторая смена','Second school shift','学校第二班次'],
+    'mobile-units':['Выездные медбригады','Mobile medical teams','流动医疗队'],
+    'clinics':['Сельские амбулатории','Rural clinics','乡村门诊'],
+    'single-window':['Единое цифровое окно','Digital one-stop service','一站式数字服务'],
+    'offline-centres':['Временные офлайн-центры','Temporary offline service centres','临时线下服务中心']
+  };
+  function serviceName(project){
+    const names=SERVICE_NAMES[project.actionId];
+    return names?{ru:names[0],en:names[1],zh:names[2]}:{
+      ru:'«'+localise(project.title,'ru')+'»',en:'“'+localise(project.title,'en')+'”',zh:'“'+localise(project.title,'zh')+'”'
+    };
+  }
+  function serviceAction(project, quote, actionId) {
+    const name=serviceName(project);
+    return {...Agenda.OPERATIONS.actions[0], id:actionId, cost:quote.fee, tags:[],
+      title:{
+        ru:'Восстановление · '+name.ru,
+        en:'Restoration · '+name.en,
+        zh:'恢复服务 · '+name.zh
+      },
+      outcome:{
+        ru:`После окончания контракта в ${quote.expiryYear} году регион оплатил возобновление службы.`,
+        en:`The contract ended in ${quote.expiryYear}. The region has paid to restart the service.`,
+        zh:`合同于${quote.expiryYear}年到期，地区已支付恢复服务的费用。`
+      },
+      future:{
+        ru:`Служба возобновит работу в ${quote.reopenYear} году. Контракт предусматривает три года содержания.`,
+        en:`The service will reopen in ${quote.reopenYear}. The contract covers three years of operation.`,
+        zh:`服务将于${quote.reopenYear}年恢复，合同涵盖三年的运营费用。`
+      }};
+  }
+
+  function actionForRecord(state, record) {
+    if (record.restoration) {
+      const project = state.finance.portfolio.find(p => p.id === record.restoration.projectId);
+      if (project) return serviceAction(project, record.restoration, record.actionId);
+    }
+    return Agenda.byId(record.missionId)?.actions.find(a => a.id === record.actionId) || null;
+  }
+
+  function restoreProgrammeCore(state, projectId) {
+    const q = Finance.restorationQuote(state, projectId);
+    if (!q.available) throw new Error(q.reason);
+    const project = state.finance.portfolio.find(p => p.id === projectId);
+    if (Agenda.open(state)) Agenda.select(state, Agenda.OPERATIONS.id);
+    const mission = getCurrentMission(state);
+    const slot = mission.actions.find(a => a.deferred);
+    // Reusing the no-new-project slot keeps both campaign calendars intact.
+    // A restoration has its own receipt, price and district, and the old
+    // service retains its original project id, placements and promises.
+    const action = serviceAction(project, q, slot.id);
+    const preview = previewAction(state, action.id, 'treasury', null, [], action);
+    preview.advisorReactions = [];
+    preview.plan.restoration = {operation:'restoration', turn:state.turnIndex+1,
+      projectId, districtId:project.districtId, expiryTurn:q.expiryTurn, expiryYear:q.expiryYear,
+      reopenTurn:q.reopenTurn, reopenYear:q.reopenYear, fee:q.fee, annualOpex:q.annualOpex,
+      extraYears:q.extraYears, futureCommitment:q.futureCommitment};
+    return commitActionCore(state, action.id, 'treasury', null, [], preview);
+  }
+
+  function restoreProgramme(state, projectId) {
+    ensureBudgetWritable(state);
+    if (BudgetReview.active(state)) return performBudgetTransition(state, 'restore', [projectId]);
+    // Validate the entire year before replacing a caller's live save.
+    const draft = deepClone(state);
+    const result = restoreProgrammeCore(draft, projectId);
+    if (!validateState(draft)) throw new Error('Invalid service restoration');
+    Object.assign(state, draft);
+    return {...result, state};
+  }
 
   function renewalQuote(state, projectId) {
     const quote=Finance.renewalQuote(state,projectId);
@@ -1221,18 +1300,37 @@
     const assistance=state.finance.totalEmergencyTransfers;
     const fiscalStatus=assistance>0?'assistance-used':future.unfunded?'future-gap':'covered-under-assumptions';
     const recoveryReport=Recovery.report(state);
-    const ruParts=[`Новых мер: ${launched.length}; годов без новой меры: ${deferred}. Капитальные проекты составили ${Math.round(capitalShare*100)}% расходов на меры. Запущено капитальных объектов: ${actualCapital}. Средний индекс доступности услуг изменился на ${serviceChange>0?'+':''}${serviceChange} п. п. `,
+    const restoredYears=records.filter(record=>record.restoration).length;
+    const ongoingOnly=deferred-restoredYears;
+    const newMeasures=launched.length;
+    const decisionCounts=restoredYears?{
+      ru:`Годы с новой мерой — ${newMeasures}, с восстановлением службы — ${restoredYears}, без запуска и восстановления — ${ongoingOnly}. `,
+      en:`New measures — ${newMeasures}. Service restorations — ${restoredYears}. Years with neither — ${ongoingOnly}. `,
+      zh:`任期内有${newMeasures}年采取新措施，${restoredYears}年恢复服务，${ongoingOnly}年既未启动新措施也未恢复服务。`
+    }:{
+      ru:`Новых мер: ${newMeasures}; годов без новой меры: ${deferred}. `,
+      en:`New measures: ${newMeasures}; years without a new measure: ${deferred}. `,
+      zh:`新增措施：${newMeasures}；没有新增措施的年数：${deferred}。`
+    };
+    const capitalPercent=Math.round(capitalShare*100);
+    const changeText=(serviceChange>0?'+':'')+serviceChange;
+    const spending={
+      ru:`Капитальные проекты составили ${capitalPercent}% расходов на меры. Запущено капитальных объектов: ${actualCapital}. Средний индекс доступности услуг изменился на ${changeText} п. п. `,
+      en:`Capital projects account for ${capitalPercent}% of policy spending; ${actualCapital} capital projects opened. Mean service-access index changed by ${changeText} pp. `,
+      zh:`资本项目占措施支出的${capitalPercent}%。已投用资本设施：${actualCapital}。服务平均可及性指数变化了${changeText}个百分点。 `
+    };
+    const ruParts=[
       assistance>0?`Для завершения срока понадобилось ${round2(assistance)} млрд ₽ экстренной учебной помощи. `:'Экстренная учебная помощь не использовалась. ',
       future.unfunded?'При продолжении действующих обязательств есть дефицит следующего бюджета. ':'Условный прогноз следующих трёх лет не требует помощи. ',
       recoveryReport?`В учебном кейсе старый счёт: ${recoveryReport.bill} млрд ₽; целевая помощь: ${recoveryReport.grantReceived}; возврат помощи: ${recoveryReport.grantReturned}; остаток займа: ${recoveryReport.principalOutstanding}. `:'',
       'Название описывает ваш курс, а не оценку знаний и не доказательство успешности управления.'];
-    const ru=ruParts.join('');
-    const en=`New measures: ${launched.length}; years without a new measure: ${deferred}. Capital projects account for ${Math.round(capitalShare*100)}% of policy spending; ${actualCapital} capital projects opened. Mean service-access index changed by ${serviceChange>0?'+':''}${serviceChange} pp. `+
+    const ru=decisionCounts.ru+spending.ru+ruParts.join('');
+    const en=decisionCounts.en+spending.en+
       (assistance>0?`Completing the term required ${round2(assistance)} bn RUB in emergency classroom support. `:'No emergency classroom support was used. ')+
       (future.unfunded?'Existing commitments imply a future cash shortfall. ':'The conditional three-year projection requires no support. ')+
       (recoveryReport?`Classroom inherited bill: ${recoveryReport.bill} bn RUB; conditional grant: ${recoveryReport.grantReceived}; grant returned: ${recoveryReport.grantReturned}; loan still outstanding: ${recoveryReport.principalOutstanding}. `:'')+
       'The title describes your course, not learning attainment or proof of governance success.';
-    return {id,title:{ru:titles[id][0],en:titles[id][1]},description:{ru,en,...(root.GovernorGame.I18n?{zh:ruParts.map(part=>localise(part,'zh')).join('')}:{})},future,
+    return {id,title:{ru:titles[id][0],en:titles[id][1]},description:{ru,en,...(root.GovernorGame.I18n?{zh:decisionCounts.zh+spending.zh+ruParts.map(part=>localise(part,'zh')).join('')}:{})},future,
       evidence:{advisorAverage:round1(advisorAverage),actualCapital,assistance,deferred,launched:launched.length,capitalShare:round2(capitalShare),serviceShare:round2(serviceShare),protectionShare:round2(protectionShare),coverage,serviceChange,fiscalStatus,promises,future},
       lessons:[
        {ru:'Ввод объекта, доступность услуги и бюджетная устойчивость проверяются отдельно.',en:'Facility opening, service access and fiscal resilience are assessed separately.'},
@@ -1271,6 +1369,7 @@
     if (!state.profile || typeof state.profile.name !== 'string') return false;
     if (!state.finance || state.finance.version !== Finance.VERSION) return false;
     if (!Array.isArray(state.history) || !Array.isArray(state.finance.ledgers)) return false;
+    if (!Finance.verifyRestorations(state)) return false;
     const expectedHistory = state.completed || state.awaitingContinue ? state.turnIndex + 1 : state.turnIndex;
     if (state.history.length !== expectedHistory) return false;
     if (state.history.some((r,i)=>r.turn!==i+1 || (!Agenda.isFlexibleTurn(state,i) && r.missionId!==DATA.missions[i].id))) return false;
@@ -1295,6 +1394,35 @@
     try { return validateStateUnchecked(state); } catch (_) { return false; }
   }
 
+  // Older manual-budget saves recorded reserve financing in the ledger but
+  // displayed it as treasury cash on the crisis card. Rebuild display copies
+  // only for the exact approved crisis, leaving all financial flows intact.
+  function repairCrisisReceipts(state) {
+    const fundingEvents = state.budgetReview?.events?.filter(e => e.reason === 'crisis' && e.reserve > 0) || [];
+    for (const e of fundingEvents) {
+      const ledger = state.finance.ledgers[e.turn - 1] || state.finance.currentLedger;
+      if (ledger?.turn !== e.turn) continue;
+      const decision = ledger.decisions.find(d => d.operation === 'budget-review-funding' && d.id === e.id);
+      const original = ledger.shocks.find(shock => shock.missionId === e.missionId);
+      if (!original || decision?.reserve !== e.reserve || original.reserveUsed !== 0) continue;
+      if (original.treasuryImpact !== round2(-original.totalCost + e.loan + e.grant)) continue;
+      const receipt = {...original, reserveUsed:e.reserve, treasuryImpact:round2(original.treasuryImpact + e.reserve)};
+      for (const copy of [ledger, state.finance.lastClosedLedger, state.history[e.turn - 1]?.fiscalLedger]) {
+        if (copy?.turn !== e.turn) continue;
+        const shock = copy.shocks.find(s => s.missionId === e.missionId);
+        if (shock) Object.assign(shock, receipt);
+      }
+      const entries = [state.history[e.turn - 1]?.entry];
+      if (e.turn === state.turnIndex + 1) entries.push(state.currentEntry);
+      for (const entry of entries) {
+        if (entry?.missionId !== e.missionId) continue;
+        entry.finance = deepClone(receipt);
+        entry.effects.budget = receipt.treasuryImpact;
+        entry.effects.reserve = -receipt.reserveUsed;
+      }
+    }
+  }
+
   function restoreState(raw) {
     try {
       const state = typeof raw === 'string' ? JSON.parse(raw) : deepClone(raw);
@@ -1307,6 +1435,7 @@
         state.agenda = {...Agenda.create('guided'),version:Agenda.LEGACY_VERSION};
       }
       if (!validateState(state)) return null;
+      repairCrisisReceipts(state);
       state.language = ['ru','en','zh'].includes(state.language) ? state.language : 'ru';
       state.activeView = state.activeView || 'mission';
       state.soundEnabled = state.soundEnabled !== false;
@@ -1454,7 +1583,7 @@
       }),
       decisions: state.history.map(record => {
         const mission = Agenda.byId(record.missionId);
-        const action = mission && mission.actions.find(item => item.id === record.actionId);
+        const action = actionForRecord(state,record);
         return {
           turn: record.turn,
           chapter: record.chapter,
@@ -1463,6 +1592,7 @@
           mission: mission ? localise(mission.title, lang) : record.missionId,
           actionId: record.actionId,
           action: action ? localise(action.title, lang) : record.actionId,
+          ...(record.restoration ? {restoration:deepClone(record.restoration)} : {}),
           fundingMode: record.fundingMode,
           placement: record.placement ? {
             id: record.placement.id,
@@ -1546,6 +1676,9 @@
     renegotiatePromise,
     renewProgramme,
     renewalQuote,
+    serviceName, actionForRecord,
+    restorationQuote:Finance.restorationQuote,
+    restoreProgramme,
     advanceTurn,
     enterCurrentMission,
     getPlacements,
