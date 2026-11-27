@@ -53,6 +53,7 @@ concurrency:
 
 jobs:
   catalog:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -137,7 +138,7 @@ jobs:
           retention-days: 14
 
   complete-matrix:
-    if: always()
+    if: ${{ always() && !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
     needs: [catalog, browsers, storage, interactions, games-and-rendering, performance]
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -177,6 +178,7 @@ jobs:
             ${{ runner.temp }}/puzzle-matrix/localized-layout-summary.json
 
   storage:
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

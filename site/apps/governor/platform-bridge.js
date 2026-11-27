@@ -361,7 +361,8 @@ async function tryStart(){
 let v3Dependencies;
 function loadV3(){
   if(!v3Dependencies){
-    const list=['v3-event-bank','v3-event-copy','v3-event-art','v3-events','v3-rules','v3-store','v3-advisor','v3-motion','v3-runtime','v3-ui'];
+    const list=['v3-event-bank','v3-event-copy','v3-event-art','v3-events','v4-catalog','v4-campaign','v3-rules','v3-store',
+      'v3-advisor','v3-motion','v4-map','v4-planning','v3-runtime','v3-ui'];
     v3Dependencies=Promise.all(list.map(name=>new Promise((resolve,reject)=>{
       const script=document.createElement('script');
       script.async=false;
@@ -378,24 +379,29 @@ async function startV3(loadEnd,hasHistoric){
   try{
     await loadV3();
     if(!sameOwner())return;
-    const current=await backend.loadDraft({owner,activitySlug,mode:G.V3Runtime.draftMode});
+    const edition=gameRoute.get('edition')==='v3'?'v3':'v4';
+    const modern=edition==='v4';
+    const skipLink=document.querySelector('.skip-link');
+    const updateSkip=()=>{skipLink.textContent=tr('Перейти к игре','Skip to game','跳转到游戏');};
+    const current=await backend.loadDraft({owner,activitySlug,mode:modern?G.V3Runtime.v4DraftMode:G.V3Runtime.draftMode});
     if(!sameOwner())return;
     let legacyURL;
     if(free&&hasHistoric){
       const archive=new URL(location.href);archive.searchParams.set('edition','legacy');legacyURL=archive.href;
     }
     v3Runtime=await G.V3Runtime.mount($('#governor-v3'),{
-      owner,context,language,backend,preview:backend.isAdmin()&&!free,
-      canWrite:sameOwner,setLanguage:next=>{language=next;setLocale(next);G.I18n.shell(document,next);},
+      owner,context,language,backend,preview:backend.isAdmin()&&!free,edition,
+      canWrite:sameOwner,setLanguage:next=>{language=next;setLocale(next);G.I18n.shell(document,next);updateSkip();},
       credential:()=>backend.user?.getIdToken(),advisorEnabled:CONFIG.governorAdvisorUrl,
       legacyURL,exit:()=>location.assign(courseUrl)
-    }, current?.state?.governorV3);
+    }, modern?current?.state?.governorV4:current?.state?.governorV3);
     if(!sameOwner()){v3Runtime.freeze();return;}
     document.body.classList.add('governor-v3-active');
     $('#app')?.remove();
     $('#platform-loading').hidden=true;
     $('#governor-v3').hidden=false;
-    document.querySelector('.skip-link').href='#v3-heading';
+    skipLink.href='#v3-heading';
+    updateSkip();
     document.documentElement.dataset.appReady='true';
     loadEnd({success:true});diagnostics.record('module-ready',{success:true});
     window.dispatchEvent(new Event('governor:playable'));
@@ -444,26 +450,32 @@ backend.init().then(tryStart).catch(()=>block(tr('Не удалось восст
 
 // The platform owns caching; never install a competing nested service worker.
 if('serviceWorker'in navigator){
-  let preparing=false,moduleReady=false,canPrepare=false;
+  let preparing=false,moduleReady=false,canPrepare=false,offlineUnavailable=false,prepareTimeout;
   const updateOfflineStatus=()=>{
     const element=$('#offline-status');if(!element)return;
-    const desired=moduleReady?'ready':'pending';if(element.dataset.platformOffline===desired)return;
+    const desired=moduleReady?'ready':offlineUnavailable?'available':preparing?'pending':'';
+    if(element.dataset.platformOffline===desired&&element.lang===language)return;
     element.dataset.platformOffline=desired;
+    element.lang=language;
     element.textContent=moduleReady
-      ?tr('Готово к работе без сети','Ready for offline use')
-      :tr('Автономное приложение · ресурсы загружаются','Standalone app · resources loading');
+      ?tr('Готово к работе без сети','Ready for offline use','可离线使用')
+      :offlineUnavailable?tr('Игра готова. Офлайн-копия пока недоступна.','The game is ready. The offline copy is unavailable.','游戏已就绪，暂无法离线使用。')
+      :preparing?tr('Можно играть. Готовим офлайн-копию.','Ready to play. Preparing the offline copy.','可以开始游戏，正在准备离线资源。'):'';
   };
   // Cached resources may be acknowledged before Auth has mounted the game UI.
   const statusMount=new MutationObserver(()=>{if($('#offline-status'))updateOfflineStatus();});
   statusMount.observe(document.body,{childList:true,subtree:true});
   const prepare=()=>{
     if(!canPrepare||preparing||moduleReady||!navigator.serviceWorker.controller)return;
-    preparing=true;updateOfflineStatus();
+    preparing=true;offlineUnavailable=false;updateOfflineStatus();
+    clearTimeout(prepareTimeout);
+    prepareTimeout=setTimeout(()=>{if(!moduleReady){offlineUnavailable=true;updateOfflineStatus();}},18000);
     navigator.serviceWorker.controller.postMessage({type:'PREPARE_MODULE',module:'governor',urls:[location.href,resourceURL('../../assets/course/previews/seminar_07_simulator.jpg',import.meta.url).href]});
   };
   navigator.serviceWorker.addEventListener('message',event=>{
     if(event.source!==navigator.serviceWorker.controller||event.data?.type!=='MODULE_CACHE_STATUS'||event.data.module!=='governor')return;
-    preparing=false;moduleReady=event.data.ready===true;updateOfflineStatus();
+    clearTimeout(prepareTimeout);
+    preparing=false;moduleReady=event.data.ready===true;offlineUnavailable=!moduleReady;updateOfflineStatus();
   });
   navigator.serviceWorker.addEventListener('controllerchange',()=>{preparing=false;moduleReady=false;prepare();});
   window.addEventListener('online',prepare);
@@ -472,7 +484,7 @@ if('serviceWorker'in navigator){
     const register=()=>{
       canPrepare=true;
       navigator.serviceWorker.register(new URL('service-worker.js',getReleaseContext()?.siteRoot||new URL('../../',import.meta.url)),{updateViaCache:'none'})
-        .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{});
+        .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{offlineUnavailable=true;updateOfflineStatus();});
     };
     // Give the first tap a quiet interval. A visitor who stays on the landing
     // still gets the complete verified pack without having to opt in.

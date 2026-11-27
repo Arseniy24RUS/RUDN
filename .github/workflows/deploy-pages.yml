@@ -62,29 +62,30 @@ jobs:
           compression-level: 0
 
   platform-checks:
-    if: ${{ !(github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
+    if: ${{ !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
     uses: ./.github/workflows/platform-checks.yml
 
   legal-lab:
-    if: ${{ !(github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
+    if: ${{ !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
     uses: ./.github/workflows/legal-lab-checks.yml
 
   puzzle-checks:
-    if: ${{ !(github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!(contains(github.event.head_commit.message, '[career-seminar-express]') || (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) || contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))) }}
+    if: ${{ !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!(contains(github.event.head_commit.message, '[career-seminar-express]') || (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) || contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
 
   deploy:
     needs: [preserve-legacy-baseline, puzzle-checks, legal-lab, platform-checks]
-    if: ${{ (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && (github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && (contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[course-result-recovery]')) && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))))) }}
+    if: ${{ (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && ((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && (contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[course-result-recovery]')) && needs.legal-lab.result == 'skipped' && needs.platform-checks.result == 'skipped' && needs.puzzle-checks.result == 'skipped') || (!cancelled() && needs.preserve-legacy-baseline.result == 'success' && needs.legal-lab.result == 'success' && needs.platform-checks.result == 'success' && (needs.puzzle-checks.result == 'success' || (needs.puzzle-checks.result == 'skipped' && (contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))))) }}
     env:
-      GOVERNOR_V3_PUBLISH: ${{ github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ') }}
+      GOVERNOR_V3_PUBLISH: ${{ ((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) }}
+      GOVERNOR_V4_CHANGE: ${{ (github.event_name == 'push' && github.event.before == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
       COURSE_RESULT_RECOVERY: ${{ contains(github.event.head_commit.message, '[course-result-recovery]') }}
       CAREER_VERIFIED_PUBLISH: ${{ contains(github.event.head_commit.message, '[career-verified-publish]') }}
       RECEPTION_AI_RELEASE: ${{ contains(github.event.head_commit.message, '[reception-ai-release]') }}
       RECEPTION_LEGAL_READER: ${{ (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) }}
-      FOCUSED_HOTFIX: ${{ (github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || contains(github.event.head_commit.message, '[course-result-recovery]') || contains(github.event.head_commit.message, '[career-verified-publish]') || (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
+      FOCUSED_HOTFIX: ${{ ((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) || contains(github.event.head_commit.message, '[course-result-recovery]') || contains(github.event.head_commit.message, '[career-verified-publish]') || (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]') }}
       SETTLEMENTS_NETWORK: ${{ contains(github.event.head_commit.message, '[settlements-network]') }}
       SETTLEMENTS_ROAD_ROUTES: ${{ contains(github.event.head_commit.message, '[settlements-road-routes]') }}
       SETTLEMENTS_RUNTIME_CACHE: ${{ contains(github.event.head_commit.message, '[settlements-runtime-cache]') }}
@@ -108,11 +109,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - name: Scope the reviewed Governor V3 publication
+      - name: Scope the reviewed Governor publication
         if: env.GOVERNOR_V3_PUBLISH == 'true'
         env:
-          GOVERNOR_BASE: ${{ github.event.before }}
-          GOVERNOR_PUSH_MESSAGE: ${{ github.event.head_commit.message }}
+          GOVERNOR_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          GOVERNOR_PUSH_MESSAGE: ${{ github.event.pull_request.title || github.event.head_commit.message }}
         run: |
           python - <<'PY_INNER'
           import os
@@ -130,7 +131,8 @@ jobs:
           first_year_guide_base = '9bb503f8a3f423c279595fcd96aa8399ce01c09a'
           menu_toggle_base = '28f3b5ddcdfc21576ea0b99aa3fd3ceee78e280f'
           advisor_base = '030f5e6b73d7bfe78b5d24e81b0cfc94abc686b8'
-          if base not in (release_base, image_hotfix_base, cover_hotfix_base, welcome_cover_base, first_year_guide_base, menu_toggle_base, advisor_base):
+          portfolio_base = '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd'
+          if base not in (release_base, image_hotfix_base, cover_hotfix_base, welcome_cover_base, first_year_guide_base, menu_toggle_base, advisor_base, portfolio_base):
               raise SystemExit('Governor publication requires a reviewed base on main')
           if re.findall(r'\[[^\]\r\n]+\]', os.environ['GOVERNOR_PUSH_MESSAGE']) != ['[governor-v3-publish]']:
               raise SystemExit('Do not combine the Governor publication marker with other markers')
@@ -163,6 +165,14 @@ jobs:
               reviewed['site'] = '60d8bc912ee7fa416984b94d724d37d46c80481a'
               reviewed['scripts'] = '81a5c0e7a2756347e6852c24a4d7958665202213'
               reviewed['firebase'] = 'dc4aff2a5e0344910d27103cdd004dac79ed68c2'
+          if base == portfolio_base:
+              reviewed['site'] = '094e4d33fe408e59966fcecabb15df4fb5aa2116'
+              reviewed['scripts'] = 'a853b3fc42429ecd398bcb82e5d3d15194d550c5'
+              reviewed['tests'] = 'b2502cb5f4fce6d466a506daa3344f6d5b470912'
+              reviewed['.github/workflows/platform-checks.yml'] = 'c0949615c011ff4d0991478a7fb37492e29c2a70'
+              reviewed['.github/workflows/legal-lab-checks.yml'] = 'baca07b408691f48a53dbd4069d261cf07dd25cf'
+              reviewed['.github/workflows/puzzle-checks.yml'] = '1afa713ad087583796a3eead1daf421ae6cc3b8d'
+              reviewed['firebase'] = 'bfba8e0e5b71310ec5e941a87e5d8f8d3807d69b'
           for path, expected in reviewed.items():
               if git('rev-parse', 'HEAD:' + path) != expected:
                   raise SystemExit('Content differs from the reviewed Governor V3 candidate: ' + path)
@@ -229,6 +239,27 @@ jobs:
                   'firebase/functions/governor-v3-advisor/service.mjs',
               }
               unexpected = sorted(set(changed) - allowed_files)
+          elif base == portfolio_base:
+              integration_files = {
+                  workflow,
+                  '.github/workflows/platform-checks.yml',
+                  '.github/workflows/legal-lab-checks.yml',
+                  '.github/workflows/puzzle-checks.yml',
+                  'firebase/functions/governor-v3-advisor/provider.mjs',
+                  'scripts/build-platform-release.mjs',
+                  'scripts/test-platform-release.mjs',
+                  'scripts/test_governor_v3_browser.py',
+                  'scripts/test_governor_v4_browser.py',
+                  'scripts/test_governor_service_worker.mjs',
+                  'site/service-worker.js',
+                  'site/assets/course/previews/seminar_07_simulator.jpg',
+                  'scripts/test_governor_terra_browser.py',
+                  'tests/governor-v4-campaign.test.mjs',
+                  'tests/governor-v4-economy.test.mjs',
+                  'tests/governor-v4-map.test.mjs',
+              }
+              unexpected = sorted(path for path in changed if path not in integration_files
+                                  and not path.startswith('site/apps/governor/'))
           else:
               allowed_roots = (*reviewed, workflow)
               unexpected = [path for path in changed if not any(path == root or path.startswith(root + '/') for root in allowed_roots)]
@@ -785,8 +816,8 @@ jobs:
         if: env.GOVERNOR_V3_PUBLISH == 'true'
         run: node --test firebase/functions/governor-v3-advisor/advisor.test.mjs
       - name: Verify Governor on-demand video release mapping
-        if: env.GOVERNOR_V3_PUBLISH == 'true' && github.event.before == '5828b851c4ad9efdbff0aaa890d67c9ed1599bfc'
-        run: node --test --test-name-pattern='^Governor on-demand video' scripts/test-platform-release.mjs
+        if: env.GOVERNOR_V4_CHANGE == 'true' || (env.GOVERNOR_V3_PUBLISH == 'true' && github.event.before == '5828b851c4ad9efdbff0aaa890d67c9ed1599bfc')
+        run: node --test --test-name-pattern='^Governor on-demand' scripts/test-platform-release.mjs
       - name: Verify Settlements source integrity, score and persistence
         if: env.FOCUSED_HOTFIX != 'true' || env.SETTLEMENTS_UI_ONLY == 'true'
         run: |
@@ -843,12 +874,21 @@ jobs:
         run: |
           python -m pip install playwright==1.61.0
           python -m playwright install --with-deps chromium webkit
+      - name: Prepare Firefox for Governor
+        if: env.GOVERNOR_V4_CHANGE == 'true' || (env.FOCUSED_HOTFIX != 'true' && env.VERIFIED_SETTLEMENTS_PUBLISH != 'true')
+        run: python -m playwright install --with-deps firefox
       - name: Test native Governor on desktop and mobile
         if: env.FOCUSED_HOTFIX != 'true' || env.GOVERNOR_V3_PUBLISH == 'true'
         run: |
           python scripts/test_governor_v3_browser.py --engine chromium --offline-final --lost-receipt --output "${{ runner.temp }}/governor-browser-qa"
           python scripts/test_governor_v3_browser.py --engine webkit --first-year --output "${{ runner.temp }}/governor-webkit-qa"
           python scripts/test_governor_terra_browser.py
+      - name: Test Governor's four terms on three browsers
+        if: env.GOVERNOR_V4_CHANGE == 'true' || env.FOCUSED_HOTFIX != 'true'
+        run: |
+          python scripts/test_governor_v4_browser.py --engine chromium --full --output "${{ runner.temp }}/governor-v4/chromium"
+          python scripts/test_governor_v4_browser.py --engine webkit --first-year --output "${{ runner.temp }}/governor-v4/webkit"
+          python scripts/test_governor_v4_browser.py --engine firefox --first-year --output "${{ runner.temp }}/governor-v4/firefox"
       - name: Verify the first year from a district without map objects
         if: env.GOVERNOR_V3_PUBLISH == 'true' && (github.event.before == '9bb503f8a3f423c279595fcd96aa8399ce01c09a' || github.event.before == '28f3b5ddcdfc21576ea0b99aa3fd3ceee78e280f')
         run: python scripts/test_governor_v3_browser.py --engine webkit --first-year --first-measure=outreach --output "${{ runner.temp }}/governor-webkit-qa/river"
@@ -945,6 +985,7 @@ jobs:
           path: |
             ${{ runner.temp }}/governor-browser-qa
             ${{ runner.temp }}/governor-webkit-qa
+            ${{ runner.temp }}/governor-v4
             ${{ runner.temp }}/reception-browser-qa
             ${{ runner.temp }}/games-access-qa
             ${{ runner.temp }}/quiz-layout-qa

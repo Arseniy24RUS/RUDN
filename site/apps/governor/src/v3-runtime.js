@@ -4,24 +4,30 @@
   const copy = value => structuredClone(value);
   const SAVE_VERSION = 1;
   const ASSIGNMENT = 'governor-v3';
+  const V4_ASSIGNMENT = 'governor-v4';
+  const isV4 = state => state?.rulesVersion === 'governor-v4.0';
   const DRAFT_MODE = 'governor-v3';
   const uiDefaults = {tab:'decisions', tutorialStep:1, welcomeStep:1, motion:'auto', panel:null, started:false};
   const allowedUI = new Set(['tab','tutorialStep','eventOpen','measureOpen','panel','districtId','objectId','inspectedSiteId',
-    'budgetYear','statsYear','motion','largeText','started','scroll','sourceTab','returnPanel','lesson','projectOpen','statsDistrict','mapYear','welcomeStep']);
+    'budgetYear','statsYear','motion','largeText','started','scroll','sourceTab','returnPanel','lesson','projectOpen','statsDistrict','mapYear','welcomeStep',
+    'selectedMeasureId','portfolioFilter','chapterArchive','investmentViewed','portfolioPracticed','mapPracticed','locationScope','statsGoalsSeen']);
   const patchState = (to, patch, fields) => ({...to, ...Object.fromEntries(
     Object.entries(patch).filter(([key]) => fields.has(key))
   )});
-  const draftFields = new Set(['eventChoice','measureId','siteId','districtId','taxMode','loan','reserveDraw','reserveContribution','sectorLimits','promise']);
+  const draftFields = new Set(['eventChoice','measureId','siteId','districtId','taxMode','loan','reserveDraw','reserveContribution','sectorLimits','promise',
+    'measures','taxRate','investment']);
   function lesson(record) {
     const {ui,state} = record;
     if(state.handover||ui.tutorialStep>=11)return record;
-    const measure=state.draft.measureId&&G.V3Rules.availableMeasures(state).find(row=>row.id===state.draft.measureId);
+    const measureId=isV4(state)?ui.selectedMeasureId:state.draft.measureId;
+    const measure=measureId&&G.V3Rules.availableMeasures(state).find(row=>row.id===measureId);
     const requiredSites=measure?.siteIds||[];
-    const practicedMap=requiredSites.length?requiredSites.includes(state.draft.siteId):ui.tab==='map'&&ui.panel==='object';
+    const practicedMap=isV4(state)?ui.mapPracticed:
+      requiredSites.length?requiredSites.includes(state.draft.siteId):ui.tab==='map'&&ui.panel==='object';
     const completed=[
       ui.panel==='event',
       ['a','b','base'].includes(state.draft.eventChoice),
-      Boolean(state.draft.measureId),
+      Boolean(isV4(state)?ui.selectedMeasureId||ui.portfolioPracticed:state.draft.measureId),
       practicedMap,
       Boolean(ui.taxPractice),
       false,
@@ -34,9 +40,9 @@
     while(step<=10&&completed[step-1])step++;
     return step===ui.tutorialStep?record:{...record,ui:{...ui,tutorialStep:step}};
   }
-  function valid(record, owner, context) {
+  function valid(record, owner, context, assignment) {
     return record?.schema === SAVE_VERSION && record.owner === owner && record.context === context &&
-      record.assignment === ASSIGNMENT && typeof record.state?.attemptId === 'string' &&
+      record.assignment === assignment && isV4(record.state)===(assignment===V4_ASSIGNMENT) && typeof record.state?.attemptId === 'string' &&
       Array.isArray(record.state.history) && Array.isArray(record.draws);
   }
   function viewUI({ui,state}) {
@@ -76,10 +82,11 @@
     // Cash quotes exclude reimbursement. Only the locked year transaction can record the receipt.
     return {params,plan};
   }
-  function envelope(owner, context, map) {
-    const state = G.V3Rules.create({attemptId:crypto.randomUUID(), schoolMap:map});
+  function envelope(owner, context, map, assignment) {
+    const state = G.V3Rules.create({attemptId:crypto.randomUUID(),schoolMap:map,
+      ...(assignment===V4_ASSIGNMENT?{rulesVersion:G.V3Rules.V4_RULES_VERSION}:{})});
     return {
-      owner, context, schema:SAVE_VERSION, assignment:ASSIGNMENT, createdAt:new Date().toISOString(),
+      owner, context, schema:SAVE_VERSION, assignment, createdAt:new Date().toISOString(),
       drawKey:G.V3Events.createDrawKey(), contentVersion:G.V3Events.contentVersion, algorithmVersion:G.V3Events.algorithmVersion,
       draws:[], effects:[], referenceEffects:[], ui:{...uiDefaults,started:context==='course'}, state,
       messages:[], submission:null, localResult:false
@@ -115,19 +122,32 @@
     return {
       id:state.attemptId, ...(isCourse?{studentKey:record.owner.slice('student:'.length)}:{}),
       source:'native-v1',type:'governor-simulator',activitySlug:isCourse?'seminar-7':'governor-freeplay',
-      schemaVersion:1,draftMode:DRAFT_MODE, recordGrade:isCourse, reviewStatus:isCourse?'auto-scored':'practice',
+      schemaVersion:1,draftMode:isV4(state)?V4_ASSIGNMENT:DRAFT_MODE, recordGrade:isCourse, reviewStatus:isCourse?'auto-scored':'practice',
       points:assessment.points,maxPoints:5,createdAt:record.closedAt,startedAt:record.createdAt,durationMs:Math.max(0,millis),
-      governor:{applicationVersion:'3.0.0',modelVersion:state.rulesVersion,campaignStatus:state.handover?'stopped':'completed',
+      governor:{applicationVersion:isV4(state)?'4.0.0':'3.0.0',modelVersion:state.rulesVersion,campaignStatus:state.handover?'stopped':'completed',
         decisions:state.history.length,scenario:'Сбалансированный старт',assessment,final,territories,
-        decisionRegister:state.history.map(turn => ({year:turn.year,
-          mission:G.V3Events.card(turn.event).title,action:turn.measure ? G.I18n.local(turn.measure.labels,'ru') : 'Без нового проекта',
-          cost:(turn.finance?.newMeasureCost || 0)/1000,delivery:turn.measure?.openingYear}))
+        decisionRegister:state.history.map(turn => {
+          const projects=turn.measures??(turn.measure?[turn.measure]:[]);
+          const action=projects.map(project=>G.I18n.local(project.labels,'ru'));
+          return {year:turn.year,mission:G.V3Events.card(turn.event).title,action:action.join(' · ')||(isV4(state)?'Без новых мер':'Без нового проекта'),
+            cost:(turn.finance?.newMeasureCost||0)/1000,delivery:projects[0]?.openingYear,...(isV4(state)?{
+              measures:projects.map(({id,measureId,districtId,siteId,openingYear,annualOpex,action},index)=>({
+                id,measureId,districtId,siteId,openingYear,annualOpex,action,title:projects[index].labels
+              })),
+              investments:{contribution:turn.finance.investmentContribution||0,principal:turn.finance.investmentPrincipal||0,
+                income:turn.finance.investmentIncome||0}
+            }:{})};
+        }),
+        ...(isV4(state)?{chapterResults:[1,2,3,4].map(number=>G.V4Campaign.status(state,number)).filter(row=>row.closed),
+          promises:state.promises.map(({id,type,dueYear,projectId,status})=>({id,type,dueYear,projectId,status}))}:{})
       }
     };
   }
 
   async function mount(host, bridge, restored) {
-    const scope = JSON.stringify([bridge.owner,bridge.context,ASSIGNMENT]);
+    const assignment = bridge.edition==='v3'?ASSIGNMENT:V4_ASSIGNMENT;
+    const stateKey = assignment===V4_ASSIGNMENT?'governorV4':'governorV3';
+    const scope = JSON.stringify([bridge.owner,bridge.context,assignment]);
     const save = G.V3Store;
     const isCourse = bridge.context==='course' && bridge.owner.startsWith('student:') && !bridge.preview;
     let record = await save.read(scope);
@@ -185,9 +205,9 @@
     function cloudCheckpoint() {
       if (!isCourse || !record || record.localResult || !active()) return Promise.resolve();
       const candidate = {...copy(record),messages:[]};
-      return bridge.backend.checkpoint({owner:bridge.owner,activitySlug:'seminar-7',mode:DRAFT_MODE,
+      return bridge.backend.checkpoint({owner:bridge.owner,activitySlug:'seminar-7',mode:assignment,
         attemptId:record.state.attemptId,phase:record.state.completed?'completed':'answering',
-        contentVersion:ASSIGNMENT,state:{governorV3:candidate}});
+        contentVersion:assignment,state:{[stateKey]:candidate}});
     }
     function mirror() {
       if (!isCourse || !record || !active()) return;
@@ -242,7 +262,7 @@
       return run(async () => {
         if (!active()) throw Error('governor-v3/profile-changed');
         if (!record) {
-          const initial=envelope(bridge.owner,bridge.context,await loadSchoolMap());
+          const initial=envelope(bridge.owner,bridge.context,await loadSchoolMap(),assignment);
           await replaceIfMissing({...initial,ui:{...initial.ui,...ui,started:true}});
         }
         if (!record.ui.started) await write(record,{...record,ui:{...record.ui,started:true}});
@@ -254,6 +274,12 @@
     const controller = {
       getState:()=>record?.state ?? null,
       getQuote:()=>quote,
+      previewDraft:patch=>{
+        const state={...record.state,draft:patchState(record.state.draft,patch,draftFields)};
+        return G.V3Rules.quote(state,{eventPlan:settlementPlan(record,state).plan});
+      },
+      previewMeasure:(measureId,siteId)=>G.V3Rules.previewMeasure(record.state,measureId,siteId,
+        {eventPlan:settlementPlan(record,record.state).plan}),
       eventArt:G.V3EventArt,
       getUI:()=>record?viewUI(record):ui,
       schoolCoverage,schoolPractice:()=>record?schoolPractice(record):null,
@@ -270,9 +296,11 @@
       patchDraft:patch => change(before => {
         if (before.state.completed) throw Error('governor-v3/stale-year');
         const draft=patchState(before.state.draft,patch,draftFields),state={...before.state,draft};
-        const from=before.state.draft.taxMode,to=draft.taxMode;
+        const from=isV4(state)?before.state.draft.taxRate:before.state.draft.taxMode;
+        const to=isV4(state)?draft.taxRate:draft.taxMode;
         const ui=before.ui;
-        if (ui.tutorialStep!==5||ui.tab!=='budget'||ui.panel!==null||from===to||!Object.hasOwn(G.V3Rules.TAX_MODES,to)) return {...before,state};
+        const validRate=isV4(state)?Number.isInteger(to)&&to>=88&&to<=112:Object.hasOwn(G.V3Rules.TAX_MODES,to);
+        if (ui.tutorialStep!==5||ui.tab!=='budget'||ui.panel!==null||from===to||!validRate) return {...before,state};
         const eventPlan=settlementPlan(before,before.state).plan;
         const after=G.V3Rules.quote(state,{eventPlan}).finance;
         const taxPractice={from,to,taxesBefore:quote.finance.taxes,taxesAfter:after.taxes,cashBefore:quote.finance.cashEnd,cashAfter:after.cashEnd};
@@ -287,6 +315,16 @@
         if (answer!==expected) return false;
         await change(before=>({...before,ui:{...before.ui,tutorialStep:step+1}}),false);
         return true;
+      },
+      restart:async()=> {
+        await run(settle);
+        await change(async before=>{
+          if(!before.state.completed||(isCourse&&!before.localResult))throw Error('governor-v3/restart-unavailable');
+          const next=envelope(bridge.owner,bridge.context,before.state.schoolMap,assignment);
+          return {...next,ui:{...next.ui,welcomeStep:4,tutorialStep:11,started:true,motion:before.ui.motion,largeText:before.ui.largeText}};
+        },false);
+        await run(assureEvent);
+        mirror();
       },
       saveUI:patch => {
         if (!record) {
@@ -313,7 +351,8 @@
         const nowSettled=G.V3Events.year({...params,settledSpend});
         const closed=G.V3Rules.commit(state,{expectedRevision:revision,signature,eventPlan:plan,settledEventPlan:nowSettled,baselineEventPlan:reference});
         const next={...before,state:closed,effects:[...before.effects,...plan.outcomes],
-          referenceEffects:[...before.referenceEffects,...reference.outcomes],ui:{...before.ui,panel:'result'}};
+          referenceEffects:[...before.referenceEffects,...reference.outcomes],ui:{...before.ui,panel:'result',selectedMeasureId:null,
+            inspectedSiteId:null,chapterArchive:null}};
         if (closed.completed) {
           next.closedAt=new Date().toISOString();
           next.submission=submission(next,isCourse);
@@ -337,13 +376,13 @@
         const key=error?.code==='tutorial-required'?error.code:code(error);
         return rows[key][{ru:0,en:1,zh:2}[locale]??0];
       },
-      meta:{context:bridge.context,legacyURL:bridge.legacyURL,getStatus:()=>status,get status(){return status;},
+      meta:{context:bridge.context,edition:assignment===V4_ASSIGNMENT?'v4':'v3',legacyURL:bridge.legacyURL,getStatus:()=>status,get status(){return status;},
         get canResume(){return Boolean(record);},get readOnly(){return !active();}}
     };
 
-    if (record && !valid(record,bridge.owner,bridge.context)) throw Error('governor-v3/invalid-saved-record');
-    if (!record && valid(restored,bridge.owner,bridge.context)) await replaceIfMissing(restored);
-    if (bridge.context==='course' && !record) await replaceIfMissing(envelope(bridge.owner,bridge.context,await loadSchoolMap()));
+    if (record && !valid(record,bridge.owner,bridge.context,assignment)) throw Error('governor-v3/invalid-saved-record');
+    if (!record && valid(restored,bridge.owner,bridge.context,assignment)) await replaceIfMissing(restored);
+    if (bridge.context==='course' && !record) await replaceIfMissing(envelope(bridge.owner,bridge.context,await loadSchoolMap(),assignment));
     if (record && !record.state.completed) {
       await assureEvent();
       const reconciled=lesson(record);
@@ -377,6 +416,7 @@
     repaint();
     runtime = G.V3UI.mount(host,controller);
     const motion=G.V3Motion?.attach(host,controller.getUI,controller.getState);
+    const mapControls=G.V4Map?.attach(host);
     mirror();
     if (record?.state.completed) void run(settle);
     const connected=()=>{if (active()) void run(settle);};
@@ -388,6 +428,7 @@
         channel?.close();
         root.removeEventListener('online',connected);
         motion?.destroy();
+        mapControls?.destroy();
         runtime.destroy?.();
       },
       refresh(){
@@ -397,5 +438,5 @@
       },flush:()=>busy
     };
   }
-  G.V3Runtime={mount,submission,draftMode:DRAFT_MODE};
+  G.V3Runtime={mount,submission,draftMode:DRAFT_MODE,v4DraftMode:V4_ASSIGNMENT};
 })(globalThis);

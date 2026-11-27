@@ -74,6 +74,15 @@
     const district=id=>local(rules.DISTRICTS[id]?.labels);
     const event=G.V3Events.card(state.event,lang);
     const lines=[];
+    const terms=G.V4Campaign&&state.rulesVersion==='governor-v4.0' ? G.V4Campaign.status(state) : null;
+    if(terms){
+      const plan=quote?.projects??[];
+      lines.push('Four-term edition, term '+terms.chapter.number+' ('+terms.chapter.startYear+'–'+terms.chapter.endYear+
+        '). The full package can include any different affordable measures; the current catalog changes every five years. '+
+        'Current draft measures: '+(plan.map(row=>local(row.labels)+' ('+row.costNow+' million RUB now, opens '+row.openingYear+')').join('; ')||'none')+'.');
+      lines.push('Verified term KPI, actual / target: '+terms.entries.map(row=>local(row.labels)+' '+(row.actual??'N/A')+
+        ' / '+row.target+(row.inverse?' (lower is better)':'')).join('; ')+'. Satisfaction target '+terms.chapter.satisfactionTarget+'/100.');
+    }
     if(event){
       lines.push('Current event — '+[event.title,event.situation,event.circumstance?.summary].filter(Boolean).join(' '));
       for(const option of event.options){
@@ -85,7 +94,7 @@
       }
       if(!draft.eventChoice)lines.push('Event response: not selected.');
     }
-    const measure=rules.availableMeasures(state).find(row=>row.id===draft.measureId), project=quote?.project;
+    const measure=terms?null:rules.availableMeasures(state).find(row=>row.id===draft.measureId), project=terms?null:quote?.project;
     const siteId=project?.siteId??draft.siteId;
     const site=local(SCHOOL_SITES[siteId]??rules.SITES.find(row=>row.id===siteId)?.labels);
     const projectCaption=[local(measure?.labels),district(measure?.districtId),site].filter(Boolean).join(' · ');
@@ -98,14 +107,14 @@
           label+' unavailable';
       }).join('; ')
       :'';
-    lines.push('Project draft — '+(projectCaption||'not selected')+
+    if(!terms)lines.push('Project draft — '+(projectCaption||'not selected')+
       (measure?.siteIds?.length&&!site?' · site not selected':'')+
       (project?' · planned opening '+project.openingYear+', payment now '+project.costNow+
         ' million RUB, running cost '+project.annualOpex+' million RUB/year':'')+
       (siteComparison?' · site comparison (million RUB): '+siteComparison:''));
     const finance=quote?.finance;
     if(finance){
-      lines.push('Draft budget forecast for '+year+' (million RUB): tax level '+draft.taxMode+
+      lines.push('Draft budget forecast for '+year+' (million RUB): tax level '+(terms?draft.taxRate+'% of baseline':draft.taxMode)+
         ', tax receipts '+finance.taxes+', closing cash '+finance.cashEnd+', closing reserve '+finance.reserveEnd+
         ', closing debt '+finance.debtEnd+(quote.ok?' · plan ready':' · plan needs work: '+quote.errors.map(error=>error.code).join(', ')));
       const loan=finance.loans.find(row=>row.issueYear===year);
@@ -115,7 +124,9 @@
         draft.reserveContribution+', room to borrow '+finance.loanHeadroom+'; '+(firstPayment?
           'new loan '+draft.loan.principal+' at '+finance.annualPercent+'% for '+draft.loan.termYears+
           ' years, first payment '+firstPayment.total+' in '+firstPayment.year:'no approved new loan in the draft')+
-        (limits?'; sector ceilings: '+limits:''));
+        (limits?'; sector ceilings: '+limits:'')+(terms?'; available to invest '+finance.investmentHeadroom+
+          (finance.investmentDraft?', contribution '+finance.investmentDraft.principal+' pays '+finance.investmentDraft.payout+
+            ' in '+finance.investmentDraft.maturityYear:''):''));
       const near=finance.futureRows.slice(0,3), end=finance.futureRows.at(-1);
       if(end)lines.push('Forecast if commitments and settings stay as planned (million RUB) — closing balances '+
         near.map(row=>row.year+' '+row.cash).join(', ')+
@@ -252,7 +263,11 @@
           }
         }else{
           kind=localGuide?'event':intent(question);
-          text=localGuide?(GUIDES[localGuide][l]||GUIDES[localGuide].ru):explain(kind,state,q,l);
+          text=localGuide?(localGuide==='year'&&state.rulesVersion==='governor-v4.0'?{
+            ru:'Ответьте на ситуацию года. Добавьте в план доступные меры или оставьте его без новых проектов. Проверьте площадки на карте, расходы в бюджете и цели пятилетки в статистике. Кнопка ▶ открывает сводку года.',
+            en:'Answer the annual situation. Add affordable measures or leave the plan without new projects. Check sites on the Map, spending in Budget, and term targets in Statistics. ▶ opens the annual review.',
+            zh:'先回应年度情境。将预算可承担的措施加入计划，也可暂不启动新项目。在地图核对选址、在预算查看支出、在统计查看五年目标。点击▶检查年度计划。'
+          }[l]:(GUIDES[localGuide][l]||GUIDES[localGuide].ru)):explain(kind,state,q,l);
         }
         if(api.state()?.attemptId!==state.attemptId||api.state()?.revision!==state.revision||
           api.state()?.year!==state.year||api.quote()?.signature!==signature)throw Error('advisor/context-changed');

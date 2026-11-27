@@ -24,7 +24,56 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  governor-scope:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd' && startsWith(github.event.pull_request.title, '[governor-v3-publish] ') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Verify the focused Governor pull request
+        env:
+          GOVERNOR_BASE: ${{ github.event.pull_request.base.sha }}
+          GOVERNOR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python - <<'PY_INNER'
+          import os
+          import re
+          import subprocess
+
+          if re.findall(r'\[[^\]\r\n]+\]', os.environ['GOVERNOR_TITLE']) != ['[governor-v3-publish]']:
+              raise SystemExit('Use only the Governor release marker')
+          base = os.environ['GOVERNOR_BASE']
+          changed = subprocess.check_output(
+              ['git', 'diff', '--name-only', '--no-renames', '-z', base, 'HEAD'], text=True
+          ).rstrip('\0').split('\0')
+          allowed = {
+              '.github/workflows/deploy-pages.yml',
+              '.github/workflows/platform-checks.yml',
+              '.github/workflows/legal-lab-checks.yml',
+              '.github/workflows/puzzle-checks.yml',
+              'firebase/functions/governor-v3-advisor/provider.mjs',
+              'scripts/build-platform-release.mjs',
+              'scripts/test-platform-release.mjs',
+              'scripts/test_governor_v3_browser.py',
+              'scripts/test_governor_v4_browser.py',
+                  'scripts/test_governor_service_worker.mjs',
+                  'site/service-worker.js',
+                  'site/assets/course/previews/seminar_07_simulator.jpg',
+              'scripts/test_governor_terra_browser.py',
+              'tests/governor-v4-campaign.test.mjs',
+              'tests/governor-v4-economy.test.mjs',
+              'tests/governor-v4-map.test.mjs',
+          }
+          outside = sorted(path for path in changed if path not in allowed and not path.startswith('site/apps/governor/'))
+          if outside or not any(path.startswith('site/apps/governor/') for path in changed):
+              raise SystemExit('Invalid Governor-only pull request scope: ' + ', '.join(outside))
+          PY_INNER
+
   contracts:
+    needs: governor-scope
+    if: ${{ !cancelled() && needs.governor-scope.result == 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -52,6 +101,8 @@ jobs:
           node scripts/test_personality_insights.mjs
 
   firebase:
+    needs: governor-scope
+    if: ${{ !cancelled() && needs.governor-scope.result == 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -79,6 +130,8 @@ jobs:
           retention-days: 14
 
   browsers:
+    needs: governor-scope
+    if: ${{ !cancelled() && needs.governor-scope.result == 'skipped' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:

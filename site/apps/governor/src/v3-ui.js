@@ -893,6 +893,7 @@
     let busy = false, destroyed = false, errorText = '', optionDraft = null, focusAfter = null;
     let chatDraft = '', chatPending = false, chatError = '', loanDraft = null, review = null;
     let replayWelcome = 0, practiceError = '', menuReturnPending = false, scrollAfterMenu = null;
+    let investmentDraft = null, taxFrame = 0;
     const navigation = ['decisions','budget','map','stats','advisor'];
     const defaultUI = {started:false,tab:'decisions',panel:null,tutorialStep:1,welcomeStep:4,districtId:'suburb',motion:'auto'};
     const language = () => {
@@ -906,6 +907,7 @@
     };
     const ui = () => ({...defaultUI,...(controller.getUI?.() || {})});
     const state = () => controller.getState();
+    const modern = () => controller.meta?.edition==='v4';
     const welcomeStep = current => replayWelcome || (current.welcomeStep>=1&&current.welcomeStep<=3?current.welcomeStep:0);
     const quote = () => controller.getQuote();
     const asset = path => G.resolveAsset ? G.resolveAsset(path) : path;
@@ -915,19 +917,33 @@
     const button = (text,action,cls = '',attributes = '') => '<button type="button" class="v3-button '+cls+'" data-v3-action="'+esc(action)+'" '+attributes+'>'+text+'</button>';
     const card = () => G.V3Events?.card(state()?.event,language());
     const measures = () => rules.availableMeasures?.(state()) || rules.MEASURES;
-    const selectedMeasure = () => measures().find(row => row.id === state()?.draft.measureId) || rules.MEASURES.find(row => row.id === state()?.draft.measureId);
+    const selectedMeasure = () => {
+      const id=modern()?ui().selectedMeasureId:state()?.draft.measureId;
+      return id&&(measures().find(row=>row.id===id)||rules.MEASURES.find(row=>row.id===id));
+    };
+    const selectedDraft = () => modern()?state()?.draft.measures.find(row=>row.measureId===ui().selectedMeasureId):state()?.draft;
     const districtLabel = id => local(rules.DISTRICTS[id]?.labels) || id;
     const districtCaption = id => t('district')+' · '+districtLabel(id);
     const needsSite = () => {
       const sites=selectedMeasure()?.siteIds;
-      return Boolean(sites?.length&&!sites.includes(state().draft.siteId));
+      return Boolean(sites?.length&&!sites.includes(selectedDraft()?.siteId));
     };
     const projectArt = measure => 'assets/illustrated/'+({north:'clinic',river:'barrier',industrial:'industry',capital:'digital'}[measure.districtId]||'school')+'.webp';
     const phase = project => project.status || rules.projectPhase(project,state().year);
     const phaseLabel = value => t({open:'running',foundation:'foundation',frame:'frame',finishing:'finishing',construction:'building',building:'building',closed:'closed',ended:'closed',restoring:'restoring',preparing:'approved',approved:'approved'}[value] || 'approved');
+    const wasChanged = id => {
+      const history=state().history;
+      if(!history.length)return false;
+      const current=history.at(-1).projects?.find(row=>row.id===id);
+      const previous=history.at(-2)?.projects?.find(row=>row.id===id);
+      return Boolean(current&&(!previous||previous.status!==current.status));
+    };
     const moneyInput = (name,value,title,max) => '<label class="v3-field"><span>'+esc(title)+'</span><input inputmode="decimal" type="number" min="0" step="1" '+(Number.isFinite(max)?'max="'+max+'" ':'')+'name="'+name+'" value="'+esc(value || 0)+'"></label>';
     const picture = (src,alt,cls = '') => '<img class="'+cls+'" src="'+esc(asset(src))+'" alt="'+esc(alt)+'" decoding="async">';
     const regionalArt = 'assets/illustrated/region-cover-1024.webp';
+    const v4=G.V4Planning?.create({state,quote,ui,t,local,esc,label,button,money,number,language,measures,heading,back,controller,
+      districtLabel,siteLabel:id=>id?local(rules.SITES.find(row=>row.id===id)?.labels||G.V4Campaign?.site(id)?.labels||
+        siteData({id:'school-campus',siteIds:[id]}).find(row=>row.id===id)?.labels):''});
 
     async function perform(operation, after) {
       if (busy || controller.meta?.readOnly) return;
@@ -997,7 +1013,8 @@
       focusAfter='v3-heading';
     }
     async function openSites() {
-      await storeUI({tab:'map',panel:'sites',districtId:selectedMeasure()?.districtId||'suburb'});
+      await storeUI({tab:'map',panel:'sites',districtId:selectedMeasure()?.districtId||'suburb',
+        ...(modern()?{locationScope:'district',inspectedSiteId:selectedDraft()?.siteId||null}:{})});
       focusAfter='v3-heading';
     }
     function practiceStep(current) {
@@ -1027,8 +1044,13 @@
         const route=routes[step];
         if (route?.[0]) action=button(esc(t(route[1])),'tutorial-next','secondary');
       }
+      const fund=modern()&&step===7&&!current.investmentViewed;
+      const portfolio=modern()&&step===7&&!fund&&!current.portfolioPracticed;
+      if(fund&&current.panel!=='investment')action=button(esc(v4.tr('fundEdit')),'v4-fund','secondary');
+      if(portfolio)action=button(esc(v4.tr('pick')),'measures','secondary');
       return '<aside class="v3-coach" aria-label="'+esc(t('localAdvisor'))+'">'+picture('assets/characters/ilya-avatar.webp','','')+
-        '<div><strong>'+esc(t('localAdvisor'))+'</strong><p>'+esc(t(keys[step-1]))+'</p>'+action+'</div></aside>';
+        '<div><strong>'+esc(t('localAdvisor'))+'</strong><p>'+
+        esc(fund?v4.tr('tutorialFund'):portfolio?v4.tr('tutorialPortfolio'):t(keys[step-1]))+'</p>'+action+'</div></aside>';
     }
     function eventIllustration(event, detailed = false) {
       const illustration=controller.eventArt?.(event,language());
@@ -1037,7 +1059,9 @@
       const poster=art.poster||art.src;
       const lowerSubject=/\/(mobile-medical-unit|commuter-transport)-800\.webp$/.test(poster);
       const classes='v3-event-art'+(art.emblem?' v3-event-emblem':'')+(lowerSubject?' v3-event-subject-low':'');
-      return '<div class="v3-event-visual"'+(detailed&&art.motion==='river'?' data-v3-motion="river"':'')+'><picture>'+
+      const gif=modern()&&detailed?(art.motion==='river'?'river-flow':poster.endsWith('/school-street.webp')?'school-breeze':null):null;
+      const motion=gif?' data-v4-event-gif="'+gif+'"':detailed&&art.motion==='river'?' data-v3-motion="river"':'';
+      return '<div class="v3-event-visual"'+motion+'><picture>'+
         (art.small&&asset(art.small)!==asset(poster)?'<source media="(max-width: 600px)" srcset="'+esc(asset(art.small))+'">':'')+
         picture(poster,'',classes)+'</picture></div>'+
         (detailed&&art.contextOnly?'<p class="v3-art-note">'+esc({ru:'Иллюстрация темы',en:'Topic illustration',zh:'主题插图'}[language()])+'</p>':'');
@@ -1078,6 +1102,7 @@
       return '<section class="v3-start">'+picture(regionalArt,t('whole'),'v3-start-art')+
         '<h1>'+esc(t('title'))+'</h1><p class="v3-start-subtitle">'+esc(t('subtitle'))+'</p><p>'+esc(t('twenty'))+'</p>'+
         (controller.meta?.context==='course'?'<p>'+esc(t('coursePoints'))+'</p>':'')+
+        (modern()?'<details><summary>'+esc(v4.tr('ratings'))+'</summary><p>'+esc(v4.tr('scoreHelp'))+'</p></details>':'')+
         button(esc(t(controller.meta?.canResume?'resume':'opening')),'start','primary')+
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
         (controller.meta?.legacyURL?'<a class="v3-link" href="'+esc(controller.meta.legacyURL)+'">'+esc(t('legacy'))+'</a>':'')+
@@ -1091,14 +1116,17 @@
         '<div class="v3-welcome-copy"><div class="v3-welcome-speaker">'+picture('assets/characters/ilya-avatar.webp','')+
         '<div><strong>'+esc(t('localAdvisor'))+'</strong><small>'+esc(t('nav.advisor'))+'</small></div></div>'+
         heading(t(key+'Title'))+'<p>'+esc(t(key+'First'))+'</p><p>'+esc(t(key+'Second'))+'</p>'+
+        (step===3&&modern()&&!replayWelcome?'<details><summary>'+esc(v4.tr('ratings'))+'</summary><p>'+esc(v4.tr('scoreHelp'))+'</p></details>':'')+
         '<div class="v3-welcome-actions"><span>'+esc(t('welcomeProgress',{step}))+'</span>'+button(esc(t(action)),'welcome-next','primary')+'</div></div></section>';
     }
     function decisions() {
       const event=card(),draft=state().draft,choice=event?.options.find(row=>row.id===draft.eventChoice),measure=selectedMeasure(),project=quote()?.project;
-      return heading(t('nav.decisions'))+'<div class="v3-decision-grid"><section class="v3-card v3-event">'+
+      return heading(t('nav.decisions'))+(modern()?'<p class="v3-muted">'+esc(v4.period(G.V4Campaign.chapter(state().year)))+'</p>':'')+
+        '<div class="v3-decision-grid"><section class="v3-card v3-event">'+
         (event?eventIllustration(event):'')+'<div class="v3-card-body"><p class="v3-eyebrow">'+esc(t('event'))+'</p>'+
         '<h2>'+esc(event?.title || t('eventRequired'))+'</h2>'+ (choice?'<p class="v3-selected-copy">✓ '+esc(choice.label)+'</p>':'')+
         button(esc(t(choice?'eventChange':'eventOpen')),'event','primary','data-anchor="event.open"')+'</div></section>'+
+        (modern()?v4.summary()+'</div>':
         '<section class="v3-project-summary"><h2>'+esc(t('newProject'))+'</h2><div class="v3-card v3-card-body">'+
         (measure?'<div class="v3-project-heading">'+(measure.districtId?picture(projectArt(measure),'','v3-project-thumb'):'')+'<div><h3>'+esc(local(measure.labels))+'</h3>'+
           (measure.districtId?'<p class="v3-muted">'+esc(districtCaption(measure.districtId))+'</p>':'')+'</div></div>':
@@ -1107,7 +1135,7 @@
         button(esc(t(measure?'projectChange':'choose')),'measures','link','data-anchor="measure.select"')+
         (measure&&measure.id!=='defer'?button(esc(t('details')),'project','secondary'):'')+
         (measure?.siteIds?.length?button(esc(t(draft.siteId?'siteChange':'map.chooseSite')),'sites','secondary'):'')+
-        '</div></section></div>';
+        '</div></section></div>');
     }
     function eventView() {
       const event=card();
@@ -1128,6 +1156,7 @@
         }).join('')+'</div>'+button(esc(t('dec.saveAnswer')),'save-event','primary full',chosen?'':'disabled');
     }
     function measuresView() {
+      if(modern())return v4.catalogue();
       const all=measures(),selected=state().draft.measureId;
       return back('back',t('nav.decisions'))+heading(t('choose'))+button(esc(t('projectDefer')),'defer','secondary full')+
         '<div class="v3-measures">'+Object.keys(rules.DISTRICTS).map(id=>{
@@ -1141,6 +1170,21 @@
     function projectView() {
       const measure=selectedMeasure(),project=quote()?.project,draft=state().draft;
       if (!measure) return measuresView();
+      if(modern()){
+        const row=selectedDraft();
+        const candidate=row?v4.projectFor(measure.id):measure.siteIds?.length?null:controller.previewMeasure(measure.id,null).project;
+        return back('measures',v4.tr('pick'))+heading(local(measure.labels))+
+          '<section class="v3-card v3-card-body"><p class="v3-eyebrow">'+esc(districtCaption(measure.districtId))+'</p>'+
+          '<p>'+esc(local(measure.description))+'</p>'+
+          label(t('construction'),money(candidate?.capex??measure.cost))+
+          label(t('budget.annual'),money(candidate?.annualOpex??measure.annualOpex))+
+          (candidate?label(t('budget.now'),money(candidate.costNow))+label(t('plannedOpen'),candidate.openingYear):'')+
+          (measure.siteIds?.length?button(esc(t(row?.siteId?'siteChange':'map.chooseSite')),'sites','primary full'):
+            !row?button(esc(v4.tr('add')),'v4-add','primary full'): '')+
+          (row?button(esc(v4.tr('remove')),'v4-remove','secondary full','data-measure-id="'+esc(measure.id)+'"'):'')+
+          '</section>'+(row?promiseEditor(row.promise,candidate):'')+
+          button(esc(v4.tr('pick')),'measures','secondary full');
+      }
       const promise=draft.promise;
       return back('back',t('nav.decisions'))+heading(local(measure.labels))+
         (measure.siteIds?.length?button(esc(t(draft.siteId?'siteChange':'map.chooseSite')),'sites','primary full'):'')+
@@ -1157,12 +1201,25 @@
           (promise.type==='reserve'?moneyInput('promise-amount',promise.amount,t('promiseAmount')):''):'')+
         '</section>'+(practiceStep(ui())===4?'':button(esc(t('budget.review')),'budget','secondary full'));
     }
+    function promiseEditor(promise,project) {
+      return '<details class="v3-card v3-card-body"><summary>'+esc(t('promise'))+'</summary>'+
+        '<label class="v3-field"><span>'+esc(t('promiseWho'))+'</span><select name="promise-type"><option value="">'+esc(t('noPromise'))+'</option>'+
+        [['open','promiseOpen'],['operate','promiseRun'],['reserve','promiseReserve']].map(([id,key])=>'<option value="'+id+'" '+
+          (promise?.type===id?'selected':'')+'>'+esc(t(key))+'</option>').join('')+'</select></label>'+
+        (promise?label(t('promiseWho'),t(promise.type==='reserve'?'financeTeam':promise.type==='operate'?'residents':'municipality'))+
+          '<label class="v3-field"><span>'+esc(t('promiseDue'))+'</span><input type="number" name="promise-year" min="'+state().year+
+          '" max="2045" value="'+esc(promise.dueYear??project?.openingYear??state().year)+'"></label>'+
+          (promise.type==='reserve'?moneyInput('promise-amount',promise.amount,t('promiseAmount')):''):'')+'</details>';
+    }
     function operationName(operation) {
+      if(modern()&&operation.type.startsWith('investment-'))return v4.tr({
+        'investment-contribution':'fundContribution','investment-principal':'fundPrincipal','investment-income':'fundIncome'}[operation.type]||'fund');
       const keys={tax:'ownTax','non-tax':'nonTax',equalization:'transfers',loan:'borrowing',interest:'interest',principal:'principal',operation:'operational',capex:'construction',mandatory:'locked','reserve-draw':'budget.reserve','reserve-add':'budget.reserve',event:'event',start:'construction'};
       const project=state().projects.find(row=>operation.id.startsWith(row.id));
       return project?local(project.labels):t(keys[operation.type] || 'spend');
     }
     function taxesView(finance,current) {
+      if(modern())return v4.taxes(finance,current);
       const selected=state().draft.taxMode,trial=current.taxPractice;
       return '<section><h2>'+esc(t('budget.taxes'))+'</h2><div class="v3-segments" data-anchor="budget.tax">'+
         ['low','moderate','high'].map(id=>'<button type="button" data-v3-tax="'+id+'" aria-pressed="'+(selected===id)+'">'+esc(t('budget.tax.'+id))+'</button>').join('')+'</div>'+
@@ -1178,10 +1235,11 @@
           :'<p class="v3-muted">'+esc((finance.taxDelta>=0?'+':'')+money(finance.taxDelta))+' · '+esc(t('ownTax'))+'</p>')+'</section>';
     }
     function budgetView() {
-      const current=ui(),s=state(),past=s.history.find(row=>row.year===Number(current.budgetYear));
+      const current=ui(),s=state(),past=s.history.find(row=>row.year===Number(current.budgetYear))||(s.completed?s.history.at(-1):null);
       const finance=past?.finance || quote().finance;
       const nearTerm=finance.futureRows.slice(0,3),later=finance.futureRows.slice(3);
-      const forecastRows=rows=>rows.map(row=>label(String(row.year),money(row.cash))).join('');
+      const forecastRows=rows=>rows.map(row=>label(String(row.year),money(row.cash))+
+        (modern()&&row.investmentIncome?label(v4.tr('fundIncome'),money(row.investmentIncome)):'')).join('');
       const taxes=past?'':taxesView(finance,current);
       const startWithTaxes=!past&&!s.history.length&&(current.tutorialStep===5||Boolean(current.taxPractice));
       const period='<label class="v3-period"><span class="v3-sr">'+esc(t('period'))+'</span><select name="budget-year"><option value="">'+esc(t('freshYear',{year:s.year}))+'</option>'+
@@ -1191,6 +1249,7 @@
         label(t('cashStart'),money(finance.cash))+label(t('totalIn'),money(finance.totalIn))+label(t('totalOut'),money(finance.totalOut))+
         '<details><summary>'+esc(t('disclose'))+'</summary>'+finance.operations.map(op=>label(operationName(op),(op.direction==='in'?'+':'−')+money(op.amount))).join('')+'</details></section>'+
         (startWithTaxes?'':taxes)+
+        (modern()&&!past?v4.funding(finance):'')+
         (!past?'<section class="v3-card v3-card-body">'+button('<span><strong>'+esc(t('budget.loan'))+'</strong><small>'+esc(s.draft.loan?money(s.draft.loan.principal):t('noLoan'))+'</small></span><span aria-hidden="true">›</span>','loan','v3-row-button','data-anchor="budget.loan"')+
           '<details><summary>'+esc(t('budget.reserve'))+'</summary><p>'+esc(t('reserveHelp'))+'</p>'+label(t('cashStart'),money(s.finance.reserve))+
           moneyInput('reserveDraw',s.draft.reserveDraw,t('reserveTake'),s.finance.reserve)+moneyInput('reserveContribution',s.draft.reserveContribution,t('reserveAdd'))+label(t('after'),money(finance.reserveEnd))+'</details></section>':'')+
@@ -1202,7 +1261,8 @@
         label(t('principal'),money(finance.operations.filter(op=>op.type==='principal').reduce((sum,row)=>sum+row.amount,0)))+'</section>'+
         (nearTerm.length?'<section class="v3-card v3-card-body" aria-labelledby="v3-future-balance"><h2 id="v3-future-balance">'+
           esc(nearTerm.length===1?t('futureBalanceYear',{year:nearTerm[0].year}):
-            t('futureBalance',{from:nearTerm[0].year,to:nearTerm.at(-1).year}))+'</h2>'+forecastRows(nearTerm)+
+            t('futureBalance',{from:nearTerm[0].year,to:nearTerm.at(-1).year}))+'</h2>'+
+          (modern()?v4.warning(finance):'')+forecastRows(nearTerm)+
           (later.length?'<details><summary>'+esc(t(later.length===1?'futureMoreYear':'futureMore',{year:later.at(-1).year}))+
             '</summary>'+forecastRows(later)+'</details>':'')+'</section>':'')+
         '<section><h2>'+esc(t('operational'))+'</h2><div class="v3-card">'+s.projects.map(project=>'<button type="button" class="v3-measure" data-v3-object="'+esc(project.id)+'"><span><strong>'+esc(local(project.labels))+'</strong><small>'+esc(phaseLabel(phase(project)))+' · '+esc(money(project.annualOpex))+' '+esc(t('annual'))+'</small></span><span aria-hidden="true">›</span></button>').join('')+(s.projects.length?'':'<p class="v3-card-body">'+esc(t('noBuilding'))+'</p>')+'</div></section></div></div>';
@@ -1248,7 +1308,89 @@
         const captions={yard:['Во дворах','In the courtyards','居民院落'],bridge:['У моста','By the bridge','桥边'],south:['Южная развилка','Southern junction','南部路口']};
         return {...site,labels:captions[site.id]?{ru:captions[site.id][0],en:captions[site.id][1],zh:captions[site.id][2]}:site.label,...position};
       });
+      if(modern())return rules.sitesFor(state(),measure).map(site=>({...site,...G.V4Map.sitePoint(measure.districtId,site.id,site)}));
       return rules.SITES.filter(row=>measure?.siteIds?.includes(row.id));
+    }
+    const mapCopy=()=>({
+      zoomIn:{ru:'Приблизить карту',en:'Zoom in',zh:'放大地图'}[language()],
+      zoomOut:{ru:'Отдалить карту',en:'Zoom out',zh:'缩小地图'}[language()],
+      reset:{ru:'Сбросить масштаб',en:'Reset the map view',zh:'重置地图视角'}[language()],
+      controls:{ru:'Масштаб карты',en:'Map zoom controls',zh:'地图缩放控件'}[language()],
+      objects:t('locations'),closedRoad:{ru:'Дорога закрыта',en:'Road closed',zh:'道路已关闭'}[language()]
+    });
+    function mapAsset(project,status) {
+      const structure=['foundation','frame','finishing'].includes(status);
+      if(project.measureId==='school-campus')return 'assets/v3/new-school-'+(structure?status:'open')+'.webp';
+      if(project.districtId!=='suburb')return 'assets/v4/facility-'+project.districtId+'-'+
+        (status==='restoring'?'finishing':structure?status:'open')+'.webp';
+      return structure?'assets/v3/new-school-'+status+'.webp':'assets/world/housing.webp';
+    }
+    function modernMap(district,siteMode=false,historical=null) {
+      const s=state(),map=G.V4Map,school=district==='suburb',chosen=selectedDraft();
+      if(district==='all')return map.render({key:'region',district,image:asset(regionalArt),aspect:16/9,label:t('whole'),
+        strings:mapCopy(),fit:'contain',routes:map.ambientRoads('region'),pins:Object.entries(rules.DISTRICTS).map(([id,row])=>({
+          id,x:row.x,y:row.y,label:districtLabel(id),kind:'district',marker:districtLabel(id).slice(0,1)
+        }))});
+      const current=historical?.projects??s.projects,rows=current.filter(project=>project.districtId===district),pins=[],buildings=[];
+      const draftIds=new Set(s.draft.measures.map(row=>row.siteId).filter(Boolean));
+      for(const [index,project] of rows.entries()){
+        const descriptor=G.V4Campaign.measure(project.measureId)||rules.MEASURES.find(row=>row.id===project.measureId);
+        const site=project.siteId&&siteData(descriptor||{id:project.measureId,districtId:district,siteIds:[project.siteId]}).find(row=>row.id===project.siteId);
+        const position=site||(school&&(project.measureId==='school-bus'||project.measureId==='second-shift')?servicePoint(project):
+          {x:.23+(index%4)*.17,y:.63+Math.floor(index%8/4)*.16});
+        const status=historical?project.status:phase(project);
+        const recent=!historical&&wasChanged(project.id);
+        pins.push({...position,id:project.id,label:local(project.labels)+' · '+phaseLabel(status)+(recent?' · '+v4.tr('recent'):''),
+          kind:'object',status,recent,selected:ui().objectId===project.id});
+        if(!project.siteId)continue;
+        const activeStage=status==='restoring'?'finishing':status;
+        const motion=['foundation','frame','finishing'].includes(activeStage);
+        buildings.push({...position,id:project.id,status,src:asset(mapAsset(project,status)),width:school?.28:.21,
+          animation:!historical&&motion?{src:asset('assets/v4/motion/work-'+activeStage+'.gif'),
+            width:.54,height:.54,offsetX:.49,offsetY:.51}:null});
+      }
+      if(school){
+        for(const [id,node,name] of [['old-school','old',t('oldSchool')],['other-school','other',t('otherSchool')]]){
+          pins.push({...mapPoint(node),id,label:name,kind:'object',status:'open',selected:ui().objectId===id});
+        }
+      }
+      if(siteMode){
+        siteData(selectedMeasure()).forEach((site,index)=>{
+          const label=local(site.labels)||site.id;
+          const occupied=current.some(row=>row.siteId===site.id)||draftIds.has(site.id)&&chosen?.siteId!==site.id;
+          pins.push({...site,id:site.id,label:(occupied?label+' · '+v4.tr('occupied'):label),kind:'site',
+            selected:ui().inspectedSiteId===site.id||!ui().inspectedSiteId&&chosen?.siteId===site.id,
+            status:occupied?'occupied':draftIds.has(site.id)?'planned':'available',marker:site.marker||String.fromCharCode(65+index)});
+        });
+      }
+      const districts=s.stats.districts;
+      const baseImage=school?'assets/v3/district-base.webp':'assets/v4/terrain-'+district+'.webp';
+      const routes=school?map.schoolRoads({roads:s.schoolMap.roads,closedRoads:historical?
+        historical.stats?.school?.closedRoads||[]:s.closedRoads,projectPoint:mapPoint}):map.ambientRoads(district);
+      return map.render({key:historical?'year:'+historical.year+':'+district:'district:'+district,district,
+        image:asset(baseImage),overlayImage:school?asset('assets/v3/old-school-layer.webp'):undefined,pins,buildings,routes,
+        historical:!!historical,label:districtLabel(district)+' · '+number(districts[district]?.population),strings:mapCopy(),fit:'contain'});
+    }
+    function mapDistricts(district) {
+      return '<div class="v4-map-districts">'+[['all',t('whole')],...Object.keys(rules.DISTRICTS).map(id=>[id,districtLabel(id)])].map(([id,title])=>
+        '<button type="button" class="v3-button '+(id===district?'primary':'secondary')+'" data-v3-district="'+id+'" aria-pressed="'+(id===district)+'">'+
+        esc(title)+'</button>').join('')+'</div>';
+    }
+    function mapWorkbench({district,inspector='',siteMode=false,historical=null,controls=true}) {
+      return (controls?mapDistricts(district):'')+'<div class="v4-map-workspace" data-anchor="map.inspectOrPlace">'+
+        modernMap(district,siteMode,historical)+inspector+'</div>';
+    }
+    function districtBrief(district) {
+      const area=state().stats.districts[district];
+      if(!area)return '';
+      const relevant={suburb:['school','childcare'],north:['health','employment'],river:['flood','health'],
+        industrial:['employment','housing'],capital:['digital','housing']}[district];
+      const counts=area.kpis;
+      return '<section class="v4-map-inspector"><h2>'+esc(districtLabel(district))+'</h2>'+
+        label(v4.tr('population'),number(area.population))+'<p class="v3-muted">'+esc(v4.tr('coverage'))+'</p>'+
+        relevant.map(metric=>label(t(metric==='school'?'stats.schoolAccess':metric),counts[metric].value===null?t('noDemand'):
+          number(counts[metric].value,1)+'%')).join('')+
+        (!state().completed?button(esc(v4.tr('districtMeasures')),'v4-district-measures','secondary full','data-district-id="'+district+'"'):'')+'</section>';
     }
     function locationArt(district,siteMode,historical = null) {
       const s=historical?{schoolMap:state().schoolMap,projects:historical.projects,closedRoads:historical.stats?.school?.closedRoads||[]}:state();
@@ -1292,6 +1434,11 @@
       return content.join('')+'</div>';
     }
     function mapView() {
+      if(modern()) {
+        const current=ui(),district=current.locationScope==='district'?current.districtId||'suburb':'all';
+        return heading(t('nav.map'))+mapWorkbench({district,inspector:districtBrief(district)})+
+          (state().history.length?button(esc(t('history')),'history','secondary'):'');
+      }
       const district=ui().districtId||'suburb',s=state(),projects=s.projects.filter(row=>row.districtId===district);
       return heading(t('nav.map'))+'<section class="v3-overview" aria-label="'+esc(t('whole'))+'">'+picture('assets/illustrated/region-cover-1024.webp',t('whole'))+
         Object.entries(rules.DISTRICTS).map(([id,row])=>'<button type="button" class="v3-region-pin '+(id===district?'selected':'')+'" style="--x:'+row.x+';--y:'+row.y+'" data-v3-district="'+id+'" aria-label="'+esc(districtCaption(id))+'"></button>').join('')+'</section>'+
@@ -1306,6 +1453,27 @@
     function sitesView() {
       const measure=selectedMeasure();
       if (!measure?.siteIds?.length) return mapView();
+      if(modern()){
+        const current=ui(),site=siteData(measure).find(row=>row.id===(current.inspectedSiteId||selectedDraft()?.siteId));
+        const result=site?controller.previewMeasure(measure.id,site.id):null;
+        const project=result?.project;
+        const occupied=!!site&&!project&&result?.errors.some(row=>row.code==='site-occupied'||row.code==='duplicate-site');
+        const kpi=result?.marginal?.kpi;
+        const delta=kpi?.districts?.map(row=>label(districtLabel(row.districtId),number(row.before.served)+' → '+number(row.after.served)+
+          ' / '+number(row.after.demand))).join('')||'';
+        const same=selectedDraft()?.siteId===site?.id;
+        const inspector='<section class="v4-map-inspector" aria-labelledby="v4-map-inspect-title"><h2 id="v4-map-inspect-title">'+
+          esc(site?local(site.labels):v4.tr('noSite'))+'</h2>'+
+          (occupied?'<p role="status">'+esc(v4.tr('occupied'))+'</p>':'')+
+          (project?label(t('budget.now'),money(project.costNow))+label(t('construction'),money(project.capex))+
+            label(t('budget.annual'),money(project.annualOpex))+label(t('plannedOpen'),project.openingYear)+
+            (delta?'<h3>'+esc(v4.tr('effect'))+'</h3>'+delta:'')+label(v4.tr('yearCash'),money(result.finance.cashEnd))+
+            (result.finance.cashEnd<0?'<p class="v4-money-warning">'+esc(v4.tr('shortageNow'))+'</p>':'')+
+            button(esc(v4.tr(same?'selected':'add')),'accept-site','primary full','data-site-id="'+esc(site.id)+'" '+
+              (same?'disabled':'')):'')+'</section>';
+        return back('project-back',t('newProject'))+heading(t('map.chooseSite'))+
+          mapWorkbench({district:measure.districtId,siteMode:true,inspector,controls:false});
+      }
       const sites=siteData(measure),selected=sites.find(row=>row.id===(ui().inspectedSiteId||state().draft.siteId))||sites[0];
       const s=state(),school=measure.id==='school-campus';
       const prospective=school?rules.schoolQuote(s,selected.id):rules.quote({...s,draft:{...s.draft,siteId:selected.id}},{eventPlan:G.V3Events.plan({record:s.event,choice:s.draft.eventChoice||'base'})}).project?.projection;
@@ -1326,7 +1494,21 @@
     function objectView() {
       const id=ui().objectId,s=state(),project=s.projects.find(row=>row.id===id),baseline=!project,school=s.stats.school?.facilities?.find(row=>row.id===(id==='other-school'?'east-school':id));
       const name=project?local(project.labels):t(id==='other-school'?'otherSchool':'oldSchool');
-      const restore=measures().filter(row=>row.id.includes(id)&&row.id!==project?.measureId);
+      const restore=measures().filter(row=>row.projectId===id);
+      if(modern()){
+        const district=project?.districtId||'suburb';
+        const service=project?.outputs&&Object.keys(project.outputs)[0];
+        const servedAs={schoolStaff:'school',healthCapacity:'health',digitalAccess:'digital',floodProtection:'flood',jobs:'employment',childcareCapacity:'childcare'};
+        const kpi=s.stats.districts[district]?.kpis[servedAs[service]||({north:'health',river:'flood',industrial:'employment',capital:'digital',suburb:'school'}[district])];
+        const inspector='<section class="v4-map-inspector" data-anchor="map.inspectResult"><h2>'+esc(name)+'</h2><p class="v3-muted">'+
+          esc(districtCaption(district))+'</p><p class="v3-state '+esc(project?phase(project):'open')+'">'+esc(project?phaseLabel(phase(project)):t('running'))+'</p>'+
+          (project?label(t('plannedOpen'),project.openingYear)+label(t('budget.annual'),money(project.annualOpex))+
+            label(t('period'),project.openingYear+'–'+project.endYear)+(kpi&&phase(project)==='open'?
+              label(t('district')+' · '+t('people'),number(kpi.served)+' / '+number(kpi.demand)):''):
+            label(t('people'),number(school?.served))+label(t('demand'),number(Math.min(school?.physicalSeats,school?.staffedSeats))))+
+          restore.map(row=>'<button type="button" class="v3-button primary full" data-v3-measure="'+esc(row.id)+'">'+esc(local(row.labels))+'</button>').join('')+'</section>';
+        return back('back',t('nav.map'))+heading(t('nav.map'))+mapWorkbench({district,inspector});
+      }
       return back('back',t('nav.map'))+heading(name)+'<p class="v3-muted">'+esc(districtCaption(project?.districtId||'suburb'))+'</p>'+locationArt(project?.districtId||'suburb',false)+
         '<section class="v3-card v3-card-body" data-anchor="map.inspectResult">'+
         '<p class="v3-eyebrow">'+esc(s.history.length?t('factYear',{year:s.history.at(-1).year}):t('baseline'))+'</p>'+
@@ -1377,11 +1559,13 @@
       const stats=current.statsYear==='initial'?s.initialStats:row?.stats||s.initialStats,district=current.statsDistrict||'all';
       const projection=district==='all'?stats:stats.districts[district];
       const previous=district==='all'?s.initialStats:s.initialStats.districts[district];
-      return heading(t('nav.stats'))+'<div class="v3-stat-filters"><label><span class="v3-sr">'+esc(t('period'))+'</span><select name="stats-year"><option value="initial" '+(current.statsYear==='initial'?'selected':'')+'>'+esc(t('baseline'))+'</option>'+
+      const exercise=schoolExercise();
+      return heading(t('nav.stats'))+(modern()?exercise+v4.goals(G.V4Campaign.status(s)):'')+
+        '<div class="v3-stat-filters"><label><span class="v3-sr">'+esc(t('period'))+'</span><select name="stats-year"><option value="initial" '+(current.statsYear==='initial'?'selected':'')+'>'+esc(t('baseline'))+'</option>'+
         s.history.map(entry=>'<option value="'+entry.year+'" '+((current.statsYear?Number(current.statsYear)===entry.year:last?.year===entry.year)?'selected':'')+'>'+entry.year+'</option>').join('')+'</select></label>'+
         '<label><span class="v3-sr">'+esc(t('district'))+'</span><select name="stats-district"><option value="all">'+esc(t('whole'))+'</option>'+Object.keys(rules.DISTRICTS).map(id=>'<option value="'+id+'" '+(district===id?'selected':'')+'>'+esc(districtLabel(id))+'</option>').join('')+'</select></label></div>'+
         '<p class="v3-muted">'+esc(current.statsYear==='initial'||!row?t('baseline'):t('stats.after',{year:row.year}))+'</p>'+
-        '<div class="v3-stats-grid"><section class="v3-card v3-card-body" data-anchor="'+(row?'stats.actual':'stats.baseline')+'"><h2>'+esc(t('stats.kpi'))+'</h2>'+kpiRows(current.statsYear==='initial'?previous:projection,previous,schoolExercise())+'</section>'+
+        '<div class="v3-stats-grid"><section class="v3-card v3-card-body" data-anchor="'+(row?'stats.actual':'stats.baseline')+'"><h2>'+esc(t('stats.kpi'))+'</h2>'+kpiRows(current.statsYear==='initial'?previous:projection,previous,modern()?'':exercise)+'</section>'+
         '<section class="v3-card v3-card-body"><h2>'+esc(t('stats.support'))+'</h2>'+label(t('support'),number(stats.support,1)+' / 100')+
         Object.entries(stats.groups||{}).map(([id,value])=>'<div class="v3-group"><div>'+label(t(id),number(value,1))+'</div><meter min="0" max="100" value="'+value+'" aria-label="'+esc(t(id))+'">'+value+'</meter></div>').join('')+
         '<details><summary>'+esc(t('reasons'))+'</summary>'+Object.entries(stats.groupReasons||{}).map(([id,value])=>'<p><strong>'+esc(t(id))+'</strong> '+esc(typeof value==='number'?(value>0?'+':'')+number(value,1):value?.delta!==undefined?(value.delta>0?'+':'')+number(value.delta,1):local(value))+'</p>').join('')+'</details></section></div>'+
@@ -1389,13 +1573,16 @@
           const event=G.V3Events.eventCard(outcome.eventId,language());
           return '<p><strong>'+esc(event?.title||'')+'</strong></p>'+label(event?.localIndicator.unitLabel||'',number(outcome.actualUnits??outcome.units??outcome.value));
         }).join('')+'</section>':'')+
-        (s.history.length?button(esc(t('history')),'history','secondary full'):'');
+        (modern()?v4.archive():'')+(s.history.length?button(esc(t('history')),'history','secondary full'):'');
     }
     function historyView() {
       return back('back',t('nav.stats'))+heading(t('history'))+'<div class="v3-history">'+state().history.map(row=>{
         const event=G.V3Events.eventCard(row.event?.id||row.event?.eventId,language());
-        return '<details class="v3-card v3-card-body" data-v3-history-year="'+row.year+'" '+(Number(ui().mapYear)===row.year?'open':'')+'><summary><strong>'+row.year+'</strong> '+esc(local(row.measure?.labels)||t('dec.defer'))+'</summary>'+
+        const measures=row.measures??[];
+        return '<details class="v3-card v3-card-body" data-v3-history-year="'+row.year+'" '+(Number(ui().mapYear)===row.year?'open':'')+'><summary><strong>'+row.year+'</strong> '+
+          esc(modern()?(measures.map(project=>local(project.labels)).slice(0,2).join(' · ')||v4.tr('empty')):local(row.measure?.labels)||t('dec.defer'))+'</summary>'+
           '<p>'+esc(event?.title||'')+'</p>'+label(t('budget.remaining'),money(row.finance.cashEnd))+label(t('support'),number(row.stats.support,1))+
+          (modern()&&measures.length?v4.list(measures):'')+
           (Array.isArray(row.projects)?'<button type="button" class="v3-button secondary full" data-v3-history-map="'+row.year+'">'+esc(t('historyMap'))+'</button>':'')+'</details>';
       }).join('')+'</div>';
     }
@@ -1403,6 +1590,7 @@
       const row=state().history.find(entry=>entry.year===Number(ui().mapYear));
       if (!Array.isArray(row?.projects)) return historyView();
       const district=ui().districtId||'suburb',projects=row.projects.filter(project=>project.districtId===district);
+      if(modern())return back('history-return',t('history'))+heading(t('factYear',{year:row.year}))+mapWorkbench({district,historical:row});
       const facilities=district==='suburb'?row.stats?.school?.facilities||[]:[];
       const facilityName=facility=>facility.id==='old-school'?t('oldSchool'):facility.id==='east-school'?t('otherSchool'):
         local(projects.find(project=>project.measureId==='school-campus')?.labels)||t('newProject');
@@ -1434,29 +1622,47 @@
     }
     function errorLabel(error) {
       const code=error.code;
+      if(modern()){
+        if(['duplicate-site','site-occupied'].includes(code))return v4.tr('occupied');
+        if(code.startsWith('investment'))return v4.tr('fundLimit');
+        if(['duplicate-measure','measure-unavailable','duplicate-project'].includes(code))return v4.tr('invalidPlan');
+      }
       if (code==='cash-shortfall'||code==='budget-deficit'||code==='insufficient-cash') return t('shortage',{amount:money(error.amount||Math.abs(quote().finance.cashEnd))});
       const keys={'event-required':'eventRequired','measure-required':'measureRequired','site-required':'siteRequired','site-occupied':'siteRequired','invalid-site':'siteRequired','loan-limit':'loanError','reserve-unavailable':'budgetError','sector-below-commitments':'balanceError','sector-total':'balanceError','campaign-finished':'final'};
       return t(keys[code]||'budgetError');
     }
     function reviewView() {
       const current=quote(),event=card(),chosen=event?.options.find(row=>row.id===state().draft.eventChoice),year=state().year;
+      const lessonLocked=year===2026&&ui().tutorialStep<8;
       return back('back',t('cancel'))+heading(t('freshYear',{year}))+
         (!current.ok?'<div class="v3-card v3-card-body"><h2>'+esc(t('reviewError'))+'</h2>'+current.errors.map(error=>
-          '<button class="v3-error-link" type="button" data-v3-fix="'+esc(error.code)+'" data-tab="'+esc(error.tab)+'">'+esc(errorLabel(error))+' →</button>').join('')+'</div>':'')+
+          '<button class="v3-error-link" type="button" data-v3-fix="'+esc(error.code)+'" data-tab="'+esc(error.tab)+
+          '" data-measure-id="'+esc(error.measureId||'')+'">'+esc(errorLabel(error))+' →</button>').join('')+'</div>':'')+
         '<section class="v3-card v3-card-body"><p class="v3-eyebrow">'+esc(t('event'))+'</p><h2>'+esc(event?.title||'')+'</h2><p>'+esc(chosen?.label||t('eventRequired'))+'</p>'+
-        '<hr><p class="v3-eyebrow">'+esc(t('newProject'))+'</p><h2>'+esc(local(selectedMeasure()?.labels)||t('measureRequired'))+'</h2>'+
-        (current.project?label(t('plannedOpen'),current.project.openingYear)+label(t('budget.now'),money(current.project.costNow))+label(t('budget.annual'),money(current.project.annualOpex)):'')+
+        (modern()?'<h2>'+esc(v4.tr('plan'))+'</h2>'+v4.list(current.projects)+v4.warning(current.finance)+(current.finance.investmentDraft?
+          label(v4.tr('fundContribution'),money(current.finance.investmentDraft.principal))+label(v4.tr('fundMaturity'),current.finance.investmentDraft.maturityYear):''):
+          '<hr><p class="v3-eyebrow">'+esc(t('newProject'))+'</p><h2>'+esc(local(selectedMeasure()?.labels)||t('measureRequired'))+'</h2>'+
+          (current.project?label(t('plannedOpen'),current.project.openingYear)+label(t('budget.now'),money(current.project.costNow))+label(t('budget.annual'),money(current.project.annualOpex)):''))+
         '<hr>'+label(t('budget.remaining'),money(current.finance.cashEnd))+label(t('budget.debt'),money(current.finance.debtEnd))+label(t('budget.reserve'),money(current.finance.reserveEnd))+'</section>'+
-        button(esc(t('confirm',{year})),'commit','primary full','data-anchor="year.commit" '+(!current.ok||busy||(state().year===2026&&ui().tutorialStep<8)?'disabled':''))+
+        (modern()&&lessonLocked?'<p>'+esc(v4.tr('tutorialBeforeClose'))+'</p>'+button(esc(v4.tr('tutorialContinue')),'advance','secondary full'):'')+
+        button(esc(t('confirm',{year})),'commit','primary full','data-anchor="year.commit" '+(!current.ok||busy||lessonLocked?'disabled':''))+
         (controller.handoverStatus?.()?.available?button(esc(language()==='ru'?'Передать управление':language()==='en'?'Hand over administration':'移交管理'),'handover','secondary full'):'');
     }
     function resultView() {
       const row=state().history.at(-1);
       if (!row) return decisions();
+      const term=modern()?G.V4Campaign.chapter(row.year):null;
+      const situation=G.V3Events.card(row.event,language());
+      const outcome=situation?.options.find(option=>option.id===row.event.choice);
       return heading(t('result'))+'<p class="v3-year-result">'+row.year+'</p><section class="v3-card v3-card-body">'+
-        '<h2>'+esc(local(row.measure?.labels)||t('dec.defer'))+'</h2>'+
+        (modern()?'<p class="v3-eyebrow">'+esc(t('event'))+'</p><h2>'+esc(situation?.title||'')+'</h2>'+
+          (outcome?'<p>'+esc(outcome.label)+'</p>':'')+'<h3>'+esc(v4.tr('plan'))+'</h3>'+v4.list(row.measures||[]):
+          '<h2>'+esc(local(row.measure?.labels)||t('dec.defer'))+'</h2>')+
         label(t('budget.remaining'),money(row.finance.cashEnd))+label(t('support'),number(row.stats.support,1)+' / 100')+
-        (row.measure?label(t('plannedOpen'),row.measure.openingYear):'<p>'+esc(t('noBuilding'))+'</p>')+'</section>'+
+        (!modern()?(row.measure?label(t('plannedOpen'),row.measure.openingYear):'<p>'+esc(t('noBuilding'))+'</p>'):'')+'</section>'+
+        (term?.endYear===row.year?v4.goals(G.V4Campaign.status(state(),term.number),true)+
+          (!state().completed?'<p class="v3-muted">'+esc(v4.tr('nextChapter'))+'</p>':''):'')+
+        (modern()&&state().projects.length?button(esc(t('returnMap')),'v4-view-last-map','secondary full'):'')+
         button(esc(t(ui().tutorialStep===9?'resultStats':'resultNext')),'result-next','primary full');
     }
     function exitLabel() {
@@ -1470,8 +1676,12 @@
         '<section class="v3-card v3-card-body"><p class="v3-eyebrow">'+esc(t('score'))+'</p><p class="v3-score">'+esc(number(result.points,2))+'<small>'+esc(t('points'))+'</small></p>'+
         '<p class="v3-submission" role="status">'+esc(t({sent:'sent',sending:'sending',error:'saved',offline:'saved',saved:'saved',preview:'saved'}[key]||'saved'))+'</p>'+
         (key==='error'?button(esc(t('retry')),'retry','secondary'):'')+'</section>'+
+        (modern()?'<section class="v3-card v3-card-body">'+label(v4.tr('reportKpi'),number(result.paths?.kpi,2)+' / 5')+
+          label(v4.tr('reportSatisfaction'),number(result.paths?.satisfaction,2)+' / 5')+'<p>'+esc(v4.tr('ratings'))+'</p></section>'+
+          v4.goals(G.V4Campaign.status(state(),G.V4Campaign.chapter(state().year).number),true):'')+
         '<section class="v3-card v3-card-body">'+result.criteria.map(row=>label(local(row.label||row.title),number(row.points,2)+' / '+number(row.maxPoints,2))).join('')+'</section>'+
         button(esc(t('stats.kpi')),'stats','secondary full')+button(esc(t('history')),'history','secondary full')+
+        (modern()?button(esc(v4.tr('replay')),'v4-restart','secondary full'):'')+
         button(esc(exitLabel()),'exit','primary full');
     }
     function menuView() {
@@ -1497,10 +1707,13 @@
       const menuOpen=current.panel==='menu';
       const showWelcome=welcome&&(replayWelcome||!menuOpen);
       const step=practiceStep(current);
+      const learning=modern()&&!s?.history.length&&step>0&&step<7;
+      const advanceLabel=learning?v4.tr('tutorialContinue'):t('turn.next');
       host.className='governor-v3'+(current.largeText?' v3-large-text':'')+(current.motion==='still'?' v3-still':'');
       host.dataset.v3Tab=current.tab;
       document.body.classList.toggle('governor-v3-active',active);
-      const panels={event:eventView,measures:measuresView,project:projectView,sites:sitesView,object:objectView,loan:loanView,review:reviewView,result:resultView,history:historyView,'history-map':historyMapView,menu:menuView};
+      const panels={event:eventView,measures:measuresView,project:projectView,sites:sitesView,object:objectView,loan:loanView,review:reviewView,
+        result:resultView,history:historyView,'history-map':historyMapView,menu:menuView,investment:()=>v4.investment(investmentDraft)};
       let content;
       if (showWelcome) content=welcomeView(welcome);
       else if (menuOpen) content=menuView();
@@ -1518,7 +1731,8 @@
         (step?practiceView(step,current):'')+content+'</main>'+
         (active&&!welcome?'<nav class="v3-navigation" aria-label="'+esc(t('menu'))+'">'+navigation.map(tab=>
           '<button type="button" data-v3-tab="'+tab+'" aria-current="'+(current.tab===tab?'page':'false')+'">'+navIcon(tab)+'<span>'+esc(t('nav.'+tab))+'</span></button>').join('')+
-          '<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+esc(t('turn.next'))+'" '+(s.completed?'disabled':'')+'><span aria-hidden="true">'+advanceIcon+'</span><small>'+esc(t('turn.next'))+'</small></button></nav>':'');
+          '<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+esc(advanceLabel)+'" '+(s.completed?'disabled':'')+
+          '<span aria-hidden="true">'+advanceIcon+'</span><small>'+esc(learning?v4.tr('tutorialShort'):advanceLabel)+'</small></button></nav>':'');
       const main=host.querySelector('.v3-content');
       main.scrollTop=scrollAfterMenu??(focusAfter?0:previousScroll);
       scrollAfterMenu=null;
@@ -1547,12 +1761,33 @@
       return null;
     }
     async function chooseMeasure(id) {
+      if(modern()){
+        if(id==='defer'){
+          await storeUI({panel:null,tab:'decisions',selectedMeasureId:null,portfolioPracticed:true});
+          await finishStep(3);
+        }else{
+          const selected=measures().find(row=>row.id===id);
+          if(!selected)return;
+          await storeUI({selectedMeasureId:id,tab:'decisions',panel:'project',districtId:selected.districtId,inspectedSiteId:null});
+          await finishStep(3);
+        }
+        focusAfter='v3-heading';
+        return;
+      }
       const measure=measures().find(row=>row.id===id);
       if (!measure) return;
       await controller.patchDraft({measureId:id,siteId:null,districtId:measure.districtId,promise:null});
       await storeUI({panel:id==='defer'?null:'project',tab:'decisions',inspectedSiteId:null,districtId:measure.districtId||ui().districtId});
       await finishStep(3);
       focusAfter='v3-heading';
+    }
+    async function editPortfolio(id,patch) {
+      const previous=state().draft.measures,existing=previous.find(row=>row.measureId===id);
+      const next=patch===null?previous.filter(row=>row.measureId!==id):
+        existing?previous.map(row=>row.measureId===id?{...row,...patch}:row):
+          [...previous,{measureId:id,siteId:null,promise:null,...patch}];
+      await controller.patchDraft({measures:next});
+      if(next.length>=2&&!ui().portfolioPracticed)await storeUI({portfolioPracticed:true});
     }
     async function submitChat(question,options) {
       if (!question.trim()||chatPending) return;
@@ -1599,12 +1834,18 @@
         });
       }
       if (item.dataset.v3Tab) return perform(()=>navigate(item.dataset.v3Tab));
-      if (item.dataset.v3District) return perform(()=>storeUI({districtId:item.dataset.v3District}));
+      if (item.dataset.v3District) return perform(()=>{
+        const districtId=item.dataset.v3District;
+        if(!modern())return storeUI({districtId});
+        return storeUI({districtId:districtId==='all'?'suburb':districtId,locationScope:districtId==='all'?'region':'district',
+          ...(ui().panel==='object'?{panel:null,objectId:null}:{})});
+      });
       if (item.dataset.v3Site) return perform(()=>storeUI({inspectedSiteId:item.dataset.v3Site}));
       if (item.dataset.v3Measure) return perform(()=>chooseMeasure(item.dataset.v3Measure));
       if (item.dataset.v3Object) return perform(async()=>{
         const project=state().projects.find(row=>row.id===item.dataset.v3Object);
-        await storeUI({tab:'map',panel:'object',objectId:item.dataset.v3Object,districtId:project?.districtId||'suburb'});
+        await storeUI({tab:'map',panel:'object',objectId:item.dataset.v3Object,districtId:project?.districtId||'suburb',
+          ...(modern()?{locationScope:'district',mapPracticed:true}:{})});
         if (!selectedMeasure()?.siteIds.length) await finishStep(4);
         await finishStep(10);
         focusAfter='v3-heading';
@@ -1613,7 +1854,11 @@
         const code=item.dataset.v3Fix;
         if (code==='event-required') {optionDraft=state().draft.eventChoice;await storeUI({tab:'decisions',panel:'event'});}
         else if (code==='measure-required') await storeUI({tab:'decisions',panel:'measures'});
-        else if (code.startsWith('site-')) await storeUI({tab:'map',panel:'sites'});
+        else if (code.includes('site')) {
+          if(modern()&&item.dataset.measureId)await storeUI({selectedMeasureId:item.dataset.measureId});
+          await openSites();
+        }
+        else if (modern()&&code.startsWith('investment'))await openInvestment();
         else await navigate(item.dataset.tab||'budget');
       });
       const action=item.dataset.v3Action;
@@ -1640,15 +1885,26 @@
         else if (action==='event') await openEvent();
         else if (action==='save-event') {await controller.patchDraft({eventChoice:optionDraft??state().draft.eventChoice});await closePanel();await finishStep(2);optionDraft=null;focusAfter='v3-heading';}
         else if (action==='measures') {await pushPanel('measures');focusAfter='v3-heading';}
+        else if(action==='v4-district-measures'){
+          await pushPanel('measures',{tab:'decisions',portfolioFilter:item.dataset.districtId});
+          focusAfter='v3-heading';
+        }
         else if (action==='project') await pushPanel('project');
         else if (action==='defer') await chooseMeasure('defer');
         else if (action==='project-back') await storeUI({tab:'decisions',panel:'project'});
         else if (action==='sites') await openSites();
         else if (action==='accept-site') {
-          await controller.patchDraft({siteId:item.dataset.siteId});await storeUI({tab:'decisions',panel:'project'});await finishStep(4);focusAfter='v3-heading';
+          if(modern()){
+            await editPortfolio(selectedMeasure().id,{siteId:item.dataset.siteId});
+            await storeUI({mapPracticed:true});
+          }else{
+            await controller.patchDraft({siteId:item.dataset.siteId});
+            await storeUI({tab:'decisions',panel:'project'});
+          }
+          await finishStep(4);focusAfter='v3-heading';
         }
         else if (action==='restore-tutorial-tax'&&ui().taxPractice) {
-          await controller.patchDraft({taxMode:ui().taxPractice.from});focusAfter='v3-tax-practice';
+          await controller.patchDraft({[modern()?'taxRate':'taxMode']:ui().taxPractice.from});focusAfter='v3-tax-practice';
         }
         else if (action==='tutorial-kpi'||action==='tutorial-kpi-change') {
           const correct=await controller.answerSchoolPractice(item.dataset.v3Value);
@@ -1660,7 +1916,50 @@
           const form=host.querySelector('#v3-loan-form');await controller.patchDraft({loan:{principal:Number(form.elements['loan-principal'].value),termYears:Number(form.elements['loan-term'].value),annualPercent:state().finance.annualPercent}});await closePanel();
         }
         else if (action==='remove-loan') {await controller.patchDraft({loan:null});await closePanel();}
+        else if(action==='v4-add'){
+          const measure=selectedMeasure();
+          if(!measure||measure.siteIds?.length)return;
+          await editPortfolio(measure.id,{siteId:null});
+          await storeUI({tab:'decisions',panel:null});
+        }
+        else if(action==='v4-remove'){
+          await editPortfolio(item.dataset.measureId,null);
+          await storeUI({tab:'decisions',panel:null,selectedMeasureId:null});
+        }
+        else if(action==='v4-fund')await openInvestment();
+        else if(action==='v4-save-fund'){
+          if(!v4.investable(investmentDraft))return;
+          await controller.patchDraft({investment:investmentDraft});
+          await closePanel();
+        }
+        else if(action==='v4-remove-fund'){
+          await controller.patchDraft({investment:null});
+          await closePanel();
+        }
+        else if(action==='v4-view-last-map'){
+          const latest=state().history.at(-1)?.measures?.[0];
+          await storeUI({tab:'map',panel:latest?'object':null,locationScope:'district',
+            districtId:latest?.districtId||'suburb',objectId:latest?.id||null});
+        }
+        else if(action==='v4-restart'){
+          await controller.restart();
+          focusAfter='v3-heading';
+        }
         else if (action==='advance') {
+          if(modern()&&!state().history.length&&ui().tutorialStep<7){
+            const next=ui().tutorialStep;
+            if(next<=2)await openEvent();
+            else if(next===3)await pushPanel('measures',{tab:'decisions'});
+            else if(next===4){
+              if(needsSite())await openSites();
+              else await storeUI({tab:'map',panel:'object',districtId:'suburb',locationScope:'district',objectId:'old-school',mapPracticed:true});
+            }else await navigate(next===5?'budget':'stats');
+            return;
+          }
+          if(modern()&&!state().history.length&&ui().tutorialStep===7&&!ui().investmentViewed&&state().year<=2043){
+            await openInvestment();
+            return;
+          }
           review={signature:quote().signature,revision:state().revision};await storeUI({panel:'review'});await finishStep(7);focusAfter='v3-heading';
         }
         else if (action==='commit') {
@@ -1680,7 +1979,8 @@
         }
         else if (action==='tutorial-school') {
           if (!schoolExampleNeeded(ui().tutorialStep,ui())) return;
-          await pushPanel('object',{tab:'map',objectId:'old-school'});
+          await pushPanel('object',{tab:'map',objectId:'old-school',
+            ...(modern()?{locationScope:'district',districtId:'suburb',mapPracticed:true}:{})});
           focusAfter='v3-heading';
         }
         else if (action==='handover') {await controller.handover({revision:state().revision});await storeUI({tab:'decisions',panel:null});}
@@ -1691,9 +1991,19 @@
         else if (action==='history-return') {await storeUI({panel:'history'});focusAfter='v3-heading';}
       });
     }
+    async function openInvestment() {
+      const room=quote()?.finance.investmentHeadroom??0;
+      investmentDraft={...(state().draft.investment??{principal:Math.min(room,1000),termYears:Math.min(3,2045-state().year)})};
+      await pushPanel('investment',{tab:'budget',investmentViewed:true});
+      focusAfter='v3-heading';
+    }
     function change(event) {
       const input=event.target,name=input.name;
       if (!name||name==='question') return;
+      if(name.startsWith('investment-')){
+        updateInvestment(input.form);
+        return;
+      }
       if (name==='loan-principal'||name==='loan-term') {
         const form=input.form;loanDraft={principal:Number(form.elements['loan-principal'].value),termYears:Number(form.elements['loan-term'].value)};
         let rows=[];try{rows=rules.loanSchedule(loanDraft.principal,state().finance.annualPercent,loanDraft.termYears,state().year);}catch(_){}
@@ -1701,6 +2011,11 @@
       }
       perform(async()=>{
         if (name==='language') await controller.setLanguage(input.value);
+        else if(name==='tax-rate'){
+          const value=Number(input.value);
+          if(value!==state().draft.taxRate)await controller.patchDraft({taxRate:value});
+        }
+        else if(name==='portfolio-filter')await storeUI({portfolioFilter:input.value});
         else if (name==='still') await storeUI({motion:input.checked?'still':'auto'});
         else if (name==='large') await storeUI({largeText:input.checked});
         else if (name==='budget-year') await storeUI({budgetYear:input.value});
@@ -1709,17 +2024,35 @@
         else if (name==='district') await storeUI({districtId:input.value});
         else if (name==='reserveDraw'||name==='reserveContribution') await controller.patchDraft({[name]:Number(input.value)});
         else if (name.startsWith('sector:')) await controller.patchDraft({sectorLimits:{...state().draft.sectorLimits,[name.split(':')[1]]:Number(input.value)}});
+        else if(modern()&&name.startsWith('promise-')){
+          const row=selectedDraft(),id=selectedMeasure()?.id;
+          if(!row||!id)return;
+          const promise=name==='promise-type'?input.value?{type:input.value,dueYear:Math.min(2045,v4.projectFor(id)?.openingYear||state().year),
+            amount:state().finance.reserve}:null:{...row.promise,[name==='promise-year'?'dueYear':'amount']:Number(input.value)};
+          await editPortfolio(id,{promise});
+        }
         else if (name==='promise-type') await controller.patchDraft({promise:input.value?{type:input.value,dueYear:quote().project?.openingYear||state().year,amount:state().finance.reserve}:null});
         else if (name==='promise-year') await controller.patchDraft({promise:{...state().draft.promise,dueYear:Number(input.value)}});
         else if (name==='promise-amount') await controller.patchDraft({promise:{...state().draft.promise,amount:Number(input.value)}});
       });
     }
+    function updateInvestment(form) {
+      investmentDraft={principal:Number(form.elements['investment-principal'].value),termYears:Number(form.elements['investment-term'].value)};
+      host.querySelector('#v4-investment-preview').innerHTML=v4.investmentPreview(investmentDraft,true);
+      host.querySelector('[data-v3-action="v4-save-fund"]').disabled=!v4.investable(investmentDraft);
+    }
     function input(event) {
       if (event.target.id==='v3-question') chatDraft=event.target.value;
+      if(event.target.name==='investment-principal')updateInvestment(event.target.form);
+      if(event.target.name==='tax-rate'){
+        const rate=Number(event.target.value);
+        cancelAnimationFrame(taxFrame);
+        taxFrame=requestAnimationFrame(()=>v4.updateTax(host,rate));
+      }
     }
     function submit(event) {
       if (event.target.id==='v3-chat') {event.preventDefault();submitChat(event.target.elements.question.value);}
-      if (event.target.id==='v3-loan-form') event.preventDefault();
+      if (event.target.id==='v3-loan-form'||event.target.id==='v4-fund-form') event.preventDefault();
     }
     function popstate(event) {
       if (menuReturnPending) {menuReturnPending=false;return;}
@@ -1740,6 +2073,7 @@
     viewportChanged();render();
     return {render,navigate,destroy(){
       destroyed=true;
+      cancelAnimationFrame(taxFrame);
       host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('input',input);host.removeEventListener('submit',submit);
       host.removeEventListener('error',imageError,true);
       window.removeEventListener('popstate',popstate);window.removeEventListener('resize',viewportChanged);window.visualViewport?.removeEventListener('resize',viewportChanged);
