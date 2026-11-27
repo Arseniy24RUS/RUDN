@@ -129,9 +129,11 @@ img {
   box-shadow: 0 13px 28px rgba(8, 127, 196, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.primary-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 17px 34px rgba(8, 127, 196, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+@media (hover: hover) {
+  .primary-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 17px 34px rgba(8, 127, 196, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
 }
 
 .primary-button:active:not(:disabled),

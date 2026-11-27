@@ -146,10 +146,18 @@ def run_management(browser, base, output, width, height, language):
                 page.locator("#district-dialog").wait_for(state="hidden")
                 assert not page.locator("dialog[open]").count(), "Returning should close the proposal"
                 header.wait_for()
+                if touch:
+                    # Mobile browser chrome can change viewport height between sheets.
+                    page.set_viewport_size({"width": width, "height": height - 4})
                 choose(restore, touch)
                 review.wait_for()
-                choose(review.locator("[data-restore-confirm]"), touch)
+                confirm = review.locator("[data-restore-confirm]")
+                if touch and page.evaluate("matchMedia('(hover: none)').matches"):
+                    assert confirm.evaluate("el => getComputedStyle(el).transform") == "none", "Sticky hover moved the touch target"
+                choose(confirm, touch)
                 review.wait_for(state="hidden")
+                if touch:
+                    page.set_viewport_size({"width": width, "height": height})
                 restored_year = year
                 action = "restore"
             elif turn >= 12:
