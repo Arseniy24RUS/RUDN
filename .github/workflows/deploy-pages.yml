@@ -166,12 +166,13 @@ jobs:
               reviewed['scripts'] = '81a5c0e7a2756347e6852c24a4d7958665202213'
               reviewed['firebase'] = 'dc4aff2a5e0344910d27103cdd004dac79ed68c2'
           if base == portfolio_base:
-              reviewed['site'] = '094e4d33fe408e59966fcecabb15df4fb5aa2116'
-              reviewed['scripts'] = 'a853b3fc42429ecd398bcb82e5d3d15194d550c5'
+              reviewed['site'] = '52f2e21083f7bcf3229dc409d9e32f1feb73db41'
+              reviewed['scripts'] = '863e26be5bb18811fe6de4343b078f391e7891df'
               reviewed['tests'] = 'b2502cb5f4fce6d466a506daa3344f6d5b470912'
-              reviewed['.github/workflows/platform-checks.yml'] = 'c0949615c011ff4d0991478a7fb37492e29c2a70'
+              reviewed['.github/workflows/platform-checks.yml'] = '9666cc56209926a1f4ac7263574bf9c698691982'
               reviewed['.github/workflows/legal-lab-checks.yml'] = 'baca07b408691f48a53dbd4069d261cf07dd25cf'
               reviewed['.github/workflows/puzzle-checks.yml'] = '1afa713ad087583796a3eead1daf421ae6cc3b8d'
+              reviewed['.github/workflows/puzzle-map-network.yml'] = 'e0317e776bab68028ac20115e6fed7d6b62d06eb'
               reviewed['firebase'] = 'bfba8e0e5b71310ec5e941a87e5d8f8d3807d69b'
           for path, expected in reviewed.items():
               if git('rev-parse', 'HEAD:' + path) != expected:
@@ -245,6 +246,7 @@ jobs:
                   '.github/workflows/platform-checks.yml',
                   '.github/workflows/legal-lab-checks.yml',
                   '.github/workflows/puzzle-checks.yml',
+                  '.github/workflows/puzzle-map-network.yml',
                   'firebase/functions/governor-v3-advisor/provider.mjs',
                   'scripts/build-platform-release.mjs',
                   'scripts/test-platform-release.mjs',

@@ -53,6 +53,7 @@ jobs:
               '.github/workflows/platform-checks.yml',
               '.github/workflows/legal-lab-checks.yml',
               '.github/workflows/puzzle-checks.yml',
+              '.github/workflows/puzzle-map-network.yml',
               'firebase/functions/governor-v3-advisor/provider.mjs',
               'scripts/build-platform-release.mjs',
               'scripts/test-platform-release.mjs',

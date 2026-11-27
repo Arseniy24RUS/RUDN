@@ -25,3 +25,4 @@
 .v4-event-gif{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;visibility:hidden}
 .v4-event-gif.is-ready{visibility:visible}
 .v4-event-gif-full{object-fit:contain}
+.v3-navigation.v4-complete{grid-template-columns:repeat(5,minmax(0,1fr))}

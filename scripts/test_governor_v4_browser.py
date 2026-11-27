@@ -77,6 +77,13 @@ def first_year(page, profile, output):
     assert page.locator('#v4-tax-readout').inner_text() != trial_cash
     assert load_record(page, profile)['state']['draft']['taxRate'] == 101
     screenshot(page, output, 'tax-preview')
+    assert page.locator('[data-v3-action="advance"]').and_(page.get_by_role('button')).count() == 1
+    click(page, '[data-v3-action="loan"]')
+    visible(page, '[name="loan-principal"]').fill('2800')
+    click(page, '[data-v3-action="save-loan"]')
+    assert load_record(page, profile)['state']['draft']['loan']['principal'] == 2800
+    click(page, '[data-v3-action="loan"]')
+    click(page, '[data-v3-action="remove-loan"]')
     click(page, '[data-v3-action="v4-fund"]')
     visible(page, '[name="investment-principal"]').fill('1000')
     visible(page, '[name="investment-term"]').select_option('3')
@@ -146,6 +153,7 @@ def full_campaign(page, profile, output, campus):
             click(page, '[data-v3-action="result-next"]')
     assert stages == ['frame', 'frame', 'finishing', 'open'], stages
     assert state['completed'] and len(state['history']) == 20 and state['year'] == 2045
+    assert page.locator('[data-v3-action="advance"]').count() == 0
     assert page.locator('.v4-goals').first.is_visible()
     screenshot(page, output, 'final')
     score = record['submission']['governor']['assessment']

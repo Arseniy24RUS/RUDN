@@ -205,7 +205,7 @@
     function kpiValue(value,unit) {
       if(value===null||value===undefined||!Number.isFinite(value))return tr('noValue');
       const translated={percent:'%',pct:'%',years:language()==='ru'?' лет':language()==='zh'?'年':' yr',rub:' ₽',people:''};
-      const digits=unit==='people'?0:['tfr','ratio','children','years'].includes(unit)?2:1;
+      const digits=unit==='people'?0:2;
       return number(value,digits)+(translated[unit]??'');
     }
     function goals(status,closed=false) {

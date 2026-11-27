@@ -1044,7 +1044,7 @@
         const route=routes[step];
         if (route?.[0]) action=button(esc(t(route[1])),'tutorial-next','secondary');
       }
-      const fund=modern()&&step===7&&!current.investmentViewed;
+      const fund=modern()&&step===7&&(!current.investmentViewed||current.panel==='investment');
       const portfolio=modern()&&step===7&&!fund&&!current.portfolioPracticed;
       if(fund&&current.panel!=='investment')action=button(esc(v4.tr('fundEdit')),'v4-fund','secondary');
       if(portfolio)action=button(esc(v4.tr('pick')),'measures','secondary');
@@ -1214,8 +1214,14 @@
     function operationName(operation) {
       if(modern()&&operation.type.startsWith('investment-'))return v4.tr({
         'investment-contribution':'fundContribution','investment-principal':'fundPrincipal','investment-income':'fundIncome'}[operation.type]||'fund');
+      if(modern()&&operation.type==='mandatory'&&operation.sector)return t('locked')+' · '+t(operation.sector);
+      if(modern()&&operation.eventId){
+        const named=G.V3Events.eventCard(operation.eventId,language());
+        if(named?.title)return named.title;
+      }
       const keys={tax:'ownTax','non-tax':'nonTax',equalization:'transfers',loan:'borrowing',interest:'interest',principal:'principal',operation:'operational',capex:'construction',mandatory:'locked','reserve-draw':'budget.reserve','reserve-add':'budget.reserve',event:'event',start:'construction'};
-      const project=state().projects.find(row=>operation.id.startsWith(row.id));
+      const projects=modern()?[...state().projects,...(quote()?.projects??[])]:state().projects;
+      const project=projects.find(row=>operation.id.startsWith(row.id+':'));
       return project?local(project.labels):t(keys[operation.type] || 'spend');
     }
     function taxesView(finance,current) {
@@ -1707,8 +1713,12 @@
       const menuOpen=current.panel==='menu';
       const showWelcome=welcome&&(replayWelcome||!menuOpen);
       const step=practiceStep(current);
-      const learning=modern()&&!s?.history.length&&step>0&&step<7;
+      const learning=modern()&&!s?.history.length&&step>0&&(step<7||step===7&&!current.investmentViewed);
       const advanceLabel=learning?v4.tr('tutorialContinue'):t('turn.next');
+      const finished=modern()&&s?.completed;
+      const advance=finished?'':'<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+
+        esc(advanceLabel)+'" '+(s?.completed?'disabled':'')+'><span aria-hidden="true">'+advanceIcon+'</span><small>'+
+        esc(learning?v4.tr('tutorialShort'):advanceLabel)+'</small></button>';
       host.className='governor-v3'+(current.largeText?' v3-large-text':'')+(current.motion==='still'?' v3-still':'');
       host.dataset.v3Tab=current.tab;
       document.body.classList.toggle('governor-v3-active',active);
@@ -1729,10 +1739,9 @@
         (errorText?'<div class="v3-alert" role="alert">'+esc(errorText)+button(esc(t('retry')),'retry','link')+'</div>':'')+
         (controller.meta?.readOnly?'<div class="v3-alert" role="status">'+esc(t('system.otherTab'))+'</div>':'')+
         (step?practiceView(step,current):'')+content+'</main>'+
-        (active&&!welcome?'<nav class="v3-navigation" aria-label="'+esc(t('menu'))+'">'+navigation.map(tab=>
+        (active&&!welcome?'<nav class="v3-navigation '+(finished?'v4-complete':'')+'" aria-label="'+esc(t('menu'))+'">'+navigation.map(tab=>
           '<button type="button" data-v3-tab="'+tab+'" aria-current="'+(current.tab===tab?'page':'false')+'">'+navIcon(tab)+'<span>'+esc(t('nav.'+tab))+'</span></button>').join('')+
-          '<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+esc(advanceLabel)+'" '+(s.completed?'disabled':'')+
-          '<span aria-hidden="true">'+advanceIcon+'</span><small>'+esc(learning?v4.tr('tutorialShort'):advanceLabel)+'</small></button></nav>':'');
+          advance+'</nav>':'');
       const main=host.querySelector('.v3-content');
       main.scrollTop=scrollAfterMenu??(focusAfter?0:previousScroll);
       scrollAfterMenu=null;
@@ -2004,11 +2013,7 @@
         updateInvestment(input.form);
         return;
       }
-      if (name==='loan-principal'||name==='loan-term') {
-        const form=input.form;loanDraft={principal:Number(form.elements['loan-principal'].value),termYears:Number(form.elements['loan-term'].value)};
-        let rows=[];try{rows=rules.loanSchedule(loanDraft.principal,state().finance.annualPercent,loanDraft.termYears,state().year);}catch(_){}
-        host.querySelector('#v3-loan-schedule').innerHTML=loanRows(rows);return;
-      }
+      if (name==='loan-principal'||name==='loan-term') {updateLoan(input.form);return;}
       perform(async()=>{
         if (name==='language') await controller.setLanguage(input.value);
         else if(name==='tax-rate'){
@@ -2041,9 +2046,18 @@
       host.querySelector('#v4-investment-preview').innerHTML=v4.investmentPreview(investmentDraft,true);
       host.querySelector('[data-v3-action="v4-save-fund"]').disabled=!v4.investable(investmentDraft);
     }
+    function updateLoan(form) {
+      loanDraft={principal:Number(form.elements['loan-principal'].value),termYears:Number(form.elements['loan-term'].value)};
+      let rows=[];
+      try{rows=rules.loanSchedule(loanDraft.principal,state().finance.annualPercent,loanDraft.termYears,state().year);}catch(_){}
+      const target=host.querySelector('#v3-loan-schedule');
+      const html=loanRows(rows);
+      if(target.innerHTML!==html)target.innerHTML=html;
+    }
     function input(event) {
       if (event.target.id==='v3-question') chatDraft=event.target.value;
       if(event.target.name==='investment-principal')updateInvestment(event.target.form);
+      if(event.target.name==='loan-principal')updateLoan(event.target.form);
       if(event.target.name==='tax-rate'){
         const rate=Number(event.target.value);
         cancelAnimationFrame(taxFrame);
