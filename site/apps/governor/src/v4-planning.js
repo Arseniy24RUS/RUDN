@@ -57,7 +57,7 @@
     reportSatisfaction:['Результат по удовлетворённости','Satisfaction score','满意度成绩'],
     ratings:['Засчитывается лучший из двух результатов','The higher of the two scores counts','按两项成绩中的较高者计分'],
     scoreHelp:['Путь KPI учитывает продвижение по 12 целям. Путь удовлетворённости учитывает среднюю поддержку жителей за каждый период. У каждого пути максимум 5 баллов. Веса пятилеток — 10%, 20%, 30% и 40%.','The KPI path measures progress on 12 goals. The satisfaction path uses average resident support over each term. Either path can earn 5 points. Term weights are 10%, 20%, 30%, and 40%.','指标成绩按12项目标的进度计算。满意度成绩按各期居民平均支持度计算。两种途径均可得5分。四期权重为10%、20%、30%和40%。'],
-    journalScore:['Балл в журнале','Gradebook score','成绩册分数'],
+    journalScore:['Балл для журнала','Score for the gradebook','本次计入成绩册的分数'],
     journalRounding:['Балл в журнале округляется вверх до целого.','The gradebook score is rounded up to a whole point.','成绩册分数向上取整。'],
     replay:['Начать новый срок','Begin another campaign','开始新的任期'],
     replayHint:['Новая область начнёт с 2026 года.','Start a fresh region in 2026.','新区将从2026年开始。'],

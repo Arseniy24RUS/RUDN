@@ -170,7 +170,7 @@ def full_campaign(page, profile, output, campus, locale):
         page.wait_for_function("Object.keys(JSON.parse(localStorage.getItem('rudn.grades.v2')||'{}')).length === 1")
         grades = page.evaluate("student => JSON.parse(localStorage.getItem('rudn.grades.v2'))[student]", profile['studentKey'])
         assert grades['seminar-7']['points'] == journal_score
-        label = {'ru': 'Балл в журнале', 'en': 'Gradebook score', 'zh': '成绩册分数'}[locale]
+        label = {'ru': 'Балл для журнала', 'en': 'Score for the gradebook', 'zh': '本次计入成绩册的分数'}[locale]
         row = page.locator('.v3-line').filter(has_text=label)
         assert row.locator('strong').inner_text() == f'{journal_score} / 5'
         assert float(page.locator('.v3-score').evaluate('element => element.firstChild.textContent').replace(',', '.')) == score['points']
