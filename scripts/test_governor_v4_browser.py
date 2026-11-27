@@ -143,6 +143,8 @@ def full_campaign(page, profile, output, campus, locale):
             screenshot(page, output, f'checkpoint-{year}')
             page.reload()
             page.locator(READY).wait_for(state='attached', timeout=WAIT)
+            # The shared loopback fixture sets Russian on every navigation.
+            set_locale(page, locale)
             assert str(year) in page.locator('.v4-goals').first.inner_text()
             click(page, '[data-v3-action="result-next"]')
             click(page, '[data-anchor="measure.select"]')
