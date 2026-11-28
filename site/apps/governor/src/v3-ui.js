@@ -698,16 +698,6 @@
     "This save requires a newer game version.",
     "此进度需要更新版本的游戏。"
   ],
-  "system.offlinePreparing": [
-    "Загружаем офлайн-версию…",
-    "Preparing offline play…",
-    "正在准备离线游戏…"
-  ],
-  "system.offlineReady": [
-    "Игра готова к работе без сети",
-    "Game ready for offline play",
-    "游戏已可离线运行"
-  ],
   "system.requiresJs": [
     "Чтобы открыть игру, включите JavaScript.",
     "Enable JavaScript to open the game.",
@@ -1285,7 +1275,7 @@
         choice+
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
         (controller.meta?.legacyURL?'<a class="v3-link" href="'+esc(controller.meta.legacyURL)+'">'+esc(t('legacy'))+'</a>':'')+
-        '<p id="offline-status" role="status" class="v3-muted"></p></section>';
+        '</section>';
     }
     function welcomeView(step) {
       const key='welcome'+step;
@@ -2066,7 +2056,7 @@
         '<label class="v3-check"><input type="checkbox" name="still" '+(ui().motion==='still'?'checked':'')+'>'+esc(t('still'))+'</label>'+
         '<label class="v3-check"><input type="checkbox" name="large" '+(ui().largeText?'checked':'')+'>'+esc(t('large'))+'</label>'+
         '<details><summary>'+esc(t('help'))+'</summary><p>'+esc(t(modern()?'helpTextModern':'helpText'))+'</p></details>'+
-        '<p id="offline-status" role="status"></p></section>'+
+        '</section>'+
         (modern()&&state()?button(esc(t('attemptsTitle')),'attempt-history','secondary full'):'')+
         (state()&&ui().started&&!welcomeStep(ui())?button(esc(t('welcomeReplay')),'welcome-replay','secondary full'):'')+
         (controller.meta?.legacyURL?'<a class="v3-button secondary full" href="'+esc(controller.meta.legacyURL)+'">'+esc(language()==='ru'?'Открыть прежнюю партию':language()==='en'?'Open an earlier game':'打开之前的游戏')+'</a>':'')+

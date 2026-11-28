@@ -41,11 +41,11 @@ let language=G.I18n.normalize(getLocale());
 document.documentElement.lang=language==='zh'?'zh-Hans':language;
 const tr=(ru,en,zh)=>language==='zh'&&zh?zh:G.I18n.choose(language,ru,en);
 const local=value=>G.I18n.local(value,language);
-$('#platform-loading-text').textContent={ru:'Восстанавливаем профиль платформы…',en:'Restoring your course profile…',zh:'正在恢复课程账号…'}[language];
-function message(text,routine=false){
+$('#platform-loading-text').textContent={ru:'Загружаем игру…',en:'Loading the game…',zh:'正在加载游戏…'}[language];
+function message(text){
   const status=$('#platform-status');
   status.textContent=text;
-  status.classList.toggle('routine-status',routine);
+  status.hidden=!text;
 }
 const canAccess=()=>{
   if(free)return gameAccessGate('governor',backend,course)?.open!==false;
@@ -73,20 +73,19 @@ function ensureRun(state){
 }
 function runChanged(state,restoredRun){
   run=restoredRun?.submissionId&&restoredRun.campaignToken===state?.storiesRunId?structuredClone(restoredRun):createRunMetadata();run.campaignToken=state?.storiesRunId||null;reflectionFailure='';
-  try{persistRun(state);message(tr('Новая партия сохраняется в вашем профиле на этом устройстве.','A new campaign is saved to your profile on this device.'));}
+  try{persistRun(state);message('');}
   catch{message(tr('Не удалось сохранить сведения о попытке. Скачайте файл партии.','Attempt metadata could not be saved. Download a campaign save.'));}
 }
 function syncText(){
   if(latestSaveStatus?.durable===false)return tr('Не удалось сохранить партию на устройстве. Скачайте файл сохранения перед закрытием.','Could not save the campaign on this device. Download a save before closing.');
-  if(free)return tr('Свободная игра · партия сохраняется отдельно от учебных заданий.','Free play · this campaign is saved separately from course assignments.','自由游戏 · 本局进度与课程作业分别保存。');
+  if(free)return '';
   if(backend.isAdmin())return tr('Режим преподавателя · пробные результаты не отправляются в журнал.','Instructor preview · practice results are not sent to the gradebook.');
-  if(!run)return tr('Партия сохраняется на устройстве. Отчёт передаётся после завершения.','The campaign is saved on this device. The final grade and report are submitted automatically.');
+  if(!run)return '';
   const record=backend.localAttempts().find(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner);
   if(record)return readState(pendingStorageKey(record),null)
     ?tr(`Автоматическая оценка: ${record.points}/5. Отчёт сохранён на устройстве и ожидает отправки. Не очищайте данные браузера.`,`Automatic grade: ${record.points}/5. The report is saved on this device and is awaiting upload. Keep browser data intact.`)
     :tr(`Отчёт отправлен. Автоматическая оценка: ${record.points}/5; в журнале учитывается лучший результат.`,`Report submitted. Automatic grade: ${record.points}/5; the gradebook keeps your best result.`);
-  return terminal(runtime?.state())?tr('Кампания закончена. Сохраняем автоматическую оценку и отчёт.','The campaign has ended. Saving your automatic grade and report.')
-    :latestSaveStatus?.state==='saved'?tr('Партия сохранена. Можно продолжить позже.','Campaign saved. You can continue later.'):tr('Партия сохранена на устройстве. Изменения отправятся автоматически.','Campaign saved on this device. Changes will upload automatically.');
+  return '';
 }
 function refresh(){
   G.I18n.shell(document,language);
@@ -104,7 +103,7 @@ function refresh(){
   const profile=backend.getProfile();
   $('#platform-identity').textContent=backend.isAdmin()?tr('Преподаватель','Instructor'):(profile?.fullName||(free?tr('Гость','Guest','访客'):''));
   $('#platform-identity').title=backend.isAdmin()?(backend.user.displayName||backend.user.email||''):(profile?.fullName||'');
-  if(active)message(syncText(),free&&latestSaveStatus?.durable!==false);
+  if(active)message(syncText());
   if($('#platform-rubric'))renderRules();
   if($('#platform-submission')?.open){$('#platform-submission-status').textContent=syncText();renderReflectionStatus();}
 }
@@ -467,41 +466,31 @@ backend.init().then(tryStart).catch(()=>block(tr('Не удалось восст
 
 // The platform owns caching; never install a competing nested service worker.
 if('serviceWorker'in navigator){
-  let preparing=false,moduleReady=false,canPrepare=false,offlineUnavailable=false,prepareTimeout;
-  const updateOfflineStatus=()=>{
-    const element=$('#offline-status');if(!element)return;
-    const desired=moduleReady?'ready':offlineUnavailable?'available':preparing?'pending':'';
-    if(element.dataset.platformOffline===desired&&element.lang===language)return;
-    element.dataset.platformOffline=desired;
-    element.lang=language;
-    element.textContent=moduleReady
-      ?tr('Готово к работе без сети','Ready for offline use','可离线使用')
-      :offlineUnavailable?tr('Игра готова. Офлайн-копия пока недоступна.','The game is ready. The offline copy is unavailable.','游戏已就绪，暂无法离线使用。')
-      :preparing?tr('Можно играть. Готовим офлайн-копию.','Ready to play. Preparing the offline copy.','可以开始游戏，正在准备离线资源。'):'';
-  };
-  // Cached resources may be acknowledged before Auth has mounted the game UI.
-  const statusMount=new MutationObserver(()=>{if($('#offline-status'))updateOfflineStatus();});
-  statusMount.observe(document.body,{childList:true,subtree:true});
+  let preparing=false,moduleReady=false,canPrepare=false;
   const prepare=()=>{
     if(!canPrepare||preparing||moduleReady||!navigator.serviceWorker.controller)return;
-    preparing=true;offlineUnavailable=false;updateOfflineStatus();
-    clearTimeout(prepareTimeout);
-    prepareTimeout=setTimeout(()=>{if(!moduleReady){offlineUnavailable=true;updateOfflineStatus();}},18000);
+    preparing=true;
     navigator.serviceWorker.controller.postMessage({type:'PREPARE_MODULE',module:'governor',urls:[location.href,resourceURL('../../assets/course/previews/seminar_07_simulator.jpg',import.meta.url).href]});
   };
   navigator.serviceWorker.addEventListener('message',event=>{
     if(event.source!==navigator.serviceWorker.controller||event.data?.type!=='MODULE_CACHE_STATUS'||event.data.module!=='governor')return;
-    clearTimeout(prepareTimeout);
-    preparing=false;moduleReady=event.data.ready===true;offlineUnavailable=!moduleReady;updateOfflineStatus();
+    preparing=false;
+    moduleReady=event.data.ready===true;
+    if(moduleReady)document.documentElement.dataset.platformOffline='ready';
+    else delete document.documentElement.dataset.platformOffline;
   });
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{preparing=false;moduleReady=false;prepare();});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    preparing=false;
+    moduleReady=false;
+    delete document.documentElement.dataset.platformOffline;
+    prepare();
+  });
   window.addEventListener('online',prepare);
-  window.addEventListener('rudn:locale',updateOfflineStatus);
   window.addEventListener('governor:playable',()=>{
     const register=()=>{
       canPrepare=true;
       navigator.serviceWorker.register(new URL('service-worker.js',getReleaseContext()?.siteRoot||new URL('../../',import.meta.url)),{updateViaCache:'none'})
-        .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{offlineUnavailable=true;updateOfflineStatus();});
+        .then(()=>navigator.serviceWorker.ready).then(prepare).catch(()=>{});
     };
     // Give the first tap a quiet interval. A visitor who stays on the landing
     // still gets the complete verified pack without having to opt in.

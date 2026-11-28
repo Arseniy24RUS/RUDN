@@ -2,7 +2,7 @@
 (function(root){
  'use strict';
  const G=root.GovernorGame;
- let hooks,language='ru',waitingWorker=null,offlineReady=false,activated=false;
+ let hooks,language='ru',waitingWorker=null,activated=false;
  const tr=(r,e)=>globalThis.GovernorGame.I18n.choose(language,()=>(r),()=>(e));
  const $=s=>document.querySelector(s);
  function button(label,fn,cls='secondary-button'){const b=document.createElement('button');b.type='button';b.className=cls;b.textContent=label;b.onclick=fn;return b;}
@@ -28,16 +28,14 @@
  function translate(l){language=l;const strings={startSetup:['Настроить','Set up','设置'],campaignOptions:['Параметры кампании','Campaign options'],regionCaption:['Один регион. Пять территорий. Последствия каждого решения.','One region. Five districts. Every decision leaves a mark.'],startGuide:['Как играть','How to play'],gameGuide:['Справочник','Guide'],privacyNote:['Можно использовать имя персонажа. Данные остаются в этом браузере.','You can use a character name. Data stays in this browser.']};if(G.Platform?.freePlay)strings.privacyNote=['Свободная игра. Кампания сохраняется в этом браузере.','Free play. This campaign is saved in this browser.','自由游戏。进度保存在此浏览器中。'];else if(G.Platform)strings.privacyNote=['Профиль учебной платформы. Партия сохраняется на устройстве; итоговая оценка и отчёт передаются в журнал автоматически.','Your course profile. Campaigns are saved on this device; the final grade and report are submitted automatically.'];for(const [k,v]of Object.entries(strings))for(const el of document.querySelectorAll(`[data-ui="${k}"]`))el.textContent=l==='zh'&&v[2]?v[2]:G.I18n.choose(l,v[0],v[1]);
   const labels={'start-language':{ru:'Switch to English',en:G.I18n.ready()?'Switch to Chinese':'Switch to Russian',zh:'切换为俄语'}[l],'language-toggle':{ru:'Switch to English',en:G.I18n.ready()?'Switch to Chinese':'Switch to Russian',zh:'切换为俄语'}[l],'advisor-dialog':tr('Советник','Adviser'),'district-dialog':tr('Территория и проекты','District and projects'),'profile-dialog':tr('Профиль игрока','Player profile'),'section-menu':tr('Разделы игры','Game sections'),'learning-dialog':tr('Как играть','How to play'),'learning-report':tr('Учебный отчёт','Learning report')};for(const [id,label]of Object.entries(labels))$('#'+id)?.setAttribute('aria-label',label);
   for(const b of document.querySelectorAll('[data-close-dialog]'))b.setAttribute('aria-label',tr('Закрыть','Close'));
-  if($('#learning-dialog')?.open)openGuide();updateStatus();
+  if($('#learning-dialog')?.open)openGuide();
  }
- function updateStatus(){const el=$('#offline-status');if(!el)return;if(G.Platform){el.textContent=el.dataset.platformOffline==='ready'?tr('Готово к работе без сети','Ready for offline use'):tr('Автономное приложение · ресурсы загружаются','Standalone app · resources loading');return;}el.textContent=offlineReady?tr('Готово к работе без сети','Ready for offline use'):tr('Автономное приложение · ресурсы загружаются','Standalone app · resources loading');}
  function offerUpdate(worker){waitingWorker=worker;const banner=$('#release-update');banner.hidden=false;banner.replaceChildren();const text=document.createElement('p');text.textContent=tr('Доступна новая версия. Скачайте сохранение перед обновлением.','A new version is available. Download a save before updating.');banner.append(text,button(tr('Скачать сохранение','Download save'),()=>hooks.save()),button(tr('Обновить','Update'),()=>{if(!waitingWorker)return;if(!window.confirm(tr('Обновить приложение? Текущая партия останется в автосохранении. Перед обновлением рекомендуется скачать её копию.','Update the app? The campaign stays in autosave. Download a copy before updating.')))return;activated=true;waitingWorker.postMessage({type:'ACTIVATE_RELEASE'});}),button(tr('Позже','Later'),()=>{banner.hidden=true;}));}
  async function registerOffline(){
-  try{const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});if(reg.active){offlineReady=true;updateStatus();}if(reg.waiting)offerUpdate(reg.waiting);
-   reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(!worker)return;worker.addEventListener('statechange',()=>{if(worker.state==='installed'){if(navigator.serviceWorker.controller)offerUpdate(worker);else{offlineReady=true;updateStatus();}}});});
+  try{const reg=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});if(reg.waiting)offerUpdate(reg.waiting);
+   reg.addEventListener('updatefound',()=>{const worker=reg.installing;if(!worker)return;worker.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)offerUpdate(worker);});});
    navigator.serviceWorker.addEventListener('controllerchange',()=>{if(activated)location.reload();});
-   navigator.serviceWorker.ready.then(()=>{offlineReady=true;updateStatus();});
-  }catch(_){const el=$('#offline-status');if(el)el.textContent=tr('Игра работает; офлайн-копия пока недоступна','Game available; offline copy is not ready');}
+  }catch{}
  }
  function init(h){hooks=h;language=h.language();dialog('learning-dialog',tr('Как играть','How to play'));dialog('learning-report',tr('Учебный отчёт','Learning report'));dialog('section-menu',tr('Разделы игры','Game sections'));
   const help=button(tr('Как играть','How to play'),openGuide);help.id='start-guide';help.dataset.ui='startGuide';$('.start-copy').append(help);
@@ -49,7 +47,6 @@
     $('.start-card-top').after(privacy);
   }else $('#player-group').after(privacy);
   const gameHelp=button(tr('Справочник','Guide'),openGuide,'nav-button');gameHelp.dataset.ui='gameGuide';gameHelp.id='game-guide';$('.side-nav').append(gameHelp);
-  const status=document.createElement('p');status.id='offline-status';status.className='offline-status';status.setAttribute('role','status');$('#start-form').append(status);
   const notice=document.createElement('aside');notice.id='release-update';notice.hidden=true;notice.setAttribute('aria-label',tr('Обновление приложения','App update'));document.body.append(notice);
   const menu=$('#mobile-menu-button');menu.setAttribute('aria-haspopup','dialog');menu.setAttribute('aria-controls','section-menu');
   for(const d of document.querySelectorAll('.release-dialog'))d.addEventListener('click',e=>{if(e.target!==d)return;const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();});

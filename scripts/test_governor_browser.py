@@ -472,7 +472,7 @@ class Suite:
         saved = self.snapshot(page)
         page.evaluate("async()=>{await navigator.serviceWorker.ready}")
         page.wait_for_function("navigator.serviceWorker.controller!==null", timeout=30000)
-        page.wait_for_function("document.querySelector('#offline-status')?.dataset.platformOffline==='ready'", timeout=60000)
+        page.wait_for_function("document.documentElement.dataset.platformOffline==='ready'", timeout=60000)
         worker = page.evaluate("async()=>({scope:(await navigator.serviceWorker.ready).scope,script:navigator.serviceWorker.controller.scriptURL,caches:await caches.keys()})")
         assert worker["scope"] == self.server.base
         assert worker["script"] == self.server.base + "service-worker.js"
