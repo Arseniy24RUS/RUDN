@@ -89,6 +89,7 @@ jobs:
                   'scripts/test_governor_v4_browser.py',
                   'site/service-worker.js',
                   'tests/governor-v4-major-events.test.mjs',
+                  'tests/governor-v4-media.test.mjs',
               }
           outside = sorted(path for path in changed if path not in allowed and not path.startswith('site/apps/governor/'))
           if outside or not any(path.startswith('site/apps/governor/') for path in changed):

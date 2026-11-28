@@ -10,9 +10,13 @@ from test_governor_browser import LocalFixtureServer, Suite, STUDENT_A
 from test_governor_v3_browser import READY, WAIT, click, course_entry, data, fit, visible
 
 
-FULL_DRAW_KEY = '328e7201f0952c6930b02078d55470c604fe904493bbf5c3ebfe9892187b85cd'
+FULL_DRAW_KEY = '2c0b4ca99f12eef02299cc97c72c322051669a8425003eb618c58a2735f9d539'
 OPENING_FLOOD_KEY = '0df771feb1737cd3bd8857afda8e98756557b6335e53013f73b4d2d16ce4163c'
-FULL_MAJOR_EVENTS = {'LANDMARK-04': 2035, 'LANDMARK-02': 2037, 'LANDMARK-01': 2040, 'LANDMARK-03': 2043}
+FULL_MAJOR_EVENTS = {
+    'LANDMARK-05': 2028, 'LANDMARK-01': 2030, 'LANDMARK-06': 2031,
+    'LANDMARK-04': 2033, 'LANDMARK-07': 2034, 'LANDMARK-02': 2041,
+    'LANDMARK-09': 2042, 'LANDMARK-08': 2043, 'LANDMARK-03': 2045,
+}
 
 
 def setup_draw_key(context, draw_key):

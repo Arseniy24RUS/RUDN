@@ -84,9 +84,10 @@ test('all 18 placeable facilities show their delivery stages and a distinct open
 
 test('all situations display narrative art before the player chooses a response', async () => {
   assert.equal(eventBank.cards.length, 100);
-  assert.equal(G.V4MajorEvents.cards.length,4);
+  assert.equal(G.V4MajorEvents.cards.length, 9);
   const images = new Set();
   const motion = new Set();
+  const majorMotion = new Set();
   for (const event of [...eventBank.cards,...G.V4MajorEvents.cards]) {
     const art = G.V4EventMedia.get(event);
     assert.ok(art?.poster && !art.emblem, event.id);
@@ -95,8 +96,10 @@ test('all situations display narrative art before the player chooses a response'
     const clip=art.gif||(art.motion==='river'?'assets/v4/motion/river-flow.gif':
       art.poster.endsWith('/school-street.webp')?'assets/v4/motion/school-breeze.gif':null);
     assert.ok(clip,event.id);
+    if (G.V4MajorEvents.has(event.id)) majorMotion.add(clip);
     motion.add(clip);
   }
+  assert.equal(majorMotion.size, G.V4MajorEvents.cards.length);
   await Promise.all([...images].map(still));
   await Promise.all([...motion].map(nativeLoop));
 });

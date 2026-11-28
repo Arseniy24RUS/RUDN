@@ -30,7 +30,8 @@ function setup(crypto = webcrypto) {
 const game = setup();
 const {V3Events:events,V4MajorEvents:major,V3Rules:rules} = game;
 const snapshot = {revision:0,tags:events.baselineTags};
-const ids = ['LANDMARK-01','LANDMARK-02','LANDMARK-03','LANDMARK-04'];
+const legacyIds = ['LANDMARK-01','LANDMARK-02','LANDMARK-03','LANDMARK-04'];
+const ids = [...legacyIds,'LANDMARK-05','LANDMARK-06','LANDMARK-07','LANDMARK-08','LANDMARK-09'];
 
 async function drawCampaign(drawKey, eventPolicy, eventSnapshot = snapshot) {
   const ledger = [];
@@ -46,12 +47,14 @@ async function drawCampaign(drawKey, eventPolicy, eventSnapshot = snapshot) {
 test('the archived schedule still draws exactly one distinct signature situation per five-year term',async()=>{
   assert.equal(events.bank.cards.length,100);
   assert.equal(events.candidates(events.baselineTags).length,100);
+  assert.deepEqual(Array.from(major.legacyCards,row=>row.id),legacyIds);
+  assert.ok(Object.isFrozen(major.legacyCards));
   const orderings = new Set(),dates = new Set();
   for (let i=0;i<24;i++) {
     const ledger = await drawCampaign(key(i),major.LEGACY_POLICY);
     const landmarks = ledger.filter(row=>major.has(row.eventId));
     assert.equal(landmarks.length,4);
-    assert.deepEqual(landmarks.map(row=>row.eventId).sort(),ids);
+    assert.deepEqual(landmarks.map(row=>row.eventId).sort(),legacyIds);
     assert.ok(landmarks[0].year>=2028 && landmarks[0].year<=2030);
     landmarks.slice(1).forEach((row,i) => {
       const termStart = firstYear+(i+1)*5;
@@ -65,7 +68,8 @@ test('the archived schedule still draws exactly one distinct signature situation
   assert.ok(orderings.size>6 && dates.size>6);
 });
 
-test('new terms draw rare situations from the first year, allow several in one term, and can omit them all',async()=>{
+test('new terms can draw any of the nine rare situations in the opening year, several in one term, or none',async()=>{
+  assert.deepEqual(Array.from(events.candidates(events.baselineTags,new Set(),major.cards)),ids);
   const frequencies = Array(20).fill(0);
   const campaignCounts = new Set(), firstYearEvents = new Set();
   const landmarksIn = ledger => ledger.filter(row=>major.has(row.eventId));
@@ -78,13 +82,14 @@ test('new terms draw rare situations from the first year, allow several in one t
     assert.equal(new Set(ledger.map(row=>row.eventId)).size,20);
     assert.ok(ledger.every(row=>row.eventPolicy===major.POLICY));
   }
-  assert.deepEqual([...campaignCounts].sort(),[0,1,2,3,4]);
+  assert.deepEqual([...campaignCounts].sort(),[0,1,2,3,4,5,6,7,8,9]);
   assert.deepEqual([...firstYearEvents].sort(),ids);
   assert.ok(frequencies.every(count=>count>0));
   assert.equal(frequencies[0],24,'The fixed sample includes 24 rare opening rolls in 128 attempts');
-  const clustered = landmarksIn(await drawCampaign(key(28),major.POLICY));
+  const clustered = landmarksIn(await drawCampaign(key(70),major.POLICY));
   assert.deepEqual(clustered.map(row=>[row.year,row.eventId]),[
-    [2026,'LANDMARK-03'],[2027,'LANDMARK-01'],[2028,'LANDMARK-02'],[2030,'LANDMARK-04']
+    [2028,'LANDMARK-05'],[2030,'LANDMARK-01'],[2031,'LANDMARK-06'],[2033,'LANDMARK-04'],[2034,'LANDMARK-07'],
+    [2041,'LANDMARK-02'],[2042,'LANDMARK-09'],[2043,'LANDMARK-08'],[2045,'LANDMARK-03']
   ]);
   assert.deepEqual(landmarksIn(await drawCampaign(key(56),major.POLICY)),[]);
 });
@@ -128,6 +133,11 @@ test('older saves retain the original draw, and policy receipts prevent accident
   await assert.rejects(events.open({attemptId,year:firstYear,drawKey:key(3),snapshot,eventPolicy:'unknown'}),/event-policy-unavailable/);
   assert.throws(()=>events.card({...landmark,eventPolicy:undefined}),/invalid-major-event-record/);
   assert.throws(()=>events.card({...landmark,eventPolicy:'unknown'}),/event-policy-unavailable/);
+  const newLandmark = await events.open({attemptId,year:firstYear,drawKey:key(109),snapshot,eventPolicy:major.POLICY});
+  assert.equal(newLandmark.eventId,'LANDMARK-05');
+  assert.throws(()=>events.card({...newLandmark,eventPolicy:major.LEGACY_POLICY}),/invalid-major-event-record/);
+  await assert.rejects(events.verify({...newLandmark,eventPolicy:major.LEGACY_POLICY},{snapshot,drawKey:key(109),ledger:[]}),
+    /invalid-major-event-record/);
   const restricted = plain(snapshot);
   delete restricted.tags.river;
   for (const policy of [major.POLICY,major.LEGACY_POLICY]) {
@@ -135,7 +145,7 @@ test('older saves retain the original draw, and policy receipts prevent accident
   }
 });
 
-test('four genuine options sets are readable in Russian, English and Chinese',()=>{
+test('nine distinct options sets are readable in Russian, English and Chinese',()=>{
   for (const id of ids) {
     const translated = ['ru','en-GB','zh-CN'].map(locale=>events.eventCard(id,locale));
     assert.equal(new Set(translated.map(card=>card.title)).size,3,id);
@@ -157,8 +167,8 @@ function calculate(record, choice, context = {}) {
 }
 
 test('the ledger counts mandatory costs once, models actual coverage, and credits the dam grant only at settlement',async()=>{
-  const ledger = await drawCampaign(key(28),major.POLICY);
-  const [meteor,dam,visit,games] = ids.map(id=>ledger.find(row=>row.eventId===id));
+  const ledger = await drawCampaign(key(70),major.POLICY);
+  const [meteor,dam,visit,games] = legacyIds.map(id=>ledger.find(row=>row.eventId===id));
   for (const [record, a, b, base, coverage, authority] of [
     [meteor,1300,490,180,[950,420,140],'suburb'],
     [dam,2090,795,420,[1240,640,180],'river'],
@@ -183,8 +193,29 @@ test('the ledger counts mandatory costs once, models actual coverage, and credit
   assert.equal(calculate(dam,'a',{year:dam.year+1,settledSpend}).currentReceiptMln,0);
 });
 
+test('each new landmark supports the full, targeted and baseline responses in the opening year',async()=>{
+  for (const [seed,id,expenses] of [
+    [109,'LANDMARK-05',[840,235,0]],[31,'LANDMARK-06',[1420,440,0]],[30,'LANDMARK-07',[660,370,120]],
+    [7,'LANDMARK-08',[1160,605,210]],[104,'LANDMARK-09',[355,150,45]]
+  ]) {
+    const record = await events.open({attemptId,year:firstYear,drawKey:key(seed),snapshot,eventPolicy:major.POLICY});
+    assert.equal(record.eventId,id);
+    const plans = ['a','b','base'].map(choice=>calculate(record,choice));
+    assert.deepEqual(plans.map(plan=>plan.currentExpenseMln),expenses);
+    assert.ok(plans[0].outcomes[0].actualUnits>plans[1].outcomes[0].actualUnits && plans[1].outcomes[0].actualUnits>0,id);
+    assert.equal(plans[2].outcomes[0].actualUnits,0,id);
+    for (const [index,choice] of ['a','b','base'].entries()) {
+      const initial = rules.create({attemptId,schoolMap:map,rulesVersion:rules.V4_RULES_VERSION});
+      const state = {...initial,event:record,draft:{...initial.draft,eventChoice:choice}};
+      const preview = rules.quote(state,{eventPlan:plans[index]});
+      assert.ok(preview.ok,JSON.stringify(preview.errors));
+      assert.ok(preview.finance.cashEnd>0);
+    }
+  }
+});
+
 test('a late bid provides current-year benefits and exposes obligations to the succeeding administration',async()=>{
-  const bid = (await drawCampaign(key(52),major.POLICY)).at(-1);
+  const bid = (await drawCampaign(key(19),major.POLICY)).at(-1);
   assert.equal(bid.eventId,'LANDMARK-04');
   const eventPlan = calculate(bid,'a');
   assert.equal(eventPlan.outcomes[0].actualUnits,24000);
@@ -224,7 +255,7 @@ function closeCampaign(ledger, choice, openingDraft = {}) {
 }
 
 test('whole 20-year V4 ledgers close with conservative, targeted, or full responses and expose the actual road impact',async()=>{
-  const ledger = await drawCampaign(key(28),major.POLICY);
+  const ledger = await drawCampaign(key(70),major.POLICY);
   const meteor = ledger.find(row=>row.eventId==='LANDMARK-01');
   const histories = Object.fromEntries(['base','b','a'].map(choice=>[choice,closeCampaign(ledger,choice)]));
   const result = (choice,year) => histories[choice].find(row=>row.year===year);
@@ -239,7 +270,7 @@ test('whole 20-year V4 ledgers close with conservative, targeted, or full respon
 });
 
 test('the opening budget can fund a portfolio and withstand the two costliest landmark events in consecutive years',async()=>{
-  const ledger = await drawCampaign(key(589),major.POLICY);
+  const ledger = await drawCampaign(key(169),major.POLICY);
   assert.deepEqual(ledger.slice(0,2).map(row=>row.eventId),['LANDMARK-02','LANDMARK-04']);
   const draft = {measures:[{measureId:'school-campus',siteId:'bridge'}],taxRate:104,investment:{principal:1000,termYears:3}};
   const history = closeCampaign(ledger,'a',draft);

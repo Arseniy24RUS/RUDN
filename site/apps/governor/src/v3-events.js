@@ -53,7 +53,11 @@
     invariant(record.contentVersion === contentVersion, 'event-bank-unavailable');
     invariant(record.algorithmVersion === algorithmVersion, 'event-algorithm-unavailable');
     invariant(validPolicy(record.eventPolicy), 'event-policy-unavailable');
-    invariant(!major?.has(entry.id) || record.eventPolicy !== undefined, 'invalid-major-event-record');
+    if (major?.has(entry.id)) {
+      invariant(record.eventPolicy === major.POLICY ||
+        record.eventPolicy === major.LEGACY_POLICY && major.legacyCards.some(card => card.id === entry.id),
+        'invalid-major-event-record');
+    }
     invariant(validHash(record.candidateHash) && validRevision(record.snapshotRevision), 'invalid-event-receipt');
     const circumstance = record.circumstance;
     const authored = entry.circumstance;
@@ -202,7 +206,7 @@
       const featured = candidates(snapshot.tags,used,major.cards);
       if (featured.length && (!ids.length || await rolledMajor(year,drawKey))) ids = featured;
     } else if (policy && await isScheduledMajorYear(year,drawKey)) {
-      const featured = candidates(snapshot.tags,used,major.cards);
+      const featured = candidates(snapshot.tags,used,major.legacyCards);
       if (featured.length) ids = featured;
     }
     invariant(ids.length > 0, 'no-applicable-events');
