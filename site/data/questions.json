@@ -1499,7 +1499,7 @@
       {
         "id": "eb5bced4-50f1-5e8b-9809-ef1d5b32d2de",
         "text": "Только для персональных данных государственных служащих",
-        "fraction": 1.0,
+        "fraction": 0.0,
         "feedback": "",
         "text_en": "Only the personal data of public servants",
         "text_zh": "仅限国家公务员的个人数据"
@@ -1507,7 +1507,7 @@
       {
         "id": "8911294a-4a52-562a-bee4-4221f4df9b54",
         "text": "Для обезличенных данных, общедоступных данных и данных в архивах, переданных для публичного использования при снятии ограничений",
-        "fraction": 0.0,
+        "fraction": 1.0,
         "feedback": "",
         "text_en": "Anonymised data, publicly available data and archival data released for public use after restrictions have been lifted",
         "text_zh": "匿名化数据、公开数据以及在解除限制后向公众开放使用的档案数据"

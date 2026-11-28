@@ -28,7 +28,7 @@ concurrency:
 jobs:
   preserve-legacy-baseline:
     # The owner-requested express career release has its own scoped publisher.
-    if: ${{ !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]')) }}
+    if: ${{ !(github.event_name == 'push' && github.event.before == '9993b1e3c86ad60ac05c7359ba58711053924df2' && startsWith(github.event.head_commit.message, '[lecture6-q5-publish] ')) && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -62,15 +62,15 @@ jobs:
           compression-level: 0
 
   platform-checks:
-    if: ${{ !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || (github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942'))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
+    if: ${{ !(github.event_name == 'push' && github.event.before == '9993b1e3c86ad60ac05c7359ba58711053924df2' && startsWith(github.event.head_commit.message, '[lecture6-q5-publish] ')) && !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || (github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942'))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
     uses: ./.github/workflows/platform-checks.yml
 
   legal-lab:
-    if: ${{ !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || (github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942'))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
+    if: ${{ !(github.event_name == 'push' && github.event.before == '9993b1e3c86ad60ac05c7359ba58711053924df2' && startsWith(github.event.head_commit.message, '[lecture6-q5-publish] ')) && !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || (github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942'))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!contains(github.event.head_commit.message, '[career-seminar-express]') && !contains(github.event.head_commit.message, '[career-verified-publish]') && !(contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]'))) }}
     uses: ./.github/workflows/legal-lab-checks.yml
 
   puzzle-checks:
-    if: ${{ !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || (github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942'))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!(contains(github.event.head_commit.message, '[career-seminar-express]') || (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) || contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))) }}
+    if: ${{ !(github.event_name == 'push' && github.event.before == '9993b1e3c86ad60ac05c7359ba58711053924df2' && startsWith(github.event.head_commit.message, '[lecture6-q5-publish] ')) && !((github.event_name == 'push' && startsWith(github.event.head_commit.message, '[governor-v3-publish] ')) || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || (github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942'))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] '))) && !contains(github.event.head_commit.message, '[course-result-recovery]') && !contains(github.event.head_commit.message, '[storage-cleanup]') && (!(contains(github.event.head_commit.message, '[career-seminar-express]') || (contains(github.event.head_commit.message, '[reception-legal-reader]') || contains(github.event.head_commit.message, '[reception-ai-release]')) || contains(github.event.head_commit.message, '[career-verified-publish]') || contains(github.event.head_commit.message, '[games-access-only]') || contains(github.event.head_commit.message, '[quiz-layout-only]') || contains(github.event.head_commit.message, '[puzzle-no-mistakes-only]') || contains(github.event.head_commit.message, '[settlements-ui-only]') || contains(github.event.head_commit.message, '[firebase-transport-only]') || contains(github.event.head_commit.message, '[settlements-grade-hotfix]') || contains(github.event.head_commit.message, '[settlements-network]') || contains(github.event.head_commit.message, '[settlements-road-routes]') || contains(github.event.head_commit.message, '[settlements-towers]') || contains(github.event.head_commit.message, '[settlements-boundaries]') || contains(github.event.head_commit.message, '[settlements-tower-batch]') || contains(github.event.head_commit.message, '[settlements-runtime-cache]') || contains(github.event.head_commit.message, '[settlements-route-limits]'))) }}
     uses: ./.github/workflows/puzzle-checks.yml
     with:
       coverage: full
@@ -1214,9 +1214,48 @@ jobs:
           name: github-pages-${{ steps.release_archive.outputs.build_id }}
           path: ${{ runner.temp }}/platform-staging
 
+  lecture6-question5:
+    if: ${{ (github.event_name == 'push' && github.event.before == '9993b1e3c86ad60ac05c7359ba58711053924df2' && startsWith(github.event.head_commit.message, '[lecture6-q5-publish] ')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      build_id: ${{ steps.release_archive.outputs.build_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Prepare the existing build dependencies
+        run: |
+          npm ci --ignore-scripts
+          npm run build:firebase
+          npm run build:career
+      - name: Carry forward the published calendar and vacancies
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          node scripts/download-release-baseline.mjs --out "${{ runner.temp }}/platform-baseline" --repo "${{ github.repository }}" --seed-calendar site/assets/data/calendars/current.json
+          node scripts/verify-career-express-release.mjs --seed-vacancies --baseline "${{ runner.temp }}/platform-baseline"
+      - name: Build and package the answer-key correction
+        id: release_archive
+        run: |
+          node --input-type=module -e 'import {buildRelease} from "./scripts/build-platform-release.mjs"; await buildRelease({site:"site",baseline:process.argv[1],out:process.argv[2],verify:false});' "${{ runner.temp }}/platform-baseline" "${{ runner.temp }}/platform-staging"
+          node scripts/archive-platform-release.mjs --site "${{ runner.temp }}/platform-staging" --out "${{ runner.temp }}/platform-release-archive"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: platform-release-${{ steps.release_archive.outputs.build_id }}
+          path: ${{ runner.temp }}/platform-release-archive
+          retention-days: 90
+          compression-level: 0
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages-${{ steps.release_archive.outputs.build_id }}
+          path: ${{ runner.temp }}/platform-staging
+
   publish-pages:
-    needs: deploy
-    if: ${{ !cancelled() && needs.deploy.result == 'success' && (github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false)) }}
+    needs: [deploy, lecture6-question5]
+    if: ${{ !cancelled() && (needs.deploy.result == 'success' || needs.lecture6-question5.result == 'success') && (github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.verification_only == false)) }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -1227,11 +1266,11 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          artifact_name: github-pages-${{ needs.deploy.outputs.build_id }}
+          artifact_name: github-pages-${{ needs.lecture6-question5.outputs.build_id || needs.deploy.outputs.build_id }}
 
   retain-successful-release:
-    needs: [deploy, publish-pages]
-    if: ${{ !cancelled() && needs.deploy.result == 'success' && needs.publish-pages.result == 'success' }}
+    needs: [deploy, lecture6-question5, publish-pages]
+    if: ${{ !cancelled() && (needs.deploy.result == 'success' || needs.lecture6-question5.result == 'success') && needs.publish-pages.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -1241,13 +1280,13 @@ jobs:
       - name: Download only the successfully deployed exact archive
         uses: actions/download-artifact@v4
         with:
-          name: platform-release-${{ needs.deploy.outputs.build_id }}
+          name: platform-release-${{ needs.lecture6-question5.outputs.build_id || needs.deploy.outputs.build_id }}
           path: release-archive
       - name: Verify and retain the immutable GitHub Release archive
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          BUILD_ID: ${{ needs.deploy.outputs.build_id }}
+          BUILD_ID: ${{ needs.lecture6-question5.outputs.build_id || needs.deploy.outputs.build_id }}
           TARGET_SHA: ${{ github.sha }}
         shell: bash
         run: |
