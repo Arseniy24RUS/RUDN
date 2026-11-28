@@ -5,12 +5,12 @@ import vm from 'node:vm';
 
 const source=await fs.readFile(new URL('../site/assets/js/main.js',import.meta.url),'utf8');
 const numberAndTable=source.slice(source.indexOf('function governorNumber('),source.indexOf('function governorReportText('));
-const strategyAndCards=source.slice(source.indexOf('function governorStrategyDetails('),source.indexOf('async function renderSeminar7('));
+const strategyAndCards=source.slice(source.indexOf('function governorAssessmentDetails('),source.indexOf('async function renderSeminar7('));
 const escape=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 function renderer(locale){
   const sandbox=vm.createContext({Intl,getLocale:()=>locale,esc:escape,governorCopy:()=>({noRows:'—',score:'Score',submitted:'Saved',details:'Report'}),
-    governorAssessmentDetails:()=>'',governorReportText:value=>typeof value==='string'?value:value?.[locale]??'',governorSaveLabel:()=>'',formatDate:()=>''});
-  vm.runInContext(`${numberAndTable}\n${strategyAndCards}\nglobalThis.api={details:governorStrategyDetails,cards:governorReportCards};`,sandbox);
+    governorReportText:value=>typeof value==='string'?value:value?.[locale]??'',governorSaveLabel:()=>'',formatDate:()=>''});
+  vm.runInContext(`${numberAndTable}\n${strategyAndCards}\nglobalThis.api={details:governorStrategyDetails,cards:governorReportCards,assessment:governorAssessmentDetails};`,sandbox);
   return sandbox.api;
 }
 function strategy(courseId='services',keys=['healthFloor','suburbSchool']){
@@ -65,4 +65,15 @@ test('teacher report shows the actual event response, district, funding lines an
   assert.match(html,/692 households with access restored · Households kept access 608/);
   const prior={...attempt,governor:{...attempt.governor,decisionRegister:[{year:2026,mission:'Dam breach'}]}};
   assert.doesNotMatch(renderer('en').cards([prior],{teacher:true}),/Responses to annual situations/);
+});
+
+test('teacher assessment lists settled public and scoring support alongside the observed calendar',()=>{
+  const report={assessment:{version:'governor-balance-v2',points:4.23,majorEvents:6},
+    chapterResults:[{chapter:{labels:{en:'Restore access'}},supportAverage:64.8,structuralSupportAverage:59.2}]};
+  const html=renderer('en').assessment(report);
+  assert.match(html,/Major events in the campaign · 6/);
+  assert.match(html,/Average public support/);
+  assert.match(html,/Lasting support used for scoring/);
+  assert.match(html,/Restore access<\/th><td[^>]*>64\.8<\/td><td[^>]*>59\.2/);
+  assert.doesNotMatch(renderer('en').assessment({assessment:{version:'governor-balance-v1'}}),/Major events in the campaign/);
 });

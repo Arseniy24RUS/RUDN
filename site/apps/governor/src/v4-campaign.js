@@ -5,9 +5,10 @@
   const L=(ru,en,zh)=>({ru,en,zh});
   const FIRST_YEAR=2026;
   const YEARS_PER_TERM=5;
-  const VERSION='governor-balance-v1';
-  const FULL_GRADE=Object.freeze({targets:4,accessGains:2,accessPoints:5,promiseShare:.75,debtShare:.40});
+  const VERSION='governor-balance-v2';
+  const FULL_GRADE=Object.freeze({targets:4,accessGains:2,accessPoints:5,serviceYears:3,promiseShare:.75,debtShare:.40});
   const {phases,sites}=G.V4Catalog;
+  const measuredSchoolMeasures=new Set(['school-campus','second-shift','school-bus']);
   const measures=new Map(phases.flat().map(row=>[row.id,row]));
   const locations=new Map(sites.map(row=>[row.id,row]));
   const sum=values=>values.reduce((total,value)=>total+value,0);
@@ -24,7 +25,7 @@
 
   const METRICS=[
     metric('trust',L('Доверие к власти','Trust in government','对政府的信任'),'points',0,100,1.2,
-      L('Меняется по итогам работы служб, выполнения программ и решения ситуаций.','Reflects how services, programmes and event responses work.','反映公共服务、项目和事件应对的效果。')),
+      L('Учитывает устойчивые изменения в услугах, программах и налоговой политике.','Tracks lasting changes in services, programmes and tax policy.','反映公共服务、项目和税收政策的持续变化。')),
     metric('population',L('Численность населения','Population','人口'),'index',70,135,1.1,
       L('Число жителей по демографической модели. На старте индекс равен 100.','Resident count from the population model. The starting index is 100.','依据人口模型统计居民人数。起始指数为100。')),
     metric('tfr',L('Суммарный коэффициент рождаемости','Total fertility rate','总和生育率'),'children',.6,3,1.1,
@@ -36,7 +37,7 @@
     metric('sport',L('Удовлетворённость спортом','Satisfaction with sport','体育服务满意度'),'points',0,100,.8,
       L('Растёт, когда программы расширяют доступ к занятиям и улучшают повседневные маршруты.','Rises as programmes widen participation and improve everyday access.','项目扩大体育参与机会、改善日常通达性时上升。')),
     metric('education',L('Образование и кадры','Education and skills','教育和技能'),'points',0,100,1,
-      L('Учитывает доступ к обучению, подготовку преподавателей и развитие навыков.','Combines access to learning with teacher training and skills programmes.','综合衡量教育可及性、师资培训和技能发展。')),
+      L('Учитывает доступ к обучению, время школьных поездок, подготовку преподавателей и развитие навыков.','Tracks access to learning, school journeys, teacher training and skills programmes.','综合衡量教育可及性、上学用时、师资培训和技能发展。')),
     metric('income',L('Реальные доходы населения','Real household income','居民实际收入'),'index',65,155,1.1,
       L('Условный индекс дохода с поправкой на занятость, навыки, помощь и налоговую нагрузку.','A simulated income index responding to employment, skills, support and tax burden.','模拟收入指数，受就业、技能、援助和税负影响。')),
     metric('investment',L('Инвестиционная активность','Investment activity','投资活跃度'),'index',65,164,.9,
@@ -116,26 +117,6 @@
       .06*row.employment+.16*row.familySupport),row=>row.women1549);
   }
 
-  // A period life table uses the same base risks as the population model. Temporary
-  // flood casualty counts are real population losses, separate from baseline risk.
-  function lifespan(row,shock) {
-    const epidemic=shock?.districtId===row.id&&shock.key==='health'?
-      Math.min(10,shock.gap||0)*.045*(1-row.emergencyMortality):0;
-    const mortality=(1+(1-row.healthAccess)*.38)*(1+epidemic);
-    function expected(sex) {
-      let survivors=1,years=0;
-      for (let age=0;age<100;age++) {
-        const risk=clamp(G.Population.qx(age,sex)*mortality*(age>=65?1-row.elderCare*.08:1),0,.95);
-        const remaining=survivors*(1-risk);
-        years+=(survivors+remaining)/2;
-        survivors=remaining;
-      }
-      const tailRisk=G.Population.qx(100,sex)*mortality*(1-row.elderCare*.08);
-      return years+survivors/Math.max(.01,tailRisk);
-    }
-    return (100*expected('female')+105*expected('male'))/205;
-  }
-
   function normalise(values) {
     return Object.fromEntries(METRICS.map(({id,min,max})=>[id,round(clamp(values[id],min,max))]));
   }
@@ -143,7 +124,7 @@
   function initial(state) {
     const rows=observed(state);
     return normalise({...INITIAL,population:100,tfr:rows.length?fertility(state,rows):1.44,
-      life:rows.length?averageBy(rows,row=>lifespan(row),row=>row.population):76});
+      life:rows.length?G.Population.lifeExpectancy(state.population):76});
   }
 
   function serviceDelta(prev,next,key) {
@@ -160,6 +141,7 @@
       if (G.V3Rules.projectPhase(project,year)!=='open') continue;
       const entries=project.kpiEffects??measures.get(project.measureId)?.kpiEffects??{};
       for (const [id,coefficient] of Object.entries(entries)) {
+        if (id==='education'&&measuredSchoolMeasures.has(project.measureId)) continue;
         const amount=coefficient*(project.outputFactor??1);
         if (amount>=0) effects[id].positive+=amount;
         else effects[id].negative-=amount;
@@ -189,6 +171,22 @@
     return effects;
   }
 
+  function schoolJourneyImprovement(before,after) {
+    if(!before?.travel||!after?.travel) return 0;
+    let pupils=0,minutesSaved=0;
+    for(const [id,previouslyServed] of Object.entries(before.allServedByZone)){
+      const servedNow=after.allServedByZone[id]??0;
+      const comparable=Math.min(previouslyServed,servedNow);
+      if(comparable<=0) continue;
+      const previousMinutes=before.travel.pupilMinutesByZone[id]/previouslyServed;
+      const currentMinutes=after.travel.pupilMinutesByZone[id]/servedNow;
+      if(!Number.isFinite(previousMinutes)||!Number.isFinite(currentMinutes)) continue;
+      minutesSaved+=comparable*(previousMinutes-currentMinutes);
+      pupils+=comparable;
+    }
+    return pupils?minutesSaved/pupils:0;
+  }
+
   function advance(prev,next,{taxIndex=100,eventPlan=null}={}) {
     const before=prev.campaignKpis??initial(prev);
     const rows=observed(next),earlierRows=observed(prev);
@@ -205,20 +203,19 @@
         averageBy(earlierRows,row=>row.mobility,row=>row.population))
     };
     const realPopulation=next.population.derived.population;
-    const localFeedback=sum(Object.entries(eventPlan?.supportByDistrict??{}).map(([id,value])=>
-      value/100*(next.stats.districts[id]?.population??0)/Math.max(1,realPopulation)));
+    const schoolTravel=schoolJourneyImprovement(prev.stats.school,next.stats.school);
     const yearStep=(id,extra=0,drift=.022,coefficient=1)=>
       before[id]+(INITIAL[id]-before[id])*drift+effects[id]*coefficient+extra;
     // Economic series are synthetic indices. Public fund redemptions go to the
     // fiscal ledger and do not count as productive investment a second time.
     return normalise({
-      trust:yearStep('trust',.17*changes.health+.14*changes.school+.1*changes.digital+localFeedback*.35-.23*tax,.03,.66),
+      trust:yearStep('trust',.17*changes.health+.14*changes.school+.1*changes.digital-.23*tax,.03,.66),
       population:100*realPopulation/next.population.initial.population,
       tfr:fertility(next,rows),
-      life:averageBy(rows,row=>lifespan(row,next.population.lastYear?.shock),row=>row.population)+effects.life*.20+(eventEffects.life??0),
+      life:G.Population.lifeExpectancy(next.population),
       poverty:yearStep('poverty',-.16*changes.jobs+.19*tax-.11*effects.income,.075,.65),
       sport:yearStep('sport',.27*changes.mobility+.07*changes.health+(eventEffects.sport??0)),
-      education:yearStep('education',.20*changes.school+.10*changes.digital+(eventEffects.education??0),.04,.78),
+      education:yearStep('education',.20*changes.school+.10*changes.digital+.35*schoolTravel+(eventEffects.education??0),.04,.78),
       income:yearStep('income',.39*changes.jobs+.085*changes.school-.35*tax),
       investment:yearStep('investment',.19*changes.jobs+.12*changes.digital-.37*tax),
       sme_income:yearStep('sme_income',.24*changes.jobs+.15*changes.mobility+.10*changes.digital-.35*tax+(eventEffects.sme_income??0)),
@@ -257,9 +254,15 @@
     const achieved=entries.some(entry=>entry.progress!=null);
     const kpi=achieved?averageBy(entries.filter(entry=>entry.progress!=null),entry=>entry.progress/100,entry=>entry.weight):0;
     const supportAverage=rows.length?sum(rows.map(row=>row.stats.support))/rows.length:null;
+    const restored=rows.some(row=>!Number.isFinite(row.stats.structuralSupport))?
+      new Map((G.V3Rules.structuralHistory?.(state)??[]).map(row=>[row.year,row.support])):new Map();
+    const structuralSupport=rows.length?
+      sum(rows.map(row=>row.stats.structuralSupport??restored.get(row.year)??row.stats.support))/rows.length:null;
     const startingSupport=state.initialStats?.support??58;
-    const satisfaction=supportAverage==null?0:achievement(supportAverage,startingSupport,term.satisfactionTarget);
-    return {chapter:term,entries,kpi:round(kpi*100),satisfaction:round(satisfaction*100),supportAverage:supportAverage==null?null:round(supportAverage),
+    const satisfaction=structuralSupport==null?0:achievement(structuralSupport,startingSupport,term.satisfactionTarget);
+    return {chapter:term,entries,kpi:round(kpi*100),satisfaction:round(satisfaction*100),
+      supportAverage:supportAverage==null?null:round(supportAverage),
+      structuralSupportAverage:structuralSupport==null?null:round(structuralSupport),
       winning:kpi>=satisfaction?'kpi':'satisfaction',closed:rows.length===YEARS_PER_TERM,yearsClosed:rows.length};
   }
 
@@ -270,20 +273,29 @@
     return new Set([...projects.map(project=>'project:'+project.id),...events.map(event=>'event:'+event.eventId)]);
   }
 
-  function accessGains(row) {
-    const services=['school','health','flood','digital'];
-    return Object.entries(row?.stats?.districts??{}).flatMap(([district,data])=>services.filter(id=>
-      Number.isFinite(data.kpis?.[id]?.value)&&Number.isFinite(row.reference?.districts?.[district]?.kpis?.[id]?.value)&&
-      data.kpis[id].value-row.reference.districts[district].kpis[id].value>=FULL_GRADE.accessPoints
-    ).map(id=>district+':'+id));
+  function accessImprovement(row) {
+    const services=['school','health','childcare','housing','employment','digital','flood'];
+    const changes=new Map();
+    for(const [district,data] of Object.entries(row?.stats?.districts??{})){
+      for(const service of services){
+        const actual=data.kpis?.[service]?.value;
+        const reference=row.reference?.districts?.[district]?.kpis?.[service]?.value;
+        if(Number.isFinite(actual)&&Number.isFinite(reference)) changes.set(district+':'+service,actual-reference);
+      }
+    }
+    return changes;
   }
 
   function fullGradeConditions(state,lastTerm) {
-    const last=state.history.at(-1), previous=state.history.at(-2);
-    const precedingServices=sustainedServices(previous);
-    const precedingAccess=new Set(accessGains(previous));
-    const maintained=[...sustainedServices(last)].filter(id=>precedingServices.has(id)).length;
-    const gained=accessGains(last).filter(id=>precedingAccess.has(id)).length;
+    const last=state.history.at(-1);
+    const window=state.history.slice(-YEARS_PER_TERM);
+    const annualServices=window.map(sustainedServices);
+    const maintained=[...sustainedServices(last)].filter(id=>
+      annualServices.filter(active=>active.has(id)).length>=FULL_GRADE.serviceYears).length;
+    const annualAccess=window.map(accessImprovement);
+    const finalAccess=annualAccess.at(-1)??new Map();
+    const gained=[...finalAccess].filter(([id,change])=>change>=FULL_GRADE.accessPoints&&
+      sum(annualAccess.map(year=>year.get(id)??0))/YEARS_PER_TERM>=FULL_GRADE.accessPoints).length;
     const targets=lastTerm.entries.filter(row=>row.id!=='trust'&&row.met).length;
     const due=(state.promises??[]).filter(row=>row.dueYear<=last?.year);
     const kept=due.filter(row=>row.status==='kept').length;
@@ -320,7 +332,8 @@
     const order=scaled.map((_,index)=>index).sort((a,b)=>(scaled[b]-cents[b])-(scaled[a]-cents[a])||a-b);
     const remaining=total-sum(cents);
     for (let i=0;i<remaining;i++) cents[order[i]]++;
-    return {version:VERSION,points:total/100,maxPoints:5,completionRatio,winning,
+    const majorEvents=state.history.filter(row=>G.V4MajorEvents?.has(row.event?.eventId)).length;
+    return {version:VERSION,points:total/100,maxPoints:5,completionRatio,winning,majorEvents,
       ...(qualification?{qualification,rawPoints:round(rawTotal/100)}:{}),
       paths:{kpi:round(paths.kpi),satisfaction:round(paths.satisfaction)},handoverCapApplied:false,
       criteria:results.map((row,index)=>{

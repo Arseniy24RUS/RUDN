@@ -768,8 +768,14 @@
     noBuilding:['Новых объектов пока нет','No new facilities yet','暂无新设施'],
     min:['мин','min','分钟'], served:['Ученики в пределах допустимого времени в пути','Pupils within the travel-time limit','通勤时间达标的学生'],
     schoolTrip:['Среднее время дороги в одну сторону','Average one-way travel time','平均单程时间'],
+    schoolLeastCoverage:['Охват в квартале с наименьшим доступом','Coverage in the least-served neighbourhood','各片区最低覆盖率'],
+    schoolBusAllocation:['Свободные места делятся между кварталами пропорционально числу учеников без доступного места.','Places are shared among neighbourhoods in proportion to how many pupils lack an accessible place.','空余学位按各片区未获得可达学位的学生人数比例分配。'],
     bridgeRisk:['При закрытии переправы','If the crossing closes','若渡口关闭'],
     loanAmount:['Сумма займа, млн ₽','Loan amount, m RUB','借款金额，百万卢布'],
+    recoveryTitle:['Как закрыть год','How to close the year','如何结算本年'],
+    recoveryPlan:['Движок проверил этот вариант без запуска новых мер. Измените проект бюджета перед подписью.','This option is affordable without starting new measures. Update the draft before signing.','已核实此方案可在不启动新措施的情况下执行。签署前请调整预算草案。'],
+    recoveryTax:['Индекс налоговой нагрузки','Tax rate index','税负指数'],
+    recoveryGap:['Прогноз дефицита','Forecast shortfall','预计赤字'],
     loanTerm:['Срок, лет','Term, years','期限，年'], rate:['Годовая ставка','Annual interest rate','年利率'],
     loanTotal:['Полная сумма выплат','Total repayments','总还款额'],
     noLoan:['Новый заём не запланирован','No new loan planned','未计划新增借款'],
@@ -820,6 +826,17 @@
     budgetError:['Измените план расходов или источники финансирования','Review expenditure or financing','调整支出计划或资金来源'],
     balanceError:['Проверьте сумму отраслевых лимитов','Check the total sector limits','核对部门预算上限总额'],
     opening:['Начать','Start','开始'], resume:['Продолжить','Continue','继续'],
+    resumeGame:['Продолжить игру','Continue game','继续游戏'], restartGame:['Начать заново','Start over','重新开始'],
+    attemptsTitle:['Мои попытки','My attempts','我的尝试'],
+    attemptsEmpty:['Здесь появятся предыдущие кампании.','Previous campaigns will appear here.','之前的战役将显示在此处。'],
+    attemptsLoading:['Загружаем попытки…','Loading attempts…','正在加载尝试…'],
+    attemptsError:['Часть попыток не удалось загрузить.','Some attempts could not be loaded.','部分尝试未能加载。'],
+    attemptFinished:['Кампания завершена','Campaign completed','战役已完成'],
+    attemptStopped:['Управление передано','Administration handed over','已移交管理'],
+    attemptOngoing:['В процессе · {year} год','In progress · {year}','进行中 · {year}年'],
+    attemptYears:['Закрыто лет: {count} из 20','Years closed: {count} of 20','已结算{count}/20年'],
+    attemptScore:['Итог кампании','Campaign result','战役结果'],
+    attemptOpen:['Открыть результат','View result','查看结果'],
     twenty:['2026–2045 · 20 лет','2026–2045 · 20 years','2026–2045 · 20年'],
     title:['Губернатор','Governor','州长'], subtitle:['Новая область','New region','新的地区'],
     welcome1Title:['Добро пожаловать','Welcome','欢迎上任'],
@@ -1216,14 +1233,56 @@
       return '<button type="button" class="v3-back" data-v3-action="'+action+'">‹ '+esc(text)+'</button>';
     }
 
+    function schoolTravelLabels(travel,reference=null) {
+      if(!travel)return '';
+      const value=(numberValue,unit)=>Number.isFinite(numberValue)?number(numberValue,2)+unit:'—';
+      const compare=(key,unit)=>reference?value(reference[key],unit)+' → '+value(travel[key],unit):value(travel[key],unit);
+      return label(t('schoolTrip'),compare('meanTripMinutesServed',' '+t('min')))+
+        label(t('schoolLeastCoverage'),compare('lowestZoneCoveragePct','%'));
+    }
+    function districtProjectionLabels(row) {
+      return label(districtLabel(row.districtId),number(row.before.served)+' → '+number(row.after.served)+' / '+number(row.after.demand))+
+        schoolTravelLabels(row.schoolTravel?.after,row.schoolTravel?.before);
+    }
+
+    function attemptsView() {
+      const {loading,error,rows}=controller.getAttemptHistory();
+      const format=new Intl.DateTimeFormat(language()==='zh'?'zh-CN':language(),{dateStyle:'medium',timeStyle:'short'});
+      const mark=value=>number(value,2)+' / 5';
+      const expanded=new Set([...host.querySelectorAll('.v3-attempt-list details[open]')].map(node=>node.parentElement.dataset.v3HistoryRecord));
+      const cards=rows.map(row=>{
+        const date=new Date(row.closedAt??row.createdAt);
+        const dateLabel=Number.isFinite(date.valueOf())?format.format(date):'';
+        const heading=t(row.stopped?'attemptStopped':row.completed?'attemptFinished':'attemptOngoing',{year:row.year});
+        const exact=Number.isFinite(row.points)?mark(row.points):'';
+        const grade=Number.isFinite(row.journalPoints)?number(row.journalPoints,0)+' / 5':'';
+        const scores=row.paths??{};
+        return '<li class="v3-card v3-card-body" data-v3-history-record="'+esc(row.attemptId)+'"><strong>'+esc(heading)+'</strong><p class="v3-muted">'+
+          esc([dateLabel,t('attemptYears',{count:row.yearsClosed})].filter(Boolean).join(' · '))+'</p>'+
+          (exact?label(t('attemptScore'),exact):'')+
+          (row.restorable?button(esc(t('resumeGame')),'attempt-resume','secondary full','data-v3-attempt="'+esc(row.attemptId)+'"'):
+            '<details'+(expanded.has(row.attemptId)?' open':'')+'><summary>'+esc(t('attemptOpen'))+'</summary>'+
+              (Number.isFinite(scores.kpi)?label(v4.tr('reportKpi'),mark(scores.kpi)):'')+
+              (Number.isFinite(scores.satisfaction)?label(v4.tr('reportSatisfaction'),mark(scores.satisfaction)):'')+
+              (grade?label(v4.tr('journalScore'),grade):'')+'</details>')+'</li>';
+      }).join('');
+      return back('attempt-history-close')+heading(t('attemptsTitle'))+
+        (loading?'<p role="status">'+esc(t('attemptsLoading'))+'</p>':'')+
+        (error?'<div class="v3-alert" role="alert">'+esc(t('attemptsError'))+button(esc(t('retry')),'attempt-history-retry','link')+'</div>':'')+
+        (cards?'<ul class="v3-attempt-list">'+cards+'</ul>':!loading&&!error?'<p>'+esc(t('attemptsEmpty'))+'</p>':'');
+    }
     function startView() {
+      const resumed=controller.meta?.canResume;
+      const choice=button(esc(t(resumed?(modern()?'resumeGame':'resume'):'opening')),'start','primary')+
+        (resumed&&modern()?button(esc(t('restartGame')),'restart-start','secondary')+
+          button(esc(t('attemptsTitle')),'attempt-history','secondary'):'');
       return '<section class="v3-start">'+picture(regionalArt,t('whole'),'v3-start-art')+
         '<h1>'+esc(t('title'))+'</h1><p class="v3-start-subtitle">'+esc(t('subtitle'))+'</p><p>'+esc(t('twenty'))+'</p>'+
         (controller.meta?.context==='course'?'<p>'+esc(t('coursePoints'))+'</p>':'')+
         (modern()&&controller.meta?.graded?'<p>'+esc(v4.tr('journalRounding'))+'</p>':'')+
         (modern()?'<p><strong>'+esc(v4.tr('scoreChoice'))+'</strong></p><details><summary>'+esc(v4.tr('ratings'))+'</summary>'+
           v4.scoringRules()+'</details>':'')+
-        button(esc(t(controller.meta?.canResume?'resume':'opening')),'start','primary')+
+        choice+
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
         (controller.meta?.legacyURL?'<a class="v3-link" href="'+esc(controller.meta.legacyURL)+'">'+esc(t('legacy'))+'</a>':'')+
         '<p id="offline-status" role="status" class="v3-muted"></p></section>';
@@ -1334,9 +1393,10 @@
           (candidate?label(v4.tr('yearSpending'),money(v4.spendingNow(candidate,offer?.finance)))+label(t('plannedOpen'),candidate.openingYear):'')+
           (!construction&&candidate?label(t('programmeYears'),candidate.openingYear+'–'+candidate.endYear)+
             label(t('programmeBalance'),money(offer?.finance.cashEnd??quote().finance.cashEnd)):'')+
-          (!construction&&candidate?.projection?.districts?.some(row=>row.servedChange)?
-            '<details><summary>'+esc(t('placesEstimate')+' · '+number(candidate.projection.served)+' / '+number(candidate.projection.demand))+'</summary>'+candidate.projection.districts.map(row=>
-              label(districtLabel(row.districtId),number(row.before.served)+' → '+number(row.after.served)+' / '+number(row.after.demand))).join('')+'</details>':'')+
+          (measure.id==='school-bus'?'<p class="v3-muted">'+esc(t('schoolBusAllocation'))+'</p>':'')+
+          (!construction&&candidate?.projection?.districts?.some(row=>row.servedChange||row.schoolTravel)?
+            '<details><summary>'+esc(t('placesEstimate')+' · '+number(candidate.projection.served)+' / '+number(candidate.projection.demand))+'</summary>'+
+              candidate.projection.districts.map(districtProjectionLabels).join('')+'</details>':'')+
           (measure.siteIds?.length?button(esc(t(row?.siteId?'siteChange':'map.chooseSite')),'sites','primary full'):
             !row?button(esc(v4.tr('add')),'v4-add','primary full'): '')+
           (row?button(esc(v4.tr('remove')),'v4-remove','secondary full','data-measure-id="'+esc(measure.id)+'"'):'')+
@@ -1570,7 +1630,7 @@
         modernMap(district,siteMode,historical)+inspector+'</div>';
     }
     function districtBrief(district,historical=null) {
-      const area=(historical?.stats??state().stats).districts[district];
+      const stats=historical?.stats??state().stats,area=stats.districts[district];
       if(!area)return '';
       const special={suburb:'childcare',river:'flood',industrial:'housing',capital:'digital'}[district];
       const relevant=['school','health','employment',...(special?[special]:[])];
@@ -1580,6 +1640,7 @@
         label(v4.tr('population'),number(area.population))+'<p class="v3-muted">'+esc(v4.tr('coverage'))+'</p>'+
         relevant.map(metric=>label(t(metric==='school'?'stats.schoolAccess':metric),counts[metric].value===null?t('noDemand'):
           number(counts[metric].value,1)+'%')).join('')+
+        (district==='suburb'?schoolTravelLabels(stats.school?.travel):'')+
         (programmes.length?'<details><summary>'+esc(t('localProgrammes'))+' ('+number(programmes.length)+')</summary><ul class="v4-plan-list">'+programmes.map(project=>
           '<li>'+(historical?'<span>'+esc(local(project.labels))+'</span>':'<button type="button" class="v4-plan-name" data-v3-object="'+
             esc(project.id)+'">'+esc(local(project.labels))+'</button>')+'</li>').join('')+'</ul></details>':'')+
@@ -1661,8 +1722,7 @@
         const project=result?.project;
         const occupied=!!site&&!project&&result?.errors.some(row=>row.code==='site-occupied'||row.code==='duplicate-site');
         const kpi=result?.marginal?.kpi;
-        const delta=kpi?.districts?.map(row=>label(districtLabel(row.districtId),number(row.before.served)+' → '+number(row.after.served)+
-          ' / '+number(row.after.demand))).join('')||'';
+        const delta=kpi?.districts?.map(districtProjectionLabels).join('')||'';
         const same=selectedDraft()?.siteId===site?.id;
         const inspector='<section class="v4-map-inspector" aria-labelledby="v4-map-inspect-title"><h2 id="v4-map-inspect-title">'+
           esc(site?local(site.labels):v4.tr('noSite'))+'</h2>'+
@@ -1913,9 +1973,23 @@
           label(t('eventAvoidedNeed'),number(outcome.preparedness.avoidedNeed)):'')+
         (contribution?label(t('eventKpiContribution')+' · '+local(indicator.labels),'+'+number(contribution,3)):'');
     }
+    function budgetRecovery(plan,event) {
+      if(!plan||!event) return '';
+      const response=event.options.find(option=>option.id===plan.eventChoice);
+      const loan=plan.loan;
+      const gap=plan.firstShortfall;
+      return '<section class="v3-card v3-card-body"><h2>'+esc(t('recoveryTitle'))+'</h2><p>'+esc(t('recoveryPlan'))+'</p>'+
+        (response?label(t('event'),response.label):'')+label(t('recoveryTax'),plan.taxRate+'%')+
+        (plan.reserveDraw?label(t('reserveTake'),number(plan.reserveDraw,0)):'')+
+        (loan?label(t('loanAmount'),number(loan.principal,0))+label(t('loanTerm'),loan.termYears):'')+
+        label(t('budget.remaining'),money(plan.closingCash))+
+        (gap?label(t('recoveryGap')+' · '+gap.year,money(gap.amount)):'')+'</section>';
+    }
     function reviewView() {
       const current=quote(),event=card(),chosen=event?.options.find(row=>row.id===state().draft.eventChoice),year=state().year;
       const lessonLocked=year===2026&&ui().tutorialStep<8;
+      const recovery=!current.ok&&controller.handoverStatus?.();
+      const deficit=current.errors.some(error=>error.code==='budget-deficit');
       return back('back',t('cancel'))+heading(t('freshYear',{year}))+
         (!current.ok?'<div class="v3-card v3-card-body"><h2>'+esc(t('reviewError'))+'</h2>'+current.errors.map(error=>
           '<button class="v3-error-link" type="button" data-v3-fix="'+esc(error.code)+'" data-tab="'+esc(error.tab)+
@@ -1929,7 +2003,8 @@
         '<hr>'+label(t('budget.remaining'),money(current.finance.cashEnd))+label(t('budget.debt'),money(current.finance.debtEnd))+label(t('budget.reserve'),money(current.finance.reserveEnd))+'</section>'+
         (modern()&&lessonLocked?'<p>'+esc(v4.tr('tutorialBeforeClose'))+'</p>'+button(esc(v4.tr('tutorialContinue')),'advance','secondary full'):'')+
         button(esc(t('confirm',{year})),'commit','primary full','data-anchor="year.commit" '+(!current.ok||busy||lessonLocked?'disabled':''))+
-        (controller.handoverStatus?.()?.available?button(esc(language()==='ru'?'Передать управление':language()==='en'?'Hand over administration':'移交管理'),'handover','secondary full'):'');
+        (modern()&&deficit?budgetRecovery(recovery?.recovery,event):'')+
+        (recovery?.available?button(esc(language()==='ru'?'Передать управление':language()==='en'?'Hand over administration':'移交管理'),'handover','secondary full'):'');
     }
     function mapProgress(row) {
       const prior=new Map((state().history.at(-2)?.projects||[]).map(project=>[project.id,project.status]));
@@ -1971,7 +2046,7 @@
         : t('game.exit');
     }
     function finalView() {
-      const result=rules.assess(state()),status=controller.meta?.status||{},key=typeof status==='string'?status:status.key;
+      const result=controller.getAssessment?.()??rules.assess(state()),status=controller.meta?.status||{},key=typeof status==='string'?status:status.key;
       return heading(t(controller.meta?.context==='course'?'seminarFinal':'final'))+
         '<section class="v3-card v3-card-body"><p class="v3-eyebrow">'+esc(t('score'))+'</p><p class="v3-score">'+esc(number(result.points,2))+'<small>'+esc(t('points'))+'</small></p>'+
         (modern()&&controller.meta?.graded?label(v4.tr('journalScore'),number(G.V4Campaign.journalPoints(result.points),0)+' / 5'):'')+
@@ -1979,7 +2054,7 @@
         (key==='error'?button(esc(t('retry')),'retry','secondary'):'')+'</section>'+
         (modern()?'<section class="v3-card v3-card-body">'+label(v4.tr('reportKpi'),number(result.paths?.kpi,2)+' / 5')+
           label(v4.tr('reportSatisfaction'),number(result.paths?.satisfaction,2)+' / 5')+'</section>'+v4.scoreQualification(result)+
-          v4.goals(G.V4Campaign.status(state(),G.V4Campaign.chapter(state().year).number),true):'')+
+          v4.goals(controller.getFinalTerm?.()??G.V4Campaign.status(state(),G.V4Campaign.chapter(state().year).number),true):'')+
         '<section class="v3-card v3-card-body">'+result.criteria.map(row=>label(local(row.label||row.title),number(row.points,2)+' / '+number(row.maxPoints,2))).join('')+'</section>'+
         button(esc(t('stats.kpi')),'stats','secondary full')+button(esc(t('history')),'history','secondary full')+
         (modern()?button(esc(v4.tr('replay')),'v4-restart','secondary full'):'')+
@@ -1992,6 +2067,7 @@
         '<label class="v3-check"><input type="checkbox" name="large" '+(ui().largeText?'checked':'')+'>'+esc(t('large'))+'</label>'+
         '<details><summary>'+esc(t('help'))+'</summary><p>'+esc(t(modern()?'helpTextModern':'helpText'))+'</p></details>'+
         '<p id="offline-status" role="status"></p></section>'+
+        (modern()&&state()?button(esc(t('attemptsTitle')),'attempt-history','secondary full'):'')+
         (state()&&ui().started&&!welcomeStep(ui())?button(esc(t('welcomeReplay')),'welcome-replay','secondary full'):'')+
         (controller.meta?.legacyURL?'<a class="v3-button secondary full" href="'+esc(controller.meta.legacyURL)+'">'+esc(language()==='ru'?'Открыть прежнюю партию':language()==='en'?'Open an earlier game':'打开之前的游戏')+'</a>':'')+
         button(esc(exitLabel()),'exit','primary full');
@@ -2029,6 +2105,7 @@
       let content;
       if (showWelcome) content=welcomeView(welcome);
       else if (menuOpen) content=menuView();
+      else if (!active&&current.panel==='attempt-history') content=attemptsView();
       else if (!active) content=startView();
       else if (s.completed&&['result','review'].includes(current.panel)) content=finalView();
       else if (current.panel&&panels[current.panel]) content=panels[current.panel]();
@@ -2240,6 +2317,23 @@
       return perform(async()=>{
         if (navigation.includes(action)) return navigate(action);
         if (action==='start') {await controller.start();focusAfter='v3-heading';}
+        else if (action==='restart-start') {
+          await controller.restart({fromStart:true});
+          focusAfter='v3-heading';
+        }
+        else if (action==='attempt-history') {
+          controller.openAttempts();
+          focusAfter='v3-heading';
+        }
+        else if (action==='attempt-history-close') {
+          controller.closeAttempts();
+          focusAfter='v3-heading';
+        }
+        else if (action==='attempt-history-retry') controller.retryAttempts();
+        else if (action==='attempt-resume') {
+          await controller.restoreAttempt(item.dataset.v3Attempt,controller.getRestartToken());
+          focusAfter='v3-heading';
+        }
         else if (action==='menu') {if (ui().panel==='menu') await closeMenu();else await openMenu();}
         else if (action==='welcome-replay') {replayWelcome=1;focusAfter='v3-heading';}
         else if (action==='welcome-next') {

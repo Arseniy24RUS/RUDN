@@ -908,9 +908,9 @@ const GOVERNOR_COPY={
 Object.assign(GOVERNOR_COPY.ru,{score:'Оценка за попытку',breakdown:'Как рассчитана оценка',criterion:'Критерий',criterionPoints:'Баллы',criterionDetail:'Основание',assessmentVersion:'Версия формулы',ungraded:'Без записи оценки',currentGrade:'Лучший балл за семинар в журнале'});
 Object.assign(GOVERNOR_COPY.en,{score:'Attempt score',breakdown:'Score breakdown',criterion:'Criterion',criterionPoints:'Points',criterionDetail:'Basis',assessmentVersion:'Formula version',ungraded:'No grade recorded',currentGrade:'Best seminar score in the gradebook'});
 Object.assign(GOVERNOR_COPY.zh,{score:'本次得分',breakdown:'评分明细',criterion:'标准',criterionPoints:'得分',criterionDetail:'依据',assessmentVersion:'公式版本',ungraded:'未记录成绩',currentGrade:'成绩册中的研讨课最佳得分'});
-Object.assign(GOVERNOR_COPY.ru,{rubric:'Игра отдельно оценивает продвижение к 12 целям и среднюю удовлетворённость жителей. Для пятёрки также нужны результаты развития, работающие услуги, выполненные обещания и устойчивый бюджет.',journalRubric:'Веса пятилеток — 10%, 20%, 30% и 40%. Балл для журнала округляется вверх до целого.',ratingKpi:'Балл по KPI',ratingSupport:'Балл по удовлетворённости',ratingEarned:'Точный итог кампании',ratingCeiling:'Предел по условиям пятёрки'});
-Object.assign(GOVERNOR_COPY.en,{rubric:'The game scores progress toward 12 targets and average resident satisfaction separately. A 5 also requires development results, working services, kept promises, and a sustainable budget.',journalRubric:'Term weights are 10%, 20%, 30%, and 40%. The gradebook score is rounded up to a whole point.',ratingKpi:'KPI score',ratingSupport:'Satisfaction score',ratingEarned:'Exact campaign result',ratingCeiling:'Score ceiling under the full-mark conditions'});
-Object.assign(GOVERNOR_COPY.zh,{rubric:'系统分别计算12项目标的完成进度和居民平均满意度。获得5分还需要发展成果、持续运行的服务、按期履行的承诺和可持续的预算。',journalRubric:'四个五年期的权重分别为10%、20%、30%和40%。计入成绩册的分数向上取整。',ratingKpi:'指标成绩',ratingSupport:'满意度成绩',ratingEarned:'本局实际得分',ratingCeiling:'满分条件决定的分数上限'});
+Object.assign(GOVERNOR_COPY.ru,{rubric:'Игра отдельно оценивает продвижение к 12 целям и устойчивую поддержку жителей. Для пятёрки также нужны результаты развития, работающие услуги, выполненные обещания и устойчивый бюджет.',journalRubric:'Веса пятилеток — 10%, 20%, 30% и 40%. Балл для журнала округляется вверх до целого.',ratingKpi:'Балл по KPI',ratingSupport:'Балл по удовлетворённости',ratingEarned:'Точный итог кампании',ratingCeiling:'Предел по условиям пятёрки'});
+Object.assign(GOVERNOR_COPY.en,{rubric:'The game scores progress toward 12 targets and lasting public support separately. A 5 also requires development results, working services, kept promises, and a sustainable budget.',journalRubric:'Term weights are 10%, 20%, 30%, and 40%. The gradebook score is rounded up to a whole point.',ratingKpi:'KPI score',ratingSupport:'Satisfaction score',ratingEarned:'Exact campaign result',ratingCeiling:'Score ceiling under the full-mark conditions'});
+Object.assign(GOVERNOR_COPY.zh,{rubric:'系统分别计算12项目标的完成进度和居民持续支持度。获得5分还需要发展成果、持续运行的服务、按期履行的承诺和可持续的预算。',journalRubric:'四个五年期的权重分别为10%、20%、30%和40%。计入成绩册的分数向上取整。',ratingKpi:'指标成绩',ratingSupport:'满意度成绩',ratingEarned:'本局实际得分',ratingCeiling:'满分条件决定的分数上限'});
 const governorCopy=()=>GOVERNOR_COPY[getLocale()]||GOVERNOR_COPY.ru;
 Object.assign(GOVERNOR_COPY.ru,{languages:'Симулятор доступен на русском, английском и китайском языках.',unsafe:'Не удалось сохранить на устройстве · скачайте резервную копию работы',conflict:'Обе версии работы сохранены · требуется выбор версии'});
 Object.assign(GOVERNOR_COPY.en,{languages:'The simulator is available in Russian, English and Chinese.',unsafe:'Could not save on this device · download a backup of your work',conflict:'Both versions retained · choose which version to continue'});
@@ -956,9 +956,20 @@ function governorAssessmentDetails(report){
     [c.ratingKpi,paths.kpi],[c.ratingSupport,paths.satisfaction],[c.ratingEarned,assessment.points],
     ...(ceiling===undefined?[]:[[c.ratingCeiling,ceiling]])
   ]:[];
+  const context={
+    ru:{events:'Крупных событий за кампанию',term:'Пятилетка',actual:'Средняя поддержка жителей',scored:'Устойчивая поддержка для оценки'},
+    en:{events:'Major events in the campaign',term:'Term',actual:'Average public support',scored:'Lasting support used for scoring'},
+    zh:{events:'本局重大事件数',term:'五年期',actual:'居民平均支持度',scored:'用于评分的持续支持度'}
+  }[getLocale()]||{events:'Major events in the campaign',term:'Term',actual:'Average public support',scored:'Lasting support used for scoring'};
+  const terms=(Array.isArray(report.chapterResults)?report.chapterResults:[]).slice(0,4).filter(row=>Number.isFinite(row?.structuralSupportAverage));
+  const comparison=terms.length?governorTable(context.scored,[context.term,context.actual,context.scored],terms.map(row=>[
+    governorReportText(row.chapter?.labels),governorNumber(row.supportAverage),governorNumber(row.structuralSupportAverage)
+  ]),{wrap:true}):'';
+  const eventCount=Number.isFinite(assessment.majorEvents)?
+    `<p class="form-hint">${esc(context.events)} · ${esc(governorNumber(assessment.majorEvents))}</p>`:'';
   const summary=components.length?`<dl class="profile-dl">${components.map(([label,value])=>
     `<dt>${esc(label)}</dt><dd>${esc(governorNumber(value))} / 5</dd>`).join('')}</dl>`:'';
-  return `<section class="subsection">${summary}${governorTable(c.breakdown,[c.criterion,c.criterionPoints,c.criterionDetail],criteria,{wrap:true})}<p class="form-hint">${esc(c.assessmentVersion)}: ${esc(assessment.version||'—')}</p></section>`;
+  return `<section class="subsection">${summary}${eventCount}${comparison}${governorTable(c.breakdown,[c.criterion,c.criterionPoints,c.criterionDetail],criteria,{wrap:true})}<p class="form-hint">${esc(c.assessmentVersion)}: ${esc(assessment.version||'—')}</p></section>`;
 }
 function governorStrategyDetails(report){
   const strategy=report?.campaignStrategy;if(!strategy||strategy.version!==1)return '';

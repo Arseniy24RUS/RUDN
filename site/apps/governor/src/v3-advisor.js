@@ -84,9 +84,9 @@
     return [introduction,l('В «Статистике» видны цели пятилетки и поддержка населения.',
       'Statistics shows the five-year targets and public support.',
       '在“统计”中可以查看五年目标和居民支持度。'),l(
-      'Сравнивают продвижение по 12 целям и среднюю поддержку жителей по пятилеткам. В итог идёт более высокий результат, до 5 баллов.',
-      'The campaign takes the higher of progress toward 12 targets and average public support over each term, up to 5 points.',
-      '战役总分取两项中的较高值，最高5分：12项目标的完成进度，或各五年期的居民平均支持度。'),
+      'Сравнивают продвижение по 12 целям и устойчивую поддержку жителей по пятилеткам. Отклик на отдельную ситуацию меняет настроения сейчас. Долгосрочные результаты в услугах и KPI идут в зачёт.',
+      'The campaign compares progress toward 12 targets and lasting public support across terms. An event can change how residents feel now. Its lasting effects on services and targets still count.',
+      '战役比较12项目标的完成进度和各五年期的持续居民支持度。事件会改变眼下的民意，其对服务和目标的持久影响仍然计入成绩。'),
       l(
         'Для пятёрки нужны результаты развития, работающие услуги, выполненные обещания и устойчивый бюджет. Точные условия есть в «Статистике».',
         'For a 5, deliver measurable improvements, maintain services, keep commitments and leave a sustainable budget. The exact conditions are in Statistics.',
@@ -139,10 +139,12 @@
         'Current draft measures: '+(plan.map(row=>local(row.labels)+' ('+row.costNow+' million RUB now, opens '+row.openingYear+')').join('; ')||'none')+'.');
       lines.push('Verified term KPI, actual / target: '+terms.entries.map(row=>local(row.labels)+' '+(row.actual??'N/A')+
         ' / '+row.target+(row.inverse?' (lower is better)':'')).join('; ')+'. Satisfaction target '+terms.chapter.satisfactionTarget+'/100.');
+      lines.push('The satisfaction path counts lasting public support from policies, taxes and delivered services. Direct event reactions affect current sentiment only. Real effects on services and KPIs still count.');
       if(randomEvents(state))lines.push('Annual draw: one random situation each year, including 2026. The chance of a major event is 20% while eligible major events remain. Events are never repeated in one campaign and no specific event or year is guaranteed.');
-      const {targets,accessGains,accessPoints,promiseShare,debtShare}=G.V4Campaign.FULL_GRADE;
+      const {targets,accessGains,accessPoints,serviceYears,promiseShare,debtShare}=G.V4Campaign.FULL_GRADE;
       lines.push('A grade of 5 requires '+targets+' final-term targets excluding trust or '+accessPoints+' percentage points of access improvement in '+accessGains+
-        ' district-service pairs in both final years, an ongoing service in both years, '+100*promiseShare+
+        ' district-service pairs on average over the final term and at its end, one service operating in '+serviceYears+
+        ' years of that term including the last year, '+100*promiseShare+
         '% of due promises kept and a covered 3-year forecast, non-negative cash and reserve net of future debt payments, and those payments within '+100*debtShare+
         '% of next year’s recurring income. If a condition is unmet, the better raw score is capped at 4.');
     }

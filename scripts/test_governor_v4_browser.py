@@ -349,7 +349,10 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
             screenshot(page, output, f'checkpoint-{year}')
             page.reload()
             page.locator(READY).wait_for(state='attached', timeout=WAIT)
-            # The shared loopback fixture sets Russian on every navigation.
+            # Reload offers a choice before opening the current attempt.
+            visible(page, '[data-v3-action="start"]')
+            visible(page, '[data-v3-action="restart-start"]')
+            click(page, '[data-v3-action="start"]')
             set_locale(page, locale)
             assert str(year) in page.locator('.v4-goals').first.inner_text()
             click(page, '[data-v3-action="result-next"]')
@@ -366,7 +369,9 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
     screenshot(page, output, 'final')
     score = record['submission']['governor']['assessment']
     qualification = score['qualification']
-    assert score['version'] == 'governor-balance-v1'
+    assert score['version'] == 'governor-balance-v2'
+    assert score['majorEvents'] == len(FULL_MAJOR_EVENTS)
+    assert all(row['structuralSupportAverage'] is not None for row in record['submission']['governor']['chapterResults'])
     assert abs(score['rawPoints'] - max(score['paths'].values())) < .011
     assert min(score['rawPoints'], qualification['ceiling']) == score['points']
     conditions = {'ru': 'Условия для пятёрки', 'en': 'Conditions for a grade of 5', 'zh': '获得5分的条件'}
@@ -390,7 +395,19 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
     click(page, '[data-v3-action="v4-restart"]')
     assert load_record(page, profile)['state']['attemptId'] != first_attempt
     choose_event(page)
-    assert load_record(page, profile)['state']['draft']['eventChoice'] == 'base'
+    second = load_record(page, profile)
+    assert second['state']['draft']['eventChoice'] == 'base'
+    click(page, '#v3-menu-toggle')
+    click(page, '[data-v3-action="attempt-history"]')
+    past = visible(page, '[data-v3-history-record="'+first_attempt+'"]')
+    past.locator('details summary').click()
+    assert past.locator('details').get_attribute('open') is not None
+    assert len(past.locator('details .v3-line').all()) >= 2
+    assert load_record(page, profile)['state'] == second['state']
+    if profile:
+        assert page.evaluate("student => JSON.parse(localStorage.getItem('rudn.grades.v2'))[student]['seminar-7'].points",
+                             profile['studentKey']) == journal_score
+    screenshot(page, output, 'attempt-result')
     return {'years': 20, 'checkpoints': checkpoints, 'construction': stages, 'score': score['points'], 'major_events': major_events,
             'scores': score['paths'], 'journal_score': journal_score, 'replay_first_decision': True}
 
@@ -413,6 +430,37 @@ def check_rare_opening(suite, server, output, locale):
     page.locator(READY).wait_for(state='attached', timeout=WAIT)
     saved = load_record(page)['state']
     assert saved['event'] == opened and saved['draft']['eventChoice'] == 'base'
+    set_locale(page, locale)
+    resume={'ru':'Продолжить игру','en':'Continue game','zh':'继续游戏'}
+    restart={'ru':'Начать заново','en':'Start over','zh':'重新开始'}
+    page.get_by_role('button', name=resume[locale], exact=True).wait_for()
+    page.get_by_role('button', name=restart[locale], exact=True).wait_for()
+    screenshot(page, output, 'saved-start')
+
+    click(page, '[data-v3-action="start"]')
+    assert load_record(page)['state'] == saved
+    visible(page, '.v3-event .v3-major-label').wait_for()
+
+    page.reload(wait_until='domcontentloaded')
+    page.locator(READY).wait_for(state='attached', timeout=WAIT)
+    click(page, '[data-v3-action="restart-start"]')
+    fresh = load_record(page)['state']
+    assert fresh['year'] == 2026 and fresh['attemptId'] != saved['attemptId']
+    assert fresh['event']['attemptId'] == fresh['attemptId'] and fresh['draft']['eventChoice'] is None
+    assert fresh['history'] == []
+    visible(page, '[data-v3-action="welcome-next"]')
+
+    click(page, '#v3-menu-toggle')
+    click(page, '[data-v3-action="attempt-history"]')
+    click(page, '[data-v3-action="attempt-resume"][data-v3-attempt="'+saved['attemptId']+'"]')
+    assert page.locator('[data-v3-history-record="'+saved['attemptId']+'"]').count() == 0
+    assert load_record(page)['state'] == saved
+    visible(page, '.v3-event .v3-major-label').wait_for()
+
+    click(page, '#v3-menu-toggle')
+    click(page, '[data-v3-action="attempt-history"]')
+    click(page, '[data-v3-action="attempt-resume"][data-v3-attempt="'+fresh['attemptId']+'"]')
+    assert load_record(page)['state'] == fresh
     assert not suite.current.get('page_errors'), suite.current
     context.close()
     return opened['eventId']

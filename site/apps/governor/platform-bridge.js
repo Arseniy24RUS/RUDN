@@ -11,7 +11,7 @@ import {gameAccessGate} from '../../assets/js/games-catalog.js?v=1.3.10';
 import {readState,pendingStorageKey} from '../../assets/js/session.js?v=1.3.10';
 import {durableStore} from '../../assets/js/durable-store.js';
 import {canResumeGameDraft,markGameDraft} from '../../assets/js/game-release-policy.js';
-import {governorReflectionText,isGovernorReflection,latestGovernorReflection,makeGovernorReflection} from '../../assets/js/governor-reflections.js';
+import {governorAttemptsWithReflections,governorReflectionText,isGovernorReflection,latestGovernorReflection,makeGovernorReflection} from '../../assets/js/governor-reflections.js';
 import {openLocalCampaignSlots} from './src/local-campaign-slots.js';
 import {finalFive,practiceAdapter,addReplayChoice,replayURL} from './src/final-five.js';
 import {scopedStorage,createRunMetadata,makeSubmission,assessmentRules,assessCampaign,northernCareComparison} from './platform-contract.js';
@@ -395,8 +395,19 @@ async function startV3(loadEnd,hasHistoric){
     if(free&&hasHistoric){
       const archive=new URL(location.href);archive.searchParams.set('edition','legacy');legacyURL=archive.href;
     }
+    const listGovernorReports=async()=>{
+      const studentKey=backend.getProfile()?.studentKey;
+      if(free||backend.isAdmin()||!studentKey||owner!=='student:'+studentKey||!sameOwner())return [];
+      const [local,remote]=await Promise.allSettled([
+        durableStore.listAttempts({owner}),
+        backend.user&&navigator.onLine!==false?backend.readCloud?.('attempts/'+studentKey):null
+      ]);
+      if(!sameOwner())return [];
+      const results=[...(backend.localAttempts?.()??[]),...(local.value??[]),...Object.values(remote.value??{})];
+      return governorAttemptsWithReflections(results,studentKey);
+    };
     v3Runtime=await G.V3Runtime.mount($('#governor-v3'),{
-      owner,context,language,backend,preview:backend.isAdmin()&&!free,edition,
+      owner,context,language,backend,preview:backend.isAdmin()&&!free,edition,listGovernorReports,
       canWrite:sameOwner,setLanguage:next=>{language=next;setLocale(next);G.I18n.shell(document,next);updateSkip();},
       credential:()=>backend.user?.getIdToken(),advisorEnabled:CONFIG.governorAdvisorUrl,
       legacyURL,exit:()=>location.assign(courseUrl)

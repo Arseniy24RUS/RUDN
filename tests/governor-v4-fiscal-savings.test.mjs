@@ -81,6 +81,47 @@ test('savings begin with delivery and stop at the end of the funded term',async(
   assert.deepEqual(years,[4,4,4,0]);
 });
 
+test('handover finds a legal bridge through a known cash gap and disappears from the signed plan',async()=>{
+  const state = await opening(), year = state.year;
+  state.draft.eventChoice = 'base';
+  const existing = R.quote({...state,draft:{...state.draft,measures:[
+    {measureId:'train-staff',siteId:null,promise:null}]}},{eventPlan:plan(state)}).projects[0];
+  state.projects = [{...existing,paidYears:[],payments:[],endYear:year+1,annualOpex:100}];
+  state.finance = {...state.finance,cash:0,debt:0,reserve:0,debtLimit:500,loans:[],
+    base:{taxes:0,nonTax:0,grant:0,mandatory:0},investments:[R.investmentQuote(600,2,year)]};
+  const eventPlan = plan(state);
+  const before = JSON.stringify(state);
+  const firstQuote = R.quote(state,{eventPlan});
+  assert.equal(firstQuote.finance.cashEnd,-100);
+  assert.ok(!firstQuote.ok);
+  for (let termYears=1;termYears<=10;termYears++) {
+    const minimum = {...state,draft:{...state.draft,loan:{principal:100,termYears}}};
+    assert.ok(R.quote(minimum,{eventPlan}).errors.some(row=>row.code==='loan-unfunded-schedule'));
+  }
+  const status = R.handoverStatus(state,{eventPlan});
+  assert.equal(status.available,false);
+  assert.equal(status.recovery.eventChoice,'base');
+  assert.ok(status.recovery.loan.principal>100);
+  assert.ok(status.recovery.loan.principal<=firstQuote.finance.loanHeadroom);
+  assert.equal(JSON.stringify(state),before);
+  const armed = {...state,draft:{...state.draft,loan:status.recovery.loan,taxRate:status.recovery.taxRate}};
+  const quote = R.quote(armed,{eventPlan});
+  assert.ok(quote.ok,JSON.stringify(quote.errors));
+  assert.equal(quote.finance.cashEnd,status.recovery.closingCash);
+  assert.ok(quote.finance.futureRows.slice(0,status.recovery.loan.termYears).every(row=>row.cash>=0));
+  assert.equal(R.handoverStatus(armed,{eventPlan}).recovery,undefined);
+  assert.throws(()=>R.handover(armed,{expectedRevision:armed.revision,eventPlan}),/handover-unavailable/);
+  const next = R.commit(armed,{expectedRevision:armed.revision,eventPlan,signature:quote.signature});
+  assert.equal(next.year,year+1);
+  assert.equal(next.finance.cash,quote.finance.cashEnd);
+
+  const withoutPayout = {...state,finance:{...state.finance,investments:[]}};
+  const cannotBorrow = R.handoverStatus(withoutPayout,{eventPlan});
+  assert.equal(cannotBorrow.available,true);
+  assert.equal(cannotBorrow.shortfall,100);
+  assert.equal(cannotBorrow.recovery,undefined);
+});
+
 test('real runtime uses the same qualified source for preview and signed year',async()=>{
   const slots = new Map();
   let controller;

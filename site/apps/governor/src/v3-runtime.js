@@ -179,7 +179,8 @@
     const save = G.V3Store;
     const isCourse = bridge.context==='course' && bridge.owner.startsWith('student:') && !bridge.preview;
     let record = await save.read(scope);
-    let ui;
+    let ui, landing, returnToGame=false, localHistory=[], savedReports=[];
+    let historyLoad=0, historyLoading=false, historyError=false;
     let status = {key:bridge.preview?'preview':'saved'};
     let busy = Promise.resolve();
     let runtime, channel;
@@ -295,13 +296,56 @@
         }
         if (!record.ui.started) await write(record,{...record,ui:{...record.ui,started:true}});
         await assureEvent();
+        const reconciled=lesson(record);
+        if(reconciled!==record) await write(record,reconciled);
+        landing=null;
+        repaint();
         mirror();
         return record.state;
       });
     }
+    const restartToken = snapshot => snapshot ?
+      JSON.stringify([snapshot.state.attemptId,snapshot.state.revision,
+        snapshot.state.completed?null:snapshot.recordRevision]) : null;
+    async function refreshAttempts() {
+      const request=++historyLoad;
+      historyLoading=true;
+      historyError=false;
+      repaint();
+      const update=(next,failed=false)=>{
+        if(request!==historyLoad||!active())return;
+        if(failed)historyError=true;
+        else next();
+        repaint();
+      };
+      await Promise.all([
+        (save.list?.(scope)??Promise.resolve([])).then(
+          rows=>update(()=>{localHistory=rows;}),()=>update(null,true)),
+        (isCourse?bridge.listGovernorReports?.():null)?.then(
+          reports=>update(()=>{savedReports=reports;}),()=>update(null,true))
+      ]);
+      if(request===historyLoad&&active()){historyLoading=false;repaint();}
+    }
+    function attemptHistory() {
+      const records=new Map(savedReports.map(report=>{
+        const governor=report.governor;
+        const yearsClosed=Number.isInteger(governor.decisions)?governor.decisions:0;
+        const lastDecision=Array.isArray(governor.decisionRegister)?governor.decisionRegister.at(-1):null;
+        return [report.id,{attemptId:report.id,createdAt:report.startedAt??report.createdAt,closedAt:report.createdAt,
+          year:lastDecision?.year,yearsClosed,completed:true,restorable:false,
+          stopped:['stopped','financial-handover'].includes(governor.campaignStatus),
+          points:governor.assessment?.points??report.points,journalPoints:report.recordGrade===false?null:report.points,
+          paths:governor.assessment?.paths}];
+      }));
+      for(const item of localHistory)records.set(item.attemptId,{...item,restorable:!item.completed});
+      records.delete(record?.state.attemptId);
+      return {loading:historyLoading,error:historyError,rows:[...records.values()].sort((a,b)=>
+        String(b.closedAt??b.createdAt??'').localeCompare(String(a.closedAt??a.createdAt??'')))};
+    }
     const controller = {
       getState:()=>record?.state ?? null,
       getQuote:()=>quote,
+      getAssessment:()=>record?.submission?.governor?.assessment??(record?G.V3Rules.assess(record.state):null),
       previewDraft:patch=>{
         const state={...record.state,draft:patchState(record.state.draft,patch,draftFields)};
         return G.V3Rules.quote(state,{eventPlan:settlementPlan(record,state).plan});
@@ -309,7 +353,7 @@
       previewMeasure:(measureId,siteId)=>G.V3Rules.previewMeasure(record.state,measureId,siteId,
         {eventPlan:settlementPlan(record,record.state).plan}),
       eventArt:G.V3EventArt,
-      getUI:()=>record?viewUI(record):ui,
+      getUI:()=>record?(landing?{...viewUI(record),...landing,started:false}:viewUI(record)):ui,
       schoolCoverage,schoolPractice:()=>record?schoolPractice(record):null,
       language:()=>language,
       async setLanguage(next) {
@@ -344,26 +388,71 @@
         await change(before=>({...before,ui:{...before.ui,tutorialStep:step+1}}),false);
         return true;
       },
-      restart:async()=> {
+      getFinalTerm:()=>record?.submission?.governor?.chapterResults?.find(row=>
+        row.chapter.number===G.V4Campaign.chapter(record.state.year).number),
+      getRestartToken:()=>restartToken(record),
+      getAttemptHistory:attemptHistory,
+      openAttempts(){
+        returnToGame=!landing;
+        landing={panel:'attempt-history'};
+        void refreshAttempts();
+      },
+      closeAttempts(){
+        landing=returnToGame?null:{panel:null};
+        repaint();
+      },
+      retryAttempts:()=>{void refreshAttempts();},
+      restoreAttempt:(attemptId,expected)=>run(async()=>{
+        if(!active()||!landing||expected!==restartToken(record))
+          throw Object.assign(Error('governor-v3/concurrent-change'),{code:'concurrent-change'});
+        try {
+          record=await save.restore(scope,record,attemptId,active);
+          landing=null;
+          channel?.postMessage('changed');
+          await assureEvent();
+          repaint();
+          mirror();
+          return record.state;
+        } catch(error) {
+          if(error.current&&active())record=error.current;
+          status={key:code(error)};
+          if(landing)void refreshAttempts();
+          repaint();
+          throw error;
+        }
+      }),
+      restart:async({fromStart=false,expected=restartToken(record)}={})=> {
         await run(settle);
         await change(async before=>{
-          if(!before.state.completed||(isCourse&&!before.localResult))throw Error('governor-v3/restart-unavailable');
+          if(expected!==restartToken(before)) throw Object.assign(Error('governor-v3/concurrent-change'),{code:'concurrent-change'});
+          if((!before.state.completed&&(!fromStart||!landing))||
+            (before.state.completed&&isCourse&&!before.localResult)) throw Error('governor-v3/restart-unavailable');
           const next=envelope(bridge.owner,bridge.context,before.state.schoolMap,assignment);
-          return {...next,ui:{...next.ui,welcomeStep:4,tutorialStep:11,started:true,motion:before.ui.motion,largeText:before.ui.largeText}};
+          const fresh={...next,ui:{...next.ui,started:true,motion:before.ui.motion,largeText:before.ui.largeText,
+            ...(!fromStart?{welcomeStep:4,tutorialStep:11}:{})}};
+          return pinnedEvent(fresh);
         },false);
-        await run(assureEvent);
+        landing=null;
+        repaint();
         mirror();
       },
       saveUI:patch => {
+        if (landing) {
+          const preferences = Object.fromEntries(Object.entries(patch).filter(([key])=>['motion','largeText'].includes(key)));
+          if (Object.keys(preferences).length) return change(before=>({...before,ui:{...before.ui,...preferences}}),false);
+          landing=patchState(landing,patch,allowedUI);
+          repaint();
+          return Promise.resolve();
+        }
         if (!record) {
           ui=patchState(ui,patch,allowedUI);
           return Promise.resolve(ui);
         }
         return change(before=>({...before,ui:patchState(before.ui,patch,allowedUI)}),false);
       },
-      handoverStatus:()=>record?.state?.event ? G.V3Rules.handoverStatus(record.state) : {available:false},
+      handoverStatus:()=>record?.state?.event ? G.V3Rules.handoverStatus(record.state,{eventPlan:settlementPlan(record,record.state).plan}) : {available:false},
       handover:({revision})=>change(before=>{
-        const state=G.V3Rules.handover(before.state,{expectedRevision:revision});
+        const state=G.V3Rules.handover(before.state,{expectedRevision:revision,eventPlan:settlementPlan(before,before.state).plan});
         const next={...before,state,closedAt:new Date().toISOString(),ui:{...before.ui,panel:'result'}};
         next.submission=submission(next,isCourse);
         return next;
@@ -410,8 +499,9 @@
 
     if (record && !valid(record,bridge.owner,bridge.context,assignment)) throw Error('governor-v3/invalid-saved-record');
     if (!record && valid(restored,bridge.owner,bridge.context,assignment)) await replaceIfMissing(restored);
+    if (assignment===V4_ASSIGNMENT&&record) landing={panel:null};
     if (bridge.context==='course' && !record) await replaceIfMissing(envelope(bridge.owner,bridge.context,await loadSchoolMap(),assignment));
-    if (record && !record.state.completed) {
+    if (record && !record.state.completed && !landing) {
       await assureEvent();
       const reconciled=lesson(record);
       if (reconciled!==record) {
@@ -429,6 +519,7 @@
         if (loaded && loaded.recordRevision>(record?.recordRevision??-1)) {
           record=loaded;
           status={key:'concurrent-change'};
+          if(landing?.panel==='attempt-history')void refreshAttempts();
           repaint();
         }
       });

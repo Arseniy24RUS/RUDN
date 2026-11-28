@@ -155,7 +155,11 @@ body.governor-v3-active > .platform-bottom-nav { display: none !important; }
 .v3-start h1 { font-size: 36px; margin-bottom: 5px; }
 .v3-start-subtitle { font-size: 22px; }
 .v3-start > .v3-button { display: flex; width: 100%; margin-top: 25px; }
+.v3-start > .v3-button + .v3-button { margin-top: 8px; }
 .v3-start > .v3-link { display: block; margin: 10px auto; }
+.v3-attempt-list { display: grid; gap: 10px; max-width: 640px; padding: 0; list-style: none; }
+.v3-attempt-list p { margin: 5px 0; }
+.v3-attempt-list .v3-button { margin-top: 10px; }
 .v3-welcome {
   width: min(100%, 540px);
   margin: clamp(0px, 3vh, 28px) auto;

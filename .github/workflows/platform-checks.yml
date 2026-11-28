@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   governor-scope:
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || (github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942'))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] ') }}
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || ((github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a') || ((github.head_ref == 'codex/governor-balance-audit' && github.event.pull_request.base.sha == 'a22983d689cfd50a7649d81b087db50532140942') || (github.head_ref == 'codex/governor-balance-ii' && github.event.pull_request.base.sha == '8353387c35ad40141bd001aec650db284d78f237')))))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] ') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -108,6 +108,22 @@ jobs:
                   'tests/governor-v4-fiscal-savings.test.mjs',
                   'tests/governor-v4-major-events.test.mjs',
                   'tests/governor-v4-negotiation.test.mjs',
+              }
+          if base == '8353387c35ad40141bd001aec650db284d78f237':
+              allowed = {
+                  '.github/workflows/deploy-pages.yml',
+                  '.github/workflows/legal-lab-checks.yml',
+                  '.github/workflows/platform-checks.yml',
+                  '.github/workflows/puzzle-checks.yml',
+                  '.github/workflows/puzzle-map-network.yml',
+                  '.github/workflows/settlements-replay.yml',
+                  'scripts/test_governor_v4_browser.py',
+                  'site/assets/js/main.js',
+                  'tests/governor-strategy-report.test.mjs',
+                  'tests/governor-v4-campaign.test.mjs',
+                  'tests/governor-v4-fiscal-savings.test.mjs',
+                  'tests/governor-v4-major-events.test.mjs',
+                  'tests/governor-v4-spatial-demography.test.mjs',
               }
           outside = sorted(path for path in changed if path not in allowed and not path.startswith('site/apps/governor/'))
           if outside or not any(path.startswith('site/apps/governor/') for path in changed):
