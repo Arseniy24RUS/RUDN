@@ -114,7 +114,7 @@ function resolveStatic(value,logical,resources,base){
 function rewriteCSS(source,logical,resources,base){return source.replace(/url\(\s*(['"]?)([^)'"\s]+)\1\s*\)/g,(_,quote,url)=>`url(${quote}${resolveStatic(url,logical,resources,base)}${quote})`);}
 function recoveryMarkup(source){return `<script data-platform-recovery>${source.replace(/<\/script/gi,'<\\/script')}</script>`;}
 const governorEntry='apps/governor/index.html';
-const GOVERNOR_ENTRY_INDEX_VERSION=3;
+const GOVERNOR_ENTRY_INDEX_VERSION=4;
 const governorV3Clips=new Set([
   'apps/governor/assets/v3/river-card-720.webm',
   'apps/governor/assets/v3/river-card-720.mp4'
@@ -122,7 +122,8 @@ const governorV3Clips=new Set([
 function governorOnDemandMedia(name,version=GOVERNOR_ENTRY_INDEX_VERSION){
   if(version>=2&&governorV3Clips.has(name))return true;
   if(version<3||!name.startsWith('apps/governor/assets/v4/'))return false;
-  return /\.(?:webm|mp4|gif|apng)$/.test(name);
+  return /\.(?:webm|mp4|gif|apng)$/.test(name)
+    || (version>=4&&/^apps\/governor\/assets\/v4\/media\/(?:decisions|events)\//.test(name));
 }
 function aliasHTML(logical,base,recovery,target){
   // The exact Governor entry still verifies the entire manifest before executing
@@ -163,6 +164,24 @@ async function bundleGovernorBridge(site,resources,runtime,base){
   const text=result.outputFiles[0].text;
   runtime.set(name,text);resources[name]={kind:'runtime',sha256:digest(text),bytes:Buffer.byteLength(text),url:`${base}_releases/${TOKEN}/${name}`};
 }
+async function bundleGovernorCampaign(site,resources,runtime,base){
+  const bridge=await fs.readFile(path.join(site,'apps/governor/platform-bridge.js'),'utf8');
+  const {body}=parse(bridge,{sourceType:'module',ecmaVersion:'latest'});
+  const declaration=body.flatMap(node=>node.declarations||[]).find(node=>node.id.name==='CAMPAIGN_SCRIPTS');
+  if(!declaration)return false;
+  const scripts=declaration.init?.elements;
+  if(!scripts?.length||scripts.some(node=>node?.type!=='Literal'||typeof node.value!=='string'||!/^[a-z0-9-]+$/.test(node.value)))fail('release/governor-campaign-scripts');
+  const files=await Promise.all(scripts.map(async script=>{
+    const source='apps/governor/src/'+script.value+'.js';
+    if(!resources[source])fail('release/governor-campaign-source:'+source);
+    return fs.readFile(path.join(site,source),'utf8');
+  }));
+  const filename='apps/governor/governor-campaign.js';
+  const {code}=await transform(files.join('\n;\n'),{loader:'js',target:'es2020',minify:true,charset:'utf8',legalComments:'inline'});
+  runtime.set(filename,code);
+  resources[filename]={kind:'runtime',sha256:digest(code),bytes:Buffer.byteLength(code),url:`${base}_releases/${TOKEN}/${filename}`};
+  return true;
+}
 async function bundleGovernor(source,site,resources,runtime,base){
   // Only adjacent local styles and classic scripts are joined. Modules retain
   // native execution boundaries and share the platform's existing singletons.
@@ -186,11 +205,12 @@ async function bundleGovernor(source,site,resources,runtime,base){
   };
   let html=await joinGroup(source,/(?:<link rel="stylesheet" href="[A-Za-z0-9./_-]+\.css">\s*){2,}/,'css',/href="([^"]+)"/g);
   html=await joinGroup(html,/(?:<script src="[A-Za-z0-9./_-]+\.js"><\/script>\s*){2,}/,'js',/src="([^"]+)"/g);
+  const hints=[];
   if(resources['apps/governor/governor-start.js']&&resources['apps/governor/platform-bridge.js']){
     await bundleGovernorBridge(site,resources,runtime,base);
     html=html.replace('type="module" src="platform-bridge.js"','type="module" src="governor-platform.mjs"');
+    if(await bundleGovernorCampaign(site,resources,runtime,base))hints.push('<link rel="preload" as="script" href="governor-campaign.js">');
   }
-  const hints=[];
   for(const file of ['release-bootstrap.js','release-resources.js','platform-update-failures.js','platform-update-contracts.js']){
     if(resources['assets/js/'+file])hints.push(`<link rel="modulepreload" href="../../assets/js/${file}">`);
   }
@@ -201,7 +221,6 @@ async function bundleGovernor(source,site,resources,runtime,base){
   for(const file of ['firebase-core.js','firebase-shared.js']){
     if(resources['assets/vendor/firebase/'+file])hints.push(`<link rel="modulepreload" href="../../assets/vendor/firebase/${file}">`);
   }
-  if(resources['apps/governor/src/app.js'])hints.push('<link rel="preload" as="script" href="src/app.js">');
   return html.replace('</head>',hints.join('\n')+'\n</head>');
 }
 function rewriteHTML(source,logical,resources,base,inlineModules,recovery){
@@ -278,7 +297,7 @@ export async function verifyRelease(out,{budget=1_000_000_000}={}){
     if(manifest.governorEntryIndex||target.governorManifest){
       const expectedPath=`_releases/${target.buildId}/governor-manifest.json`;
       const projection=json(governorManifest(manifest,target.manifestSha256));
-      if(![1,2,GOVERNOR_ENTRY_INDEX_VERSION].includes(manifest.governorEntryIndex)||target.governorManifest?.url!==base+expectedPath||
+      if(![1,2,3,GOVERNOR_ENTRY_INDEX_VERSION].includes(manifest.governorEntryIndex)||target.governorManifest?.url!==base+expectedPath||
           target.governorManifest.sha256!==digest(projection)||
           await fs.readFile(path.join(out,expectedPath),'utf8')!==projection)fail('release/governor-manifest-integrity');
       expectedFiles.add(expectedPath);

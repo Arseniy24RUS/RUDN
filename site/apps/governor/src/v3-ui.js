@@ -825,15 +825,36 @@
     welcome2Title:['Ваши задачи','Your priorities','您的职责'],
     welcome2First:['Жителям разных районов нужны школы, врачи и рабочие места.','People in each district need schools, health care and jobs.','各区居民都需要学校、医疗服务和就业机会。'],
     welcome2Second:['Каждый год вы выбираете, что улучшить и сколько на это потратить.','Each year, you choose what to improve and how much to spend.','每年由您决定优先改善什么、投入多少资金。'],
+    welcome2Programmes:['Каждый год вы решаете, какие отрасли поддержать и сколько на это потратить.','Each year, choose which sectors to support and how much to spend.','每年由您决定支持哪些行业，以及投入多少资金。'],
     welcome3Title:['Первый год','Your first year','任期第一年'],
     welcome3First:['На карте можно познакомиться с пятью районами области.','Use the map to get to know the region’s five districts.','您可以在地图上了解本州的五个区。'],
+    welcome3Construction:['На карте вы узнаете, чем живут пять районов, и сможете выбрать площадку для стройки.','Use the map to explore the five districts and choose where to build.','在地图上了解五个区，并为建设项目选择地块。'],
     welcome3Second:['Когда будете готовы, вместе разберём первую ситуацию.','When you’re ready, we’ll look at your first situation together.','准备好后，我们一起看看第一件要处理的事。'],
     welcomeProgress:['{step} из 3','{step} of 3','第 {step} 步，共 3 步'],
     welcomeNext:['Дальше','Continue','继续'], welcomeStart:['К первому году','Start the first year','进入第一年'],
     welcomeReplay:['Вступление Орлова','Orlov’s introduction','奥尔洛夫的开场介绍'], welcomeReturn:['В меню','Back to menu','返回菜单'],
-    coachEvent:['Ситуация года — срочная задача. Откройте её, чтобы узнать, что случилось.','This year’s situation is urgent. Open it to see what happened.','年度情况是一项紧急任务。打开看看发生了什么。'],
+    coachEvent:['Откройте ситуацию года. Посмотрите, что случилось и кому нужна ваша помощь.','Open the situation. See what happened and who needs your help.','打开年度情况，了解发生了什么，以及谁需要您的帮助。'],
     coachAnswer:['Сравните, кому поможет каждый ответ и сколько он стоит. Сохраните свой выбор.','Compare who benefits from each response and what it costs. Save your choice.','比较每种回应能帮助谁、需要多少钱，再保存选择。'],
     coachProject:['Проект — отдельное улучшение для района. Его можно начать или отложить на этот год.','A project is a separate improvement for a district. You can start one or defer it for the year.','项目用于单独改善一个地区。您可以今年启动，也可以暂缓。'],
+    coachMeasures:['Меры улучшают жизнь в районах. В план можно добавить несколько, если хватит денег.','Measures improve life in the districts. Add as many to the plan as you can afford.','措施可以改善各区居民的生活。预算允许时，可以把多项措施加入计划。'],
+    coachOpenScope:['Откройте карту. Нажмите на район, чтобы посмотреть его показатели.','Open the map and tap a district to see its indicators.','打开地图，点击一个地区查看其指标。'],
+    coachProgrammeScope:['Районы программы: {districts}. Откройте один из них и прочитайте показатели.','Programme districts: {districts}. Open one and read its indicators.','项目地区：{districts}。请选择一个查看指标。'],
+    mapConstruction:['Выбрать стройку','Choose what to build','选择建设项目'],
+    mapDistrictMeasures:['Местные меры','Local measures','地方措施'],
+    mapMarkSuburb:['НБ','NB','新'],
+    mapMarkCapital:['ОЦ','C','州'],
+    sectorProgrammes:['Программы отрасли','Programmes in this sector','本行业项目'],
+    territoryReach:['Районы действия','Districts served','覆盖地区'],
+    localProgrammes:['Программы в районе','Programmes serving this district','覆盖本区的项目'],
+    placesEstimate:['Охват к началу работы','Projected reach when service starts','服务启动时的预计覆盖人数'],
+    programmeYears:['Период работы','Operating years','运行年份'],
+    programmeBalance:['Остаток с программой','Cash balance with this programme','实施本项目后的国库余额'],
+    majorEvent:['Событие области','Regional event','全州事件'],
+    majorMap:['Показать на карте','Show on map','在地图上查看'],
+    majorRequired:['Обязательные расходы','Unavoidable spending','必要支出'],
+    majorTotalNow:['Всего из казны сейчас','Total from the treasury now','当前国库总支出'],
+    eventPayments:['Из казны по событию в этом году','Treasury spending on this event this year','本年度该事件的国库支出'],
+    eventReimbursement:['Возмещение по событию','Event reimbursement','该事件的支出补偿'],
     coachSites:['Место влияет на срок, расходы и число людей, которым поможет проект. Сравните участки на карте.','The location affects timing, costs and how many people benefit. Compare the sites on the map.','选址会影响工期、开支和受益人数。请在地图上比较地块。'],
     coachSchool:['В карточке школы видно, сколько детей она уже обслуживает. Этот пример поможет читать карту.','The school card shows how many children it already serves. Use it to learn how to read the map.','学校详情显示目前服务了多少学生。用这个例子熟悉地图。'],
     coachBudget:['Попробуйте изменить налоговую нагрузку в бюджете. Сравните доход от налогов и остаток денег.','Try a different tax level in the budget. Compare tax revenue and the money left over.','在预算中换一个税负水平，比较税收和年底余额。'],
@@ -846,7 +867,9 @@
     coachMap:['На карте видно, какие объекты работают и что изменилось. Посмотрите один из них.','The map shows which facilities are operating and what changed. Inspect one of them.','地图显示哪些设施在运行，以及发生了哪些变化。请选择一处查看。'],
     coachSchoolResult:['На карте видно, какие объекты работают сейчас. Посмотрите это на примере школы.','The map shows which facilities are operating now. Take a look at an example school.','地图显示目前哪些设施在运行。请查看学校示例。'],
     schoolExample:['Посмотреть действующую школу на Новом берегу','See the existing school in New Bank','查看新岸正在运行的学校'],
-    toProjects:['К проектам','View projects','查看项目'], toStats:['К статистике','View statistics','查看统计'], toMap:['К карте','View the map','打开地图'],
+    toProjects:['К проектам','View projects','查看项目'], toProgrammes:['К программам','View programmes','查看行业项目'],
+    toStats:['К статистике','View statistics','查看统计'], toMap:['К карте','View the map','打开地图'],
+    backToProgramme:['Вернуться к программе','Back to programme','返回项目'],
     taxPractice:['Пробный расчёт','Trial calculation','试算结果'],
     taxRestored:['Исходная нагрузка восстановлена','Original tax level restored','已恢复原来的税负'],
     restoreTax:['Вернуть исходную нагрузку','Restore original tax level','恢复原来的税负'],
@@ -862,6 +885,7 @@
     schoolUnknown:['Данных для сравнения нет','No data to compare','没有可比较的数据'],
     launchCost:['На запуск','To start','启动费用'],
     coursePoints:['До 5 баллов','Up to 5 points','最高5分'],
+    negotiationOpen:['Обсудить обязательства','Discuss commitments','商议承诺'],
     historyMap:['Карта за этот год','Map for this year','本年度地图'],
     historyStageUnknown:['Стадия не записана','Stage not recorded','未记录阶段'],
     illustrationUnavailable:['Иллюстрация не загрузилась','Illustration could not load','插图未能加载'],
@@ -893,8 +917,11 @@
     let busy = false, destroyed = false, errorText = '', optionDraft = null, focusAfter = null;
     let chatDraft = '', chatPending = false, chatError = '', loanDraft = null, review = null;
     let replayWelcome = 0, practiceError = '', menuReturnPending = false, scrollAfterMenu = null;
-    let investmentDraft = null, taxFrame = 0;
+    let investmentDraft = null, taxFrame = 0, taxRelease = 0, taxWrite = null, spotlightFrame = 0;
     const navigation = ['decisions','budget','map','stats','advisor'];
+    const routeFields=['tab','panel','selectedMeasureId','catalogueMode','catalogueOrigin','programmeSector','constructionDistrict',
+      'districtId','locationScope','inspectedSiteId','objectId','mapYear','historyMapSource','programmeMapReturn',
+      'sourceTab','returnPanel','scroll'];
     const defaultUI = {started:false,tab:'decisions',panel:null,tutorialStep:1,welcomeStep:4,districtId:'suburb',motion:'auto'};
     const language = () => {
       const selected = typeof controller.language === 'function' ? controller.language() : 'ru';
@@ -905,7 +932,16 @@
       const line = COPY[key] || extra[key] || [key,key,key];
       return Object.entries(values).reduce((text,[name,value]) => text.replaceAll('{'+name+'}',String(value)),line[{ru:0,en:1,zh:2}[language()]]);
     };
-    const ui = () => ({...defaultUI,...(controller.getUI?.() || {})});
+    const ui = () => {
+      const current={...defaultUI,...(controller.getUI?.() || {})};
+      if (!modern()||!current.selectedMeasureId||
+          !['project','sites','negotiation'].includes(current.panel)) return current;
+      const measure=G.V4Campaign.measure(current.selectedMeasureId)||measures().find(row=>row.id===current.selectedMeasureId);
+      if (!measure) return current;
+      const mode=v4.scope(measure);
+      const origin=mode==='programmes'?(current.catalogueOrigin==='budget'?'budget':'decisions'):'map';
+      return {...current,tab:origin,catalogueMode:mode,catalogueOrigin:origin};
+    };
     const state = () => controller.getState();
     const modern = () => controller.meta?.edition==='v4';
     const welcomeStep = current => replayWelcome || (current.welcomeStep>=1&&current.welcomeStep<=3?current.welcomeStep:0);
@@ -941,9 +977,29 @@
     const moneyInput = (name,value,title,max) => '<label class="v3-field"><span>'+esc(title)+'</span><input inputmode="decimal" type="number" min="0" step="1" '+(Number.isFinite(max)?'max="'+max+'" ':'')+'name="'+name+'" value="'+esc(value || 0)+'"></label>';
     const picture = (src,alt,cls = '') => '<img class="'+cls+'" src="'+esc(asset(src))+'" alt="'+esc(alt)+'" decoding="async">';
     const regionalArt = 'assets/illustrated/region-cover-1024.webp';
-    const v4=G.V4Planning?.create({state,quote,ui,t,local,esc,label,button,money,number,language,measures,heading,back,controller,
+    const v4=G.V4Planning?.create({state,quote,ui,t,local,esc,label,button,money,number,language,measures,heading,back,controller,asset,
       districtLabel,siteLabel:id=>id?local(rules.SITES.find(row=>row.id===id)?.labels||G.V4Campaign?.site(id)?.labels||
         siteData({id:'school-campus',siteIds:[id]}).find(row=>row.id===id)?.labels):''});
+
+    const selectedProject = () => {
+      const measure=selectedMeasure();
+      return measure&&v4?.projectFor(measure.id);
+    };
+    const returnFromNegotiation = async () => {
+      await storeUI({tab:ui().catalogueOrigin||ui().tab,panel:'project'});
+      focusAfter='v3-heading';
+      render();
+    };
+    const negotiation=G.V4Negotiation?.create({
+      state,measure:selectedMeasure,project:selectedProject,quote,language,asset,money,
+      async savePromise(promise,measureId) {
+        if (controller.meta?.readOnly||!state().draft.measures.some(row=>row.measureId===measureId)) {
+          throw Error('governor-v3/stale-project');
+        }
+        await editPortfolio(measureId,{promise});
+      },
+      confirm:returnFromNegotiation,back:returnFromNegotiation,
+    });
 
     async function perform(operation, after) {
       if (busy || controller.meta?.readOnly) return;
@@ -973,14 +1029,23 @@
       const filters=tab==='stats'&&[6,9].includes(step)
         ? {statsDistrict:'all',statsYear:step===6?'initial':String(state().history.at(-1)?.year||'')} : {};
       practiceError='';
-      await storeUI({tab,panel:null,...filters});
+      await storeUI({tab,panel:null,...filters,...(modern()?{programmeMapReturn:false}:{})});
       focusAfter = anchor || 'v3-heading';
       render();
     }
     function pushPanel(panel,patch = {}) {
       const current=ui();
-      history.pushState({governorV3:true,tab:current.tab,panel:current.panel},'');
-      return storeUI({...patch,panel});
+      const destination={...patch,panel};
+      if (modern()) {
+        const entry=view=>({governorV3:true,attemptId:state().attemptId,year:state().year,
+          route:Object.fromEntries(routeFields.map(key=>[key,view[key]??null]))});
+        const origin=entry(current);
+        if (JSON.stringify(history.state)!==JSON.stringify(origin)) history.replaceState(origin,'');
+        history.pushState(entry({...current,...destination}),'');
+      } else {
+        history.pushState({governorV3:true,tab:current.tab,panel:current.panel},'');
+      }
+      return storeUI(destination);
     }
     function closePanel() {
       return storeUI({panel:null});
@@ -994,7 +1059,7 @@
     async function closeMenu(fromHistory = false) {
       const current=ui();
       // An open menu from an older build may only have its origin in the history entry.
-      const previous=history.state?.governorV3?history.state:null;
+      const previous=history.state?.governorV3?(history.state.route||history.state):null;
       const tab=current.sourceTab||previous?.tab||current.tab;
       const panel=Object.hasOwn(current,'returnPanel')?current.returnPanel:previous?.panel??null;
       replayWelcome=0;
@@ -1014,15 +1079,48 @@
     }
     async function openSites() {
       await storeUI({tab:'map',panel:'sites',districtId:selectedMeasure()?.districtId||'suburb',
-        ...(modern()?{locationScope:'district',inspectedSiteId:selectedDraft()?.siteId||null}:{})});
+        ...(modern()?{locationScope:'district',inspectedSiteId:selectedDraft()?.siteId||null,
+          catalogueMode:'construction',catalogueOrigin:'map'}:{})});
+      focusAfter='v3-heading';
+    }
+    async function openCatalogue(mode, origin, filter='all') {
+      const field=mode==='programmes'?'programmeSector':'constructionDistrict';
+      await pushPanel('measures',{tab:origin,catalogueMode:mode,catalogueOrigin:origin,[field]:filter});
+      focusAfter='v3-heading';
+    }
+    function programmeDistricts(measure) {
+      if(!measure)return [];
+      const current=measure.projectId&&state().projects.find(project=>project.id===measure.projectId);
+      return Object.keys(current?.targets||measure.serviceEffect?.targets||{[measure.districtId]:1});
+    }
+    function projectDistricts(project) {
+      return project?Object.keys(project.targets||{[project.districtId]:1}):[];
+    }
+    async function learnDistrict() {
+      if (needsSite()) return openSites();
+      const measure=selectedMeasure();
+      const fromProgramme=ui().panel==='project'&&Boolean(measure)&&v4.scope(measure)==='programmes';
+      await storeUI({tab:'map',panel:null,locationScope:'region',programmeMapReturn:fromProgramme});
       focusAfter='v3-heading';
     }
     function practiceStep(current) {
       if (!current.started||!state()||state().completed||current.panel==='menu'||welcomeStep(current)) return 0;
       return current.tutorialStep<=10?current.tutorialStep:0;
     }
+    function activePracticeSurface(step,{tab,panel,catalogueMode}) {
+      if (panel==='negotiation') return false;
+      if (step<=2) return tab==='decisions'&&(!panel||panel==='event');
+      if (step===3) return tab==='decisions'&&(!panel||panel==='measures'&&catalogueMode!=='construction');
+      if (step===4) return panel==='project'||tab==='map'&&(!panel||panel==='sites');
+      if (step===5) return tab==='budget'&&!panel;
+      if (step===6) return ['budget','stats'].includes(tab)&&!panel;
+      if (step===7) return panel==='investment'||tab==='decisions'&&(!panel||panel==='measures');
+      if (step===8) return panel==='review'||tab==='decisions'&&!panel;
+      if (step===9) return panel==='result'||tab==='stats'&&!panel;
+      return step===10&&tab==='map'&&(!panel||panel==='object');
+    }
     function schoolExampleNeeded(step,current) {
-      if (step===4) return !needsSite();
+      if (step===4) return !modern()&&!needsSite();
       const district=current.districtId||'suburb';
       return step===10&&district!=='suburb'&&!state().projects.some(project=>project.districtId===district);
     }
@@ -1031,14 +1129,16 @@
       const example=schoolExampleNeeded(step,current);
       const taxResult=step===6&&tab==='budget'&&!panel&&current.taxPractice;
       const reviewBlocked=step===8&&panel==='review'&&!quote().ok;
-      const keys=['coachEvent','coachAnswer','coachProject',example?'coachSchool':'coachSites','coachBudget',
+      const programmeMap=modern()&&step===4&&!needsSite();
+      const coverage=programmeDistricts(selectedMeasure()).map(districtLabel).join(', ');
+      const keys=['coachEvent','coachAnswer',modern()?'coachMeasures':'coachProject',example?'coachSchool':'coachSites','coachBudget',
         taxResult?'coachTaxResult':'coachStats','coachReview',reviewBlocked?'coachFixPlan':'coachConfirm','coachResults',example?'coachSchoolResult':'coachMap'];
       let action='';
       if (example) action=button(esc(t('schoolExample')),'tutorial-school','secondary');
       else {
         const sitesShown=['project','sites'].includes(panel)||!panel&&['decisions','map'].includes(tab);
         const routes={1:[tab!=='decisions'||panel,'eventOpen'],2:[panel!=='event','eventOpen'],
-          3:[panel!=='measures','toProjects'],4:[!sitesShown,'map.chooseSite'],
+          3:[panel!=='measures',modern()?'toProgrammes':'toProjects'],4:programmeMap?[tab!=='map'||panel,'toMap']:[!sitesShown,'map.chooseSite'],
           5:[tab!=='budget'||panel,'budget.review'],6:[!taxResult&&!controller.schoolPractice?.()?.visible,'toStats'],
           9:[panel!=='result'&&!controller.schoolPractice?.()?.visible,'resultStats'],10:[tab!=='map'||panel,'toMap']};
         const route=routes[step];
@@ -1048,19 +1148,21 @@
       const portfolio=modern()&&step===7&&!fund&&!current.portfolioPracticed;
       if(fund&&current.panel!=='investment')action=button(esc(v4.tr('fundEdit')),'v4-fund','secondary');
       if(portfolio)action=button(esc(v4.tr('pick')),'measures','secondary');
+      const guidance=programmeMap?(coverage?t('coachProgrammeScope',{districts:coverage}):t('coachOpenScope')):t(keys[step-1]);
       return '<aside class="v3-coach" aria-label="'+esc(t('localAdvisor'))+'">'+picture('assets/characters/ilya-avatar.webp','','')+
         '<div><strong>'+esc(t('localAdvisor'))+'</strong><p>'+
-        esc(fund?v4.tr('tutorialFund'):portfolio?v4.tr('tutorialPortfolio'):t(keys[step-1]))+'</p>'+action+'</div></aside>';
+        esc(fund?v4.tr('tutorialFund'):portfolio?v4.tr('tutorialPortfolio'):guidance)+'</p>'+action+'</div></aside>';
     }
     function eventIllustration(event, detailed = false) {
-      const illustration=controller.eventArt?.(event,language());
+      const illustration=modern()?G.V4EventMedia.get(event):controller.eventArt?.(event,language());
       if (!illustration) return '';
       const art=typeof illustration==='string'?{poster:illustration}:illustration;
       const poster=art.poster||art.src;
       const lowerSubject=/\/(mobile-medical-unit|commuter-transport)-800\.webp$/.test(poster);
-      const classes='v3-event-art'+(art.emblem?' v3-event-emblem':'')+(lowerSubject?' v3-event-subject-low':'');
-      const gif=modern()&&detailed?(art.motion==='river'?'river-flow':poster.endsWith('/school-street.webp')?'school-breeze':null):null;
-      const motion=gif?' data-v4-event-gif="'+gif+'"':detailed&&art.motion==='river'?' data-v3-motion="river"':'';
+      const classes='v3-event-art'+(art.emblem?' v3-event-emblem':'')+(lowerSubject?' v3-event-subject-low':'')+
+        (G.V4MajorEvents?.has(event.id)?' v3-major-art':'');
+      const gif=modern()&&detailed?(art.gif||(art.motion==='river'?'river-flow':poster.endsWith('/school-street.webp')?'school-breeze':null)):null;
+      const motion=gif?' data-v4-event-gif="'+esc(gif)+'"':detailed&&art.motion==='river'?' data-v3-motion="river"':'';
       return '<div class="v3-event-visual"'+motion+'><picture>'+
         (art.small&&asset(art.small)!==asset(poster)?'<source media="(max-width: 600px)" srcset="'+esc(asset(art.small))+'">':'')+
         picture(poster,'',classes)+'</picture></div>'+
@@ -1112,18 +1214,22 @@
     function welcomeView(step) {
       const key='welcome'+step;
       const action=step<3?'welcomeNext':replayWelcome?'welcomeReturn':'welcomeStart';
+      const first=modern()&&step===3?'welcome3Construction':key+'First';
+      const second=modern()&&step===2?'welcome2Programmes':key+'Second';
       return '<section class="v3-card v3-welcome" data-v3-welcome="'+step+'" aria-labelledby="v3-heading">'+
         picture(regionalArt,'','v3-welcome-art')+
         '<div class="v3-welcome-copy"><div class="v3-welcome-speaker">'+picture('assets/characters/ilya-avatar.webp','')+
         '<div><strong>'+esc(t('localAdvisor'))+'</strong><small>'+esc(t('nav.advisor'))+'</small></div></div>'+
-        heading(t(key+'Title'))+'<p>'+esc(t(key+'First'))+'</p><p>'+esc(t(key+'Second'))+'</p>'+
+        heading(t(key+'Title'))+'<p>'+esc(t(first))+'</p><p>'+esc(t(second))+'</p>'+
         '<div class="v3-welcome-actions"><span>'+esc(t('welcomeProgress',{step}))+'</span>'+button(esc(t(action)),'welcome-next','primary')+'</div></div></section>';
     }
     function decisions() {
       const event=card(),draft=state().draft,choice=event?.options.find(row=>row.id===draft.eventChoice),measure=selectedMeasure(),project=quote()?.project;
+      const major=majorSituation(state().event);
       return heading(t('nav.decisions'))+(modern()?'<p class="v3-muted">'+esc(v4.period(G.V4Campaign.chapter(state().year)))+'</p>':'')+
         '<div class="v3-decision-grid"><section class="v3-card v3-event">'+
-        (event?eventIllustration(event):'')+'<div class="v3-card-body"><p class="v3-eyebrow">'+esc(t('event'))+'</p>'+
+        (event?eventIllustration(event):'')+'<div class="v3-card-body"><p class="v3-eyebrow'+(major?' v3-major-label':'')+'">'+
+        esc(major?t('majorEvent')+' · '+districtLabel(major.districtId):t('event'))+'</p>'+
         '<h2>'+esc(event?.title || t('eventRequired'))+'</h2>'+ (choice?'<p class="v3-selected-copy">✓ '+esc(choice.label)+'</p>':'')+
         button(esc(t(choice?'eventChange':'eventOpen')),'event','primary','data-anchor="event.open"')+'</div></section>'+
         (modern()?v4.summary()+'</div>':
@@ -1141,16 +1247,19 @@
       const event=card();
       if (!event) return heading(t('event'))+'<p role="status">'+esc(t('eventRequired'))+'</p>';
       const chosen=optionDraft ?? state().draft.eventChoice;
+      const major=majorSituation(state().event), required=event.circumstance?.effects?.unavoidableExpenseMlnRub||0;
       return back('back',t('nav.decisions'))+heading(event.title)+'<section class="v3-card v3-event-detail">'+eventIllustration(event,true)+
         '<div class="v3-card-body"><p>'+esc(event.situation)+'</p>'+
         (event.circumstance?.summary?'<p>'+esc(event.circumstance.summary)+'</p>':'')+
+        (major&&required?label(t('majorRequired'),money(required)):'')+
+        (major?button(esc(t('majorMap')),'major-map','link','data-district-id="'+esc(major.districtId)+'"'):'')+
         (event.fallbackLocale?'<small>'+esc(t('translatedFallback'))+'</small>':'')+'</div></section>'+
         '<div class="v3-options" role="group" aria-label="'+esc(t('event'))+'" data-anchor="event.option">'+event.options.map(option=>{
           const tax=option.effects?.treasury||{},outcome=option.effects?.localOutcome||{},picked=chosen===option.id;
-          const costs=tax.oneOffMlnRub>0||tax.operatingMlnRubPerYear>0;
-          const now=(tax.oneOffMlnRub||0)+(tax.firstOperatingYearOffset===0?(tax.operatingMlnRubPerYear||0):0);
+          const now=(tax.oneOffMlnRub||0)+(tax.firstOperatingYearOffset===0?(tax.operatingMlnRubPerYear||0):0)+(major?required:0);
+          const costs=now>0||tax.operatingMlnRubPerYear>0;
           return '<button type="button" class="v3-option '+(picked?'selected':'')+'" aria-pressed="'+picked+'" data-v3-option="'+esc(option.id)+'"><strong>'+esc(option.label)+(picked?'<span aria-hidden="true">✓</span>':'')+'</strong>'+
-            '<span>'+esc(option.tradeoff)+'</span>'+(costs?'<small>'+esc(t('budget.now'))+': '+esc(money(now))+(tax.operatingMlnRubPerYear?' · '+esc(money(tax.operatingMlnRubPerYear))+' '+esc(t('annual')):'')+'</small>':'')+
+            '<span>'+esc(option.tradeoff)+'</span>'+(costs?'<small>'+esc(major?t('majorTotalNow'):modern()?v4.tr('yearSpending'):t('budget.now'))+': '+esc(money(now))+(tax.operatingMlnRubPerYear?' · '+esc(money(tax.operatingMlnRubPerYear))+' '+esc(t('annual')):'')+'</small>':'')+
             (picked&&option.beneficiaries?'<small>'+esc(option.beneficiaries)+'</small>':'')+
             (outcome.units?'<small>'+esc(number(outcome.units))+' · '+esc(event.localIndicator?.unitLabel || '')+' · '+(state().year+(outcome.firstYearOffset||0))+'</small>':'')+'</button>';
         }).join('')+'</div>'+button(esc(t('dec.saveAnswer')),'save-event','primary full',chosen?'':'disabled');
@@ -1167,23 +1276,44 @@
             (row.annualOpex?' · '+esc(money(row.annualOpex))+' '+esc(t('annual')):'')+'</small></span><span aria-hidden="true">'+(selected===row.id?'✓':'›')+'</span></button>').join('')+'</div></section>';
         }).join('')+'</div>';
     }
+    function measureIllustration(measure) {
+      const scene=G.V4DecisionMedia?.get(measure.id);
+      return scene?picture(scene,'','v4-measure-image'):'';
+    }
     function projectView() {
       const measure=selectedMeasure(),project=quote()?.project,draft=state().draft;
       if (!measure) return measuresView();
       if(modern()){
         const row=selectedDraft();
-        const candidate=row?v4.projectFor(measure.id):measure.siteIds?.length?null:controller.previewMeasure(measure.id,null).project;
-        return back('measures',v4.tr('pick'))+heading(local(measure.labels))+
-          '<section class="v3-card v3-card-body"><p class="v3-eyebrow">'+esc(districtCaption(measure.districtId))+'</p>'+
-          '<p>'+esc(local(measure.description))+'</p>'+
-          label(t('construction'),money(candidate?.capex??measure.cost))+
+        const offer=!row&&!measure.siteIds?.length?controller.previewMeasure(measure.id,null):null;
+        const candidate=row?v4.projectFor(measure.id):offer?.project;
+        const illustration=measureIllustration(measure);
+        const scope=v4.scope(measure),construction=scope==='construction';
+        const catalogue=scope==='programmes'?v4.tr('pick'):t(construction?'mapConstruction':'mapDistrictMeasures');
+        const context='<p class="v3-eyebrow">'+esc(t(measure.sector))+'</p><p>'+esc(local(measure.description))+'</p>';
+        const districts=construction?[measure.districtId]:programmeDistricts(measure);
+        const continuation={renew:'renewalFee',restore:'restorationFee'}[measure.kind];
+        const costKey=continuation?v4.tr(continuation):t(construction?'construction':'launchCost');
+        const cost=continuation?candidate?.costNow??measure.cost:candidate?.capex??measure.cost;
+        return back('catalogue-back',catalogue)+heading(local(measure.labels))+
+          '<section class="v3-card v3-card-body">'+
+          (illustration?'<div class="v4-measure-intro"><div>'+context+'</div>'+illustration+'</div>':context)+
+          label(t('territoryReach'),districts.map(districtLabel).join(', '))+
+          label(costKey,money(cost))+
           label(t('budget.annual'),money(candidate?.annualOpex??measure.annualOpex))+
-          (candidate?label(t('budget.now'),money(candidate.costNow))+label(t('plannedOpen'),candidate.openingYear):'')+
+          (candidate?label(v4.tr('yearSpending'),money(v4.spendingNow(candidate,offer?.finance)))+label(t('plannedOpen'),candidate.openingYear):'')+
+          (!construction&&candidate?label(t('programmeYears'),candidate.openingYear+'–'+candidate.endYear)+
+            label(t('programmeBalance'),money(offer?.finance.cashEnd??quote().finance.cashEnd)):'')+
+          (!construction&&candidate?.projection?.districts?.some(row=>row.servedChange)?
+            '<details><summary>'+esc(t('placesEstimate')+' · '+number(candidate.projection.served)+' / '+number(candidate.projection.demand))+'</summary>'+candidate.projection.districts.map(row=>
+              label(districtLabel(row.districtId),number(row.before.served)+' → '+number(row.after.served)+' / '+number(row.after.demand))).join('')+'</details>':'')+
           (measure.siteIds?.length?button(esc(t(row?.siteId?'siteChange':'map.chooseSite')),'sites','primary full'):
             !row?button(esc(v4.tr('add')),'v4-add','primary full'): '')+
           (row?button(esc(v4.tr('remove')),'v4-remove','secondary full','data-measure-id="'+esc(measure.id)+'"'):'')+
-          '</section>'+(row?promiseEditor(row.promise,candidate):'')+
-          button(esc(v4.tr('pick')),'measures','secondary full');
+          '</section>'+
+          (row?.promise?negotiation.summarize(measure.id):'')+
+          (row&&candidate?button(esc(t('negotiationOpen')),'negotiate','secondary full'):'')+
+          button(esc(catalogue),'catalogue-back','secondary full');
       }
       const promise=draft.promise;
       return back('back',t('nav.decisions'))+heading(local(measure.labels))+
@@ -1201,16 +1331,7 @@
           (promise.type==='reserve'?moneyInput('promise-amount',promise.amount,t('promiseAmount')):''):'')+
         '</section>'+(practiceStep(ui())===4?'':button(esc(t('budget.review')),'budget','secondary full'));
     }
-    function promiseEditor(promise,project) {
-      return '<details class="v3-card v3-card-body"><summary>'+esc(t('promise'))+'</summary>'+
-        '<label class="v3-field"><span>'+esc(t('promiseWho'))+'</span><select name="promise-type"><option value="">'+esc(t('noPromise'))+'</option>'+
-        [['open','promiseOpen'],['operate','promiseRun'],['reserve','promiseReserve']].map(([id,key])=>'<option value="'+id+'" '+
-          (promise?.type===id?'selected':'')+'>'+esc(t(key))+'</option>').join('')+'</select></label>'+
-        (promise?label(t('promiseWho'),t(promise.type==='reserve'?'financeTeam':promise.type==='operate'?'residents':'municipality'))+
-          '<label class="v3-field"><span>'+esc(t('promiseDue'))+'</span><input type="number" name="promise-year" min="'+state().year+
-          '" max="2045" value="'+esc(promise.dueYear??project?.openingYear??state().year)+'"></label>'+
-          (promise.type==='reserve'?moneyInput('promise-amount',promise.amount,t('promiseAmount')):''):'')+'</details>';
-    }
+
     function operationName(operation) {
       if(modern()&&operation.type.startsWith('investment-'))return v4.tr({
         'investment-contribution':'fundContribution','investment-principal':'fundPrincipal','investment-income':'fundIncome'}[operation.type]||'fund');
@@ -1261,8 +1382,11 @@
           moneyInput('reserveDraw',s.draft.reserveDraw,t('reserveTake'),s.finance.reserve)+moneyInput('reserveContribution',s.draft.reserveContribution,t('reserveAdd'))+label(t('after'),money(finance.reserveEnd))+'</details></section>':'')+
         '</div><div><h2>'+esc(t('budget.sectors'))+'</h2><section class="v3-card v3-card-body">'+
         (!past?'<details><summary>'+esc(t('sectorHelpTitle'))+'</summary><p>'+esc(t('sectorHelp'))+'</p></details>':'')+
-        Object.entries(finance.sectors||{}).map(([id,sector])=>'<details class="v3-sector"><summary><span>'+esc(t(id))+'</span><strong>'+esc(money(sector.total))+'</strong></summary>'+
-        (sector.entries||[]).map(op=>label(operationName(op),money(op.amount))).join('')+(!past?moneyInput('sector:'+id,s.draft.sectorLimits[id]??sector.total,t('allocation')):'')+'</details>').join('')+
+        Object.entries(finance.sectors||{}).map(([id,sector])=>'<details class="v3-sector" data-v4-sector-id="'+esc(id)+'"'+
+        (!past&&current.catalogueOrigin==='budget'&&current.programmeSector===id?' open':'')+'><summary><span>'+esc(t(id))+'</span><strong>'+esc(money(sector.total))+'</strong></summary>'+
+        (sector.entries||[]).map(op=>label(operationName(op),money(op.amount))).join('')+(!past?moneyInput('sector:'+id,s.draft.sectorLimits[id]??sector.total,t('allocation')):'')+
+        (!past&&modern()&&measures().some(measure=>measure.sector===id&&v4.scope(measure)==='programmes')?
+          button(esc(t('sectorProgrammes')),'v4-sector-programmes','secondary','data-sector="'+esc(id)+'"'):'')+'</details>').join('')+
         label(t('interest'),money(finance.operations.filter(op=>op.type==='interest').reduce((sum,row)=>sum+row.amount,0)))+
         label(t('principal'),money(finance.operations.filter(op=>op.type==='principal').reduce((sum,row)=>sum+row.amount,0)))+'</section>'+
         (nearTerm.length?'<section class="v3-card v3-card-body" aria-labelledby="v3-future-balance"><h2 id="v3-future-balance">'+
@@ -1324,36 +1448,51 @@
       controls:{ru:'Масштаб карты',en:'Map zoom controls',zh:'地图缩放控件'}[language()],
       objects:t('locations'),closedRoad:{ru:'Дорога закрыта',en:'Road closed',zh:'道路已关闭'}[language()]
     });
-    function mapAsset(project,status) {
-      const structure=['foundation','frame','finishing'].includes(status);
-      if(project.measureId==='school-campus')return 'assets/v3/new-school-'+(structure?status:'open')+'.webp';
-      if(project.districtId!=='suburb')return 'assets/v4/facility-'+project.districtId+'-'+
-        (status==='restoring'?'finishing':structure?status:'open')+'.webp';
-      return structure?'assets/v3/new-school-'+status+'.webp':'assets/world/housing.webp';
+    function majorSituation(record) {
+      const identity=record?.eventId;
+      return modern()&&G.V4MajorEvents?.has(identity)?G.V3Events.eventCard(identity,language()):null;
+    }
+    function majorMapPin(situation, position) {
+      return {...position,id:situation.id,kind:'event',marker:'!',label:situation.title};
     }
     function modernMap(district,siteMode=false,historical=null) {
       const s=state(),map=G.V4Map,school=district==='suburb',chosen=selectedDraft();
-      if(district==='all')return map.render({key:'region',district,image:asset(regionalArt),aspect:16/9,label:t('whole'),
-        strings:mapCopy(),fit:'contain',routes:map.ambientRoads('region'),pins:Object.entries(rules.DISTRICTS).map(([id,row])=>({
-          id,x:row.x,y:row.y,label:districtLabel(id),kind:'district',marker:districtLabel(id).slice(0,1)
-        }))});
-      const current=historical?.projects??s.projects,rows=current.filter(project=>project.districtId===district),pins=[],buildings=[];
+      const major=majorSituation(historical?historical.event:s.event);
+      const ambient=G.V4TerrainMedia.layers(district).map(layer=>({...layer,src:asset(layer.src)}));
+      if(district==='all') {
+        const marks={suburb:t('mapMarkSuburb'),capital:t('mapMarkCapital')};
+        const pins=Object.entries(rules.DISTRICTS).map(([id,row])=>({
+          id,x:row.x,y:row.y,label:districtLabel(id),kind:'district',marker:marks[id]||districtLabel(id).slice(0,1)
+        }));
+        if (major) {
+          const {x,y}=rules.DISTRICTS[major.districtId];
+          pins.push(majorMapPin(major,{x:x+.047,y:y-.065}));
+        }
+        return map.render({key:historical?'year:'+historical.year+':region':'region',district,image:asset(regionalArt),aspect:16/9,
+          label:t('whole'),strings:mapCopy(),fit:'contain',historical:!!historical,routes:map.ambientRoads('region'),ambient,pins});
+      }
+      const current=historical?.projects??s.projects;
+      const rows=current.filter(project=>project.siteId&&project.districtId===district),pins=[],buildings=[];
+      if(major?.districtId===district) {
+        const points={suburb:{x:.67,y:.43},river:{x:.58,y:.37},capital:{x:.65,y:.55}};
+        pins.push(majorMapPin(major,points[district]||{x:.53,y:.44}));
+      }
       const draftIds=new Set(s.draft.measures.map(row=>row.siteId).filter(Boolean));
       for(const [index,project] of rows.entries()){
         const descriptor=G.V4Campaign.measure(project.measureId)||rules.MEASURES.find(row=>row.id===project.measureId);
         const site=project.siteId&&siteData(descriptor||{id:project.measureId,districtId:district,siteIds:[project.siteId]}).find(row=>row.id===project.siteId);
-        const position=site||(school&&(project.measureId==='school-bus'||project.measureId==='second-shift')?servicePoint(project):
-          {x:.23+(index%4)*.17,y:.63+Math.floor(index%8/4)*.16});
+        const position=site||{x:.23+(index%4)*.17,y:.63+Math.floor(index%8/4)*.16};
         const status=historical?project.status:phase(project);
         const recent=!historical&&wasChanged(project.id);
         pins.push({...position,id:project.id,label:local(project.labels)+' · '+phaseLabel(status)+(recent?' · '+v4.tr('recent'):''),
           kind:'object',status,recent,selected:ui().objectId===project.id});
-        if(!project.siteId)continue;
-        const activeStage=status==='restoring'?'finishing':status;
-        const motion=['foundation','frame','finishing'].includes(activeStage);
-        buildings.push({...position,id:project.id,status,src:asset(mapAsset(project,status)),width:school?.28:.21,
-          animation:!historical&&motion?{src:asset('assets/v4/motion/work-'+activeStage+'.gif'),
-            width:.54,height:.54,offsetX:.49,offsetY:.51}:null});
+        const visual=G.V4FacilityMedia.get(project.measureId,status);
+        if(!visual)continue;
+        const groundwork=['river','transport'].includes(visual.type);
+        const displayMotion=!historical&&(status!=='open'||recent||ui().objectId===project.id);
+        const animation=displayMotion&&visual.loop?{...visual.loop,src:asset(visual.loop.src)}:null;
+        const width=groundwork?.17:visual.type==='school'?.28:school?.20:.21;
+        buildings.push({...position,id:project.id,status,src:asset(visual.building),width,groundwork,animation});
       }
       if(school){
         for(const [id,node,name] of [['old-school','old',t('oldSchool')],['other-school','other',t('otherSchool')]]){
@@ -1371,10 +1510,20 @@
       }
       const districts=s.stats.districts;
       const baseImage=school?'assets/v3/district-base.webp':'assets/v4/terrain-'+district+'.webp';
-      const routes=school?map.schoolRoads({roads:s.schoolMap.roads,closedRoads:historical?
-        historical.stats?.school?.closedRoads||[]:s.closedRoads,projectPoint:mapPoint}):map.ambientRoads(district);
+      const running=new Set(current.filter(project=>projectDistricts(project).includes(district)&&phase(project)==='open').map(project=>project.measureId));
+      const schoolBus=running.has('school-bus')&&s.stats.school?.transported>0;
+      const medical=['mobile-units','municipal-health-contracts'].some(id=>running.has(id));
+      const freight=['agro-cold-chain','county-freight-hubs','logistics-embankment'].some(id=>running.has(id));
+      const vehicle=schoolBus?'bus':medical?'medical':freight?'freight':undefined;
+      let closedRoads=historical?historical.stats?.school?.closedRoads||[]:s.closedRoads;
+      if(school&&!historical) {
+        closedRoads=closedRoads.filter(id=>(s.roadExpiry?.[id]??s.year)>=s.year);
+        const impact=G.V4MajorEvents?.roadImpact(s.event,s.draft.eventChoice);
+        if(impact)closedRoads=impact.open?closedRoads.filter(id=>id!==impact.id):[...new Set([...closedRoads,impact.id])];
+      }
+      const routes=school?map.schoolRoads({roads:s.schoolMap.roads,closedRoads,projectPoint:mapPoint,vehicle}):map.ambientRoads(district,vehicle);
       return map.render({key:historical?'year:'+historical.year+':'+district:'district:'+district,district,
-        image:asset(baseImage),overlayImage:school?asset('assets/v3/old-school-layer.webp'):undefined,pins,buildings,routes,
+        image:asset(baseImage),overlayImage:school?asset('assets/v3/old-school-layer.webp'):undefined,pins,buildings,routes,ambient,
         historical:!!historical,label:districtLabel(district)+' · '+number(districts[district]?.population),strings:mapCopy(),fit:'contain'});
     }
     function mapDistricts(district) {
@@ -1383,20 +1532,27 @@
         esc(title)+'</button>').join('')+'</div>';
     }
     function mapWorkbench({district,inspector='',siteMode=false,historical=null,controls=true}) {
-      return (controls?mapDistricts(district):'')+'<div class="v4-map-workspace" data-anchor="map.inspectOrPlace">'+
+      const major=majorSituation(historical?historical.event:state().event);
+      return (controls?mapDistricts(district):'')+(major&&(district==='all'||district===major.districtId)?
+        '<aside class="v3-major-map-note"><div><small>'+esc(t('majorEvent')+' · '+districtLabel(major.districtId))+'</small><strong>'+esc(major.title)+'</strong></div>'+
+        (historical?'':button(esc(t('eventOpen')),'event','secondary'))+'</aside>':'')+'<div class="v4-map-workspace" data-anchor="map.inspectOrPlace">'+
         modernMap(district,siteMode,historical)+inspector+'</div>';
     }
-    function districtBrief(district) {
-      const area=state().stats.districts[district];
+    function districtBrief(district,historical=null) {
+      const area=(historical?.stats??state().stats).districts[district];
       if(!area)return '';
-      const relevant={suburb:['school','childcare'],north:['health','employment'],river:['flood','health'],
-        industrial:['employment','housing'],capital:['digital','housing']}[district];
+      const special={suburb:'childcare',river:'flood',industrial:'housing',capital:'digital'}[district];
+      const relevant=['school','health','employment',...(special?[special]:[])];
       const counts=area.kpis;
+      const programmes=(historical?.projects??state().projects).filter(project=>!project.siteId&&projectDistricts(project).includes(district)&&phase(project)==='open');
       return '<section class="v4-map-inspector"><h2>'+esc(districtLabel(district))+'</h2>'+
         label(v4.tr('population'),number(area.population))+'<p class="v3-muted">'+esc(v4.tr('coverage'))+'</p>'+
         relevant.map(metric=>label(t(metric==='school'?'stats.schoolAccess':metric),counts[metric].value===null?t('noDemand'):
           number(counts[metric].value,1)+'%')).join('')+
-        (!state().completed?button(esc(v4.tr('districtMeasures')),'v4-district-measures','secondary full','data-district-id="'+district+'"'):'')+'</section>';
+        (programmes.length?'<details><summary>'+esc(t('localProgrammes'))+' ('+number(programmes.length)+')</summary><ul class="v4-plan-list">'+programmes.map(project=>
+          '<li>'+(historical?'<span>'+esc(local(project.labels))+'</span>':'<button type="button" class="v4-plan-name" data-v3-object="'+
+            esc(project.id)+'">'+esc(local(project.labels))+'</button>')+'</li>').join('')+'</ul></details>':'')+
+        '</section>';
     }
     function locationArt(district,siteMode,historical = null) {
       const s=historical?{schoolMap:state().schoolMap,projects:historical.projects,closedRoads:historical.stats?.school?.closedRoads||[]}:state();
@@ -1442,7 +1598,16 @@
     function mapView() {
       if(modern()) {
         const current=ui(),district=current.locationScope==='district'?current.districtId||'suburb':'all';
-        return heading(t('nav.map'))+mapWorkbench({district,inspector:districtBrief(district)})+
+        const available=state().completed?[]:measures().filter(row=>district==='all'||row.districtId===district);
+        const sections=new Set(available.map(v4.scope));
+        const options=[['construction','mapConstruction','v4-map-construction'],['district','mapDistrictMeasures','v4-map-district-measures']]
+          .filter(([name])=>sections.has(name));
+        const tools=options.length?'<div class="v4-map-plan-actions">'+options.map(([,key,action])=>
+          button(esc(t(key)),action,'secondary','data-district-id="'+esc(district)+'"')).join('')+'</div>':'';
+        const returning=current.programmeMapReturn&&selectedMeasure()?back('project-back',t('backToProgramme')):'';
+        const workbench=mapWorkbench({district,inspector:districtBrief(district)});
+        return returning+heading(t('nav.map'))+(returning?workbench+tools:tools+workbench)+
+          (!state().completed?v4.mapPlan(district):'')+
           (state().history.length?button(esc(t('history')),'history','secondary'):'');
       }
       const district=ui().districtId||'suburb',s=state(),projects=s.projects.filter(row=>row.districtId===district);
@@ -1471,7 +1636,7 @@
         const inspector='<section class="v4-map-inspector" aria-labelledby="v4-map-inspect-title"><h2 id="v4-map-inspect-title">'+
           esc(site?local(site.labels):v4.tr('noSite'))+'</h2>'+
           (occupied?'<p role="status">'+esc(v4.tr('occupied'))+'</p>':'')+
-          (project?label(t('budget.now'),money(project.costNow))+label(t('construction'),money(project.capex))+
+          (project?label(v4.tr('yearSpending'),money(v4.spendingNow(project,result.finance)))+label(t('construction'),money(project.capex))+
             label(t('budget.annual'),money(project.annualOpex))+label(t('plannedOpen'),project.openingYear)+
             (delta?'<h3>'+esc(v4.tr('effect'))+'</h3>'+delta:'')+label(v4.tr('yearCash'),money(result.finance.cashEnd))+
             (result.finance.cashEnd<0?'<p class="v4-money-warning">'+esc(v4.tr('shortageNow'))+'</p>':'')+
@@ -1502,13 +1667,18 @@
       const name=project?local(project.labels):t(id==='other-school'?'otherSchool':'oldSchool');
       const restore=measures().filter(row=>row.projectId===id);
       if(modern()){
-        const district=project?.districtId||'suburb';
+        const serviceDistricts=projectDistricts(project),activeDistrict=ui().districtId;
+        const district=serviceDistricts.includes(activeDistrict)?activeDistrict:project?.districtId||'suburb';
         const service=project?.outputs&&Object.keys(project.outputs)[0];
         const servedAs={schoolStaff:'school',healthCapacity:'health',digitalAccess:'digital',floodProtection:'flood',jobs:'employment',childcareCapacity:'childcare'};
         const kpi=s.stats.districts[district]?.kpis[servedAs[service]||({north:'health',river:'flood',industrial:'employment',capital:'digital',suburb:'school'}[district])];
+        const status=project?phase(project):'open';
+        const observedYear=s.history.at(-1)?.year;
         const inspector='<section class="v4-map-inspector" data-anchor="map.inspectResult"><h2>'+esc(name)+'</h2><p class="v3-muted">'+
-          esc(districtCaption(district))+'</p><p class="v3-state '+esc(project?phase(project):'open')+'">'+esc(project?phaseLabel(phase(project)):t('running'))+'</p>'+
+          esc(districtCaption(district))+'</p><p class="v3-state '+esc(status)+'">'+esc(phaseLabel(status)+' · '+
+            (observedYear?t('factYear',{year:observedYear}):t('baseline')))+'</p>'+
           (project?label(t('plannedOpen'),project.openingYear)+label(t('budget.annual'),money(project.annualOpex))+
+            (!project.siteId?label(t('territoryReach'),serviceDistricts.map(districtLabel).join(', ')):'')+
             label(t('period'),project.openingYear+'–'+project.endYear)+(kpi&&phase(project)==='open'?
               label(t('district')+' · '+t('people'),number(kpi.served)+' / '+number(kpi.demand)):''):
             label(t('people'),number(school?.served))+label(t('demand'),number(Math.min(school?.physicalSeats,school?.staffedSeats))))+
@@ -1555,9 +1725,10 @@
         };
         const value=displayed(stats),baseline=displayed(previous);
         const delta=Number.isFinite(value)&&Number.isFinite(baseline)?Math.round((value-baseline)*10)/10:null;
-        return '<div class="v3-kpi" data-v3-kpi="'+esc(id)+'"><div><strong>'+esc(title)+'</strong><small>'+esc(number(kpi.served))+' / '+esc(number(kpi.demand))+'</small></div><div><b>'+esc(value===null?t('noDemand'):number(value,1)+'%')+'</b>'+
+        const metric='<div class="v3-kpi" data-v3-kpi="'+esc(id)+'"><div><strong>'+esc(title)+'</strong><small>'+esc(number(kpi.served))+' / '+esc(number(kpi.demand))+'</small></div><div><b>'+esc(value===null?t('noDemand'):number(value,1)+'%')+'</b>'+
           (Number.isFinite(delta)?'<small'+(delta?' class="'+(delta>0?'positive':'negative')+'"':'')+'>'+
-            (delta>0?'+':'')+esc(number(delta,1))+' '+esc(language()==='ru'?'п.п.':language()==='zh'?'百分点':'pp')+'</small>':'')+'</div></div>'+(id==='school'?exercise:'');
+            (delta>0?'+':'')+esc(number(delta,1))+' '+esc(language()==='ru'?'п.п.':language()==='zh'?'百分点':'pp')+'</small>':'')+'</div></div>';
+        return id==='school'&&exercise?'<div data-v3-school-practice>'+metric+exercise+'</div>':metric;
       }).join('');
     }
     function statsView() {
@@ -1566,15 +1737,17 @@
       const projection=district==='all'?stats:stats.districts[district];
       const previous=district==='all'?s.initialStats:s.initialStats.districts[district];
       const exercise=schoolExercise();
-      return heading(t('nav.stats'))+(modern()?exercise+v4.goals(G.V4Campaign.status(s)):'')+
+      const goals=modern()?v4.goals(G.V4Campaign.status(s)):'';
+      return heading(t('nav.stats'))+(exercise?'':goals)+
         '<div class="v3-stat-filters"><label><span class="v3-sr">'+esc(t('period'))+'</span><select name="stats-year"><option value="initial" '+(current.statsYear==='initial'?'selected':'')+'>'+esc(t('baseline'))+'</option>'+
         s.history.map(entry=>'<option value="'+entry.year+'" '+((current.statsYear?Number(current.statsYear)===entry.year:last?.year===entry.year)?'selected':'')+'>'+entry.year+'</option>').join('')+'</select></label>'+
         '<label><span class="v3-sr">'+esc(t('district'))+'</span><select name="stats-district"><option value="all">'+esc(t('whole'))+'</option>'+Object.keys(rules.DISTRICTS).map(id=>'<option value="'+id+'" '+(district===id?'selected':'')+'>'+esc(districtLabel(id))+'</option>').join('')+'</select></label></div>'+
         '<p class="v3-muted">'+esc(current.statsYear==='initial'||!row?t('baseline'):t('stats.after',{year:row.year}))+'</p>'+
-        '<div class="v3-stats-grid"><section class="v3-card v3-card-body" data-anchor="'+(row?'stats.actual':'stats.baseline')+'"><h2>'+esc(t('stats.kpi'))+'</h2>'+kpiRows(current.statsYear==='initial'?previous:projection,previous,modern()?'':exercise)+'</section>'+
+        '<div class="v3-stats-grid"><section class="v3-card v3-card-body" data-anchor="'+(row?'stats.actual':'stats.baseline')+'"><h2>'+esc(t('stats.kpi'))+'</h2>'+kpiRows(current.statsYear==='initial'?previous:projection,previous,exercise)+'</section>'+
         '<section class="v3-card v3-card-body"><h2>'+esc(t('stats.support'))+'</h2>'+label(t('support'),number(stats.support,1)+' / 100')+
         Object.entries(stats.groups||{}).map(([id,value])=>'<div class="v3-group"><div>'+label(t(id),number(value,1))+'</div><meter min="0" max="100" value="'+value+'" aria-label="'+esc(t(id))+'">'+value+'</meter></div>').join('')+
         '<details><summary>'+esc(t('reasons'))+'</summary>'+Object.entries(stats.groupReasons||{}).map(([id,value])=>'<p><strong>'+esc(t(id))+'</strong> '+esc(typeof value==='number'?(value>0?'+':'')+number(value,1):value?.delta!==undefined?(value.delta>0?'+':'')+number(value.delta,1):local(value))+'</p>').join('')+'</details></section></div>'+
+        (exercise?goals:'')+
         ((stats.eventOutcomes||[]).length?'<section class="v3-card v3-card-body"><h2>'+esc(t('event'))+'</h2>'+stats.eventOutcomes.map(outcome=>{
           const event=G.V3Events.eventCard(outcome.eventId,language());
           return '<p><strong>'+esc(event?.title||'')+'</strong></p>'+label(event?.localIndicator.unitLabel||'',number(outcome.actualUnits??outcome.units??outcome.value));
@@ -1588,7 +1761,7 @@
         return '<details class="v3-card v3-card-body" data-v3-history-year="'+row.year+'" '+(Number(ui().mapYear)===row.year?'open':'')+'><summary><strong>'+row.year+'</strong> '+
           esc(modern()?(measures.map(project=>local(project.labels)).slice(0,2).join(' · ')||v4.tr('empty')):local(row.measure?.labels)||t('dec.defer'))+'</summary>'+
           '<p>'+esc(event?.title||'')+'</p>'+label(t('budget.remaining'),money(row.finance.cashEnd))+label(t('support'),number(row.stats.support,1))+
-          (modern()&&measures.length?v4.list(measures):'')+
+          (modern()&&measures.length?v4.list(measures,{finance:row.finance}):'')+
           (Array.isArray(row.projects)?'<button type="button" class="v3-button secondary full" data-v3-history-map="'+row.year+'">'+esc(t('historyMap'))+'</button>':'')+'</details>';
       }).join('')+'</div>';
     }
@@ -1596,7 +1769,8 @@
       const row=state().history.find(entry=>entry.year===Number(ui().mapYear));
       if (!Array.isArray(row?.projects)) return historyView();
       const district=ui().districtId||'suburb',projects=row.projects.filter(project=>project.districtId===district);
-      if(modern())return back('history-return',t('history'))+heading(t('factYear',{year:row.year}))+mapWorkbench({district,historical:row});
+      if(modern())return back('history-return',t(ui().historyMapSource==='result'?'result':'history'))+
+        heading(t('factYear',{year:row.year}))+mapWorkbench({district,historical:row,inspector:districtBrief(district,row)});
       const facilities=district==='suburb'?row.stats?.school?.facilities||[]:[];
       const facilityName=facility=>facility.id==='old-school'?t('oldSchool'):facility.id==='east-school'?t('otherSchool'):
         local(projects.find(project=>project.measureId==='school-campus')?.labels)||t('newProject');
@@ -1637,6 +1811,12 @@
       const keys={'event-required':'eventRequired','measure-required':'measureRequired','site-required':'siteRequired','site-occupied':'siteRequired','invalid-site':'siteRequired','loan-limit':'loanError','reserve-unavailable':'budgetError','sector-below-commitments':'balanceError','sector-total':'balanceError','campaign-finished':'final'};
       return t(keys[code]||'budgetError');
     }
+    function eventPayments(event,finance) {
+      const rows=finance.operations.filter(row=>row.eventId===event.id);
+      const paid=rows.filter(row=>row.direction==='out').reduce((sum,row)=>sum+row.amount,0);
+      const receipts=rows.filter(row=>row.direction==='in').reduce((sum,row)=>sum+row.amount,0);
+      return label(t('eventPayments'),money(paid))+(receipts?label(t('eventReimbursement'),money(receipts)):'');
+    }
     function reviewView() {
       const current=quote(),event=card(),chosen=event?.options.find(row=>row.id===state().draft.eventChoice),year=state().year;
       const lessonLocked=year===2026&&ui().tutorialStep<8;
@@ -1645,7 +1825,8 @@
           '<button class="v3-error-link" type="button" data-v3-fix="'+esc(error.code)+'" data-tab="'+esc(error.tab)+
           '" data-measure-id="'+esc(error.measureId||'')+'">'+esc(errorLabel(error))+' →</button>').join('')+'</div>':'')+
         '<section class="v3-card v3-card-body"><p class="v3-eyebrow">'+esc(t('event'))+'</p><h2>'+esc(event?.title||'')+'</h2><p>'+esc(chosen?.label||t('eventRequired'))+'</p>'+
-        (modern()?'<h2>'+esc(v4.tr('plan'))+'</h2>'+v4.list(current.projects)+v4.warning(current.finance)+(current.finance.investmentDraft?
+        (modern()&&chosen?eventPayments(event,current.finance):'')+
+        (modern()?'<h2>'+esc(v4.tr('plan'))+'</h2>'+v4.list(current.projects,{finance:current.finance})+(negotiation?.summarize()||'')+v4.warning(current.finance)+(current.finance.investmentDraft?
           label(v4.tr('fundContribution'),money(current.finance.investmentDraft.principal))+label(v4.tr('fundMaturity'),current.finance.investmentDraft.maturityYear):''):
           '<hr><p class="v3-eyebrow">'+esc(t('newProject'))+'</p><h2>'+esc(local(selectedMeasure()?.labels)||t('measureRequired'))+'</h2>'+
           (current.project?label(t('plannedOpen'),current.project.openingYear)+label(t('budget.now'),money(current.project.costNow))+label(t('budget.annual'),money(current.project.annualOpex)):''))+
@@ -1654,18 +1835,35 @@
         button(esc(t('confirm',{year})),'commit','primary full','data-anchor="year.commit" '+(!current.ok||busy||lessonLocked?'disabled':''))+
         (controller.handoverStatus?.()?.available?button(esc(language()==='ru'?'Передать управление':language()==='en'?'Hand over administration':'移交管理'),'handover','secondary full'):'');
     }
+    function mapProgress(row) {
+      const prior=new Map((state().history.at(-2)?.projects||[]).map(project=>[project.id,project.status]));
+      const changed=(row.projects||[]).filter(project=>project.status&&prior.get(project.id)!==project.status);
+      if (!changed.length)return '';
+      return '<section class="v3-card v3-card-body"><h2>'+esc(v4.tr('mapProgress'))+'</h2>'+
+        '<ul class="v4-plan-list">'+changed.map(project=>'<li><div><button type="button" class="v4-plan-name" data-v3-object="'+
+          esc(project.id)+'">'+esc(local(project.labels))+'</button><small>'+esc(projectDistricts(project).length===Object.keys(rules.DISTRICTS).length?
+            v4.tr('allDistrictsLocation'):projectDistricts(project).map(districtLabel).join(', '))+
+          '</small></div><strong>'+esc(phaseLabel(project.status))+'</strong></li>').join('')+'</ul></section>';
+    }
     function resultView() {
       const row=state().history.at(-1);
       if (!row) return decisions();
       const term=modern()?G.V4Campaign.chapter(row.year):null;
       const situation=G.V3Events.card(row.event,language());
       const outcome=situation?.options.find(option=>option.id===row.event.choice);
+      const major=majorSituation(row.event);
+      const delivery=major&&row.stats.eventOutcomes?.find(item=>item.eventId===major.id);
       return heading(t('result'))+'<p class="v3-year-result">'+row.year+'</p><section class="v3-card v3-card-body">'+
-        (modern()?'<p class="v3-eyebrow">'+esc(t('event'))+'</p><h2>'+esc(situation?.title||'')+'</h2>'+
-          (outcome?'<p>'+esc(outcome.label)+'</p>':'')+'<h3>'+esc(v4.tr('plan'))+'</h3>'+v4.list(row.measures||[]):
+        (modern()?'<p class="v3-eyebrow'+(major?' v3-major-label':'')+'">'+esc(t(major?'majorEvent':'event'))+'</p><h2>'+esc(situation?.title||'')+'</h2>'+
+          (outcome?'<p>'+esc(outcome.label)+'</p>':'')+
+          (situation?eventPayments(situation,row.finance):'')+
+          (major?(delivery?label(major.localIndicator.unitLabel,number(delivery.actualUnits)):'')+
+            button(esc(t('majorMap')),'major-history-map','link','data-district-id="'+esc(major.districtId)+'"'):'')+
+          '<h3>'+esc(v4.tr('plan'))+'</h3>'+v4.list(row.measures||[],{finance:row.finance}):
           '<h2>'+esc(local(row.measure?.labels)||t('dec.defer'))+'</h2>')+
         label(t('budget.remaining'),money(row.finance.cashEnd))+label(t('support'),number(row.stats.support,1)+' / 100')+
         (!modern()?(row.measure?label(t('plannedOpen'),row.measure.openingYear):'<p>'+esc(t('noBuilding'))+'</p>'):'')+'</section>'+
+        (modern()?mapProgress(row):'')+
         (term?.endYear===row.year?v4.goals(G.V4Campaign.status(state(),term.number),true)+
           (!state().completed?'<p class="v3-muted">'+esc(v4.tr('nextChapter'))+'</p>':''):'')+
         (modern()&&state().projects.length?button(esc(t('returnMap')),'v4-view-last-map','secondary full'):'')+
@@ -1714,7 +1912,10 @@
       const menuOpen=current.panel==='menu';
       const showWelcome=welcome&&(replayWelcome||!menuOpen);
       const step=practiceStep(current);
-      const learning=modern()&&!s?.history.length&&step>0&&(step<7||step===7&&!current.investmentViewed);
+      const spotlight=step&&(modern()?activePracticeSurface(step,current):current.panel!=='negotiation');
+      const coach=spotlight||step&&current.tab==='decisions'&&!current.panel;
+      const lesson=current.tutorialStep;
+      const learning=modern()&&active&&!s.history.length&&lesson>0&&(lesson<7||lesson===7&&!current.investmentViewed);
       const advanceLabel=learning?v4.tr('tutorialContinue'):t('turn.next');
       const finished=modern()&&s?.completed;
       const advance=finished?'':'<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+
@@ -1724,7 +1925,8 @@
       host.dataset.v3Tab=current.tab;
       document.body.classList.toggle('governor-v3-active',active);
       const panels={event:eventView,measures:measuresView,project:projectView,sites:sitesView,object:objectView,loan:loanView,review:reviewView,
-        result:resultView,history:historyView,'history-map':historyMapView,menu:menuView,investment:()=>v4.investment(investmentDraft)};
+        result:resultView,history:historyView,'history-map':historyMapView,menu:menuView,investment:()=>v4.investment(investmentDraft),
+        negotiation:()=>selectedProject()?negotiation.render():projectView()};
       let content;
       if (showWelcome) content=welcomeView(welcome);
       else if (menuOpen) content=menuView();
@@ -1739,10 +1941,13 @@
         '<main class="v3-content '+(current.tab==='advisor'&&!current.panel&&!showWelcome?'v3-chat-content':'')+'" id="v3-main">'+
         (errorText?'<div class="v3-alert" role="alert">'+esc(errorText)+button(esc(t('retry')),'retry','link')+'</div>':'')+
         (controller.meta?.readOnly?'<div class="v3-alert" role="status">'+esc(t('system.otherTab'))+'</div>':'')+
-        (step?practiceView(step,current):'')+content+'</main>'+
+        (coach?practiceView(step,current):'')+content+'</main>'+
         (active&&!welcome?'<nav class="v3-navigation '+(finished?'v4-complete':'')+'" aria-label="'+esc(t('menu'))+'">'+navigation.map(tab=>
           '<button type="button" data-v3-tab="'+tab+'" aria-current="'+(current.tab===tab?'page':'false')+'">'+navIcon(tab)+'<span>'+esc(t('nav.'+tab))+'</span></button>').join('')+
-          advance+'</nav>':'');
+          advance+'</nav>':'')+(spotlight?
+          '<svg class="v3-coach-shade" aria-hidden="true" focusable="false"><defs><mask id="v3-coach-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">'+
+          '<rect width="100%" height="100%" fill="white"/><g data-v3-coach-holes fill="black"/></mask></defs>'+
+          '<rect width="100%" height="100%" mask="url(#v3-coach-mask)"/></svg>':'');
       const main=host.querySelector('.v3-content');
       main.scrollTop=scrollAfterMenu??(focusAfter?0:previousScroll);
       scrollAfterMenu=null;
@@ -1751,7 +1956,34 @@
         if (target&&!target.matches('button,input,select,textarea,a,[tabindex]')) target.tabIndex=-1;
         target?.focus({preventScroll:true});target?.scrollIntoView({block:'nearest'});focusAfter=null;
       } else if (focusSelector) host.querySelector(focusSelector)?.focus({preventScroll:true});
-      if (step) tutorialTarget(step,current)?.classList.add('v3-coach-target');
+      if (spotlight) {
+        cancelAnimationFrame(spotlightFrame);
+        tutorialTarget(step,current)?.classList.add('v3-coach-target');
+        if (step===2 && current.panel==='event') host.querySelector('.v3-event-detail')?.setAttribute('data-v3-coach-context','');
+        if (step===3 && current.panel==='measures') host.querySelector('.v4-catalog-filter')?.setAttribute('data-v3-coach-context','');
+        drawSpotlight();
+      }
+    }
+    function drawSpotlight() {
+      spotlightFrame=0;
+      const holes=host.querySelector('[data-v3-coach-holes]');
+      if (!holes) return;
+      const bounds=holes.ownerSVGElement.getBoundingClientRect();
+      const main=host.querySelector('.v3-content'), viewport=main.getBoundingClientRect();
+      const subjects=[...host.querySelectorAll('.v3-coach,.v3-coach-target,[data-v3-coach-context],#v3-menu-toggle')];
+      const focused=document.activeElement;
+      if (focused&&host.contains(focused)&&focused.matches(':focus-visible')) subjects.push(focused);
+      holes.innerHTML=subjects.map(node=>{
+        const area=node.getBoundingClientRect(), clip=main.contains(node)?viewport:bounds;
+        const x=Math.max(area.left-4,clip.left)-bounds.left;
+        const y=Math.max(area.top-4,clip.top)-bounds.top;
+        const width=Math.min(area.right+4,clip.right)-bounds.left-x;
+        const height=Math.min(area.bottom+4,clip.bottom)-bounds.top-y;
+        return width>0&&height>0?'<rect x="'+x+'" y="'+y+'" width="'+width+'" height="'+height+'" rx="8"/>':'';
+      }).join('');
+    }
+    function scheduleSpotlight() {
+      if (!spotlightFrame&&host.querySelector('[data-v3-coach-holes]')) spotlightFrame=requestAnimationFrame(drawSpotlight);
     }
     function tutorialTarget(step,current) {
       const {tab,panel}=current;
@@ -1759,13 +1991,18 @@
       const tabButton=name=>locate('[data-v3-tab="'+name+'"]');
       const route=locate('[data-v3-action="tutorial-next"]');
       if (step===1) return locate('[data-anchor="event.open"]')||route;
-      if (step===2) return panel==='event'?locate(optionDraft?'[data-v3-action="save-event"]':'[data-v3-option]'):route;
-      if (step===3) return panel==='measures'?locate('[data-v3-measure]'):route||locate('[data-anchor="measure.select"]');
+      if (step===2) return panel==='event'?locate(optionDraft?'[data-v3-action="save-event"]':'.v3-options'):route;
+      if (step===3) return panel==='measures'?locate('.v3-measures'):route||locate('[data-anchor="measure.select"]');
       if (schoolExampleNeeded(step,current)) return locate('[data-v3-action="tutorial-school"]');
+      if (step===4&&modern()&&!needsSite()) {
+        const districts=programmeDistricts(selectedMeasure());
+        return route||(districts.length&&locate('[data-v4-map-key] [data-v3-district="'+districts[0]+'"]'))||
+          locate('.v4-map-districts')||tabButton('map');
+      }
       if (step===4) return panel==='sites'?locate(current.inspectedSiteId?'[data-v3-action="accept-site"]':'.v3-site-choices'):locate('[data-v3-action="sites"]')||route;
       if (step===5) return locate('[data-anchor="budget.tax"]')||tabButton('budget');
-      if (step===6||step===9) return locate('[data-v3-school-question]')||locate('#v3-tax-practice')||locate('[data-v3-action="result-next"]')||tabButton('stats');
-      if (step===7) return locate('[data-v3-action="advance"]');
+      if (step===6||step===9) return locate('[data-v3-school-practice]')||locate('#v3-tax-practice')||locate('[data-v3-action="result-next"]')||tabButton('stats');
+      if (step===7) return locate('#v4-fund-form')||locate('.v3-coach .v3-button')||locate('[data-v3-action="advance"]');
       if (step===8) return locate('[data-v3-fix]')||locate('[data-v3-action="commit"]')||locate('[data-v3-action="advance"]');
       if (step===10) return tab==='map'&&!panel?locate('.v3-map-grid .v3-measure[data-v3-object]'):tabButton('map');
       return null;
@@ -1778,7 +2015,11 @@
         }else{
           const selected=measures().find(row=>row.id===id);
           if(!selected)return;
-          await storeUI({selectedMeasureId:id,tab:'decisions',panel:'project',districtId:selected.districtId,inspectedSiteId:null});
+          const current=ui();
+          const mode=v4.scope(selected);
+          const origin=mode!=='programmes'?'map':current.tab==='budget'?'budget':'decisions';
+          await storeUI({selectedMeasureId:id,tab:origin,panel:'project',districtId:selected.districtId,inspectedSiteId:null,
+            catalogueMode:mode,catalogueOrigin:origin});
           await finishStep(3);
         }
         focusAfter='v3-heading';
@@ -1818,6 +2059,8 @@
       const item=event.target.closest('button,a[data-v3-action]');
       if (!item||!host.contains(item)) return;
       if (item.matches('a')) event.preventDefault();
+      const pendingTax=saveTaxRate();
+      if (pendingTax) await pendingTax;
       if (item.dataset.v3Option) {optionDraft=item.dataset.v3Option;render();return;}
       if (item.dataset.v3Advice!==undefined) {
         const reply=controller.advisor.messages()[Number(item.dataset.v3Advice)];
@@ -1832,7 +2075,7 @@
       if (item.dataset.v3HistoryMap) return perform(async()=>{
         const year=Number(item.dataset.v3HistoryMap);
         if (!state().history.some(row=>row.year===year&&Array.isArray(row.projects))) return;
-        await pushPanel('history-map',{mapYear:year});focusAfter='v3-heading';
+        await pushPanel('history-map',{mapYear:year,historyMapSource:'history'});focusAfter='v3-heading';
       });
       if (item.dataset.v3Tax) {
         const taxMode=item.dataset.v3Tax;
@@ -1847,14 +2090,19 @@
       if (item.dataset.v3District) return perform(()=>{
         const districtId=item.dataset.v3District;
         if(!modern())return storeUI({districtId});
+        const districts=programmeDistricts(selectedMeasure());
+        const completed=ui().tutorialStep===4&&!needsSite()&&districtId!=='all'&&(!districts.length||districts.includes(districtId));
         return storeUI({districtId:districtId==='all'?'suburb':districtId,locationScope:districtId==='all'?'region':'district',
+          ...(completed?{mapPracticed:true}:{}),
           ...(ui().panel==='object'?{panel:null,objectId:null}:{})});
       });
       if (item.dataset.v3Site) return perform(()=>storeUI({inspectedSiteId:item.dataset.v3Site}));
+      if (item.dataset.v3Event) return perform(()=>openEvent());
       if (item.dataset.v3Measure) return perform(()=>chooseMeasure(item.dataset.v3Measure));
       if (item.dataset.v3Object) return perform(async()=>{
         const project=state().projects.find(row=>row.id===item.dataset.v3Object);
-        await storeUI({tab:'map',panel:'object',objectId:item.dataset.v3Object,districtId:project?.districtId||'suburb',
+        const contextDistrict=ui().tab==='map'&&projectDistricts(project).includes(ui().districtId)?ui().districtId:project?.districtId||'suburb';
+        await storeUI({tab:'map',panel:'object',objectId:item.dataset.v3Object,districtId:contextDistrict,
           ...(modern()?{locationScope:'district',mapPracticed:true}:{})});
         if (!selectedMeasure()?.siteIds.length) await finishStep(4);
         await finishStep(10);
@@ -1893,20 +2141,48 @@
         else if (action==='exit') await controller.exit();
         else if (action==='retry') await controller.retry?.();
         else if (action==='event') await openEvent();
+        else if (action==='major-map') {
+          await storeUI({tab:'map',panel:null,districtId:item.dataset.districtId,locationScope:'district'});
+          focusAfter='v3-heading';
+        }
+        else if (action==='major-history-map') {
+          const year=state().history.at(-1)?.year;
+          await pushPanel('history-map',{tab:'map',mapYear:year,historyMapSource:'result',
+            districtId:item.dataset.districtId,locationScope:'district'});
+          focusAfter='v3-heading';
+        }
         else if (action==='save-event') {await controller.patchDraft({eventChoice:optionDraft??state().draft.eventChoice});await closePanel();await finishStep(2);optionDraft=null;focusAfter='v3-heading';}
-        else if (action==='measures') {await pushPanel('measures');focusAfter='v3-heading';}
-        else if(action==='v4-district-measures'){
-          await pushPanel('measures',{tab:'decisions',portfolioFilter:item.dataset.districtId});
+        else if (action==='measures') {
+          if(modern()) await openCatalogue('programmes','decisions');
+          else {await pushPanel('measures');focusAfter='v3-heading';}
+        }
+        else if (action==='v4-map-construction') await openCatalogue('construction','map',item.dataset.districtId||'all');
+        else if (action==='v4-map-district-measures') await openCatalogue('district','map',item.dataset.districtId||'all');
+        else if (action==='v4-sector-programmes') await openCatalogue('programmes','budget',item.dataset.sector);
+        else if (action==='catalogue-back') {
+          const current=ui();
+          await storeUI({tab:current.catalogueOrigin||current.tab,panel:'measures'});
           focusAfter='v3-heading';
         }
         else if (action==='project') await pushPanel('project');
         else if (action==='defer') await chooseMeasure('defer');
-        else if (action==='project-back') await storeUI({tab:'decisions',panel:'project'});
+        else if (action==='project-back') {
+          await storeUI({tab:ui().catalogueOrigin||'decisions',panel:'project',...(modern()?{programmeMapReturn:false}:{})});
+          focusAfter='v3-heading';
+        }
+        else if (action==='negotiate'&&modern()) {
+          const measureId=item.dataset.measureId||selectedMeasure()?.id;
+          if (!measureId||!v4.projectFor(measureId)) return;
+          const mode=v4.scope(measures().find(row=>row.id===measureId));
+          const origin=mode==='programmes'?ui().tab==='budget'?'budget':'decisions':'map';
+          await pushPanel('negotiation',{tab:origin,catalogueOrigin:origin,catalogueMode:mode,selectedMeasureId:measureId});
+          focusAfter='v3-heading';
+        }
         else if (action==='sites') await openSites();
         else if (action==='accept-site') {
           if(modern()){
             await editPortfolio(selectedMeasure().id,{siteId:item.dataset.siteId});
-            await storeUI({mapPracticed:true});
+            await storeUI({mapPracticed:true,tab:'map',panel:'project'});
           }else{
             await controller.patchDraft({siteId:item.dataset.siteId});
             await storeUI({tab:'decisions',panel:'project'});
@@ -1930,11 +2206,11 @@
           const measure=selectedMeasure();
           if(!measure||measure.siteIds?.length)return;
           await editPortfolio(measure.id,{siteId:null});
-          await storeUI({tab:'decisions',panel:null});
+          await storeUI({tab:ui().catalogueOrigin||'decisions',panel:null});
         }
         else if(action==='v4-remove'){
           await editPortfolio(item.dataset.measureId,null);
-          await storeUI({tab:'decisions',panel:null,selectedMeasureId:null});
+          await storeUI({panel:null,selectedMeasureId:null});
         }
         else if(action==='v4-fund')await openInvestment();
         else if(action==='v4-save-fund'){
@@ -1959,11 +2235,9 @@
           if(modern()&&!state().history.length&&ui().tutorialStep<7){
             const next=ui().tutorialStep;
             if(next<=2)await openEvent();
-            else if(next===3)await pushPanel('measures',{tab:'decisions'});
-            else if(next===4){
-              if(needsSite())await openSites();
-              else await storeUI({tab:'map',panel:'object',districtId:'suburb',locationScope:'district',objectId:'old-school',mapPracticed:true});
-            }else await navigate(next===5?'budget':'stats');
+            else if(next===3)await openCatalogue('programmes','decisions');
+            else if(next===4)await learnDistrict();
+            else await navigate(next===5?'budget':'stats');
             return;
           }
           if(modern()&&!state().history.length&&ui().tutorialStep===7&&!ui().investmentViewed&&state().year<=2043){
@@ -1981,8 +2255,11 @@
         else if (action==='tutorial-next') {
           const step=ui().tutorialStep;
           if (step<=2) await openEvent();
-          else if (step===3) {await pushPanel('measures',{tab:'decisions'});focusAfter='v3-heading';}
-          else if (step===4) await openSites();
+          else if (step===3) {
+            if(modern()) await openCatalogue('programmes','decisions');
+            else {await pushPanel('measures',{tab:'decisions'});focusAfter='v3-heading';}
+          }
+          else if (step===4) {if(modern()) await learnDistrict();else await openSites();}
           else if (step===5) await navigate('budget');
           else if (step===6||step===9) await navigate('stats');
           else if (step===10) await navigate('map');
@@ -1997,8 +2274,14 @@
         else if (action==='result-next') {
           if (ui().tutorialStep===9) await navigate('stats');else await storeUI({panel:null,tab:'decisions'});focusAfter='v3-heading';
         }
-        else if (action==='history') await pushPanel('history');
-        else if (action==='history-return') {await storeUI({panel:'history'});focusAfter='v3-heading';}
+        else if (action==='history') {
+          await pushPanel('history');
+          focusAfter='v3-heading';
+        }
+        else if (action==='history-return') {
+          await storeUI(ui().historyMapSource==='result'?{tab:'decisions',panel:'result'}:{panel:'history'});
+          focusAfter='v3-heading';
+        }
       });
     }
     async function openInvestment() {
@@ -2006,6 +2289,20 @@
       investmentDraft={...(state().draft.investment??{principal:Math.min(room,1000),termYears:Math.min(3,2045-state().year)})};
       await pushPanel('investment',{tab:'budget',investmentViewed:true});
       focusAfter='v3-heading';
+    }
+    function saveTaxRate() {
+      if (taxWrite) return taxWrite;
+      const slider=host.querySelector('[name="tax-rate"]');
+      if (!slider||busy||controller.meta?.readOnly) return;
+      const value=Number(slider.value);
+      if (value===state().draft.taxRate) return;
+      taxWrite=perform(()=>controller.patchDraft({taxRate:value})).finally(()=>{taxWrite=null;});
+      return taxWrite;
+    }
+    function finishTaxGesture(event) {
+      if (event.target.name!=='tax-rate') return;
+      clearTimeout(taxRelease);
+      taxRelease=setTimeout(saveTaxRate,0);
     }
     function change(event) {
       const input=event.target,name=input.name;
@@ -2015,13 +2312,12 @@
         return;
       }
       if (name==='loan-principal'||name==='loan-term') {updateLoan(input.form);return;}
+      if (name==='tax-rate') return saveTaxRate();
       perform(async()=>{
         if (name==='language') await controller.setLanguage(input.value);
-        else if(name==='tax-rate'){
-          const value=Number(input.value);
-          if(value!==state().draft.taxRate)await controller.patchDraft({taxRate:value});
-        }
         else if(name==='portfolio-filter')await storeUI({portfolioFilter:input.value});
+        else if(name==='programme-sector')await storeUI({programmeSector:input.value});
+        else if(name==='construction-district')await storeUI({constructionDistrict:input.value});
         else if (name==='still') await storeUI({motion:input.checked?'still':'auto'});
         else if (name==='large') await storeUI({largeText:input.checked});
         else if (name==='budget-year') await storeUI({budgetYear:input.value});
@@ -2030,13 +2326,6 @@
         else if (name==='district') await storeUI({districtId:input.value});
         else if (name==='reserveDraw'||name==='reserveContribution') await controller.patchDraft({[name]:Number(input.value)});
         else if (name.startsWith('sector:')) await controller.patchDraft({sectorLimits:{...state().draft.sectorLimits,[name.split(':')[1]]:Number(input.value)}});
-        else if(modern()&&name.startsWith('promise-')){
-          const row=selectedDraft(),id=selectedMeasure()?.id;
-          if(!row||!id)return;
-          const promise=name==='promise-type'?input.value?{type:input.value,dueYear:Math.min(2045,v4.projectFor(id)?.openingYear||state().year),
-            amount:state().finance.reserve}:null:{...row.promise,[name==='promise-year'?'dueYear':'amount']:Number(input.value)};
-          await editPortfolio(id,{promise});
-        }
         else if (name==='promise-type') await controller.patchDraft({promise:input.value?{type:input.value,dueYear:quote().project?.openingYear||state().year,amount:state().finance.reserve}:null});
         else if (name==='promise-year') await controller.patchDraft({promise:{...state().draft.promise,dueYear:Number(input.value)}});
         else if (name==='promise-amount') await controller.patchDraft({promise:{...state().draft.promise,amount:Number(input.value)}});
@@ -2074,23 +2363,37 @@
       if (ui().panel==='menu') {perform(()=>closeMenu(true));return;}
       if (event.state?.governorV3Menu) {perform(()=>openMenu(true));return;}
       replayWelcome=0;
-      if (event.state?.governorV3) perform(()=>storeUI({tab:event.state.tab,panel:event.state.panel}));
+      if (event.state?.governorV3&&event.state.route) {
+        if (event.state.attemptId===state()?.attemptId&&event.state.year===state().year) perform(()=>storeUI(event.state.route));
+      }
+      else if (event.state?.governorV3) perform(()=>storeUI({tab:event.state.tab,panel:event.state.panel}));
       else if (ui().panel) perform(()=>closePanel());
     }
     function viewportChanged() {
       const visual=window.visualViewport;
       host.style.setProperty('--v3-height',(visual?.height||window.innerHeight)+'px');
       host.classList.toggle('v3-keyboard-open',ui().tab==='advisor'&&!!visual&&window.innerHeight-visual.height>140);
+      scheduleSpotlight();
     }
     host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('input',input);host.addEventListener('submit',submit);
     host.addEventListener('error',imageError,true);
+    for (const type of ['scroll','focusin','load','toggle']) host.addEventListener(type,scheduleSpotlight,true);
+    host.addEventListener('pointerup',finishTaxGesture);
+    host.addEventListener('touchend',finishTaxGesture,{passive:true});
     window.addEventListener('popstate',popstate);window.addEventListener('resize',viewportChanged);window.visualViewport?.addEventListener('resize',viewportChanged);
+    negotiation?.attach(host);
     viewportChanged();render();
     return {render,navigate,destroy(){
       destroyed=true;
+      negotiation?.destroy();
       cancelAnimationFrame(taxFrame);
+      cancelAnimationFrame(spotlightFrame);
+      clearTimeout(taxRelease);
+      host.removeEventListener('pointerup',finishTaxGesture);
+      host.removeEventListener('touchend',finishTaxGesture);
       host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('input',input);host.removeEventListener('submit',submit);
       host.removeEventListener('error',imageError,true);
+      for (const type of ['scroll','focusin','load','toggle']) host.removeEventListener(type,scheduleSpotlight,true);
       window.removeEventListener('popstate',popstate);window.removeEventListener('resize',viewportChanged);window.visualViewport?.removeEventListener('resize',viewportChanged);
       document.body.classList.remove('governor-v3-active');
     }};

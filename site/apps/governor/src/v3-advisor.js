@@ -77,6 +77,9 @@
     const terms=G.V4Campaign&&state.rulesVersion==='governor-v4.0' ? G.V4Campaign.status(state) : null;
     if(terms){
       const plan=quote?.projects??[];
+      lines.push('Current navigation: Decisions contains annual situations and regional programmes. In Map, “'+
+        local({ru:'Выбрать стройку',en:'Choose what to build',zh:'选择建设项目'})+'” opens construction and site choices; “'+
+        local({ru:'Местные меры',en:'Local measures',zh:'地方措施'})+'” opens district-level work. Budget sector cards open programmes in that sector. The annual review combines every cost.');
       lines.push('Four-term edition, term '+terms.chapter.number+' ('+terms.chapter.startYear+'–'+terms.chapter.endYear+
         '). The full package can include any different affordable measures; the current catalog changes every five years. '+
         'Current draft measures: '+(plan.map(row=>local(row.labels)+' ('+row.costNow+' million RUB now, opens '+row.openingYear+')').join('; ')||'none')+'.');
@@ -160,6 +163,15 @@
     const labels={low:l('Низкая','Low','低'),moderate:l('Умеренная','Moderate','中'),high:l('Высокая','High','高')};
     switch(kind){
       case 'tax': {
+        if(state.rulesVersion==='governor-v4.0'){
+          const rate=state.draft.taxRate, impact=G.V3Rules.taxSupportEffects(rate);
+          return years+l('В «Бюджете» налоговая нагрузка меняется от 88% до 112% базовой. Сейчас '+rate+'%.',
+            'Use Budget to set the tax burden between 88% and 112% of baseline. It is now '+rate+'%.',
+            '在“预算”可以把税负调整到基准的88%至112%。当前税负为'+rate+'%。')+' '+
+            l('При этом ставка меняет поддержку бизнеса на '+n(impact.business)+' п. и семей на '+n(impact.families)+' п.',
+              'This setting changes business support by '+n(impact.business)+' points and household support by '+n(impact.families)+' points.',
+              '当前设置使企业支持度变化'+n(impact.business)+'点、家庭支持度变化'+n(impact.families)+'点。');
+        }
         const effect=G.V3Rules.taxSupportEffects('high');
         const scores=Object.entries(effect).map(([key,value])=>[key,n(value)]);
         const declines=Object.fromEntries(scores);
@@ -264,9 +276,9 @@
         }else{
           kind=localGuide?'event':intent(question);
           text=localGuide?(localGuide==='year'&&state.rulesVersion==='governor-v4.0'?{
-            ru:'Ответьте на ситуацию года. Добавьте в план доступные меры или оставьте его без новых проектов. Проверьте площадки на карте, расходы в бюджете и цели пятилетки в статистике. Кнопка ▶ открывает сводку года.',
-            en:'Answer the annual situation. Add affordable measures or leave the plan without new projects. Check sites on the Map, spending in Budget, and term targets in Statistics. ▶ opens the annual review.',
-            zh:'先回应年度情境。将预算可承担的措施加入计划，也可暂不启动新项目。在地图核对选址、在预算查看支出、在统计查看五年目标。点击▶检查年度计划。'
+            ru:'Ответьте на ситуацию года. В «Решениях» можно выбрать программы области. На «Карте» доступны стройки, участки и местные меры. Проверьте расходы в «Бюджете» и цели пятилетки в «Статистике». Кнопка ▶ открывает сводку года.',
+            en:'Respond to the annual situation. Choose regional programmes in Decisions. Find construction, sites and local measures on the Map. Check spending in Budget and term targets in Statistics. ▶ opens the annual review.',
+            zh:'先回应年度情境。可在“决策”中选择全州项目，在“地图”中查看建设项目、地块和地方措施。在“预算”核对支出，在“统计”查看五年目标。点击▶检查年度计划。'
           }[l]:(GUIDES[localGuide][l]||GUIDES[localGuide].ru)):explain(kind,state,q,l);
         }
         if(api.state()?.attemptId!==state.attemptId||api.state()?.revision!==state.revision||

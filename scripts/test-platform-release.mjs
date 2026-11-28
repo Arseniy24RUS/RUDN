@@ -114,18 +114,42 @@ test('Governor on-demand video resolves from the entry index without entering th
     globalThis.__RUDN_RELEASE__=prior;
   }
 });
-test('Governor on-demand map motion stays lazy while static district backgrounds remain offline',async t=>{
+test('Governor preloads the pinned campaign in source order and keeps the legacy application available',async t=>{
+  const f=await fixture(t),out=path.join(f.root,'governor-campaign');
+  const prefix='apps/governor/';
+  const files={
+    'index.html':'<html><head></head><body><script src="src/core.js"></script><script src="src/save.js"></script><script type="module" src="platform-bridge.js"></script></body></html>',
+    'platform-bridge.js':"const CAMPAIGN_SCRIPTS=['rules','game'];",
+    'src/core.js':'globalThis.core=true;',
+    'src/save.js':'globalThis.save=true;',
+    'src/rules.js':'globalThis.rulesLoaded=true;',
+    'src/game.js':'globalThis.gameLoaded=globalThis.rulesLoaded;',
+    'src/app.js':'globalThis.oldCampaign=true;'
+  };
+  for(const [name,contents] of Object.entries(files))await write(f.site,prefix+name,contents);
+  const built=await buildRelease({...f,out});
+  const index=JSON.parse(await fs.readFile(path.join(out,built.target.governorManifest.url.slice('/RUDN/'.length))));
+  const name=prefix+'governor-campaign.js',campaign=index.resources[name];
+  const html=await fs.readFile(path.join(out,index.resources[prefix+'index.html'].url.slice('/RUDN/'.length)),'utf8');
+  const script=await fs.readFile(path.join(out,campaign.url.slice('/RUDN/'.length)),'utf8');
+  assert.ok(html.includes(`<link rel="preload" as="script" href="${campaign.url}">`));
+  assert.ok(!html.includes('src/app.js'));
+  assert.ok(index.resources[prefix+'src/app.js']);
+  assert.ok(index.packs.governor.includes(name));
+  assert.ok(script.indexOf('rulesLoaded=!0')<script.indexOf('gameLoaded='));
+});
+test('Governor on-demand illustrations and motion stay lazy while previews and the map remain offline',async t=>{
   const f=await fixture(t),out=path.join(f.root,'governor-map-on-demand');
   await write(f.site,'apps/governor/index.html','<html><head></head><body>Governor map</body></html>');
   const prefix='apps/governor/assets/v4/';
   const lazy=['motion/work-foundation.gif','motion/work-frame.gif','motion/work-finishing.gif','motion/clinic.webm','motion/clinic.mp4',
-    'motion/clinic.gif','motion/clinic.apng'];
-  const offline=['terrain-north.webp','terrain-river.webp','clinic-poster.webp'];
+    'motion/clinic.gif','motion/clinic.apng','media/decisions/public-review.webp','media/events/storm.webp','media/facilities/clinic/operation.gif'];
+  const offline=['terrain-north.webp','terrain-river.webp','clinic-poster.webp','media/decision-thumbs/public-review.webp','media/facilities/clinic/operation.webp'];
   for(const name of [...lazy,...offline])await write(f.site,prefix+name,'test resource: '+name);
   const built=await buildRelease({...f,out});
   const index=JSON.parse(await fs.readFile(path.join(out,built.target.governorManifest.url.slice('/RUDN/'.length))));
   const full=JSON.parse(await fs.readFile(path.join(out,built.target.manifestURL.slice('/RUDN/'.length))));
-  assert.equal(full.governorEntryIndex,3);
+  assert.equal(full.governorEntryIndex,4);
   for(const name of [...lazy,...offline]){
     const logical=prefix+name;
     assert.deepEqual(index.resources[logical],full.resources[logical]);

@@ -57,7 +57,7 @@ const UI = {
     seminar4Lead:'Получите один целостный блок вопросов по конкретному нормативному правовому акту.', legalLabQuizTitle:'Квиз: нормативные правовые акты', legalLabAssessmentTitle:'Самостоятельная работа: нормативные правовые акты',
     seminar5Lead:'Система закрепляет за студентом один из 30 вариантов обращения. Заполните служебную карточку и подготовьте официальный ответ гражданину.', yourVariant:'Ваш вариант', appealType:'Тип обращения', completeness:'Полнота обязательных сведений', registration:'Регистрация и первоначальное действие', deadline:'Срок рассмотрения', competentBody:'Компетентный орган', addresseeDetails:'Реквизиты адресата', officialReply:'Проект официального ответа гражданину', rubric:'Автоматическая предварительная оценка проверяет полноту карточки, сроки, компетенцию и структуру ответа. Преподаватель может уточнить итог.',
     seminar6Lead:'Пройдите официальный внешний тест, укажите результат и прикрепите скриншот.', openCivilTest:'Открыть тест госслужбы', testScore:'Результат теста (процент или балл)', screenshot:'Скриншот результата',
-    seminar7Lead:'Управляйте регионом и проследите последствия решений. По итогам кампании оценка и учебный отчёт сохранятся автоматически.', openSimulator:'Открыть симулятор',
+    seminar7Lead:'Управляйте областью двадцать игровых лет. На кампанию отведите около 80 минут. Оценка и отчёт сохранятся автоматически.', openSimulator:'Открыть симулятор',
     finalLead:'Итоговый тест проверяет освоение всех тем курса.',
     saved:'Результат сохранён', fillRequired:'Заполните обязательные поля', profileRequired:'Для сохранения результата сначала войдите в профиль.',
     gradebookTitle:'Электронный журнал', gradebookLead:'По каждой активности учитывается лучший результат. Максимум за курс — 100 баллов.', exportCsv:'Скачать CSV', attempts:'История попыток', date:'Дата', type:'Тип', duration:'Время',
@@ -90,7 +90,7 @@ const UI = {
     seminar4Lead:'Receive one coherent question block devoted to a particular normative legal act.', legalLabQuizTitle:'Quiz: regulatory legal acts', legalLabAssessmentTitle:'Independent work: regulatory legal acts',
     seminar5Lead:'The platform assigns one of 30 petition cases to each student. Complete the processing card and draft an official reply.', yourVariant:'Your case', appealType:'Type of petition', completeness:'Completeness of mandatory information', registration:'Registration and initial action', deadline:'Review deadline', competentBody:'Competent authority', addresseeDetails:'Addressee details', officialReply:'Draft official reply to the citizen', rubric:'The preliminary automated mark checks completeness, deadlines, competence and reply structure. The instructor may adjust it.',
     seminar6Lead:'Complete the official external test, record the result and upload a screenshot.', openCivilTest:'Open civil-service test', testScore:'Test result (percentage or score)', screenshot:'Result screenshot',
-    seminar7Lead:'Manage a region and explore the consequences of your decisions. Your score and learning report are saved automatically when the campaign ends.', openSimulator:'Open simulator',
+    seminar7Lead:'Govern the region for twenty in-game years. Set aside about 80 minutes. Your score and report are saved automatically.', openSimulator:'Open simulator',
     finalLead:'The final course test covers all course themes.',
     saved:'Result saved', fillRequired:'Complete all required fields', profileRequired:'Sign in before saving a result.',
     gradebookTitle:'Electronic gradebook', gradebookLead:'The best result is retained for each activity. The course maximum is 100 points.', exportCsv:'Download CSV', attempts:'Attempt history', date:'Date', type:'Type', duration:'Time',
@@ -123,7 +123,7 @@ const UI = {
     seminar4Lead:'系统将发放一个围绕特定规范性法律文件的完整题组。', legalLabQuizTitle:'测验：规范性法律文件', legalLabAssessmentTitle:'自主作业：规范性法律文件',
     seminar5Lead:'系统为每位学生固定分配30个公民来信案例之一。请填写办理卡并起草正式答复。', yourVariant:'你的案例', appealType:'来信类型', completeness:'必备信息完整性', registration:'登记与初始处理', deadline:'办理期限', competentBody:'主管机关', addresseeDetails:'收件人信息', officialReply:'致公民的正式答复草案', rubric:'自动初评检查资料完整性、期限、职权归属和答复结构；教师可调整最终成绩。',
     seminar6Lead:'完成外部官方测试，填写结果并上传截图。', openCivilTest:'打开公务员测试', testScore:'测试结果（百分比或分数）', screenshot:'成绩截图',
-    seminar7Lead:'管理地区，观察决策后果。任期结束后，成绩和学习报告将自动保存。', openSimulator:'打开模拟器',
+    seminar7Lead:'在游戏中治理新州二十年。建议预留约80分钟。成绩和报告将自动保存。', openSimulator:'打开模拟器',
     finalLead:'课程期末测验覆盖全部主题。',
     saved:'结果已保存', fillRequired:'请填写必填项', profileRequired:'保存结果前请先登录。',
     gradebookTitle:'电子成绩册', gradebookLead:'每项活动保留最佳成绩，课程总分上限为100分。', exportCsv:'下载CSV', attempts:'作答记录', date:'日期', type:'类型', duration:'用时',
@@ -560,7 +560,7 @@ function seminarShell(topic,body){
     ?resourceURL('assets/course/previews/seminar_07_simulator.jpg',new URL('../../',import.meta.url)).href
     :topic.number===2?'assets/course/previews/seminar_02_puzzle.png'
     :topic.number===3?'assets/course/previews/seminar_03_dashboard.png':topic.lecture.preview;
-  const previewAlt=governor?{ru:'Карта региона и нижняя панель игры «Губернатор»',en:'Governor game map and bottom navigation',zh:'《州长》游戏的地区地图和底部导航'}[getLocale()]:'';
+  const previewAlt=governor?{ru:'Панорама Новой области',en:'Panorama of Novaya Oblast',zh:'新州全景图'}[getLocale()]:'';
   return `<section class="page${governor?' governor-seminar':''}"><div class="page-actions" style="margin-bottom:12px"><a class="btn btn-neutral btn-small" href="#dashboard">← ${ui('back')}</a></div>${activityHeader(topic.seminar,`${ui('seminarWord')} ${topic.number}`,preview,previewAlt)}${body}</section>`;
 }
 function renderSeminar4(topic,view){

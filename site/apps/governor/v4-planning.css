@@ -3,8 +3,27 @@
 .v4-plan-list small,.v4-kpi-list small{display:block;margin:.18rem 0;color:#4b6e85}
 .v4-plan-list .v3-button{min-width:44px;min-height:44px}
 .v4-plan-name{color:inherit;font:inherit;font-weight:700;text-align:start;border:0;background:none;padding:.25rem 0;text-decoration:underline;text-underline-offset:.18em;cursor:pointer}
+.v4-plan-negotiate{min-height:44px;border:0;background:none;padding:0;color:var(--v3-blue);text-decoration:underline;font:inherit;font-size:.85rem;text-align:start;cursor:pointer}
 .v4-money-warning{color:#73380d;padding:.6rem;background:#fff1de;border-radius:8px}
 .v4-catalog-filter{margin:0 0 1rem}
+.v4-catalog-period{margin-bottom:.35rem}
+.v4-catalog-help{margin:.35rem 0 .8rem;font-size:.9rem;line-height:1.4}
+.v4-catalog .v3-measure{align-items:center;gap:.7rem;padding:.65rem .75rem}
+.v4-catalog-thumb{flex:0 0 46px;object-fit:cover;border-radius:8px;background:#e7f1f8}
+.v4-catalog-copy{min-width:0;flex:1}
+.v4-catalog-copy strong{line-height:1.3;overflow-wrap:anywhere}
+.v4-catalog-copy .v4-catalog-location{font-size:.75rem;line-height:1.35;margin-top:.3rem}
+.v4-catalog-copy .v4-catalog-cost{line-height:1.4;font-variant-numeric:tabular-nums}
+.v4-catalog-copy .v4-catalog-selected{color:#145f3a;font-weight:700}
+.v4-continuity{margin-top:1.25rem}
+.v4-continuity .v3-measure{gap:.7rem;padding:.65rem .75rem}
+.v4-map-plan{margin:.7rem 0;padding:.35rem .75rem;border:1px solid var(--v3-line);border-radius:12px;background:var(--v3-paper)}
+.v4-map-plan>summary{min-height:44px;align-content:center;cursor:pointer}
+.v4-map-plan>summary strong{float:inline-end;margin-inline-start:.5rem;color:var(--v3-blue)}
+@media(max-width:360px){.v4-catalog .v3-measure,.v4-continuity .v3-measure{gap:.5rem;padding:.65rem .6rem}.v4-catalog-thumb{width:38px;height:38px;flex-basis:38px}}
+.v4-measure-intro{display:grid;grid-template-columns:minmax(0,1fr) clamp(76px,30%,148px);align-items:center;gap:.65rem}
+.v4-measure-intro > div{min-width:0}
+.v4-measure-intro .v4-measure-image{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:contain}
 #v4-tax-rate{min-height:44px;width:100%;accent-color:var(--v3-blue);cursor:ew-resize}
 .v4-tax-ticks{display:flex;justify-content:space-between;gap:.3rem;color:#4b6e85;font-size:.8rem;margin:-.35rem 0 .5rem}
 .v4-kpi-list{display:grid;gap:.5rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr))}
@@ -25,4 +44,5 @@
 .v4-event-gif{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;visibility:hidden}
 .v4-event-gif.is-ready{visibility:visible}
 .v4-event-gif-full{object-fit:contain}
+@media(max-width:600px){.v4-event-gif-subject-low{object-fit:cover;object-position:center bottom}}
 .v3-navigation.v4-complete{grid-template-columns:repeat(5,minmax(0,1fr))}

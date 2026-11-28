@@ -96,6 +96,8 @@ def main():
                     page.get_by_text(reply, exact=True).wait_for(timeout=WAIT)
                     assert len(posted) == 1 and posted[0]['studentKey'] is None
                 assert posted[-1]['question'] == question and posted[-1]['gameContext']
+                navigation = next(item for item in posted[-1]['gameContext'] if item.startswith('Current navigation:'))
+                assert 'Выбрать стройку' in navigation and 'Местные меры' in navigation and 'Budget sector' in navigation
                 ask(page, 'Что сравнить первым?')
                 page.get_by_text(reply, exact=True).last.wait_for(timeout=WAIT)
                 page.wait_for_function("document.querySelectorAll('.v3-chat-answer > p').length === 2")

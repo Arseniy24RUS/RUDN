@@ -1,0 +1,65 @@
+.v4-negotiation { max-width: 720px; margin: 0 auto; }
+.v4-neg-heading { display: flex; align-items: start; gap: 12px; margin-bottom: 10px; }
+.v4-neg-heading > div { flex: 1; min-width: 0; }
+.v4-neg-heading p { margin: 0 0 3px; color: #4b6e85; font-size: 12px; }
+.v4-neg-heading h1 { margin: 0; font-size: clamp(18px,4.8vw,23px); line-height: 1.16; }
+.v4-neg-heading > button { width: 44px; height: 44px; flex: 0 0 44px; background: #fff; border: 1px solid var(--v3-line); border-radius: 12px; font-size: 24px; }
+.v4-neg-participants { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; }
+.v4-neg-participants button { min-width: 0; padding: 7px 4px; display: flex; align-items: center; flex-direction: column; gap: 3px; border: 1px solid var(--v3-line); border-radius: 12px; background: #fff; font-size: 12px; line-height: 1.2; }
+.v4-neg-participants img { width: 42px; height: 42px; object-fit: cover; border-radius: 50%; }
+.v4-neg-participants span { font-weight: 700; }
+.v4-neg-participants small { font-size: 12px; }
+.v4-neg-participants [aria-pressed="true"] { background: #dceffc; border-color: #087fb7; box-shadow: inset 0 0 0 1px #087fb7; }
+.v4-neg-conversation { padding-top: 8px; }
+.v4-neg-line { font-size: 14px; line-height: 1.32; margin: 0 0 8px; }
+.v4-neg-line strong { display: block; margin-bottom: 3px; }
+.v4-neg-offers { display: grid; gap: 6px; }
+.v4-neg-offer { display: flex; align-items: center; gap: 8px; text-align: start; padding: 8px 9px; background: #fff; border: 1px solid #a9c9dd; border-radius: 12px; min-height: 72px; }
+.v4-neg-choice { display: grid; place-items: center; flex: 0 0 24px; align-self: start; min-height: 24px; color: #087fb7; font-size: 20px; }
+.v4-neg-offer > span:last-child { display: grid; gap: 2px; }
+.v4-neg-offer strong { font-size: 14px; line-height: 1.25; }
+.v4-neg-offer span span { font-size: 13px; line-height: 1.3; }
+.v4-neg-offer small { font-size: 12px; color: #4b6e85; line-height: 1.25; }
+.v4-neg-offer[aria-pressed="true"] { border-color: #087fb7; background: #dceffc; box-shadow: inset 0 0 0 1px #087fb7; }
+.v4-neg-detail { margin: 5px 0; font-size: 13px; }
+.v4-neg-detail summary { padding: 7px 0; min-height: 32px; cursor: pointer; }
+.v4-neg-detail p { margin: 7px 0; }
+.v4-neg-detail ul { padding-inline-start: 20px; }
+.v4-neg-adjust { display: flex; flex-wrap: wrap; gap: 9px; padding: 8px; border: 1px solid var(--v3-line); border-radius: 8px; }
+.v4-neg-adjust label { display: grid; gap: 4px; flex: 1 1 120px; }
+.v4-neg-adjust input { min-width: 0; width: 100%; min-height: 44px; border-radius: 6px; border: 1px solid #a9c9dd; padding: 5px 8px; background: #fff; }
+.v4-neg-contract { position: relative; padding: 9px 0 3px; background: #edf7fd; border-top: 1px solid #a9c9dd; margin-top: 2px; }
+.v4-neg-empty { font-size: 13px; margin: 0 0 6px; }
+.v4-neg-pledge { display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 1.3; margin-bottom: 5px; }
+.v4-neg-pledge > span { flex: 1; min-width: 0; }
+.v4-neg-pledge small { display: block; color: #4b6e85; font-size: 12px; }
+.v4-neg-pledge button { width: 44px; min-height: 44px; flex: 0 0 44px; border: 1px solid var(--v3-line); background: #fff; border-radius: 10px; font-size: 21px; }
+.v4-neg-price { display: grid; grid-template-columns: 1fr 1.15fr .9fr; gap: 4px 9px; font-size: 12px; line-height: 1.3; margin: 5px 0 8px; }
+.v4-neg-price b { display: block; font-size: 16px; }
+.v4-neg-total { font-size: 12px; margin: -2px 0 8px; }
+.v4-neg-costs { list-style: none; padding: 0; }
+.v4-neg-costs li { margin: 8px 0; }
+.v4-neg-costs li span { display: block; }
+.v4-neg-summary { list-style: none; padding: 0; margin: 8px 0; }
+.v4-neg-summary li { padding: 6px 0; }
+.v4-neg-summary small { display: block; color: #4b6e85; }
+.v4-neg-sign { min-height: 44px; }
+.v4-neg-other { font-size: 12px; margin-bottom: 6px; }
+.v4-neg-other summary { padding: 4px 0; cursor: pointer; }
+.v4-neg-warning { margin: 0 0 6px; padding: 6px 8px; background: #fff0d5; color: #713d0b; border-radius: 7px; font-size: 13px; }
+.v3-content:has(.v4-negotiation) > .v3-coach { display: none; }
+.v3-large-text .v4-negotiation { font-size: 18px; }
+.v3-large-text .v4-negotiation :is(p,small,summary,.v4-neg-pledge,.v4-neg-price,.v4-neg-participants span,.v4-neg-offer span span) { font-size: 1em; }
+.v3-large-text .v4-neg-offer strong { font-size: 1.05em; }
+@media (max-width: 359px) {
+  .v4-neg-heading h1 { font-size: 18px; }
+  .v4-neg-participants img { width: 36px; height: 36px; }
+  .v4-neg-participants button { padding: 5px 3px; }
+}
+@media (min-width: 620px) and (max-height: 510px) {
+  .v4-negotiation { display: grid; grid-template-columns: minmax(0,1fr) minmax(220px,.7fr); column-gap: 16px; }
+  .v4-neg-heading { grid-column: 1 / -1; }
+  .v4-neg-participants { grid-column: 1; }
+  .v4-neg-conversation { grid-column: 1; }
+  .v4-neg-contract { grid-column: 2; grid-row: 2 / 4; align-self: start; position: sticky; top: 0; bottom: auto; }
+}

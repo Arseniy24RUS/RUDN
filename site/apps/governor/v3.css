@@ -11,6 +11,7 @@
   color: var(--v3-ink);
   background: linear-gradient(#f3faff, #e7f4fc);
   height: var(--v3-height, 100dvh);
+  position: relative;
   display: grid;
   grid-template-rows: var(--v3-header) minmax(0, 1fr) auto;
   overflow: hidden;
@@ -49,10 +50,15 @@ body.governor-v3-active > .platform-bottom-nav { display: none !important; }
 .v3-button.full { display: flex; width: 100%; margin: 14px 0; }
 .v3-button.link, .v3-link { padding: 8px 0; background: none; border: 0; color: #0077b2; text-align: left; justify-content: start; min-height: 44px; font-weight: 650; }
 .v3-event .v3-button { width: 100%; }
+.v3-major-label { color: #97401f; font-weight: 750; }
+.v3-major-map-note { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; padding: 9px 12px; border: 1px solid #e6b88e; border-radius: 12px; background: #fff5e7; }
+.v3-major-map-note :is(small,strong) { display: block; }
+.v3-major-map-note small { color: #97401f; }
 .v3-event-visual { background: #e8f3fa; }
 .v3-event-visual picture { display: block; }
 .v3-event-art { display: block; width: 100%; height: auto; aspect-ratio: 2.4; object-fit: contain; }
 .v3-event-detail .v3-event-art { aspect-ratio: 2.2; }
+.v3-event-detail .v3-event-art.v3-major-art { aspect-ratio: 16 / 9; max-height: 45dvh; background: #233c46; }
 .v3-event-visual-error { min-height: 84px; display: grid; place-items: center; margin: 0; padding: 12px; color: #4b6e85; text-align: center; }
 @media (max-width: 600px) {
   .v3-event-art.v3-event-subject-low {
@@ -206,6 +212,7 @@ body.governor-v3-active > .platform-bottom-nav { display: none !important; }
 .v3-coach .v3-button { margin-top: 8px; padding: 8px 12px; }
 .v3-coach strong { font-size: 14px; }
 .v3-coach-target { outline: 2px solid var(--v3-blue); outline-offset: -2px; }
+.v3-coach-shade { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 8; pointer-events: none; fill: rgba(16,38,56,.38); }
 .v3-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .v3-image-unavailable { visibility: hidden; max-height: 110px; }
 .v3-keyboard-open .v3-navigation { display: none; }
@@ -239,6 +246,10 @@ body.governor-v3-active > .platform-bottom-nav { display: none !important; }
 @media (max-height: 500px) and (min-width: 600px) {
   .governor-v3 { --v3-header: 44px; --v3-nav: 52px; }
   .v3-content { padding-top: 10px; padding-bottom: 12px; }
+  .v3-coach { max-width: none; align-items: center; padding: 6px 9px; margin-bottom: 6px; }
+  .v3-coach > div { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .v3-coach p { flex: 1 1 200px; margin: 0; }
+  .v3-coach .v3-button { margin: 0; padding: 5px 10px; }
   .v3-navigation > button { flex-direction: row; gap: 7px; }
   .v3-navigation .v3-advance { flex-direction: row; justify-content: center; }
   .v3-navigation .v3-advance small { display: none; }
@@ -253,6 +264,9 @@ body.governor-v3-active > .platform-bottom-nav { display: none !important; }
   .v3-navigation > button { font-size: 9px; }
   .v3-advance small { font-size: 8px; }
   .v3-line { gap: 8px; font-size: 13px; }
+  .v3-coach { padding: 8px; gap: 7px; margin-bottom: 9px; }
+  .v3-coach > img { flex-basis: 28px; width: 28px; height: 28px; }
+  .governor-v3:not(.v3-large-text) .v3-coach p { font-size: 13px; }
   .v3-total { font-size: 25px; }
   .v3-project-thumb { width: 56px; height: 56px; }
 }

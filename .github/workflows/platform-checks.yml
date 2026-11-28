@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   governor-scope:
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] ') }}
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || (github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2'))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] ') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -66,9 +66,16 @@ jobs:
               'tests/governor-v4-campaign.test.mjs',
               'tests/governor-v4-economy.test.mjs',
               'tests/governor-v4-map.test.mjs',
+              'scripts/test_governor_v4_touch_browser.py',
+              'tests/governor-v4-major-events.test.mjs',
+              'tests/governor-v4-media.test.mjs',
+              'tests/governor-v4-negotiation.test.mjs',
+              'tests/governor-v4-programmes.test.mjs',
           }
           if base == 'e7da48e8af623787598e73cebda113a775ca7347':
               allowed.add('site/assets/js/main.js')
+          if base == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2':
+              allowed.update({'site/assets/js/main.js', 'site/assets/css/site.css', '.github/workflows/settlements-replay.yml'})
           outside = sorted(path for path in changed if path not in allowed and not path.startswith('site/apps/governor/'))
           if outside or not any(path.startswith('site/apps/governor/') for path in changed):
               raise SystemExit('Invalid Governor-only pull request scope: ' + ', '.join(outside))
