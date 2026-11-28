@@ -135,6 +135,8 @@ def main():
                 assert 'Выбрать стройку' in navigation and 'Местные меры' in navigation and 'Budget sector' in navigation
                 annual_draw = next(item for item in posted[-1]['gameContext'] if item.startswith('Annual draw:'))
                 assert '20%' in annual_draw and 'no specific event or year is guaranteed' in annual_draw
+                eligibility = next(item for item in posted[-1]['gameContext'] if item.startswith('A grade of 5 requires'))
+                assert 'capped at 4' in eligibility
                 ask(page, 'Что сравнить первым?')
                 page.get_by_text(reply, exact=True).last.wait_for(timeout=WAIT)
                 page.wait_for_function("document.querySelectorAll('.v3-chat-answer > p').length === 2")

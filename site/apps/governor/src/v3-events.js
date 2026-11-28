@@ -11,6 +11,37 @@
   const range = 2 ** 32;
   const encoder = new TextEncoder();
   const majorDrawSlots = ['major','ordinary-1','ordinary-2','ordinary-3','ordinary-4'];
+  const remoteOptions = Object.freeze({
+    'EDU-07':'a',
+    'HEALTH-01':'a',
+    'HEALTH-08':'b',
+    'SOCIAL-01':'b',
+    'SOCIAL-09':'b',
+    'PUBLIC-08':'b'
+  });
+  // A local result contributes only to a KPI with a direct, authored link.
+  // Coefficients are index points (years for life) at full local coverage,
+  // before the region weights the district's observed population.
+  const thematicEffects = Object.freeze({
+    'LANDMARK-04':['sport',1.5],
+    'SOCIAL-07':['sport',.45],
+    'LANDMARK-05':['education',.65],
+    'LANDMARK-06':['sme_income',.7],
+    'LANDMARK-07':['life',.065],
+    'HEALTH-01':['life',.04],
+    'HEALTH-08':['life',.04],
+    'SOCIAL-01':['life',.025],
+    'LANDMARK-08':['environment',.9],
+    'ECOLOGY-01':['environment',.44],
+    'ECOLOGY-05':['environment',.3],
+    'ECOLOGY-07':['environment',.36],
+    'ECOLOGY-08':['environment',.35],
+    'ECOLOGY-09':['environment',.5],
+    'ECOLOGY-10':['environment',.37],
+    'PUBLIC-02':['digital',.33],
+    'PUBLIC-06':['digital',.3],
+    'PUBLIC-07':['digital',.4]
+  });
 
   function freeze(value) {
     if (value && typeof value === 'object') {
@@ -227,7 +258,7 @@
     return expected.eventId === record.eventId && expected.candidateHash === record.candidateHash;
   }
 
-  function plan({record, choice, locale}) {
+  function plan({record, choice, locale, balance}) {
     const entry = card(record, locale);
     const option = entry?.options.find(item => item.id === choice);
     invariant(option, 'invalid-event-option');
@@ -236,7 +267,14 @@
     const firstOperatingYear = record.year + treasury.firstOperatingYearOffset;
     const lastOperatingYear = firstOperatingYear + treasury.fundedYears - 1;
     const inYearOperating = record.year === firstOperatingYear ? treasury.operatingMlnRubPerYear : 0;
-    const need = entry.localIndicator.potential + (terms.needDelta || 0);
+    const originalNeed = entry.localIndicator.potential + (terms.needDelta || 0);
+    const originalExpenseMln = terms.unavoidableExpenseMlnRub || 0;
+    const preparedness = balance && entry.id === 'LANDMARK-02'
+      ? Math.min(1, nonnegative(balance.floodCoverageBps) / 10000) : null;
+    // Protection leaves the accident and its draw intact. A higher share of
+    // protected residents limits exposure and the resulting emergency bill.
+    const need = originalNeed - Math.floor(originalNeed * .65 * (preparedness ?? 0));
+    const externalExpenseMln = originalExpenseMln - Math.floor(originalExpenseMln * .5 * (preparedness ?? 0));
     const baselineUnits = Math.min(need, terms.baselineUnits || 0);
     const plannedUnits = Math.min(need - baselineUnits, option.effects.localOutcome.units);
     return {
@@ -245,8 +283,13 @@
       oneOffMln: treasury.oneOffMlnRub, annualMln: treasury.operatingMlnRubPerYear,
       fundedYears: treasury.fundedYears, currentExpenseMln: treasury.oneOffMlnRub + inYearOperating,
       futureMln: treasury.fundedYears * treasury.operatingMlnRubPerYear - inYearOperating,
-      externalExpenseMln: terms.unavoidableExpenseMlnRub || 0,
-      matchedReceiptCapMln: terms.matchedReceiptCapMlnRub || 0
+      externalExpenseMln,
+      matchedReceiptCapMln: terms.matchedReceiptCapMlnRub || 0,
+      ...(preparedness === null ? {} : {preparedness:{
+        basisPoints:Math.round(preparedness * 10000), originalNeed, avoidedNeed:originalNeed-need,
+        savedEmergencyMln:originalExpenseMln-externalExpenseMln
+      }}),
+      ...(balance && Object.hasOwn(remoteOptions,entry.id) ? {remotePlannedUnits:choice === remoteOptions[entry.id] ? plannedUnits : 0} : {})
     };
   }
 
@@ -275,7 +318,19 @@
     const attributed = indicator.kind === 'stock' && active ? cumulativeUnits : currentUnits;
     const countsInNativeModel = options.nativeCoverage[entry.id] === true;
     const budget = option.effects.support.maxBasisPoints;
-    const supportBasisPoints = countsInNativeModel ? 0 : Math.round(budget * attributed / need);
+    const remoteUnits = selection.remotePlannedUnits ? currentUnits : 0;
+    // The remote-access option reaches a group underserved by the ordinary
+    // route. Its local support contribution includes that distinct benefit.
+    const extraReach = selection.remotePlannedUnits ? 1.65 : 1;
+    // Count households spared by mitigation once, on the incident year.
+    // Otherwise successful prevention can appear worse just because crews
+    // have fewer households left to reconnect.
+    const spared = year === record.year ? selection.preparedness?.avoidedNeed ?? 0 : 0;
+    const supportNeed = spared ? selection.preparedness.originalNeed : need;
+    const supportBasisPoints = countsInNativeModel ? 0 :
+      Math.min(budget, Math.round(budget * (attributed + spared) * extraReach / supportNeed));
+    const effect = options.balance && !countsInNativeModel && attributed > 0
+      ? thematicEffects[entry.id] ?? (entry.topic === 'edu' ? ['education',.42] : null) : null;
     const execution = year < firstOperatingYear ? 'scheduled' : active ? 'operating' : 'ended';
     return {
       decisionYear: record.year, year, eventId: entry.id, optionId: option.id,
@@ -283,13 +338,16 @@
       metric: indicator.id, unitLabel: indicator.unitLabel, kind: indicator.kind,
       beneficiaries: option.beneficiaries, need, baselineUnits: year === record.year ? baselineUnits : 0,
       baselineOpeningUnits: baselineUnits, actualUnits: currentUnits, cumulativeUnits,
-      supportBasisPoints, active, execution: option.id === 'base' ? 'baseline' : execution
+      supportBasisPoints, active, execution: option.id === 'base' ? 'baseline' : execution,
+      ...(selection.preparedness ? {preparedness:selection.preparedness} : {}),
+      ...(Object.hasOwn(selection,'remotePlannedUnits') ? {remoteUnits} : {}),
+      ...(effect ? {kpiEffect:{id:effect[0],localChange:effect[1]*attributed/need}} : {})
     };
   }
 
   function year({
     attemptId, year: fiscalYear, ledger, picks, verifiedBaseExpenses = {}, settledSpend = {},
-    capacity = {}, nativeCoverage = {}, executionHistory = []
+    capacity = {}, nativeCoverage = {}, executionHistory = [], balance
   }) {
     invariant(validYear(fiscalYear), 'invalid-financial-year');
     verifyLedger(ledger, attemptId);
@@ -303,7 +361,10 @@
       if (record.year > fiscalYear) break;
       const choice = picks?.[record.year];
       // Older open rows from a pending transaction may still have no picked answer.
-      const selection = plan({record, choice: choice ?? 'base'});
+      const openingBalance = balance && record.eventId === 'LANDMARK-02' && record.year < fiscalYear
+        ? {floodCoverageBps:executionHistory.find(row => row.eventId === record.eventId && row.year === record.year)?.preparedness?.basisPoints}
+        : balance;
+      const selection = plan({record, choice: choice ?? 'base', balance: openingBalance});
       const {oneOffMln, annualMln, externalExpenseMln, firstOperatingYear, lastOperatingYear} = selection;
       const current = record.year === fiscalYear;
       const active = fiscalYear >= firstOperatingYear && fiscalYear <= lastOperatingYear;
@@ -316,7 +377,7 @@
       for (let y = Math.max(firstOperatingYear, fiscalYear + 1); annualMln > 0 && y <= lastOperatingYear; y += 1) {
         futureRows.push(posting(selection, 'operating', y, annualMln));
       }
-      const outcome = serviceOutcome(selection, fiscalYear, {capacity, nativeCoverage, executionHistory});
+      const outcome = serviceOutcome(selection, fiscalYear, {capacity, nativeCoverage, executionHistory, balance});
       if (current || choice && choice !== 'base') outcomes.push(outcome);
       if (outcome.supportBasisPoints) {
         supportByDistrict[outcome.district] = (supportByDistrict[outcome.district] || 0) + outcome.supportBasisPoints;
@@ -326,7 +387,9 @@
       const grant = current ? Math.min(selection.matchedReceiptCapMln, confirmed) : 0;
       if (grant) rows.push(posting(selection, 'grant', fiscalYear, grant));
       const terms = selection.option.effects.conditionalSaving;
-      if (terms && active && (outcome.actualUnits || outcome.active && outcome.kind === 'stock' && outcome.cumulativeUnits)) {
+      const savingStart = terms && record.year + terms.firstYearOffset;
+      const delivered = outcome.actualUnits || outcome.active && outcome.kind === 'stock' && outcome.cumulativeUnits;
+      if (terms && active && delivered && fiscalYear >= savingStart && fiscalYear < savingStart + terms.years) {
         const source = verifiedBaseExpenses[terms.baseLedgerRef];
         if (typeof source?.id === 'string' && source.id && source.year === fiscalYear) {
           const used = usedSavings.get(source.id) ?? nonnegative(source.usedMln);

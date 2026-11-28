@@ -19,7 +19,8 @@ const noListeners = () => {};
 
 function setup(crypto = webcrypto) {
   const sandbox = vm.createContext({
-    GovernorGame:{DATA:shared.DATA,Population:shared.Population}, structuredClone, crypto, TextEncoder,
+    GovernorGame:{DATA:shared.DATA,Population:shared.Population,I18n:{local:(value,locale)=>value?.[locale]??value}},
+    structuredClone, crypto, TextEncoder,
     fetch:async()=>({ok:true,json:async()=>structuredClone(map)}),
     addEventListener:noListeners, removeEventListener:noListeners
   });
@@ -165,6 +166,93 @@ test('nine distinct options sets are readable in Russian, English and Chinese',(
 function calculate(record, choice, context = {}) {
   return events.year({attemptId,year:record.year,ledger:[record],picks:{[record.year]:choice},...context});
 }
+
+async function openingRecord(eventId) {
+  for (let seed=0;seed<3000;seed++) {
+    const record=await events.open({attemptId,year:firstYear,drawKey:key(seed),snapshot,eventPolicy:major.POLICY});
+    if(record.eventId===eventId)return record;
+  }
+  throw new Error('Missing playable fixture for '+eventId);
+}
+
+function chooseOpening(record,choice,balanceVersion) {
+  const state=rules.create({attemptId,schoolMap:map,rulesVersion:rules.V4_RULES_VERSION,balanceVersion});
+  return {...state,event:record,draft:{...state.draft,eventChoice:choice}};
+}
+
+function playOpening(record,choice,balanceVersion) {
+  const state=chooseOpening(record,choice,balanceVersion);
+  const context=rules.eventImpactContext(state);
+  const eventPlan=calculate(record,choice,context);
+  const baselineEventPlan=calculate(record,'base',rules.eventImpactContext(state,true));
+  const quote=rules.quote(state,{eventPlan});
+  assert.ok(quote.ok,JSON.stringify(quote.errors));
+  return rules.commit(state,{expectedRevision:state.revision,signature:quote.signature,eventPlan,baselineEventPlan});
+}
+
+test('opening flood protection changes exposure and emergency spending on the same dam draw',async()=>{
+  const record=await openingRecord('LANDMARK-02'), choice='a';
+  const {BALANCE_VERSION}=game.V4Campaign;
+  const fresh=chooseOpening(record,choice,BALANCE_VERSION);
+  const protectedState={...fresh,stats:plain(fresh.stats)};
+  protectedState.stats.districts.river.kpis.flood={served:58207,demand:92042};
+  const unprepared=calculate(record,choice,rules.eventImpactContext(fresh));
+  const context=rules.eventImpactContext(protectedState);
+  const prepared=calculate(record,choice,context);
+  const reference=calculate(record,choice,rules.eventImpactContext(protectedState,true));
+  assert.equal(fresh.event.candidateHash,protectedState.event.candidateHash);
+  assert.deepEqual(plain(reference),plain(unprepared));
+  assert.equal(unprepared.outcomes[0].need,1480);
+  assert.equal(prepared.outcomes[0].need,872);
+  assert.equal(prepared.outcomes[0].preparedness.avoidedNeed,608);
+  assert.equal(prepared.outcomes[0].actualUnits,692);
+  assert.ok(prepared.outcomes[0].supportBasisPoints>unprepared.outcomes[0].supportBasisPoints);
+  assert.equal(prepared.rows.find(row=>row.type==='external').amount,288);
+  assert.equal(prepared.currentExpenseMln,1958);
+  assert.equal(unprepared.currentExpenseMln,2090);
+  const settledSpend=Object.fromEntries(prepared.rows.map(row=>[row.id,row.amount]));
+  const settled=calculate(record,choice,{...context,settledSpend});
+  assert.equal(settled.currentReceiptMln,280);
+  const quote=rules.quote(protectedState,{eventPlan:prepared});
+  const committed=rules.commit(protectedState,{expectedRevision:0,signature:quote.signature,eventPlan:prepared,
+    settledEventPlan:settled,baselineEventPlan:reference});
+  assert.equal(committed.history[0].finance.cashEnd,quote.finance.cashEnd+280);
+  const report=game.V3Runtime.submission({owner:'student:synthetic',state:committed,createdAt:'2026-01-01T00:00:00Z',
+    closedAt:'2026-01-01T01:00:00Z'},true).governor.decisionRegister[0].situation;
+  assert.equal(report.answer.en,'Rebuild the dam and access road');
+  assert.equal(report.district.en,'River valley');
+  assert.equal(report.actualUnits,692);
+  assert.equal(report.paidMln,1958);
+  assert.equal(report.grantMln,280);
+  const follow=events.year({attemptId,year:firstYear+1,ledger:[record],picks:{[record.year]:choice},
+    balance:{floodCoverageBps:0},executionHistory:committed.history[0].stats.eventOutcomes});
+  assert.equal(follow.outcomes[0].need,872);
+  assert.equal(follow.currentExpenseMln,110);
+  assert.equal(follow.currentReceiptMln,0);
+  const archived=calculate(record,choice,rules.eventImpactContext({...protectedState,balanceVersion:undefined}));
+  assert.equal(archived.outcomes[0].need,1480);
+  assert.equal(archived.outcomes[0].preparedness,undefined);
+});
+
+test('delivered Olympic visits move the sports KPI and local outreach values the remote option',async()=>{
+  const {BALANCE_VERSION}=game.V4Campaign;
+  const olympics=await openingRecord('LANDMARK-04');
+  const [base,small,full]=['base','b','a'].map(choice=>playOpening(olympics,choice,BALANCE_VERSION));
+  assert.equal(full.history[0].stats.eventOutcomes[0].actualUnits,24000);
+  assert.ok(full.campaignKpis.sport>small.campaignKpis.sport && small.campaignKpis.sport>base.campaignKpis.sport);
+  assert.equal(playOpening(olympics,'a').campaignKpis.sport,playOpening(olympics,'base').campaignKpis.sport);
+  const remote=await openingRecord('SOCIAL-01');
+  const state=chooseOpening(remote,'b',BALANCE_VERSION);
+  const context=rules.eventImpactContext(state);
+  const [near,far]=['a','b'].map(choice=>calculate(remote,choice,context).outcomes[0]);
+  assert.ok(near.actualUnits>far.actualUnits);
+  assert.equal(near.remoteUnits,0);
+  assert.equal(far.remoteUnits,710);
+  assert.ok(far.supportBasisPoints>near.supportBasisPoints);
+  const later=calculate(remote,'b',{...context,capacity:{[remote.eventId]:0}}).outcomes[0];
+  assert.equal(later.remoteUnits,0);
+  assert.equal(later.kpiEffect,undefined);
+});
 
 test('the ledger counts mandatory costs once, models actual coverage, and credits the dam grant only at settlement',async()=>{
   const ledger = await drawCampaign(key(70),major.POLICY);

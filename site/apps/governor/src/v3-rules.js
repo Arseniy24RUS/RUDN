@@ -25,6 +25,18 @@
     capital: {labels: {ru:'Областной центр', en:'Regional centre', zh:'州中心'}, x:.57, y:.73}
   });
   const L = (ru, en, zh) => ({ru, en, zh});
+  // Model budget sub-items included in the sector totals, in million rubles.
+  // The avoidable part is smaller than the contracted expense.
+  const BASE_EXPENSE_SOURCES = [
+    {ref:'base.college.extraCharters',sector:'education',amount:4,avoidable:1,
+      labels:L('Дополнительные рейсы колледжа','Additional college shuttles','学院额外班车')},
+    {ref:'base.energy.municipalBuildings',sector:'housingUtilities',amount:9,avoidable:4,
+      labels:L('Отопление муниципальных зданий','Municipal building heating','市政建筑供暖')},
+    {ref:'base.procurement.logistics',sector:'administration',amount:5,avoidable:2,
+      labels:L('Доставка общих расходников','Shared supplies delivery','通用耗材配送')},
+    {ref:'base.freight.overlappingOrders',sector:'administration',amount:4,avoidable:1,
+      labels:L('Дублирующие заказы на доставку','Duplicate freight orders','重复货运订单')}
+  ];
   const clone = value => JSON.parse(JSON.stringify(value));
   const sum = values => values.reduce((total, value) => total + value, 0);
   const money = value => Math.round(value);
@@ -231,7 +243,26 @@
     const {year, finance} = state, demographic = G.Population?.fiscalFactors(state) || {mandatoryFactor:1};
     const mandatory = money(finance.base.mandatory * (1 + (year-FIRST_YEAR)*.008) * demographic.mandatoryFactor);
     const amounts = split(mandatory,Object.values(SECTOR_SHARES));
-    return Object.keys(SECTOR_SHARES).map((sector,i) => pay(`base:${year}:${sector}`,year,'out','mandatory',amounts[i],sector));
+    const rows = Object.keys(SECTOR_SHARES).map((sector,i) => pay(`base:${year}:${sector}`,year,'out','mandatory',amounts[i],sector));
+    if (!G.V4Campaign?.balanced?.(state)) return rows;
+    return rows.flatMap(row => {
+      let remainder = row.amount;
+      const lines = [];
+      for (const source of BASE_EXPENSE_SOURCES.filter(item => item.sector === row.sector)) {
+        const amount = Math.min(remainder, source.amount);
+        if (!amount) continue;
+        remainder -= amount;
+        const reductionMln = Math.min(source.avoidable, Math.floor(amount * source.avoidable / source.amount));
+        lines.push({...row,id:row.id+':'+source.ref,amount,baseLedgerRef:source.ref,reductionMln,labels:source.labels});
+      }
+      return [{...row,amount:remainder},...lines];
+    });
+  }
+
+  function verifiedBaseExpenses(state) {
+    if (!G.V4Campaign?.balanced?.(state)) return {};
+    return Object.fromEntries(baseOperations(state).filter(row => row.baseLedgerRef && row.reductionMln > 0)
+      .map(row => [row.baseLedgerRef,{id:row.id,year:row.year,expenseMln:row.amount,reductionMln:row.reductionMln}]));
   }
 
   function emptyDraft(taxMode = 'moderate', rulesVersion = RULES_VERSION) {
@@ -243,14 +274,16 @@
       reserveDraw:0,reserveContribution:0,sectorLimits:{},promise:null};
   }
 
-  function create({attemptId, schoolMap, rulesVersion = RULES_VERSION}) {
+  function create({attemptId, schoolMap, rulesVersion = RULES_VERSION, balanceVersion}) {
     if (!attemptId || !schoolMap?.sites) throw new Error('governor-v3/missing-start-data');
     if (![RULES_VERSION,V4_RULES_VERSION].includes(rulesVersion)) throw new Error('governor/unsupported-rules');
+    if (balanceVersion!==undefined&&(rulesVersion!==V4_RULES_VERSION||balanceVersion!==G.V4Campaign?.BALANCE_VERSION))
+      throw new Error('governor/unsupported-balance');
     const scenario = G.DATA?.scenarios?.find(row => row.id === 'balanced');
     const opening = scenario?.finance || {openingTreasury:4.5,reserve:2.5,debt:6,debtLimit:16,debtRate:.07,
       ownTaxRevenue:35,nonTaxRevenue:3,equalizationGrant:2.5,mandatoryCosts:37.4};
     const population = G.Population.create('balanced'), debt = money(opening.debt*1000), annualPercent = cents(opening.debtRate*100);
-    const start = {rulesVersion,attemptId,scenarioId:'balanced',schoolMap,population,year:FIRST_YEAR,revision:0,completed:false,
+    const start = {rulesVersion,...(balanceVersion?{balanceVersion}:{}),attemptId,scenarioId:'balanced',schoolMap,population,year:FIRST_YEAR,revision:0,completed:false,
       draft:emptyDraft('moderate',rulesVersion),event:null,projects:[],history:[],promises:[],closedRoads:[],
       finance:{cash:money(opening.openingTreasury*1000),reserve:money(opening.reserve*1000),debt,initialDebt:debt,debtLimit:money(opening.debtLimit*1000),
         annualPercent,base:{taxes:money(opening.ownTaxRevenue*1000),nonTax:money(opening.nonTaxRevenue*1000),
@@ -459,8 +492,13 @@
         const position = rows.findIndex(op => op.id === (row.replaces || row.sourceId) && op.direction === 'out');
         if (position !== -1) {
           const original = rows[position];
-          const saved = Math.min(amount,original.amount);
-          rows[position] = {...original,amount:original.amount-saved,savings:[...(original.savings || []),{id:row.id,amount:saved}]};
+          const savings = original.savings || [];
+          if (savings.some(entry => entry.id === row.id)) continue;
+          const available = original.reductionMln === undefined ? original.amount :
+            Math.max(0,original.reductionMln-sum(savings.map(entry => entry.amount)));
+          const saved = Math.min(amount,original.amount,available);
+          if (saved) rows[position] = {...original,amount:original.amount-saved,
+            savings:[...savings,{id:row.id,amount:saved,...(original.baseLedgerRef?{eventId:row.eventId}:{})}]};
         }
       } else {
         rows.push({...row,amount,sector:row.direction === 'out' ? EVENT_SECTORS[row.sector] || row.sector || 'administration' : null});
@@ -575,6 +613,7 @@
     return {...result,taxes,taxBase,taxDelta:taxes-taxBase,nonTax,annualPercent,
       loanHeadroom:Math.max(0,finance.debtLimit-finance.debt+principalDue),debtSchedule,futureRows,loans,projects,mandatoryBySector,
       interest:sum(due.map(row=>row.interest)),principalDue,
+      ...(G.V4Campaign?.balanced?.(state)?{eventSavings:sum(afterEvents.flatMap(row=>(row.savings||[]).map(entry=>entry.amount)))}:{}),
       ...(modern?{taxRate:taxFactor,employmentTaxDelta:taxBase-money(regularTaxBase),investmentHeadroom,investmentDraft,investments,investmentContribution,
         investmentPrincipal:sum(matured.map(row=>row.principal)),investmentIncome:sum(matured.map(row=>row.income)),
         firstShortfall:shortfall?{...shortfall,amount:-shortfall.cash}:null}:{})};
@@ -826,7 +865,7 @@
     return result;
   }
 
-  function checkPromises(state,selected,finance,year) {
+  function checkPromises(state,selected,actual,year) {
     const modern = isV4(state);
     const result = state.promises.map(p=>({...p}));
     const planned = modern ? state.draft.measures.map(row=>[row.promise,selected.find(p=>p.draftMeasureId===row.measureId)]) :
@@ -843,11 +882,11 @@
     }
     for (const promise of result) {
       if (promise.status!=='pending' || promise.dueYear>year) continue;
-      const p = finance.projects.find(row=>row.id===promise.projectId);
-      if (promise.type==='open') promise.status=p?.paidYears.some(paid=>paid<=year &&
+      const p = actual.projects.find(row=>row.id===promise.projectId);
+      if (promise.type==='open') promise.status=p?.paidYears.some(paid=>paid<=promise.dueYear &&
         (!modern || paid>=promise.approvalYear))?'kept':'missed';
-      if (promise.type==='operate') promise.status=p && projectPhase(p,year)==='open'?'kept':'missed';
-      if (promise.type==='reserve') promise.status=finance.reserveEnd>=promise.amount?'kept':'missed';
+      if (promise.type==='operate') promise.status=p?.paidYears.includes(promise.dueYear)?'kept':'missed';
+      if (promise.type==='reserve') promise.status=actual.finance.reserve>=promise.amount?'kept':'missed';
     }
     return result;
   }
@@ -863,12 +902,24 @@
     return report;
   }
 
+  function eventImpactContext(state,reference=false) {
+    if (!G.V4Campaign?.balanced?.(state)) return {};
+    const stats = reference ? state.baseline?.stats : state.stats;
+    const coverage = stats?.districts?.river?.kpis?.flood;
+    // The opening world is the last confirmed year, never a project's draft.
+    const floodCoverageBps = coverage?.demand > 0
+      ? Math.round(10000 * clamp(coverage.served / coverage.demand,0,1)) : 0;
+    return {balance:{floodCoverageBps}};
+  }
+
   function settleEvent(state,eventPlan,approvedOperations,settledEventPlan) {
     if (!G.V3Events?.year || !eventPlan.rows?.some(row => row.eventId === state.event.eventId)) return eventPlan;
     const ledger = [...state.history.map(row=>row.event),state.event];
     const picks = Object.fromEntries(ledger.map(row=>[row.year,row.choice || state.draft.eventChoice]));
     const settledSpend = Object.fromEntries(approvedOperations.filter(row=>row.direction==='out').map(row=>[row.id,row.amount]));
-    const calculation = G.V3Events.year({attemptId:state.attemptId,year:state.year,ledger,picks,settledSpend});
+    const executionHistory = state.history.flatMap(row=>row.stats.eventOutcomes);
+    const calculation = G.V3Events.year({attemptId:state.attemptId,year:state.year,ledger,picks,settledSpend,
+      executionHistory,...eventImpactContext(state)});
     const known = new Set(eventPlan.rows.map(row=>row.id));
     const grants = calculation.rows.filter(row=>row.type==='grant' && row.direction==='in' && !known.has(row.id));
     if (settledEventPlan) {
@@ -894,7 +945,7 @@
     const settled = settleEvent(state,eventPlan,review.finance.operations,settledEventPlan);
     const fiscalResult = settled === eventPlan ? review.finance : buildFinance(state,selected,settled,[]);
     const actual = advanceProjection(state,fiscalResult,settled);
-    const promises = checkPromises(state,selected,fiscalResult,year);
+    const promises = checkPromises(state,selected,actual,year);
     const measures = selected.map(project=>({id:project.id,measureId:project.measureId,districtId:project.districtId,
       siteId:project.siteId,labels:project.labels,action:project.action,openingYear:project.openingYear,annualOpex:project.annualOpex,
       deliveryWindowStart:project.action==='renew' ? project.endYear-project.durationYears+1 : project.openingYear,
@@ -919,7 +970,9 @@
       ...(!isV4(state)?{measureId:'defer'}:{})}};
     const deficits = [];
     for (const choice of ['base','a','b']) {
-      const eventPlan = G.V3Events.year({attemptId:state.attemptId,year:state.year,ledger,picks:{...picks,[state.year]:choice},executionHistory});
+      const eventPlan = G.V3Events.year({attemptId:state.attemptId,year:state.year,ledger,
+        picks:{...picks,[state.year]:choice},executionHistory,verifiedBaseExpenses:verifiedBaseExpenses(state),
+        ...G.V3Rules.eventImpactContext?.(state)});
       const basic = buildFinance(candidate,[],eventPlan,[]);
       if (basic.cashEnd>=0) return {available:false};
       deficits.push(-basic.cashEnd);
@@ -1004,6 +1057,6 @@
 
   G.V3Rules = {RULES_VERSION,V4_RULES_VERSION,FIRST_YEAR,LAST_YEAR,TAX_MODES,TAX_RATE_LIMITS,INVESTMENT_TERMS,
     GROUP_WEIGHTS,SECTOR_SHARES,DISTRICTS,MEASURES,SITES,create,emptyDraft,availableMeasures,sitesFor,projectPhase,loanSchedule,
-    investmentQuote,reconcile,aggregateSupport,taxSupportEffects,baseOperations,schoolAllocation,schoolComparison,schoolQuote,
-    quote,previewMeasure,commit,handoverStatus,handover,assess};
+    investmentQuote,reconcile,aggregateSupport,taxSupportEffects,baseOperations,verifiedBaseExpenses,schoolAllocation,schoolComparison,schoolQuote,
+    quote,previewMeasure,commit,eventImpactContext,handoverStatus,handover,assess};
 })(globalThis);

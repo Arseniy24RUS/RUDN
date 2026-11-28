@@ -9,7 +9,7 @@ const strategyAndCards=source.slice(source.indexOf('function governorStrategyDet
 const escape=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
 function renderer(locale){
   const sandbox=vm.createContext({Intl,getLocale:()=>locale,esc:escape,governorCopy:()=>({noRows:'—',score:'Score',submitted:'Saved',details:'Report'}),
-    governorAssessmentDetails:()=>'',governorReportText:value=>typeof value==='string'?value:'',governorSaveLabel:()=>'',formatDate:()=>''});
+    governorAssessmentDetails:()=>'',governorReportText:value=>typeof value==='string'?value:value?.[locale]??'',governorSaveLabel:()=>'',formatDate:()=>''});
   vm.runInContext(`${numberAndTable}\n${strategyAndCards}\nglobalThis.api={details:governorStrategyDetails,cards:governorReportCards};`,sandbox);
   return sandbox.api;
 }
@@ -50,4 +50,19 @@ test('Governor old reports are unchanged and untrusted strategy fields cannot in
   const html=render.details({campaignStrategy:data});
   assert.equal(html.includes('<script'),false);assert.equal(html.includes('<img'),false);assert.equal(html.includes('onerror'),false);
   assert.match(html,/Курс не указан/);assert.match(html,/Показатель: — \/ 60%/);
+});
+
+test('teacher report shows the actual event response, district, funding lines and delivered service',()=>{
+  const attempt={id:'campaign-synthetic',studentKey:'synthetic',points:4,governor:{campaignStatus:'completed',decisions:20,
+    decisionRegister:[{year:2026,mission:'Dam breach',situation:{title:{en:'Dam breach'},district:{en:'River valley'},
+      answer:{en:'Rebuild the dam and access road'},units:{en:'households with access restored'},
+      actualUnits:692,paidMln:1958,grantMln:280,savedMln:0,avoidedNeed:608}}]}};
+  const html=renderer('en').cards([attempt],{teacher:true});
+  assert.match(html,/Responses to annual situations/);
+  assert.match(html,/River valley/);
+  assert.match(html,/Rebuild the dam and access road/);
+  assert.match(html,/Spending 1,958 · Reimbursement 280/);
+  assert.match(html,/692 households with access restored · Households kept access 608/);
+  const prior={...attempt,governor:{...attempt.governor,decisionRegister:[{year:2026,mission:'Dam breach'}]}};
+  assert.doesNotMatch(renderer('en').cards([prior],{teacher:true}),/Responses to annual situations/);
 });

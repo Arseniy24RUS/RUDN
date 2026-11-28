@@ -78,6 +78,60 @@ test('the four reported results use a single winning path, never a patchwork of 
   assert.equal(C.status(partial,2).entries.every(row=>row.actual===null),true);
 });
 
+function scoredCampaign({targets,access=false,services=true,promises=true,debt=0}={}) {
+  const state=gradeFixture({goodKpi:targets?[4]:[],goodSupport:[1,2,3,4]});
+  state.balanceVersion=C.BALANCE_VERSION;
+  state.finance.reserve=2000;
+  state.finance.cash=4000;
+  state.promises=[{dueYear:2045,status:promises?'kept':'missed'}];
+  for(const row of state.history.slice(-2)){
+    row.projects=services?[{id:'current-service',status:'open',paidYears:[row.year]}]:[];
+    if(access){
+      row.stats.districts={river:{kpis:{health:{value:76},flood:{value:55}}}};
+      row.reference={districts:{river:{kpis:{health:{value:70},flood:{value:50}}}}};
+    }
+    row.finance={debtSchedule:[{year:row.year+1,total:debt}],futureRows:[
+      {year:row.year+1,cash:6000,projectedIncome:10000},
+      {year:row.year+2,cash:6500,projectedIncome:10000},
+      {year:row.year+3,cash:7000,projectedIncome:10000}
+    ]};
+  }
+  return state;
+}
+
+test('a popular campaign qualifies for 5 through measurable results, continuity, promises and funded debt',()=>{
+  const throughTargets=C.score(scoredCampaign({targets:true,debt:4000}));
+  const throughAccess=C.score(scoredCampaign({access:true}));
+  const idle=C.score(scoredCampaign());
+  assert.equal(throughTargets.points,5);
+  assert.equal(throughAccess.points,5);
+  assert.equal(throughAccess.qualification.gained,2);
+  assert.equal(idle.points,4);
+  assert.equal(idle.rawPoints,5);
+  assert.equal(idle.paths.satisfaction,5);
+  assert.equal(idle.qualification.checks.performance,false);
+  assert.equal(C.journalPoints(idle.points),4);
+  assert.equal(idle.criteria.reduce((sum,row)=>sum+Math.round(row.points*100),0),400);
+  for(const [missing,state] of [
+    ['services',scoredCampaign({targets:true,services:false})],
+    ['promises',scoredCampaign({targets:true,promises:false})],
+    ['finance',scoredCampaign({targets:true,debt:4001})]
+  ]){
+    const grade=C.score(state);
+    assert.equal(grade.qualification.checks[missing],false);
+    assert.equal(grade.points,4);
+  }
+  assert.equal(C.score({...scoredCampaign({targets:true}),handover:true}).points,4);
+});
+
+test('new balance versions are explicit at creation and never inferred from an old attempt',()=>{
+  const state=R.create({attemptId:'new-balance',schoolMap,rulesVersion:R.V4_RULES_VERSION,balanceVersion:C.BALANCE_VERSION});
+  assert.ok(C.balanced(state));
+  assert.equal(C.balanced(make()),false);
+  assert.throws(()=>R.create({attemptId:'unsupported',schoolMap,rulesVersion:R.V4_RULES_VERSION,balanceVersion:'unknown'}),
+    /unsupported-balance/);
+});
+
 async function sign(state,entries) {
   const {attemptId,year,revision}=state;
   const old=state.history.map(row=>row.event);
