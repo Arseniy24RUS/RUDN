@@ -244,7 +244,7 @@
     const mandatory = money(finance.base.mandatory * (1 + (year-FIRST_YEAR)*.008) * demographic.mandatoryFactor);
     const amounts = split(mandatory,Object.values(SECTOR_SHARES));
     const rows = Object.keys(SECTOR_SHARES).map((sector,i) => pay(`base:${year}:${sector}`,year,'out','mandatory',amounts[i],sector));
-    if (!G.V4Campaign?.balanced?.(state)) return rows;
+    if (!isV4(state)) return rows;
     return rows.flatMap(row => {
       let remainder = row.amount;
       const lines = [];
@@ -260,7 +260,7 @@
   }
 
   function verifiedBaseExpenses(state) {
-    if (!G.V4Campaign?.balanced?.(state)) return {};
+    if (!isV4(state)) return {};
     return Object.fromEntries(baseOperations(state).filter(row => row.baseLedgerRef && row.reductionMln > 0)
       .map(row => [row.baseLedgerRef,{id:row.id,year:row.year,expenseMln:row.amount,reductionMln:row.reductionMln}]));
   }
@@ -274,16 +274,14 @@
       reserveDraw:0,reserveContribution:0,sectorLimits:{},promise:null};
   }
 
-  function create({attemptId, schoolMap, rulesVersion = RULES_VERSION, balanceVersion}) {
+  function create({attemptId, schoolMap, rulesVersion = RULES_VERSION}) {
     if (!attemptId || !schoolMap?.sites) throw new Error('governor-v3/missing-start-data');
     if (![RULES_VERSION,V4_RULES_VERSION].includes(rulesVersion)) throw new Error('governor/unsupported-rules');
-    if (balanceVersion!==undefined&&(rulesVersion!==V4_RULES_VERSION||balanceVersion!==G.V4Campaign?.BALANCE_VERSION))
-      throw new Error('governor/unsupported-balance');
     const scenario = G.DATA?.scenarios?.find(row => row.id === 'balanced');
     const opening = scenario?.finance || {openingTreasury:4.5,reserve:2.5,debt:6,debtLimit:16,debtRate:.07,
       ownTaxRevenue:35,nonTaxRevenue:3,equalizationGrant:2.5,mandatoryCosts:37.4};
     const population = G.Population.create('balanced'), debt = money(opening.debt*1000), annualPercent = cents(opening.debtRate*100);
-    const start = {rulesVersion,...(balanceVersion?{balanceVersion}:{}),attemptId,scenarioId:'balanced',schoolMap,population,year:FIRST_YEAR,revision:0,completed:false,
+    const start = {rulesVersion,attemptId,scenarioId:'balanced',schoolMap,population,year:FIRST_YEAR,revision:0,completed:false,
       draft:emptyDraft('moderate',rulesVersion),event:null,projects:[],history:[],promises:[],closedRoads:[],
       finance:{cash:money(opening.openingTreasury*1000),reserve:money(opening.reserve*1000),debt,initialDebt:debt,debtLimit:money(opening.debtLimit*1000),
         annualPercent,base:{taxes:money(opening.ownTaxRevenue*1000),nonTax:money(opening.nonTaxRevenue*1000),
@@ -613,8 +611,7 @@
     return {...result,taxes,taxBase,taxDelta:taxes-taxBase,nonTax,annualPercent,
       loanHeadroom:Math.max(0,finance.debtLimit-finance.debt+principalDue),debtSchedule,futureRows,loans,projects,mandatoryBySector,
       interest:sum(due.map(row=>row.interest)),principalDue,
-      ...(G.V4Campaign?.balanced?.(state)?{eventSavings:sum(afterEvents.flatMap(row=>(row.savings||[]).map(entry=>entry.amount)))}:{}),
-      ...(modern?{taxRate:taxFactor,employmentTaxDelta:taxBase-money(regularTaxBase),investmentHeadroom,investmentDraft,investments,investmentContribution,
+      ...(modern?{eventSavings:sum(afterEvents.flatMap(row=>(row.savings||[]).map(entry=>entry.amount))),taxRate:taxFactor,employmentTaxDelta:taxBase-money(regularTaxBase),investmentHeadroom,investmentDraft,investments,investmentContribution,
         investmentPrincipal:sum(matured.map(row=>row.principal)),investmentIncome:sum(matured.map(row=>row.income)),
         firstShortfall:shortfall?{...shortfall,amount:-shortfall.cash}:null}:{})};
   }
@@ -903,7 +900,7 @@
   }
 
   function eventImpactContext(state,reference=false) {
-    if (!G.V4Campaign?.balanced?.(state)) return {};
+    if (!isV4(state)) return {};
     const stats = reference ? state.baseline?.stats : state.stats;
     const coverage = stats?.districts?.river?.kpis?.flood;
     // The opening world is the last confirmed year, never a project's draft.

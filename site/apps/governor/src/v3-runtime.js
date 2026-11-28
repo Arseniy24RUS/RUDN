@@ -88,7 +88,7 @@
   }
   function envelope(owner, context, map, assignment) {
     const state = G.V3Rules.create({attemptId:crypto.randomUUID(),schoolMap:map,
-      ...(assignment===V4_ASSIGNMENT?{rulesVersion:G.V3Rules.V4_RULES_VERSION,balanceVersion:G.V4Campaign.BALANCE_VERSION}:{})});
+      ...(assignment===V4_ASSIGNMENT?{rulesVersion:G.V3Rules.V4_RULES_VERSION}:{})});
     return {
       owner, context, schema:SAVE_VERSION, assignment, createdAt:new Date().toISOString(),
       drawKey:G.V3Events.createDrawKey(), contentVersion:G.V3Events.contentVersion, algorithmVersion:G.V3Events.algorithmVersion,
@@ -157,7 +157,7 @@
           const projects=turn.measures??(turn.measure?[turn.measure]:[]);
           const action=projects.map(project=>G.I18n.local(project.labels,'ru'));
           return {year:turn.year,mission:G.V3Events.card(turn.event).title,action:action.join(' · ')||(isV4(state)?'Без новых мер':'Без нового проекта'),
-            ...(G.V4Campaign?.balanced?.(state)?{situation:settledSituation(turn)}:{}),
+            ...(isV4(state)?{situation:settledSituation(turn)}:{}),
             cost:(turn.finance?.newMeasureCost||0)/1000,delivery:projects[0]?.openingYear,...(isV4(state)?{
               measures:projects.map(({id,measureId,districtId,siteId,openingYear,annualOpex,action},index)=>({
                 id,measureId,districtId,siteId,openingYear,annualOpex,action,title:projects[index].labels

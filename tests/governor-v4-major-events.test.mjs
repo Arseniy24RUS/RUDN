@@ -175,15 +175,15 @@ async function openingRecord(eventId) {
   throw new Error('Missing playable fixture for '+eventId);
 }
 
-function chooseOpening(record,choice,balanceVersion) {
-  const state=rules.create({attemptId,schoolMap:map,rulesVersion:rules.V4_RULES_VERSION,balanceVersion});
+function chooseOpening(record,choice,rulesVersion=rules.V4_RULES_VERSION) {
+  const state=rules.create({attemptId,schoolMap:map,rulesVersion});
   return {...state,event:record,draft:{...state.draft,eventChoice:choice}};
 }
 
-function playOpening(record,choice,balanceVersion) {
-  const state=chooseOpening(record,choice,balanceVersion);
+function playOpening(record,choice,extra={}) {
+  const state=chooseOpening(record,choice);
   const context=rules.eventImpactContext(state);
-  const eventPlan=calculate(record,choice,context);
+  const eventPlan=calculate(record,choice,{...context,...extra});
   const baselineEventPlan=calculate(record,'base',rules.eventImpactContext(state,true));
   const quote=rules.quote(state,{eventPlan});
   assert.ok(quote.ok,JSON.stringify(quote.errors));
@@ -192,8 +192,7 @@ function playOpening(record,choice,balanceVersion) {
 
 test('opening flood protection changes exposure and emergency spending on the same dam draw',async()=>{
   const record=await openingRecord('LANDMARK-02'), choice='a';
-  const {BALANCE_VERSION}=game.V4Campaign;
-  const fresh=chooseOpening(record,choice,BALANCE_VERSION);
+  const fresh=chooseOpening(record,choice);
   const protectedState={...fresh,stats:plain(fresh.stats)};
   protectedState.stats.districts.river.kpis.flood={served:58207,demand:92042};
   const unprepared=calculate(record,choice,rules.eventImpactContext(fresh));
@@ -229,20 +228,22 @@ test('opening flood protection changes exposure and emergency spending on the sa
   assert.equal(follow.outcomes[0].need,872);
   assert.equal(follow.currentExpenseMln,110);
   assert.equal(follow.currentReceiptMln,0);
-  const archived=calculate(record,choice,rules.eventImpactContext({...protectedState,balanceVersion:undefined}));
+  const legacy=chooseOpening(record,choice,rules.RULES_VERSION);
+  const archived=calculate(record,choice,rules.eventImpactContext({...legacy,stats:protectedState.stats}));
   assert.equal(archived.outcomes[0].need,1480);
   assert.equal(archived.outcomes[0].preparedness,undefined);
 });
 
 test('delivered Olympic visits move the sports KPI and local outreach values the remote option',async()=>{
-  const {BALANCE_VERSION}=game.V4Campaign;
   const olympics=await openingRecord('LANDMARK-04');
-  const [base,small,full]=['base','b','a'].map(choice=>playOpening(olympics,choice,BALANCE_VERSION));
+  const [base,small,full]=['base','b','a'].map(choice=>playOpening(olympics,choice));
   assert.equal(full.history[0].stats.eventOutcomes[0].actualUnits,24000);
   assert.ok(full.campaignKpis.sport>small.campaignKpis.sport && small.campaignKpis.sport>base.campaignKpis.sport);
-  assert.equal(playOpening(olympics,'a').campaignKpis.sport,playOpening(olympics,'base').campaignKpis.sport);
+  const noVisits=playOpening(olympics,'a',{capacity:{[olympics.eventId]:0}});
+  assert.equal(noVisits.history[0].stats.eventOutcomes[0].actualUnits,0);
+  assert.equal(noVisits.campaignKpis.sport,base.campaignKpis.sport);
   const remote=await openingRecord('SOCIAL-01');
-  const state=chooseOpening(remote,'b',BALANCE_VERSION);
+  const state=chooseOpening(remote,'b');
   const context=rules.eventImpactContext(state);
   const [near,far]=['a','b'].map(choice=>calculate(remote,choice,context).outcomes[0]);
   assert.ok(near.actualUnits>far.actualUnits);

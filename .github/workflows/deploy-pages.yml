@@ -205,9 +205,9 @@ jobs:
               reviewed['.github/workflows/puzzle-checks.yml'] = '63dec2c41d0e6170ac52d3e6bc52ab2fb655f8e2'
               reviewed['.github/workflows/puzzle-map-network.yml'] = 'f935f0c19f401b060f412e33210efb82c4abf05b'
           if base == balance_base:
-              reviewed['site'] = 'd5cca78d307eb080265bdec0ca877acad45c4912'
-              reviewed['scripts'] = 'd57d65ac508a32ae94ead2cf247105d42c5fcb81'
-              reviewed['tests'] = 'c09fd46838b249e1ce4a57e4fe265943572d4510'
+              reviewed['site'] = 'f26195bf860ed1f1f99aa754d1c3a88bd3432b02'
+              reviewed['scripts'] = 'f8c8816d91f2e5a7aff5048f6405a41fbf47bf1f'
+              reviewed['tests'] = 'b1e6a608ae20742e9b1a7234a75bdb0ec52155f0'
               reviewed['firebase'] = 'dcf90f556550a3217b4ce3673b7ec352d80a9b38'
               reviewed['.github/workflows/platform-checks.yml'] = 'f450c66561cdf2440a43d3c7ea00df9c6d94ae06'
               reviewed['.github/workflows/legal-lab-checks.yml'] = '84bfeff152b561722bdfad9879b0839c597b31e1'

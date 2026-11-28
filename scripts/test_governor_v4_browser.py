@@ -360,13 +360,13 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
     assert stages == ['frame', 'frame', 'finishing', 'open'], stages
     assert major_events == FULL_MAJOR_EVENTS, major_events
     assert state['completed'] and len(state['history']) == 20 and state['year'] == 2045
-    assert state['balanceVersion'] == 'governor-balance-v1'
+    assert state['rulesVersion'] == 'governor-v4.0'
     assert page.locator('[data-v3-action="advance"]').count() == 0
     assert page.locator('.v4-goals').first.is_visible()
     screenshot(page, output, 'final')
     score = record['submission']['governor']['assessment']
     qualification = score['qualification']
-    assert score['version'] == state['balanceVersion']
+    assert score['version'] == 'governor-balance-v1'
     assert abs(score['rawPoints'] - max(score['paths'].values())) < .011
     assert min(score['rawPoints'], qualification['ceiling']) == score['points']
     conditions = {'ru': 'Условия для пятёрки', 'en': 'Conditions for a grade of 5', 'zh': '获得5分的条件'}

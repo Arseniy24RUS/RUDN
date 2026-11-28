@@ -5,9 +5,7 @@
   const L=(ru,en,zh)=>({ru,en,zh});
   const FIRST_YEAR=2026;
   const YEARS_PER_TERM=5;
-  const VERSION='governor-v4.0';
-  const BALANCE_VERSION='governor-balance-v1';
-  const balanced=state=>state?.balanceVersion===BALANCE_VERSION;
+  const VERSION='governor-balance-v1';
   const FULL_GRADE=Object.freeze({targets:4,accessGains:2,accessPoints:5,promiseShare:.75,debtShare:.40});
   const {phases,sites}=G.V4Catalog;
   const measures=new Map(phases.flat().map(row=>[row.id,row]));
@@ -195,7 +193,7 @@
     const before=prev.campaignKpis??initial(prev);
     const rows=observed(next),earlierRows=observed(prev);
     const effects=fundedEffects(next.projects,next.stats.year);
-    const eventEffects=G.V4Campaign.balanced?.(prev)?eventKpiEffects(eventPlan,next.stats):{};
+    const eventEffects=eventKpiEffects(eventPlan,next.stats);
     const tax=(taxIndex-100)/12;
     const changes={
       jobs:serviceDelta(prev,next,'employment'),
@@ -313,7 +311,7 @@
     const paths=Object.fromEntries(['kpi','satisfaction'].map(path=>[path,sum(results.map(row=>weighted(row,path)))]));
     const winning=paths.kpi>=paths.satisfaction?'kpi':'satisfaction';
     const raw=results.map(row=>weighted(row,winning)*100);
-    const qualification=balanced(state)&&state.completed?fullGradeConditions(state,results.at(-1)):null;
+    const qualification=state.completed?fullGradeConditions(state,results.at(-1)):null;
     const rawTotal=sum(raw);
     const ceiling=qualification?.ceiling*100;
     const scaled=qualification&&rawTotal>ceiling?raw.map(value=>value*ceiling/rawTotal):raw;
@@ -322,7 +320,7 @@
     const order=scaled.map((_,index)=>index).sort((a,b)=>(scaled[b]-cents[b])-(scaled[a]-cents[a])||a-b);
     const remaining=total-sum(cents);
     for (let i=0;i<remaining;i++) cents[order[i]]++;
-    return {version:balanced(state)?BALANCE_VERSION:VERSION,points:total/100,maxPoints:5,completionRatio,winning,
+    return {version:VERSION,points:total/100,maxPoints:5,completionRatio,winning,
       ...(qualification?{qualification,rawPoints:round(rawTotal/100)}:{}),
       paths:{kpi:round(paths.kpi),satisfaction:round(paths.satisfaction)},handoverCapApplied:false,
       criteria:results.map((row,index)=>{
@@ -336,7 +334,7 @@
   }
 
   G.V4Campaign={
-    VERSION,BALANCE_VERSION,balanced,FULL_GRADE,METRICS,CHAPTERS,chapter,initial,advance,satisfactionEffects,eventKpiEffects,status,score,
+    VERSION,FULL_GRADE,METRICS,CHAPTERS,chapter,initial,advance,satisfactionEffects,eventKpiEffects,status,score,
     journalPoints:points=>Math.ceil(points),
     available:year=>phases[chapter(year).number-1],
     measure:id=>measures.get(id),

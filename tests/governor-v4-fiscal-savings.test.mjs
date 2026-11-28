@@ -29,7 +29,7 @@ async function opening() {
   const event = await E.open({attemptId:state.attemptId,year:state.year,drawKey:key,ledger:[],eventPolicy:M.POLICY,
     snapshot:{revision:0,tags:E.baselineTags}});
   assert.equal(event.eventId,'UTILITY-01');
-  return {...state,event,balanceVersion:'governor-balance-v1',draft:{...state.draft,eventChoice:'a'}};
+  return {...state,event,draft:{...state.draft,eventChoice:'a'}};
 }
 
 function plan(state,{verified = R.verifiedBaseExpenses(state), ...extra} = {}) {
@@ -37,8 +37,9 @@ function plan(state,{verified = R.verifiedBaseExpenses(state), ...extra} = {}) {
     picks:{[state.event.year]:state.draft.eventChoice},verifiedBaseExpenses:verified,...extra});
 }
 
-test('fiscal items come from existing sector allocations and legacy opening totals remain exact',async()=>{
-  const state = await opening(), legacy = {...state,balanceVersion:undefined};
+test('V4 fiscal items come from existing sector allocations and match the opening V3 totals',async()=>{
+  const state = await opening();
+  const legacy = R.create({attemptId:'fiscal-v3-control',schoolMap,rulesVersion:R.RULES_VERSION});
   const before = R.baseOperations(legacy), after = R.baseOperations(state);
   assert.equal(after.length-before.length,4);
   for (const {sector,amount} of before) assert.equal(total(after.filter(row=>row.sector===sector)),amount);

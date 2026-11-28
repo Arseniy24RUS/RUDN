@@ -87,10 +87,10 @@
       'Сравнивают продвижение по 12 целям и среднюю поддержку жителей по пятилеткам. В итог идёт более высокий результат, до 5 баллов.',
       'The campaign takes the higher of progress toward 12 targets and average public support over each term, up to 5 points.',
       '战役总分取两项中的较高值，最高5分：12项目标的完成进度，或各五年期的居民平均支持度。'),
-      G.V4Campaign?.balanced?.(state)?l(
+      l(
         'Для пятёрки нужны результаты развития, работающие услуги, выполненные обещания и устойчивый бюджет. Точные условия есть в «Статистике».',
         'For a 5, deliver measurable improvements, maintain services, keep commitments and leave a sustainable budget. The exact conditions are in Statistics.',
-        '获得5分还需要可衡量的改善、持续运行的服务、履行承诺和可持续的预算。详见“统计”。'):'',
+        '获得5分还需要可衡量的改善、持续运行的服务、履行承诺和可持续的预算。详见“统计”。'),
       journal?l(
       'Если партия идёт в зачёт, итог для журнала округляется вверх до целого балла.',
       'For a graded campaign, the gradebook rounds that score up to a whole point.',
@@ -140,13 +140,11 @@
       lines.push('Verified term KPI, actual / target: '+terms.entries.map(row=>local(row.labels)+' '+(row.actual??'N/A')+
         ' / '+row.target+(row.inverse?' (lower is better)':'')).join('; ')+'. Satisfaction target '+terms.chapter.satisfactionTarget+'/100.');
       if(randomEvents(state))lines.push('Annual draw: one random situation each year, including 2026. The chance of a major event is 20% while eligible major events remain. Events are never repeated in one campaign and no specific event or year is guaranteed.');
-      if(G.V4Campaign.balanced(state)){
-        const {targets,accessGains,accessPoints,promiseShare,debtShare}=G.V4Campaign.FULL_GRADE;
-        lines.push('A grade of 5 requires '+targets+' final-term targets excluding trust or '+accessPoints+' percentage points of access improvement in '+accessGains+
-          ' district-service pairs in both final years, an ongoing service in both years, '+100*promiseShare+
-          '% of due promises kept and a covered 3-year forecast, non-negative cash and reserve net of future debt payments, and those payments within '+100*debtShare+
-          '% of next year’s recurring income. If a condition is unmet, the better raw score is capped at 4.');
-      }
+      const {targets,accessGains,accessPoints,promiseShare,debtShare}=G.V4Campaign.FULL_GRADE;
+      lines.push('A grade of 5 requires '+targets+' final-term targets excluding trust or '+accessPoints+' percentage points of access improvement in '+accessGains+
+        ' district-service pairs in both final years, an ongoing service in both years, '+100*promiseShare+
+        '% of due promises kept and a covered 3-year forecast, non-negative cash and reserve net of future debt payments, and those payments within '+100*debtShare+
+        '% of next year’s recurring income. If a condition is unmet, the better raw score is capped at 4.');
     }
     if(event){
       const context=rules.eventImpactContext?.(state) ?? {};

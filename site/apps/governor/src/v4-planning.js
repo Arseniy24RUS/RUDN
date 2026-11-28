@@ -306,14 +306,14 @@
       const digits=unit==='people'?0:2;
       return number(value,digits)+(translated[unit]??'');
     }
-    function scoringRules(includeConditions=G.V4Campaign.balanced(state())) {
+    function scoringRules() {
       const limits=G.V4Campaign.FULL_GRADE;
-      return '<p>'+esc(tr('scoreHelp'))+'</p>'+(includeConditions?'<h3>'+esc(tr('fullGrade'))+'</h3><ul>'+
+      return '<p>'+esc(tr('scoreHelp'))+'</p><h3>'+esc(tr('fullGrade'))+'</h3><ul>'+
         '<li>'+esc(tr('gradePerformance',{targets:limits.targets,points:limits.accessPoints,access:limits.accessGains}))+'</li>'+
         '<li>'+esc(tr('gradeServices'))+'</li>'+
         '<li>'+esc(tr('gradePromises',{share:100*limits.promiseShare}))+'</li>'+
         '<li>'+esc(tr('gradeFinance',{share:100*limits.debtShare}))+'</li>'+
-        '</ul><p>'+esc(tr('gradeLimit'))+'</p>':'');
+        '</ul><p>'+esc(tr('gradeLimit'))+'</p>';
     }
     function scoreQualification(result) {
       const grade=result.qualification;

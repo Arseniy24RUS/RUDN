@@ -49,7 +49,7 @@ test('the gradebook rounds fractional campaign points up and preserves integers'
   assert.deepEqual(points.map(C.journalPoints),[0,1,1,3,4,5,5,5]);
 });
 
-function gradeFixture({goodKpi,goodSupport}) {
+function gradeFixture({goodKpi,goodSupport,access=false,services=true,promises=true,debt=0}) {
   const state=make();
   const bad=Object.fromEntries(C.METRICS.map(m=>[m.id,m.inverse?m.max:m.min]));
   const history=[...Array(20)].map((_,i)=>{
@@ -58,33 +58,7 @@ function gradeFixture({goodKpi,goodSupport}) {
       referenceCampaignKpis:state.initialCampaignKpis,
       stats:{support:goodSupport.includes(term.number)?term.satisfactionTarget:58}};
   });
-  return {...state,year:2045,completed:true,history,campaignKpis:history.at(-1).campaignKpis};
-}
-
-test('the four reported results use a single winning path, never a patchwork of years',()=>{
-  const state=gradeFixture({goodKpi:[1,2],goodSupport:[3,4]});
-  const grade=C.score(state);
-  assert.equal(grade.winning,'satisfaction');
-  assert.deepEqual(plain(grade.paths),{kpi:1.5,satisfaction:3.5});
-  assert.equal(grade.points,3.5);
-  assert.deepEqual(plain(grade.criteria.map(row=>row.maxPoints)),[.5,1,1.5,2]);
-  assert.deepEqual(plain(grade.criteria.map(row=>row.points)),[0,0,1.5,2]);
-  assert.equal(C.score(gradeFixture({goodKpi:[1,2,3,4],goodSupport:[]})).points,5);
-  assert.equal(C.score(gradeFixture({goodKpi:[],goodSupport:[1,2,3,4]})).points,5);
-  assert.equal(C.score({...state,handover:true}).points,3.5);
-  const partial={...state,year:2027,completed:false,history:state.history.slice(0,1)};
-  assert.equal(C.score(partial).points,.1);
-  assert.equal(C.status(partial,1).closed,false);
-  assert.equal(C.status(partial,2).entries.every(row=>row.actual===null),true);
-});
-
-function scoredCampaign({targets,access=false,services=true,promises=true,debt=0}={}) {
-  const state=gradeFixture({goodKpi:targets?[4]:[],goodSupport:[1,2,3,4]});
-  state.balanceVersion=C.BALANCE_VERSION;
-  state.finance.reserve=2000;
-  state.finance.cash=4000;
-  state.promises=[{dueYear:2045,status:promises?'kept':'missed'}];
-  for(const row of state.history.slice(-2)){
+  for(const row of history.slice(-2)){
     row.projects=services?[{id:'current-service',status:'open',paidYears:[row.year]}]:[];
     if(access){
       row.stats.districts={river:{kpis:{health:{value:76},flood:{value:55}}}};
@@ -96,7 +70,29 @@ function scoredCampaign({targets,access=false,services=true,promises=true,debt=0
       {year:row.year+3,cash:7000,projectedIncome:10000}
     ]};
   }
-  return state;
+  return {...state,year:2045,completed:true,history,campaignKpis:history.at(-1).campaignKpis,
+    finance:{...state.finance,reserve:2000,cash:4000},promises:[{dueYear:2045,status:promises?'kept':'missed'}]};
+}
+
+test('the four reported results use a single winning path, never a patchwork of years',()=>{
+  const state=gradeFixture({goodKpi:[1,2],goodSupport:[3,4]});
+  const grade=C.score(state);
+  assert.equal(grade.winning,'satisfaction');
+  assert.deepEqual(plain(grade.paths),{kpi:1.5,satisfaction:3.5});
+  assert.equal(grade.points,3.5);
+  assert.deepEqual(plain(grade.criteria.map(row=>row.maxPoints)),[.5,1,1.5,2]);
+  assert.deepEqual(plain(grade.criteria.map(row=>row.points)),[0,0,1.5,2]);
+  assert.equal(C.score(gradeFixture({goodKpi:[1,2,3,4],goodSupport:[]})).points,5);
+  assert.equal(C.score(gradeFixture({goodKpi:[],goodSupport:[1,2,3,4],access:true})).points,5);
+  assert.equal(C.score({...state,handover:true}).points,3.5);
+  const partial={...state,year:2027,completed:false,history:state.history.slice(0,1)};
+  assert.equal(C.score(partial).points,.1);
+  assert.equal(C.status(partial,1).closed,false);
+  assert.equal(C.status(partial,2).entries.every(row=>row.actual===null),true);
+});
+
+function scoredCampaign({targets,access=false,services=true,promises=true,debt=0}={}) {
+  return gradeFixture({goodKpi:targets?[4]:[],goodSupport:[1,2,3,4],access,services,promises,debt});
 }
 
 test('a popular campaign qualifies for 5 through measurable results, continuity, promises and funded debt',()=>{
@@ -124,12 +120,10 @@ test('a popular campaign qualifies for 5 through measurable results, continuity,
   assert.equal(C.score({...scoredCampaign({targets:true}),handover:true}).points,4);
 });
 
-test('new balance versions are explicit at creation and never inferred from an old attempt',()=>{
-  const state=R.create({attemptId:'new-balance',schoolMap,rulesVersion:R.V4_RULES_VERSION,balanceVersion:C.BALANCE_VERSION});
-  assert.ok(C.balanced(state));
-  assert.equal(C.balanced(make()),false);
-  assert.throws(()=>R.create({attemptId:'unsupported',schoolMap,rulesVersion:R.V4_RULES_VERSION,balanceVersion:'unknown'}),
-    /unsupported-balance/);
+test('V4 campaigns use the current assessment definition by default',()=>{
+  const state=make();
+  assert.equal(state.rulesVersion,R.V4_RULES_VERSION);
+  assert.equal(R.assess(state).version,'governor-balance-v1');
 });
 
 async function sign(state,entries) {

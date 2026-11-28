@@ -1222,7 +1222,7 @@
         (controller.meta?.context==='course'?'<p>'+esc(t('coursePoints'))+'</p>':'')+
         (modern()&&controller.meta?.graded?'<p>'+esc(v4.tr('journalRounding'))+'</p>':'')+
         (modern()?'<p><strong>'+esc(v4.tr('scoreChoice'))+'</strong></p><details><summary>'+esc(v4.tr('ratings'))+'</summary>'+
-          v4.scoringRules(!controller.meta?.canResume||G.V4Campaign.balanced(state()))+'</details>':'')+
+          v4.scoringRules()+'</details>':'')+
         button(esc(t(controller.meta?.canResume?'resume':'opening')),'start','primary')+
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
         (controller.meta?.legacyURL?'<a class="v3-link" href="'+esc(controller.meta.legacyURL)+'">'+esc(t('legacy'))+'</a>':'')+
