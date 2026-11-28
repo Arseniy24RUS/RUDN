@@ -167,13 +167,16 @@ function calculate(record, choice, context = {}) {
   return events.year({attemptId,year:record.year,ledger:[record],picks:{[record.year]:choice},...context});
 }
 
-async function openingRecord(eventId) {
+async function openingFixture(eventId) {
   for (let seed=0;seed<3000;seed++) {
-    const record=await events.open({attemptId,year:firstYear,drawKey:key(seed),snapshot,eventPolicy:major.POLICY});
-    if(record.eventId===eventId)return record;
+    const drawKey=key(seed);
+    const record=await events.open({attemptId,year:firstYear,drawKey,snapshot,eventPolicy:major.POLICY});
+    if(record.eventId===eventId)return {record,drawKey};
   }
   throw new Error('Missing playable fixture for '+eventId);
 }
+
+const openingRecord=async eventId=>(await openingFixture(eventId)).record;
 
 function chooseOpening(record,choice,rulesVersion=rules.V4_RULES_VERSION) {
   const state=rules.create({attemptId,schoolMap:map,rulesVersion});
@@ -253,6 +256,48 @@ test('delivered Olympic visits move the sports KPI and local outreach values the
   const later=calculate(remote,'b',{...context,capacity:{[remote.eventId]:0}}).outcomes[0];
   assert.equal(later.remoteUnits,0);
   assert.equal(later.kpiEffect,undefined);
+});
+
+test('Olympic services raise current support only during delivery and leave recoverable durable support',async()=>{
+  const {record,drawKey}=await openingFixture('LANDMARK-04');
+  let state=playOpening(record,'a');
+  for (let offset=1;offset<3;offset++) {
+    const year=firstYear+offset;
+    const ledger=state.history.map(row=>row.event);
+    const opening=await events.open({attemptId,year,drawKey,snapshot:{...snapshot,revision:state.revision},ledger});
+    ledger.push(opening);
+    const parameters={attemptId,year,ledger,picks:Object.fromEntries(ledger.map(row=>[row.year,row.choice??'base'])),
+      executionHistory:state.history.flatMap(row=>row.stats.eventOutcomes)};
+    const eventPlan=events.year({...parameters,...rules.eventImpactContext(state)});
+    const baselineEventPlan=events.year({...parameters,picks:{},...rules.eventImpactContext(state,true)});
+    state={...state,event:opening,draft:{...state.draft,eventChoice:'base'}};
+    const quote=rules.quote(state,{eventPlan});
+    assert.ok(quote.ok);
+    state=rules.commit(state,{expectedRevision:state.revision,signature:quote.signature,eventPlan,baselineEventPlan});
+  }
+  const rows=state.history;
+  assert.deepEqual(Array.from(rows,row=>row.stats.eventOutcomes.find(event=>event.eventId==='LANDMARK-04').actualUnits),[24000,24000,0]);
+  assert.ok(rows.slice(0,2).every(row=>row.stats.support>row.stats.structuralSupport));
+  assert.equal(rows[2].stats.support,rows[2].stats.structuralSupport);
+  const oldState={...state,history:rows.map(row=>{
+    const {structuralGroups,structuralSupport,...stats}=row.stats;
+    return {...row,stats};
+  })};
+  assert.deepEqual(plain(rules.structuralHistory(oldState)),plain(rules.structuralHistory(state)));
+});
+
+test('outbreak consultations are delivered separately from the age-specific mortality table',async()=>{
+  const record=await openingRecord('LANDMARK-07');
+  const active=playOpening(record,'a');
+  const base=playOpening(record,'base');
+  const outcome=active.history[0].stats.eventOutcomes.find(row=>row.eventId===record.eventId);
+  assert.equal(outcome.actualUnits,14000);
+  assert.equal(outcome.kpiEffect,undefined);
+  assert.ok(active.stats.support>base.stats.support);
+  assert.equal(active.stats.structuralSupport,base.stats.structuralSupport);
+  assert.equal(active.population.lastYear.deaths,base.population.lastYear.deaths);
+  assert.equal(active.population.lastYear.municipalities.capital.deaths,base.population.lastYear.municipalities.capital.deaths);
+  assert.equal(active.campaignKpis.life,base.campaignKpis.life);
 });
 
 test('the ledger counts mandatory costs once, models actual coverage, and credits the dam grant only at settlement',async()=>{

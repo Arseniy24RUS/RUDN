@@ -20,17 +20,13 @@
     'PUBLIC-08':'b'
   });
   // A local result contributes only to a KPI with a direct, authored link.
-  // Coefficients are index points (years for life) at full local coverage,
-  // before the region weights the district's observed population.
+  // Coefficients are index points at full local coverage before the region
+  // weights the district's observed population. Life expectancy uses age-specific risks.
   const thematicEffects = Object.freeze({
     'LANDMARK-04':['sport',1.5],
     'SOCIAL-07':['sport',.45],
     'LANDMARK-05':['education',.65],
     'LANDMARK-06':['sme_income',.7],
-    'LANDMARK-07':['life',.065],
-    'HEALTH-01':['life',.04],
-    'HEALTH-08':['life',.04],
-    'SOCIAL-01':['life',.025],
     'LANDMARK-08':['environment',.9],
     'ECOLOGY-01':['environment',.44],
     'ECOLOGY-05':['environment',.3],

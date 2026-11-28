@@ -243,23 +243,59 @@
       mandatoryFactor:round(.55+.45*(.25*now.children/Math.max(1,start.children)+.4*now.population/start.population+.35*now.elders/Math.max(1,start.elders)),6),
       employed:now.employed,children:now.children,elders:now.elders};
   }
+  function mortalityMultiplier(row,shock) {
+    const epidemic=shock?.key==='health'?Math.min(10,shock.gap||0)*.045*(1-row.emergencyMortality):0;
+    return (1+(1-row.healthAccess)*.38)*(1+epidemic);
+  }
+
+  function deathRisk(age,sex,mortality,elderCare) {
+    return clamp(qx(age,sex)*mortality*(age>=65?1-elderCare*.08:1),0,.95);
+  }
+
+  // This period table follows recurring age-specific risks. Flood casualties are recorded separately as actual losses.
+  function periodLifeExpectancy(mortality,elderCare) {
+    function expected(sex) {
+      let survivors=1,years=0;
+      for(let age=0;age<100;age++){
+        const remaining=survivors*(1-deathRisk(age,sex,mortality,elderCare));
+        years+=(survivors+remaining)/2;
+        survivors=remaining;
+      }
+      const tailRisk=deathRisk(100,sex,mortality,elderCare);
+      return years+survivors*(1/Math.max(.01,tailRisk)-.5);
+    }
+    return (100*expected('female')+105*expected('male'))/205;
+  }
+
+  function lifeExpectancy(population) {
+    const entries=Object.values(population?.lastYear?.municipalities??{});
+    if(entries.length && entries.every(row=>Number.isFinite(row.modelLifeYears))){
+      const exposure=sum(entries.map(row=>row.opening));
+      return exposure?sum(entries.map(row=>row.modelLifeYears*row.opening))/exposure:0;
+    }
+    const rows=Object.values(population?.derived?.municipalities??{});
+    const shock=population?.lastYear?.shock;
+    const residents=sum(rows.map(row=>row.population));
+    return residents?sum(rows.map(row=>row.population*periodLifeExpectancy(
+      mortalityMultiplier(row,shock?.districtId===row.id?shock:null),row.elderCare)))/residents:0;
+  }
+
   function advanceYear(state){
     const p=state.population;
     if(p.ledgers.length!==state.turnIndex)throw new Error('Population year already advanced or missing');
     const before=derive(state),opening=populationTotal(p),startFiscal=fiscalFactors(state),rows={},natural={};
-    const currentShock=p.shock;const emergency=(id)=>before.municipalities[id].emergencyMortality;
+    const currentShock=p.shock;
     for(const config of MUNICIPALITIES){
       const id=config.id,m=p.municipalities[id],d=before.municipalities[id];
       const localShock=currentShock?.districtId===id?currentShock:null;
       const shockGap=Math.min(10,localShock?.gap||0);
-      const epidemic=localShock?.key==='health'?shockGap*.045*(1-emergency(id)):0;
-      const mortalityFactor=(1+(1-d.healthAccess)*.38)*(1+epidemic);
+      const mortalityFactor=mortalityMultiplier(d,localShock);
       const deaths={female:[],male:[]};
-      for(const sex of ['female','male'])deaths[sex]=expectedCounts(m[sex].map((n,a)=>n*clamp(qx(a,sex)*mortalityFactor*(a>=65?1-d.elderCare*.08:1),0,.95))).map((n,a)=>Math.min(n,m[sex][a]));
+      for(const sex of ['female','male'])deaths[sex]=expectedCounts(m[sex].map((n,a)=>n*deathRisk(a,sex,mortalityFactor,d.elderCare))).map((n,a)=>Math.min(n,m[sex][a]));
       // Flood mortality is small, explicit and bounded. Never treated as a reward.
       let catastrophe=0;
       if(localShock?.key==='flood'){
-        const lost=takeFloodCasualties({female:m.female.map((n,a)=>n-deaths.female[a]),male:m.male.map((n,a)=>n-deaths.male[a])},Math.round(d.population*shockGap*.000015*(1-d.floodProtection)*(1-emergency(id))));
+        const lost=takeFloodCasualties({female:m.female.map((n,a)=>n-deaths.female[a]),male:m.male.map((n,a)=>n-deaths.male[a])},Math.round(d.population*shockGap*.000015*(1-d.floodProtection)*(1-d.emergencyMortality)));
         catastrophe=countStock(lost);for(const sex of ['female','male'])deaths[sex]=deaths[sex].map((v,a)=>v+lost[sex][a]);
       }
       const fertilityFactor=(state.scenarioId==='demographic'?.87:1)*(.82+.10*d.childcareAccess+.08*d.housingAccess+.06*d.employment+.16*d.familySupport);
@@ -274,6 +310,7 @@
       rows[id]={id,opening:d.population,births,deaths:countStock(deaths)+sum(neonatal),newbornDeaths:sum(neonatal),catastropheDeaths:catastrophe,
         internalIn:0,internalOut:0,externalIn:0,externalOut:0,cohortsBefore:clone(d.cohorts),
         women1549:d.women1549,modelTFR:round(sum(Array.from({length:35},(_,a)=>fertility(a+15)))*fertilityFactor,3),
+        ...(state.recordLifeExpectancy?{modelLifeYears:periodLifeExpectancy(mortalityFactor,d.elderCare)}:{}),
         conditions:{healthAccess:round(d.healthAccess),schoolAccess:round(d.schoolAccess),childcareAccess:round(d.childcareAccess),employment:round(d.employment)},closing:0,gap:0};
     }
     // Plan flows against frozen beginning-of-year accessibility, and transfer exact
@@ -385,7 +422,7 @@
     }catch(_){errors.push('malformed-data');}
     return{ok:errors.length===0,errors,years:(p?.ledgers||[]).length};
   }
-  const Population={VERSION,travelMinutes,TRANSPORT,MUNICIPALITIES,COHORTS,OUTPUTS,ROUTES,create,derive,refresh,advanceYear,registerDecision,preview,insight,report,verify,fiscalFactors,targets,outputsFor,populationTotal,cohortTotals,allocate,qx,fertility};
+  const Population={VERSION,travelMinutes,TRANSPORT,MUNICIPALITIES,COHORTS,OUTPUTS,ROUTES,create,derive,refresh,advanceYear,registerDecision,preview,insight,report,verify,fiscalFactors,targets,outputsFor,populationTotal,cohortTotals,allocate,qx,fertility,lifeExpectancy};
   root.GovernorGame=root.GovernorGame||{};root.GovernorGame.Population=Population;
   if(typeof module!=='undefined'&&module.exports)module.exports=Population;
 })(typeof window!=='undefined'?window:globalThis);

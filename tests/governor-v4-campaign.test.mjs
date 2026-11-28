@@ -49,7 +49,7 @@ test('the gradebook rounds fractional campaign points up and preserves integers'
   assert.deepEqual(points.map(C.journalPoints),[0,1,1,3,4,5,5,5]);
 });
 
-function gradeFixture({goodKpi,goodSupport,access=false,services=true,promises=true,debt=0}) {
+function gradeFixture({goodKpi,goodSupport,access=false,services=true,accessYears=5,serviceYears=5,promises=true,debt=0}) {
   const state=make();
   const bad=Object.fromEntries(C.METRICS.map(m=>[m.id,m.inverse?m.max:m.min]));
   const history=[...Array(20)].map((_,i)=>{
@@ -58,9 +58,9 @@ function gradeFixture({goodKpi,goodSupport,access=false,services=true,promises=t
       referenceCampaignKpis:state.initialCampaignKpis,
       stats:{support:goodSupport.includes(term.number)?term.satisfactionTarget:58}};
   });
-  for(const row of history.slice(-2)){
-    row.projects=services?[{id:'current-service',status:'open',paidYears:[row.year]}]:[];
-    if(access){
+  for(const row of history.slice(-5)){
+    row.projects=services&&row.year>=2046-serviceYears?[{id:'current-service',status:'open',paidYears:[row.year]}]:[];
+    if(access&&row.year>=2046-accessYears){
       row.stats.districts={river:{kpis:{health:{value:76},flood:{value:55}}}};
       row.reference={districts:{river:{kpis:{health:{value:70},flood:{value:50}}}}};
     }
@@ -91,8 +91,8 @@ test('the four reported results use a single winning path, never a patchwork of 
   assert.equal(C.status(partial,2).entries.every(row=>row.actual===null),true);
 });
 
-function scoredCampaign({targets,access=false,services=true,promises=true,debt=0}={}) {
-  return gradeFixture({goodKpi:targets?[4]:[],goodSupport:[1,2,3,4],access,services,promises,debt});
+function scoredCampaign({targets,...conditions}={}) {
+  return gradeFixture({goodKpi:targets?[4]:[],goodSupport:[1,2,3,4],...conditions});
 }
 
 test('a popular campaign qualifies for 5 through measurable results, continuity, promises and funded debt',()=>{
@@ -120,10 +120,35 @@ test('a popular campaign qualifies for 5 through measurable results, continuity,
   assert.equal(C.score({...scoredCampaign({targets:true}),handover:true}).points,4);
 });
 
+test('late access spikes and two operating years do not qualify for a grade of 5',()=>{
+  const brief=C.score(scoredCampaign({access:true,accessYears:2}));
+  assert.equal(brief.qualification.checks.services,true);
+  assert.equal(brief.qualification.checks.performance,false);
+  assert.equal(brief.qualification.gained,0);
+  assert.equal(brief.points,4);
+
+  const late=C.score(scoredCampaign({targets:true,serviceYears:2}));
+  assert.equal(late.qualification.checks.performance,true);
+  assert.equal(late.qualification.checks.services,false);
+  assert.equal(late.points,4);
+
+  assert.equal(C.score(scoredCampaign({targets:true,serviceYears:3})).points,5);
+});
+
+test('term scoring identifies structural support separately from public sentiment',()=>{
+  const state=gradeFixture({goodKpi:[],goodSupport:[4],access:true});
+  for(const row of state.history) row.stats.structuralSupport=58;
+  const term=C.status(state,4);
+  assert.equal(term.supportAverage,66);
+  assert.equal(term.structuralSupportAverage,58);
+  assert.equal(term.satisfaction,0);
+  assert.equal(C.score(state).paths.satisfaction,0);
+});
+
 test('V4 campaigns use the current assessment definition by default',()=>{
   const state=make();
   assert.equal(state.rulesVersion,R.V4_RULES_VERSION);
-  assert.equal(R.assess(state).version,'governor-balance-v1');
+  assert.equal(R.assess(state).version,'governor-balance-v2');
 });
 
 async function sign(state,entries) {
