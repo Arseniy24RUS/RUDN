@@ -91,9 +91,7 @@
       if(item.gif)return;
       const image=document.createElement('img');
       const name=host.dataset.v4EventGif;
-      const poster=host.querySelector('.v3-event-art');
-      image.className='v4-event-gif '+(name==='river-flow'?'v4-event-gif-full':'');
-      if (poster?.classList.contains('v3-event-subject-low')) image.classList.add('v4-event-gif-subject-low');
+      image.className='v4-event-gif';
       image.setAttribute('aria-hidden','true');
       image.alt='';
       image.addEventListener('load',()=>image.classList.add('is-ready'),{once:true});

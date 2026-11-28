@@ -735,7 +735,7 @@
     'dec.defer':['Год без нового проекта','Year without a new project','本年不启动新项目'],
     advisorChanged:['План изменился. Задайте вопрос снова.','The plan has changed. Ask your question again.','计划已更改。请重新提问。'],
     advisorRetry:['Повторить запрос','Retry question','重试提问'],
-    advisorGuest:['Справка работает локально. Для вопросов ИИ-советнику войдите в профиль РУДН.','Built-in help is available. Sign in to your RUDN account to ask the AI advisor.','访客可使用内置帮助。登录俄罗斯人民友谊大学账号后可向 AI 顾问提问。'],
+    advisorGuest:['В гостевом режиме доступны подсказки по игре. Для полного диалога войдите в профиль РУДН.','Guests can use the built-in tips. Sign in to your RUDN account for the full chat.','访客可以使用游戏内的提示。登录俄罗斯人民友谊大学账号后即可完整使用对话功能。'],
     legacy:['Открыть прежнюю партию','Open an earlier game','打开之前的游戏'],
     factYear:['Факт за {year}','Actual for {year}','{year}年实际情况'],
     foundation:['Фундамент','Foundation','地基'],frame:['Каркас','Frame','主体框架'],finishing:['Подготовка к открытию','Preparing to open','启用准备'],
@@ -798,9 +798,11 @@
     help:['Как проходит год','How a year works','年度流程'], helpText:['Ответьте на срочную задачу. Выберите проект для района или отложите его. Проверьте бюджет и исходные показатели. Кнопка ▶ открывает сводку плана перед подтверждением года.','Respond to the urgent issue. Choose a district project or defer it. Check the budget and starting figures. ▶ opens the plan for review before you close the year.','先处理紧急任务，再决定启动或暂缓地区项目。核对预算和基准数据。点击 ▶ 可查看年度计划，确认后才结算。'],
     localAdvisor:['Илья Орлов','Ilya Orlov','伊利亚·奥尔洛夫'], advisorRole:['Стратегическое развитие','Strategic development','战略发展'],
     ask:['Спросить советника…','Ask your adviser…','询问顾问…'], send:['Отправить','Send','发送'],
+    chatWelcome:['Губернатор, я на связи. Что обсудим?','Governor, I’m here. What shall we discuss?','州长，我在。您想讨论什么？'],
+    chatYou:['Вы','You','您'], chatHistory:['Переписка с советником','Conversation with your adviser','与顾问的对话'],
     navigation:['Что делать в этом году?','What should I do this year?','今年要做什么？'], compare:['Как сравнить варианты?','How can I compare options?','如何比较方案？'],
     awaiting:['Подготовка ответа…','Preparing an answer…','正在准备回答…'], unavailable:['Консультация сейчас недоступна. Можно продолжить год.','Consultation is unavailable. You can continue the year.','咨询暂不可用，可以继续年度决策。'],
-    answerLabel:['Ответ советника','Adviser’s reply','顾问回复'], ready:['План готов к проверке','Plan ready for review','计划可供核查'],
+    ready:['План готов к проверке','Plan ready for review','计划可供核查'],
     confirm:['Завершить {year} год','Close {year}','结束{year}年'],
     result:['Год завершён','Year complete','年度已结束'], resultNext:['Продолжить','Continue','继续'],
     resultStats:['Посмотреть результат','View the results','查看结果'],
@@ -915,7 +917,8 @@
   function mount(host, controller) {
     const rules = G.V3Rules;
     let busy = false, destroyed = false, errorText = '', optionDraft = null, focusAfter = null;
-    let chatDraft = '', chatPending = false, chatError = '', loanDraft = null, review = null;
+    let chatDraft = '', chatPending = '', chatError = '', chatShell = '', chatLog = '';
+    let loanDraft = null, review = null;
     let replayWelcome = 0, practiceError = '', menuReturnPending = false, scrollAfterMenu = null;
     let investmentDraft = null, taxFrame = 0, taxRelease = 0, taxWrite = null, spotlightFrame = 0;
     const navigation = ['decisions','budget','map','stats','advisor'];
@@ -1158,15 +1161,16 @@
       if (!illustration) return '';
       const art=typeof illustration==='string'?{poster:illustration}:illustration;
       const poster=art.poster||art.src;
-      const lowerSubject=/\/(mobile-medical-unit|commuter-transport)-800\.webp$/.test(poster);
-      const classes='v3-event-art'+(art.emblem?' v3-event-emblem':'')+(lowerSubject?' v3-event-subject-low':'')+
-        (G.V4MajorEvents?.has(event.id)?' v3-major-art':'');
+      const diorama=poster.match(/\/v3\/events\/(bridge-drainage|civic-tech-workshop|clean-production-line|clinic|commuter-transport|digital|family-childcare|first-job-mentoring|home-long-term-care|housing|industry|mobile-medical-unit|school)-800\.webp$/)?.[1];
+      const compact=['civic-tech-workshop','clean-production-line'].includes(diorama);
+      const low=['commuter-transport','mobile-medical-unit'].includes(diorama);
+      const visualClass=diorama?' v4-event-diorama'+(low?' v4-event-diorama-low':compact?' v4-event-diorama-compact':''):
+        /\/v4\/media\/decisions\//.test(poster)?' v4-event-portrait':'';
       const gif=modern()&&detailed?(art.gif||(art.motion==='river'?'river-flow':poster.endsWith('/school-street.webp')?'school-breeze':null)):null;
       const motion=gif?' data-v4-event-gif="'+esc(gif)+'"':detailed&&art.motion==='river'?' data-v3-motion="river"':'';
-      return '<div class="v3-event-visual"'+motion+'><picture>'+
+      return '<div class="v3-event-visual'+visualClass+'"'+motion+'><picture>'+
         (art.small&&asset(art.small)!==asset(poster)?'<source media="(max-width: 600px)" srcset="'+esc(asset(art.small))+'">':'')+
-        picture(poster,'',classes)+'</picture></div>'+
-        (detailed&&art.contextOnly?'<p class="v3-art-note">'+esc({ru:'Иллюстрация темы',en:'Topic illustration',zh:'主题插图'}[language()])+'</p>':'');
+        picture(poster,'','v3-event-art'+(art.emblem?' v3-event-emblem':''))+'</picture></div>';
     }
     function imageError(event) {
       const image=event.target;
@@ -1179,7 +1183,8 @@
         if (sources.length&&selected!==image.src) return;
         const fallback=asset(regionalArt);
         if (image.getAttribute('src')!==fallback) {
-          image.classList.remove('v3-event-subject-low','v3-event-emblem');
+          visual.classList.remove('v4-event-diorama','v4-event-diorama-low','v4-event-diorama-compact','v4-event-portrait');
+          image.classList.remove('v3-event-emblem');
           image.alt=t('whole');
           image.src=fallback;
           return;
@@ -1296,8 +1301,9 @@
         const costKey=continuation?v4.tr(continuation):t(construction?'construction':'launchCost');
         const cost=continuation?candidate?.costNow??measure.cost:candidate?.capex??measure.cost;
         return back('catalogue-back',catalogue)+heading(local(measure.labels))+
-          '<section class="v3-card v3-card-body">'+
-          (illustration?'<div class="v4-measure-intro"><div>'+context+'</div>'+illustration+'</div>':context)+
+          '<section class="v3-card v4-measure-detail">'+
+          '<div class="v4-measure-intro">'+illustration+'<div class="v4-measure-copy">'+context+'</div></div>'+
+          '<div class="v3-card-body v4-measure-terms">'+
           label(t('territoryReach'),districts.map(districtLabel).join(', '))+
           label(costKey,money(cost))+
           label(t('budget.annual'),money(candidate?.annualOpex??measure.annualOpex))+
@@ -1310,7 +1316,7 @@
           (measure.siteIds?.length?button(esc(t(row?.siteId?'siteChange':'map.chooseSite')),'sites','primary full'):
             !row?button(esc(v4.tr('add')),'v4-add','primary full'): '')+
           (row?button(esc(v4.tr('remove')),'v4-remove','secondary full','data-measure-id="'+esc(measure.id)+'"'):'')+
-          '</section>'+
+          '</div></section>'+
           (row?.promise?negotiation.summarize(measure.id):'')+
           (row&&candidate?button(esc(t('negotiationOpen')),'negotiate','secondary full'):'')+
           button(esc(catalogue),'catalogue-back','secondary full');
@@ -1786,19 +1792,69 @@
           label(t('people'),number(facility.served))+label(t('staffedPlaces'),number(facility.staffedSeats))).join('')+'</section>':'')+'</div></div>';
     }
     function adviserView() {
+      const sendIcon='<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 3-7.2 18-3.3-7.5L3 10.2 21 3Z"/><path d="M21 3 10.5 13.5"/></svg>';
+      return '<section class="v3-chat-panel" aria-labelledby="v3-heading"><header class="v3-advisor-person">'+
+        picture('assets/characters/ilya-avatar.webp','','')+'<div><h1 id="v3-heading" tabindex="-1">'+esc(t('localAdvisor'))+'</h1>'+
+        '<span>'+esc(t('nav.advisor'))+' · '+esc(t('advisorRole'))+'</span></div></header>'+
+        '<div class="v3-conversation" role="log" tabindex="0" aria-label="'+esc(t('chatHistory'))+'"></div>'+
+        '<form id="v3-chat" class="v3-composer"><label class="v3-sr" for="v3-question">'+esc(t('ask'))+'</label>'+
+        '<textarea rows="1" id="v3-question" name="question" enterkeyhint="send" maxlength="1200" placeholder="'+esc(t('ask'))+'"></textarea>'+
+        '<button type="submit" aria-label="'+esc(t('send'))+'" title="'+esc(t('send'))+'">'+sendIcon+'</button></form></section>';
+    }
+    function adviserMessages() {
       const messages=controller.advisor?.messages?.()||[];
-      return heading(t('nav.advisor'))+'<div class="v3-advisor-person">'+picture('assets/characters/ilya-avatar.webp','','')+
-        '<div><strong>'+esc(t('localAdvisor'))+'</strong><span>'+esc(t('advisorRole'))+'</span></div></div>'+
-        (controller.advisor?.cloudAccount?'':'<p class="v3-muted">'+esc(t('advisorGuest'))+'</p>')+
-        '<div class="v3-conversation" role="log" aria-live="polite" aria-label="'+esc(t('answerLabel'))+'">'+messages.map((message,index)=>
-          '<p class="v3-chat-question">'+esc(message.question)+'</p><div class="v3-chat-answer"><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+
+      const question=text=>'<p class="v3-chat-question"><span class="v3-sr">'+esc(t('chatYou'))+' </span>'+esc(text)+'</p>';
+      return (controller.advisor?.cloudAccount?'':'<p class="v3-chat-notice">'+esc(t('advisorGuest'))+'</p>')+
+        '<p class="v3-chat-answer v3-chat-welcome">'+esc(t('chatWelcome'))+'</p>'+
+        messages.map((message,index)=>question(message.question)+
+          '<div class="v3-chat-answer"><span class="v3-sr">'+esc(t('localAdvisor'))+' </span><p>'+esc(message.text)+'</p>'+
           (message.target?'<button type="button" class="v3-button secondary" data-v3-advice="'+index+'">'+esc(t('advisor.show'))+'</button>':'')+
           (message.status==='unavailable'?'<button type="button" class="v3-button secondary" data-v3-advice-retry="'+index+'">'+esc(t('advisorRetry'))+'</button>':'')+'</div>').join('')+
-          (chatPending?'<p class="v3-chat-answer" role="status">'+esc(t('awaiting'))+'</p>':'')+
-          (chatError?'<p role="alert">'+esc(chatError)+'</p>':'')+'</div>'+
-        (!messages.length?'<div class="v3-chat-suggestions">'+button(esc(t('navigation')),'ask-navigation','secondary')+button(esc(t('compare')),'ask-compare','secondary')+'</div>':'')+
-        '<form id="v3-chat" class="v3-composer"><label class="v3-sr" for="v3-question">'+esc(t('ask'))+'</label><textarea rows="1" id="v3-question" name="question" maxlength="1200" placeholder="'+esc(t('ask'))+'">'+esc(chatDraft)+'</textarea>'+
-        '<button type="submit" aria-label="'+esc(t('send'))+'" '+(chatPending?'disabled':'')+'>➤</button></form>';
+        (chatPending?(messages.at(-1)?.question===chatPending?'':question(chatPending))+
+          '<p class="v3-chat-typing" role="status"><span aria-hidden="true"><i></i><i></i><i></i></span>'+esc(t('awaiting'))+'</p>':'')+
+        (chatError?'<p class="v3-chat-notice" role="alert">'+esc(chatError)+'</p>':'')+
+        (!messages.length&&!chatPending?'<div class="v3-chat-suggestions">'+button(esc(t('navigation')),'ask-navigation','secondary')+
+          button(esc(t('compare')),'ask-compare','secondary')+'</div>':'');
+    }
+    function chatAtEnd(log) {
+      return log.scrollHeight-log.scrollTop-log.clientHeight<40;
+    }
+    function refreshComposer(field) {
+      field.style.height='auto';
+      field.style.height=(field.scrollHeight+2)+'px';
+      field.form.querySelector('button[type="submit"]').disabled=!!chatPending||!chatDraft.trim();
+    }
+    function updateChatLog(log,markup,field) {
+      // Keep messages already present in the live region so only new text is announced.
+      const template=document.createElement('template');
+      template.innerHTML=markup;
+      let current=log.firstElementChild;
+      for (const next of [...template.content.children]) {
+        if (!current?.isEqualNode(next)) break;
+        current=current.nextElementSibling;
+        next.remove();
+      }
+      while (current) {
+        const next=current.nextElementSibling;
+        if (current.contains(document.activeElement)&&document.activeElement.matches(':focus-visible')) field.focus({preventScroll:true});
+        current.remove();
+        current=next;
+      }
+      log.append(template.content);
+    }
+    function refreshChat({reset=false,follow=false}={}) {
+      const log=host.querySelector('.v3-conversation');
+      const field=host.querySelector('#v3-question');
+      if (!log||!field) return;
+      const atEnd=follow||reset||chatAtEnd(log);
+      const markup=adviserMessages();
+      if (reset||chatLog!==markup) {
+        updateChatLog(log,markup,field);
+        chatLog=markup;
+      }
+      if (field.value!==chatDraft) field.value=chatDraft;
+      refreshComposer(field);
+      if (atEnd) log.scrollTop=log.scrollHeight;
     }
     function errorLabel(error) {
       const code=error.code;
@@ -1918,10 +1974,13 @@
       const learning=modern()&&active&&!s.history.length&&lesson>0&&(lesson<7||lesson===7&&!current.investmentViewed);
       const advanceLabel=learning?v4.tr('tutorialContinue'):t('turn.next');
       const finished=modern()&&s?.completed;
+      const showChat=active&&current.tab==='advisor'&&!current.panel&&!showWelcome;
       const advance=finished?'':'<button type="button" class="v3-advance" data-v3-action="advance" data-anchor="year.review" aria-label="'+
         esc(advanceLabel)+'" '+(s?.completed?'disabled':'')+'><span aria-hidden="true">'+advanceIcon+'</span><small>'+
         esc(learning?v4.tr('tutorialShort'):advanceLabel)+'</small></button>';
-      host.className='governor-v3'+(current.largeText?' v3-large-text':'')+(current.motion==='still'?' v3-still':'');
+      host.classList.add('governor-v3');
+      host.classList.toggle('v3-large-text',!!current.largeText);
+      host.classList.toggle('v3-still',current.motion==='still');
       host.dataset.v3Tab=current.tab;
       document.body.classList.toggle('governor-v3-active',active);
       const panels={event:eventView,measures:measuresView,project:projectView,sites:sitesView,object:objectView,loan:loanView,review:reviewView,
@@ -1936,9 +1995,9 @@
       else if (s.completed&&current.tab==='decisions') content=finalView();
       else content=({decisions,budget:budgetView,map:mapView,stats:statsView,advisor:adviserView}[current.tab]||decisions)();
       const brand='<span class="v3-emblem" aria-hidden="true">♜</span><strong>'+esc(t('subtitle'))+'</strong>';
-      host.innerHTML='<header class="v3-header">'+(welcome?'<div class="v3-welcome-brand">'+brand+'</div>':'<a href="#" data-v3-action="decisions" aria-label="'+esc(t('title'))+'">'+brand+'</a>')+
+      const shell='<header class="v3-header">'+(welcome?'<div class="v3-welcome-brand">'+brand+'</div>':'<a href="#" data-v3-action="decisions" aria-label="'+esc(t('title'))+'">'+brand+'</a>')+
         (s?'<time>'+s.year+'</time>':'')+'<button type="button" id="v3-menu-toggle" class="v3-menu-button" data-v3-action="menu" aria-label="'+esc(t(menuOpen?'menuClose':'menu'))+'" aria-expanded="'+menuOpen+'" aria-controls="v3-main">'+(menuOpen?'×':'☰')+'</button></header>'+
-        '<main class="v3-content '+(current.tab==='advisor'&&!current.panel&&!showWelcome?'v3-chat-content':'')+'" id="v3-main">'+
+        '<main class="v3-content '+(showChat?'v3-chat-content':'')+'" id="v3-main">'+
         (errorText?'<div class="v3-alert" role="alert">'+esc(errorText)+button(esc(t('retry')),'retry','link')+'</div>':'')+
         (controller.meta?.readOnly?'<div class="v3-alert" role="status">'+esc(t('system.otherTab'))+'</div>':'')+
         (coach?practiceView(step,current):'')+content+'</main>'+
@@ -1948,6 +2007,15 @@
           '<svg class="v3-coach-shade" aria-hidden="true" focusable="false"><defs><mask id="v3-coach-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">'+
           '<rect width="100%" height="100%" fill="white"/><g data-v3-coach-holes fill="black"/></mask></defs>'+
           '<rect width="100%" height="100%" mask="url(#v3-coach-mask)"/></svg>':'');
+      // Keep the composer mounted during replies, including a runtime repaint when a reply is saved.
+      if (showChat&&chatShell===shell&&!focusAfter) {
+        refreshChat();
+        return;
+      }
+      chatShell=showChat?shell:'';
+      host.innerHTML=shell;
+      if (showChat) refreshChat({reset:true});
+      if (showChat||host.classList.contains('v3-keyboard-open')) viewportChanged();
       const main=host.querySelector('.v3-content');
       main.scrollTop=scrollAfterMenu??(focusAfter?0:previousScroll);
       scrollAfterMenu=null;
@@ -2041,19 +2109,23 @@
       if(next.length>=2&&!ui().portfolioPracticed)await storeUI({portfolioPracticed:true});
     }
     async function submitChat(question,options) {
-      if (!question.trim()||chatPending) return;
-      chatDraft='';chatPending=true;chatError='';render();
-      try {await controller.advisor.ask(question.trim(),options);}
+      const text=question.trim();
+      if (!text||chatPending) return;
+      const field=host.querySelector('#v3-question');
+      if (field?.form.querySelector('button[type="submit"]')===document.activeElement) {
+        field.focus({preventScroll:true});
+      }
+      if (!options) chatDraft='';
+      chatPending=text;
+      chatError='';
+      refreshChat({follow:true});
+      try {await controller.advisor.ask(text,options);}
       catch (error) {
-        chatDraft=question;
+        if (!chatDraft&&!options) chatDraft=question;
         chatError=t(error.message==='advisor/context-changed'?'advisorChanged':'unavailable');
       }
-      chatPending=false;render();
-      const composer=host.querySelector('#v3-question');
-      if (composer) {
-        composer.focus();
-        const main=host.querySelector('.v3-content');main.scrollTop=main.scrollHeight;
-      }
+      chatPending='';
+      refreshChat();
     }
     async function click(event) {
       const item=event.target.closest('button,a[data-v3-action]');
@@ -2345,7 +2417,13 @@
       if(target.innerHTML!==html)target.innerHTML=html;
     }
     function input(event) {
-      if (event.target.id==='v3-question') chatDraft=event.target.value;
+      if (event.target.id==='v3-question') {
+        chatDraft=event.target.value;
+        const log=host.querySelector('.v3-conversation');
+        const atEnd=log&&chatAtEnd(log);
+        refreshComposer(event.target);
+        if (atEnd) log.scrollTop=log.scrollHeight;
+      }
       if(event.target.name==='investment-principal')updateInvestment(event.target.form);
       if(event.target.name==='loan-principal')updateLoan(event.target.form);
       if(event.target.name==='tax-rate'){
@@ -2357,6 +2435,15 @@
     function submit(event) {
       if (event.target.id==='v3-chat') {event.preventDefault();submitChat(event.target.elements.question.value);}
       if (event.target.id==='v3-loan-form'||event.target.id==='v4-fund-form') event.preventDefault();
+    }
+    function keydown(event) {
+      if (event.target.id!=='v3-question'||event.key!=='Enter'||event.shiftKey||event.isComposing||event.keyCode===229) return;
+      event.preventDefault();
+      if (!event.repeat) event.target.form.requestSubmit();
+    }
+    function retainChatFocus(event) {
+      const send=event.target.closest('#v3-chat button[type="submit"]');
+      if (send?.form.elements.question===document.activeElement) event.preventDefault();
     }
     function popstate(event) {
       if (menuReturnPending) {menuReturnPending=false;return;}
@@ -2371,14 +2458,18 @@
     }
     function viewportChanged() {
       const visual=window.visualViewport;
+      const log=host.querySelector('.v3-conversation');
+      const atEnd=log&&chatAtEnd(log);
       host.style.setProperty('--v3-height',(visual?.height||window.innerHeight)+'px');
-      host.classList.toggle('v3-keyboard-open',ui().tab==='advisor'&&!!visual&&window.innerHeight-visual.height>140);
+      host.classList.toggle('v3-keyboard-open',!!log&&!!visual&&window.innerHeight-visual.height>140);
+      if (atEnd) log.scrollTop=log.scrollHeight;
       scheduleSpotlight();
     }
-    host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('input',input);host.addEventListener('submit',submit);
+    host.addEventListener('click',click);host.addEventListener('change',change);host.addEventListener('input',input);host.addEventListener('submit',submit);host.addEventListener('keydown',keydown);
     host.addEventListener('error',imageError,true);
     for (const type of ['scroll','focusin','load','toggle']) host.addEventListener(type,scheduleSpotlight,true);
     host.addEventListener('pointerup',finishTaxGesture);
+    host.addEventListener('pointerdown',retainChatFocus);
     host.addEventListener('touchend',finishTaxGesture,{passive:true});
     window.addEventListener('popstate',popstate);window.addEventListener('resize',viewportChanged);window.visualViewport?.addEventListener('resize',viewportChanged);
     negotiation?.attach(host);
@@ -2390,8 +2481,9 @@
       cancelAnimationFrame(spotlightFrame);
       clearTimeout(taxRelease);
       host.removeEventListener('pointerup',finishTaxGesture);
+      host.removeEventListener('pointerdown',retainChatFocus);
       host.removeEventListener('touchend',finishTaxGesture);
-      host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('input',input);host.removeEventListener('submit',submit);
+      host.removeEventListener('click',click);host.removeEventListener('change',change);host.removeEventListener('input',input);host.removeEventListener('submit',submit);host.removeEventListener('keydown',keydown);
       host.removeEventListener('error',imageError,true);
       for (const type of ['scroll','focusin','load','toggle']) host.removeEventListener(type,scheduleSpotlight,true);
       window.removeEventListener('popstate',popstate);window.removeEventListener('resize',viewportChanged);window.visualViewport?.removeEventListener('resize',viewportChanged);

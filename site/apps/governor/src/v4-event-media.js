@@ -3,19 +3,28 @@
   const G = root.GovernorGame ||= {};
   const decision = stem => 'v4/media/decisions/' + stem + '.webp';
   const situation = stem => 'v4/media/events/' + stem + '.webp';
+  const legacyScene = stem => 'v3/events/' + stem + '-800.webp';
 
   const scenes = {
     'LANDMARK-01': situation('meteorite-aftermath'),
     'LANDMARK-02': situation('dam-breach'),
     'LANDMARK-03': situation('presidential-visit'),
     'LANDMARK-04': situation('winter-olympics-bid'),
+    'EDU-02': decision('classroom-lab'),
+    'EDU-03': legacyScene('industrial-mentoring-scene'),
+    'EDU-05': decision('community-arts'),
+    'EDU-07': situation('library-delivery'),
+    'EDU-08': decision('teacher-development'),
+    'HEALTH-04': decision('preventive-screening'),
+    'HEALTH-05': decision('medical-hub'),
     'TRANSPORT-02': situation('snow-clearance'),
-    'TRANSPORT-03': 'v3/events/commuter-transport-800.webp',
+    'TRANSPORT-03': legacyScene('commuter-transport'),
     'TRANSPORT-08': situation('station-bikes'),
-    'TRANSPORT-09': 'v3/events/commuter-transport-800.webp',
+    'TRANSPORT-09': legacyScene('commuter-transport'),
     'UTILITY-01': decision('district-heating'),
     'UTILITY-03': situation('village-fuel-delivery'),
     'UTILITY-05': decision('accessible-street'),
+    'UTILITY-06': decision('district-heating'),
     'UTILITY-07': situation('repair-workshop'),
     'UTILITY-08': decision('water-network'),
     'UTILITY-09': situation('station-restrooms'),
@@ -26,6 +35,11 @@
     'ECOLOGY-07': decision('green-street'),
     'ECOLOGY-09': situation('landfill-remediation'),
     'ECOLOGY-10': decision('green-street'),
+    'ECONOMY-02': decision('cold-chain'),
+    'ECONOMY-03': situation('repair-workshop'),
+    'ECONOMY-06': decision('local-tourism'),
+    'ECONOMY-08': decision('cold-chain'),
+    'ECONOMY-10': decision('freight-exchange'),
     'SOCIAL-04': decision('community-arts'),
     'SOCIAL-07': decision('adaptive-sports'),
     'SOCIAL-09': situation('library-delivery'),

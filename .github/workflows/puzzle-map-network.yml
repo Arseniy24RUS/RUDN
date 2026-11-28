@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   network-fallback:
-    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.base_ref == 'main' && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || (github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2'))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.base_ref == 'main' && ((((github.head_ref == 'codex/governor-map-and-four-terms' && github.event.pull_request.base.sha == '6aee7fe4e31beb4cc4d02a25405a53a2bf2624fd') || ((github.head_ref == 'codex/governor-content-art' && github.event.pull_request.base.sha == 'f2b90e82b2cc652012c9773260a79a22ab62c5d2') || (github.head_ref == 'codex/governor-advisor-messenger' && github.event.pull_request.base.sha == '980d11ae4b455090b19ac40789f6f6724a638b9a')))) || (github.head_ref == 'codex/governor-seminar-scoring' && github.event.pull_request.base.sha == 'e7da48e8af623787598e73cebda113a775ca7347')) && startsWith(github.event.pull_request.title, '[governor-v3-publish] ')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:

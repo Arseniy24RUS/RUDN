@@ -48,6 +48,32 @@ def assert_fit(page):
     assert size['body'] <= size['width'] + 1, size
 
 
+def check_situation_frame(page):
+    card = page.locator('.v3-event-detail')
+    frame = card.locator('.v3-event-visual')
+    image = frame.locator('.v3-event-art')
+    assert image.evaluate('async image => { await image.decode(); return image.naturalWidth; }') >= 450
+    assert frame.get_attribute('data-v4-event-gif')
+    assert image.evaluate('image => getComputedStyle(image).objectFit') == 'cover'
+    card_box, frame_box, image_box = [element.bounding_box() for element in (card, frame, image)]
+    assert abs(card_box['width'] - frame_box['width']) <= 2
+    assert abs(frame_box['width'] - image_box['width']) <= 1
+    assert abs(frame_box['height'] - image_box['height']) <= 1
+
+
+def check_mobile_measure_frame(page):
+    if page.viewport_size['width'] >= 800:
+        return
+    card = page.locator('.v4-measure-detail')
+    image = card.locator('.v4-measure-image')
+    copy = card.locator('.v4-measure-copy')
+    assert image.evaluate('async image => { await image.decode(); return image.naturalWidth; }') >= 320
+    card_box, image_box, copy_box = [element.bounding_box() for element in (card, image, copy)]
+    assert abs(card_box['width'] - image_box['width']) <= 2
+    assert image_box['height'] >= image_box['width'] * 0.51
+    assert abs(image_box['y'] + image_box['height'] - copy_box['y']) <= 1
+
+
 def catalogue_ids(page):
     catalogue = page.locator('.v4-catalog [data-v3-measure]')
     ids = catalogue.evaluate_all("rows => rows.map(row => row.dataset.v3Measure)")
@@ -115,9 +141,10 @@ def first_year(page, profile, output, verified=None):
     shade.wait_for(state='detached')
     click(page, '[data-v3-tab="decisions"]')
     shade.wait_for()
-    choose_event(page)
+    choose_event(page, lambda: check_situation_frame(page))
     click(page, '[data-anchor="measure.select"]')
     click(page, '[data-v3-measure="train-staff"]')
+    check_mobile_measure_frame(page)
     cost = page.locator('.v3-line').filter(has_text='945')
     assert cost.count() == 1 and cost.locator('strong').inner_text().startswith('945')
     click(page, '.v3-coach [data-v3-action="tutorial-next"]')

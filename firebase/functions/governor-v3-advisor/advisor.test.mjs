@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {readFileSync} from 'node:fs';
 import {test} from 'node:test';
+import {runInNewContext} from 'node:vm';
 import {AdvisorError,MODEL,identityMarkers,providerFacts,readRequest} from './contract.mjs';
 import {createAdvisorService} from './service.mjs';
 import {createProvider} from './provider.mjs';
@@ -126,6 +129,12 @@ test('Responses adapter selects Terra, disables storage and returns only validat
   assert.equal(outbound.store,false);
   assert.deepEqual(outbound.reasoning,{effort:'none'});
   assert.equal(JSON.parse(outbound.input).question,sample.question);
+  assert.match(outbound.instructions,/Speak as Ilya Orlov, the governor's trusted strategy adviser/);
+  assert.match(outbound.instructions,/whether you are alive, answer in character/);
+  assert.match(outbound.instructions,/If explicitly asked whether the adviser is an AI .* AI generates the replies/);
+  assert.match(outbound.instructions,/meet the term's targets \(KPIs\) and earn residents' support/);
+  assert.match(outbound.instructions,/maximum is 5 .* higher of progress toward 12 targets and average resident support/);
+  assert.match(outbound.instructions,/rounded up to a whole point for a graded attempt/);
   assert.equal(outbound.text.format.strict,true);
   assert.equal(outbound.text.format.schema.additionalProperties,false);
   assert.equal(Object.hasOwn(outbound,'tools'),false);
@@ -134,6 +143,46 @@ test('Responses adapter selects Terra, disables storage and returns only validat
     fakeResponse({intent:'loan',answer:'Пример',fact:12}),fakeResponse(loanReply)]) {
     const bad=createProvider({key:'fixture-key',fetchImpl:async()=>reply});
     await assert.rejects(bad(providerFacts(sample)),{code:'provider-invalid',status:502});
+  }
+});
+
+test('guest advisor speaks in character in each language and separates campaign performance from the gradebook',async()=>{
+  const GovernorGame={};
+  const source=readFileSync(new URL('../../../site/apps/governor/src/v3-advisor.js',import.meta.url),'utf8');
+  runInNewContext(source,{GovernorGame,crypto:{randomUUID}});
+  const state={year:2026,revision:0,attemptId:'synthetic-attempt',rulesVersion:'governor-v4.0'};
+  const cases=[
+    {language:'ru',identity:'Ты живой?',technical:'Ты ИИ?',score:'Как рассчитывается оценка?',journal:'Какой балл попадёт в журнал?',
+      adviser:/Я Илья Орлов, ваш преданный советник/,guide:/в гостевом режиме.*встроенной справке/iu,
+      goals:/целевые показатели и заручиться поддержкой жителей/,formula:/12 целям.*более высокий результат/,
+      rounding:/округляется вверх до целого/,journalName:/журнал/},
+    {language:'en',identity:'Are you alive?',technical:'Are you an AI?',score:'How is my score calculated?',journal:'What score goes into the gradebook?',
+      adviser:/I’m Ilya Orlov, your trusted adviser/,guide:/built-in guide/,
+      goals:/meet our targets and earn residents’ support/,formula:/higher of progress toward 12 targets and average public support/,
+      rounding:/rounds that score up to a whole point/,journalName:/gradebook/},
+    {language:'zh',identity:'你是真人吗？',technical:'你是人工智能吗？',score:'如何评分？',journal:'成绩册如何计分？',
+      adviser:/我是伊利亚·奥尔洛夫，您的忠实顾问/,guide:/访客模式.*内置指南/,
+      goals:/完成任期目标.*居民的支持/,formula:/两项中的较高值.*12项目标.*居民平均支持度/,
+      rounding:/向上取整/,journalName:/成绩册/}
+  ];
+  for (const row of cases) {
+    const oldAnswer={id:'old-answer',question:row.identity,text:'Old version',year:2026,signature:'plan',mode:'local',status:'ok'};
+    let messages=[oldAnswer];
+    const adviser=GovernorGame.V3Advisor.create({
+      state:()=>state,quote:()=>({signature:'plan'}),language:()=>row.language,
+      messages:()=>messages,save:async next=>{messages=next;}
+    });
+    const identity=await adviser.ask(row.identity);
+    assert.match(identity.text,row.adviser);
+    assert.doesNotMatch(identity.text,row.guide);
+    assert.equal(messages[0],oldAnswer);
+    assert.equal(await adviser.ask(row.identity),identity);
+    assert.match((await adviser.ask(row.technical)).text,row.guide);
+    const score=await adviser.ask(row.score);
+    assert.match(score.text,row.goals);
+    assert.match(score.text,row.formula);
+    assert.doesNotMatch(score.text,row.journalName);
+    assert.match((await adviser.ask(row.journal)).text,row.rounding);
   }
 });
 

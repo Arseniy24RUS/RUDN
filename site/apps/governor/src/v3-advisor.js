@@ -2,6 +2,7 @@
   'use strict';
   const G=root.GovernorGame;
   const MODEL='gpt-6.1-terra';
+  const VOICE_VERSION=1;
   const TARGETS={tax:['budget','budget.tax'],loan:['budget','budget.loan'],budget:['budget','budget.review'],
     route:['map','map.inspectOrPlace'],sites:['map','map.inspectOrPlace'],compare:['budget','budget.review'],event:['decisions','event.open']};
   const INTENTS=new Set([...Object.keys(TARGETS),'unknown']);
@@ -46,6 +47,44 @@
     budget:/бюджет|остаток|budget|treasury|现金|预算/u,
     event:/ситуаци|событи|event|事件/u
   };
+  const ROLE=/^(?:кто (?:ты|вы)|жив[а-яё]* ли (?:ты|вы)|(?:ты|вы) (?:вообще )?(?:кто|жив[а-яё]*|настоящ[а-яё]*|человек|на связи|здесь|тут)|who are you|are you (?:alive|real|human|there)|你是(?:谁|真人吗|人吗|活人吗|活的吗)|你还?在吗|你还?活着吗)\s*[!?.？。]*$/iu;
+  const TECHNOLOGY=/^(?:(?:ты|вы) (?:это )?(?:ИИ|бот|чат-бот|искусственный интеллект)|are you (?:an? )?(?:ai|(?:chat)?bot)|你是(?:人工智能|AI|机器人)吗)\s*[!?.？。]*$|(?:какая у тебя модель|какую модель ты используешь|what model (?:are you|do you use)|你用(?:的)?什么模型)/iu;
+  const SCORE=/оценк[ауеи]|балл[а-яё]*|\b(?:grade|score|points?)\b|成绩|得分|分数|评分|计分/iu;
+  const JOURNAL=/журнал|семинар|\b(?:gradebook|seminar)\b|成绩册|研讨课/iu;
+  const PERFORMANCE=/как (?:получить|заработать|улучшить|рассчитыва[а-яё]*|счита[а-яё]*).{0,32}(?:оценк|балл)|(?:оценк[ауеи]|балл[а-яё]*) (?:за игру|за кампанию|губернатора)|^(?:как у меня дела|что важно губернатору|оценка|баллы)\s*[?!.\s]*$|\b(?:what(?:['’]s| is) my score|how (?:is|do).{0,24}(?:score|grad[ei])|(?:my|campaign|final|maximum) (?:score|grade)|(?:earn|get) (?:full|more|maximum|\d+) points)\b|怎么.{0,9}(?:评分|计分|拿高分)|如何.{0,9}(?:评分|计分|拿高分)|我的(?:得分|成绩)|满分|^评分[？?]?$/iu;
+  function roleReply(question,state,lang) {
+    const l=(ru,en,zh)=>({ru,en,zh})[lang]??ru;
+    const text=question.replace(/\s+/gu,' ');
+    const technology=TECHNOLOGY.test(text);
+    if(technology||ROLE.test(text)){
+      const introduction=l('Я Илья Орлов, ваш преданный советник.',
+        'I’m Ilya Orlov, your trusted adviser.',
+        '我是伊利亚·奥尔洛夫，您的忠实顾问。');
+      return introduction+' '+(technology
+        ?l('В гостевом режиме я отвечаю по встроенной справке.','In guest mode, my replies come from the built-in guide.','在访客模式下，我根据内置指南回答。')
+        :l('Обращайтесь ко мне по любому вопросу, связанному с областью.',
+          'Come to me with any question about the region.',
+          '有关本州的事，您随时可以来问我。'));
+    }
+    const journal=JOURNAL.test(text)&&SCORE.test(text);
+    if(!journal&&!PERFORMANCE.test(text))return null;
+    const introduction=l('Губернатор, наша задача — выполнить целевые показатели и заручиться поддержкой жителей.',
+      'Governor, we need to meet our targets and earn residents’ support.',
+      '州长，我们既要完成任期目标，也要争取居民的支持。');
+    if(state.rulesVersion!=='governor-v4.0')return introduction+' '+l(
+      'Откройте «Статистику», чтобы проверить поддержку и доступность услуг в районах.',
+      'Open Statistics to check public support and access to services across districts.',
+      '打开“统计”，查看居民支持度和各区的服务覆盖情况。');
+    return [introduction,l('В «Статистике» видны цели пятилетки и поддержка населения.',
+      'Statistics shows the five-year targets and public support.',
+      '在“统计”中可以查看五年目标和居民支持度。'),l(
+      'Сравнивают продвижение по 12 целям и среднюю поддержку жителей по пятилеткам. В итог идёт более высокий результат, до 5 баллов.',
+      'The campaign takes the higher of progress toward 12 targets and average public support over each term, up to 5 points.',
+      '战役总分取两项中的较高值，最高5分：12项目标的完成进度，或各五年期的居民平均支持度。'),journal?l(
+      'Если партия идёт в зачёт, итог для журнала округляется вверх до целого балла.',
+      'For a graded campaign, the gradebook rounds that score up to a whole point.',
+      '如果本局计入考核，成绩册分数向上取整。'):''].filter(Boolean).join(' ');
+  }
   function intent(question) {
     if (CHOICES.tax.test(question)&&CHOICES.loan.test(question)) return 'compare';
     if (CHOICES.route.test(question)) return 'route';
@@ -231,7 +270,7 @@
       const messages=api.messages();
       const isCloudAnswer=row=>row.mode==='cloud'&&row.model===MODEL&&row.status==='ok';
       const same=messages.findLast(row=>row.question===question&&row.year===state.year&&row.signature===signature&&
-        row.guide===localGuide&&(!row.language||row.language===l)&&
+        row.voiceVersion===VOICE_VERSION&&row.guide===localGuide&&(!row.language||row.language===l)&&
         (useCloud?isCloudAnswer(row)||row.status==='unavailable':row.mode==='local'&&row.status==='ok'));
       if(same&&(!retry||same.status==='ok'))return same;
       pending=(async()=>{
@@ -274,18 +313,19 @@
             newRequest=failureCode==='provider-unavailable'||failureCode==='provider-invalid';
           }
         }else{
-          kind=localGuide?'event':intent(question);
+          const roleAnswer=localGuide?null:roleReply(question,state,l);
+          kind=localGuide?'event':roleAnswer?'unknown':intent(question);
           text=localGuide?(localGuide==='year'&&state.rulesVersion==='governor-v4.0'?{
             ru:'Ответьте на ситуацию года. В «Решениях» можно выбрать программы области. На «Карте» доступны стройки, участки и местные меры. Проверьте расходы в «Бюджете» и цели пятилетки в «Статистике». Кнопка ▶ открывает сводку года.',
             en:'Respond to the annual situation. Choose regional programmes in Decisions. Find construction, sites and local measures on the Map. Check spending in Budget and term targets in Statistics. ▶ opens the annual review.',
             zh:'先回应年度情境。可在“决策”中选择全州项目，在“地图”中查看建设项目、地块和地方措施。在“预算”核对支出，在“统计”查看五年目标。点击▶检查年度计划。'
-          }[l]:(GUIDES[localGuide][l]||GUIDES[localGuide].ru)):explain(kind,state,q,l);
+          }[l]:(GUIDES[localGuide][l]||GUIDES[localGuide].ru)):roleAnswer??explain(kind,state,q,l);
         }
         if(api.state()?.attemptId!==state.attemptId||api.state()?.revision!==state.revision||
           api.state()?.year!==state.year||api.quote()?.signature!==signature)throw Error('advisor/context-changed');
         const [tab,anchor]=TARGETS[kind]||[];
         const target=tab?{tab,anchor,attemptId:state.attemptId,revision:state.revision,year:state.year,signature}:null;
-        const row={id:requestId,question,text,target,year:state.year,signature,mode,status,language:l};
+        const row={id:requestId,question,text,target,year:state.year,signature,mode,status,language:l,voiceVersion:VOICE_VERSION};
         if(model)row.model=model;
         if(status==='unavailable')row.retryHistory=retryHistory;
         if(newRequest)row.newRequest=true;
