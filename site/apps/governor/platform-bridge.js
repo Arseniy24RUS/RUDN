@@ -85,6 +85,7 @@ function syncText(){
   if(record)return readState(pendingStorageKey(record),null)
     ?tr(`Автоматическая оценка: ${record.points}/5. Отчёт сохранён на устройстве и ожидает отправки. Не очищайте данные браузера.`,`Automatic grade: ${record.points}/5. The report is saved on this device and is awaiting upload. Keep browser data intact.`)
     :tr(`Отчёт отправлен. Автоматическая оценка: ${record.points}/5; в журнале учитывается лучший результат.`,`Report submitted. Automatic grade: ${record.points}/5; the gradebook keeps your best result.`);
+  if(needsNewSeminarCampaign(runtime?.state()))return tr('История сохранена. Для новой попытки откройте текущий семинар.','History saved. Open the current seminar to start a new attempt.','历史已保存。请打开当前研讨课，开始新一轮。');
   return '';
 }
 function refresh(){
@@ -142,6 +143,31 @@ function identityChanged(){
   else refresh();
 }
 function reflectionParent(){return run?stored('submission:'+run.submissionId)||backend.localAttempts().find(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner):null;}
+function canSubmitCampaign(state){
+  if(free)return terminal(state);
+  return state?.completed===true&&state.history?.length===20&&!G.BudgetReview.stopped(state);
+}
+function needsNewSeminarCampaign(state){
+  if(!state||free||backend.isAdmin())return false;
+  const options=state.budgetReview?.pending?.event?.options;
+  return G.BudgetReview.stopped(state)||(Array.isArray(options)&&!options.some(option=>option.available));
+}
+function canSaveCampaignReflection(state){
+  if(!terminal(state))return false;
+  return canSubmitCampaign(state)||Boolean(run?.submitted||backend.localAttempts().some(a=>a.id===run?.submissionId&&`student:${a.studentKey}`===owner));
+}
+function currentSeminarURL(){
+  const url=new URL(location.href);
+  url.searchParams.set('edition','v4');url.searchParams.delete('practice');url.searchParams.delete('returnTo');url.hash='';
+  return url.href;
+}
+function useHistoricCampaign(hasHistoric,edition,preferCurrent,returnToTerm){
+  if(!hasHistoric)return false;
+  if(edition==='legacy')return true;
+  if(free)return false;
+  if(returnToTerm)return true;
+  return edition!=='v4'&&!preferCurrent;
+}
 function reflectionReceipt(parent=reflectionParent()){
   if(!parent)return null;
   return latestGovernorReflection([...backend.localAttempts(),...(isGovernorReflection(run?.reflectionReceipt,parent)?[run.reflectionReceipt]:[])],parent);
@@ -152,7 +178,7 @@ function reflectionChanged(parent=reflectionParent()){
 function renderReflectionStatus(){
   const field=$('#platform-reflection'),hint=$('#platform-reflection-hint'),button=$('#platform-reflection-save');
   if(!field||!hint||!button||!run)return;
-  const parent=reflectionParent(),receipt=reflectionReceipt(parent),changed=reflectionChanged(parent),ended=terminal(runtime?.state());
+  const parent=reflectionParent(),receipt=reflectionReceipt(parent),changed=reflectionChanged(parent),ended=canSaveCampaignReflection(runtime?.state());
   field.readOnly=backend.isAdmin();
   button.hidden=backend.isAdmin()||!ended;
   button.disabled=reflectionBusy||submissionBusy||(!changed&&!run.pendingReflection);
@@ -166,7 +192,7 @@ function renderReflectionStatus(){
     :tr('После знакомства с итогами можно написать или дополнить вывод и сохранить его отдельным дополнением к отчёту. Автоматическая оценка уже зафиксирована.','After reviewing the results, write or edit your reflection and save it as a report addendum. The automatic grade is already fixed.','查看结果后，您可以撰写或修改反思，并将其作为报告补充内容保存。自动评分已确定。'));
 }
 async function saveReflection(){
-  if(reflectionBusy||updatePaused||!sameOwner()||free||backend.isAdmin()||!runtime?.canWrite()||!terminal(runtime.state())||!run)return;
+  if(reflectionBusy||updatePaused||!sameOwner()||free||backend.isAdmin()||!runtime?.canWrite()||!canSaveCampaignReflection(runtime.state())||!run)return;
   reflectionBusy=true;reflectionFailure='';const editingRun=run,scope=diagnostics,started=performance.now();let saved=false;
   try{
     if(!reflectionParent())await submit();
@@ -213,16 +239,22 @@ function submissionDialog(){
   $('#platform-submission-intro').textContent=backend.isAdmin()
     ?tr('Пробное прохождение преподавателя. Итоги доступны для учебного разбора.','Instructor preview. Your results are available for discussion.')
     :tr('По завершении кампании платформа автоматически рассчитывает оценку от 0 до 5 и сохраняет её вместе с отчётом. Учитывается лучший результат. Критерии оценивают выполнение задания в учебной модели.','When the campaign ends, the platform automatically calculates a grade from 0 to 5 and saves it with the report. Your best result counts. The criteria assess performance within this teaching model.');
+  if(needsNewSeminarCampaign(state)){
+    const intro=$('#platform-submission-intro'),link=document.createElement('a');
+    intro.textContent=tr('Прежняя партия сохранена. ','Your earlier campaign is saved. ','此前的进度已保存。');
+    link.href=currentSeminarURL();link.textContent=tr('Открыть текущую кампанию семинара','Open the current seminar campaign','打开当前研讨课游戏');intro.append(link);
+  }
   $('#platform-run-progress').textContent=terminal(state)
     ?state.completed?tr('Полная кампания: 20 из 20 решений.','Full campaign: 20 of 20 decisions.')
-      :tr(`Досрочная передача управления: ${state.history.length} из 20 решений. Этот статус сохранится в отчёте.`,`Early financial handover: ${state.history.length} of 20 decisions. The report preserves this status.`)
+      :tr(`Досрочная передача управления: ${state.history.length} из 20 решений. История решений сохранена.`,`Early financial handover: ${state.history.length} of 20 decisions. Your decision history is saved.`)
     :tr(`Принято решений: ${state.history.length}/20. Ниже — текущий расчёт; окончательная оценка сохранится при завершении.`,`Decisions made: ${state.history.length}/20. This is the current calculation; the final grade is saved when the campaign ends.`);
-  renderAssessment(sent?.governor?.assessment||assessCampaign(state,G));
+  const archived=G.BudgetReview.stopped(state)&&!backend.isAdmin();
+  renderAssessment(archived?(acknowledged||run.submitted?sent?.governor?.assessment:null):sent?.governor?.assessment||assessCampaign(state,G));
   $('#platform-reflection-label').textContent=tr('Учебный вывод (необязательно)','Reflection (optional)');
   if(run.reflection===undefined)run.reflection=reflectionReceipt(sent)?.reflection??sent?.reflection??'';
   $('#platform-reflection').value=run.reflection;
   renderReflectionStatus();
-  $('#platform-submit').hidden=backend.isAdmin();$('#platform-submit').disabled=acknowledged||!terminal(state);
+  $('#platform-submit').hidden=backend.isAdmin()||archived;$('#platform-submit').disabled=acknowledged||!canSubmitCampaign(state);
   $('#platform-submit').textContent=acknowledged?tr('Отчёт принят платформой','Report accepted by the platform'):sent?tr('Повторить отправку','Retry submission'):tr('Передать преподавателю','Submit to instructor');
   $('#platform-readable').textContent=tr('Открыть полный учебный отчёт','Open the full learning report');
   $('#platform-submission-close').textContent=tr('Закрыть','Close');
@@ -231,7 +263,7 @@ function submissionDialog(){
 }
 async function submit(){
   if(updatePaused||submissionBusy||!sameOwner()||(!free&&backend.isAdmin())||!runtime?.canWrite()||(free&&run?.submitted))return;
-  const state=runtime?.state();if(!terminal(state))return;
+  const state=runtime?.state();if(!canSubmitCampaign(state))return;
   if(run&&backend.localAttempts().some(a=>a.id===run.submissionId&&`student:${a.studentKey}`===owner)){run.submitted=true;refresh();if(run.pendingReflection)void saveReflection();return;}
   submissionBusy=true;$('#platform-submit').disabled=true;const started=performance.now(),scope=diagnostics;
   try{
@@ -305,9 +337,14 @@ async function tryStart(){
   if(!sameOwner())return;
   const localStore=new G.Saves.Store(storage),localResult=localStore.inspect(),localRaw=localStore.raw();
   const hasHistoric=Boolean(localRaw||restored?.state?.campaign||run);
-  const useHistoric=hasHistoric&&(!free||gameRoute.get('edition')==='legacy');
+  const edition=gameRoute.get('edition');
+  const preferCurrent=!backend.isAdmin()&&stored('prefer-current-seminar')===true;
+  const useHistoric=useHistoricCampaign(hasHistoric,edition,preferCurrent,gameRoute.get('returnTo')==='term');
   if(!useHistoric){
     await startV3(loadEnd,hasHistoric);
+    if(!free&&!backend.isAdmin()&&hasHistoric&&edition==='v4'&&v3Runtime&&sameOwner()){
+      try{storage.setItem('prefer-current-seminar','true');}catch{/* The explicit current-edition URL still opens the correct campaign. */}
+    }
     return;
   }
   // Authored fields in existing reports can have been saved in any language.
@@ -346,6 +383,7 @@ async function tryStart(){
   }else if(localResult.status==='ok'){ensureRun(localResult.state);}
   const profile=backend.getProfile();
   G.Platform={
+    gradedSeminar:!free&&!backend.isAdmin(),currentSeminarURL:currentSeminarURL(),
     captureFinalFive:practiceSession.capture,currentRun:()=>run,resumeOnEntry:gameRoute.get('returnTo')==='term'&&localStore.inspect().state?.completed===true,
     storage,lockName:scoped.lockName,storageKey:scoped.keyFor(G.Saves.Key),offlineEnabled:false,
     language,freePlay:free,profile:{name:backend.isAdmin()?tr('Преподаватель · пробная кампания','Instructor · preview campaign'):(profile?.fullName||tr('Гость','Guest','访客')),group:profile?.group||''},
@@ -391,7 +429,7 @@ async function startV3(loadEnd,hasHistoric){
     const current=await backend.loadDraft({owner,activitySlug,mode:modern?G.V3Runtime.v4DraftMode:G.V3Runtime.draftMode});
     if(!sameOwner())return;
     let legacyURL;
-    if(free&&hasHistoric){
+    if(hasHistoric){
       const archive=new URL(location.href);archive.searchParams.set('edition','legacy');legacyURL=archive.href;
     }
     const listGovernorReports=async()=>{

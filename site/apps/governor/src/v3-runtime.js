@@ -131,8 +131,59 @@
     };
   }
 
-  function submission(record, isCourse) {
+  function closeYear(before,state,revision,signature) {
+    const {params,plan}=settlementPlan(before,state);
+    const {plan:reference}=settlementPlan(before,state,true);
+    const settledSpend=Object.fromEntries(plan.rows.filter(row=>row.direction==='out').map(row=>[row.id,row.amount]));
+    const settled=G.V3Events.year({...params,settledSpend});
+    const closed=G.V3Rules.commit(state,{expectedRevision:revision,signature,eventPlan:plan,settledEventPlan:settled,baselineEventPlan:reference});
+    return {...before,state:closed,effects:[...before.effects,...plan.outcomes],
+      referenceEffects:[...before.referenceEffects,...reference.outcomes],ui:{...before.ui,panel:'result',selectedMeasureId:null,
+        inspectedSiteId:null,chapterArchive:null}};
+  }
+
+  function fullCourseTerm(state) {
+    const {FIRST_YEAR,LAST_YEAR}=G.V3Rules;
+    return state.completed && !state.handover && state.history.length===LAST_YEAR-FIRST_YEAR+1 &&
+      state.history.every((row,index)=>row.year===FIRST_YEAR+index);
+  }
+
+  // Rebuild only previously signed years. The attempt, start time and random draw key stay the same.
+  function crisisChapter(record) {
+    return G.V4Campaign.chapter(Math.max(G.V3Rules.FIRST_YEAR,record.state.year-1)).startYear;
+  }
+
+  function retryYear(record) {
+    const first=G.V3Rules.FIRST_YEAR, chapter=crisisChapter(record);
+    const prior=record.courseRetries?.[chapter];
+    const target=prior===undefined?chapter:G.V4Campaign.chapter(Math.max(first,prior-1)).startYear;
+    for (let year=first;year<target;year++) if (!record.coursePlans?.[year]) return first;
+    return target;
+  }
+
+  async function rewindCourse(before,year) {
+    const {attemptId,schoolMap,rulesVersion}=before.state;
+    const state=G.V3Rules.create({attemptId,schoolMap,rulesVersion});
+    let next={...before,state,coursePlans:{},draws:[],effects:[],referenceEffects:[],messages:[],
+      submission:null,localResult:false,courseRetries:{...before.courseRetries,[crisisChapter(before)]:year}};
+    delete next.closedAt;
+    while(next.state.year<year) {
+      next=await pinnedEvent(next);
+      const current={...next.state,draft:before.coursePlans[next.state.year]};
+      const {plan}=settlementPlan(next,current);
+      const approved=G.V3Rules.quote(current,{eventPlan:plan});
+      if (!approved.ok) throw Error('governor-v3/replan-unavailable');
+      next=closeYear(next,current,current.revision,approved.signature);
+      next.coursePlans[current.year]=current.draft;
+    }
+    next.ui={...uiDefaults,started:true,welcomeStep:4,tutorialStep:before.ui.tutorialStep,
+      motion:before.ui.motion,largeText:before.ui.largeText};
+    return pinnedEvent(next);
+  }
+
+  function submission(record, courseRequested) {
     const state = record.state;
+    const isCourse = courseRequested && fullCourseTerm(state);
     const assessment = G.V3Rules.assess(state);
     const points = isCourse && isV4(state) ? G.V4Campaign.journalPoints(assessment.points) : assessment.points;
     const millis = Date.parse(record.closedAt)-Date.parse(record.createdAt);
@@ -248,7 +299,7 @@
       }).catch(() => {});
     }
     async function settle() {
-      if (!isCourse || !active() || !record?.state.completed) return;
+      if (!isCourse || !active() || !record || !fullCourseTerm(record.state)) return;
       const before = record;
       if (record.localResult || bridge.backend.localAttempts().some(a=>a.id===record.state.attemptId)) {
         status={key:bridge.backend.status?.().saving==='synced'?'sent':navigator.onLine?'saved':'offline'};
@@ -450,8 +501,19 @@
         }
         return change(before=>({...before,ui:patchState(before.ui,patch,allowedUI)}),false);
       },
-      handoverStatus:()=>record?.state?.event ? G.V3Rules.handoverStatus(record.state,{eventPlan:settlementPlan(record,record.state).plan}) : {available:false},
+      handoverStatus:()=>{
+        if (!record?.state.event) return {available:false};
+        const status=G.V3Rules.handoverStatus(record.state,{eventPlan:settlementPlan(record,record.state).plan});
+        return isCourse && status.available ? {available:false,retryYear:retryYear(record)} : status;
+      },
+      replanCourse:({revision,year})=>change(before=>{
+        if (!isCourse || before.state.completed || revision!==before.state.revision || retryYear(before)!==year ||
+            !G.V3Rules.handoverStatus(before.state,{eventPlan:settlementPlan(before,before.state).plan}).available)
+          throw Error('governor-v3/replan-unavailable');
+        return rewindCourse(before,year);
+      }),
       handover:({revision})=>change(before=>{
+        if (isCourse) throw Error('governor-v3/full-term-required');
         const state=G.V3Rules.handover(before.state,{expectedRevision:revision,eventPlan:settlementPlan(before,before.state).plan});
         const next={...before,state,closedAt:new Date().toISOString(),ui:{...before.ui,panel:'result'}};
         next.submission=submission(next,isCourse);
@@ -462,14 +524,9 @@
         if (!state.history.length && before.ui.tutorialStep<8) {
           throw Object.assign(Error('governor-v3/tutorial-required'),{code:'tutorial-required'});
         }
-        const {params,plan}=settlementPlan(before,state);
-        const {plan:reference}=settlementPlan(before,state,true);
-        const settledSpend=Object.fromEntries(plan.rows.filter(row=>row.direction==='out').map(row=>[row.id,row.amount]));
-        const nowSettled=G.V3Events.year({...params,settledSpend});
-        const closed=G.V3Rules.commit(state,{expectedRevision:revision,signature,eventPlan:plan,settledEventPlan:nowSettled,baselineEventPlan:reference});
-        const next={...before,state:closed,effects:[...before.effects,...plan.outcomes],
-          referenceEffects:[...before.referenceEffects,...reference.outcomes],ui:{...before.ui,panel:'result',selectedMeasureId:null,
-            inspectedSiteId:null,chapterArchive:null}};
+        const next=closeYear(before,state,revision,signature);
+        if (isCourse) next.coursePlans={...before.coursePlans,[state.year]:state.draft};
+        const closed=next.state;
         if (closed.completed) {
           next.closedAt=new Date().toISOString();
           next.submission=submission(next,isCourse);
@@ -499,6 +556,14 @@
 
     if (record && !valid(record,bridge.owner,bridge.context,assignment)) throw Error('governor-v3/invalid-saved-record');
     if (!record && valid(restored,bridge.owner,bridge.context,assignment)) await replaceIfMissing(restored);
+    if (isCourse && record?.state.handover && !record.localResult &&
+        !bridge.backend.localAttempts().some(attempt=>attempt.id===record.state.attemptId)) {
+      const {handover,...state}=record.state;
+      const resumed={...record,state:{...state,completed:false},submission:null,ui:{...record.ui,panel:'review'}};
+      delete resumed.closedAt;
+      try {await write(record,resumed);}
+      catch(error) {if (error.code!=='concurrent-change') throw error;record=error.current;}
+    }
     if (assignment===V4_ASSIGNMENT&&record) landing={panel:null};
     if (bridge.context==='course' && !record) await replaceIfMissing(envelope(bridge.owner,bridge.context,await loadSchoolMap(),assignment));
     if (record && !record.state.completed && !landing) {
