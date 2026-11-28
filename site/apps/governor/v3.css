@@ -50,7 +50,7 @@ body.governor-v3-active > .platform-bottom-nav { display: none !important; }
 .v3-button.full { display: flex; width: 100%; margin: 14px 0; }
 .v3-button.link, .v3-link { padding: 8px 0; background: none; border: 0; color: #0077b2; text-align: left; justify-content: start; min-height: 44px; font-weight: 650; }
 .v3-event .v3-button { width: 100%; }
-.v3-major-label { color: #97401f; font-weight: 750; }
+.v3-card:is(.v3-event, .v3-event-detail):has(.v3-major-label) { border-color: #e6b88e; }
 .v3-major-map-note { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; padding: 9px 12px; border: 1px solid #e6b88e; border-radius: 12px; background: #fff5e7; }
 .v3-major-map-note :is(small,strong) { display: block; }
 .v3-major-map-note small { color: #97401f; }
@@ -60,6 +60,7 @@ body.governor-v3-active > .platform-bottom-nav { display: none !important; }
 .v3-event-detail .v3-event-art { max-height: min(45dvh, 420px); }
 .v3-event-visual-error { min-height: 84px; display: grid; place-items: center; margin: 0; padding: 12px; color: #4b6e85; text-align: center; }
 .v3-eyebrow { color: #4b6e85; font-size: 13px; font-weight: 650; margin-bottom: 5px !important; }
+.v3-eyebrow.v3-major-label { color: #97401f; font-weight: 750; }
 .v3-muted { color: #4b6e85; font-size: 13px; }
 .v3-selected-copy { color: #197346; font-size: 14px; }
 .v3-project-heading { display: flex; gap: 12px; align-items: center; }

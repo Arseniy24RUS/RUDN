@@ -796,6 +796,7 @@
     menuClose:['Закрыть меню','Close menu','关闭菜单'], menuReturn:['Вернуться в игру','Return to the game','返回游戏'],
     large:['Увеличенный текст','Larger text','大号文字'], still:['Статичные иллюстрации','Still illustrations','静态插图'],
     help:['Как проходит год','How a year works','年度流程'], helpText:['Ответьте на срочную задачу. Выберите проект для района или отложите его. Проверьте бюджет и исходные показатели. Кнопка ▶ открывает сводку плана перед подтверждением года.','Respond to the urgent issue. Choose a district project or defer it. Check the budget and starting figures. ▶ opens the plan for review before you close the year.','先处理紧急任务，再决定启动或暂缓地区项目。核对预算和基准数据。点击 ▶ 可查看年度计划，确认后才结算。'],
+    helpTextModern:['В начале каждого года случайно выпадает ситуация. Иногда это крупное событие. Ответьте на ситуацию, выберите меры и проверьте бюджет. Кнопка ▶ открывает сводку перед завершением года.','Each year opens with a randomly selected situation. Sometimes a major event occurs. Respond, choose your measures and check the budget. Use ▶ to review the plan before closing the year.','每年开始时会随机出现一种情况，偶尔会遇到重大事件。处理情况、选择措施并核对预算，再点 ▶ 查看年度计划。'],
     localAdvisor:['Илья Орлов','Ilya Orlov','伊利亚·奥尔洛夫'], advisorRole:['Стратегическое развитие','Strategic development','战略发展'],
     ask:['Спросить советника…','Ask your adviser…','询问顾问…'], send:['Отправить','Send','发送'],
     chatWelcome:['Губернатор, я на связи. Что обсудим?','Governor, I’m here. What shall we discuss?','州长，我在。您想讨论什么？'],
@@ -851,7 +852,7 @@
     placesEstimate:['Охват к началу работы','Projected reach when service starts','服务启动时的预计覆盖人数'],
     programmeYears:['Период работы','Operating years','运行年份'],
     programmeBalance:['Остаток с программой','Cash balance with this programme','实施本项目后的国库余额'],
-    majorEvent:['Событие области','Regional event','全州事件'],
+    majorEvent:['Крупное событие','Major event','重大事件'],
     majorMap:['Показать на карте','Show on map','在地图上查看'],
     majorRequired:['Обязательные расходы','Unavoidable spending','必要支出'],
     majorTotalNow:['Всего из казны сейчас','Total from the treasury now','当前国库总支出'],
@@ -1254,7 +1255,9 @@
       const chosen=optionDraft ?? state().draft.eventChoice;
       const major=majorSituation(state().event), required=event.circumstance?.effects?.unavoidableExpenseMlnRub||0;
       return back('back',t('nav.decisions'))+heading(event.title)+'<section class="v3-card v3-event-detail">'+eventIllustration(event,true)+
-        '<div class="v3-card-body"><p>'+esc(event.situation)+'</p>'+
+        '<div class="v3-card-body">'+
+        (major?'<p class="v3-eyebrow v3-major-label">'+esc(t('majorEvent')+' · '+districtLabel(major.districtId))+'</p>':'')+
+        '<p>'+esc(event.situation)+'</p>'+
         (event.circumstance?.summary?'<p>'+esc(event.circumstance.summary)+'</p>':'')+
         (major&&required?label(t('majorRequired'),money(required)):'')+
         (major?button(esc(t('majorMap')),'major-map','link','data-district-id="'+esc(major.districtId)+'"'):'')+
@@ -1950,7 +1953,7 @@
         '<label class="v3-field"><span>'+esc(t('lang'))+'</span><select name="language">'+[['ru','Русский'],['en','English'],['zh','简体中文']].map(([id,title])=>'<option value="'+id+'" '+(language()===id?'selected':'')+'>'+title+'</option>').join('')+'</select></label>'+
         '<label class="v3-check"><input type="checkbox" name="still" '+(ui().motion==='still'?'checked':'')+'>'+esc(t('still'))+'</label>'+
         '<label class="v3-check"><input type="checkbox" name="large" '+(ui().largeText?'checked':'')+'>'+esc(t('large'))+'</label>'+
-        '<details><summary>'+esc(t('help'))+'</summary><p>'+esc(t('helpText'))+'</p></details>'+
+        '<details><summary>'+esc(t('help'))+'</summary><p>'+esc(t(modern()?'helpTextModern':'helpText'))+'</p></details>'+
         '<p id="offline-status" role="status"></p></section>'+
         (state()&&ui().started&&!welcomeStep(ui())?button(esc(t('welcomeReplay')),'welcome-replay','secondary full'):'')+
         (controller.meta?.legacyURL?'<a class="v3-button secondary full" href="'+esc(controller.meta.legacyURL)+'">'+esc(language()==='ru'?'Открыть прежнюю партию':language()==='en'?'Open an earlier game':'打开之前的游戏')+'</a>':'')+

@@ -91,10 +91,12 @@ def check_messenger(page, identity_question, score_question, player_title, score
     field.fill(score_question)
     field.press('Enter')
     log.locator('.v3-chat-answer p').get_by_text(score_word, exact=False).wait_for()
-    for delimiter in delimiters:
+    replies = log.locator('div.v3-chat-answer > p')
+    for answer_index, delimiter in enumerate(delimiters, start=2):
         field.fill(score_question + delimiter + ' ' + score_question)
         field.press('Enter')
-        page.wait_for_function("document.querySelector('#v3-question').value === ''")
+        replies.nth(answer_index).wait_for(state='visible')
+        assert field.input_value() == ''
     assert field.evaluate('field => document.activeElement === field')
     composer = page.locator('#v3-chat')
     assert abs(composer.bounding_box()['y'] + composer.bounding_box()['height']
@@ -131,6 +133,8 @@ def main():
                 assert posted[-1]['question'] == question and posted[-1]['gameContext']
                 navigation = next(item for item in posted[-1]['gameContext'] if item.startswith('Current navigation:'))
                 assert 'Выбрать стройку' in navigation and 'Местные меры' in navigation and 'Budget sector' in navigation
+                annual_draw = next(item for item in posted[-1]['gameContext'] if item.startswith('Annual draw:'))
+                assert '20%' in annual_draw and 'no specific event or year is guaranteed' in annual_draw
                 ask(page, 'Что сравнить первым?')
                 page.get_by_text(reply, exact=True).last.wait_for(timeout=WAIT)
                 page.wait_for_function("document.querySelectorAll('.v3-chat-answer > p').length === 2")

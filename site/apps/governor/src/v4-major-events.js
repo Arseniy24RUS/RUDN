@@ -1,7 +1,8 @@
 (function (root) {
   'use strict';
   const G = root.GovernorGame ||= {};
-  const POLICY = 'governor-major-situations-v1';
+  const LEGACY_POLICY = 'governor-major-situations-v1';
+  const POLICY = 'governor-major-situations-v2';
   const text = (ru, en, zh) => ({ru, en, zh});
   const situations = [
     {
@@ -218,5 +219,5 @@
     if (event?.eventId !== 'LANDMARK-01' || !Number.isInteger(year) || year < event.year || year > event.year+1) return null;
     return {id:'w-c', throughYear:event.year+1, open:choice==='a'};
   }
-  G.V4MajorEvents = {POLICY, cards, copy, has:id => ids.has(id), roadImpact};
+  G.V4MajorEvents = {POLICY, LEGACY_POLICY, cards, copy, has:id => ids.has(id), roadImpact};
 })(globalThis);

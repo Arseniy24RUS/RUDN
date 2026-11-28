@@ -195,11 +195,11 @@ jobs:
               reviewed['.github/workflows/puzzle-map-network.yml'] = 'bb493b1731d24bcf89a9d00a53d95e5c4a918a85'
               reviewed['.github/workflows/settlements-replay.yml'] = 'ffed3fa562ff629c274c8d87853bdc9df2dd53ee'
           if base == messenger_base:
-              reviewed['site'] = 'c6e9195bb458e95364ec4cdee2db9959d5e524b3'
-              reviewed['scripts'] = '2f23b880926514072448df2d93830da74a21d21c'
-              reviewed['tests'] = 'b624649b417823b6a9a2e03a7af0b1ac834e4038'
-              reviewed['firebase'] = '9097fa9f3e63f5faa54f4d2165e84174722ad30a'
-              reviewed['.github/workflows/platform-checks.yml'] = '74fd3b046cb90115f76edae705dc182636a560cf'
+              reviewed['site'] = '7fa5ae74adb9e655f37734a1310d2895684b160b'
+              reviewed['scripts'] = '9d644356241bbbfcd0e333a3b1c0f39ebd7dc28c'
+              reviewed['tests'] = '40db227d7494a129a89ea46286192f70bfae689d'
+              reviewed['firebase'] = '7a655359f5e746d73824a28efc7d85308de64d22'
+              reviewed['.github/workflows/platform-checks.yml'] = 'b6b98b38669b9de48c29270d93086a0dc1f6afdc'
               reviewed['.github/workflows/legal-lab-checks.yml'] = '0a448df7750975d692a09ac5a539bdf0d0eb310f'
               reviewed['.github/workflows/puzzle-checks.yml'] = '63dec2c41d0e6170ac52d3e6bc52ab2fb655f8e2'
               reviewed['.github/workflows/puzzle-map-network.yml'] = 'f935f0c19f401b060f412e33210efb82c4abf05b'
@@ -292,6 +292,7 @@ jobs:
                   'scripts/test_governor_terra_browser.py',
                   'scripts/test_governor_v4_browser.py',
                   'site/service-worker.js',
+                  'tests/governor-v4-major-events.test.mjs',
               }
               unexpected = sorted(path for path in changed if path not in allowed_files
                                   and not path.startswith('site/apps/governor/'))

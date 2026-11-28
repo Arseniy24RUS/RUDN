@@ -51,6 +51,7 @@
   const TECHNOLOGY=/^(?:(?:ты|вы) (?:это )?(?:ИИ|бот|чат-бот|искусственный интеллект)|are you (?:an? )?(?:ai|(?:chat)?bot)|你是(?:人工智能|AI|机器人)吗)\s*[!?.？。]*$|(?:какая у тебя модель|какую модель ты используешь|what model (?:are you|do you use)|你用(?:的)?什么模型)/iu;
   const SCORE=/оценк[ауеи]|балл[а-яё]*|\b(?:grade|score|points?)\b|成绩|得分|分数|评分|计分/iu;
   const JOURNAL=/журнал|семинар|\b(?:gradebook|seminar)\b|成绩册|研讨课/iu;
+  const EVENT_DRAW=/(?=.*(?:ситуаци|событи|events?|situation|事件|情境))(?=.*(?:выбира[ею]|выпада|вероятност|шанс|random|chances?|drawn|抽取|随机|概率))/iu;
   const PERFORMANCE=/как (?:получить|заработать|улучшить|рассчитыва[а-яё]*|счита[а-яё]*).{0,32}(?:оценк|балл)|(?:оценк[ауеи]|балл[а-яё]*) (?:за игру|за кампанию|губернатора)|^(?:как у меня дела|что важно губернатору|оценка|баллы)\s*[?!.\s]*$|\b(?:what(?:['’]s| is) my score|how (?:is|do).{0,24}(?:score|grad[ei])|(?:my|campaign|final|maximum) (?:score|grade)|(?:earn|get) (?:full|more|maximum|\d+) points)\b|怎么.{0,9}(?:评分|计分|拿高分)|如何.{0,9}(?:评分|计分|拿高分)|我的(?:得分|成绩)|满分|^评分[？?]?$/iu;
   function roleReply(question,state,lang) {
     const l=(ru,en,zh)=>({ru,en,zh})[lang]??ru;
@@ -65,6 +66,11 @@
         :l('Обращайтесь ко мне по любому вопросу, связанному с областью.',
           'Come to me with any question about the region.',
           '有关本州的事，您随时可以来问我。'));
+    }
+    if(randomEvents(state)&&EVENT_DRAW.test(text)){
+      return l('Губернатор, в начале каждого года мы получаем одну случайную ситуацию. Пока остаются крупные события, шанс одного из них — 20%. События в этой партии не повторяются.',
+        'Governor, we face one random situation at the start of each year. While major events remain in the pool, the chance of one is 20%. Each event can appear only once in this campaign.',
+        '州长，每年开始时会随机出现一件事。只要还有可抽取的重大事件，抽到其中一件的概率就是20%。同一事件在本局只会出现一次。');
     }
     const journal=JOURNAL.test(text)&&SCORE.test(text);
     if(!journal&&!PERFORMANCE.test(text))return null;
@@ -84,6 +90,10 @@
       'Если партия идёт в зачёт, итог для журнала округляется вверх до целого балла.',
       'For a graded campaign, the gradebook rounds that score up to a whole point.',
       '如果本局计入考核，成绩册分数向上取整。'):''].filter(Boolean).join(' ');
+  }
+  function randomEvents(state) {
+    const policy=state.event?.eventPolicy;
+    return Boolean(policy&&policy===G.V4MajorEvents?.POLICY);
   }
   function intent(question) {
     if (CHOICES.tax.test(question)&&CHOICES.loan.test(question)) return 'compare';
@@ -124,6 +134,7 @@
         'Current draft measures: '+(plan.map(row=>local(row.labels)+' ('+row.costNow+' million RUB now, opens '+row.openingYear+')').join('; ')||'none')+'.');
       lines.push('Verified term KPI, actual / target: '+terms.entries.map(row=>local(row.labels)+' '+(row.actual??'N/A')+
         ' / '+row.target+(row.inverse?' (lower is better)':'')).join('; ')+'. Satisfaction target '+terms.chapter.satisfactionTarget+'/100.');
+      if(randomEvents(state))lines.push('Annual draw: one random situation each year, including 2026. The chance of a major event is 20% while eligible major events remain. Events are never repeated in one campaign and no specific event or year is guaranteed.');
     }
     if(event){
       lines.push('Current event — '+[event.title,event.situation,event.circumstance?.summary].filter(Boolean).join(' '));

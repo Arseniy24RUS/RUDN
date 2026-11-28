@@ -10,6 +10,24 @@ from test_governor_browser import LocalFixtureServer, Suite, STUDENT_A
 from test_governor_v3_browser import READY, WAIT, click, course_entry, data, fit, visible
 
 
+FULL_DRAW_KEY = '328e7201f0952c6930b02078d55470c604fe904493bbf5c3ebfe9892187b85cd'
+OPENING_FLOOD_KEY = '0df771feb1737cd3bd8857afda8e98756557b6335e53013f73b4d2d16ce4163c'
+FULL_MAJOR_EVENTS = {'LANDMARK-04': 2035, 'LANDMARK-02': 2037, 'LANDMARK-01': 2040, 'LANDMARK-03': 2043}
+
+
+def setup_draw_key(context, draw_key):
+    seed = list(bytes.fromhex(draw_key))
+    context.add_init_script('''(() => {
+      const randomValues = crypto.getRandomValues.bind(crypto);
+      const key = %s;
+      crypto.getRandomValues = buffer => {
+        if (!(buffer instanceof Uint8Array) || buffer.length !== key.length) return randomValues(buffer);
+        buffer.set(key);
+        return buffer;
+      };
+    })();''' % seed)
+
+
 def load_record(page, profile=None):
     return data(page, profile, 'course' if profile else 'free', edition='v4')
 
@@ -248,6 +266,7 @@ def first_year(page, profile, output, verified=None):
 
 def inspect_major_event(page, event, output, check_media):
     identity, year = event['eventId'], event['year']
+    visible(page, '.v3-event-detail .v3-major-label').wait_for()
     visible(page, '[data-v3-action="major-map"]')
     if check_media:
         art = page.locator('.v3-event-detail .v3-event-visual')
@@ -335,7 +354,7 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
         elif year < 2045:
             click(page, '[data-v3-action="result-next"]')
     assert stages == ['frame', 'frame', 'finishing', 'open'], stages
-    assert len(major_events) == 4 and len({(year - 2026) // 5 for year in major_events.values()}) == 4, major_events
+    assert major_events == FULL_MAJOR_EVENTS, major_events
     assert state['completed'] and len(state['history']) == 20 and state['year'] == 2045
     assert page.locator('[data-v3-action="advance"]').count() == 0
     assert page.locator('.v4-goals').first.is_visible()
@@ -364,6 +383,29 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
             'scores': score['paths'], 'journal_score': journal_score, 'replay_first_decision': True}
 
 
+def check_rare_opening(suite, server, output, locale):
+    context = suite.context(390, 844, profile=None)
+    setup_draw_key(context, OPENING_FLOOD_KEY)
+    page = context.new_page()
+    page.goto(server.base + 'apps/governor/index.html?context=free')
+    page.locator(READY).wait_for(state='attached', timeout=WAIT)
+    click(page, '[data-v3-action="start"]')
+    set_locale(page, locale)
+    for _ in range(3):
+        click(page, '[data-v3-action="welcome-next"]')
+    opened = load_record(page)['state']['event']
+    assert opened['year'] == 2026 and opened['eventId'] == 'LANDMARK-02', opened
+    visible(page, '.v3-event .v3-major-label').wait_for()
+    choose_event(page, lambda: inspect_major_event(page, opened, output, True))
+    page.reload(wait_until='domcontentloaded')
+    page.locator(READY).wait_for(state='attached', timeout=WAIT)
+    saved = load_record(page)['state']
+    assert saved['event'] == opened and saved['draft']['eventChoice'] == 'base'
+    assert not suite.current.get('page_errors'), suite.current
+    context.close()
+    return opened['eventId']
+
+
 def main():
     parser = ArgumentParser()
     parser.add_argument('--engine', choices=['chromium', 'webkit', 'firefox'], default='chromium')
@@ -381,6 +423,8 @@ def main():
         suite = Suite(browser, server, output)
         profile = STUDENT_A if args.full else None
         context = suite.context(390 if args.full else 320, 844 if args.full else 568, profile=profile)
+        if args.full:
+            setup_draw_key(context, FULL_DRAW_KEY)
         # Touch pointer and real keyboard remain available together.
         page = context.new_page()
         if profile:
@@ -393,6 +437,8 @@ def main():
         verified = {} if args.media else None
         campus = first_year(page, profile, output, verified)
         report = full_campaign(page, profile, output, campus, args.locale, verified) if args.full else {'years': 1}
+        if args.full:
+            report['rare_opening_reloaded'] = check_rare_opening(suite, server, output, args.locale)
         if verified is not None:
             assert len(verified) == (89 if args.full else 22), len(verified)
             report['decoded_decisions'] = verified
