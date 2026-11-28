@@ -34,7 +34,7 @@ def main():
             report["entry"] = scope
             page.locator("#start-form button[type=submit]").click()
             page.locator("[data-agenda-topic]:visible").first.wait_for()
-            page.locator("#offline-status[data-platform-offline=ready]").wait_for(state="attached", timeout=120000)
+            page.locator("html[data-platform-offline=ready]").wait_for(state="attached", timeout=120000)
 
             page.context.set_offline(True)
             page.reload()

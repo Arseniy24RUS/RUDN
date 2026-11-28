@@ -25,8 +25,7 @@ summary:focus-visible{outline:3px solid #085f96;outline-offset:3px}
 .start-card-top{margin-bottom:20px}
 .start-card-top h2{font-size:22px}
 .stage-badge{font-size:12px;background:#e3f1fa;border:0;box-shadow:none;color:#075d91;min-height:30px}
-.privacy-note,.offline-status{font-size:12px;line-height:1.5;color:#526f85;margin:10px 0}
-.offline-status{margin:16px 0 0;text-align:center}
+.privacy-note{font-size:12px;line-height:1.5;color:#526f85;margin:10px 0}
 #start-guide{margin-top:18px;min-height:44px;font-size:14px;padding:10px 18px;box-shadow:none}
 .campaign-options{margin:18px 0;border:1px solid #d9e5ed;border-radius:12px;padding:0 14px;background:#f9fcfe}
 .campaign-options>summary{padding:14px 0;font-size:14px;font-weight:650;color:#194f70;min-height:48px}

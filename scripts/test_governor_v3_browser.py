@@ -261,7 +261,8 @@ def play(page, first_year, out, snapshot, profile, context, offline_final=False,
     for index in range(number):
         if offline_final and index==19:
             click(page,'[data-v3-action=menu]')
-            page.locator('#offline-status[data-platform-offline=ready]').wait_for(timeout=120000)
+            page.locator('html[data-platform-offline=ready]').wait_for(state='attached',timeout=120000)
+            assert page.locator("#offline-status").count() == 0
             click(page,'[data-v3-action=back]')
             page.context.set_offline(True)
         close_year(page,index,out,first_measure,current)
