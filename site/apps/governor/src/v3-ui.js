@@ -1103,7 +1103,7 @@
         '<h1>'+esc(t('title'))+'</h1><p class="v3-start-subtitle">'+esc(t('subtitle'))+'</p><p>'+esc(t('twenty'))+'</p>'+
         (controller.meta?.context==='course'?'<p>'+esc(t('coursePoints'))+'</p>':'')+
         (modern()&&controller.meta?.graded?'<p>'+esc(v4.tr('journalRounding'))+'</p>':'')+
-        (modern()?'<details><summary>'+esc(v4.tr('ratings'))+'</summary><p>'+esc(v4.tr('scoreHelp'))+'</p></details>':'')+
+        (modern()?'<p><strong>'+esc(v4.tr('scoreChoice'))+'</strong></p><details><summary>'+esc(v4.tr('ratings'))+'</summary><p>'+esc(v4.tr('scoreHelp'))+'</p></details>':'')+
         button(esc(t(controller.meta?.canResume?'resume':'opening')),'start','primary')+
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
         (controller.meta?.legacyURL?'<a class="v3-link" href="'+esc(controller.meta.legacyURL)+'">'+esc(t('legacy'))+'</a>':'')+
@@ -1117,7 +1117,6 @@
         '<div class="v3-welcome-copy"><div class="v3-welcome-speaker">'+picture('assets/characters/ilya-avatar.webp','')+
         '<div><strong>'+esc(t('localAdvisor'))+'</strong><small>'+esc(t('nav.advisor'))+'</small></div></div>'+
         heading(t(key+'Title'))+'<p>'+esc(t(key+'First'))+'</p><p>'+esc(t(key+'Second'))+'</p>'+
-        (step===3&&modern()&&!replayWelcome?'<details><summary>'+esc(v4.tr('ratings'))+'</summary><p>'+esc(v4.tr('scoreHelp'))+'</p></details>':'')+
         '<div class="v3-welcome-actions"><span>'+esc(t('welcomeProgress',{step}))+'</span>'+button(esc(t(action)),'welcome-next','primary')+'</div></div></section>';
     }
     function decisions() {
