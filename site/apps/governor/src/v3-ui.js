@@ -2090,7 +2090,7 @@
       host.dataset.v3Tab=current.tab;
       document.body.classList.toggle('governor-v3-active',active);
       const panels={event:eventView,measures:measuresView,project:projectView,sites:sitesView,object:objectView,loan:loanView,review:reviewView,
-        result:resultView,history:historyView,'history-map':historyMapView,menu:menuView,investment:()=>v4.investment(investmentDraft),
+        result:resultView,history:historyView,'history-map':historyMapView,menu:menuView,investment:investmentView,
         negotiation:()=>selectedProject()?negotiation.render():projectView()};
       let content;
       if (showWelcome) content=welcomeView(welcome);
@@ -2480,9 +2480,16 @@
         }
       });
     }
-    async function openInvestment() {
+    function initialInvestmentDraft() {
       const room=quote()?.finance.investmentHeadroom??0;
-      investmentDraft={...(state().draft.investment??{principal:Math.min(room,1000),termYears:Math.min(3,2045-state().year)})};
+      return {...(state().draft.investment??{principal:Math.min(room,1000),termYears:Math.min(3,2045-state().year)})};
+    }
+    function investmentView() {
+      investmentDraft ??= initialInvestmentDraft();
+      return v4.investment(investmentDraft);
+    }
+    async function openInvestment() {
+      investmentDraft=initialInvestmentDraft();
       await pushPanel('investment',{tab:'budget',investmentViewed:true});
       focusAfter='v3-heading';
     }
