@@ -227,7 +227,7 @@ jobs:
               reviewed['.github/workflows/puzzle-map-network.yml'] = 'b17fdf840c7d831546c0430cb6ee18487c9b1c74'
               reviewed['.github/workflows/settlements-replay.yml'] = 'f6d2c7d3d825b7c13b578547a9dc64490464e81a'
           if base == silent_offline_base:
-              reviewed['site'] = '51bbc7fe936934e5d7de11ac117b0623a1a75261'
+              reviewed['site'] = '16f6f64adabb945ea98f0ca954477c5fd49ea7b7'
               reviewed['scripts'] = 'b9c0942a219d63521c94be20c28a7625baca49e0'
               reviewed['tests'] = 'a19b5bb65e90881737ae31bb64ce0eb7d66f8971'
               reviewed['firebase'] = 'dcf90f556550a3217b4ce3673b7ec352d80a9b38'

@@ -466,23 +466,20 @@ backend.init().then(tryStart).catch(()=>block(tr('Не удалось восст
 
 // The platform owns caching; never install a competing nested service worker.
 if('serviceWorker'in navigator){
-  let preparing=false,moduleReady=false,canPrepare=false,prepareTimeout;
+  let preparing=false,moduleReady=false,canPrepare=false;
   const prepare=()=>{
     if(!canPrepare||preparing||moduleReady||!navigator.serviceWorker.controller)return;
     preparing=true;
-    prepareTimeout=setTimeout(()=>{preparing=false;},18000);
     navigator.serviceWorker.controller.postMessage({type:'PREPARE_MODULE',module:'governor',urls:[location.href,resourceURL('../../assets/course/previews/seminar_07_simulator.jpg',import.meta.url).href]});
   };
   navigator.serviceWorker.addEventListener('message',event=>{
     if(event.source!==navigator.serviceWorker.controller||event.data?.type!=='MODULE_CACHE_STATUS'||event.data.module!=='governor')return;
-    clearTimeout(prepareTimeout);
     preparing=false;
     moduleReady=event.data.ready===true;
     if(moduleReady)document.documentElement.dataset.platformOffline='ready';
     else delete document.documentElement.dataset.platformOffline;
   });
   navigator.serviceWorker.addEventListener('controllerchange',()=>{
-    clearTimeout(prepareTimeout);
     preparing=false;
     moduleReady=false;
     delete document.documentElement.dataset.platformOffline;

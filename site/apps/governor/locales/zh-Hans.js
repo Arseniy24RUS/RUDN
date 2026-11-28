@@ -8120,6 +8120,18 @@
     "zh": "存档已关联课程账号"
   },
   {
+    "id": "9de8e4d7fe47",
+    "ru": "Готово к работе без сети",
+    "en": "Ready for offline use",
+    "zh": "已可离线使用"
+  },
+  {
+    "id": "3dfae74611be",
+    "ru": "Автономное приложение · ресурсы загружаются",
+    "en": "Standalone app · resources loading",
+    "zh": "独立应用 · 正在加载资源"
+  },
+  {
     "id": "4cc1b6da1de6",
     "ru": "Доступна новая версия. Скачайте сохранение перед обновлением.",
     "en": "A new version is available. Download a save before updating.",
@@ -8142,6 +8154,12 @@
     "ru": "Позже",
     "en": "Later",
     "zh": "稍后"
+  },
+  {
+    "id": "fe748585c639",
+    "ru": "Игра работает; офлайн-копия пока недоступна",
+    "en": "Game available; offline copy is not ready",
+    "zh": "游戏可正常运行；离线副本暂不可用"
   },
   {
     "id": "0a2f5a04fddd",
