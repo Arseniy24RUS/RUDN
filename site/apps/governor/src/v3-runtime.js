@@ -41,10 +41,76 @@
     while(step<=10&&completed[step-1])step++;
     return step===ui.tutorialStep?record:{...record,ui:{...ui,tutorialStep:step}};
   }
-  function valid(record, owner, context, assignment) {
+  function ownsRecord(record, owner, context, assignment) {
     return record?.schema === SAVE_VERSION && record.owner === owner && record.context === context &&
-      record.assignment === assignment && isV4(record.state)===(assignment===V4_ASSIGNMENT) && typeof record.state?.attemptId === 'string' &&
-      Array.isArray(record.state.history) && Array.isArray(record.draws);
+      record.assignment === assignment && isV4(record.state)===(assignment===V4_ASSIGNMENT) &&
+      typeof record.state?.attemptId === 'string';
+  }
+
+  function withMissing(value, defaults) {
+    const missing = Object.entries(defaults).filter(([field])=>!Object.hasOwn(value,field));
+    return missing.length ? {...value,...Object.fromEntries(missing)} : value;
+  }
+
+  function recoverSnapshot(record, owner, context, assignment) {
+    if (!ownsRecord(record,owner,context,assignment)) return record;
+    const {state} = record;
+    if (!state.draft || !state.baseline?.finance || !state.finance?.base || !state.population?.municipalities ||
+        !state.stats || !state.schoolMap?.sites || !record.ui || !Number.isInteger(state.year)) return record;
+
+    // The realtime database omits empty containers and nulls. Restore only
+    // documented empty values, without replacing saved decisions or event facts.
+    const modern = assignment === V4_ASSIGNMENT;
+    const cards = new Map([...G.V3Events.bank.cards,...(G.V4MajorEvents?.cards ?? [])].map(card=>[card.id,card]));
+    const recoverEvent = event => {
+      const fact = event?.circumstance;
+      const authored = cards.get(event?.eventId)?.circumstance;
+      if (!fact || !authored) return event;
+      const defaults = {};
+      if (authored.summary === null) defaults.summary = null;
+      if (!Object.keys(authored.effects).length) defaults.effects = {};
+      const circumstance = withMissing(fact,defaults);
+      return circumstance === fact ? event : {...event,circumstance};
+    };
+    const emptyStore = (value, defaults) => value && withMissing(value,defaults);
+    const recoverPopulation = population => emptyStore(population,{ledgers:[],temporary:[]});
+    const recoverFinance = finance => emptyStore(finance,modern?{loans:[],investments:[]}:{loans:[]});
+    const recoverStats = stats => {
+      if (!stats) return stats;
+      const {school} = stats;
+      return {...withMissing(stats,{eventOutcomes:[],groupReasons:{}}),
+        ...(school?{school:withMissing(school,{assignments:[],routes:[],closedRoads:[]})}:{})};
+    };
+    const recoverProjects = projects => projects.map(project=>withMissing(project,{changes:[],paidYears:[]}));
+    const atStart = state.year === G.V3Rules.FIRST_YEAR && state.revision === 0;
+    const restored = withMissing(state,{projects:[],promises:[],closedRoads:[],roadExpiry:{},event:null,
+      ...(atStart?{history:[]}: {})});
+    const history = Array.isArray(restored.history) ? restored.history.map(turn=>({
+      ...withMissing(turn,modern?{measures:[],projects:[]}:{projects:[],measure:null}),
+      event:recoverEvent(turn.event),
+      stats:recoverStats(turn.stats),reference:recoverStats(turn.reference),
+      ...(Array.isArray(turn.projects)?{projects:turn.projects.map(project=>withMissing(project,{paidYears:[]}))}:{}),
+      ...(turn.finance?{finance:withMissing(turn.finance,{debtSchedule:[]})}: {})
+    })) : restored.history;
+    return {
+      ...withMissing(record,{messages:[],...(atStart?{effects:[],referenceEffects:[],...(!state.event?{draws:[]}: {})}: {})}),
+      ...(Array.isArray(record.draws)?{draws:record.draws.map(recoverEvent)}:{}),
+      state:{...restored,history,event:recoverEvent(restored.event),
+        projects:Array.isArray(restored.projects)?recoverProjects(restored.projects):restored.projects,
+        draft:withMissing(state.draft,modern?{measures:[],sectorLimits:{},eventChoice:null,loan:null,investment:null}:
+          {sectorLimits:{},eventChoice:null,loan:null,promise:null,measureId:null,siteId:null,districtId:null}),
+        stats:recoverStats(state.stats),initialStats:recoverStats(state.initialStats),
+        finance:recoverFinance(state.finance),population:recoverPopulation(state.population),
+        baseline:{...withMissing(state.baseline,{closedRoads:[],roadExpiry:{}}),
+          finance:recoverFinance(state.baseline.finance),population:recoverPopulation(state.baseline.population),
+          stats:recoverStats(state.baseline.stats)}}
+    };
+  }
+
+  function valid(record, owner, context, assignment) {
+    return ownsRecord(record,owner,context,assignment) && Array.isArray(record.state.history) &&
+      Array.isArray(record.draws) && Array.isArray(record.effects) && Array.isArray(record.referenceEffects) &&
+      Array.isArray(record.state.projects) && Array.isArray(record.state.promises);
   }
   function viewUI({ui,state}) {
     if (ui.welcomeStep !== undefined) return ui;
@@ -178,7 +244,7 @@
     const scope = JSON.stringify([bridge.owner,bridge.context,assignment]);
     const save = G.V3Store;
     const isCourse = bridge.context==='course' && bridge.owner.startsWith('student:') && !bridge.preview;
-    let record = await save.read(scope);
+    let record = recoverSnapshot(await save.read(scope),bridge.owner,bridge.context,assignment);
     let ui, landing, returnToGame=false, localHistory=[], savedReports=[];
     let historyLoad=0, historyLoading=false, historyError=false;
     let status = {key:bridge.preview?'preview':'saved'};
@@ -406,7 +472,7 @@
         if(!active()||!landing||expected!==restartToken(record))
           throw Object.assign(Error('governor-v3/concurrent-change'),{code:'concurrent-change'});
         try {
-          record=await save.restore(scope,record,attemptId,active);
+          record=recoverSnapshot(await save.restore(scope,record,attemptId,active),bridge.owner,bridge.context,assignment);
           landing=null;
           channel?.postMessage('changed');
           await assureEvent();
@@ -498,7 +564,11 @@
     };
 
     if (record && !valid(record,bridge.owner,bridge.context,assignment)) throw Error('governor-v3/invalid-saved-record');
-    if (!record && valid(restored,bridge.owner,bridge.context,assignment)) await replaceIfMissing(restored);
+    if (!record && restored) {
+      const recovered = recoverSnapshot(restored,bridge.owner,bridge.context,assignment);
+      if (!valid(recovered,bridge.owner,bridge.context,assignment)) throw Error('governor-v3/invalid-saved-record');
+      await replaceIfMissing(recovered);
+    }
     if (assignment===V4_ASSIGNMENT&&record) landing={panel:null};
     if (bridge.context==='course' && !record) await replaceIfMissing(envelope(bridge.owner,bridge.context,await loadSchoolMap(),assignment));
     if (record && !record.state.completed && !landing) {
@@ -517,7 +587,7 @@
         if (!active()) return;
         const loaded=await save.read(scope);
         if (loaded && loaded.recordRevision>(record?.recordRevision??-1)) {
-          record=loaded;
+          record=recoverSnapshot(loaded,bridge.owner,bridge.context,assignment);
           status={key:'concurrent-change'};
           if(landing?.panel==='attempt-history')void refreshAttempts();
           repaint();
