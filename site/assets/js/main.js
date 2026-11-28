@@ -908,9 +908,9 @@ const GOVERNOR_COPY={
 Object.assign(GOVERNOR_COPY.ru,{score:'Оценка за попытку',breakdown:'Как рассчитана оценка',criterion:'Критерий',criterionPoints:'Баллы',criterionDetail:'Основание',assessmentVersion:'Версия формулы',ungraded:'Без записи оценки',currentGrade:'Лучший балл за семинар в журнале'});
 Object.assign(GOVERNOR_COPY.en,{score:'Attempt score',breakdown:'Score breakdown',criterion:'Criterion',criterionPoints:'Points',criterionDetail:'Basis',assessmentVersion:'Formula version',ungraded:'No grade recorded',currentGrade:'Best seminar score in the gradebook'});
 Object.assign(GOVERNOR_COPY.zh,{score:'本次得分',breakdown:'评分明细',criterion:'标准',criterionPoints:'得分',criterionDetail:'依据',assessmentVersion:'公式版本',ungraded:'未记录成绩',currentGrade:'成绩册中的研讨课最佳得分'});
-Object.assign(GOVERNOR_COPY.ru,{rubric:'За кампанию можно получить до 5 баллов. Игра отдельно оценивает продвижение к 12 целям и среднюю удовлетворённость жителей.',journalRubric:'Вес пятилеток — 10%, 20%, 30% и 40%. Балл для журнала округляется вверх до целого.'});
-Object.assign(GOVERNOR_COPY.en,{rubric:'A campaign can earn up to 5 points. The game scores progress toward 12 targets and average resident satisfaction separately.',journalRubric:'Term weights are 10%, 20%, 30%, and 40%. The gradebook score is rounded up to a whole point.'});
-Object.assign(GOVERNOR_COPY.zh,{rubric:'一局游戏最高可得5分。系统分别计算12项目标的完成进度和居民平均满意度。',journalRubric:'四个五年期的权重分别为10%、20%、30%和40%。计入成绩册的分数向上取整。'});
+Object.assign(GOVERNOR_COPY.ru,{rubric:'Игра отдельно оценивает продвижение к 12 целям и среднюю удовлетворённость жителей. Для пятёрки также нужны результаты развития, работающие услуги, выполненные обещания и устойчивый бюджет.',journalRubric:'Веса пятилеток — 10%, 20%, 30% и 40%. Балл для журнала округляется вверх до целого.',ratingKpi:'Балл по KPI',ratingSupport:'Балл по удовлетворённости',ratingEarned:'Точный итог кампании',ratingCeiling:'Предел по условиям пятёрки'});
+Object.assign(GOVERNOR_COPY.en,{rubric:'The game scores progress toward 12 targets and average resident satisfaction separately. A 5 also requires development results, working services, kept promises, and a sustainable budget.',journalRubric:'Term weights are 10%, 20%, 30%, and 40%. The gradebook score is rounded up to a whole point.',ratingKpi:'KPI score',ratingSupport:'Satisfaction score',ratingEarned:'Exact campaign result',ratingCeiling:'Score ceiling under the full-mark conditions'});
+Object.assign(GOVERNOR_COPY.zh,{rubric:'系统分别计算12项目标的完成进度和居民平均满意度。获得5分还需要发展成果、持续运行的服务、按期履行的承诺和可持续的预算。',journalRubric:'四个五年期的权重分别为10%、20%、30%和40%。计入成绩册的分数向上取整。',ratingKpi:'指标成绩',ratingSupport:'满意度成绩',ratingEarned:'本局实际得分',ratingCeiling:'满分条件决定的分数上限'});
 const governorCopy=()=>GOVERNOR_COPY[getLocale()]||GOVERNOR_COPY.ru;
 Object.assign(GOVERNOR_COPY.ru,{languages:'Симулятор доступен на русском, английском и китайском языках.',unsafe:'Не удалось сохранить на устройстве · скачайте резервную копию работы',conflict:'Обе версии работы сохранены · требуется выбор версии'});
 Object.assign(GOVERNOR_COPY.en,{languages:'The simulator is available in Russian, English and Chinese.',unsafe:'Could not save on this device · download a backup of your work',conflict:'Both versions retained · choose which version to continue'});
@@ -951,7 +951,14 @@ function governorAssessmentDetails(report){
   const c=governorCopy(),criteria=(Array.isArray(assessment.criteria)?assessment.criteria:[]).slice(0,20).map(row=>[
     governorReportText(row?.title||row?.id),`${governorNumber(row?.points)}/${governorNumber(row?.maxPoints)}`,governorReportText(row?.detail)
   ]);
-  return `<section class="subsection">${governorTable(c.breakdown,[c.criterion,c.criterionPoints,c.criterionDetail],criteria,{wrap:true})}<p class="form-hint">${esc(c.assessmentVersion)}: ${esc(assessment.version||'—')}</p></section>`;
+  const paths=assessment.paths, ceiling=assessment.qualification?.ceiling;
+  const components=paths?[
+    [c.ratingKpi,paths.kpi],[c.ratingSupport,paths.satisfaction],[c.ratingEarned,assessment.points],
+    ...(ceiling===undefined?[]:[[c.ratingCeiling,ceiling]])
+  ]:[];
+  const summary=components.length?`<dl class="profile-dl">${components.map(([label,value])=>
+    `<dt>${esc(label)}</dt><dd>${esc(governorNumber(value))} / 5</dd>`).join('')}</dl>`:'';
+  return `<section class="subsection">${summary}${governorTable(c.breakdown,[c.criterion,c.criterionPoints,c.criterionDetail],criteria,{wrap:true})}<p class="form-hint">${esc(c.assessmentVersion)}: ${esc(assessment.version||'—')}</p></section>`;
 }
 function governorStrategyDetails(report){
   const strategy=report?.campaignStrategy;if(!strategy||strategy.version!==1)return '';
@@ -977,6 +984,30 @@ function governorStrategyDetails(report){
     goalText(review.goals?.[0]),goalText(review.goals?.[1]),governorNumber(review.support),review.sustainable===true?c.met:review.sustainable===false?c.unmet:'—']);
   return `<section class="subsection governor-strategy-report">${governorTable(`${c.title}: ${course}`,[c.year,c.status,c.first,c.second,c.support,c.finance],rows,{wrap:true})}<p class="form-hint">${esc(c.note)}</p></section>`;
 }
+function governorSituationDetails(records){
+  const copy={
+    ru:{title:'Ответы на годовые ситуации',place:'Район',paid:'Расход',grant:'Возмещение',saved:'Экономия',units:'млн ₽',result:'Фактически оказано',baseline:'Базовое обслуживание',remote:'Из них на удалённых адресах',protected:'Домохозяйств сохранили подъезд'},
+    en:{title:'Responses to annual situations',place:'District',paid:'Spending',grant:'Reimbursement',saved:'Savings',units:'million RUB',result:'Actually delivered',baseline:'Baseline service',remote:'Of which to remote addresses',protected:'Households kept access'},
+    zh:{title:'年度情况的应对措施',place:'地区',paid:'支出',grant:'补偿',saved:'节省',units:'百万卢布',result:'实际提供',baseline:'基准服务量',remote:'其中覆盖偏远住址',protected:'保住通道的家庭'}
+  };
+  const labels=copy[getLocale()]||copy.ru,c=governorCopy();
+  const rows=records.filter(row=>row?.situation).map(({year,situation})=>{
+    const amounts=[
+      labels.paid+' '+governorNumber(situation.paidMln),
+      situation.grantMln>0?labels.grant+' '+governorNumber(situation.grantMln):'',
+      situation.savedMln>0?labels.saved+' '+governorNumber(situation.savedMln):''
+    ].filter(Boolean).join(' · ');
+    const result=[
+      governorNumber(situation.actualUnits)+' '+governorReportText(situation.units),
+      situation.baselineUnits>0?labels.baseline+' '+governorNumber(situation.baselineUnits):'',
+      situation.remoteUnits>0?labels.remote+' '+governorNumber(situation.remoteUnits):'',
+      situation.avoidedNeed>0?labels.protected+' '+governorNumber(situation.avoidedNeed):''
+    ].filter(Boolean).join(' · ');
+    return [year,governorReportText(situation.title),governorReportText(situation.district),
+      governorReportText(situation.answer),amounts,result];
+  });
+  return rows.length?governorTable(labels.title,[c.year,c.mission,labels.place,c.action,labels.units,labels.result],rows,{wrap:true}):'';
+}
 function governorReportCards(attempts,{teacher=false}={}){
   const c=governorCopy();
   return attempts.map(attempt=>{
@@ -988,8 +1019,9 @@ function governorReportCards(attempts,{teacher=false}={}){
 const territories=(Array.isArray(report.territories)?report.territories:[]).slice(0,5).map(row=>[governorReportText(row?.name||row?.id||'—'),governorNumber(row?.population),governorNumber(row?.healthAccess,100),governorNumber(row?.schoolAccess,100),governorNumber(row?.employment,100)]);
     const funding={treasury:c.treasury,cofinance:c.cofinance,debt:c.debtFunding,reserve:c.reserveFunding};
     const delivery={'on-time':c.onTime,delayed:c.delayed,overrun:c.overrun,partial:c.partial};
-    const decisions=(Array.isArray(report.decisionRegister)?report.decisionRegister:[]).slice(0,20).map(row=>[row?.year??'—',governorReportText(row?.mission),governorReportText(row?.action),funding[row?.fundingMode]||row?.fundingMode||'—',governorNumber(row?.cost),delivery[row?.delivery]||row?.delivery||'—']);
-    return `<article class="panel governor-report" style="overflow-wrap:anywhere"><h3>${esc(c.title)}</h3><p>${esc(formatDate(attempt.createdAt))} · ${esc(status)} · ${esc(c.decisions)}: ${esc(governorNumber(report.decisions))}/20</p><p><strong class="badge success">${esc(score)}</strong> <span class="badge"${teacher?'':` data-governor-save="${esc(attempt.id)}" data-governor-student="${esc(attempt.studentKey)}"`}>${esc(teacher?c.submitted:governorSaveLabel(attempt.studentKey,attempt.id))}</span></p><details><summary>${esc(c.details)}</summary>${governorAssessmentDetails(report)}${governorStrategyDetails(report)}<dl class="profile-dl"><dt>${esc(c.scenario)}</dt><dd>${esc(governorReportText(report.scenario))}</dd><dt>${esc(c.seed)}</dt><dd>${esc(report.seed||'—')}</dd><dt>${esc(c.application)}</dt><dd>${esc(report.applicationVersion||'—')}</dd><dt>${esc(c.model)}</dt><dd>${esc(report.modelVersion||'—')}</dd></dl><h3>${esc(c.reflection)}</h3><p class="submission-case">${esc(attempt.reflection||c.noReflection)}</p>${attempt.reflectionRecordId?`<p class="form-hint">${esc(formatDate(attempt.reflectionUpdatedAt))} · <span${teacher?'':` data-governor-save="${esc(attempt.reflectionRecordId)}" data-governor-student="${esc(attempt.studentKey)}" data-governor-mode="reflection"`}>${esc(teacher?governorSaveCopy('reflection').submitted:governorSaveLabel(attempt.studentKey,attempt.reflectionRecordId,'reflection'))}</span></p>`:''}<h3>${esc(c.outcomes)}</h3><dl class="profile-dl">${metrics.map(key=>`<dt>${esc(c[key])}</dt><dd>${esc(governorNumber(final[key]))}</dd>`).join('')}</dl>${governorTable(c.territories,[c.territory,c.population,c.health,c.school,c.employment],territories)}<div class="subsection">${governorTable(c.register,[c.year,c.mission,c.action,c.funding,c.cost,c.delivery],decisions)}</div></details></article>`;
+    const register=(Array.isArray(report.decisionRegister)?report.decisionRegister:[]).slice(0,20);
+    const decisions=register.map(row=>[row?.year??'—',governorReportText(row?.mission),governorReportText(row?.action),funding[row?.fundingMode]||row?.fundingMode||'—',governorNumber(row?.cost),delivery[row?.delivery]||row?.delivery||'—']);
+    return `<article class="panel governor-report" style="overflow-wrap:anywhere"><h3>${esc(c.title)}</h3><p>${esc(formatDate(attempt.createdAt))} · ${esc(status)} · ${esc(c.decisions)}: ${esc(governorNumber(report.decisions))}/20</p><p><strong class="badge success">${esc(score)}</strong> <span class="badge"${teacher?'':` data-governor-save="${esc(attempt.id)}" data-governor-student="${esc(attempt.studentKey)}"`}>${esc(teacher?c.submitted:governorSaveLabel(attempt.studentKey,attempt.id))}</span></p><details><summary>${esc(c.details)}</summary>${governorAssessmentDetails(report)}${governorStrategyDetails(report)}<dl class="profile-dl"><dt>${esc(c.scenario)}</dt><dd>${esc(governorReportText(report.scenario))}</dd><dt>${esc(c.seed)}</dt><dd>${esc(report.seed||'—')}</dd><dt>${esc(c.application)}</dt><dd>${esc(report.applicationVersion||'—')}</dd><dt>${esc(c.model)}</dt><dd>${esc(report.modelVersion||'—')}</dd></dl><h3>${esc(c.reflection)}</h3><p class="submission-case">${esc(attempt.reflection||c.noReflection)}</p>${attempt.reflectionRecordId?`<p class="form-hint">${esc(formatDate(attempt.reflectionUpdatedAt))} · <span${teacher?'':` data-governor-save="${esc(attempt.reflectionRecordId)}" data-governor-student="${esc(attempt.studentKey)}" data-governor-mode="reflection"`}>${esc(teacher?governorSaveCopy('reflection').submitted:governorSaveLabel(attempt.studentKey,attempt.reflectionRecordId,'reflection'))}</span></p>`:''}<h3>${esc(c.outcomes)}</h3><dl class="profile-dl">${metrics.map(key=>`<dt>${esc(c[key])}</dt><dd>${esc(governorNumber(final[key]))}</dd>`).join('')}</dl>${governorTable(c.territories,[c.territory,c.population,c.health,c.school,c.employment],territories)}<div class="subsection">${governorSituationDetails(register)}${governorTable(c.register,[c.year,c.mission,c.action,c.funding,c.cost,c.delivery],decisions)}</div></details></article>`;
   }).join('');
 }
 async function renderSeminar7(topic){

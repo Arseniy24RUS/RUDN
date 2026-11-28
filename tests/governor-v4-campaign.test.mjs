@@ -49,7 +49,7 @@ test('the gradebook rounds fractional campaign points up and preserves integers'
   assert.deepEqual(points.map(C.journalPoints),[0,1,1,3,4,5,5,5]);
 });
 
-function gradeFixture({goodKpi,goodSupport}) {
+function gradeFixture({goodKpi,goodSupport,access=false,services=true,promises=true,debt=0}) {
   const state=make();
   const bad=Object.fromEntries(C.METRICS.map(m=>[m.id,m.inverse?m.max:m.min]));
   const history=[...Array(20)].map((_,i)=>{
@@ -58,7 +58,20 @@ function gradeFixture({goodKpi,goodSupport}) {
       referenceCampaignKpis:state.initialCampaignKpis,
       stats:{support:goodSupport.includes(term.number)?term.satisfactionTarget:58}};
   });
-  return {...state,year:2045,completed:true,history,campaignKpis:history.at(-1).campaignKpis};
+  for(const row of history.slice(-2)){
+    row.projects=services?[{id:'current-service',status:'open',paidYears:[row.year]}]:[];
+    if(access){
+      row.stats.districts={river:{kpis:{health:{value:76},flood:{value:55}}}};
+      row.reference={districts:{river:{kpis:{health:{value:70},flood:{value:50}}}}};
+    }
+    row.finance={debtSchedule:[{year:row.year+1,total:debt}],futureRows:[
+      {year:row.year+1,cash:6000,projectedIncome:10000},
+      {year:row.year+2,cash:6500,projectedIncome:10000},
+      {year:row.year+3,cash:7000,projectedIncome:10000}
+    ]};
+  }
+  return {...state,year:2045,completed:true,history,campaignKpis:history.at(-1).campaignKpis,
+    finance:{...state.finance,reserve:2000,cash:4000},promises:[{dueYear:2045,status:promises?'kept':'missed'}]};
 }
 
 test('the four reported results use a single winning path, never a patchwork of years',()=>{
@@ -70,12 +83,47 @@ test('the four reported results use a single winning path, never a patchwork of 
   assert.deepEqual(plain(grade.criteria.map(row=>row.maxPoints)),[.5,1,1.5,2]);
   assert.deepEqual(plain(grade.criteria.map(row=>row.points)),[0,0,1.5,2]);
   assert.equal(C.score(gradeFixture({goodKpi:[1,2,3,4],goodSupport:[]})).points,5);
-  assert.equal(C.score(gradeFixture({goodKpi:[],goodSupport:[1,2,3,4]})).points,5);
+  assert.equal(C.score(gradeFixture({goodKpi:[],goodSupport:[1,2,3,4],access:true})).points,5);
   assert.equal(C.score({...state,handover:true}).points,3.5);
   const partial={...state,year:2027,completed:false,history:state.history.slice(0,1)};
   assert.equal(C.score(partial).points,.1);
   assert.equal(C.status(partial,1).closed,false);
   assert.equal(C.status(partial,2).entries.every(row=>row.actual===null),true);
+});
+
+function scoredCampaign({targets,access=false,services=true,promises=true,debt=0}={}) {
+  return gradeFixture({goodKpi:targets?[4]:[],goodSupport:[1,2,3,4],access,services,promises,debt});
+}
+
+test('a popular campaign qualifies for 5 through measurable results, continuity, promises and funded debt',()=>{
+  const throughTargets=C.score(scoredCampaign({targets:true,debt:4000}));
+  const throughAccess=C.score(scoredCampaign({access:true}));
+  const idle=C.score(scoredCampaign());
+  assert.equal(throughTargets.points,5);
+  assert.equal(throughAccess.points,5);
+  assert.equal(throughAccess.qualification.gained,2);
+  assert.equal(idle.points,4);
+  assert.equal(idle.rawPoints,5);
+  assert.equal(idle.paths.satisfaction,5);
+  assert.equal(idle.qualification.checks.performance,false);
+  assert.equal(C.journalPoints(idle.points),4);
+  assert.equal(idle.criteria.reduce((sum,row)=>sum+Math.round(row.points*100),0),400);
+  for(const [missing,state] of [
+    ['services',scoredCampaign({targets:true,services:false})],
+    ['promises',scoredCampaign({targets:true,promises:false})],
+    ['finance',scoredCampaign({targets:true,debt:4001})]
+  ]){
+    const grade=C.score(state);
+    assert.equal(grade.qualification.checks[missing],false);
+    assert.equal(grade.points,4);
+  }
+  assert.equal(C.score({...scoredCampaign({targets:true}),handover:true}).points,4);
+});
+
+test('V4 campaigns use the current assessment definition by default',()=>{
+  const state=make();
+  assert.equal(state.rulesVersion,R.V4_RULES_VERSION);
+  assert.equal(R.assess(state).version,'governor-balance-v1');
 });
 
 async function sign(state,entries) {

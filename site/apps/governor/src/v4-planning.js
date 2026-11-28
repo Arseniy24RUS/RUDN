@@ -83,6 +83,23 @@
     scoreChoice:['Засчитывается лучший из двух результатов','The higher of the two scores counts','按两项成绩中的较高者计分'],
     ratings:['Как рассчитывается результат','How the score is calculated','成绩如何计算'],
     scoreHelp:['Путь KPI учитывает продвижение по 12 целям. Путь удовлетворённости учитывает среднюю поддержку жителей за каждый период. У каждого пути максимум 5 баллов. Веса пятилеток — 10%, 20%, 30% и 40%.','The KPI path measures progress on 12 goals. The satisfaction path uses average resident support over each term. Either path can earn 5 points. Term weights are 10%, 20%, 30%, and 40%.','指标成绩按12项目标的进度计算。满意度成绩按各期居民平均支持度计算。两种途径均可得5分。四期权重为10%、20%、30%和40%。'],
+    fullGrade:['Условия для пятёрки','Conditions for a grade of 5','获得5分的条件'],
+    gradePerformance:['Достичь {targets} целей последней пятилетки, кроме доверия, или в обоих последних годах улучшить доступ к услугам на {points} п. п. в {access} парах «район и услуга» по сравнению с базовым сценарием.','Meet {targets} final-term targets other than trust, or improve access by {points} percentage points in {access} district–service pairs in both final years compared with the baseline.','达到最后一个五年期的{targets}项非信任目标，或在最后两年中每年将{access}个“地区与服务”组合的可及性提高{points}个百分点。'],
+    gradeServices:['Сохранить хотя бы одну программу или оплачиваемую услугу в работе в оба последних года.','Keep at least one of the same programmes or funded services operating in both final years.','至少有一个相同项目或已拨款服务在最后两年内持续运行。'],
+    gradePromises:['Выполнить хотя бы {share}% обещаний, по которым наступил срок.','Keep at least {share}% of the promises that have fallen due.','履行至少{share}%的到期承诺。'],
+    gradeFinance:['Покрыть прогноз на три года. После вычета всех будущих выплат по долгам деньги и резерв должны быть неотрицательными. Сумма этих выплат должна укладываться в {share}% регулярных доходов следующего года.','Cover the next three years of forecast spending. Cash and reserves after all future debt payments must be non-negative. Those payments must fit within {share}% of next year’s recurring revenue.','能够覆盖未来三年的预计支出。扣除全部未来偿债金额后，现金与储备之和不得为负。偿债总额不得超过下一年经常性收入的{share}%。'],
+    gradeLimit:['Если хотя бы одно условие не выполнено, итог за кампанию ограничен четырьмя баллами.','The campaign score is capped at four if any condition is unmet.','若任一条件未达到，本局成绩最高为4分。'],
+    gradeRaw:['Лучший результат до проверки условий','Higher score before applying the conditions','审核条件前的较高得分'],
+    gradeCeiling:['Предел итогового балла','Campaign score ceiling','本局分数上限'],
+    gradePassed:['Выполнено','Met','已满足'],
+    gradeMissed:['Требуется улучшение','Needs improvement','仍需改进'],
+    gradeTargets:['Цели без учёта доверия','Targets excluding trust','不含信任度的目标'],
+    gradeAccess:['Улучшения доступа в районах','District service access gains','各区服务可及性的改善'],
+    gradeContinuity:['Услуги в оба последних года','Services in both final years','最后两年持续运行的服务'],
+    gradeAgreements:['Выполненные обещания','Promises kept','已履行承诺'],
+    gradeDebts:['Выплаты преемника по долгу','Successor’s debt payments','继任者偿债金额'],
+    gradeNet:['Казна и резерв за вычетом выплат по долгу','Cash and reserves net of debt payments','扣除偿债金额后的现金和储备'],
+    gradeCovered:['Прогноз на три года','Three-year forecast','未来三年预测'],
     journalScore:['Балл для журнала','Score for the gradebook','本次计入成绩册的分数'],
     journalRounding:['Балл в журнале округляется вверх до целого.','The gradebook score is rounded up to a whole point.','成绩册分数向上取整。'],
     replay:['Начать новый срок','Begin another campaign','开始新的任期'],
@@ -289,6 +306,28 @@
       const digits=unit==='people'?0:2;
       return number(value,digits)+(translated[unit]??'');
     }
+    function scoringRules() {
+      const limits=G.V4Campaign.FULL_GRADE;
+      return '<p>'+esc(tr('scoreHelp'))+'</p><h3>'+esc(tr('fullGrade'))+'</h3><ul>'+
+        '<li>'+esc(tr('gradePerformance',{targets:limits.targets,points:limits.accessPoints,access:limits.accessGains}))+'</li>'+
+        '<li>'+esc(tr('gradeServices'))+'</li>'+
+        '<li>'+esc(tr('gradePromises',{share:100*limits.promiseShare}))+'</li>'+
+        '<li>'+esc(tr('gradeFinance',{share:100*limits.debtShare}))+'</li>'+
+        '</ul><p>'+esc(tr('gradeLimit'))+'</p>';
+    }
+    function scoreQualification(result) {
+      const grade=result.qualification;
+      if(!grade)return '';
+      const limits=G.V4Campaign.FULL_GRADE;
+      const status=ok=>tr(ok?'gradePassed':'gradeMissed');
+      return '<section class="v3-card v3-card-body" aria-label="'+esc(tr('fullGrade'))+'"><h2>'+esc(tr('fullGrade'))+'</h2>'+
+        label(tr('gradeRaw'),number(result.rawPoints,2)+' / 5')+label(tr('gradeCeiling'),grade.ceiling+' / 5')+
+        label(tr('gradeTargets'),grade.targets+' / '+limits.targets)+label(tr('gradeAccess'),grade.gained+' / '+limits.accessGains)+
+        label(tr('gradeContinuity'),status(grade.checks.services)+' · '+grade.maintained)+
+        label(tr('gradeAgreements'),status(grade.checks.promises)+' · '+grade.kept+'/'+grade.due)+
+        label(tr('gradeDebts'),money(grade.successorDebt)+' / '+money(grade.debtLimit))+
+        label(tr('gradeNet'),money(grade.netLiquid))+label(tr('gradeCovered'),status(grade.covered))+'</section>';
+    }
     function goals(status,closed=false) {
       if(!status)return '';
       const {chapter:ch,entries}=status;
@@ -309,14 +348,14 @@
         (rest.length?'<details><summary>'+esc(tr('goalsMore'))+'</summary>'+group(rest)+'</details>':'')+
         label(tr('satisfaction'),kpiValue(status.supportAverage??state().stats.support,'index')+' / '+kpiValue(ch.satisfactionTarget,'index'))+
         (closed?label(tr('reportKpi'),number(status.kpi,1)+'%')+label(tr('reportSatisfaction'),number(status.satisfaction,1)+'%'):
-          '<details><summary>'+esc(tr('ratings'))+'</summary><p>'+esc(tr('scoreHelp'))+'</p></details>')+'</section>';
+          '<details><summary>'+esc(tr('ratings'))+'</summary>'+scoringRules()+'</details>')+'</section>';
     }
     function archive() {
       const previous=[1,2,3,4].map(n=>G.V4Campaign.status(state(),n)).filter(row=>row.closed);
       return previous.map(row=>'<details class="v3-card v3-card-body"><summary>'+esc(tr('checkpoint')+' · '+period(row.chapter))+'</summary>'+
         goals(row,true)+'</details>').join('');
     }
-    return {tr,picked,drafted,projectFor,spendingNow,period,list,scope,mapPlan,summary,catalogue,warning,taxes,updateTax,funding,investment,investmentPreview,investable,goals,archive};
+    return {tr,picked,drafted,projectFor,spendingNow,period,list,scope,mapPlan,summary,catalogue,warning,taxes,updateTax,funding,investment,investmentPreview,investable,scoringRules,scoreQualification,goals,archive};
   }
 
   G.V4Planning={create};

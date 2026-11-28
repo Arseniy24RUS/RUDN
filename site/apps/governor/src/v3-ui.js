@@ -856,8 +856,18 @@
     majorMap:['Показать на карте','Show on map','在地图上查看'],
     majorRequired:['Обязательные расходы','Unavoidable spending','必要支出'],
     majorTotalNow:['Всего из казны сейчас','Total from the treasury now','当前国库总支出'],
+    eventOpeningProtection:['Жители под защитой до происшествия','Residents protected before the incident','事件发生前已受保护的居民'],
+    eventDamNeed:['Домохозяйств без подъезда','Households with lost access','失去进出通道的家庭'],
+    eventDamBaseline:['Подъезд восстановят штатные службы','Access restored by existing crews','现有队伍可恢复通行的家庭'],
+    eventGrantLimit:['Возмещение после оплаты работ · до','Reimbursement after payment · up to','付清工程款后最高可获补偿'],
+    eventAvoidedNeed:['Домохозяйств сохранили подъезд благодаря защите','Households kept access thanks to protection','因防护措施保住通道的家庭'],
+    eventEmergencySaved:['Профилактика снизила аварийные расходы на','Emergency costs reduced by prevention','防护措施减少应急支出'],
+    eventRemote:['В том числе услуги для удалённых адресов','Services reaching remote addresses','其中覆盖偏远住址的服务量'],
+    eventKpiContribution:['Вклад в областной показатель','Contribution to regional indicator','对州级指标的贡献'],
     eventPayments:['Из казны по событию в этом году','Treasury spending on this event this year','本年度该事件的国库支出'],
     eventReimbursement:['Возмещение по событию','Event reimbursement','该事件的支出补偿'],
+    eventBudgetSaving:['Экономия в обязательных расходах','Mandatory costs saved','节约的必要支出'],
+    eventLifetimeCost:['Расход за весь срок','Spending over the full term','整个执行期的支出'],
     coachSites:['Место влияет на срок, расходы и число людей, которым поможет проект. Сравните участки на карте.','The location affects timing, costs and how many people benefit. Compare the sites on the map.','选址会影响工期、开支和受益人数。请在地图上比较地块。'],
     coachSchool:['В карточке школы видно, сколько детей она уже обслуживает. Этот пример поможет читать карту.','The school card shows how many children it already serves. Use it to learn how to read the map.','学校详情显示目前服务了多少学生。用这个例子熟悉地图。'],
     coachBudget:['Попробуйте изменить налоговую нагрузку в бюджете. Сравните доход от налогов и остаток денег.','Try a different tax level in the budget. Compare tax revenue and the money left over.','在预算中换一个税负水平，比较税收和年底余额。'],
@@ -1211,7 +1221,8 @@
         '<h1>'+esc(t('title'))+'</h1><p class="v3-start-subtitle">'+esc(t('subtitle'))+'</p><p>'+esc(t('twenty'))+'</p>'+
         (controller.meta?.context==='course'?'<p>'+esc(t('coursePoints'))+'</p>':'')+
         (modern()&&controller.meta?.graded?'<p>'+esc(v4.tr('journalRounding'))+'</p>':'')+
-        (modern()?'<p><strong>'+esc(v4.tr('scoreChoice'))+'</strong></p><details><summary>'+esc(v4.tr('ratings'))+'</summary><p>'+esc(v4.tr('scoreHelp'))+'</p></details>':'')+
+        (modern()?'<p><strong>'+esc(v4.tr('scoreChoice'))+'</strong></p><details><summary>'+esc(v4.tr('ratings'))+'</summary>'+
+          v4.scoringRules()+'</details>':'')+
         button(esc(t(controller.meta?.canResume?'resume':'opening')),'start','primary')+
         '<button type="button" class="v3-link" data-v3-action="menu">'+esc(t('menu'))+'</button>'+
         (controller.meta?.legacyURL?'<a class="v3-link" href="'+esc(controller.meta.legacyURL)+'">'+esc(t('legacy'))+'</a>':'')+
@@ -1252,24 +1263,34 @@
     function eventView() {
       const event=card();
       if (!event) return heading(t('event'))+'<p role="status">'+esc(t('eventRequired'))+'</p>';
+      const record=state().event, context=rules.eventImpactContext(state());
       const chosen=optionDraft ?? state().draft.eventChoice;
-      const major=majorSituation(state().event), required=event.circumstance?.effects?.unavoidableExpenseMlnRub||0;
+      const major=majorSituation(record);
+      const estimate=option=>G.V3Events.plan({record,choice:option,locale:language(),...context});
+      const {preparedness,need,baselineUnits,externalExpenseMln:required,matchedReceiptCapMln}=estimate('base');
       return back('back',t('nav.decisions'))+heading(event.title)+'<section class="v3-card v3-event-detail">'+eventIllustration(event,true)+
         '<div class="v3-card-body">'+
         (major?'<p class="v3-eyebrow v3-major-label">'+esc(t('majorEvent')+' · '+districtLabel(major.districtId))+'</p>':'')+
         '<p>'+esc(event.situation)+'</p>'+
-        (event.circumstance?.summary?'<p>'+esc(event.circumstance.summary)+'</p>':'')+
+        (preparedness?label(t('eventOpeningProtection'),number(preparedness.basisPoints/100,2)+'%')+
+          label(t('eventDamNeed'),number(need))+
+          (preparedness.avoidedNeed?label(t('eventAvoidedNeed'),number(preparedness.avoidedNeed)):'')+
+          (preparedness.savedEmergencyMln?label(t('eventEmergencySaved'),money(preparedness.savedEmergencyMln)):'')+
+          label(t('eventDamBaseline'),number(baselineUnits))+label(t('eventGrantLimit'),money(matchedReceiptCapMln)):
+          event.circumstance?.summary?'<p>'+esc(event.circumstance.summary)+'</p>':'')+
         (major&&required?label(t('majorRequired'),money(required)):'')+
         (major?button(esc(t('majorMap')),'major-map','link','data-district-id="'+esc(major.districtId)+'"'):'')+
         (event.fallbackLocale?'<small>'+esc(t('translatedFallback'))+'</small>':'')+'</div></section>'+
         '<div class="v3-options" role="group" aria-label="'+esc(t('event'))+'" data-anchor="event.option">'+event.options.map(option=>{
-          const tax=option.effects?.treasury||{},outcome=option.effects?.localOutcome||{},picked=chosen===option.id;
-          const now=(tax.oneOffMlnRub||0)+(tax.firstOperatingYearOffset===0?(tax.operatingMlnRubPerYear||0):0)+(major?required:0);
-          const costs=now>0||tax.operatingMlnRubPerYear>0;
+          const picked=chosen===option.id,plan=estimate(option.id);
+          const now=plan.currentExpenseMln+(major?required:0);
+          const costs=now>0||plan.annualMln>0;
           return '<button type="button" class="v3-option '+(picked?'selected':'')+'" aria-pressed="'+picked+'" data-v3-option="'+esc(option.id)+'"><strong>'+esc(option.label)+(picked?'<span aria-hidden="true">✓</span>':'')+'</strong>'+
-            '<span>'+esc(option.tradeoff)+'</span>'+(costs?'<small>'+esc(major?t('majorTotalNow'):modern()?v4.tr('yearSpending'):t('budget.now'))+': '+esc(money(now))+(tax.operatingMlnRubPerYear?' · '+esc(money(tax.operatingMlnRubPerYear))+' '+esc(t('annual')):'')+'</small>':'')+
+            '<span>'+esc(option.tradeoff)+'</span>'+(costs?'<small>'+esc(major?t('majorTotalNow'):modern()?v4.tr('yearSpending'):t('budget.now'))+': '+esc(money(now))+(plan.annualMln?' · '+esc(money(plan.annualMln))+' '+esc(t('annual')):'')+'</small>':'')+
+            (context.balance&&plan.futureMln?'<small>'+esc(t('eventLifetimeCost'))+' · '+esc(money(now+plan.futureMln))+'</small>':'')+
             (picked&&option.beneficiaries?'<small>'+esc(option.beneficiaries)+'</small>':'')+
-            (outcome.units?'<small>'+esc(number(outcome.units))+' · '+esc(event.localIndicator?.unitLabel || '')+' · '+(state().year+(outcome.firstYearOffset||0))+'</small>':'')+'</button>';
+            (plan.plannedUnits?'<small>'+esc(number(plan.plannedUnits))+' · '+esc(event.localIndicator?.unitLabel || '')+' · '+plan.firstOperatingYear+'</small>':'')+
+            (option.id!=='base'&&plan.remotePlannedUnits!==undefined?'<small>'+esc(t('eventRemote'))+' · '+esc(number(plan.remotePlannedUnits))+'</small>':'')+'</button>';
         }).join('')+'</div>'+button(esc(t('dec.saveAnswer')),'save-event','primary full',chosen?'':'disabled');
     }
     function measuresView() {
@@ -1342,6 +1363,7 @@
     }
 
     function operationName(operation) {
+      if(operation.baseLedgerRef&&operation.labels)return local(operation.labels);
       if(modern()&&operation.type.startsWith('investment-'))return v4.tr({
         'investment-contribution':'fundContribution','investment-principal':'fundPrincipal','investment-income':'fundIncome'}[operation.type]||'fund');
       if(modern()&&operation.type==='mandatory'&&operation.sector)return t('locked')+' · '+t(operation.sector);
@@ -1743,6 +1765,7 @@
     function statsView() {
       const s=state(),current=ui(),last=s.history.at(-1),row=s.history.find(row=>row.year===Number(current.statsYear))||last;
       const stats=current.statsYear==='initial'?s.initialStats:row?.stats||s.initialStats,district=current.statsDistrict||'all';
+      const outcomes=(stats.eventOutcomes||[]).filter(outcome=>district==='all'||outcome.district===district);
       const projection=district==='all'?stats:stats.districts[district];
       const previous=district==='all'?s.initialStats:s.initialStats.districts[district];
       const exercise=schoolExercise();
@@ -1757,9 +1780,9 @@
         Object.entries(stats.groups||{}).map(([id,value])=>'<div class="v3-group"><div>'+label(t(id),number(value,1))+'</div><meter min="0" max="100" value="'+value+'" aria-label="'+esc(t(id))+'">'+value+'</meter></div>').join('')+
         '<details><summary>'+esc(t('reasons'))+'</summary>'+Object.entries(stats.groupReasons||{}).map(([id,value])=>'<p><strong>'+esc(t(id))+'</strong> '+esc(typeof value==='number'?(value>0?'+':'')+number(value,1):value?.delta!==undefined?(value.delta>0?'+':'')+number(value.delta,1):local(value))+'</p>').join('')+'</details></section></div>'+
         (exercise?goals:'')+
-        ((stats.eventOutcomes||[]).length?'<section class="v3-card v3-card-body"><h2>'+esc(t('event'))+'</h2>'+stats.eventOutcomes.map(outcome=>{
+        (outcomes.length?'<section class="v3-card v3-card-body"><h2>'+esc(t('event'))+'</h2>'+outcomes.map(outcome=>{
           const event=G.V3Events.eventCard(outcome.eventId,language());
-          return '<p><strong>'+esc(event?.title||'')+'</strong></p>'+label(event?.localIndicator.unitLabel||'',number(outcome.actualUnits??outcome.units??outcome.value));
+          return '<p><strong>'+esc(event?.title||'')+'</strong></p>'+eventDeliveryLines(event,outcome,stats);
         }).join('')+'</section>':'')+
         (modern()?v4.archive():'')+(s.history.length?button(esc(t('history')),'history','secondary full'):'');
     }
@@ -1874,7 +1897,21 @@
       const rows=finance.operations.filter(row=>row.eventId===event.id);
       const paid=rows.filter(row=>row.direction==='out').reduce((sum,row)=>sum+row.amount,0);
       const receipts=rows.filter(row=>row.direction==='in').reduce((sum,row)=>sum+row.amount,0);
-      return label(t('eventPayments'),money(paid))+(receipts?label(t('eventReimbursement'),money(receipts)):'');
+      const saved=finance.operations.flatMap(row=>row.savings??[]).filter(row=>row.eventId===event.id)
+        .reduce((sum,row)=>sum+row.amount,0);
+      return label(t('eventPayments'),money(paid))+(receipts?label(t('eventReimbursement'),money(receipts)):'')+
+        (saved?label(t('eventBudgetSaving'),money(saved)):'');
+    }
+    function eventDeliveryLines(event,outcome,stats) {
+      if(!event||!outcome)return '';
+      const id=outcome.kpiEffect?.id;
+      const indicator=id&&G.V4Campaign.METRICS.find(row=>row.id===id);
+      const contribution=indicator&&G.V4Campaign.eventKpiEffects({outcomes:[outcome]},stats)[id];
+      return label(event.localIndicator.unitLabel,number(outcome.actualUnits??outcome.units??outcome.value))+
+        (outcome.remoteUnits!==undefined?label(t('eventRemote'),number(outcome.remoteUnits)):'')+
+        (outcome.preparedness?.avoidedNeed&&outcome.year===outcome.decisionYear ?
+          label(t('eventAvoidedNeed'),number(outcome.preparedness.avoidedNeed)):'')+
+        (contribution?label(t('eventKpiContribution')+' · '+local(indicator.labels),'+'+number(contribution,3)):'');
     }
     function reviewView() {
       const current=quote(),event=card(),chosen=event?.options.find(row=>row.id===state().draft.eventChoice),year=state().year;
@@ -1911,13 +1948,13 @@
       const situation=G.V3Events.card(row.event,language());
       const outcome=situation?.options.find(option=>option.id===row.event.choice);
       const major=majorSituation(row.event);
-      const delivery=major&&row.stats.eventOutcomes?.find(item=>item.eventId===major.id);
+      const delivery=row.stats.eventOutcomes?.find(item=>item.eventId===row.event.eventId);
       return heading(t('result'))+'<p class="v3-year-result">'+row.year+'</p><section class="v3-card v3-card-body">'+
         (modern()?'<p class="v3-eyebrow'+(major?' v3-major-label':'')+'">'+esc(t(major?'majorEvent':'event'))+'</p><h2>'+esc(situation?.title||'')+'</h2>'+
           (outcome?'<p>'+esc(outcome.label)+'</p>':'')+
           (situation?eventPayments(situation,row.finance):'')+
-          (major?(delivery?label(major.localIndicator.unitLabel,number(delivery.actualUnits)):'')+
-            button(esc(t('majorMap')),'major-history-map','link','data-district-id="'+esc(major.districtId)+'"'):'')+
+          eventDeliveryLines(situation,delivery,row.stats)+
+          (major?button(esc(t('majorMap')),'major-history-map','link','data-district-id="'+esc(major.districtId)+'"'):'')+
           '<h3>'+esc(v4.tr('plan'))+'</h3>'+v4.list(row.measures||[],{finance:row.finance}):
           '<h2>'+esc(local(row.measure?.labels)||t('dec.defer'))+'</h2>')+
         label(t('budget.remaining'),money(row.finance.cashEnd))+label(t('support'),number(row.stats.support,1)+' / 100')+
@@ -1941,7 +1978,7 @@
         '<p class="v3-submission" role="status">'+esc(t({sent:'sent',sending:'sending',error:'saved',offline:'saved',saved:'saved',preview:'saved'}[key]||'saved'))+'</p>'+
         (key==='error'?button(esc(t('retry')),'retry','secondary'):'')+'</section>'+
         (modern()?'<section class="v3-card v3-card-body">'+label(v4.tr('reportKpi'),number(result.paths?.kpi,2)+' / 5')+
-          label(v4.tr('reportSatisfaction'),number(result.paths?.satisfaction,2)+' / 5')+'<p>'+esc(v4.tr('ratings'))+'</p></section>'+
+          label(v4.tr('reportSatisfaction'),number(result.paths?.satisfaction,2)+' / 5')+'</section>'+v4.scoreQualification(result)+
           v4.goals(G.V4Campaign.status(state(),G.V4Campaign.chapter(state().year).number),true):'')+
         '<section class="v3-card v3-card-body">'+result.criteria.map(row=>label(local(row.label||row.title),number(row.points,2)+' / '+number(row.maxPoints,2))).join('')+'</section>'+
         button(esc(t('stats.kpi')),'stats','secondary full')+button(esc(t('history')),'history','secondary full')+

@@ -5,7 +5,8 @@
   const L=(ru,en,zh)=>({ru,en,zh});
   const FIRST_YEAR=2026;
   const YEARS_PER_TERM=5;
-  const VERSION='governor-v4.0';
+  const VERSION='governor-balance-v1';
+  const FULL_GRADE=Object.freeze({targets:4,accessGains:2,accessPoints:5,promiseShare:.75,debtShare:.40});
   const {phases,sites}=G.V4Catalog;
   const measures=new Map(phases.flat().map(row=>[row.id,row]));
   const locations=new Map(sites.map(row=>[row.id,row]));
@@ -174,10 +175,25 @@
     ]));
   }
 
+  function eventKpiEffects(eventPlan,stats) {
+    const population=Math.max(1,stats.population);
+    const effects={};
+    for(const outcome of eventPlan?.outcomes??[]){
+      const impact=outcome.kpiEffect;
+      if(!impact)continue;
+      // Use the actual district, with diminishing returns from its size so
+      // that comparable improvements in sparsely settled districts count.
+      const weight=Math.sqrt(ratio((stats.districts[outcome.district]?.population??0)/population));
+      effects[impact.id]=(effects[impact.id]??0)+impact.localChange*weight;
+    }
+    return effects;
+  }
+
   function advance(prev,next,{taxIndex=100,eventPlan=null}={}) {
     const before=prev.campaignKpis??initial(prev);
     const rows=observed(next),earlierRows=observed(prev);
     const effects=fundedEffects(next.projects,next.stats.year);
+    const eventEffects=eventKpiEffects(eventPlan,next.stats);
     const tax=(taxIndex-100)/12;
     const changes={
       jobs:serviceDelta(prev,next,'employment'),
@@ -199,15 +215,15 @@
       trust:yearStep('trust',.17*changes.health+.14*changes.school+.1*changes.digital+localFeedback*.35-.23*tax,.03,.66),
       population:100*realPopulation/next.population.initial.population,
       tfr:fertility(next,rows),
-      life:averageBy(rows,row=>lifespan(row,next.population.lastYear?.shock),row=>row.population)+effects.life*.20,
+      life:averageBy(rows,row=>lifespan(row,next.population.lastYear?.shock),row=>row.population)+effects.life*.20+(eventEffects.life??0),
       poverty:yearStep('poverty',-.16*changes.jobs+.19*tax-.11*effects.income,.075,.65),
-      sport:yearStep('sport',.27*changes.mobility+.07*changes.health),
-      education:yearStep('education',.20*changes.school+.10*changes.digital,.04,.78),
+      sport:yearStep('sport',.27*changes.mobility+.07*changes.health+(eventEffects.sport??0)),
+      education:yearStep('education',.20*changes.school+.10*changes.digital+(eventEffects.education??0),.04,.78),
       income:yearStep('income',.39*changes.jobs+.085*changes.school-.35*tax),
       investment:yearStep('investment',.19*changes.jobs+.12*changes.digital-.37*tax),
-      sme_income:yearStep('sme_income',.24*changes.jobs+.15*changes.mobility+.10*changes.digital-.35*tax),
-      environment:yearStep('environment',.17*changes.flood),
-      digital:yearStep('digital',.24*changes.digital)
+      sme_income:yearStep('sme_income',.24*changes.jobs+.15*changes.mobility+.10*changes.digital-.35*tax+(eventEffects.sme_income??0)),
+      environment:yearStep('environment',.17*changes.flood+(eventEffects.environment??0)),
+      digital:yearStep('digital',.24*changes.digital+(eventEffects.digital??0))
     });
   }
 
@@ -247,6 +263,47 @@
       winning:kpi>=satisfaction?'kpi':'satisfaction',closed:rows.length===YEARS_PER_TERM,yearsClosed:rows.length};
   }
 
+  function sustainedServices(row) {
+    const projects=(row?.projects??[]).filter(project=>project.status==='open'&&project.paidYears?.includes(row.year));
+    const events=(row?.stats?.eventOutcomes??[]).filter(event=>event.optionId!=='base'&&event.active&&
+      (event.actualUnits>0||event.kind==='stock'&&event.cumulativeUnits>0));
+    return new Set([...projects.map(project=>'project:'+project.id),...events.map(event=>'event:'+event.eventId)]);
+  }
+
+  function accessGains(row) {
+    const services=['school','health','flood','digital'];
+    return Object.entries(row?.stats?.districts??{}).flatMap(([district,data])=>services.filter(id=>
+      Number.isFinite(data.kpis?.[id]?.value)&&Number.isFinite(row.reference?.districts?.[district]?.kpis?.[id]?.value)&&
+      data.kpis[id].value-row.reference.districts[district].kpis[id].value>=FULL_GRADE.accessPoints
+    ).map(id=>district+':'+id));
+  }
+
+  function fullGradeConditions(state,lastTerm) {
+    const last=state.history.at(-1), previous=state.history.at(-2);
+    const precedingServices=sustainedServices(previous);
+    const precedingAccess=new Set(accessGains(previous));
+    const maintained=[...sustainedServices(last)].filter(id=>precedingServices.has(id)).length;
+    const gained=accessGains(last).filter(id=>precedingAccess.has(id)).length;
+    const targets=lastTerm.entries.filter(row=>row.id!=='trust'&&row.met).length;
+    const due=(state.promises??[]).filter(row=>row.dueYear<=last?.year);
+    const kept=due.filter(row=>row.status==='kept').length;
+    const forecast=last?.finance?.futureRows??[];
+    const successorDebt=sum((last?.finance?.debtSchedule??[]).map(row=>row.total));
+    const liquid=state.finance.cash+state.finance.reserve;
+    const netLiquid=liquid-successorDebt;
+    const ordinaryIncome=forecast[0]?.projectedIncome??0;
+    const debtLimit=Math.floor(ordinaryIncome*FULL_GRADE.debtShare);
+    const covered=forecast.length>=3&&forecast.slice(0,3).every(row=>row.cash+state.finance.reserve>=0);
+    const checks={
+      performance:targets>=FULL_GRADE.targets||gained>=FULL_GRADE.accessGains,
+      services:maintained>0,
+      promises:kept>=Math.ceil(due.length*FULL_GRADE.promiseShare),
+      finance:covered&&netLiquid>=0&&successorDebt<=debtLimit
+    };
+    return {checks,targets,gained,maintained,kept,due:due.length,successorDebt,netLiquid,debtLimit,covered,
+      ceiling:!state.handover&&Object.values(checks).every(Boolean)?5:4};
+  }
+
   function score(state) {
     const results=CHAPTERS.map(({number})=>status(state,number));
     const completionRatio=sum(results.map(row=>row.yearsClosed))/(YEARS_PER_TERM*CHAPTERS.length);
@@ -254,13 +311,17 @@
     const paths=Object.fromEntries(['kpi','satisfaction'].map(path=>[path,sum(results.map(row=>weighted(row,path)))]));
     const winning=paths.kpi>=paths.satisfaction?'kpi':'satisfaction';
     const raw=results.map(row=>weighted(row,winning)*100);
-    const scaled=raw;
+    const qualification=state.completed?fullGradeConditions(state,results.at(-1)):null;
+    const rawTotal=sum(raw);
+    const ceiling=qualification?.ceiling*100;
+    const scaled=qualification&&rawTotal>ceiling?raw.map(value=>value*ceiling/rawTotal):raw;
     const cents=scaled.map(value=>Math.floor(value+1e-9));
     const total=Math.round(sum(scaled));
     const order=scaled.map((_,index)=>index).sort((a,b)=>(scaled[b]-cents[b])-(scaled[a]-cents[a])||a-b);
     const remaining=total-sum(cents);
     for (let i=0;i<remaining;i++) cents[order[i]]++;
     return {version:VERSION,points:total/100,maxPoints:5,completionRatio,winning,
+      ...(qualification?{qualification,rawPoints:round(rawTotal/100)}:{}),
       paths:{kpi:round(paths.kpi),satisfaction:round(paths.satisfaction)},handoverCapApplied:false,
       criteria:results.map((row,index)=>{
         const term=row.chapter, n=row.yearsClosed;
@@ -273,7 +334,7 @@
   }
 
   G.V4Campaign={
-    VERSION,METRICS,CHAPTERS,chapter,initial,advance,satisfactionEffects,status,score,
+    VERSION,FULL_GRADE,METRICS,CHAPTERS,chapter,initial,advance,satisfactionEffects,eventKpiEffects,status,score,
     journalPoints:points=>Math.ceil(points),
     available:year=>phases[chapter(year).number-1],
     measure:id=>measures.get(id),

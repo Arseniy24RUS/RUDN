@@ -238,7 +238,7 @@ def first_year(page, profile, output, verified=None):
     click(page, '[data-v3-action="v4-save-fund"]')
     click(page, '[data-v3-tab="stats"]')
     goals = page.locator('.v4-goals').first
-    assert goals.is_visible() and goals.locator('li').count() == 12
+    assert goals.is_visible() and goals.locator('.v4-kpi-list > li').count() == 12
     assert '2030' in goals.inner_text()
     screenshot(page, output, 'first-term-targets')
     options = page.locator('[data-v3-action="tutorial-kpi"][data-v3-value="91"]')
@@ -360,11 +360,19 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
     assert stages == ['frame', 'frame', 'finishing', 'open'], stages
     assert major_events == FULL_MAJOR_EVENTS, major_events
     assert state['completed'] and len(state['history']) == 20 and state['year'] == 2045
+    assert state['rulesVersion'] == 'governor-v4.0'
     assert page.locator('[data-v3-action="advance"]').count() == 0
     assert page.locator('.v4-goals').first.is_visible()
     screenshot(page, output, 'final')
     score = record['submission']['governor']['assessment']
-    assert abs(score['points'] - max(score['paths'].values())) < .011
+    qualification = score['qualification']
+    assert score['version'] == 'governor-balance-v1'
+    assert abs(score['rawPoints'] - max(score['paths'].values())) < .011
+    assert min(score['rawPoints'], qualification['ceiling']) == score['points']
+    conditions = {'ru': 'Условия для пятёрки', 'en': 'Conditions for a grade of 5', 'zh': '获得5分的条件'}
+    assert page.get_by_role('region', name=conditions[locale], exact=True).is_visible()
+    event_report = record['submission']['governor']['decisionRegister'][-1]['situation']
+    assert event_report['answer'] and event_report['district'] and event_report['paidMln'] == 70
     journal_score = None
     if profile:
         # This seeded campaign must exercise a fractional result end to end.

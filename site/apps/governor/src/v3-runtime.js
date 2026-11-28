@@ -78,7 +78,10 @@
     const ledger = record.draws;
     const picks = reference ? Object.fromEntries(ledger.map(draw => [draw.year,'base'])) :
       {...Object.fromEntries(state.history.map(row => [row.year,row.event.choice])),[state.year]:state.draft.eventChoice};
-    const params = {attemptId:state.attemptId,year:state.year,ledger,picks,executionHistory:prior};
+    const opening = reference ? {...state,...state.baseline} : state;
+    const params = {attemptId:state.attemptId,year:state.year,ledger,picks,executionHistory:prior,
+      verifiedBaseExpenses:G.V3Rules.verifiedBaseExpenses(opening),
+      ...G.V3Rules.eventImpactContext?.(state,reference)};
     const plan = G.V3Events.year(params);
     // Cash quotes exclude reimbursement. Only the locked year transaction can record the receipt.
     return {params,plan};
@@ -107,6 +110,27 @@
     return {...record, draws:record.draws.some(draw=>draw.year===event.year)?record.draws:[...record.draws,event],
       state:{...state,event}};
   }
+  function settledSituation(turn) {
+    const {event,finance,stats} = turn;
+    const outcome = stats.eventOutcomes?.find(item=>item.eventId===event.eventId);
+    if (!outcome) return null;
+    const copy = field => Object.fromEntries(['ru','en','zh'].map(locale=>
+      [locale,field(G.V3Events.card(event,locale))]));
+    const rows = finance.operations.filter(row=>row.eventId===event.eventId);
+    const paidMln = rows.filter(row=>row.direction==='out').reduce((sum,row)=>sum+row.amount,0);
+    const grantMln = rows.filter(row=>row.direction==='in').reduce((sum,row)=>sum+row.amount,0);
+    const savedMln = finance.operations.flatMap(row=>row.savings??[]).filter(row=>row.eventId===event.eventId)
+      .reduce((sum,row)=>sum+row.amount,0);
+    return {
+      title:copy(card=>card.title), district:G.V3Rules.DISTRICTS[outcome.district]?.labels,
+      answer:copy(card=>card.options.find(option=>option.id===event.choice)?.label),
+      units:copy(card=>card.localIndicator.unitLabel),
+      paidMln, grantMln, savedMln, actualUnits:outcome.actualUnits, baselineUnits:outcome.baselineUnits,
+      ...(outcome.remoteUnits===undefined?{}:{remoteUnits:outcome.remoteUnits}),
+      ...(outcome.preparedness?{avoidedNeed:outcome.preparedness.avoidedNeed}:{})
+    };
+  }
+
   function submission(record, isCourse) {
     const state = record.state;
     const assessment = G.V3Rules.assess(state);
@@ -133,6 +157,7 @@
           const projects=turn.measures??(turn.measure?[turn.measure]:[]);
           const action=projects.map(project=>G.I18n.local(project.labels,'ru'));
           return {year:turn.year,mission:G.V3Events.card(turn.event).title,action:action.join(' · ')||(isV4(state)?'Без новых мер':'Без нового проекта'),
+            ...(isV4(state)?{situation:settledSituation(turn)}:{}),
             cost:(turn.finance?.newMeasureCost||0)/1000,delivery:projects[0]?.openingYear,...(isV4(state)?{
               measures:projects.map(({id,measureId,districtId,siteId,openingYear,annualOpex,action},index)=>({
                 id,measureId,districtId,siteId,openingYear,annualOpex,action,title:projects[index].labels
