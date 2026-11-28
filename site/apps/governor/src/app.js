@@ -578,7 +578,9 @@
     if(!on&&budgetInput.dataset.previous==='1'){budgetInput.checked=true;delete budgetInput.dataset.previous;}
     budgetInput.disabled=on;
     $('#budget-review-mode-label').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Дефицит требует решения'),()=>('Every shortfall needs a decision'));
-    $('#budget-review-mode-hint').textContent=language==='zh'?'储备、限额贷款或附条件援助。可能提前移交管理。取消勾选可启用自动援助的简化预算模式。':language==='en'?'Reserves, capped loans or conditional support. An early handover is possible. Uncheck for an assisted budget with automatic support.':'Резерв, ограниченный заём, помощь с условиями. Возможна досрочная передача управления. Снимите флажок для облегчённого бюджета с автоматической помощью.';
+    $('#budget-review-mode-hint').textContent=Platform?.gradedSeminar
+      ?({ru:'Дефицит можно покрыть резервом, ограниченным займом или помощью с условиями. Для оценки завершите 20 лет.',en:'Cover a shortfall with reserves, capped borrowing or conditional aid. Complete all 20 years to receive a grade.',zh:'可用储备、限额贷款或附条件援助弥补缺口。完成全部20年后计分。'}[language])
+      :language==='zh'?'储备、限额贷款或附条件援助。可能提前移交管理。取消勾选可启用自动援助的简化预算模式。':language==='en'?'Reserves, capped loans or conditional support. An early handover is possible. Uncheck for an assisted budget with automatic support.':'Резерв, ограниченный заём, помощь с условиями. Возможна досрочная передача управления. Снимите флажок для облегчённого бюджета с автоматической помощью.';
     $('#recovery-case-label').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Особое начало: «Счёт из прошлого»'),()=>('Special opening: An inherited bill'));
     $('#recovery-case-hint').textContent=globalThis.GovernorGame.I18n.choose(language,()=>('Резерв, помощь с условиями или заём. Учебный кейс: сбалансированная область, обычные правила, открытая повестка. Дальше – та же кампания из 20 лет.'),()=>('Reserves, conditional support or a loan. Classroom case: balanced region, standard rules and open agenda, followed by the same 20-year campaign.'));
     const fields=['scenario-select','challenge-select','campaign-mode'];

@@ -37,6 +37,7 @@ function fixture(){
       const tr=ru=>ru,refresh=()=>{},message=()=>{},block=()=>{},terminal=s=>s?.completed===true;
       function stored(key,fallback=null){try{return JSON.parse(storage.getItem(key))??fallback;}catch{return fallback;}}
       ${bridge.slice(bridge.indexOf('function checkpointCampaign('),bridge.indexOf('function syncText('))}
+      ${bridge.slice(bridge.indexOf('function currentSeminarURL('),bridge.indexOf('function reflectionReceipt('))}
       ${bridge.slice(bridge.indexOf('async function tryStart('),bridge.indexOf('function installUpdateAdapter(')).replaceAll('import.meta.url',JSON.stringify('https://example.test/apps/governor/platform-bridge.js'))}
       globalThis.openCampaign=async()=>{await tryStart();await Promise.allSettled([...pendingCheckpoints]);return new G.Saves.Store(storage);};`,sandbox);
     return sandbox.openCampaign();

@@ -816,6 +816,8 @@
     budgetError:['Измените план расходов или источники финансирования','Review expenditure or financing','调整支出计划或资金来源'],
     balanceError:['Проверьте сумму отраслевых лимитов','Check the total sector limits','核对部门预算上限总额'],
     opening:['Начать','Start','开始'], resume:['Продолжить','Continue','继续'],
+    replanYear:['Пересмотреть план с {year} года','Revise the plan from {year}','从{year}年起重新规划'],
+    replanNote:['Вернуться к началу {year} года? Последующие решения предстоит принять заново. Ситуации останутся прежними.','Return to the start of {year}? You will make the later decisions again with the same events.','返回{year}年年初？之后的决策需要重新作出，事件保持不变。'],
     resumeGame:['Продолжить игру','Continue game','继续游戏'], restartGame:['Начать заново','Start over','重新开始'],
     attemptsTitle:['Мои попытки','My attempts','我的尝试'],
     attemptsEmpty:['Здесь появятся предыдущие кампании.','Previous campaigns will appear here.','之前的战役将显示在此处。'],
@@ -1994,6 +1996,9 @@
         (modern()&&lessonLocked?'<p>'+esc(v4.tr('tutorialBeforeClose'))+'</p>'+button(esc(v4.tr('tutorialContinue')),'advance','secondary full'):'')+
         button(esc(t('confirm',{year})),'commit','primary full','data-anchor="year.commit" '+(!current.ok||busy||lessonLocked?'disabled':''))+
         (modern()&&deficit?budgetRecovery(recovery?.recovery,event):'')+
+        (recovery?.retryYear?'<details class="v3-card v3-card-body"><summary>'+esc(t('replanYear',{year:recovery.retryYear}))+'</summary><p>'+
+          esc(t('replanNote',{year:recovery.retryYear}))+'</p>'+button(esc(t('replanYear',{year:recovery.retryYear})),'replan-course','secondary full',
+            'data-year="'+recovery.retryYear+'" data-revision="'+state().revision+'"')+'</details>':'')+
         (recovery?.available?button(esc(language()==='ru'?'Передать управление':language()==='en'?'Hand over administration':'移交管理'),'handover','secondary full'):'');
     }
     function mapProgress(row) {
@@ -2446,7 +2451,14 @@
           const current=quote();
           if (!current.ok) return;
           if (!review||review.signature!==current.signature) {review={signature:current.signature,revision:state().revision};return;}
-          await controller.commitYear(review);await finishStep(8);await storeUI({panel:state().completed?null:'result',tab:'decisions'});focusAfter='v3-heading';review=null;
+          if (state().year===rules.LAST_YEAR && ui().tab!=='decisions') await storeUI({tab:'decisions'});
+          await controller.commitYear(review);
+          // The final transaction opens the result panel and queues the grade receipt.
+          if (!state().completed) {
+            await finishStep(8);
+            await storeUI({panel:'result',tab:'decisions'});
+          }
+          focusAfter='v3-heading';review=null;
         }
         else if (action==='tutorial-next') {
           const step=ui().tutorialStep;
@@ -2465,6 +2477,10 @@
           await pushPanel('object',{tab:'map',objectId:'old-school',
             ...(modern()?{locationScope:'district',districtId:'suburb',mapPracticed:true}:{})});
           focusAfter='v3-heading';
+        }
+        else if (action==='replan-course') {
+          await controller.replanCourse({year:Number(item.dataset.year),revision:Number(item.dataset.revision)});
+          review=null;focusAfter='v3-heading';
         }
         else if (action==='handover') {await controller.handover({revision:state().revision});await storeUI({tab:'decisions',panel:null});}
         else if (action==='result-next') {
