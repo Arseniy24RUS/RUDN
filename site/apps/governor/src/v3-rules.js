@@ -855,7 +855,7 @@
   function projectSnapshot(project, modern) {
     const {id, status, approvedYear, openingYear, endYear, paidYears, siteId, labels, districtId, measureId, annualOpex} = project;
     return {id, status, approvedYear, openingYear, endYear, paidYears:[...paidYears], siteId, labels, districtId, measureId, annualOpex,
-      ...(modern?{artFamily:project.artFamily,capex:project.capex,sector:project.sector}:{})};
+      ...(modern?{artFamily:project.artFamily,capex:project.capex,sector:project.sector,targets:project.targets}:{})};
   }
 
   function financeRecord(projection) {

@@ -9,8 +9,9 @@
   const DRAFT_MODE = 'governor-v3';
   const uiDefaults = {tab:'decisions', tutorialStep:1, welcomeStep:1, motion:'auto', panel:null, started:false};
   const allowedUI = new Set(['tab','tutorialStep','eventOpen','measureOpen','panel','districtId','objectId','inspectedSiteId',
-    'budgetYear','statsYear','motion','largeText','started','scroll','sourceTab','returnPanel','lesson','projectOpen','statsDistrict','mapYear','welcomeStep',
-    'selectedMeasureId','portfolioFilter','chapterArchive','investmentViewed','portfolioPracticed','mapPracticed','locationScope','statsGoalsSeen']);
+    'budgetYear','statsYear','motion','largeText','started','scroll','sourceTab','returnPanel','lesson','projectOpen','statsDistrict','mapYear','historyMapSource','welcomeStep',
+    'selectedMeasureId','portfolioFilter','catalogueMode','catalogueOrigin','programmeSector','constructionDistrict','chapterArchive',
+    'investmentViewed','portfolioPracticed','mapPracticed','locationScope','statsGoalsSeen','programmeMapReturn']);
   const patchState = (to, patch, fields) => ({...to, ...Object.fromEntries(
     Object.entries(patch).filter(([key]) => fields.has(key))
   )});
@@ -88,6 +89,7 @@
     return {
       owner, context, schema:SAVE_VERSION, assignment, createdAt:new Date().toISOString(),
       drawKey:G.V3Events.createDrawKey(), contentVersion:G.V3Events.contentVersion, algorithmVersion:G.V3Events.algorithmVersion,
+      ...(assignment===V4_ASSIGNMENT && G.V4MajorEvents ? {eventPolicy:G.V4MajorEvents.POLICY} : {}),
       draws:[], effects:[], referenceEffects:[], ui:{...uiDefaults,started:context==='course'}, state,
       messages:[], submission:null, localResult:false
     };
@@ -97,7 +99,7 @@
     const state = record.state;
     const event = await G.V3Events.open({
       attemptId:state.attemptId,year:state.year,drawKey:record.drawKey,
-      contentVersion:record.contentVersion,algorithmVersion:record.algorithmVersion,
+      contentVersion:record.contentVersion,algorithmVersion:record.algorithmVersion,eventPolicy:record.eventPolicy,
       snapshot:{revision:state.revision,tags:Object.fromEntries(Object.entries(G.V3Events.baselineTags)
         .filter(([district])=>Object.hasOwn(state.stats?.districts||{},district)))},ledger:record.draws
     });

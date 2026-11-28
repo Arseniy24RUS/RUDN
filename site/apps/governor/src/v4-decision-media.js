@@ -1,0 +1,112 @@
+(function (root) {
+  'use strict';
+  const G = root.GovernorGame ||= {};
+  const decisions = Object.freeze({
+    // 2026–2030
+    'school-campus': 'v3/new-school-open.webp',
+    'second-shift': 'scenes/suburb-school-scene.webp',
+    'school-bus': 'services/school-bus.webp',
+    'clinics': 'illustrated/clinic.webp',
+    'mobile-units': 'services/mobile-medical-unit.webp',
+    'train-staff': 'services/medical-training.webp',
+    'defenses': 'illustrated/barrier.webp',
+    'outreach': 'services/flood-warning-service.webp',
+    'industrial-park': 'illustrated/industry.webp',
+    'skills-compact': 'services/vocational-training.webp',
+    'single-window': 'services/public-service-desk.webp',
+    'cyber-first': 'services/backup-server-room.webp',
+    'family-grant': 'v4/media/decisions/family-support.webp',
+    'modular-nursery': 'services/modular-nursery.webp',
+    'senior-home-visits': 'services/home-long-term-care.webp',
+    'school-equipment': 'v4/media/decisions/classroom-lab.webp',
+    'district-footways': 'v4/media/decisions/accessible-street.webp',
+    'bridge-maintenance': 'services/bridge-drainage.webp',
+    'river-water-audit': 'v4/media/decisions/water-network.webp',
+    'market-permit-desk': 'services/public-service-desk.webp',
+    'worker-income-guarantee': 'services/vocational-training.webp',
+    'training-apprenticeships': 'services/first-job-mentoring.webp',
+
+    // 2031–2035
+    'municipal-health-contracts': 'services/mobile-medical-unit.webp',
+    'telemedicine-network': 'services/telemedicine-room.webp',
+    'preventive-care-north': 'v4/media/decisions/preventive-screening.webp',
+    'therapy-circles': 'v4/media/decisions/group-counselling.webp',
+    'villages-school-network': 'v4/media/decisions/village-learning.webp',
+    'digital-classrooms': 'v4/media/decisions/classroom-lab.webp',
+    'apprenticeship-partners': 'scenes/industrial-mentoring-scene.webp',
+    'rural-cultural-halls': 'v4/media/decisions/community-arts.webp',
+    'childcare-extended': 'services/family-childcare.webp',
+    'social-contract-access': 'v4/media/decisions/family-support.webp',
+    'youth-rental': 'illustrated/housing.webp',
+    'caregiver-protection': 'services/home-long-term-care.webp',
+    'north-regular-route': 'scenes/north-access-scene.webp',
+    'regional-roads-resurface': 'v4/media/decisions/roadworks.webp',
+    'water-loss-reduction': 'v4/media/decisions/water-network.webp',
+    'nature-buffer': 'services/river-nature-buffer.webp',
+    'supplier-clusters': 'v4/media/decisions/small-firm-contracts.webp',
+    'small-business-export': 'v4/media/decisions/small-firm-contracts.webp',
+    'agro-cold-chain': 'v4/media/decisions/cold-chain.webp',
+    'modular-platform': 'v4/media/decisions/service-data-network.webp',
+    'open-feedback': 'v4/media/decisions/public-ledger.webp',
+    'cyber-response-grid': 'scenes/digital-outage-scene.webp',
+
+    // 2036–2040
+    'medical-hub': 'v4/media/decisions/medical-hub.webp',
+    'oncology-screening': 'v4/media/decisions/preventive-screening.webp',
+    'rehab-corridors': 'v4/media/decisions/accessible-street.webp',
+    'clinician-retention': 'services/medical-training.webp',
+    'research-campus': 'v4/media/decisions/research-campus.webp',
+    'teacher-clinics': 'v4/media/decisions/teacher-development.webp',
+    'heritage-centres': 'v4/media/decisions/community-arts.webp',
+    'adult-learning-vouchers': 'services/vocational-training.webp',
+    'long-life-homes': 'v4/media/decisions/accessible-home.webp',
+    'integrated-social-centre': 'services/intergenerational-centre.webp',
+    'family-income-compact': 'v4/media/decisions/family-support.webp',
+    'housing-renovation-phase3': 'services/housing-delivery.webp',
+    'parasport-access': 'v4/media/decisions/adaptive-sports.webp',
+    'logistics-embankment': 'v4/media/decisions/roadworks.webp',
+    'rail-commuter-pass': 'scenes/youth-outflow-scene.webp',
+    'district-heat-retrofit': 'v4/media/decisions/district-heating.webp',
+    'urban-trees-water': 'v4/media/decisions/green-street.webp',
+    'clean-line-modernisation': 'services/clean-production-line.webp',
+    'innovation-match': 'v4/media/decisions/industrial-pilot.webp',
+    'cooperative-tourism': 'v4/media/decisions/local-tourism.webp',
+    'district-procurement': 'v4/media/decisions/small-firm-contracts.webp',
+    'civic-tech-lab': 'services/civic-tech-workshop.webp',
+    'open-data-exchange': 'v4/media/decisions/service-data-network.webp',
+
+    // 2041–2045
+    'integrated-primary-care': 'services/telemedicine-room.webp',
+    'long-term-care-network': 'services/home-long-term-care.webp',
+    'precision-prevention': 'v4/media/decisions/preventive-screening.webp',
+    'care-continuity-hospitals': 'services/home-long-term-care.webp',
+    'teacher-professional-network': 'v4/media/decisions/teacher-development.webp',
+    'rural-digital-library': 'v4/media/decisions/village-learning.webp',
+    'career-transition-campus': 'services/vocational-training.webp',
+    'mobile-arts-infrastructure': 'v4/media/decisions/community-arts.webp',
+    'family-unified-service': 'v4/media/decisions/family-support.webp',
+    'affordable-supported-homes': 'illustrated/housing.webp',
+    'returning-youth': 'services/first-job-mentoring.webp',
+    'accessibility-life': 'v4/media/decisions/accessible-street.webp',
+    'resilient-relocation': 'illustrated/housing.webp',
+    'smart-energy-grid': 'v4/media/decisions/smart-grid.webp',
+    'county-freight-hubs': 'v4/media/decisions/freight-exchange.webp',
+    'river-restoration': 'services/river-nature-buffer.webp',
+    'green-manufacturing': 'services/clean-production-line.webp',
+    'ai-for-state-and-business': 'v4/media/decisions/service-data-network.webp',
+    'sme-financial-access': 'v4/media/decisions/small-firm-contracts.webp',
+    'technology-transfer': 'v4/media/decisions/industrial-pilot.webp',
+    'open-ledger': 'v4/media/decisions/public-ledger.webp',
+    'citizens-assembly': 'scenes/public-meeting-room.webp',
+  });
+
+  G.V4DecisionMedia = Object.freeze({
+    get(id) {
+      return Object.hasOwn(decisions, id) ? 'assets/' + decisions[id] : null;
+    },
+    thumbnail(id) {
+      return Object.hasOwn(decisions, id) ?
+        'assets/v4/media/decision-thumbs/' + decisions[id].replaceAll('/','--') : null;
+    },
+  });
+})(globalThis);

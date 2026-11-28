@@ -4,7 +4,25 @@
   const G=root.GovernorGame;
   const copy={
     plan:['План года','Annual plan','年度计划'],
-    pick:['Добавить меры','Add measures','添加措施'],
+    pick:['Выбрать программы','Choose programmes','选择项目'],
+    programmes:['Областные программы','Regional programmes','全区项目'],
+    programmePlan:['Программы года','This year’s programmes','本年度项目'],
+    programmeEmpty:['Областные программы не добавлены в план','No regional programmes in the plan','计划中尚无全区项目'],
+    districtServices:['Местные услуги','Local services','地方服务'],
+    districtHelp:['Выберите услугу для конкретного района.','Choose a service for a specific district.','为具体地区选择服务。'],
+    mapPlan:['План на карте','Map projects in the plan','计划中的地图项目'],
+    programmeSector:['Отрасль бюджета','Budget sector','预算领域'],
+    allSectors:['Все отрасли','All sectors','全部领域'],
+    programmeHelp:['Выберите, какие отрасли поддержать. Расходы войдут в их разделы бюджета.','Choose which sectors to support. Spending goes into their budget categories.','选择支持的领域，支出计入相应预算分类。'],
+    constructionHelp:['Выберите объект, затем свободную площадку на карте.','Choose a facility, then an available site on the map.','先选择设施，再在地图上选择可用地块。'],
+    districtLocation:['Район: {names}','District: {names}','地区：{names}'],
+    districtsLocation:['Районы: {names}','Districts: {names}','地区：{names}'],
+    allDistrictsLocation:['Все пять районов','All five districts','全部五个地区'],
+    noProgrammes:['Новых программ в этой отрасли сейчас нет.','No new programmes are currently available in this sector.','该领域目前没有可用的新项目。'],
+    noConstruction:['Новых строек в этом районе сейчас нет.','No new construction is currently available in this district.','该地区目前没有可用的新建设项目。'],
+    noDistrictServices:['Новых местных услуг в этом районе сейчас нет.','No new local services are currently available in this district.','该地区目前没有可用的新地方服务。'],
+    continuity:['Продолжить работу','Keep services running','延续服务'],
+    continuityHelp:['Продлите финансирование или восстановите работу объектов и программ.','Renew funding or restart facilities and programmes.','续拨资金，或恢复设施及项目的运行。'],
     selected:['В плане','In the plan','已列入计划'],
     remove:['Убрать из плана','Remove from plan','移出计划'],
     add:['Добавить в план','Add to plan','加入计划'],
@@ -16,6 +34,9 @@
     service:['Программа или услуга','Programme or service','项目或服务'],
     chapterRange:['Пятилетка {n} · {start}–{end}','Term {n} · {start}–{end}','第{n}个五年期 · {start}–{end}'],
     yearCash:['Остаток по плану','Projected cash balance','计划余额'],
+    yearSpending:['Из казны в этом году','From the treasury this year','本年国库支出'],
+    baseBuildCost:['Базовая смета','Base construction cost','基础建设预算'],
+    fundingCost:['На продолжение','Continuation funding','续期投入'],
     shortage:['Прогнозный дефицит в {year} году','Projected shortfall in {year}','{year}年预计赤字'],
     invalidPlan:['Проверьте условия плана','Check the plan requirements','请检查计划条件'],
     upperTax:['Налоговая нагрузка, % от базовой','Tax burden, % of baseline','税负，基准的百分比'],
@@ -52,6 +73,8 @@
     above:['Не ниже','At least','至少'],
     below:['Не выше','At most','不超过'],
     calculation:['Как считается','How it is calculated','计算说明'],
+    referenceWithoutPolicies:['При стандартных решениях с начала кампании','With baseline decisions since the start','自开局采用基准决策的结果'],
+    mapProgress:['Что изменилось на карте','What changed on the map','地图上的变化'],
     satisfaction:['Удовлетворённость граждан','Residents’ satisfaction','居民满意度'],
     reportKpi:['Результат по KPI','KPI score','指标成绩'],
     reportSatisfaction:['Результат по удовлетворённости','Satisfaction score','满意度成绩'],
@@ -94,7 +117,12 @@
     const chapter=()=>G.V4Campaign.chapter(state().year);
     const period=c=>tr('chapterRange',{n:c.number,start:c.startYear,end:c.endYear});
     const siteLabels=id=>api.siteLabel(id);
-    function list(projects,{editable=false}={}) {
+    function spendingNow(project, finance=quote()?.finance) {
+      if(!finance?.operations)return project.costNow;
+      return finance.operations.reduce((total,operation)=>total+
+        (operation.direction==='out'&&operation.id.startsWith(project.id+':')?operation.amount:0),0);
+    }
+    function list(projects,{editable=false,finance}={}) {
       if(!projects.length)return '<p class="v3-muted">'+esc(tr('empty'))+'</p>';
       return '<ul class="v4-plan-list">'+projects.map(row=>{
         const id=row.draftMeasureId||row.measureId;
@@ -105,44 +133,92 @@
         const title=editable?'<button type="button" class="v4-plan-name" data-v3-measure="'+esc(id)+'">'+esc(name)+'</button>':'<strong>'+esc(name)+'</strong>';
         return '<li><div>'+title+
           (site?'<small>'+esc(site)+'</small>':'')+
-          (calculated?'<small>'+esc(t('budget.now')+' '+money(calculated.costNow)+' · '+t('plannedOpen')+' '+calculated.openingYear+
+          (calculated?'<small>'+esc(tr('yearSpending')+' '+money(spendingNow(calculated,finance))+' · '+t('plannedOpen')+' '+calculated.openingYear+
             (calculated.annualOpex?' · '+money(calculated.annualOpex)+' '+t('annual'):''))+'</small>':'')+
+          (editable&&calculated?'<button type="button" class="v4-plan-negotiate" data-v3-action="negotiate" data-measure-id="'+
+            esc(id)+'" aria-label="'+esc(t('negotiationOpen')+' · '+name)+'">'+esc(t('negotiationOpen'))+'</button>':'')+
           '</div>'+(editable?button('×','v4-remove','secondary','data-measure-id="'+esc(id)+'" aria-label="'+esc(tr('remove')+' · '+name)+'"'):'')+'</li>';
       }).join('')+'</ul>';
     }
     function summary() {
       const finance=quote()?.finance;
-      const expiring=measures().filter(row=>row.kind==='renew');
-      return '<section class="v3-project-summary"><h2>'+esc(tr('plan'))+'</h2><div class="v3-card v3-card-body">'+
-        list(picked(),{editable:true})+(finance?label(tr('yearCash'),money(finance.cashEnd))+warning(finance):'')+
+      const continuing=measures().filter(row=>isContinuing(row)&&scope(row)==='programmes');
+      const programmes=picked().filter(row=>scope(row)==='programmes');
+      return '<section class="v3-project-summary"><h2>'+esc(tr('programmePlan'))+'</h2><div class="v3-card v3-card-body">'+
+        (programmes.length?list(programmes,{editable:true}):'<p class="v3-muted">'+esc(tr('programmeEmpty'))+'</p>')+
+        (finance?label(tr('yearCash'),money(finance.cashEnd))+warning(finance):'')+
         button(esc(tr('pick')),'measures','secondary full','data-anchor="measure.select"')+'</div>'+
-        (expiring.length?'<section class="v3-card v3-card-body" data-v4-expiring><h3>'+esc(tr('expiring'))+'</h3><p>'+esc(tr('renewHelp'))+'</p>'+
-          '<ul class="v4-plan-list">'+expiring.map(row=>'<li><button class="v4-plan-name" type="button" data-v3-measure="'+
-            esc(row.id)+'">'+esc(local(row.labels))+'</button><small>'+esc(drafted(row.id)?tr('selected'):money(row.cost))+'</small></li>').join('')+
-          '</ul></section>':'')+'</section>';
+        continuity(continuing)+'</section>';
     }
     function warning(finance) {
       const year=finance.futureRows.find(row=>row.cash<0);
       return year?'<p class="v4-money-warning">'+esc(tr('shortage',{year:year.year})+' · '+money(-year.cash))+'</p>':'';
     }
+    const isContinuing=row=>row.kind==='renew'||row.kind==='restore';
+    const sourceFor=row=>!row.kind&&row.measureId?measures().find(item=>item.id===row.measureId)||row:row;
+    const existingFor=row=>row.projectId?state().projects.find(item=>item.id===row.projectId):null;
+    function locations(row) {
+      const source=sourceFor(row),project=existingFor(source);
+      const targets=project?.targets||source.targets||source.serviceEffect?.targets||project?.serviceEffect?.targets||{[source.districtId]:1};
+      return Object.keys(targets).filter(id=>G.V3Rules.DISTRICTS[id]);
+    }
+    function scope(row) {
+      const source=sourceFor(row),project=existingFor(source);
+      if(row.siteId||source.kind==='capital'||source.siteIds?.length||project?.siteId||project?.kind==='capital')return 'construction';
+      return locations(source).length>1?'programmes':'district';
+    }
+    function mapPlan(district='all') {
+      const rows=picked().filter(row=>scope(row)!=='programmes'&&(district==='all'||locations(row).includes(district)));
+      if(!rows.length)return '';
+      return '<details class="v4-map-plan" data-v4-map-plan><summary><span>'+esc(tr('mapPlan'))+'</span><strong>'+rows.length+
+        '</strong></summary>'+list(rows,{editable:true})+'</details>';
+    }
+    function catalogueRow(row,{geography=true}={}) {
+      const selected=Boolean(drafted(row.id)),calculated=selected?projectFor(row.id):null;
+      const thumb=G.V4DecisionMedia?.thumbnail(row.id);
+      const preview=thumb?'<img class="v4-catalog-thumb" width="46" height="46" src="'+esc(api.asset(thumb))+'" alt="" loading="lazy" decoding="async">':'';
+      const districts=locations(row),annualOpex=calculated?.annualOpex??row.annualOpex;
+      const priceLabel=calculated?tr('yearSpending'):isContinuing(row)?tr('fundingCost'):
+        scope(row)==='construction'?tr('baseBuildCost'):t('launchCost');
+      const location=geography&&districts.length?'<small class="v4-catalog-location">'+esc(districts.length===Object.keys(G.V3Rules.DISTRICTS).length?
+        tr('allDistrictsLocation'):tr(districts.length===1?'districtLocation':'districtsLocation',{
+          names:districts.map(id=>api.districtLabel(id)).join(', ')}))+'</small>':'';
+      return '<button type="button" class="v3-measure" data-v3-measure="'+esc(row.id)+'" aria-pressed="'+selected+'">'+preview+
+        '<span class="v4-catalog-copy"><strong>'+esc(local(row.labels))+'</strong>'+location+'<small class="v4-catalog-cost">'+
+        esc(priceLabel+' '+money(calculated?spendingNow(calculated):row.cost)+(annualOpex?' · '+money(annualOpex)+' '+t('annual'):''))+'</small>'+
+        (selected?'<small class="v4-catalog-selected">'+esc(tr('selected'))+'</small>':'')+
+        '</span><span aria-hidden="true">'+(selected?'✓':'›')+'</span></button>';
+    }
+    function continuity(rows) {
+      if(!rows.length)return '';
+      return '<section class="v4-continuity" data-v4-continuity data-v4-expiring><h2>'+esc(tr('continuity'))+'</h2>'+
+        '<p class="v3-muted">'+esc(tr('continuityHelp'))+'</p><div class="v3-card">'+rows.map(row=>catalogueRow(row)).join('')+'</div></section>';
+    }
     function catalogue() {
-      const current=chapter(),filter=ui().portfolioFilter||'all';
-      const options=measures().filter(row=>filter==='all'||row.districtId===filter);
-      return api.back('back',t('nav.decisions'))+api.heading(tr('pick'))+'<p class="v3-muted">'+esc(period(current)+' · '+local(current.labels))+'</p>'+
-        '<label class="v3-field v4-catalog-filter"><span>'+esc(tr('portfolioFilter'))+'</span><select name="portfolio-filter">'+
-        [['all',tr('all')],...Object.entries(G.V3Rules.DISTRICTS).map(([id,d])=>[id,local(d.labels)])].map(([id,name])=>
-          '<option value="'+id+'" '+(id===filter?'selected':'')+'>'+esc(name)+'</option>').join('')+'</select></label>'+
-        (ui().tutorialStep===3?button(esc(tr('continueEmpty')),'defer','secondary full'):'')+
-        '<div class="v3-measures v4-catalog">'+Object.keys(G.V3Rules.DISTRICTS).map(id=>{
-          const rows=options.filter(row=>row.districtId===id);
+      const current=chapter(),view=ui(),mode=['construction','district'].includes(view.catalogueMode)?view.catalogueMode:'programmes',onMap=mode!=='programmes';
+      const groups=onMap?Object.entries(G.V3Rules.DISTRICTS).map(([id,d])=>[id,local(d.labels)]):
+        Object.keys(G.V3Rules.SECTOR_SHARES).map(id=>[id,t(id)]);
+      const requested=onMap?view.constructionDistrict:view.programmeSector;
+      const filter=groups.some(([id])=>id===requested)?requested:'all';
+      const matches=row=>filter==='all'||(onMap?locations(row).includes(filter):row.sector===filter);
+      const available=measures(),options=available.filter(row=>!isContinuing(row)&&row.kind!=='defer'&&
+        scope(row)===mode&&matches(row));
+      const returning=onMap?'nav.map':view.catalogueOrigin==='budget'?'nav.budget':'nav.decisions';
+      return api.back('back',t(returning))+api.heading(tr(mode==='district'?'districtServices':mode))+
+        '<p class="v3-muted v4-catalog-period">'+esc(period(current)+' · '+local(current.labels))+'</p>'+
+        (view.tutorialStep===3&&!onMap?'':'<p class="v4-catalog-help">'+esc(tr(mode==='construction'?'constructionHelp':mode==='district'?'districtHelp':'programmeHelp'))+'</p>')+
+        '<label class="v3-field v4-catalog-filter"><span>'+esc(tr(onMap?'portfolioFilter':'programmeSector'))+
+        '</span><select name="'+(onMap?'construction-district':'programme-sector')+'">'+
+        [['all',tr(onMap?'all':'allSectors')],...groups].map(([id,name])=>
+          '<option value="'+esc(id)+'" '+(id===filter?'selected':'')+'>'+esc(name)+'</option>').join('')+'</select></label>'+
+        (view.tutorialStep===3&&!onMap?button(esc(tr('continueEmpty')),'defer','secondary full'):'')+
+        '<div class="v3-measures v4-catalog" data-v4-catalogue-mode="'+mode+'">'+groups.map(([id,name])=>{
+          const rows=options.filter(row=>(onMap?row.districtId:row.sector)===id);
           if(!rows.length)return '';
-          return '<section><h2>'+esc(api.districtLabel(id))+'</h2><div class="v3-card">'+rows.map(row=>{
-            const selected=Boolean(drafted(row.id));
-            return '<button type="button" class="v3-measure" data-v3-measure="'+esc(row.id)+'" aria-pressed="'+selected+'"><span><strong>'+
-              esc(local(row.labels))+'</strong><small>'+esc(money(row.cost)+(row.annualOpex?' · '+money(row.annualOpex)+' '+t('annual'):'')+
-              (selected?' · '+tr('selected'):''))+'</small></span><span aria-hidden="true">'+(selected?'✓':'›')+'</span></button>';
-          }).join('')+'</div></section>';
-        }).join('')+'</div>';
+          return '<section data-v4-'+(onMap?'district':'sector')+'="'+esc(id)+'"><h2>'+esc(name)+
+            '</h2><div class="v3-card">'+rows.map(row=>catalogueRow(row,{geography:!onMap})).join('')+'</div></section>';
+        }).join('')+'</div>'+(options.length?'':'<p class="v3-muted">'+esc(tr(mode==='construction'?'noConstruction':mode==='district'?'noDistrictServices':'noProgrammes'))+'</p>')+
+        continuity(available.filter(row=>isContinuing(row)&&scope(row)===mode&&matches(row)));
     }
     function taxMetrics(finance,rate) {
       const effects=G.V3Rules.taxSupportEffects(rate);
@@ -219,7 +295,8 @@
         esc((row.inverse?'≤ ':'≥ ')+kpiValue(row.target,row.unit))+'</span></div>'+
         '<meter min="0" max="100" value="'+(row.progress??0)+'" aria-label="'+esc(local(row.labels))+'"></meter>'+
         (row.met?'<small class="positive">'+esc(tr('met'))+'</small>':'')+
-        '<details><summary>'+esc(tr('calculation'))+'</summary><small>'+esc(local(row.description))+'</small></details></li>';
+        '<details><summary>'+esc(tr('calculation'))+'</summary><small>'+esc(local(row.description))+'</small>'+
+        (row.reference==null?'':label(tr('referenceWithoutPolicies'),kpiValue(row.reference,row.unit)))+'</details></li>';
       const all=entries||[];
       const priority=Array.isArray(ch.priority)?all.filter(row=>ch.priority.includes(row.id)):all.slice(0,4);
       const rest=all.filter(row=>!priority.includes(row));
@@ -237,7 +314,7 @@
       return previous.map(row=>'<details class="v3-card v3-card-body"><summary>'+esc(tr('checkpoint')+' · '+period(row.chapter))+'</summary>'+
         goals(row,true)+'</details>').join('');
     }
-    return {tr,picked,drafted,projectFor,period,list,summary,catalogue,warning,taxes,updateTax,funding,investment,investmentPreview,investable,goals,archive};
+    return {tr,picked,drafted,projectFor,spendingNow,period,list,scope,mapPlan,summary,catalogue,warning,taxes,updateTax,funding,investment,investmentPreview,investable,goals,archive};
   }
 
   G.V4Planning={create};

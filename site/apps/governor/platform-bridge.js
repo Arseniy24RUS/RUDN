@@ -38,6 +38,7 @@ const storageValues=new Map(),pendingCheckpoints=new Set();
 let latestSaveStatus=null,updateAdapter=null,updateCoordinator=null,updatePaused=false;
 const diagnosticService=getSharedPlatformDiagnostics({backend,getLocale:()=>getLocale(),getModule:()=> 'governor'});let diagnostics=diagnosticService.forModule('governor');
 let language=G.I18n.normalize(getLocale());
+document.documentElement.lang=language==='zh'?'zh-Hans':language;
 const tr=(ru,en,zh)=>language==='zh'&&zh?zh:G.I18n.choose(language,ru,en);
 const local=value=>G.I18n.local(value,language);
 $('#platform-loading-text').textContent={ru:'Восстанавливаем профиль платформы…',en:'Restoring your course profile…',zh:'正在恢复课程账号…'}[language];
@@ -358,17 +359,22 @@ async function tryStart(){
   await loadApplication(loadEnd);
 }
 
+const CAMPAIGN_SCRIPTS=[
+  'v3-event-bank','v3-event-copy','v3-event-art','v4-major-events','v3-events','v4-catalog','v4-campaign','v3-rules','v3-store',
+  'v3-advisor','v3-motion','v4-map','v4-planning','v4-decision-media','v4-facility-media','v4-event-media',
+  'v4-terrain-media','v4-negotiation','v3-runtime','v3-ui'
+];
 let v3Dependencies;
 function loadV3(){
   if(!v3Dependencies){
-    const list=['v3-event-bank','v3-event-copy','v3-event-art','v3-events','v4-catalog','v4-campaign','v3-rules','v3-store',
-      'v3-advisor','v3-motion','v4-map','v4-planning','v3-runtime','v3-ui'];
-    v3Dependencies=Promise.all(list.map(name=>new Promise((resolve,reject)=>{
+    const packaged=getReleaseContext()?.resources?.['apps/governor/governor-campaign.js'];
+    const sources=packaged?['./governor-campaign.js']:CAMPAIGN_SCRIPTS.map(name=>'./src/'+name+'.js');
+    v3Dependencies=Promise.all(sources.map(source=>new Promise((resolve,reject)=>{
       const script=document.createElement('script');
       script.async=false;
-      script.src=resourceURL('./src/'+name+'.js',import.meta.url).href;
+      script.src=resourceURL(source,import.meta.url).href;
       script.onload=resolve;
-      script.onerror=()=>reject(Error('governor-v3/load:'+name));
+      script.onerror=()=>reject(Error('governor-v3/load:'+source));
       document.head.append(script);
     })));
   }

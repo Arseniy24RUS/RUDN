@@ -91,12 +91,14 @@
       if(item.gif)return;
       const image=document.createElement('img');
       const name=host.dataset.v4EventGif;
+      const poster=host.querySelector('.v3-event-art');
       image.className='v4-event-gif '+(name==='river-flow'?'v4-event-gif-full':'');
+      if (poster?.classList.contains('v3-event-subject-low')) image.classList.add('v4-event-gif-subject-low');
       image.setAttribute('aria-hidden','true');
       image.alt='';
       image.addEventListener('load',()=>image.classList.add('is-ready'),{once:true});
       image.addEventListener('error',()=>{item.failed=true;hideGif(item);},{once:true});
-      image.src=G.resolveAsset('assets/v4/motion/'+name+'.gif');
+      image.src=G.resolveAsset(name.startsWith('assets/')?name:'assets/v4/motion/'+name+'.gif');
       host.append(image);
       item.gif=image;
     }
@@ -136,7 +138,9 @@
         }
       }
     }
-    const mutations=new MutationObserver(update);
+    const mutations=new MutationObserver(records=>{
+      if (records.some(record=>!record.target.closest?.('[data-v4-vehicle],[data-v3-coach-holes]'))) update();
+    });
     mutations.observe(scene,{childList:true,subtree:true});
     motion.addEventListener('change',update);
     document.addEventListener('visibilitychange',update);

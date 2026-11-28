@@ -3,6 +3,7 @@
   'use strict';
   const G = root.GovernorGame;
   const bank = G.V3EventBank;
+  const major = G.V4MajorEvents;
   const contentVersion = bank.contentVersion;
   const algorithmVersion = bank.drawPolicy.version;
   const firstYear = 2026;
@@ -19,7 +20,8 @@
   }
 
   freeze(bank);
-  const byId = new Map(bank.cards.map(card => [card.id, card]));
+  freeze(major);
+  const byId = new Map([...bank.cards, ...(major?.cards || [])].map(card => [card.id, card]));
   const baselineTags = bank.worldBaselineTags.byDistrict;
 
   class EventError extends Error {
@@ -48,6 +50,8 @@
     invariant(entry && record.attemptId === attemptId && validYear(record.year), 'invalid-event-record');
     invariant(record.contentVersion === contentVersion, 'event-bank-unavailable');
     invariant(record.algorithmVersion === algorithmVersion, 'event-algorithm-unavailable');
+    invariant(record.eventPolicy === undefined || record.eventPolicy === major?.POLICY, 'event-policy-unavailable');
+    invariant(!major?.has(entry.id) || record.eventPolicy === major.POLICY, 'invalid-major-event-record');
     invariant(validHash(record.candidateHash) && validRevision(record.snapshotRevision), 'invalid-event-receipt');
     const circumstance = record.circumstance;
     const authored = entry.circumstance;
@@ -76,9 +80,11 @@
     return ({en:'en', zh:'zh'})[String(locale || '').toLowerCase().split(/[-_]/)[0]] || 'ru';
   }
 
+  const eventCopy = id => major?.copy[id] || G.V3EventCopy?.[id];
+
   function localeInfo(eventId, locale) {
     const requested = language(locale);
-    const fallback = requested !== bank.locale && !G.V3EventCopy?.[eventId]?.[requested];
+    const fallback = requested !== bank.locale && !eventCopy(eventId)?.[requested];
     return {locale: fallback ? bank.locale : requested, fallback};
   }
 
@@ -89,11 +95,11 @@
     if (available.locale === bank.locale) {
       return available.fallback ? {...entry, locale:bank.locale, fallbackLocale:bank.locale} : entry;
     }
-    const {title, situation, unitLabel, circumstance, ...measures} = G.V3EventCopy[eventId][available.locale];
+    const {title, situation, unitLabel, circumstance, ...measures} = eventCopy(eventId)[available.locale];
     return {...entry, title, situation, locale: available.locale,
       localIndicator: {...entry.localIndicator, unitLabel},
       circumstance: {...entry.circumstance, summary: circumstance || null},
-      options: entry.options.map(option => option.id === 'base' ? {...option, ...baseText[available.locale]} :
+      options: entry.options.map(option => option.id === 'base' ? {...option, ...baseText[available.locale], ...measures.base} :
         {...option, ...measures[option.id], instrument: instruments[option.instrument]?.[available.locale] || option.instrument})};
   }
 
@@ -113,6 +119,7 @@
     const used = new Set();
     for (const record of ledger) {
       validRecord(record, attemptId);
+      invariant(record.eventPolicy === ledger[0].eventPolicy, 'event-policy-conflict');
       invariant(!years.has(record.year) && !used.has(record.eventId), 'event-ledger-conflict');
       years.add(record.year);
       used.add(record.eventId);
@@ -120,9 +127,9 @@
     return used;
   }
 
-  function candidates(tags, used = new Set()) {
+  function candidates(tags, used = new Set(), cards = bank.cards) {
     if (!tags || typeof tags !== 'object') return [];
-    return bank.cards.filter(entry => {
+    return cards.filter(entry => {
       const {requiresTerritory, requiresBaselineTag} = entry.applicability;
       return Object.hasOwn(tags, requiresTerritory) && Array.isArray(tags[requiresTerritory]) &&
         tags[requiresTerritory].includes(requiresBaselineTag) && !used.has(entry.id);
@@ -141,7 +148,7 @@
     throw new EventError('draw-entropy-exhausted');
   }
 
-  async function draw(ids, drawKey, year) {
+  async function draw(ids, drawKey, year, domain = 'governor-event-v1') {
     invariant(validHash(drawKey), 'invalid-draw-key');
     const subtle = root.crypto?.subtle;
     invariant(subtle, 'secure-browser-required');
@@ -150,31 +157,46 @@
     const keyBytes = Uint8Array.from(drawKey.match(/../g), value => Number.parseInt(value, 16));
     const key = await subtle.importKey('raw', keyBytes, {name: 'HMAC', hash: 'SHA-256'}, false, ['sign']);
     const index = await unbiasedIndex(ids.length, async counter => {
-      const message = encoder.encode('governor-event-v1|' + contentVersion + '|' + year + '|' + candidateHash + '|' + counter);
+      const message = encoder.encode(domain + '|' + contentVersion + '|' + year + '|' + candidateHash + '|' + counter);
       const bytes = await subtle.sign('HMAC', key, message);
       return new DataView(bytes).getUint32(0);
     });
     return {eventId: ids[index], candidateHash};
   }
 
+  async function isMajorYear(year, drawKey) {
+    const termStart = year - (year-firstYear)%5;
+    const startOffset = termStart === firstYear ? 2 : 1;
+    if (year < termStart+startOffset) return false;
+    const years = Array.from({length:5-startOffset}, (_,i) => String(termStart+startOffset+i));
+    const selected = await draw(years, drawKey, termStart, 'governor-major-year-v1');
+    return selected.eventId === String(year);
+  }
+
   // Call inside the controller's attempt lock. This routine never persists or reveals a card.
   async function open({
-    attemptId, year, drawKey, snapshot, ledger = [],
+    attemptId, year, drawKey, snapshot, ledger = [], eventPolicy,
     contentVersion: version = contentVersion, algorithmVersion: algorithm = algorithmVersion
   }) {
     invariant(typeof attemptId === 'string' && attemptId.trim() && validYear(year), 'invalid-event-key');
     invariant(version === contentVersion, 'event-bank-unavailable');
     invariant(algorithm === algorithmVersion, 'event-algorithm-unavailable');
-    verifyLedger(ledger, attemptId);
+    const used = verifyLedger(ledger, attemptId);
+    const policy = eventPolicy ?? ledger[0]?.eventPolicy;
+    invariant(policy === undefined || policy === major?.POLICY, 'event-policy-unavailable');
+    invariant(ledger.length === 0 || ledger[0].eventPolicy === policy, 'event-policy-conflict');
     const saved = ledger.find(record => record.year === year);
     if (saved) return saved;
     invariant(!ledger.some(record => record.year > year), 'event-ledger-gap');
     invariant(validRevision(snapshot?.revision), 'opening-snapshot-unavailable');
-    const ids = candidates(snapshot.tags, new Set(ledger.map(record => record.eventId)));
+    // Archived attempts use their original catalogue and candidate hashes.
+    // Signature situations reserve one independently drawn year in each term.
+    const featured = policy && await isMajorYear(year,drawKey) ? candidates(snapshot.tags,used,major.cards) : [];
+    const ids = featured.length ? featured : candidates(snapshot.tags,used);
     invariant(ids.length > 0, 'no-applicable-events');
     const selected = await draw(ids, drawKey, year);
     const circumstance = byId.get(selected.eventId).circumstance;
-    return {...selected, attemptId, year, contentVersion, algorithmVersion,
+    return {...selected, attemptId, year, contentVersion, algorithmVersion, ...(policy ? {eventPolicy:policy} : {}),
       snapshotRevision: snapshot.revision, circumstance};
   }
 
@@ -184,7 +206,7 @@
     if (snapshot?.revision !== record.snapshotRevision) return false;
     const expected = await open({
       attemptId: record.attemptId, year: record.year, drawKey, snapshot,
-      ledger: ledger.filter(item => item.year < record.year)
+      ledger: ledger.filter(item => item.year < record.year), eventPolicy: record.eventPolicy
     });
     return expected.eventId === record.eventId && expected.candidateHash === record.candidateHash;
   }
@@ -259,6 +281,7 @@
     const futureRows = [];
     const outcomes = [];
     const supportByDistrict = {};
+    let roadChange;
     const usedSavings = new Map();
     for (const record of [...ledger].sort((a, b) => a.year - b.year)) {
       if (record.year > fiscalYear) break;
@@ -268,6 +291,7 @@
       const {oneOffMln, annualMln, externalExpenseMln, firstOperatingYear, lastOperatingYear} = selection;
       const current = record.year === fiscalYear;
       const active = fiscalYear >= firstOperatingYear && fiscalYear <= lastOperatingYear;
+      if (current) roadChange = major?.roadImpact(record,selection.optionId,fiscalYear);
       const required = [];
       if (current && externalExpenseMln) rows.push(posting(selection, 'external', fiscalYear, externalExpenseMln));
       if (current && oneOffMln) required.push(posting(selection, 'oneOff', fiscalYear, oneOffMln));
@@ -303,7 +327,8 @@
       sum + (row.direction === 'in' ? 0 : row.type === 'saving' ? -row.amount : row.amount), 0);
     const currentReceiptMln = rows.reduce((sum, row) => sum + (row.direction === 'in' ? row.amount : 0), 0);
     const futureMln = futureRows.reduce((sum, row) => sum + row.amount, 0);
-    return {rows, futureRows, outcomes, supportByDistrict, currentExpenseMln, currentReceiptMln, futureMln};
+    return {rows, futureRows, outcomes, supportByDistrict, currentExpenseMln, currentReceiptMln, futureMln,
+      ...(roadChange ? {roadChanges:[roadChange]} : {})};
   }
 
   G.V3Events = {bank, baselineTags, contentVersion, algorithmVersion, createDrawKey, candidates,

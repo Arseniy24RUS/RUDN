@@ -6,6 +6,7 @@
   const MAX_CARS = 12;
   const DRAG_THRESHOLD = 6;
   const worlds = new Map();
+  const vehicleAngles = new Map();
   const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({
     '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
   })[char]);
@@ -36,18 +37,26 @@
     'east-gate':[[.722,.407],[.759,.429],[.799,.44],[.836,.472],[.899,.496],[.972,.529]],
     'c-j':[[.227,.622],[.216,.638],[.201,.655],[.162,.67],[.116,.686],[.059,.708]]
   };
+  // Visual registration on the terrain plates. Site IDs and model effects stay fixed.
   const districtSites = {
+    suburb:{
+      'suburb-school-reserve':[.244,.538], 'suburb-station-fields':[.802,.418]
+    },
     north:{
-      'remote-cluster':[.262,.288], 'district-centre':[.754,.471], 'transport-junction':[.488,.565]
+      'remote-cluster':[.262,.288], 'district-centre':[.754,.471], 'transport-junction':[.488,.565],
+      'north-road-paddock':[.35,.68], 'north-service-village':[.886,.470]
     },
     river:{
-      upstream:[.174,.26], 'river-towns':[.392,.594], 'delta-corridor':[.461,.888]
+      upstream:[.246,.106], 'river-towns':[.430,.603], 'delta-corridor':[.536,.897],
+      'river-high-terrace':[.174,.773], 'river-reclaimed-quay':[.853,.521]
     },
     industrial:{
-      'old-industrial-city':[.24,.548], 'small-town-belt':[.605,.214], 'logistics-corridor':[.722,.852]
+      'old-industrial-city':[.24,.548], 'small-town-belt':[.605,.214], 'logistics-corridor':[.722,.852],
+      'industrial-recovery-yard':[.482,.327], 'industrial-rail-siding':[.604,.959]
     },
     capital:{
-      'central-hub':[.581,.378], 'outer-district':[.916,.572], 'split-counters':[.205,.582]
+      'central-hub':[.581,.378], 'outer-district':[.916,.572], 'split-counters':[.205,.582],
+      'capital-redevelopment-block':[.33,.34], 'capital-ring-station':[.590,.956]
     }
   };
   // Registered against the cropped 768×512 territory plates. River traffic on
@@ -79,13 +88,15 @@
     [[.539,.495],[.505,.562],[.473,.62],[.44,.691],[.426,.745]],
     [[.623,.445],[.689,.394],[.756,.35],[.836,.321],[.899,.347],[.926,.398],[.887,.423]]
   ];
+  // Fractions along the painted road hidden under the illustrated tree crowns.
+  const treeCanopy = {'industrial-road-1':[.539,.588], 'north-road-1':[.534,.623]};
 
   function sitePoint(district, id, fallback) {
     const point = districtSites[district]?.[id];
     return point ? {x:point[0],y:point[1]} : {x:fraction(fallback?.x),y:fraction(fallback?.y)};
   }
 
-  function schoolRoads({roads = [], closedRoads = [], projectPoint}) {
+  function schoolRoads({roads = [], closedRoads = [], projectPoint, vehicle}) {
     const closures = new Set(closedRoads);
     return roads.map(road => ({
       id:road.id,
@@ -93,24 +104,26 @@
         [normal(projectPoint(road.from)), ...(schoolWaypoints[road.id] || []), normal(projectPoint(road.to))],
       closed:closures.has(road.id),
       traffic:road.id === 'bridge-crossing' ? 2 : paintedSchoolRoads[road.id] ? 1 : 0,
+      vehicle:road.id==='w-c'?vehicle:undefined,
       kind:road.id.includes('-gate') ? 'access' : 'local',
       label:road.label || road.name || ''
     }));
   }
 
-  function ambientRoads(district) {
+  function ambientRoads(district,vehicle) {
     const paths=district==='region' ? regionRoads :
       (paintedDistrictRoads[district] || []).map(points=>points.map(([x,y])=>[x/768,y/512]));
     return paths.map((points,index) => ({
-      id:district+'-road-'+(index+1), points, kind:'ambient', traffic:index===0 ? 2 : 1
+      id:district+'-road-'+(index+1), points, kind:'ambient', traffic:index===0 ? 2 : 1,
+      vehicle:index===0?vehicle:undefined
     }));
   }
 
   function pinMarkup(pin, list = false, historical = false) {
     const {kind,id,label,selected,disabled} = pin;
-    if (!['site','object','district'].includes(kind) || typeof id !== 'string' || (historical && kind === 'site')) return '';
+    if (!['site','object','district','event'].includes(kind) || typeof id !== 'string' || (historical && kind === 'site')) return '';
     const inspectable = !historical || kind === 'district';
-    const attributes = inspectable ? 'type="button" data-v3-'+kind+'="'+escape(id)+'"'+(disabled?' disabled':'') : '';
+    const attributes = inspectable ? 'type="button" data-v3-'+kind+'="'+escape(id)+'"'+(disabled?' disabled':'') : list?'':'role="img"';
     const tag = inspectable ? 'button' : 'span';
     const state = ['foundation','frame','finishing','open','closed','restoring','planned','occupied'].includes(pin.status) ? ' is-'+pin.status : '';
     const marker = pin.icon ? '<img src="'+escape(pin.icon)+'" alt="" draggable="false">' :
@@ -124,9 +137,9 @@
     return '<'+tag+' '+attributes+shared+(list?'':coords)+description+'>'+content+'</'+tag+'>';
   }
 
-  function activityMarkup(animation) {
+  function activityMarkup(animation, ambient = false) {
     if (!animation?.src) return '';
-    return '<span class="v4-map-activity"'+
+    return '<span class="v4-map-activity'+(ambient?' v4-map-ambient':'')+'" aria-hidden="true"'+
       ' style="left:'+fraction(animation.offsetX,0)*100+'%;top:'+fraction(animation.offsetY,.60)*100+
       '%;width:'+fraction(animation.width,1)*100+'%;height:'+fraction(animation.height,.40)*100+'%">'+
       '<img data-v4-gif-src="'+escape(animation.src)+'" alt="" decoding="async" draggable="false"></span>';
@@ -136,18 +149,65 @@
     const {id,src,animation} = building;
     if (!src && !animation?.src) return '';
     const phase = ['foundation','frame','finishing','open','closed','restoring','planned'].includes(building.status) ? building.status : '';
-    return '<span class="v4-map-building is-'+phase+'" data-v4-build="'+escape(id)+'"'+
+    return '<span class="v4-map-building is-'+phase+(building.groundwork?' v4-map-groundwork':'')+'" data-v4-build="'+escape(id)+'"'+
       ' style="--map-x:'+fraction(building.x)+';--map-y:'+fraction(building.y)+';--map-size:'+clamp(fraction(building.width,.20),.03,.75)+'" aria-hidden="true">'+
       (src?'<img class="v4-map-structure" src="'+escape(src)+'" loading="lazy" decoding="async" alt="" draggable="false">':'')+
       (!historical?activityMarkup(animation):'')+'</span>';
   }
 
-  function carMarkup(index) {
-    return '<g class="v4-map-car v4-map-car-'+(index%3)+'" data-v4-car aria-hidden="true">'+
-      '<rect x="-8.5" y="-4.3" width="19" height="11" rx="3" class="v4-map-car-shadow"/>'+
-      '<rect x="-9" y="-5.5" width="18" height="11" rx="3.5" class="v4-map-car-body"/>'+
-      '<rect x="-1" y="-4" width="6" height="8" rx="1.7" class="v4-map-car-glass"/>'+
-      '<path d="M8 -3v1.4m0 3.2v1.4" class="v4-map-car-lights"/></g>';
+  function carMarkup(index,vehicle) {
+    const type=index===0&&['bus','medical','freight'].includes(vehicle)?vehicle:'car';
+    return '<g class="v4-map-car v4-map-car-'+(index%3)+' v4-map-vehicle-'+type+'" data-v4-car aria-hidden="true">'+
+      '<g data-v4-vehicle="'+type+'"/></g>';
+  }
+
+  function projectedVehicle(type,heading) {
+    const key=type+':'+heading;
+    if (vehicleAngles.has(key)) return vehicleAngles.get(key);
+    // Align the ground plane with the painted terrain. Elevation always rises
+    // vertically on screen, including when a vehicle turns or changes lanes.
+    const pitch=.56, angle=heading*Math.PI/180;
+    const yaw=Math.atan2(Math.sin(angle)/pitch,Math.cos(angle));
+    const along=[Math.cos(yaw),pitch*Math.sin(yaw)];
+    const across=[-Math.sin(yaw),pitch*Math.cos(yaw)];
+    const side=across[1]>=0?1:-1;
+    const nose=along[1]>=0;
+    const bus=type==='bus', freight=type==='freight', medical=type==='medical';
+    const length=bus||freight?14:medical?10.5:9;
+    const width=bus||freight||medical?5.1:4.4;
+    const panel=(kind,vertices)=>'<polygon class="v4-map-car-'+kind+'" points="'+vertices.map(([x,y,z])=>
+      (x*along[0]+y*across[0]).toFixed(1)+','+(x*along[1]+y*across[1]-z).toFixed(1)
+    ).join(' ')+'"/>';
+    const deck=(back,front,half,z)=>[[back,-half,z],[front,-half,z],[front,half,z],[back,half,z]];
+    const block=(back,front,half,bottom,top,palette='')=>{
+      const near=side*half, end=nose?front:back;
+      return panel('side'+palette,[[back,near,bottom],[front,near,bottom],[front,near,top],[back,near,top]])+
+        panel('end'+palette,[[end,-half,bottom],[end,half,bottom],[end,half,top],[end,-half,top]])+
+        panel('roof'+palette,deck(back,front,half,top));
+    };
+    const strip=(kind,back,front,half,bottom,top)=>panel(kind,
+      [[back,side*half,bottom],[front,side*half,bottom],[front,side*half,top],[back,side*half,top]]);
+    const wheel=x=>strip('wheel',x-1.65,x+1.65,width+.12,.05,2.75);
+    const windshield=(start,finish,half,bottom,top)=>panel('glass',
+      [[start,-half,bottom],[start,half,bottom],[finish,half,top],[finish,-half,top]]);
+    let svg=panel('shadow',deck(-length-.7,length+.7,width+.8,-.2))+wheel(-length+4)+wheel(length-3.7);
+    svg+=block(-length,length,width,1.3,bus||medical?7.1:3.2);
+    if (bus||medical) {
+      const windows=bus?[-10,-5,0,5,10]:[5.4];
+      for (const x of windows) svg+=strip('glass',x-1.65,x+1.65,width,4.7,6.65);
+      if (nose) svg+=windshield(length,length,width-.7,4.9,6.7);
+      if (medical) svg+=strip('stripe',-10.3,10.3,width,2.8,3.65);
+    } else {
+      if (freight) svg+=block(-length+.45,3.4,width-.22,3.2,8.1,'-cargo');
+      const back=freight?4.1:-4.8, front=freight?12.7:4.2, half=width-.7;
+      svg+=block(back,front,half,3.2,6.1)+strip('glass',back+.7,front-.6,half,3.9,5.6);
+      if (nose) svg+=windshield(front,front,half-.35,3.9,5.6);
+    }
+    const end=nose?length:-length;
+    for (const lamp of [-width+.9,width-.9]) svg+=panel(nose?'headlamp':'tail-lamp',
+      [[end,lamp-.46,1.98],[end,lamp+.46,1.98],[end,lamp+.46,2.85],[end,lamp-.46,2.85]]);
+    vehicleAngles.set(key,svg);
+    return svg;
   }
 
   function roadPath(points, height) {
@@ -182,13 +242,13 @@
       outlines.push('<g class="'+classes+'"><path class="v4-map-road-edge" d="'+path+'"/></g>');
       return '<g data-v4-road="'+escape(id)+'" class="'+classes+'"'+
         (closed?' data-v4-closed':'')+'><path class="v4-map-road-centre" d="'+path+
-        '" data-v4-path/>'+Array.from({length:count},(_,index)=>carMarkup(index)).join('')+'</g>';
+        '" data-v4-path/>'+Array.from({length:count},(_,index)=>carMarkup(index,route.vehicle)).join('')+'</g>';
     }).join('');
     return '<svg class="v4-map-roads" viewBox="0 0 1000 '+height+'" preserveAspectRatio="none" aria-hidden="true">'+outlines.join('')+groups+'</svg>';
   }
 
   function render({
-    key, district, image, overlayImage, aspect = 1.5, pins = [], buildings = [], routes = [],
+    key, district, image, overlayImage, aspect = 1.5, pins = [], buildings = [], routes = [], ambient = [],
     historical = false, label = '', strings = {}, fit = 'cover'
   }) {
     const landscape = Number.isFinite(aspect) ? clamp(aspect,.65,3) : 1.5;
@@ -200,6 +260,7 @@
       '" data-v4-fit="'+(fit==='contain'?'contain':'cover')+'" style="--map-aspect:'+landscape+'" role="region" aria-label="'+escape(label)+'" tabindex="0">'+
       '<div class="v4-map-world">'+
       (image?'<img class="v4-map-terrain" src="'+escape(image)+'" alt="" decoding="async" draggable="false">':'')+
+      (historical?'':ambient.map(layer=>activityMarkup(layer,true)).join(''))+
       routeMarkup(routes,landscape,historical)+
       (overlayImage?'<img class="v4-map-terrain v4-map-foreground" src="'+escape(overlayImage)+'" alt="" decoding="async" draggable="false">':'')+
       buildings.map(building=>buildingMarkup(building,historical)).join('')+
@@ -251,11 +312,16 @@
       const progress = ((item.offset+elapsed*item.speed)%item.length+item.length)%item.length;
       const at = item.path.getPointAtLength(progress);
       const ahead = item.path.getPointAtLength(clamp(progress+item.direction*2,0,item.length));
-      const angle = Math.atan2(ahead.y-at.y,ahead.x-at.x)*180/Math.PI;
-      const radians = angle*Math.PI/180;
-      item.node.setAttribute('opacity',clamp(Math.min(progress,item.length-progress)/16,0,1).toFixed(2));
+      const radians = Math.atan2(ahead.y-at.y,ahead.x-at.x);
+      const heading=(Math.round(radians*36/Math.PI)*5+360)%360;
+      if (item.heading!==heading) {
+        item.shape.innerHTML=projectedVehicle(item.type,heading);
+        item.heading=heading;
+      }
+      const clear=item.canopy?Math.max(item.canopy[0]*item.length-progress,progress-item.canopy[1]*item.length,0):16;
+      item.node.setAttribute('opacity',clamp(Math.min(clear,progress,item.length-progress)/16,0,1).toFixed(2));
       item.node.setAttribute('transform','translate('+
-        (at.x-Math.sin(radians)*3.3).toFixed(2)+' '+(at.y+Math.cos(radians)*3.3).toFixed(2)+') rotate('+angle.toFixed(2)+')');
+        (at.x-Math.sin(radians)*3.3).toFixed(2)+' '+(at.y+Math.cos(radians)*3.3).toFixed(2)+')');
     }
   }
 
@@ -268,7 +334,9 @@
       if (!length) continue;
       vehicles.forEach((node,index) => {
         const direction = index%2 ? -1 : 1;
-        cars.push({node,path,length,direction,offset:length*(index+.23)/vehicles.length,speed:direction*(28+7*index)});
+        const shape=node.querySelector('[data-v4-vehicle]');
+        cars.push({node,shape,type:shape.dataset.v4Vehicle,path,length,direction,canopy:treeCanopy[group.dataset.v4Road],
+          offset:length*(index+.23)/vehicles.length,speed:direction*(28+7*index)});
       });
     }
     return cars;
@@ -538,8 +606,9 @@
     root.addEventListener('pointerup',end,true);
     root.addEventListener('pointercancel',end,true);
     const observer = new MutationObserver(records => {
-      if (records.some(record=>record.type==='childList')) update();
-      else motion();
+      const changes=records.filter(record=>!record.target.closest?.('[data-v4-vehicle],[data-v3-coach-holes]'));
+      if (changes.some(record=>record.type==='childList')) update();
+      else if (changes.length) motion();
     });
     observer.observe(host,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
     const onWindowResize=()=>{

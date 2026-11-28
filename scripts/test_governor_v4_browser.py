@@ -14,9 +14,11 @@ def load_record(page, profile=None):
     return data(page, profile, 'course' if profile else 'free', edition='v4')
 
 
-def choose_event(page):
+def choose_event(page, inspect=None):
     click(page, '[data-v3-tab="decisions"]')
     click(page, '[data-v3-action="event"]')
+    if inspect:
+        inspect()
     click(page, '[data-v3-option="base"]')
     click(page, '[data-v3-action="save-event"]')
 
@@ -46,13 +48,95 @@ def assert_fit(page):
     assert size['body'] <= size['width'] + 1, size
 
 
-def first_year(page, profile, output):
+def catalogue_ids(page):
+    catalogue = page.locator('.v4-catalog [data-v3-measure]')
+    ids = catalogue.evaluate_all("rows => rows.map(row => row.dataset.v3Measure)")
+    return [identity for identity in ids if not identity.startswith(('renew:', 'restore:'))]
+
+
+def check_measure_art(page, year, verified, ids):
+    for identity in ids:
+        row = page.locator('.v4-catalog [data-v3-measure="' + identity + '"]')
+        row.scroll_into_view_if_needed()
+        assert row.locator('.v4-catalog-thumb').evaluate('async img => { await img.decode(); return img.naturalWidth; }') >= 96
+        click(page, '[data-v3-measure="' + identity + '"]')
+        picture = page.locator('.v4-measure-image')
+        width, height, src = picture.evaluate(
+            "async img => { await img.decode(); return [img.naturalWidth,img.naturalHeight,img.currentSrc]; }"
+        )
+        assert max(width, height) >= 350 and min(width, height) >= 200 and 'unavailable' not in src, (identity, width, height, src)
+        verified[identity] = {'year': year, 'asset': src.rsplit('/assets/', 1)[-1], 'pixels': [width, height]}
+        click(page, '.v3-back[data-v3-action="catalogue-back"]')
+
+
+def map_catalogue(page, mode):
+    click(page, '[data-v3-tab="map"]')
+    click(page, '.v4-map-districts [data-v3-district="all"]')
+    action = 'v4-map-construction' if mode == 'construction' else 'v4-map-district-measures'
+    click(page, f'[data-v3-action="{action}"]')
+    visible(page, f'[data-v4-catalogue-mode="{mode}"]')
+
+
+def construction_catalogue(page):
+    map_catalogue(page, 'construction')
+
+
+def check_term_catalogues(page, year, verified):
+    click(page, '[data-v3-tab="decisions"]')
+    assert not page.locator('[data-v3-action="v4-map-construction"],[data-v3-action="v4-map-district-measures"]').count()
+    click(page, '[data-anchor="measure.select"]')
+    visible(page, '[data-v4-catalogue-mode="programmes"]')
+    programmes = catalogue_ids(page)
+    if verified is not None:
+        check_measure_art(page, year, verified, programmes)
+    map_catalogue(page, 'district')
+    local = catalogue_ids(page)
+    if verified is not None:
+        check_measure_art(page, year, verified, local)
+    construction_catalogue(page)
+    projects = catalogue_ids(page)
+    if verified is not None:
+        check_measure_art(page, year, verified, projects)
+    assert len(set(programmes+local+projects)) == len(programmes) + len(local) + len(projects)
+    assert len(programmes) + len(local) + len(projects) == {2026: 22, 2031: 22, 2036: 23, 2041: 22}[year]
+    assert len(programmes) == {2026: 13, 2031: 15, 2036: 15, 2041: 14}[year]
+    assert local and projects
+    return {'programmes': len(programmes), 'local': len(local), 'construction': len(projects)}
+
+
+def first_year(page, profile, output, verified=None):
     assert_fit(page)
     for _ in range(3):
         click(page, '[data-v3-action="welcome-next"]')
+    shade = visible(page, '.v3-coach-shade')
+    assert shade.evaluate('layer => getComputedStyle(layer).pointerEvents') == 'none'
+    assert shade.locator('[data-v3-coach-holes] rect').count() >= 2
+    click(page, '[data-v3-tab="map"]')
+    shade.wait_for(state='detached')
+    click(page, '[data-v3-tab="decisions"]')
+    shade.wait_for()
     choose_event(page)
     click(page, '[data-anchor="measure.select"]')
-    assert page.locator('.v4-catalog [data-v3-measure]').count() == 22
+    click(page, '[data-v3-measure="train-staff"]')
+    cost = page.locator('.v3-line').filter(has_text='945')
+    assert cost.count() == 1 and cost.locator('strong').inner_text().startswith('945')
+    click(page, '.v3-coach [data-v3-action="tutorial-next"]')
+    click(page, '.v4-map-viewport [data-v3-district="north"]')
+    assert load_record(page,profile)['ui']['tutorialStep'] == 5
+    assert page.locator('.v4-map-inspector h2').is_visible()
+    screenshot(page, output, 'programme-district-practice')
+    click(page, '[data-v3-action="project-back"]')
+    assert page.locator('#governor-v3').get_attribute('data-v3-tab') == 'decisions'
+    assert page.locator('[data-v3-action="v4-add"]').is_visible()
+    check_term_catalogues(page, 2026, verified)
+    construction_catalogue(page)
+    click(page, '[data-v3-measure="school-campus"]')
+    page.evaluate('history.back()')
+    visible(page, '[data-v3-action="v4-map-construction"]').wait_for()
+    assert page.locator('#governor-v3').get_attribute('data-v3-tab') == 'map'
+    assert not page.locator('[data-v3-action="sites"]').count()
+    page.evaluate('history.forward()')
+    visible(page, '[data-v4-catalogue-mode="construction"]').wait_for()
     click(page, '[data-v3-measure="school-campus"]')
     click(page, '[data-v3-action="sites"]')
     district_map = page.locator('[data-v4-map-key="district:suburb"]')
@@ -64,13 +148,25 @@ def first_year(page, profile, output):
     screenshot(page, output, 'site-choice')
     click(page, '[data-v3-action="accept-site"]')
     assert load_record(page, profile)['state']['draft']['measures'][0]['siteId'] == 'bridge'
-    click(page, '[data-v3-tab="decisions"]')
-    click(page, '[data-anchor="measure.select"]')
+    map_catalogue(page, 'district')
     click(page, '[data-v3-measure="school-bus"]')
     click(page, '[data-v3-action="v4-add"]')
     assert len(load_record(page, profile)['state']['draft']['measures']) == 2
+    assert page.locator('[data-v4-map-plan] [data-v3-measure="school-bus"]').count() == 1
     screenshot(page, output, 'year-plan')
+    click(page, '[data-v3-tab="decisions"]')
+    assert not page.locator('[data-v3-measure="school-campus"],[data-v3-measure="school-bus"]').count()
     click(page, '[data-v3-tab="budget"]')
+    health = page.locator('.v3-sector[data-v4-sector-id="health"]')
+    health_name = health.locator('summary span').inner_text()
+    health.locator('summary').click()
+    click(page, '[data-v3-action="v4-sector-programmes"][data-sector="health"]')
+    assert visible(page, '[name="programme-sector"]').input_value() == 'health'
+    assert page.locator('.v4-catalog [data-v4-sector="health"] h2').inner_text() == health_name
+    assert 'clinics' not in catalogue_ids(page)
+    screenshot(page, output, 'budget-health-programmes')
+    click(page, '.v3-back[data-v3-action="back"]')
+    assert page.locator('#governor-v3').get_attribute('data-v3-tab') == 'budget'
     slider = visible(page, '#v4-tax-rate')
     trial_cash = page.locator('#v4-tax-readout').inner_text()
     slider.press('ArrowRight')
@@ -97,6 +193,9 @@ def first_year(page, profile, output):
     assert '2030' in goals.inner_text()
     screenshot(page, output, 'first-term-targets')
     options = page.locator('[data-v3-action="tutorial-kpi"][data-v3-value="91"]')
+    exercise = visible(page, '[data-v3-school-practice]')
+    assert exercise.locator('[data-v3-kpi="school"] b').inner_text() == '91%'
+    assert exercise.locator('[data-v3-action="tutorial-kpi"]').count() == 3
     assert options.is_visible(), page.locator('[data-v3-school-question]').inner_text()
     options.click()
     plan_year(page)
@@ -119,12 +218,47 @@ def first_year(page, profile, output):
     return campus['id']
 
 
-def full_campaign(page, profile, output, campus, locale):
+def inspect_major_event(page, event, output, check_media):
+    identity, year = event['eventId'], event['year']
+    visible(page, '[data-v3-action="major-map"]')
+    if check_media:
+        art = page.locator('.v3-event-detail .v3-event-visual')
+        width = art.locator('picture img').evaluate('async image => { await image.decode(); return image.naturalWidth; }')
+        assert width >= 768, (identity, width)
+        page.emulate_media(reduced_motion='no-preference')
+        try:
+            clip = visible(page, '.v3-event-detail .v4-event-gif.is-ready')
+            assert clip.evaluate('image => image.naturalWidth') >= 500
+            first = art.screenshot(path=output / f'{identity}-{year}-event.png', animations='allow')
+            page.wait_for_timeout(215)
+            later = art.screenshot(path=output / f'{identity}-{year}-event-later.png', animations='allow')
+            assert first != later, (identity, 'the visible event animation did not change')
+        finally:
+            page.emulate_media(reduced_motion='reduce')
+    click(page, '[data-v3-action="major-map"]')
+    marker = '.v4-map-viewport [data-v3-event="' + identity + '"]'
+    visible(page, marker)
+    if identity == 'LANDMARK-01':
+        assert page.locator('[data-v4-road="w-c"][data-v4-closed]').count() == 1
+    screenshot(page, output, f'{identity}-{year}-map')
+    click(page, marker)
+    visible(page, '[data-v3-action="major-map"]')
+
+
+def full_campaign(page, profile, output, campus, locale, verified=None):
     stages = []
     checkpoints = []
+    major_events = {}
     for year in range(2027, 2046):
-        choose_event(page)
+        opened = load_record(page, profile)['state']['event']
+        identity = opened.get('eventId', '')
+        if identity.startswith('LANDMARK-'):
+            major_events[identity] = year
+            choose_event(page, lambda: inspect_major_event(page, opened, output, verified is not None))
+        else:
+            choose_event(page)
         if year == 2029:
+            map_catalogue(page, 'district')
             assert page.locator('[data-v4-expiring] [data-v3-measure^="renew:"]').count() >= 1
         plan_year(page)
         record = load_record(page, profile)
@@ -147,14 +281,12 @@ def full_campaign(page, profile, output, campus, locale):
             set_locale(page, locale)
             assert str(year) in page.locator('.v4-goals').first.inner_text()
             click(page, '[data-v3-action="result-next"]')
-            click(page, '[data-anchor="measure.select"]')
-            counts = page.locator('.v4-catalog [data-v3-measure]').count()
-            # Finished services can add renewal and restoration actions outside chapter quotas.
-            assert counts >= {2030: 22, 2035: 23, 2040: 22}[year]
-            checkpoints.append({'year': year, 'visible_measures_including_maintenance': counts})
+            counts = check_term_catalogues(page, year + 1, verified)
+            checkpoints.append({'year': year, 'catalogue': counts})
         elif year < 2045:
             click(page, '[data-v3-action="result-next"]')
     assert stages == ['frame', 'frame', 'finishing', 'open'], stages
+    assert len(major_events) == 4 and len({(year - 2026) // 5 for year in major_events.values()}) == 4, major_events
     assert state['completed'] and len(state['history']) == 20 and state['year'] == 2045
     assert page.locator('[data-v3-action="advance"]').count() == 0
     assert page.locator('.v4-goals').first.is_visible()
@@ -179,7 +311,7 @@ def full_campaign(page, profile, output, campus, locale):
     assert load_record(page, profile)['state']['attemptId'] != first_attempt
     choose_event(page)
     assert load_record(page, profile)['state']['draft']['eventChoice'] == 'base'
-    return {'years': 20, 'checkpoints': checkpoints, 'construction': stages, 'score': score['points'],
+    return {'years': 20, 'checkpoints': checkpoints, 'construction': stages, 'score': score['points'], 'major_events': major_events,
             'scores': score['paths'], 'journal_score': journal_score, 'replay_first_decision': True}
 
 
@@ -189,6 +321,7 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--full', action='store_true')
     parser.add_argument('--first-year', action='store_true')
+    parser.add_argument('--media', action='store_true', help='Decode all selectable project illustrations along the campaign')
     parser.add_argument('--locale', choices=['ru', 'en', 'zh'], default='ru')
     args = parser.parse_args()
     output = args.output
@@ -208,8 +341,12 @@ def main():
             page.locator(READY).wait_for(state='attached', timeout=WAIT)
             click(page, '[data-v3-action="start"]')
         set_locale(page, args.locale)
-        campus = first_year(page, profile, output)
-        report = full_campaign(page, profile, output, campus, args.locale) if args.full else {'years': 1}
+        verified = {} if args.media else None
+        campus = first_year(page, profile, output, verified)
+        report = full_campaign(page, profile, output, campus, args.locale, verified) if args.full else {'years': 1}
+        if verified is not None:
+            assert len(verified) == (89 if args.full else 22), len(verified)
+            report['decoded_decisions'] = verified
         assert not suite.current.get('page_errors'), suite.current
         report.update(status='pass', browser=browser.version, engine=args.engine, seconds=round(time.monotonic()-started, 2),
                       locale=args.locale, profile='synthetic local student' if profile else 'guest')

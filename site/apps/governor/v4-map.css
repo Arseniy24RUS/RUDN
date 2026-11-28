@@ -71,14 +71,25 @@
 #governor-v3 :is(.v4-map-road-ambient,.v4-map-road-local,.v4-map-road-access):not(.is-closed) .v4-map-road-edge,
 #governor-v3 :is(.v4-map-road-ambient,.v4-map-road-local,.v4-map-road-access):not(.is-closed) .v4-map-road-centre { opacity: 0; }
 
-#governor-v3 .v4-map-car { visibility: hidden; }
+#governor-v3 .v4-map-car { visibility: hidden; --vehicle-top: #eaba61; --vehicle-side: #a26432; --vehicle-end: #794b31; }
 #governor-v3 .v4-map-animated .v4-map-car { visibility: visible; }
-#governor-v3 .v4-map-car-shadow { fill: #20303e; opacity: .78; }
-#governor-v3 .v4-map-car-body { fill: #e1b763; stroke: #324e5a; stroke-width: 1.2; }
-#governor-v3 .v4-map-car-1 .v4-map-car-body { fill: #e8eeef; }
-#governor-v3 .v4-map-car-2 .v4-map-car-body { fill: #4a9db7; }
-#governor-v3 .v4-map-car-glass { fill: #387080; }
-#governor-v3 .v4-map-car-lights { fill: none; stroke: #ffffe1; stroke-width: 1.2; stroke-linecap: round; }
+#governor-v3 .v4-map-car-1 { --vehicle-top: #e7e5db; --vehicle-side: #979c96; --vehicle-end: #667c83; }
+#governor-v3 .v4-map-car-2 { --vehicle-top: #6aa6b8; --vehicle-side: #367689; --vehicle-end: #2c5267; }
+#governor-v3 .v4-map-vehicle-bus { --vehicle-top: #f9d16c; --vehicle-side: #d08724; --vehicle-end: #af6c28; }
+#governor-v3 .v4-map-vehicle-medical { --vehicle-top: #fffbeb; --vehicle-side: #bbb6a3; --vehicle-end: #948579; }
+#governor-v3 .v4-map-vehicle-freight { --vehicle-top: #75a3a4; --vehicle-side: #527b7a; --vehicle-end: #375e67; }
+#governor-v3 .v4-map-car-shadow { fill: #21333d; opacity: .46; }
+#governor-v3 .v4-map-car-wheel { fill: #27323a; }
+#governor-v3 .v4-map-car-roof { fill: var(--vehicle-top); }
+#governor-v3 .v4-map-car-side { fill: var(--vehicle-side); }
+#governor-v3 .v4-map-car-end { fill: var(--vehicle-end); }
+#governor-v3 .v4-map-car-roof-cargo { fill: #b9b9a4; }
+#governor-v3 .v4-map-car-side-cargo { fill: #8c9185; }
+#governor-v3 .v4-map-car-end-cargo { fill: #6c7772; }
+#governor-v3 .v4-map-car-glass { fill: #355564; }
+#governor-v3 .v4-map-car-stripe { fill: #c65342; }
+#governor-v3 .v4-map-car-headlamp { fill: #fff8d3; }
+#governor-v3 .v4-map-car-tail-lamp { fill: #e27366; }
 
 #governor-v3 .v4-map-building {
   position: absolute;
@@ -91,11 +102,14 @@
   pointer-events: none;
 }
 
+#governor-v3 .v4-map-building.v4-map-groundwork { transform: translate(-50%,-58%); }
 #governor-v3 .v4-map-structure { display: block; width: 100%; height: 100%; object-fit: contain; }
 #governor-v3 .v4-map-building.is-closed { filter: saturate(.3); }
 #governor-v3 .v4-map-activity { position: absolute; overflow: hidden; }
 #governor-v3 .v4-map-activity img { display: none; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
 #governor-v3 .v4-map-activity img[src] { display: block; }
+#governor-v3 .v4-map-ambient { z-index: 1; pointer-events: none; }
+#governor-v3 .v4-map-ambient img { object-fit: fill; }
 
 #governor-v3 .v4-map-pin {
   position: absolute;
@@ -169,6 +183,10 @@
 #governor-v3 .v4-map-object.is-restoring .v4-map-pin-symbol { background: #925218; }
 #governor-v3 .v4-map-object.is-planned .v4-map-pin-symbol { background: #177293; }
 #governor-v3 .v4-map-object.is-closed .v4-map-pin-symbol { background: #536265; }
+#governor-v3 .v4-map-event .v4-map-pin-symbol { background: #a74623; border-color: #fff6d9; box-shadow: 0 0 0 3px #f6bd56, 0 3px 7px #4c2918a0; }
+#governor-v3 .v4-map-event .v4-map-site-letter { color: #fff; }
+#governor-v3 .v4-map-plan-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+#governor-v3 .v4-map-plan-actions > button { flex: 1 1 135px; }
 
 #governor-v3 .v4-map-dock {
   display: grid;
