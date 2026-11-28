@@ -25,10 +25,10 @@ function view(state, id = 'school-campus') {
   const project = quote.projects.find(row=>row.draftMeasureId===id);
   return N.model({state,measure,project,quote});
 }
-function ui(state, locale = 'ru') {
+function ui(state, locale = 'ru', id = 'school-campus') {
   const quote = () => R.quote(state);
-  return N.create({state:()=>state, measure:()=>R.availableMeasures(state).find(row=>row.id==='school-campus'),
-    project:()=>quote().projects.find(row=>row.draftMeasureId==='school-campus'),quote,
+  return N.create({state:()=>state, measure:()=>R.availableMeasures(state).find(row=>row.id===id),
+    project:()=>quote().projects.find(row=>row.draftMeasureId===id),quote,
     language:()=>locale,money:value=>value+' mln RUB',asset:path=>'/'+path});
 }
 
@@ -104,6 +104,24 @@ test('the second operating offer stays inside a short programme’s funded perio
   assert.equal(project.endYear,project.openingYear+1);
   assert.equal(actual.offers.residents[1].promise.dueYear,project.endYear);
   assert.equal(actual.offers.residents[1].title.en,'Running one year later');
+});
+
+test('renewing an operating service offers commitments starting in the renewal year',()=>{
+  const state=fixture();
+  const original=R.quote(state).projects.find(row=>row.draftMeasureId==='school-bus');
+  state.projects=[{...original,paidYears:[2026,2027,2028]}];
+  state.year=2029;
+  const id='renew:'+original.id;
+  state.draft.measures=[{measureId:id,siteId:null,promise:null}];
+  const renewal=view(state,id);
+  assert.equal(renewal.opening,2026);
+  assert.deepEqual(plain(renewal.offers.municipality.map(offer=>offer.promise.dueYear)),[2029,2030]);
+  assert.deepEqual(plain(renewal.offers.residents.map(offer=>offer.promise.dueYear)),[2029,2031]);
+  const html=ui(state,'en',id).render();
+  assert.match(html,/Confirm service by the end of 2029/);
+  assert.match(html,/Operating since <b>2026/);
+  state.draft.measures[0].promise={type:'open',dueYear:2026};
+  assert.equal(view(state,id).risk,'pastDue');
 });
 
 test('all three locales retain two offers, three participants, annual cost and an empty-package action',()=>{

@@ -215,6 +215,7 @@ def first_year(page, profile, output, verified=None):
     campus = next(row for row in record['state']['projects'] if row['measureId'] == 'school-campus')
     click(page, '[data-v3-object="' + campus['id'] + '"]')
     assert page.locator('.v4-map-inspector').is_visible()
+    assert '2026' in page.locator('.v4-map-inspector .v3-state').inner_text()
     return campus['id']
 
 
@@ -268,6 +269,19 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
             exact = 26 if year == 2029 else 110
             fee = page.locator('.v3-line').filter(has=page.get_by_text(label, exact=True))
             assert fee.locator('strong').inner_text().startswith(f'{exact} '), fee.inner_text()
+            if year == 2029:
+                click(page, '[data-v3-action="v4-add"]')
+                click(page, '[data-v4-map-plan] > summary')
+                click(page, '[data-v4-map-plan] [data-v3-action="negotiate"][data-measure-id^="renew:"]')
+                assert '2029' in page.locator('[data-v4-neg-offer="open-0"]').inner_text()
+                click(page, '[data-v4-neg-actor="residents"]')
+                assert '2029' in page.locator('[data-v4-neg-offer="operate-0"]').inner_text()
+                click(page, '[data-v4-neg-offer="operate-0"]')
+                page.locator('[data-v4-neg-offer="operate-0"][aria-pressed="true"]').wait_for()
+                assert load_record(page,profile)['state']['draft']['measures'][0]['promise']['dueYear'] == 2029
+                click(page, '[data-v4-neg-confirm]')
+                page.locator('.v4-neg-summary').wait_for()
+                click(page, '[data-v3-action="v4-remove"]')
         plan_year(page)
         record = load_record(page, profile)
         state = record['state']

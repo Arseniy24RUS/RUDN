@@ -1672,8 +1672,11 @@
         const service=project?.outputs&&Object.keys(project.outputs)[0];
         const servedAs={schoolStaff:'school',healthCapacity:'health',digitalAccess:'digital',floodProtection:'flood',jobs:'employment',childcareCapacity:'childcare'};
         const kpi=s.stats.districts[district]?.kpis[servedAs[service]||({north:'health',river:'flood',industrial:'employment',capital:'digital',suburb:'school'}[district])];
+        const status=project?phase(project):'open';
+        const observedYear=s.history.at(-1)?.year;
         const inspector='<section class="v4-map-inspector" data-anchor="map.inspectResult"><h2>'+esc(name)+'</h2><p class="v3-muted">'+
-          esc(districtCaption(district))+'</p><p class="v3-state '+esc(project?phase(project):'open')+'">'+esc(project?phaseLabel(phase(project)):t('running'))+'</p>'+
+          esc(districtCaption(district))+'</p><p class="v3-state '+esc(status)+'">'+esc(phaseLabel(status)+' · '+
+            (observedYear?t('factYear',{year:observedYear}):t('baseline')))+'</p>'+
           (project?label(t('plannedOpen'),project.openingYear)+label(t('budget.annual'),money(project.annualOpex))+
             (!project.siteId?label(t('territoryReach'),serviceDistricts.map(districtLabel).join(', ')):'')+
             label(t('period'),project.openingYear+'–'+project.endYear)+(kpi&&phase(project)==='open'?

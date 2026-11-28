@@ -42,6 +42,7 @@
     yearly:copy('В год после запуска','Per year once open','启用后的年支出'),
     allNow:copy('Все меры сейчас','All measures now','全部措施本期支出'),
     open:copy('Плановый запуск','Planned opening','计划启用'),
+    operatingSince:copy('Работает с','Operating since','开始运行年份'),
     reserve:copy('Резерв на конец года','Year-end reserve','年末储备'),
     close:copy('Принять условия','Accept terms','接受条件'),
     saved:copy('Условия сохраняются в плане года','Terms are saved in the annual plan','条件保存在年度计划中'),
@@ -52,6 +53,7 @@
     shortage:copy('Есть дефицит','Funding shortfall','资金不足'),
     funded:copy('Расходы учтены','Spending included','支出已计入'),
     mismatch:copy('Обещанный срок раньше запуска','Promised deadline precedes opening','承诺期限早于启用时间'),
+    pastDue:copy('Обещанный год уже прошёл','The promised year has already passed','承诺年份已经过去'),
     expired:copy('Обещанный год вне срока работы проекта','The promised year is outside the service period','承诺年份不在项目服务期内'),
     reserveRisk:copy('Плановый резерв ниже обещанного','Projected reserve is below the promise','计划储备低于承诺'),
     error:copy('Не удалось сохранить. Проверьте план и повторите.','Could not save. Check the plan and retry.','保存失败。请检查计划后重试。'),
@@ -70,14 +72,17 @@
     const opening = project?.openingYear;
     const finance = quote?.finance;
     const year = state?.year;
+    const firstService = Math.max(year,opening);
+    const renewal = project?.action === 'renew';
     const currentReserve = Number(finance?.reserveEnd ?? state?.finance?.reserve ?? 0);
     const otherReserve = entries.some(row => row !== current && row.promise?.type === 'reserve');
     const offers = {
       municipality: [0, 1].map(buffer => ({
         id:'open-' + buffer,
-        promise:{type:'open', dueYear:opening + buffer},
-        title:buffer ? copy('Запас в один год','Allow one extra year','保留一年余量') : copy('Срок по плану','The planned deadline','按计划期限'),
-        disabled:opening + buffer > LAST_YEAR ? 'later' : null
+        promise:{type:'open', dueYear:firstService + buffer},
+        title:buffer ? copy('Запас в один год','Allow one extra year','保留一年余量') :
+          renewal ? copy('Подтвердить в этом году','Confirm this year','在本年确认') : copy('Срок по плану','The planned deadline','按计划期限'),
+        disabled:firstService + buffer > LAST_YEAR ? 'later' : null
       })),
       finance: [0, 2].map(offset => ({
         id:'reserve-' + offset,
@@ -85,22 +90,24 @@
         title:offset ? copy('Резерв через два года','Reserve in two years','两年后的储备') : copy('Резерв в этом году','Reserve this year','本年的储备'),
         disabled:otherReserve ? 'otherReserve' : currentReserve <= 0 ? 'noReserve' : year + offset > LAST_YEAR ? 'later' : null
       })),
-      residents: [0, Math.max(1,Math.min(2,(project?.endYear ?? opening + 2)-opening))].map(offset => ({
+      residents: [0, Math.max(1,Math.min(2,(project?.endYear ?? firstService + 2)-firstService))].map(offset => ({
         id:'operate-' + offset,
-        promise:{type:'operate', dueYear:opening + offset},
+        promise:{type:'operate', dueYear:firstService + offset},
         title:offset === 1 ? copy('Работа через год','Running one year later','一年后仍在运行') :
-          offset ? copy('Работа через два года','Running two years later','两年后仍在运行') : copy('Работа в год запуска','Running in the opening year','启用年正常运行'),
-        disabled:opening + offset > LAST_YEAR ? 'later' : null
+          offset ? copy('Работа через два года','Running two years later','两年后仍在运行') :
+          renewal ? copy('Работа в этом году','Running this year','本年正常运行') : copy('Работа в год запуска','Running in the opening year','启用年正常运行'),
+        disabled:firstService + offset > LAST_YEAR ? 'later' : firstService + offset > project?.endYear ? 'expired' : null
       }))
     };
-    const risk = promise?.type === 'open' && promise.dueYear < opening ? 'mismatch' :
+    const risk = promise?.dueYear < year ? 'pastDue' :
+      promise?.type === 'open' && promise.dueYear < opening ? 'mismatch' :
       promise?.type === 'operate' && (promise.dueYear < opening || promise.dueYear > project?.endYear) ? 'expired' :
       promise?.type === 'reserve' && promise.dueYear === year && promise.amount > finance?.reserveEnd ? 'reserveRisk' : null;
     const costFor = row => (finance?.operations || []).filter(operation => operation.direction === 'out' &&
       operation.id?.startsWith(row.id + ':')).reduce((total, operation) => total + operation.amount, 0);
     const costs = (quote?.projects || []).map(row => ({project:row, now:costFor(row)}));
     const currentCost = costs.find(row => row.project.draftMeasureId === measure?.id)?.now ?? project?.costNow ?? 0;
-    return {entries, promise, opening, finance, offers, risk, costs, currentCost,
+    return {entries, promise, opening, renewal, finance, offers, risk, costs, currentCost,
       totalNow:costs.reduce((total, row) => total + row.now, 0),
       ready:Boolean(project && current && Number.isInteger(opening))};
   }
@@ -125,20 +132,27 @@
         `预测${row.year}年资金缺口为${money(row.amount)}。`)) :
         local(copy(`Риск в ${row.year}`,`Risk in ${row.year}`,`${row.year}年有风险`));
     }
-    function promiseText(promise) {
+    function promiseText(promise, project) {
       const due = promise.dueYear;
-      if (promise.type === 'open') return local(copy(`Открыть к концу ${due}`,`Open by the end of ${due}`,`${due}年底前启用`));
+      if (promise.type === 'open') return local(project?.action==='renew' ?
+        copy(`Подтвердить работу к концу ${due}`,`Confirm service by the end of ${due}`,`${due}年底前确认服务已运行`) :
+        copy(`Открыть к концу ${due}`,`Open by the end of ${due}`,`${due}年底前启用`));
       if (promise.type === 'operate') return local(copy(`Обеспечить работу в ${due}`,`Keep running in ${due}`,`确保${due}年运行`));
       return local(copy(`Резерв ≥ ${money(promise.amount)} в конце ${due}`,`Reserve ≥ ${money(promise.amount)} at the end of ${due}`,`${due}年底储备 ≥ ${money(promise.amount)}`));
     }
     function stance(actor, view) {
       if (actor.id === 'municipality') return view.risk === 'mismatch' ? tr('mismatch') :
-        local(copy(`Запуск ${view.opening}`,`Opens ${view.opening}`,`${view.opening}年启用`));
+        view.renewal ? local(copy('Продление','Renewal','延续服务')) :
+          local(copy(`Запуск ${view.opening}`,`Opens ${view.opening}`,`${view.opening}年启用`));
       if (actor.id === 'finance') return shortfall(view) || tr('ready');
       return view.finance?.firstShortfall && view.finance.firstShortfall.year <= api.project().endYear ? tr('shortage') : tr('funded');
     }
     function line(actor, view) {
       const project = api.project();
+      if (actor.id === 'municipality' && view.renewal) return local(copy(
+        'Услуга уже действует. К какому году подтвердим работу?',
+        'The service is running. By when shall we confirm it is operating?',
+        '服务正在运行。最迟何时确认服务继续运行？'));
       if (actor.id === 'municipality') return local(project.siteId ? copy(
         `Объект откроется в ${view.opening} году. Какой срок назвать жителям?`,
         `The facility opens in ${view.opening}. What deadline shall we give residents?`,
@@ -156,10 +170,11 @@
     }
     function pledge(row, project) {
       const actor = party(row.promise.type);
+      const commitment=promiseText(row.promise,project||(row.measureId===measureId?api.project():null));
       return '<div class="v4-neg-pledge"><span><strong>' + esc(local(actor.title)) + '</strong> · ' +
-        esc(promiseText(row.promise)) + (project ? '<small>' + esc(local(project.labels)) + '</small>' : '') +
+        esc(commitment) + (project ? '<small>' + esc(local(project.labels)) + '</small>' : '') +
         '</span><button type="button" data-v4-neg-remove="' + esc(row.measureId) + '" aria-label="' +
-        esc(tr('remove') + ' · ' + local(actor.title) + ' · ' + promiseText(row.promise)) + '"' + (busy ? ' disabled' : '') + '>×</button></div>';
+        esc(tr('remove') + ' · ' + local(actor.title) + ' · ' + commitment) + '"' + (busy ? ' disabled' : '') + '>×</button></div>';
     }
     function summarize(selectedId) {
       const view = data();
@@ -168,7 +183,7 @@
       return '<ul class="v4-neg-summary">' + promises.map(row => {
         const actor = party(row.promise.type);
         const project = api.quote()?.projects?.find(item=>item.draftMeasureId===row.measureId);
-        return '<li><strong>' + esc(local(actor?.title || row.promise.type)) + '</strong> · ' + esc(promiseText(row.promise)) +
+        return '<li><strong>' + esc(local(actor?.title || row.promise.type)) + '</strong> · ' + esc(promiseText(row.promise,project)) +
           (project ? '<small>' + esc(local(project.labels)) + '</small>' : '') + '</li>';
       }).join('') + '</ul>';
     }
@@ -189,12 +204,12 @@
           tr('noExtraCost') + (!picked && view.promise ? ' · ' + tr('replace') : '');
         return '<button type="button" class="v4-neg-offer" data-v4-neg-offer="' + offer.id + '" aria-pressed="' + picked + '"' +
           (offer.disabled || busy ? ' disabled' : '') + '><span class="v4-neg-choice" aria-hidden="true">' + (picked ? '✓' : '+') +
-          '</span><span><strong>' + esc(local(offer.title)) + '</strong><span>' + esc(promiseText(offer.promise)) + '</span><small>' +
+          '</span><span><strong>' + esc(local(offer.title)) + '</strong><span>' + esc(promiseText(offer.promise,api.project())) + '</span><small>' +
           esc(terms) + '</small></span></button>';
       }).join('');
       const fees = '<span>' + esc(tr('now')) + ' <b>' + esc(money(view.currentCost)) + '</b></span><span>' +
         esc(tr('yearly')) + ' <b>' + esc(money(api.project().annualOpex)) + '</b></span><span>' +
-        esc(tr('open')) + ' <b>' + view.opening + '</b></span>';
+        esc(tr(view.renewal?'operatingSince':'open')) + ' <b>' + view.opening + '</b></span>';
       const fullPledges = others.map(row => pledge(row, api.quote().projects.find(project => project.draftMeasureId === row.measureId))).join('');
       return '<section class="v4-negotiation" data-v4-negotiation aria-busy="' + busy + '">' +
         '<header class="v4-neg-heading"><div><p>' + esc(tr('title')) + '</p><h1 id="v3-heading" tabindex="-1">' + esc(local(measure.labels)) +
@@ -210,7 +225,7 @@
         '</ul>' + (shortfall(view,true) ? '<p class="v4-neg-warning">' + esc(shortfall(view,true)) + '</p>' : '') +
         (view.costs.length > 1 ? '<ul class="v4-neg-costs">' + view.costs.map(row=>'<li><strong>' + esc(local(row.project.labels)) +
           '</strong><span>' + esc(tr('now')) + ': ' + esc(money(row.now)) + ' · ' + esc(tr('yearly')) + ': ' +
-          esc(money(row.project.annualOpex)) + ' · ' + esc(tr('open')) + ': ' + row.project.openingYear + '</span></li>').join('') + '</ul>' : '') +
+          esc(money(row.project.annualOpex)) + ' · ' + esc(tr(row.project.action==='renew'?'operatingSince':'open')) + ': ' + row.project.openingYear + '</span></li>').join('') + '</ul>' : '') +
         (view.promise ? '<fieldset class="v4-neg-adjust"><legend>' + esc(tr('revise')) + '</legend><label>' + esc(tr('due')) +
           '<input type="number" inputmode="numeric" data-v4-neg-year min="' + api.state().year + '" max="2045" value="' + view.promise.dueYear + '"' + disabled + '></label>' +
           (view.promise.type === 'reserve' ? '<label>' + esc(tr('amount')) + '<input type="number" inputmode="numeric" data-v4-neg-amount min="1" step="1" value="' + view.promise.amount + '"' + disabled + '></label>' : '') + '</fieldset>' : '') +
