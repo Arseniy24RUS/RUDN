@@ -6,14 +6,14 @@ from test_governor_browser import LocalFixtureServer, STUDENT_A
 from test_governor_v3_browser import READY, WAIT, click, visible
 
 
-def configure_context(browser, server, role):
-    context = browser.new_context(viewport={'width': 390, 'height': 844}, has_touch=True,
-                                  locale='ru-RU', service_workers='block')
+def configure_context(browser, server, role, width=390, height=844, locale='ru'):
+    context = browser.new_context(viewport={'width': width, 'height': height}, has_touch=width < 800,
+                                  locale=locale, service_workers='block')
     profile = STUDENT_A if role == 'student' else None
     context.add_init_script(
         "localStorage.setItem('qa.native.local-only'," + json.dumps(json.dumps({'role': role})) + ");"
         "localStorage.setItem('rudn.profile.v1'," + json.dumps(json.dumps(profile)) + ");"
-        "localStorage.setItem('rudn.locale','ru');"
+        "localStorage.setItem('rudn.locale'," + json.dumps(locale) + ");"
     )
     posted = []
     endpoint = server.origin + '/RUDN/qa/advisor'
@@ -70,6 +70,41 @@ def ask(page, question):
     click(page, '#v3-chat button[type=submit]')
 
 
+def check_messenger(page, identity_question, score_question, player_title, score_word):
+    field = visible(page, '#v3-question')
+    log = page.get_by_role('log')
+    main = page.locator('#v3-main')
+    assert field.get_attribute('enterkeyhint') == 'send'
+
+    field.fill(identity_question)
+    field.press('Shift+Enter')
+    assert field.input_value() == identity_question + '\n'
+    field.dispatch_event('keydown', {'key': 'Enter', 'isComposing': True, 'bubbles': True})
+    assert field.input_value() == identity_question + '\n'
+    assert not log.locator('.v3-chat-question').count()
+    field.press('Enter')
+    log.locator('.v3-chat-answer p').get_by_text(player_title, exact=False).wait_for()
+    assert field.input_value() == ''
+
+    # Create enough history to make the message pane scroll even on desktop.
+    delimiters = ('\n', ' \n', '  \n')
+    field.fill(score_question)
+    field.press('Enter')
+    log.locator('.v3-chat-answer p').get_by_text(score_word, exact=False).wait_for()
+    replies = log.locator('div.v3-chat-answer > p')
+    for answer_index, delimiter in enumerate(delimiters, start=2):
+        field.fill(score_question + delimiter + ' ' + score_question)
+        field.press('Enter')
+        replies.nth(answer_index).wait_for(state='visible')
+        assert field.input_value() == ''
+    assert field.evaluate('field => document.activeElement === field')
+    composer = page.locator('#v3-chat')
+    assert abs(composer.bounding_box()['y'] + composer.bounding_box()['height']
+               - main.bounding_box()['y'] - main.bounding_box()['height']) <= 16
+    assert log.evaluate('element => element.scrollHeight > element.clientHeight')
+    assert main.evaluate('element => element.scrollTop === 0')
+
+
 def main():
     question = 'Как понять, удаётся ли сократить разницу между районами?'
     reply = 'Сравните доступность услуг до и после решения.'
@@ -98,14 +133,26 @@ def main():
                 assert posted[-1]['question'] == question and posted[-1]['gameContext']
                 navigation = next(item for item in posted[-1]['gameContext'] if item.startswith('Current navigation:'))
                 assert 'Выбрать стройку' in navigation and 'Местные меры' in navigation and 'Budget sector' in navigation
+                annual_draw = next(item for item in posted[-1]['gameContext'] if item.startswith('Annual draw:'))
+                assert '20%' in annual_draw and 'no specific event or year is guaranteed' in annual_draw
                 ask(page, 'Что сравнить первым?')
                 page.get_by_text(reply, exact=True).last.wait_for(timeout=WAIT)
                 page.wait_for_function("document.querySelectorAll('.v3-chat-answer > p').length === 2")
                 assert posted[-1]['history'] == [{'question': question, 'answer': reply}]
                 assert visible(page, '[data-v3-advice-retry="0"]').count() == 0
             context.close()
+        desktop, _ = configure_context(browser, server, 'guest', 1366, 768, 'zh')
+        check_messenger(open_advisor(desktop, server), '你活着吗？', '我的得分怎么算？', '忠实顾问', '五年目标')
+        desktop.close()
         browser.close()
-    print('Governor advisor browser round trip passed for student, instructor, and guest.')
+        webkit = playwright.webkit.launch()
+        mobile, posted = configure_context(webkit, server, 'guest', 320, 568, 'ru')
+        check_messenger(open_advisor(mobile, server), 'Ты живой?', 'Как получить оценку за игру?',
+                        'ваш преданный советник', 'цели пятилетки')
+        assert not posted
+        mobile.close()
+        webkit.close()
+    print('Governor adviser round trip and messenger passed for student, instructor and guest in Chromium and WebKit.')
 
 
 if __name__ == '__main__':

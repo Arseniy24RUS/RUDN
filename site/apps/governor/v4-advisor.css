@@ -1,0 +1,155 @@
+.governor-v3 .v3-chat-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  scrollbar-gutter: auto;
+}
+
+.v3-chat-content > .v3-alert { margin: 8px; }
+
+.v3-chat-panel {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  background: #e9f4fc;
+}
+
+.v3-advisor-person {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 14px;
+  background: white;
+  border-bottom: 1px solid var(--v3-line);
+}
+
+.v3-advisor-person > img {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  background: #e2f3fc;
+}
+
+.governor-v3 .v3-advisor-person h1 { margin: 0 0 2px; font-size: 1.12em; }
+.v3-advisor-person span { display: block; color: #4b6e85; font-size: .8em; }
+
+.v3-conversation {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 9px;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 13px;
+  background-image: radial-gradient(#547c9c22 .7px, transparent .7px);
+  background-size: 18px 18px;
+}
+
+.v3-conversation:focus-visible {
+  outline: 2px solid #285783;
+  outline-offset: -3px;
+}
+
+.governor-v3 :is(.v3-chat-question, .v3-chat-answer, .v3-chat-typing, .v3-chat-notice) {
+  flex: 0 0 auto;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.v3-chat-question, .v3-chat-answer {
+  max-width: min(92%, 61ch);
+  padding: 8px 12px;
+  border: 1px solid #c6dfef;
+  border-radius: 15px 15px 15px 4px;
+  background: white;
+}
+
+.v3-chat-question {
+  align-self: end;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 4px;
+  background: #ddf2fd;
+}
+
+.v3-chat-question, .governor-v3 .v3-chat-answer p { white-space: pre-wrap; }
+.governor-v3 .v3-chat-answer p { margin: 0; }
+.v3-chat-answer .v3-button { margin: 7px 0 0; }
+
+.v3-chat-typing, .v3-chat-notice {
+  padding: 7px 10px;
+  border-radius: 10px;
+  background: #f5faff;
+  color: #3c607a;
+  font-size: .85em;
+}
+
+.v3-chat-notice { align-self: center; text-align: center; }
+.v3-chat-typing { display: flex; align-items: center; gap: 7px; }
+.v3-chat-typing span { display: inline-flex; gap: 3px; }
+.v3-chat-typing i { width: 4px; height: 4px; border-radius: 50%; background: #58768d; }
+.v3-chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; }
+.v3-chat-suggestions .v3-button { padding: 6px 10px; font-size: .87em; }
+
+.v3-composer {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  padding: 8px max(10px, env(safe-area-inset-right)) 8px max(10px, env(safe-area-inset-left));
+  background: white;
+  border-top: 1px solid var(--v3-line);
+}
+
+.governor-v3 .v3-composer textarea {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  max-height: min(8rem, calc(var(--v3-height, 100dvh) / 4));
+  resize: none;
+  border: 1px solid #b7d1e4;
+  border-radius: 22px;
+  background: #f2f8fc;
+  padding: 9px 14px;
+  font-size: max(16px, 1em);
+  line-height: 1.5;
+}
+
+.v3-composer textarea::placeholder { color: #527189; opacity: 1; }
+.v3-composer button {
+  display: grid;
+  flex: 0 0 44px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: #0676a9;
+  color: white;
+}
+
+.v3-composer button:not(:disabled):hover { background: #055d85; }
+.v3-keyboard-open .v3-navigation { display: none; }
+.v3-keyboard-open .v3-advisor-person { padding-block: 5px; }
+.v3-keyboard-open .v3-advisor-person > img { width: 32px; height: 32px; }
+.v3-keyboard-open .v3-composer { padding-block: 6px; }
+
+@media (min-width: 800px) {
+  .governor-v3 .v3-chat-content { padding: 14px max(22px, calc((100% - 760px) / 2)); }
+  .v3-chat-panel { border: 1px solid var(--v3-line); border-radius: 15px; box-shadow: var(--v3-shadow); }
+  .v3-advisor-person, .v3-composer { padding-inline: 16px; }
+  .v3-conversation { padding: 16px; }
+}
+
+@media (max-height: 460px) {
+  .governor-v3 .v3-chat-content { padding-block: 0; }
+  .v3-conversation { padding-block: 8px; }
+  .v3-advisor-person { padding-block: 5px; }
+}

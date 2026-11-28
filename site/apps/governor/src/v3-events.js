@@ -10,6 +10,7 @@
   const lastYear = 2045;
   const range = 2 ** 32;
   const encoder = new TextEncoder();
+  const majorDrawSlots = ['major','ordinary-1','ordinary-2','ordinary-3','ordinary-4'];
 
   function freeze(value) {
     if (value && typeof value === 'object') {
@@ -38,6 +39,7 @@
   const hex = bytes => Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
   const validYear = year => Number.isInteger(year) && year >= firstYear && year <= lastYear;
   const validHash = value => typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
+  const validPolicy = policy => policy === undefined || policy === major?.POLICY || policy === major?.LEGACY_POLICY;
   const nonnegative = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
 
   function createDrawKey() {
@@ -50,8 +52,12 @@
     invariant(entry && record.attemptId === attemptId && validYear(record.year), 'invalid-event-record');
     invariant(record.contentVersion === contentVersion, 'event-bank-unavailable');
     invariant(record.algorithmVersion === algorithmVersion, 'event-algorithm-unavailable');
-    invariant(record.eventPolicy === undefined || record.eventPolicy === major?.POLICY, 'event-policy-unavailable');
-    invariant(!major?.has(entry.id) || record.eventPolicy === major.POLICY, 'invalid-major-event-record');
+    invariant(validPolicy(record.eventPolicy), 'event-policy-unavailable');
+    if (major?.has(entry.id)) {
+      invariant(record.eventPolicy === major.POLICY ||
+        record.eventPolicy === major.LEGACY_POLICY && major.legacyCards.some(card => card.id === entry.id),
+        'invalid-major-event-record');
+    }
     invariant(validHash(record.candidateHash) && validRevision(record.snapshotRevision), 'invalid-event-receipt');
     const circumstance = record.circumstance;
     const authored = entry.circumstance;
@@ -164,13 +170,18 @@
     return {eventId: ids[index], candidateHash};
   }
 
-  async function isMajorYear(year, drawKey) {
+  async function isScheduledMajorYear(year, drawKey) {
     const termStart = year - (year-firstYear)%5;
     const startOffset = termStart === firstYear ? 2 : 1;
     if (year < termStart+startOffset) return false;
     const years = Array.from({length:5-startOffset}, (_,i) => String(termStart+startOffset+i));
     const selected = await draw(years, drawKey, termStart, 'governor-major-year-v1');
     return selected.eventId === String(year);
+  }
+
+  async function rolledMajor(year, drawKey) {
+    const chance = await draw(majorDrawSlots, drawKey, year, 'governor-major-chance-v2');
+    return chance.eventId === 'major';
   }
 
   // Call inside the controller's attempt lock. This routine never persists or reveals a card.
@@ -183,16 +194,21 @@
     invariant(algorithm === algorithmVersion, 'event-algorithm-unavailable');
     const used = verifyLedger(ledger, attemptId);
     const policy = eventPolicy ?? ledger[0]?.eventPolicy;
-    invariant(policy === undefined || policy === major?.POLICY, 'event-policy-unavailable');
+    invariant(validPolicy(policy), 'event-policy-unavailable');
     invariant(ledger.length === 0 || ledger[0].eventPolicy === policy, 'event-policy-conflict');
     const saved = ledger.find(record => record.year === year);
     if (saved) return saved;
     invariant(!ledger.some(record => record.year > year), 'event-ledger-gap');
     invariant(validRevision(snapshot?.revision), 'opening-snapshot-unavailable');
-    // Archived attempts use their original catalogue and candidate hashes.
-    // Signature situations reserve one independently drawn year in each term.
-    const featured = policy && await isMajorYear(year,drawKey) ? candidates(snapshot.tags,used,major.cards) : [];
-    const ids = featured.length ? featured : candidates(snapshot.tags,used);
+    // The policy belongs to the attempt, including after a reload or a recovery from the cloud.
+    let ids = candidates(snapshot.tags,used);
+    if (policy && policy === major.POLICY) {
+      const featured = candidates(snapshot.tags,used,major.cards);
+      if (featured.length && (!ids.length || await rolledMajor(year,drawKey))) ids = featured;
+    } else if (policy && await isScheduledMajorYear(year,drawKey)) {
+      const featured = candidates(snapshot.tags,used,major.legacyCards);
+      if (featured.length) ids = featured;
+    }
     invariant(ids.length > 0, 'no-applicable-events');
     const selected = await draw(ids, drawKey, year);
     const circumstance = byId.get(selected.eventId).circumstance;

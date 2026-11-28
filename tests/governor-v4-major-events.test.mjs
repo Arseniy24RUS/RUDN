@@ -30,7 +30,8 @@ function setup(crypto = webcrypto) {
 const game = setup();
 const {V3Events:events,V4MajorEvents:major,V3Rules:rules} = game;
 const snapshot = {revision:0,tags:events.baselineTags};
-const ids = ['LANDMARK-01','LANDMARK-02','LANDMARK-03','LANDMARK-04'];
+const legacyIds = ['LANDMARK-01','LANDMARK-02','LANDMARK-03','LANDMARK-04'];
+const ids = [...legacyIds,'LANDMARK-05','LANDMARK-06','LANDMARK-07','LANDMARK-08','LANDMARK-09'];
 
 async function drawCampaign(drawKey, eventPolicy, eventSnapshot = snapshot) {
   const ledger = [];
@@ -43,26 +44,71 @@ async function drawCampaign(drawKey, eventPolicy, eventSnapshot = snapshot) {
   return ledger;
 }
 
-test('new campaigns draw exactly one distinct signature situation per five-year term with varied dates and order',async()=>{
+test('the archived schedule still draws exactly one distinct signature situation per five-year term',async()=>{
   assert.equal(events.bank.cards.length,100);
   assert.equal(events.candidates(events.baselineTags).length,100);
+  assert.deepEqual(Array.from(major.legacyCards,row=>row.id),legacyIds);
+  assert.ok(Object.isFrozen(major.legacyCards));
   const orderings = new Set(),dates = new Set();
   for (let i=0;i<24;i++) {
-    const ledger = await drawCampaign(key(i),major.POLICY);
+    const ledger = await drawCampaign(key(i),major.LEGACY_POLICY);
     const landmarks = ledger.filter(row=>major.has(row.eventId));
     assert.equal(landmarks.length,4);
-    assert.deepEqual(landmarks.map(row=>row.eventId).sort(),ids);
+    assert.deepEqual(landmarks.map(row=>row.eventId).sort(),legacyIds);
     assert.ok(landmarks[0].year>=2028 && landmarks[0].year<=2030);
     landmarks.slice(1).forEach((row,i) => {
       const termStart = firstYear+(i+1)*5;
       assert.ok(row.year>termStart && row.year<=termStart+4);
     });
-    assert.ok(ledger.every(row=>row.eventPolicy===major.POLICY));
+    assert.ok(ledger.every(row=>row.eventPolicy===major.LEGACY_POLICY));
     assert.equal(new Set(ledger.map(row=>row.eventId)).size,20);
     orderings.add(landmarks.map(row=>row.eventId).join(','));
     dates.add(landmarks.map(row=>row.year).join(','));
   }
   assert.ok(orderings.size>6 && dates.size>6);
+});
+
+test('new terms can draw any of the nine rare situations in the opening year, several in one term, or none',async()=>{
+  assert.deepEqual(Array.from(events.candidates(events.baselineTags,new Set(),major.cards)),ids);
+  const frequencies = Array(20).fill(0);
+  const campaignCounts = new Set(), firstYearEvents = new Set();
+  const landmarksIn = ledger => ledger.filter(row=>major.has(row.eventId));
+  for (let i=0;i<128;i++) {
+    const ledger = await drawCampaign(key(i),major.POLICY);
+    const landmarks = landmarksIn(ledger);
+    campaignCounts.add(landmarks.length);
+    for (const {year} of landmarks) frequencies[year-firstYear]++;
+    if (major.has(ledger[0].eventId)) firstYearEvents.add(ledger[0].eventId);
+    assert.equal(new Set(ledger.map(row=>row.eventId)).size,20);
+    assert.ok(ledger.every(row=>row.eventPolicy===major.POLICY));
+  }
+  assert.deepEqual([...campaignCounts].sort(),[0,1,2,3,4,5,6,7,8,9]);
+  assert.deepEqual([...firstYearEvents].sort(),ids);
+  assert.ok(frequencies.every(count=>count>0));
+  assert.equal(frequencies[0],24,'The fixed sample includes 24 rare opening rolls in 128 attempts');
+  const clustered = landmarksIn(await drawCampaign(key(70),major.POLICY));
+  assert.deepEqual(clustered.map(row=>[row.year,row.eventId]),[
+    [2028,'LANDMARK-05'],[2030,'LANDMARK-01'],[2031,'LANDMARK-06'],[2033,'LANDMARK-04'],[2034,'LANDMARK-07'],
+    [2041,'LANDMARK-02'],[2042,'LANDMARK-09'],[2043,'LANDMARK-08'],[2045,'LANDMARK-03']
+  ]);
+  assert.deepEqual(landmarksIn(await drawCampaign(key(56),major.POLICY)),[]);
+});
+
+test('the random policy uses the eligible pool when the other one is empty',async()=>{
+  const restricted = {revision:0,tags:{capital:['publicBuilding']}};
+  const drawKey = key(0); // Ordinary rolls in both 2026 and 2027.
+  const first = await events.open({attemptId,year:firstYear,drawKey,snapshot:restricted,eventPolicy:major.POLICY});
+  assert.equal(first.eventId,'BUDGET-02');
+  const second = await events.open({attemptId,year:firstYear+1,drawKey,snapshot:restricted,ledger:[first]});
+  assert.equal(second.eventId,'LANDMARK-03');
+  assert.ok(await events.verify(second,{snapshot:restricted,drawKey,ledger:[first,second]}));
+  await assert.rejects(events.open({attemptId,year:firstYear+2,drawKey,snapshot:restricted,ledger:[first,second]}),/no-applicable-events/);
+  const scheduled = await events.open({attemptId,year:firstYear,drawKey,snapshot:restricted,eventPolicy:major.LEGACY_POLICY});
+  await assert.rejects(events.open({attemptId,year:firstYear+1,drawKey,snapshot:restricted,ledger:[scheduled]}),/no-applicable-events/);
+  // The first-year rare roll for this seed must use an ordinary card when no large situation applies.
+  const ordinaryOnly = {revision:0,tags:{suburb:['school']}};
+  const fallback = await events.open({attemptId,year:firstYear,drawKey:key(3),snapshot:ordinaryOnly,eventPolicy:major.POLICY});
+  assert.ok(events.candidates(ordinaryOnly.tags).includes(fallback.eventId));
 });
 
 test('older saves retain the original draw, and policy receipts prevent accidental mixing',async()=>{
@@ -71,18 +117,35 @@ test('older saves retain the original draw, and policy receipts prevent accident
   assert.equal(original.candidateHash,'466345b8eaa23a7933f9d84a5e1f17052cf53b3a8cfef2a611ce954a56e7d722');
   assert.equal(Object.hasOwn(original,'eventPolicy'),false);
   assert.ok((await drawCampaign(key('legacy'),undefined)).every(row=>!major.has(row.eventId)));
-  const current = await drawCampaign(key(1),major.POLICY);
+  const current = await drawCampaign(key(3),major.POLICY);
+  const scheduled = await drawCampaign(key(3),major.LEGACY_POLICY);
+  assert.equal(scheduled[0].eventId,'HEALTH-04');
+  assert.equal(scheduled[0].candidateHash, original.candidateHash);
   const landmark = current.find(row=>major.has(row.eventId));
   assert.equal(await events.open({attemptId,year:landmark.year,ledger:current}),landmark);
+  assert.equal(await events.open({attemptId,year:scheduled[0].year,ledger:scheduled}),scheduled[0]);
   await assert.rejects(events.open({attemptId,year:firstYear+1,drawKey:key(1),snapshot,ledger:[original],
     eventPolicy:major.POLICY}),/event-policy-conflict/);
+  await assert.rejects(events.open({attemptId,year:firstYear+1,drawKey:key(3),snapshot,ledger:scheduled.slice(0,1),
+    eventPolicy:major.POLICY}),/event-policy-conflict/);
+  await assert.rejects(events.open({attemptId,year:firstYear+1,drawKey:key(3),snapshot,ledger:current.slice(0,1),
+    eventPolicy:major.LEGACY_POLICY}),/event-policy-conflict/);
+  await assert.rejects(events.open({attemptId,year:firstYear,drawKey:key(3),snapshot,eventPolicy:'unknown'}),/event-policy-unavailable/);
   assert.throws(()=>events.card({...landmark,eventPolicy:undefined}),/invalid-major-event-record/);
+  assert.throws(()=>events.card({...landmark,eventPolicy:'unknown'}),/event-policy-unavailable/);
+  const newLandmark = await events.open({attemptId,year:firstYear,drawKey:key(109),snapshot,eventPolicy:major.POLICY});
+  assert.equal(newLandmark.eventId,'LANDMARK-05');
+  assert.throws(()=>events.card({...newLandmark,eventPolicy:major.LEGACY_POLICY}),/invalid-major-event-record/);
+  await assert.rejects(events.verify({...newLandmark,eventPolicy:major.LEGACY_POLICY},{snapshot,drawKey:key(109),ledger:[]}),
+    /invalid-major-event-record/);
   const restricted = plain(snapshot);
   delete restricted.tags.river;
-  assert.ok((await drawCampaign(key(2),major.POLICY,restricted)).every(row=>row.eventId!=='LANDMARK-02'));
+  for (const policy of [major.POLICY,major.LEGACY_POLICY]) {
+    assert.ok((await drawCampaign(key(3),policy,restricted)).every(row=>row.eventId!=='LANDMARK-02'));
+  }
 });
 
-test('four genuine options sets are readable in Russian, English and Chinese',()=>{
+test('nine distinct options sets are readable in Russian, English and Chinese',()=>{
   for (const id of ids) {
     const translated = ['ru','en-GB','zh-CN'].map(locale=>events.eventCard(id,locale));
     assert.equal(new Set(translated.map(card=>card.title)).size,3,id);
@@ -104,8 +167,8 @@ function calculate(record, choice, context = {}) {
 }
 
 test('the ledger counts mandatory costs once, models actual coverage, and credits the dam grant only at settlement',async()=>{
-  const ledger = await drawCampaign(key(3),major.POLICY);
-  const [meteor,dam,visit,games] = ids.map(id=>ledger.find(row=>row.eventId===id));
+  const ledger = await drawCampaign(key(70),major.POLICY);
+  const [meteor,dam,visit,games] = legacyIds.map(id=>ledger.find(row=>row.eventId===id));
   for (const [record, a, b, base, coverage, authority] of [
     [meteor,1300,490,180,[950,420,140],'suburb'],
     [dam,2090,795,420,[1240,640,180],'river'],
@@ -130,13 +193,30 @@ test('the ledger counts mandatory costs once, models actual coverage, and credit
   assert.equal(calculate(dam,'a',{year:dam.year+1,settledSpend}).currentReceiptMln,0);
 });
 
-test('a late bid provides current-year benefits and exposes obligations to the succeeding administration',async()=>{
-  let bid;
-  for (let i=0;i<40 && !bid;i++) {
-    const ledger = await drawCampaign(key('late-'+i),major.POLICY);
-    if (ledger.at(-1).eventId==='LANDMARK-04') bid=ledger.at(-1);
+test('each new landmark supports the full, targeted and baseline responses in the opening year',async()=>{
+  for (const [seed,id,expenses] of [
+    [109,'LANDMARK-05',[840,235,0]],[31,'LANDMARK-06',[1420,440,0]],[30,'LANDMARK-07',[660,370,120]],
+    [7,'LANDMARK-08',[1160,605,210]],[104,'LANDMARK-09',[355,150,45]]
+  ]) {
+    const record = await events.open({attemptId,year:firstYear,drawKey:key(seed),snapshot,eventPolicy:major.POLICY});
+    assert.equal(record.eventId,id);
+    const plans = ['a','b','base'].map(choice=>calculate(record,choice));
+    assert.deepEqual(plans.map(plan=>plan.currentExpenseMln),expenses);
+    assert.ok(plans[0].outcomes[0].actualUnits>plans[1].outcomes[0].actualUnits && plans[1].outcomes[0].actualUnits>0,id);
+    assert.equal(plans[2].outcomes[0].actualUnits,0,id);
+    for (const [index,choice] of ['a','b','base'].entries()) {
+      const initial = rules.create({attemptId,schoolMap:map,rulesVersion:rules.V4_RULES_VERSION});
+      const state = {...initial,event:record,draft:{...initial.draft,eventChoice:choice}};
+      const preview = rules.quote(state,{eventPlan:plans[index]});
+      assert.ok(preview.ok,JSON.stringify(preview.errors));
+      assert.ok(preview.finance.cashEnd>0);
+    }
   }
-  assert.ok(bid);
+});
+
+test('a late bid provides current-year benefits and exposes obligations to the succeeding administration',async()=>{
+  const bid = (await drawCampaign(key(19),major.POLICY)).at(-1);
+  assert.equal(bid.eventId,'LANDMARK-04');
   const eventPlan = calculate(bid,'a');
   assert.equal(eventPlan.outcomes[0].actualUnits,24000);
   assert.deepEqual(plain(eventPlan.futureRows.map(row=>[row.year,row.amount])),[[2046,170]]);
@@ -148,35 +228,36 @@ test('a late bid provides current-year benefits and exposes obligations to the s
   assert.equal(baseline.finance.futureRows[0].cash-quote.finance.futureRows[0].cash,2520);
 });
 
-test('whole 20-year V4 ledgers close with conservative, targeted, or full responses and expose the actual road impact',async()=>{
-  const drawKey = key('comparative');
-  const ledger = await drawCampaign(drawKey,major.POLICY);
-  const meteor = ledger.find(row=>row.eventId==='LANDMARK-01');
-  const histories = {};
-  for (const choice of ['base','b','a']) {
-    let state = rules.create({attemptId,schoolMap:map,rulesVersion:rules.V4_RULES_VERSION});
-    for (const record of ledger) {
-      assert.equal(state.year,record.year);
-      state = {...state,event:record,draft:{...state.draft,eventChoice:major.has(record.eventId)?choice:'base'}};
-      const ledgerToDate = ledger.filter(row=>row.year<=record.year);
-      const params = {attemptId,year:record.year,ledger:ledgerToDate};
-      const picks = Object.fromEntries(ledgerToDate.map(row=>[row.year,major.has(row.eventId)?choice:'base']));
-      const eventPlan = events.year({...params,picks,executionHistory:state.history.flatMap(row=>row.stats.eventOutcomes)});
-      const baselineEventPlan = events.year({...params,picks:{},executionHistory:state.history.flatMap(row=>row.reference.eventOutcomes)});
-      const preview = rules.quote(state,{eventPlan});
-      assert.ok(preview.ok,JSON.stringify(preview.errors));
-      const {history} = state = rules.commit(state,{expectedRevision:state.revision,signature:preview.signature,eventPlan,baselineEventPlan});
-      const committed = history.at(-1);
-      const grants = committed.finance.operations.filter(entry=>entry.eventId===record.eventId && entry.type==='grant');
-      assert.equal(grants.length,choice!=='base'&&record.eventId==='LANDMARK-02'?1:0);
-      assert.equal(state.finance.cash,preview.finance.cashEnd+(grants[0]?.amount||0));
-      assert.ok(state.finance.cash>=0);
-    }
-    assert.equal(state.completed,true);
-    assert.equal(state.history.length,20);
-    assert.ok(rules.assess(state).points>=0 && rules.assess(state).points<=5);
-    histories[choice] = state.history;
+function closeCampaign(ledger, choice, openingDraft = {}) {
+  let state = rules.create({attemptId,schoolMap:map,rulesVersion:rules.V4_RULES_VERSION});
+  for (const record of ledger) {
+    assert.equal(state.year,record.year);
+    state = {...state,event:record,draft:{...state.draft,...(record.year===firstYear?openingDraft:{}),
+      eventChoice:major.has(record.eventId)?choice:'base'}};
+    const ledgerToDate = ledger.filter(row=>row.year<=record.year);
+    const params = {attemptId,year:record.year,ledger:ledgerToDate};
+    const picks = Object.fromEntries(ledgerToDate.map(row=>[row.year,major.has(row.eventId)?choice:'base']));
+    const eventPlan = events.year({...params,picks,executionHistory:state.history.flatMap(row=>row.stats.eventOutcomes)});
+    const baselineEventPlan = events.year({...params,picks:{},executionHistory:state.history.flatMap(row=>row.reference.eventOutcomes)});
+    const preview = rules.quote(state,{eventPlan});
+    assert.ok(preview.ok,JSON.stringify(preview.errors));
+    state = rules.commit(state,{expectedRevision:state.revision,signature:preview.signature,eventPlan,baselineEventPlan});
+    const committed = state.history.at(-1);
+    const grants = committed.finance.operations.filter(entry=>entry.eventId===record.eventId && entry.type==='grant');
+    assert.equal(grants.length,choice!=='base'&&record.eventId==='LANDMARK-02'?1:0);
+    assert.equal(state.finance.cash,preview.finance.cashEnd+(grants[0]?.amount||0));
+    assert.ok(state.finance.cash>=0);
   }
+  assert.equal(state.completed,true);
+  assert.equal(state.history.length,20);
+  assert.ok(rules.assess(state).points>=0 && rules.assess(state).points<=5);
+  return state.history;
+}
+
+test('whole 20-year V4 ledgers close with conservative, targeted, or full responses and expose the actual road impact',async()=>{
+  const ledger = await drawCampaign(key(70),major.POLICY);
+  const meteor = ledger.find(row=>row.eventId==='LANDMARK-01');
+  const histories = Object.fromEntries(['base','b','a'].map(choice=>[choice,closeCampaign(ledger,choice)]));
   const result = (choice,year) => histories[choice].find(row=>row.year===year);
   assert.equal(major.roadImpact(meteor,'a').open,true);
   assert.equal(major.roadImpact(meteor,'b',meteor.year+2),null);
@@ -188,8 +269,19 @@ test('whole 20-year V4 ledgers close with conservative, targeted, or full respon
   if (meteor.year<lastYear-1) assert.ok(!result('b',meteor.year+2).stats.school.closedRoads.includes('w-c'));
 });
 
+test('the opening budget can fund a portfolio and withstand the two costliest landmark events in consecutive years',async()=>{
+  const ledger = await drawCampaign(key(169),major.POLICY);
+  assert.deepEqual(ledger.slice(0,2).map(row=>row.eventId),['LANDMARK-02','LANDMARK-04']);
+  const draft = {measures:[{measureId:'school-campus',siteId:'bridge'}],taxRate:104,investment:{principal:1000,termYears:3}};
+  const history = closeCampaign(ledger,'a',draft);
+  assert.equal(history[0].measures[0].measureId,'school-campus');
+  assert.equal(history[0].finance.investmentContribution,1000);
+  assert.ok(history[0].finance.cashEnd>0 && history[1].finance.cashEnd>0);
+});
+
 test('V4 runtime assigns the policy only to new attempts and keeps saved events on resume',async()=>{
-  const actual = setup();
+  const actual = setup({subtle:webcrypto.subtle,randomUUID:()=>webcrypto.randomUUID(),
+    getRandomValues(bytes){bytes.set(Buffer.from(key(3),'hex'));return bytes;}});
   const slots = new Map();
   let controller;
   actual.V3Store = {
@@ -209,6 +301,7 @@ test('V4 runtime assigns the policy only to new attempts and keeps saved events 
     const scope = JSON.stringify([bridge.owner,bridge.context,'governor-'+edition]);
     const saved = slots.get(scope);
     assert.equal(saved.eventPolicy,edition==='v4'?major.POLICY:undefined);
+    if (edition==='v4') assert.equal(saved.state.event.eventId,'LANDMARK-02');
     runtime.freeze();
     const reopened = await actual.V3Runtime.mount({}, {...bridge,edition});
     assert.equal(reopened.state().event.eventId,saved.state.event.eventId);
@@ -217,11 +310,17 @@ test('V4 runtime assigns the policy only to new attempts and keeps saved events 
   }
   const v4Key = JSON.stringify([bridge.owner,bridge.context,'governor-v4']);
   const old = slots.get(v4Key);
-  delete old.eventPolicy;
-  delete old.draws[0].eventPolicy;
-  delete old.state.event.eventPolicy;
-  const oldResumed = await actual.V3Runtime.mount({}, {...bridge,edition:'v4'});
-  assert.equal(oldResumed.state().event.eventId,old.state.event.eventId);
-  assert.equal(slots.get(v4Key).eventPolicy,undefined);
-  oldResumed.freeze();
+  for (const eventPolicy of [undefined,major.LEGACY_POLICY]) {
+    const event = await events.open({attemptId:old.state.attemptId,year:firstYear,snapshot,drawKey:old.drawKey,eventPolicy});
+    const saved = {...old,eventPolicy,draws:[event],state:{...old.state,event}};
+    for (const recoverFromCloud of [false,true]) {
+      if (recoverFromCloud) slots.delete(v4Key);
+      else slots.set(v4Key,saved);
+      const resumed = await actual.V3Runtime.mount({}, {...bridge,edition:'v4'},recoverFromCloud?saved:undefined);
+      assert.deepEqual(plain(resumed.state().event),plain(event));
+      assert.equal(slots.get(v4Key).eventPolicy,eventPolicy);
+      assert.deepEqual(plain(slots.get(v4Key).draws),plain(saved.draws));
+      resumed.freeze();
+    }
+  }
 });

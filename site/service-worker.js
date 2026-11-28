@@ -367,6 +367,7 @@ const GOVERNOR_ASSETS=[
   "./apps/governor/src/v4-catalog.js",
   "./apps/governor/src/v4-map.js",
   "./apps/governor/src/v4-planning.js",
+  "./apps/governor/v4-advisor.css",
   "./apps/governor/v4-map.css",
   "./apps/governor/v4-planning.css",
   "./apps/governor/v3-motion.css",

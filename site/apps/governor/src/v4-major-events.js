@@ -1,7 +1,8 @@
 (function (root) {
   'use strict';
   const G = root.GovernorGame ||= {};
-  const POLICY = 'governor-major-situations-v1';
+  const LEGACY_POLICY = 'governor-major-situations-v1';
+  const POLICY = 'governor-major-situations-v2';
   const text = (ru, en, zh) => ({ru, en, zh});
   const situations = [
     {
@@ -175,6 +176,221 @@
         'Keep the current timetable. The oblast does not bid or expand sports programming.',
         '维持现有开放时间。本州不参与申办，也不扩大体育活动安排。'
       )
+    },
+    {
+      id:'LANDMARK-05', topic:'economy', districtId:'industrial', tag:'factory', kind:'flow',
+      title:text('Крупная IT-компания строит дата-центр', 'A major tech firm builds a data centre', '大型科技企业建设数据中心'),
+      situation:text(
+        'В Промышленном поясе начинается стройка. Компании нужны специалисты и надёжное подключение к сети. Колледжи готовы подключиться к подготовке кадров.',
+        'Construction is starting in the Industrial Belt. The company needs staff and a reliable grid connection. Colleges are ready to help train the workforce.',
+        '工业带的建设即将启动。企业需要专业人员和可靠的电力接入。职业院校愿意参与人才培训。'
+      ),
+      notice:text(
+        'Компания оплачивает стройку. Действующие курсы подготовят 90 специалистов за год. Бюджет пока не рассчитывает на новые налоговые поступления.',
+        'The company pays for construction. Existing courses train 90 people a year. The budget assumes no new tax revenue from the project.',
+        '建设由企业出资。现有课程每年培训90人。预算暂未计入该项目的新增税收。'
+      ),
+      units:text('дополнительно подготовленных специалистов за год', 'additional people trained per year', '每年新增完成培训的人员'),
+      need:600, baseline:90,
+      responses:[
+        {
+          label:text('Усилить сеть и расширить подготовку кадров', 'Upgrade the grid and expand training', '升级电网并扩大培训规模'),
+          tradeoff:text(
+            'Модернизируем подстанцию и оснащаем учебные аудитории. Дополнительные курсы оплачиваем два года, включая этот.',
+            'Upgrade the substation and equip classrooms. Fund two years of additional courses, including this one.',
+            '升级变电站并配备教学设备。为新增课程提供含今年在内的两年经费。'
+          ),
+          beneficiaries:text('выпускники колледжей и работники местных предприятий', 'college graduates and local employees', '职业院校毕业生和当地企业员工'),
+          setup:720, annual:120, years:2, units:410, support:365
+        },
+        {
+          label:text('Открыть короткие курсы на действующей базе', 'Run short courses at existing facilities', '利用现有设施开设短期课程'),
+          tradeoff:text(
+            'Оплачиваем обучение одной группы в этом году. Дополнительные работы на сети остаются за компанией.',
+            'Fund one cohort this year. Leave any extra grid work to the company.',
+            '今年资助一批学员参加培训。额外的电网工程由企业负责。'
+          ),
+          beneficiaries:text('выпускники, готовые начать стажировку в этом году', 'graduates ready to start a placement this year', '今年即可开始实习的毕业生'),
+          setup:235, units:180, support:285
+        }
+      ],
+      base:text(
+        'Сохраняем обычный набор на курсы. Компания сама организует подключение и наём.',
+        'Keep regular enrolment. The company handles its grid connection and hiring.',
+        '维持现有课程招生。企业自行安排电力接入和招聘。'
+      )
+    },
+    {
+      id:'LANDMARK-06', topic:'transport', districtId:'suburb', tag:'transit', kind:'flow',
+      title:text('Проект скоростного общественного транспорта', 'A rapid public transport project', '快速公共交通项目'),
+      situation:text(
+        'Пассажиры Нового берега подолгу добираются до областного центра. Перевозчик предлагает пустить скоростные электробусы по выделенным полосам.',
+        'New Bank passengers face long journeys to the regional capital. The operator proposes rapid electric buses with dedicated lanes.',
+        '新岸区乘客前往州府耗时较长。运营方建议开通使用专用车道的快速电动公交。'
+      ),
+      notice:text(
+        'Часть спроса покрывают обычные рейсы. Показатель отражает дополнительные поездки. Время в пути зависит от загрузки дорог.',
+        'Regular services already cover some demand. The indicator measures additional trips. Journey times depend on traffic.',
+        '常规班次已满足部分需求。指标按新增乘车人次计算。出行时间取决于路况。'
+      ),
+      units:text('дополнительных поездок на скоростных рейсах за год', 'additional trips on rapid buses per year', '每年新增快速公交乘车人次'),
+      need:185000, baseline:24000,
+      responses:[
+        {
+          label:text('Открыть скоростной коридор', 'Open a rapid bus corridor', '开通快速公交走廊'),
+          tradeoff:text(
+            'Выделяем полосы на загруженных участках и обновляем остановки. Дополнительные рейсы оплачиваем два года, включая этот.',
+            'Reserve lanes on busy sections and upgrade stops. Fund two years of additional services, including this one.',
+            '在拥堵路段设置专用车道并升级站点。为新增班次提供含今年在内的两年经费。'
+          ),
+          beneficiaries:text('пассажиры между Новым берегом и областным центром', 'passengers between New Bank and the regional capital', '往返新岸区和州府的乘客'),
+          setup:1240, annual:180, years:2, units:126000, support:450
+        },
+        {
+          label:text('Испытать один скоростной маршрут', 'Pilot one rapid bus route', '试运行一条快速公交线路'),
+          tradeoff:text(
+            'В этом году запускаем несколько рейсов на существующей дороге. Остальные маршруты сохраняют прежнее расписание.',
+            'Run a limited service on the existing road this year. Other routes keep their current timetables.',
+            '今年利用现有道路开行有限班次。其他线路仍按原时刻表运行。'
+          ),
+          beneficiaries:text('пассажиры пилотного маршрута', 'passengers on the pilot route', '试运行线路的乘客'),
+          setup:350, annual:90, units:62000, support:325
+        }
+      ],
+      base:text(
+        'Сохраняем обычное расписание и обслуживание остановок. Скоростные рейсы пока не добавляем.',
+        'Keep the regular timetable and stop maintenance. No extra rapid services start this year.',
+        '维持常规时刻表和站点维护。今年不增加快速班次。'
+      )
+    },
+    {
+      id:'LANDMARK-07', topic:'health', districtId:'capital', tag:'clinic', kind:'flow',
+      title:text('Угроза эпидемии', 'An outbreak threat', '疫情风险'),
+      situation:text(
+        'Поликлиники областного центра сообщают о росте обращений с симптомами инфекции. Врачи просят дополнительные часы приёма, чтобы сохранить доступ к плановой помощи.',
+        'Clinics in the regional capital report more patients with signs of infection. They ask for extra hours to keep routine care available.',
+        '州府多家门诊报告，出现感染症状的就诊者增多。医生申请增设接诊时段，以保证常规医疗服务。'
+      ),
+      notice:text(
+        'Обязательное наблюдение и оповещение стоят 120 млн ₽. Измеряем, сколько дополнительных консультаций смогут провести врачи.',
+        'Mandatory monitoring and notices cost 120 million RUB. The indicator measures how many additional consultations clinics can provide.',
+        '必需的监测和通知支出为1.2亿卢布。指标衡量门诊可额外提供的咨询人次。'
+      ),
+      units:text('дополнительных консультаций за год', 'additional consultations per year', '每年新增咨询人次'),
+      need:22000, baseline:2700, emergency:120,
+      responses:[
+        {
+          label:text('Открыть отдельные смены в сети поликлиник', 'Open dedicated shifts across the clinic network', '在门诊网络增设专门接诊班次'),
+          tradeoff:text(
+            'Нанимаем временный персонал и открываем отдельные часы приёма в этом году. Плановые консультации остаются в расписании.',
+            'Hire temporary staff and add separate appointment hours this year. Routine appointments remain on the timetable.',
+            '今年聘用临时人员并增设独立接诊时段。常规预约仍按原时刻表安排。'
+          ),
+          beneficiaries:text('пациенты с симптомами и люди, которым нужна плановая помощь', 'people with symptoms and patients needing routine care', '出现症状的居民和需要常规医疗服务的患者'),
+          setup:540, units:14000, support:520
+        },
+        {
+          label:text('Продлить приём в самых загруженных поликлиниках', 'Extend hours at the busiest clinics', '延长就诊量最大的门诊服务时间'),
+          tradeoff:text(
+            'Оплачиваем дополнительные смены в нескольких учреждениях. Остальные поликлиники сохраняют прежний график.',
+            'Fund extra shifts in a few clinics. Other facilities keep their usual hours.',
+            '为少数门诊增加班次拨款。其他门诊维持原有开放时间。'
+          ),
+          beneficiaries:text('жители в зоне обслуживания самых загруженных поликлиник', 'residents served by the busiest clinics', '就诊量最大的门诊服务范围内的居民'),
+          setup:250, units:6500, support:390
+        }
+      ],
+      base:text(
+        'Продолжаем обязательное наблюдение и оповещение. Поликлиники работают по обычному графику.',
+        'Continue mandatory monitoring and notices. Clinics keep their usual appointment hours.',
+        '继续开展必需的监测和通知工作。门诊仍按原时段接诊。'
+      )
+    },
+    {
+      id:'LANDMARK-08', topic:'ecology', districtId:'north', tag:'forest', kind:'flow',
+      title:text('Лесные пожары', 'Wildfires', '森林火灾'),
+      situation:text(
+        'Из-за засухи в Северных районах загорелись леса. Спасатели защищают ближайшие посёлки и просят подкрепление.',
+        'Drought has sparked forest fires in the Northern Districts. Emergency teams are protecting the nearest villages and asking for reinforcements.',
+        '干旱导致北部地区发生森林火灾。救援队正在保护附近村镇，并请求增援。'
+      ),
+      notice:text(
+        'Действующие бригады и оповещение стоят 210 млн ₽. Результат измеряем площадью, которую охватывает патрулирование.',
+        'Existing crews and public alerts cost 210 million RUB. The result measures how much land receives patrol coverage.',
+        '现有救援队和居民预警支出为2.1亿卢布。成效按纳入巡护的林地面积计算。'
+      ),
+      units:text('дополнительных гектаров под патрулированием за сезон', 'additional hectares patrolled per season', '每个火险季新增巡护面积（公顷）'),
+      need:8000, baseline:1200, emergency:210,
+      responses:[
+        {
+          label:text('Усилить тушение и лесные патрули', 'Reinforce firefighting and forest patrols', '加强灭火和森林巡护'),
+          tradeoff:text(
+            'Оплачиваем подкрепление в этом году. Расширенные патрули сохраняем на два сезона, включая нынешний.',
+            'Fund reinforcements this year. Keep expanded patrols for two seasons, including the current one.',
+            '今年为增援拨款。扩大后的巡护范围维持两个火险季，包括当前火险季。'
+          ),
+          beneficiaries:text('жители северных посёлков и лесные службы', 'northern communities and forestry services', '北部村镇居民和林业部门'),
+          setup:810, annual:140, years:2, units:5700, support:535
+        },
+        {
+          label:text('Сосредоточить подкрепление у посёлков', 'Concentrate reinforcements near villages', '将增援力量集中在村镇周边'),
+          tradeoff:text(
+            'Добавляем бригады у жилых зон на этот сезон. Дальние лесные участки остаются под обычным наблюдением.',
+            'Add crews near populated areas for this season. Remote forests keep their existing monitoring.',
+            '本火险季在居民区附近增派人员。偏远林地仍按常规方式监测。'
+          ),
+          beneficiaries:text('жители посёлков рядом с очагами возгорания', 'residents of villages closest to the fires', '火点附近村镇的居民'),
+          setup:395, units:2600, support:445
+        }
+      ],
+      base:text(
+        'Сохраняем оповещение и работу действующих бригад. Зону патрулирования не расширяем.',
+        'Keep public alerts and the current crews. Patrols stay within their existing area.',
+        '维持居民预警和现有救援队工作。巡护范围保持不变。'
+      )
+    },
+    {
+      id:'LANDMARK-09', topic:'public', districtId:'river', tag:'club', kind:'flow',
+      title:text('Местный референдум о присоединении соседнего района', 'A local referendum on joining a neighbouring district', '关于相邻区合并的地方公投'),
+      situation:text(
+        'В Речной долине обсуждают объединение с соседним муниципальным районом. Жители хотят знать, как изменятся услуги в посёлках, если предложение поддержат.',
+        'The River Valley is considering a merger with a neighbouring municipal district. Residents want to know how village services might change if the proposal passes.',
+        '河谷地区正在讨论与相邻市辖区合并。居民想知道，如果提案通过，各村镇的公共服务将发生什么变化。'
+      ),
+      notice:text(
+        'Голосование и обязательные объявления стоят 45 млн ₽. Область может улучшить доступ к информации. Итог определяют избиратели.',
+        'Running the vote and issuing required notices costs 45 million RUB. The oblast can improve access to information. Voters decide the result.',
+        '组织投票和发布必需公告需支出4,500万卢布。本州可改善信息获取条件，由选民决定投票结果。'
+      ),
+      units:text('дополнительных жителей, получивших разъяснения', 'additional residents given information', '额外获得说明的居民人数'),
+      need:17000, baseline:2300, emergency:45,
+      responses:[
+        {
+          label:text('Провести выездные обсуждения в посёлках', 'Hold public discussions in the villages', '在各村镇举办公开讨论'),
+          tradeoff:text(
+            'Публикуем расчёты по услугам, проводим встречи и развозим материалы. Равным образом объясняем последствия обоих вариантов.',
+            'Publish service estimates, hold meetings and deliver materials. Explain the consequences of both voting options on equal terms.',
+            '公布服务测算，举办会议并分发资料。平等介绍两种投票选择可能带来的结果。'
+          ),
+          beneficiaries:text('жители обоих районов, включая удалённые посёлки', 'residents of both districts, including outlying villages', '两区居民，包括偏远村镇居民'),
+          setup:310, units:12000, support:420
+        },
+        {
+          label:text('Открыть справочную службу для жителей', 'Set up a public information line', '开设居民咨询热线'),
+          tradeoff:text(
+            'Запускаем телефонную линию и публикуем ответы на частые вопросы. Выездных обсуждений не будет.',
+            'Open a telephone line and publish answers to common questions. There will be no travelling sessions.',
+            '开通咨询电话并公布常见问题答复。不举办巡回讨论。'
+          ),
+          beneficiaries:text('жители, которым доступны телефон или интернет', 'residents with telephone or internet access', '可以使用电话或互联网的居民'),
+          setup:105, units:6200, support:310
+        }
+      ],
+      base:text(
+        'Проводим голосование и размещаем обязательные объявления. Дополнительных встреч или консультаций не будет.',
+        'Hold the vote and post the required notices. There are no additional meetings or consultations.',
+        '组织投票并发布必需公告。不增设会议或咨询服务。'
+      )
     }
   ];
 
@@ -205,6 +421,7 @@
         instrument:'базовый порядок', effects:effects(row.kind,{years:0})}
     ]
   }));
+  const legacyCards = cards.slice(0, 4);
   function translated(row,locale) {
     const [a,b] = row.responses.map(option => ({
       label:option.label[locale], tradeoff:option.tradeoff[locale], beneficiaries:option.beneficiaries[locale]
@@ -218,5 +435,5 @@
     if (event?.eventId !== 'LANDMARK-01' || !Number.isInteger(year) || year < event.year || year > event.year+1) return null;
     return {id:'w-c', throughYear:event.year+1, open:choice==='a'};
   }
-  G.V4MajorEvents = {POLICY, cards, copy, has:id => ids.has(id), roadImpact};
+  G.V4MajorEvents = {POLICY, LEGACY_POLICY, cards, legacyCards, copy, has:id => ids.has(id), roadImpact};
 })(globalThis);

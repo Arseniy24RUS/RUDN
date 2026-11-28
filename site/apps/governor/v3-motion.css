@@ -67,7 +67,6 @@ body.governor-v3-active > .platform-status {display:none}
 }
 #governor-v3 [data-v3-motion="river"] .v3-event-art {
   aspect-ratio:3/2;
-  object-fit:contain;
 }
 
 #governor-v3 .v3-service-routes {
