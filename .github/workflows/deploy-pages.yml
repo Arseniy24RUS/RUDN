@@ -188,10 +188,11 @@ jobs:
               reviewed['scripts'] = '237bc85598b7e33cc20a8cc783d2883aa987dce3'
               reviewed['tests'] = '13490422a1ac325829d524410f511b0aea29149b'
               reviewed['firebase'] = 'bfba8e0e5b71310ec5e941a87e5d8f8d3807d69b'
-              reviewed['.github/workflows/platform-checks.yml'] = 'be1c1d33d1b75056ee5d425b26306480f8db9499'
+              reviewed['.github/workflows/platform-checks.yml'] = 'a34f17500dd3c6ad56977ab09344fe57cbdd222a'
               reviewed['.github/workflows/legal-lab-checks.yml'] = 'a4584581805c1896c8df2289aa0e0a956db5498c'
               reviewed['.github/workflows/puzzle-checks.yml'] = '1f2e1f96ebe00806cf017638f5635e6a9d41dd14'
               reviewed['.github/workflows/puzzle-map-network.yml'] = 'bb493b1731d24bcf89a9d00a53d95e5c4a918a85'
+              reviewed['.github/workflows/settlements-replay.yml'] = 'ffed3fa562ff629c274c8d87853bdc9df2dd53ee'
           for path, expected in reviewed.items():
               if git('rev-parse', 'HEAD:' + path) != expected:
                   raise SystemExit('Content differs from the reviewed Governor V3 candidate: ' + path)
@@ -295,7 +296,7 @@ jobs:
                   'tests/governor-v4-programmes.test.mjs',
               }
               if base == content_base:
-                  integration_files.update({'site/assets/js/main.js', 'site/assets/css/site.css'})
+                  integration_files.update({'site/assets/js/main.js', 'site/assets/css/site.css', '.github/workflows/settlements-replay.yml'})
               unexpected = sorted(path for path in changed if path not in integration_files
                                   and not path.startswith('site/apps/governor/'))
           else:
