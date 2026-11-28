@@ -37,6 +37,8 @@
     yearSpending:['Из казны в этом году','From the treasury this year','本年国库支出'],
     baseBuildCost:['Базовая смета','Base construction cost','基础建设预算'],
     fundingCost:['На продолжение','Continuation funding','续期投入'],
+    renewalFee:['На продление','Renewal cost','续期费用'],
+    restorationFee:['На восстановление','Restoration cost','恢复费用'],
     shortage:['Прогнозный дефицит в {year} году','Projected shortfall in {year}','{year}年预计赤字'],
     invalidPlan:['Проверьте условия плана','Check the plan requirements','请检查计划条件'],
     upperTax:['Налоговая нагрузка, % от базовой','Tax burden, % of baseline','税负，基准的百分比'],

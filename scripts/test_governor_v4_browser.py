@@ -257,9 +257,17 @@ def full_campaign(page, profile, output, campus, locale, verified=None):
             choose_event(page, lambda: inspect_major_event(page, opened, output, verified is not None))
         else:
             choose_event(page)
-        if year == 2029:
+        if year in (2029, 2030):
             map_catalogue(page, 'district')
-            assert page.locator('[data-v4-expiring] [data-v3-measure^="renew:"]').count() >= 1
+            action = 'renew' if year == 2029 else 'restore'
+            button = page.locator(f'[data-v4-expiring] [data-v3-measure^="{action}:"][data-v3-measure$=":school-bus"]')
+            button.click()
+            labels = {'ru': ('На продление','На восстановление'), 'en': ('Renewal cost','Restoration cost'),
+                      'zh': ('续期费用','恢复费用')}
+            label = labels[locale][0 if year == 2029 else 1]
+            exact = 26 if year == 2029 else 110
+            fee = page.locator('.v3-line').filter(has=page.get_by_text(label, exact=True))
+            assert fee.locator('strong').inner_text().startswith(f'{exact} '), fee.inner_text()
         plan_year(page)
         record = load_record(page, profile)
         state = record['state']

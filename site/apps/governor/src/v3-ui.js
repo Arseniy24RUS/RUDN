@@ -1292,11 +1292,14 @@
         const catalogue=scope==='programmes'?v4.tr('pick'):t(construction?'mapConstruction':'mapDistrictMeasures');
         const context='<p class="v3-eyebrow">'+esc(t(measure.sector))+'</p><p>'+esc(local(measure.description))+'</p>';
         const districts=construction?[measure.districtId]:programmeDistricts(measure);
+        const continuation={renew:'renewalFee',restore:'restorationFee'}[measure.kind];
+        const costKey=continuation?v4.tr(continuation):t(construction?'construction':'launchCost');
+        const cost=continuation?candidate?.costNow??measure.cost:candidate?.capex??measure.cost;
         return back('catalogue-back',catalogue)+heading(local(measure.labels))+
           '<section class="v3-card v3-card-body">'+
           (illustration?'<div class="v4-measure-intro"><div>'+context+'</div>'+illustration+'</div>':context)+
           label(t('territoryReach'),districts.map(districtLabel).join(', '))+
-          label(t(construction?'construction':'launchCost'),money(candidate?.capex??measure.cost))+
+          label(costKey,money(cost))+
           label(t('budget.annual'),money(candidate?.annualOpex??measure.annualOpex))+
           (candidate?label(v4.tr('yearSpending'),money(v4.spendingNow(candidate,offer?.finance)))+label(t('plannedOpen'),candidate.openingYear):'')+
           (!construction&&candidate?label(t('programmeYears'),candidate.openingYear+'–'+candidate.endYear)+
